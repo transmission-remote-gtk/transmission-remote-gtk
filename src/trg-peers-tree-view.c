@@ -57,6 +57,9 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
 				   PEERSCOL_DOWNSPEED, -1);
     trg_tree_view_add_speed_column(TRG_TREE_VIEW(self), "Up Speed",
 				   PEERSCOL_UPSPEED, -1);
+    trg_tree_view_add_column(TRG_TREE_VIEW(self), "Client",
+                             PEERSCOL_CLIENT);
+
 }
 
 TrgPeersTreeView *trg_peers_tree_view_new(TrgPeersModel * model)

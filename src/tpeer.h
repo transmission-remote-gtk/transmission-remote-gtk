@@ -24,7 +24,7 @@
 #include <json-glib/json-glib.h>
 
 #define TPEER_ADDRESS           "address"
-#define TPEER_CLIENT_NAME       "client_name"
+#define TPEER_CLIENT_NAME       "clientName"
 #define TPEER_PROGRESS          "progress"
 #define TPEER_RATE_TO_CLIENT    "rateToClient"
 #define TPEER_RATE_TO_PEER      "rateToPeer"

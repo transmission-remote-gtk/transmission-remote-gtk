@@ -134,24 +134,29 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 	if (first == TRUE
 	    || find_existing_peer_item(model, peer, &peerIter) == FALSE) {
 	    gtk_list_store_append(GTK_LIST_STORE(model), &peerIter);
+
+	    address = peer_get_address(peer);
+#if HAVE_GEOIP
+        if ((gi = g_object_get_data(G_OBJECT(model), "geoip")) != NULL)
+            country = GeoIP_country_name_by_addr(gi, address);
+#endif
+        gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
+                        PEERSCOL_ICON, GTK_STOCK_NETWORK,
+                        PEERSCOL_IP, address,
+#if HAVE_GEOIP
+                        PEERSCOL_COUNTRY, country != NULL ? country : "",
+#endif
+                        PEERSCOL_CLIENT, peer_get_client_name(peer),
+                        -1);
+
 	    isNew = TRUE;
 	} else {
 	    isNew = FALSE;
 	}
 
-	address = peer_get_address(peer);
+
 	flagStr = peer_get_flagstr(peer);
-#if HAVE_GEOIP
-	if ((gi = g_object_get_data(G_OBJECT(model), "geoip")) != NULL)
-	    country = GeoIP_country_name_by_addr(gi, address);
-#endif
 	gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
-			   PEERSCOL_ICON,
-			   GTK_STOCK_NETWORK, PEERSCOL_IP, address,
-#if HAVE_GEOIP
-			   PEERSCOL_COUNTRY,
-			   country != NULL ? country : "",
-#endif
 			   PEERSCOL_FLAGS, flagStr,
 			   PEERSCOL_PROGRESS,
 			   peer_get_progress(peer),
@@ -202,6 +207,7 @@ static void trg_peers_model_init(TrgPeersModel * self)
     column_types[PEERSCOL_PROGRESS] = G_TYPE_DOUBLE;
     column_types[PEERSCOL_DOWNSPEED] = G_TYPE_INT64;
     column_types[PEERSCOL_UPSPEED] = G_TYPE_INT64;
+    column_types[PEERSCOL_CLIENT] = G_TYPE_STRING;
     column_types[PEERSCOL_UPDATESERIAL] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
