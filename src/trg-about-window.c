@@ -1,6 +1,6 @@
 /*
  * transmission-remote-gtk - A GTK RPC client to Transmission
- * Copyright (C) 2010  Alan Fitton
+ * Copyright (C) 2011  Alan Fitton
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -34,7 +34,7 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     GtkWidget *dialog;
     GdkPixbuf *logo;
     GError *error = NULL;
-    const gchar *trgAuthors[] = { "Alan Fitton <alan@eth0.org.uk>", NULL };
+    const gchar *trgAuthors[] = { "Alan Fitton <ajf@eth0.org.uk>", NULL };
 
     dialog = gtk_about_dialog_new();
     gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
@@ -62,16 +62,16 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),
 				 PACKAGE_VERSION);
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
-				   "(C) 2009 Alan F");
+				   "(C) 2011 Alan F");
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
 				  "A remote client to transmission-daemon.");
     /* Set the license text, which is usually loaded from a file. Also, set the
      * web site address and label. */
     gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog), "GPL2");
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog),
-				 "http://eth0.org.uk/");
+				 "http://code.google.com/p/transmission-remote-gtk/");
     gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog),
-				       "eth0.org.uk");
+				       "http://code.google.com/p/transmission-remote-gtk/");
 
     /* Set the application authors, documenters and translators. */
     gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(dialog), trgAuthors);
