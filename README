@@ -1,0 +1,25 @@
+ABOUT
+
+  transmission-remote-gtk is a GTK client for remote management of
+  the Transmission BitTorrent client, using its HTTP RPC protocol.
+
+BUILDING
+
+  * To optionally see which country peers are located in,
+    install libgeoip and its headers when building.
+
+  Building a Transmission release from the command line:
+
+    $ tar zxfv transmission-remote-gtk-0.1.0.tar.gz
+    $ cd transmission-0.1.0
+    $ ./configure
+    $ make
+    $ sudo make install
+
+  Building from subversion checkout:
+    
+    $ svn co <repository URL>
+    $ ./autogen.sh
+    $ ./configure
+    $ make
+    $ sudo make install

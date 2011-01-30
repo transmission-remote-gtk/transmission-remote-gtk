@@ -1,0 +1,109 @@
+<gconfschemafile>
+  <schemalist>
+
+    <schema>
+      <key>/schemas/apps/trg/auto-connect</key>
+      <applyto>/apps/trg/auto-connect</applyto>
+      <owner>trg</owner>
+      <type>bool</type>
+      <default>0</default>
+
+      <locale name="C">
+        <short>Auto connect</short>
+        <long>Auto connect</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/trg/system-tray</key>
+      <applyto>/apps/trg/system-tray</applyto>
+      <owner>trg</owner>
+      <type>bool</type>
+      <default>0</default>
+
+      <locale name="C">
+        <short>Show system tray icon</short>
+        <long>Show system tray icon while app is running</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/trg/window_height</key>
+      <applyto>/apps/trg/window_height</applyto>
+      <owner>trg</owner>
+      <type>int</type>
+      <default>600</default>
+
+      <locale name="C">
+        <short>Window height</short>
+        <long>Window height</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/trg/window_width</key>
+      <applyto>/apps/trg/window_width</applyto>
+      <owner>trg</owner>
+      <type>int</type>
+      <default>800</default>
+
+      <locale name="C">
+        <short>Window width</short>
+        <long>Window width</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/trg/port</key>
+      <applyto>/apps/trg/port</applyto>
+      <owner>trg</owner>
+      <type>int</type>
+      <default>9091</default>
+
+      <locale name="C">
+        <short>Port</short>
+        <long>Port</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/trg/username</key>
+      <applyto>/apps/trg/username</applyto>
+      <owner>trg</owner>
+      <type>string</type>
+      <default></default>
+
+      <locale name="C">
+        <short>Username</short>
+        <long>Username</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/trg/password</key>
+      <applyto>/apps/trg/password</applyto>
+      <owner>trg</owner>
+      <type>string</type>
+      <default></default>
+
+      <locale name="C">
+        <short>Password</short>
+        <long>Password</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/trg/hostname</key>
+      <applyto>/apps/trg/hostname</applyto>
+      <owner>trg</owner>
+      <type>string</type>
+      <default></default>
+
+      <locale name="C">
+        <short>Hostname</short>
+        <long>Hostname</long>
+      </locale>
+    </schema>
+
+  </schemalist>
+</gconfschemafile>
