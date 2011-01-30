@@ -36,6 +36,9 @@
 #include "trg-client.h"
 #include "http.h"
 #include "json.h"
+#include "util.h"
+#include "requests.h"
+#include "session-get.h"
 
 #include "trg-main-window.h"
 #include "trg-about-window.h"
@@ -56,11 +59,7 @@
 #include "trg-menu-bar.h"
 #include "trg-status-bar.h"
 #include "trg-remote-prefs-dialog.h"
-
-#include "util.h"
-#include "requests.h"
 #include "trg-preferences-dialog.h"
-#include "session-get.h"
 
 /* Events */
 
@@ -1278,7 +1277,7 @@ static GObject *trg_main_window_constructor(GType type,
 		     NULL);
 
     gtk_window_set_icon_from_file
-	(GTK_WINDOW(self), WINDOW_ICON_FILE, &iconError);
+	(GTK_WINDOW(self), TRG_WINDOW_ICON, &iconError);
 
     if (iconError != NULL) {
 	g_printf("setting icon failed: %s\n", iconError->message);
@@ -1378,7 +1377,7 @@ static GObject *trg_main_window_constructor(GType type,
     priv->notebook = trg_main_window_notebook_new(self);
     gtk_paned_pack2(GTK_PANED(priv->vpaned), priv->notebook, FALSE, FALSE);
 
-    priv->statusIcon = gtk_status_icon_new_from_file(WINDOW_ICON_FILE);
+    priv->statusIcon = gtk_status_icon_new_from_file(TRG_WINDOW_ICON);
     gtk_status_icon_set_screen(priv->statusIcon,
 			       gtk_window_get_screen(GTK_WINDOW(self)));
     g_signal_connect(priv->statusIcon, "activate",

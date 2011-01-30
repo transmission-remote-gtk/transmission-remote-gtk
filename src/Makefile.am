@@ -7,6 +7,9 @@ desktop_DATA = transmission-remote-gtk.desktop
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = transmission-remote-gtk.schemas
 
+svgiconsdir = /usr/share/icons/hicolor/scalable/apps/
+svgicons_DATA = transmission-remote-gtk.svg
+
 bin_PROGRAMS = transmission-remote-gtk
 INCLUDES = --pedantic -Wall -I.. -O2 $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gconf_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS)
 

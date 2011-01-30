@@ -22,8 +22,6 @@
 
 #include <glib-object.h>
 
-#define WINDOW_ICON_FILE "/usr/share/icons/hicolor/scalable/apps/transmission.svg"
-
 #define trg_strlspeed(a, b) tr_strlspeed(a, b, sizeof(a))
 #define trg_strlpercent(a, b) tr_strlpercent(a, b, sizeof(a))
 #define trg_strlsize(a, b) tr_strlsize(a, b, sizeof(a))
