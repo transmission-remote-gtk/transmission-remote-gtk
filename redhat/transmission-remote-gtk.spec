@@ -16,12 +16,10 @@ Requires: GConf2
 Requires: libnotify
 Requires: json-glib
 Requires: libcurl
-Requires: GeoIP
 
 BuildRequires: gtk2-devel
 BuildRequires: glib2-devel
 BuildRequires: unique-devel
-BuildRequires: GeoIP-devel
 BuildRequires: GConf2-devel
 BuildRequires: json-glib-devel
 BuildRequires: libcurl-devel
