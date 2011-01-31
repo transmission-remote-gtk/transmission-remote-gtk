@@ -80,6 +80,7 @@ fi
 %{_sysconfdir}/gconf/schemas/%{name}.schemas
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
+%{_datadir}/icons/hicolor/scalable/apps/transmission-remote-gtk.svg
 
 %changelog
 * Sun Jan 30 2010 Alan Fitton <alan@eth0.org.uk> - 0.1.0
