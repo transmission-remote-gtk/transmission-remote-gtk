@@ -177,7 +177,7 @@ gchar *torrent_get_status_icon(guint flags)
         else if (flags & TORRENT_FLAG_CHECKING)
                 return g_strdup(GTK_STOCK_REFRESH);
         else
-                g_strdup(GTK_STOCK_DIALOG_QUESTION);
+                return g_strdup(GTK_STOCK_DIALOG_QUESTION);
 }
 
 const gchar *torrent_get_errorstr(JsonObject * t)
