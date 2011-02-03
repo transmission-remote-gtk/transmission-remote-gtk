@@ -21,6 +21,7 @@ PKG_CHECK_MODULES([gtk], [gtk+-2.0])
 PKG_CHECK_MODULES([gio], [gio-2.0])
 PKG_CHECK_MODULES([unique], [unique-1.0])
 PKG_CHECK_MODULES([notify], [libnotify])
+LIBCURL_CHECK_CONFIG([yes], [7.0], [], [AC_MSG_ERROR(["libcurl not found"])])
 
 AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
 have_libgeoip=no
@@ -34,10 +35,6 @@ if test "x$have_geoip" = "xyes"; then
 fi
 AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
 
-AM_GCONF_SOURCE_2
-
-# Checks for typedefs, structures, and compiler characteristics.
 AC_TYPE_SIZE_T
-AC_FUNC_REALLOC
 
 AC_OUTPUT

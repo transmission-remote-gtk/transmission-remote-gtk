@@ -22,6 +22,7 @@
 #include <json-glib/json-glib.h>
 #include <curl/curl.h>
 
+#include "config.h"
 #include "dispatch.h"
 #include "http.h"
 #include "json.h"

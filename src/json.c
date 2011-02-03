@@ -22,6 +22,7 @@
 #include <json-glib/json-glib.h>
 #include <gtk/gtk.h>
 
+#include "config.h"
 #include "protocol-constants.h"
 #include "requests.h"
 #include "dispatch.h"
