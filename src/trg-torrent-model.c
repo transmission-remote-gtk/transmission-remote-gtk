@@ -210,9 +210,7 @@ update_torrent_iter(gint64 serial, TrgTorrentModel * model,
 		       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 
 
-    if ((lastFlags & TORRENT_FLAG_DOWNLOADING) ==
-	TORRENT_FLAG_DOWNLOADING
-	&& (newFlags & TORRENT_FLAG_COMPLETE) == TORRENT_FLAG_COMPLETE)
+    if ((lastFlags & TORRENT_FLAG_DOWNLOADING) && (newFlags & TORRENT_FLAG_COMPLETE))
 	g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
 
     trg_torrent_module_count_peers(model, iter, t);
