@@ -845,7 +845,7 @@ trg_dialog_error_handler(TrgMainWindow * win, JsonObject * response,
 	dialog = gtk_message_dialog_new(GTK_WINDOW(win),
 					GTK_DIALOG_MODAL,
 					GTK_MESSAGE_ERROR,
-					GTK_BUTTONS_OK, msg);
+					GTK_BUTTONS_OK, "%s", msg);
 	gtk_window_set_title(GTK_WINDOW(dialog), "Error");
 	gtk_dialog_run(GTK_DIALOG(dialog));
 	gtk_widget_destroy(dialog);
