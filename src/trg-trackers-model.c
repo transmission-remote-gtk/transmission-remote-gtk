@@ -33,30 +33,29 @@ void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
     const gchar *announce;
     const gchar *scrape;
 
+    trackers = torrent_get_trackers(t);
+
     gtk_list_store_clear(GTK_LIST_STORE(model));
 
-    trackers = torrent_get_trackers(t);
     for (j = 0; j < json_array_get_length(trackers); j++) {
-	JsonObject *tracker =
-	    json_node_get_object(json_array_get_element(trackers, j));
+		GtkTreeIter trackIter;
+		JsonObject *tracker =
+			json_node_get_object(json_array_get_element(trackers, j));
 
-	announce = tracker_get_announce(tracker);
-	scrape = tracker_get_scrape(tracker);
+		announce = tracker_get_announce(tracker);
+		scrape = tracker_get_scrape(tracker);
 #ifdef DEBUG
-	g_printf("show tracker: announce=\"%s\"\n", announce);
-	g_printf("show tracker: scrape=\"%s\"\n", scrape);
+		g_printf("show tracker: announce=\"%s\"\n", announce);
+		g_printf("show tracker: scrape=\"%s\"\n", scrape);
 #endif
 
-	GtkTreeIter trackIter;
-	gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
-	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-			   TRACKERCOL_ICON, GTK_STOCK_NETWORK,
-			   TRACKERCOL_TIER,
-			   tracker_get_tier(tracker),
-			   TRACKERCOL_ANNOUNCE,
-			   announce,
-			   TRACKERCOL_SCRAPE,
-			   scrape, -1);
+		gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
+		gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+				   TRACKERCOL_ICON, GTK_STOCK_NETWORK,
+				   TRACKERCOL_TIER,
+				   tracker_get_tier(tracker),
+				   TRACKERCOL_ANNOUNCE,
+				   announce, TRACKERCOL_SCRAPE, scrape, -1);
     }
 }
 
