@@ -19,6 +19,7 @@
 
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
+#include <glib/gprintf.h>
 
 #include "torrent.h"
 #include "trg-trackers-model.h"
