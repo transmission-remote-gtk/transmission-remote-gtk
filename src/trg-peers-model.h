@@ -27,7 +27,7 @@
 
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
-#if HAVE_GEOIP
+#ifdef HAVE_GEOIP
 #include <GeoIP.h>
 #endif
 #include <glib-object.h>

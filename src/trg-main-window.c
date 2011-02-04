@@ -223,8 +223,6 @@ static void on_torrent_completed(TrgTorrentModel * model,
                 notify_notification_attach_to_status_icon(notify, priv->statusIcon);
 #endif
 
-
-
     notify_notification_set_urgency(notify, NOTIFY_URGENCY_LOW);
     notify_notification_set_timeout(notify, 8000);
 
