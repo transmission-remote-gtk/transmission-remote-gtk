@@ -101,7 +101,8 @@ trg_cell_renderer_size_class_init(TrgCellRendererSizeClass * klass)
     g_type_class_add_private(klass, sizeof(TrgCellRendererSizePrivate));
 }
 
-static void trg_cell_renderer_size_init(TrgCellRendererSize * self)
+static void
+trg_cell_renderer_size_init(TrgCellRendererSize * self G_GNUC_UNUSED)
 {
 }
 

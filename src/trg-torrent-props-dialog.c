@@ -64,7 +64,7 @@ static void
 trg_torrent_props_dialog_set_property(GObject * object,
 				      guint prop_id,
 				      const GValue * value,
-				      GParamSpec * pspec)
+				      GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgTorrentPropsDialogPrivate *priv =
 	TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(object);
@@ -82,7 +82,8 @@ trg_torrent_props_dialog_set_property(GObject * object,
 static void
 trg_torrent_props_dialog_get_property(GObject * object,
 				      guint prop_id,
-				      GValue * value, GParamSpec * pspec)
+				      GValue * value,
+                                      GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgTorrentPropsDialogPrivate *priv =
 	TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(object);
@@ -98,7 +99,8 @@ trg_torrent_props_dialog_get_property(GObject * object,
 }
 
 static void
-trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
+trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
+                              gpointer data G_GNUC_UNUSED)
 {
     TrgTorrentPropsDialogPrivate *priv;
     JsonNode *request;
@@ -348,7 +350,8 @@ trg_torrent_props_dialog_class_init(TrgTorrentPropsDialogClass * klass)
 				     G_PARAM_STATIC_BLURB));
 }
 
-static void trg_torrent_props_dialog_init(TrgTorrentPropsDialog * self)
+static void
+trg_torrent_props_dialog_init(TrgTorrentPropsDialog * self G_GNUC_UNUSED)
 {
 
 }

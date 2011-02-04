@@ -367,7 +367,7 @@ static void trg_menu_bar_init(TrgMenuBar * self)
     trg_menu_bar_help_menu_new(TRG_MENU_BAR(self));
 }
 
-TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win)
+TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win G_GNUC_UNUSED)
 {
     GObject *obj = g_object_new(TRG_TYPE_MENU_BAR, NULL);
     return TRG_MENU_BAR(obj);

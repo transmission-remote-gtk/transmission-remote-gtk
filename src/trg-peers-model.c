@@ -38,14 +38,16 @@
 
 G_DEFINE_TYPE(TrgPeersModel, trg_peers_model, GTK_TYPE_LIST_STORE)
 
-static void trg_peers_model_class_init(TrgPeersModelClass * klass)
+static void
+trg_peers_model_class_init(TrgPeersModelClass * klass G_GNUC_UNUSED)
 {
 }
 
 gboolean
 find_existing_peer_item_foreachfunc(GtkTreeModel * model,
-				    GtkTreePath * path, GtkTreeIter * iter,
-				    gpointer data)
+                                    GtkTreePath * path G_GNUC_UNUSED,
+                                    GtkTreeIter * iter,
+                                    gpointer data)
 {
     struct peerAndIter *pi;
     gchar *ip;
@@ -114,7 +116,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 {
     JsonArray *peers;
     GtkTreeIter peerIter;
-    int j;
+    guint j;
     gboolean isNew;
 
     peers = torrent_get_peers(t);
@@ -124,7 +126,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
     for (j = 0; j < json_array_get_length(peers); j++) {
 	JsonObject *peer;
-	const gchar *address, *flagStr;
+	const gchar *address=NULL, *flagStr;
 #if HAVE_GEOIP
 	GeoIP *gi;
 	const gchar *country = NULL;

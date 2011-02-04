@@ -125,7 +125,7 @@ JsonNode *torrent_get()
     return root;
 }
 
-JsonNode *torrent_add_url(const gchar * url, gboolean paused)
+JsonNode *torrent_add_url(const gchar * url, gboolean paused G_GNUC_UNUSED)
 {
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);
@@ -133,7 +133,7 @@ JsonNode *torrent_add_url(const gchar * url, gboolean paused)
     return root;
 }
 
-JsonNode *torrent_add(gchar * filename, gboolean paused)
+JsonNode *torrent_add(gchar * filename, gboolean paused G_GNUC_UNUSED)
 {
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);

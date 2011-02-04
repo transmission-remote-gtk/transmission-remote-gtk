@@ -27,7 +27,7 @@ G_DEFINE_TYPE(TrgTorrentTreeView, trg_torrent_tree_view,
 	      TRG_TYPE_TREE_VIEW)
 
 static void
-trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass * klass)
+trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass * klass G_GNUC_UNUSED)
 {
 }
 
@@ -89,7 +89,7 @@ gint get_first_selected(TrgTorrentTreeView * view, GtkTreeIter * iter,
 
 void
 trg_torrent_model_get_json_id_array_foreach(GtkTreeModel * model,
-					    GtkTreePath * path,
+					    GtkTreePath * path G_GNUC_UNUSED,
 					    GtkTreeIter * iter,
 					    gpointer data)
 {

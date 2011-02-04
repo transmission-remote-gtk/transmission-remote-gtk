@@ -40,7 +40,7 @@ enum {
 };
 
 static UniqueResponse
-message_received_cb(UniqueApp * app,
+message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 		    gint command,
 		    UniqueMessageData * message,
 		    guint time_, gpointer user_data)

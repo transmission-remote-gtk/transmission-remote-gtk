@@ -34,7 +34,8 @@
 
 G_DEFINE_TYPE(TrgPeersTreeView, trg_peers_tree_view, TRG_TYPE_TREE_VIEW)
 
-static void trg_peers_tree_view_class_init(TrgPeersTreeViewClass * klass)
+static void
+trg_peers_tree_view_class_init(TrgPeersTreeViewClass * klass G_GNUC_UNUSED)
 {
 }
 

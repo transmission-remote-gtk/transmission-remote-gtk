@@ -152,7 +152,7 @@ gboolean torrent_get_is_finished(JsonObject * t)
 gdouble torrent_get_percent_done(JsonObject * t)
 {
     JsonNode *percentDone = json_object_get_member(t, FIELD_PERCENTDONE);
-    GValue a = { 0 };
+    GValue a;
     json_node_get_value(percentDone, &a);
     switch (G_VALUE_TYPE(&a)) {
     case G_TYPE_INT64:

@@ -115,8 +115,9 @@ static void trg_files_model_init(TrgFilesModel * self)
 
 gboolean
 trg_files_model_update_foreach(GtkListStore * model,
-			       GtkTreePath * path, GtkTreeIter * iter,
-			       gpointer data)
+			       GtkTreePath * path G_GNUC_UNUSED,
+                               GtkTreeIter * iter,
+			       gpointer data G_GNUC_UNUSED)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     JsonObject *file;
@@ -136,7 +137,7 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
 		       JsonObject * t, gboolean first)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
-    int j;
+    guint j;
 
     if (first == TRUE)
 	gtk_list_store_clear(GTK_LIST_STORE(model));

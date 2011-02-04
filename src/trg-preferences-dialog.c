@@ -55,7 +55,7 @@ static void
 trg_preferences_dialog_set_property(GObject * object,
 				    guint prop_id,
 				    const GValue * value,
-				    GParamSpec * pspec)
+				    GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgPreferencesDialog *pref_dlg = TRG_PREFERENCES_DIALOG(object);
 
@@ -70,7 +70,8 @@ trg_preferences_dialog_set_property(GObject * object,
 }
 
 static void
-trg_preferences_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
+trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
+                            gpointer data G_GNUC_UNUSED)
 {
     switch (res_id) {
     default:
@@ -81,8 +82,9 @@ trg_preferences_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
 
 static void
 trg_preferences_dialog_get_property(GObject * object,
-				    guint prop_id,
-				    GValue * value, GParamSpec * pspec)
+                                    guint prop_id,
+                                    GValue * value,
+                                    GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgPreferencesDialog *pref_dlg = TRG_PREFERENCES_DIALOG(object);
 

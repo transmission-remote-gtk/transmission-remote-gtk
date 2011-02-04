@@ -3,6 +3,8 @@ AC_INIT(transmission-remote-gtk, 0.1, alan@eth0.org.uk)
 AM_INIT_AUTOMAKE(transmission-remote-gtk, 0.1.0)
 AC_OUTPUT(Makefile src/Makefile)
 
+m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+
 AC_CONFIG_MACRO_DIR([m4])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])

@@ -41,7 +41,8 @@ void trg_tree_view_std_column_setup(GtkTreeViewColumn * column, int index,
     }
 }
 
-static void trg_tree_view_class_init(TrgTreeViewClass * klass)
+static void
+trg_tree_view_class_init(TrgTreeViewClass * klass G_GNUC_UNUSED)
 {
 }
 

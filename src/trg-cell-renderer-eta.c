@@ -105,7 +105,8 @@ trg_cell_renderer_eta_class_init(TrgCellRendererEtaClass * klass)
     g_type_class_add_private(klass, sizeof(TrgCellRendererEtaPrivate));
 }
 
-static void trg_cell_renderer_eta_init(TrgCellRendererEta * self)
+static void
+trg_cell_renderer_eta_init(TrgCellRendererEta * self G_GNUC_UNUSED)
 {
 }
 

@@ -103,7 +103,8 @@ trg_cell_renderer_priority_class_init(TrgCellRendererPriorityClass * klass)
 			     sizeof(TrgCellRendererPriorityPrivate));
 }
 
-static void trg_cell_renderer_priority_init(TrgCellRendererPriority * self)
+static void
+trg_cell_renderer_priority_init(TrgCellRendererPriority * self G_GNUC_UNUSED)
 {
 }
 

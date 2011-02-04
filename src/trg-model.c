@@ -28,7 +28,7 @@ struct trg_model_remove_removed_foreachfunc_args {
 
 gboolean
 trg_model_remove_removed_foreachfunc(GtkTreeModel * model,
-				     GtkTreePath * path,
+				     GtkTreePath * path G_GNUC_UNUSED,
 				     GtkTreeIter * iter, gpointer data)
 {
     struct trg_model_remove_removed_foreachfunc_args *args =

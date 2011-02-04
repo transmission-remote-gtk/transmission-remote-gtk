@@ -93,7 +93,8 @@ trg_cell_renderer_wanted_class_init(TrgCellRendererWantedClass * klass)
     g_type_class_add_private(klass, sizeof(TrgCellRendererWantedPrivate));
 }
 
-static void trg_cell_renderer_wanted_init(TrgCellRendererWanted * self)
+static void
+trg_cell_renderer_wanted_init(TrgCellRendererWanted * self G_GNUC_UNUSED)
 {
 }
 

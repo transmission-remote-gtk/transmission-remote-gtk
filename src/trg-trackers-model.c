@@ -27,7 +27,7 @@ G_DEFINE_TYPE(TrgTrackersModel, trg_trackers_model, GTK_TYPE_LIST_STORE)
 
 void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
 {
-    int j;
+    guint j;
     JsonArray *trackers;
 
     gtk_list_store_clear(GTK_LIST_STORE(model));
@@ -49,7 +49,8 @@ void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
     }
 }
 
-static void trg_trackers_model_class_init(TrgTrackersModelClass * klass)
+static void
+trg_trackers_model_class_init(TrgTrackersModelClass * klass G_GNUC_UNUSED)
 {
 }
 

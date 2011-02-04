@@ -70,12 +70,13 @@ static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
 
 }
 
-static void trg_torrent_module_count_peers(TrgTorrentModel * model,
+static void trg_torrent_model_count_peers(TrgTorrentModel * model,
 					   GtkTreeIter * iter,
 					   JsonObject * t)
 {
     JsonArray *peers;
-    gint seeders, leechers, j;
+    gint seeders, leechers;
+    guint j;
 
     peers = torrent_get_peers(t);
 
@@ -213,7 +214,7 @@ update_torrent_iter(gint64 serial, TrgTorrentModel * model,
     if ((lastFlags & TORRENT_FLAG_DOWNLOADING) && (newFlags & TORRENT_FLAG_COMPLETE))
 	g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
 
-    trg_torrent_module_count_peers(model, iter, t);
+    trg_torrent_model_count_peers(model, iter, t);
 
     g_free(statusString);
     g_free(statusIcon);
@@ -226,7 +227,7 @@ TrgTorrentModel *trg_torrent_model_new(void)
 
 static gboolean
 find_existing_torrent_item_foreachfunc(GtkTreeModel * model,
-				       GtkTreePath * path,
+				       GtkTreePath * path G_GNUC_UNUSED,
 				       GtkTreeIter * iter, gpointer data)
 {
     struct idAndIter *ii;

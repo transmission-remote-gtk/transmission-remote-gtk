@@ -147,7 +147,8 @@ static void update_session(GtkDialog * dlg)
 }
 
 static void
-trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
+trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
+                             gpointer data G_GNUC_UNUSED)
 {
     if (res_id == GTK_RESPONSE_ACCEPT) {
 	update_session(dlg);
@@ -522,7 +523,8 @@ trg_remote_prefs_dialog_class_init(TrgRemotePrefsDialogClass * klass)
 				     G_PARAM_STATIC_BLURB));
 }
 
-static void trg_remote_prefs_dialog_init(TrgRemotePrefsDialog * self)
+static void
+trg_remote_prefs_dialog_init(TrgRemotePrefsDialog * self G_GNUC_UNUSED)
 {
 }
 

@@ -27,7 +27,7 @@ G_DEFINE_TYPE(TrgTrackersTreeView, trg_trackers_tree_view,
 
 
 static void
-trg_trackers_tree_view_class_init(TrgTrackersTreeViewClass * klass)
+trg_trackers_tree_view_class_init(TrgTrackersTreeViewClass * klass G_GNUC_UNUSED)
 {
 }
 

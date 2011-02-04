@@ -101,7 +101,8 @@ trg_cell_renderer_ratio_class_init(TrgCellRendererRatioClass * klass)
     g_type_class_add_private(klass, sizeof(TrgCellRendererRatioPrivate));
 }
 
-static void trg_cell_renderer_ratio_init(TrgCellRendererRatio * self)
+static void
+trg_cell_renderer_ratio_init(TrgCellRendererRatio * self G_GNUC_UNUSED)
 {
 }
 

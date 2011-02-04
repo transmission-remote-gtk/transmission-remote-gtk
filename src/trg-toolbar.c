@@ -163,7 +163,8 @@ static void trg_toolbar_class_init(TrgToolbarClass * klass)
 }
 
 static
-GtkWidget *trg_toolbar_item_new(TrgToolbar * toolbar, gchar * text,
+GtkWidget *trg_toolbar_item_new(TrgToolbar * toolbar,
+                                gchar * text G_GNUC_UNUSED,
 				int *index, gchar * icon,
 				gboolean sensitive)
 {
