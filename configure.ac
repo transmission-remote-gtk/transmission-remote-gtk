@@ -39,4 +39,6 @@ AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
 
 AC_TYPE_SIZE_T
 
+AM_GCONF_SOURCE_2
+
 AC_OUTPUT

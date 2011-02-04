@@ -24,10 +24,10 @@
 #include "protocol-constants.h"
 #include "session-get.h"
 
-int session_get_version(JsonObject * s, float *version, int *revision)
+int session_get_version(JsonObject * s, float *version)
 {
-    return sscanf(json_object_get_string_member(s, SGET_VERSION),
-		  "%f (%d)", version, revision);
+	const gchar *versionStr = json_object_get_string_member(s, SGET_VERSION);
+    return sscanf(versionStr, "%f", version);
 }
 
 gboolean session_get_pex_enabled(JsonObject * s)

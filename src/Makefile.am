@@ -1,3 +1,13 @@
+NULL =
+
+public_icons_themes = \
+        hicolor \
+        $(NULL)
+
+public_icons = \
+        hicolor_apps_scalable_transmission-remote-gtk.svg \
+        $(NULL)
+
 EXTRA_DIST = transmission-remote-gtk.desktop.in
 CLEANFILES = transmission-remote-gtk.desktop
 
@@ -6,9 +16,6 @@ desktop_DATA = transmission-remote-gtk.desktop
 
 schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = transmission-remote-gtk.schemas
-
-svgiconsdir = /usr/share/icons/hicolor/scalable/apps/
-svgicons_DATA = transmission-remote-gtk.svg
 
 bin_PROGRAMS = transmission-remote-gtk
 INCLUDES = --pedantic -Wall -I.. -O2 $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gconf_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS)
@@ -24,8 +31,41 @@ transmission_remote_gtk_SOURCES = main.c requests.c base64.c json.c http.c dispa
 
 transmission_remote_gtk_LDFLAGS = -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gconf_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS)
 
-install-data-local:
+install-data-local: install-icons update-icon-cache
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule $(srcdir)/$(schema_DATA)
+
+gtk_update_icon_cache = gtk-update-icon-cache -f -t
+
+update-icon-cache:
+	@-if test -z "$(DESTDIR)"; then \
+		echo "Updating Gtk icon cache."; \
+		for theme in $(public_icons_themes); do \
+			$(gtk_update_icon_cache) $(datadir)/icons/$$theme; \
+	done; \
+	else \
+		echo "*** Icon cache not updated.  After (un)install, run this:"; \
+		for theme in $(public_icons_themes); do \
+			echo "***   $(gtk_update_icon_cache) $(datadir)/icons/$$theme"; \
+		done; \
+	fi
+
+install-icons:
+	for icon in $(public_icons); do \
+                THEME=`echo $$icon | cut -d_ -f1`; \
+                CONTEXT=`echo $$icon | cut -d_ -f2`; \
+                SIZE=`echo $$icon | cut -d_ -f3`; \
+                ICONFILE=`echo $$icon | cut -d_ -f4`; \
+                mkdir -p $(DESTDIR)$(datadir)/icons/$$THEME/$$SIZE/$$CONTEXT; \
+                $(INSTALL_DATA) $(srcdir)/$$icon $(DESTDIR)$(datadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
+        done; \
+        for icon in $(private_icons); do \
+                THEME=`echo $$icon | cut -d_ -f1`; \
+                CONTEXT=`echo $$icon | cut -d_ -f2`; \
+                SIZE=`echo $$icon | cut -d_ -f3`; \
+                ICONFILE=`echo $$icon | cut -d_ -f4`; \
+                mkdir -p $(DESTDIR)$(pkgdatadir)/icons/$$THEME/$$SIZE/$$CONTEXT; \
+                $(INSTALL_DATA) $(srcdir)/$$icon $(DESTDIR)$(pkgdatadir)/icons/$$THEME/$$SIZE/$$CONTEXT/$$ICONFILE; \
+        done
 
 transmission-remote-gtk.desktop: transmission-remote-gtk.desktop.in
 	sed -e 's,@bindir\@,$(bindir),g' $< > $@
