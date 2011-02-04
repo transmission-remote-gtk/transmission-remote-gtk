@@ -1,5 +1,5 @@
 Name: transmission-remote-gtk
-Version: 0.1.0
+Version: 0.1.1
 Release: 1%{?dist:%{dist}}
 Summary: Remote control client for Transmission BitTorrent
 
@@ -32,7 +32,8 @@ Requires(post): desktop-file-utils
 Requires(postun): desktop-file-utils
 
 %description
-transmission-remote-gtk is a GTK app to remotely manage the Transmission BitTorrent client.
+transmission-remote-gtk is a GTK application for remote management of the
+Transmission BitTorrent client via its RPC interface. 
 
 %prep
 %setup -q
