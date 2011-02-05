@@ -102,8 +102,9 @@ trg_cell_renderer_ratio_class_init(TrgCellRendererRatioClass * klass)
 }
 
 static void
-trg_cell_renderer_ratio_init(TrgCellRendererRatio * self G_GNUC_UNUSED)
+trg_cell_renderer_ratio_init(TrgCellRendererRatio * self)
 {
+    g_object_set(self, "xalign", 1.0f, NULL);
 }
 
 GtkCellRenderer *trg_cell_renderer_ratio_new(void)

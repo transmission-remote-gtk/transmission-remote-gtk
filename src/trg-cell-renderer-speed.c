@@ -103,8 +103,9 @@ trg_cell_renderer_speed_class_init(TrgCellRendererSpeedClass * klass)
 }
 
 static void
-trg_cell_renderer_speed_init(TrgCellRendererSpeed * self G_GNUC_UNUSED)
+trg_cell_renderer_speed_init(TrgCellRendererSpeed * self)
 {
+    g_object_set(self, "xalign", 1.0f, NULL);
 }
 
 GtkCellRenderer *trg_cell_renderer_speed_new(void)

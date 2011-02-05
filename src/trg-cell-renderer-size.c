@@ -102,8 +102,9 @@ trg_cell_renderer_size_class_init(TrgCellRendererSizeClass * klass)
 }
 
 static void
-trg_cell_renderer_size_init(TrgCellRendererSize * self G_GNUC_UNUSED)
+trg_cell_renderer_size_init(TrgCellRendererSize * self)
 {
+    g_object_set(self, "xalign", 1.0f, NULL);
 }
 
 GtkCellRenderer *trg_cell_renderer_size_new(void)
