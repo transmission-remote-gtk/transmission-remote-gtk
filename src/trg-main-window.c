@@ -862,11 +862,15 @@ torrent_selection_changed(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     TrgMainWindow *win;
     TrgMainWindowPrivate *priv;
     gboolean isSelected;
+    trg_client *client;
 
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     win = TRG_MAIN_WINDOW(data);
+    client = priv->client;
 
+    g_mutex_lock(client->updateMutex);
     isSelected = update_selected_torrent_notebook(win, TRUE);
+    g_mutex_unlock(client->updateMutex);
 
     trg_toolbar_torrent_actions_sensitive(priv->toolBar, isSelected);
     trg_menu_bar_torrent_actions_sensitive(priv->menuBar, isSelected);
@@ -907,13 +911,11 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     client = priv->client;
 
-    g_mutex_lock(client->updateMutex);
     gdk_threads_enter();
 
     /* Disconnected between request and response callback */
     if (client->session == NULL) {
 	gdk_threads_leave();
-	g_mutex_unlock(client->updateMutex);
 	response_unref(response);
 	return;
     }
@@ -939,7 +941,6 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
 	    g_timeout_add_seconds(3, trg_update_torrents_timerfunc, data);
 	}
 	gdk_threads_leave();
-	g_mutex_unlock(client->updateMutex);
 	response_unref(response);
 	return;
     }
@@ -951,19 +952,22 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
     stats.down = 0;
     stats.paused = 0;
 
+    g_mutex_lock(client->updateMutex);
+
     trg_torrent_model_update(priv->torrentModel, priv->client,
 			     response, &stats, first);
 
-    trg_status_bar_update(priv->statusBar, &stats);
-
     update_selected_torrent_notebook(TRG_MAIN_WINDOW(data), first);
+
+    g_mutex_unlock(client->updateMutex);
+
+    trg_status_bar_update(priv->statusBar, &stats);
 
     g_timeout_add_seconds(3, trg_update_torrents_timerfunc, data);
 
     client->updateSerial++;
 
     gdk_threads_leave();
-    g_mutex_unlock(client->updateMutex);
     response_unref(response);
 }
 

@@ -71,8 +71,8 @@ static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
 }
 
 static void trg_torrent_model_count_peers(TrgTorrentModel * model,
-					   GtkTreeIter * iter,
-					   JsonObject * t)
+					  GtkTreeIter * iter,
+					  JsonObject * t)
 {
     JsonArray *peers;
     gint seeders, leechers;
@@ -147,7 +147,7 @@ static guint32 torrent_get_flags(JsonObject * t, gint64 status,
 	flags |= TORRENT_FLAG_CHECKING;
 	break;
     case STATUS_WAITING_TO_CHECK:
-        flags |= TORRENT_FLAG_WAITING_CHECK;
+	flags |= TORRENT_FLAG_WAITING_CHECK;
 	flags |= TORRENT_FLAG_CHECKING;
 	break;
     }
@@ -211,7 +211,8 @@ update_torrent_iter(gint64 serial, TrgTorrentModel * model,
 		       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 
 
-    if ((lastFlags & TORRENT_FLAG_DOWNLOADING) && (newFlags & TORRENT_FLAG_COMPLETE))
+    if ((lastFlags & TORRENT_FLAG_DOWNLOADING)
+	&& (newFlags & TORRENT_FLAG_COMPLETE))
 	g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
 
     trg_torrent_model_count_peers(model, iter, t);
@@ -267,7 +268,6 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
     JsonArray *newTorrents;
 
     newTorrents = get_torrents(get_arguments(response));
-
     stats->count = json_array_get_length(newTorrents);
 
     for (i = 0; i < stats->count; i++) {
