@@ -21,6 +21,7 @@
 #include <json-glib/json-glib.h>
 #include <glib/gprintf.h>
 
+#include "config.h"
 #include "torrent.h"
 #include "trg-trackers-model.h"
 
@@ -48,6 +49,9 @@ void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
 		g_printf("show tracker: announce=\"%s\"\n", announce);
 		g_printf("show tracker: scrape=\"%s\"\n", scrape);
 #endif
+
+		if (announce == NULL || scrape == NULL)
+			continue;
 
 		gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
 		gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
