@@ -868,9 +868,7 @@ torrent_selection_changed(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     win = TRG_MAIN_WINDOW(data);
     client = priv->client;
 
-    g_mutex_lock(client->updateMutex);
     isSelected = update_selected_torrent_notebook(win, TRUE);
-    g_mutex_unlock(client->updateMutex);
 
     trg_toolbar_torrent_actions_sensitive(priv->toolBar, isSelected);
     trg_menu_bar_torrent_actions_sensitive(priv->menuBar, isSelected);
