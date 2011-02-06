@@ -42,7 +42,7 @@ G_DEFINE_TYPE(TrgTorrentModel, trg_torrent_model, GTK_TYPE_LIST_STORE)
 static guint32 torrent_get_flags(JsonObject * t, gint64 status,
 				 TrgTorrentModelClassUpdateStats * stats);
 
-static voidb
+static void
 update_torrent_iter(gint64 serial, TrgTorrentModel * model,
 		    GtkTreeIter * iter, JsonObject * t,
 		    TrgTorrentModelClassUpdateStats * stats);
