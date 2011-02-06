@@ -107,7 +107,7 @@ static void trg_files_model_init(TrgFilesModel * self)
     column_types[FILESCOL_PROGRESS] = G_TYPE_DOUBLE;
     column_types[FILESCOL_ID] = G_TYPE_INT;
     column_types[FILESCOL_WANTED] = G_TYPE_BOOLEAN;
-    column_types[FILESCOL_PRIORITY] = G_TYPE_INT;
+    column_types[FILESCOL_PRIORITY] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
 				    FILESCOL_COLUMNS, column_types);
