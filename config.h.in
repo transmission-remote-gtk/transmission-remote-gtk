@@ -1,5 +1,8 @@
 /* config.h.in.  Generated from configure.ac by autoheader.  */
 
+/* enable debugging */
+#undef DEBUG
+
 /* GeoIP Support. */
 #undef HAVE_GEOIP
 

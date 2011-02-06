@@ -2,9 +2,9 @@
   <schemalist>
 
     <schema>
-      <key>/schemas/apps/trg/auto-connect</key>
-      <applyto>/apps/trg/auto-connect</applyto>
-      <owner>trg</owner>
+      <key>/schemas/apps/transmission-remote-gtk/auto-connect</key>
+      <applyto>/apps/transmission-remote-gtk/auto-connect</applyto>
+      <owner>transmission-remote-gtk</owner>
       <type>bool</type>
       <default>0</default>
 
@@ -15,9 +15,9 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/trg/system-tray</key>
-      <applyto>/apps/trg/system-tray</applyto>
-      <owner>trg</owner>
+      <key>/schemas/apps/transmission-remote-gtk/system-tray</key>
+      <applyto>/apps/transmission-remote-gtk/system-tray</applyto>
+      <owner>transmission-remote-gtk</owner>
       <type>bool</type>
       <default>0</default>
 
@@ -28,9 +28,9 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/trg/window_height</key>
-      <applyto>/apps/trg/window_height</applyto>
-      <owner>trg</owner>
+      <key>/schemas/apps/transmission-remote-gtk/window_height</key>
+      <applyto>/apps/transmission-remote-gtk/window_height</applyto>
+      <owner>transmission-remote-gtk</owner>
       <type>int</type>
       <default>600</default>
 
@@ -41,9 +41,9 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/trg/window_width</key>
-      <applyto>/apps/trg/window_width</applyto>
-      <owner>trg</owner>
+      <key>/schemas/apps/transmission-remote-gtk/window_width</key>
+      <applyto>/apps/transmission-remote-gtk/window_width</applyto>
+      <owner>transmission-remote-gtk</owner>
       <type>int</type>
       <default>800</default>
 
@@ -54,9 +54,9 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/trg/port</key>
-      <applyto>/apps/trg/port</applyto>
-      <owner>trg</owner>
+      <key>/schemas/apps/transmission-remote-gtk/port</key>
+      <applyto>/apps/transmission-remote-gtk/port</applyto>
+      <owner>transmission-remote-gtk</owner>
       <type>int</type>
       <default>9091</default>
 
@@ -67,9 +67,9 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/trg/username</key>
-      <applyto>/apps/trg/username</applyto>
-      <owner>trg</owner>
+      <key>/schemas/apps/transmission-remote-gtk/username</key>
+      <applyto>/apps/transmission-remote-gtk/username</applyto>
+      <owner>transmission-remote-gtk</owner>
       <type>string</type>
       <default></default>
 
@@ -80,9 +80,9 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/trg/password</key>
-      <applyto>/apps/trg/password</applyto>
-      <owner>trg</owner>
+      <key>/schemas/apps/transmission-remote-gtk/password</key>
+      <applyto>/apps/transmission-remote-gtk/password</applyto>
+      <owner>transmission-remote-gtk</owner>
       <type>string</type>
       <default></default>
 
@@ -93,9 +93,9 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/trg/hostname</key>
-      <applyto>/apps/trg/hostname</applyto>
-      <owner>trg</owner>
+      <key>/schemas/apps/transmission-remote-gtk/hostname</key>
+      <applyto>/apps/transmission-remote-gtk/hostname</applyto>
+      <owner>transmission-remote-gtk</owner>
       <type>string</type>
       <default></default>
 
