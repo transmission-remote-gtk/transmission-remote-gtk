@@ -85,7 +85,7 @@ static void trg_trackers_model_init(TrgTrackersModel * self)
     GType column_types[TRACKERCOL_COLUMNS];
 
     column_types[TRACKERCOL_ICON] = G_TYPE_STRING;
-    column_types[TRACKERCOL_TIER] = G_TYPE_INT;
+    column_types[TRACKERCOL_TIER] = G_TYPE_INT64;
     column_types[TRACKERCOL_ANNOUNCE] = G_TYPE_STRING;
     column_types[TRACKERCOL_SCRAPE] = G_TYPE_STRING;
 

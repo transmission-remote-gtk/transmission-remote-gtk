@@ -21,6 +21,7 @@
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
+#include "config.h"
 #include "torrent.h"
 #include "tpeer.h"
 #include "json.h"
@@ -41,7 +42,7 @@ G_DEFINE_TYPE(TrgTorrentModel, trg_torrent_model, GTK_TYPE_LIST_STORE)
 static guint32 torrent_get_flags(JsonObject * t, gint64 status,
 				 TrgTorrentModelClassUpdateStats * stats);
 
-static void
+static voidb
 update_torrent_iter(gint64 serial, TrgTorrentModel * model,
 		    GtkTreeIter * iter, JsonObject * t,
 		    TrgTorrentModelClassUpdateStats * stats);
@@ -117,7 +118,7 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_UPLOADED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_DOWNLOADED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_RATIO] = G_TYPE_DOUBLE;
-    column_types[TORRENT_COLUMN_ID] = G_TYPE_INT;
+    column_types[TORRENT_COLUMN_ID] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_JSON] = G_TYPE_POINTER;
     column_types[TORRENT_COLUMN_UPDATESERIAL] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_FLAGS] = G_TYPE_INT;
