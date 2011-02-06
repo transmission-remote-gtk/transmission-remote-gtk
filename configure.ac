@@ -1,6 +1,6 @@
 #AC_PREREQ([2.65])
-AC_INIT(transmission-remote-gtk, 0.1, alan@eth0.org.uk)
-AM_INIT_AUTOMAKE(transmission-remote-gtk, 0.1.0)
+AC_INIT(transmission-remote-gtk, 0.1.1, alan@eth0.org.uk)
+AM_INIT_AUTOMAKE(transmission-remote-gtk, 0.1.1)
 AC_OUTPUT(Makefile src/Makefile)
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
@@ -10,12 +10,11 @@ AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 
 AC_PROG_CC
-
-# Checks for header files.
-
 AC_CHECK_HEADERS([stdlib.h string.h])
+AC_TYPE_SIZE_T
 
-# Checks for programs.
+AM_GCONF_SOURCE_2
+
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
 PKG_CHECK_MODULES([gconf], [gconf-2.0])
@@ -37,8 +36,10 @@ if test "x$have_geoip" = "xyes"; then
 fi
 AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
 
-AC_TYPE_SIZE_T
-
-AM_GCONF_SOURCE_2
+AC_ARG_ENABLE(debug, [AS_HELP_STRING(--enable-debug,
+                                     [enable debugging])])
+if test x$enable_debug = xyes; then
+    AC_DEFINE([DEBUG], [],  [enable debugging])
+fi
 
 AC_OUTPUT

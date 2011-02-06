@@ -206,7 +206,7 @@ update_torrent_iter(gint64 serial, TrgTorrentModel * model,
 		       TORRENT_COLUMN_DOWNLOADED, downloaded,
 		       TORRENT_COLUMN_RATIO,
 		       uploaded >
-		       0 ? (double) uploaded / (double) downloaded : 0,
+		       0 && downloaded > 0 ? (double) uploaded / (double) downloaded : 0,
 		       TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
 		       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 
