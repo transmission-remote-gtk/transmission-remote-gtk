@@ -82,7 +82,15 @@ fi
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/scalable/apps/transmission-remote-gtk.svg
+%{_datadir}/icons/hicolor/16x16/apps/transmission-remote-gtk.png
+%{_datadir}/icons/hicolor/22x22/apps/transmission-remote-gtk.png
+%{_datadir}/icons/hicolor/24x24/apps/transmission-remote-gtk.png
+%{_datadir}/icons/hicolor/32x32/apps/transmission-remote-gtk.png
+%{_datadir}/icons/hicolor/48x48/apps/transmission-remote-gtk.png
 
 %changelog
-* Sun Jan 30 2010 Alan Fitton <alan@eth0.org.uk> - 0.1.0
-- Initial RPM Build
+* Mon Feb 07 2011 Alan Fitton <alan@eth0.org.uk> - 0.1.1
+- Squash a couple of nasty first release bugs.
+
+* Sun Jan 30 2011 Alan Fitton <alan@eth0.org.uk> - 0.1.0
+- Initial RPM Build.
