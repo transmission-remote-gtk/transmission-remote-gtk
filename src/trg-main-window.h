@@ -33,8 +33,6 @@
 #include "trg-torrent-tree-view.h"
 #include "trg-client.h"
 
-#define TRG_WINDOW_ICON "/usr/share/icons/hicolor/scalable/apps/transmission-remote-gtk.svg"
-
 G_BEGIN_DECLS
 #define TRG_TYPE_MAIN_WINDOW trg_main_window_get_type()
 #define TRG_MAIN_WINDOW(obj) \

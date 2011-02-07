@@ -20,13 +20,13 @@
 #ifndef TRG_PREFERENCES_H_
 #define TRG_PREFERENCES_H_
 
-#define TRG_GCONF_KEY_HOSTNAME      "/apps/trg/hostname"
-#define TRG_GCONF_KEY_PORT          "/apps/trg/port"
-#define TRG_GCONF_KEY_USERNAME      "/apps/trg/username"
-#define TRG_GCONF_KEY_PASSWORD      "/apps/trg/password"
-#define TRG_GCONF_KEY_AUTO_CONNECT  "/apps/trg/auto-connect"
-#define TRG_GCONF_KEY_WINDOW_WIDTH  "/schemas/apps/trg/window_width"
-#define TRG_GCONF_KEY_WINDOW_HEIGHT  "/schemas/apps/trg/window_height"
+#define TRG_GCONF_KEY_HOSTNAME      "/apps/transmission-remote-gtk/hostname"
+#define TRG_GCONF_KEY_PORT          "/apps/transmission-remote-gtk/port"
+#define TRG_GCONF_KEY_USERNAME      "/apps/transmission-remote-gtk/username"
+#define TRG_GCONF_KEY_PASSWORD      "/apps/transmission-remote-gtk/password"
+#define TRG_GCONF_KEY_AUTO_CONNECT  "/apps/transmission-remote-gtk/auto-connect"
+#define TRG_GCONF_KEY_WINDOW_WIDTH  "/apps/transmission-remote-gtk/window_width"
+#define TRG_GCONF_KEY_WINDOW_HEIGHT  "/apps/transmission-remote-gtk/window_height"
 
 
 #endif				/* TRG_PREFERENCES_H_ */
