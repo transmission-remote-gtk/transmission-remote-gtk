@@ -15,11 +15,24 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/system-tray-minimise</key>
+      <applyto>/apps/transmission-remote-gtk/system-tray-minimise</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>1</default>
+
+      <locale name="C">
+        <short>Minimise to system tray</short>
+        <long>Minimise to system tray</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/system-tray</key>
       <applyto>/apps/transmission-remote-gtk/system-tray</applyto>
       <owner>transmission-remote-gtk</owner>
       <type>bool</type>
-      <default>0</default>
+      <default>1</default>
 
       <locale name="C">
         <short>Show system tray icon</short>
@@ -28,8 +41,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/transmission-remote-gtk/window_height</key>
-      <applyto>/apps/transmission-remote-gtk/window_height</applyto>
+      <key>/schemas/apps/transmission-remote-gtk/window-height</key>
+      <applyto>/apps/transmission-remote-gtk/window-height</applyto>
       <owner>transmission-remote-gtk</owner>
       <type>int</type>
       <default>600</default>
@@ -41,8 +54,8 @@
     </schema>
 
     <schema>
-      <key>/schemas/apps/transmission-remote-gtk/window_width</key>
-      <applyto>/apps/transmission-remote-gtk/window_width</applyto>
+      <key>/schemas/apps/transmission-remote-gtk/window-width</key>
+      <applyto>/apps/transmission-remote-gtk/window-width</applyto>
       <owner>transmission-remote-gtk</owner>
       <type>int</type>
       <default>800</default>

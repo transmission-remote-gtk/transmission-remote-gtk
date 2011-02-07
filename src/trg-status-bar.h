@@ -48,7 +48,7 @@ typedef struct {
 
 GType trg_status_bar_get_type(void);
 
-TrgStatusBar *trg_status_bar_new(GtkStatusIcon * icon);
+TrgStatusBar *trg_status_bar_new();
 
 G_END_DECLS
     void trg_status_bar_update(TrgStatusBar * sb,

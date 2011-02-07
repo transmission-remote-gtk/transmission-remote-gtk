@@ -203,7 +203,7 @@ static void on_torrent_completed(TrgTorrentModel * model,
 
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
-    if (!gtk_status_icon_is_embedded(priv->statusIcon))
+    if (priv->statusIcon == NULL || !gtk_status_icon_is_embedded(priv->statusIcon))
 	return;
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
@@ -1104,6 +1104,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 
 static void status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED, gpointer data)
 {
+	gtk_window_deiconify(GTK_WINDOW(data));
     gtk_window_present(GTK_WINDOW(data));
 }
 
@@ -1264,6 +1265,36 @@ static gboolean torrent_tv_popup_menu_cb(GtkWidget * treeview,
     return TRUE;
 }
 
+static void status_bar_text_pushed(GtkStatusbar *statusbar, guint context_id, gchar *text, gpointer user_data)
+{
+	TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(user_data);
+
+    if (priv->statusIcon != NULL)
+    	gtk_status_icon_set_tooltip(priv->statusIcon, text);
+}
+
+static gboolean window_state_event (GtkWidget *widget, GdkEventWindowState *event, gpointer trayIcon)
+{
+	TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(widget);
+
+    if(priv->statusIcon != NULL && event->changed_mask == GDK_WINDOW_STATE_ICONIFIED && (event->new_window_state == GDK_WINDOW_STATE_ICONIFIED || event->new_window_state == (GDK_WINDOW_STATE_ICONIFIED | GDK_WINDOW_STATE_MAXIMIZED)))
+    {
+    	GError *error = NULL;
+        gboolean tray_min = gconf_client_get_bool(priv->client->gconf, TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE, &error);
+
+        if (error)
+        {
+        	g_error_free(error);
+        	tray_min = TRUE;
+        }
+
+        if (tray_min)
+        	gtk_widget_hide (GTK_WIDGET(widget));
+    }
+
+    return TRUE;
+}
+
 static GObject *trg_main_window_constructor(GType type,
 					    guint
 					    n_construct_properties,
@@ -1278,6 +1309,8 @@ static GObject *trg_main_window_constructor(GType type,
     GtkIconTheme *theme;
     GdkPixbuf *icon;
     gint width, height;
+    GError *error = NULL;
+    gboolean tray;
 
     self = TRG_MAIN_WINDOW(G_OBJECT_CLASS
 			   (trg_main_window_parent_class)->constructor
@@ -1298,6 +1331,7 @@ static GObject *trg_main_window_constructor(GType type,
 		     G_CALLBACK(delete_event), NULL);
     g_signal_connect(G_OBJECT(self), "destroy", G_CALLBACK(destroy_window),
 		     NULL);
+    g_signal_connect (G_OBJECT (self), "window-state-event", G_CALLBACK (window_state_event), NULL);
 
     priv->torrentModel = trg_torrent_model_new();
     g_signal_connect(priv->torrentModel, "torrent-completed",
@@ -1324,7 +1358,6 @@ static GObject *trg_main_window_constructor(GType type,
 		     G_CALLBACK(torrent_tv_popup_menu_cb), self);
     g_signal_connect(priv->torrentTreeView, "button-press-event",
 		     G_CALLBACK(torrent_tv_button_pressed_cb), self);
-
 
     outerVbox = gtk_vbox_new(FALSE, 0);
     gtk_container_add(GTK_CONTAINER(self), outerVbox);
@@ -1392,17 +1425,32 @@ static GObject *trg_main_window_constructor(GType type,
     priv->notebook = trg_main_window_notebook_new(self);
     gtk_paned_pack2(GTK_PANED(priv->vpaned), priv->notebook, FALSE, FALSE);
 
-    priv->statusIcon = gtk_status_icon_new_from_pixbuf(icon);
-    gtk_status_icon_set_screen(priv->statusIcon,
-			       gtk_window_get_screen(GTK_WINDOW(self)));
-    g_signal_connect(priv->statusIcon, "activate",
-		     G_CALLBACK(status_icon_activated), self);
-    g_signal_connect(priv->statusIcon, "button-press-event",
-		     G_CALLBACK(status_icon_button_press_event), self);
-    g_signal_connect(priv->statusIcon, "popup-menu",
-		     G_CALLBACK(trg_status_icon_popup_menu_cb), self);
+    tray = gconf_client_get_bool(priv->client->gconf, TRG_GCONF_KEY_SYSTEM_TRAY, &error);
+    if (error)
+    {
+    	g_error_free(error);
+    	tray = TRUE;
+    }
 
-    priv->statusBar = trg_status_bar_new(priv->statusIcon);
+    if (tray)
+    {
+    	priv->statusIcon = gtk_status_icon_new_from_pixbuf(icon);
+    	gtk_status_icon_set_screen(priv->statusIcon,
+			       gtk_window_get_screen(GTK_WINDOW(self)));
+    	g_signal_connect(priv->statusIcon, "activate",
+    			G_CALLBACK(status_icon_activated), self);
+    	g_signal_connect(priv->statusIcon, "button-press-event",
+    			G_CALLBACK(status_icon_button_press_event), self);
+    	g_signal_connect(priv->statusIcon, "popup-menu",
+    			G_CALLBACK(trg_status_icon_popup_menu_cb), self);
+    }
+    else
+    {
+    	priv->statusIcon = NULL;
+    }
+
+    priv->statusBar = trg_status_bar_new();
+    g_signal_connect(priv->statusBar, "text-pushed", G_CALLBACK(status_bar_text_pushed), self);
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(priv->statusBar),
 		       FALSE, FALSE, 2);
 

@@ -38,9 +38,21 @@
 
 G_DEFINE_TYPE(TrgPeersModel, trg_peers_model, GTK_TYPE_LIST_STORE)
 
+#define TRG_PEERS_MODEL_GET_PRIVATE(o) \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_PEERS_MODEL, TrgPeersModelPrivate))
+
+typedef struct _TrgPeersModelPrivate TrgPeersModelPrivate;
+
+struct _TrgPeersModelPrivate {
+#ifdef HAVE_GEOIP
+	GeoIP *geoip;
+#endif
+};
+
 static void
 trg_peers_model_class_init(TrgPeersModelClass * klass G_GNUC_UNUSED)
 {
+	  g_type_class_add_private (klass, sizeof (TrgPeersModelPrivate));
 }
 
 gboolean
@@ -114,6 +126,8 @@ static void resolved_dns_cb(GObject * source_object,
 void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 			    JsonObject * t, gboolean first)
 {
+	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+
     JsonArray *peers;
     GtkTreeIter peerIter;
     guint j;
@@ -128,7 +142,6 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 	JsonObject *peer;
 	const gchar *address=NULL, *flagStr;
 #if HAVE_GEOIP
-	GeoIP *gi;
 	const gchar *country = NULL;
 #endif
 	peer = json_node_get_object(json_array_get_element(peers, j));
@@ -139,8 +152,8 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
 	    address = peer_get_address(peer);
 #if HAVE_GEOIP
-        if ((gi = g_object_get_data(G_OBJECT(model), "geoip")) != NULL)
-            country = GeoIP_country_name_by_addr(gi, address);
+        if (priv->geoip != NULL)
+            country = GeoIP_country_name_by_addr(priv->geoip, address);
 #endif
         gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
                         PEERSCOL_ICON, GTK_STOCK_NETWORK,
@@ -197,6 +210,8 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
 static void trg_peers_model_init(TrgPeersModel * self)
 {
+	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(self);
+
     GType column_types[PEERSCOL_COLUMNS];
 
     column_types[PEERSCOL_ICON] = G_TYPE_STRING;
@@ -216,11 +231,8 @@ static void trg_peers_model_init(TrgPeersModel * self)
 				    PEERSCOL_COLUMNS, column_types);
 
 #if HAVE_GEOIP
-    if (g_file_test(TRG_GEOIP_DATABASE, G_FILE_TEST_EXISTS) == TRUE) {
-	GeoIP *gi = GeoIP_open(TRG_GEOIP_DATABASE,
-			       GEOIP_STANDARD | GEOIP_CHECK_CACHE);
-	g_object_set_data(G_OBJECT(self), "geoip", gi);
-    }
+    if (g_file_test(TRG_GEOIP_DATABASE, G_FILE_TEST_EXISTS) == TRUE)
+    	priv->geoip = GeoIP_open(TRG_GEOIP_DATABASE, GEOIP_STANDARD | GEOIP_CHECK_CACHE);
 #endif
 }
 

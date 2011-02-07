@@ -33,7 +33,6 @@ typedef struct _TrgStatusBarPrivate TrgStatusBarPrivate;
 struct _TrgStatusBarPrivate {
     guint connectionCtx;
     guint countSpeedsCtx;
-    GtkStatusIcon *icon;
 };
 
 static void trg_status_bar_class_init(TrgStatusBarClass * klass)
@@ -59,7 +58,6 @@ void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
 
     priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
 
-    gtk_status_icon_set_tooltip(priv->icon, msg);
     gtk_statusbar_pop(GTK_STATUSBAR(sb), priv->connectionCtx);
     gtk_statusbar_push(GTK_STATUSBAR(sb), priv->connectionCtx, msg);
 }
@@ -75,7 +73,6 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
     g_printf("%s\n", statusMsg);
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);
-
 }
 
 void trg_status_bar_update(TrgStatusBar * sb,
@@ -101,27 +98,10 @@ void trg_status_bar_update(TrgStatusBar * sb,
     gtk_statusbar_push(GTK_STATUSBAR(sb),
 		       priv->countSpeedsCtx, statusBarUpdate);
     g_free(statusBarUpdate);
-
-    if (priv->icon != NULL) {
-	gchar *toolTipUpdate =
-	    g_strdup_printf("%d torrents: %s down/%s up",
-			    stats->count, downRateTotalString,
-			    upRateTotalString);
-	gtk_status_icon_set_tooltip(priv->icon, toolTipUpdate);
-	g_free(toolTipUpdate);
-    }
 }
 
 
-TrgStatusBar *trg_status_bar_new(GtkStatusIcon * icon)
+TrgStatusBar *trg_status_bar_new()
 {
-    TrgStatusBarPrivate *priv;
-    GObject *obj;
-
-    obj = g_object_new(TRG_TYPE_STATUS_BAR, NULL);
-
-    priv = TRG_STATUS_BAR_GET_PRIVATE(obj);
-    priv->icon = icon;
-
-    return TRG_STATUS_BAR(obj);
+    return TRG_STATUS_BAR(g_object_new(TRG_TYPE_STATUS_BAR, NULL));
 }

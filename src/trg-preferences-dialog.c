@@ -28,6 +28,7 @@
 
 #include "hig.h"
 #include "trg-preferences-dialog.h"
+#include "trg-json-widgets.h"
 #include "trg-preferences.h"
 
 #define TRG_PREFERENCES_DIALOG_GET_PRIVATE(object) \
@@ -193,6 +194,29 @@ static GtkWidget *new_entry(GConfClient * gconf, const char *key)
     return w;
 }
 
+static GtkWidget *trg_prefs_desktopPage(GConfClient *gconf)
+{
+    GtkWidget *tray, *tray_min, *t;
+    gint row = 0;
+
+    t = hig_workarea_create();
+
+    hig_workarea_add_section_title(t, &row, "System Tray");
+
+    tray = new_check_button(gconf, "Show in system tray",
+			 TRG_GCONF_KEY_SYSTEM_TRAY);
+    hig_workarea_add_wide_control(t, &row, tray);
+
+    tray_min = new_check_button(gconf, "Minimise to system tray",
+			 TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
+    gtk_widget_set_sensitive(tray_min, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tray)));
+    g_signal_connect(G_OBJECT(tray), "toggled",
+		     G_CALLBACK(toggle_active_arg_is_sensitive), tray_min);
+    hig_workarea_add_wide_control(t, &row, tray_min);
+
+    return t;
+}
+
 static GtkWidget *trg_prefs_serverPage(GConfClient * gconf)
 {
     GtkWidget *w, *t;
@@ -258,6 +282,10 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
 			     trg_prefs_serverPage(priv->gconf),
 			     gtk_label_new("Connection"));
+
+    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+			     trg_prefs_desktopPage(priv->gconf),
+			     gtk_label_new("Desktop"));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 
