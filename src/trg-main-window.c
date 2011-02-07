@@ -1283,7 +1283,7 @@ static GObject *trg_main_window_constructor(GType type,
 			    construct_params));
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(self);
 
-    gtk_window_set_icon_name(GTK_WINDOW(self), "transmission-remote-gtk");
+    gtk_window_set_icon_name(GTK_WINDOW(self), PACKAGE_NAME);
     gtk_window_set_title(GTK_WINDOW(self), PACKAGE_NAME);
     gtk_container_set_border_width(GTK_CONTAINER(self), 5);
     gtk_window_set_default_size(GTK_WINDOW(self), 1000, 600);
@@ -1385,7 +1385,7 @@ static GObject *trg_main_window_constructor(GType type,
     priv->notebook = trg_main_window_notebook_new(self);
     gtk_paned_pack2(GTK_PANED(priv->vpaned), priv->notebook, FALSE, FALSE);
 
-    priv->statusIcon = gtk_status_icon_new_from_file(TRG_WINDOW_ICON);
+    priv->statusIcon = gtk_status_icon_new_from_file(PACKAGE_NAME);
     gtk_status_icon_set_screen(priv->statusIcon,
 			       gtk_window_get_screen(GTK_WINDOW(self)));
     g_signal_connect(priv->statusIcon, "activate",
