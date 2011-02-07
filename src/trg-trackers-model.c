@@ -45,13 +45,6 @@ void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
 
 		announce = tracker_get_announce(tracker);
 		scrape = tracker_get_scrape(tracker);
-#ifdef DEBUG
-		g_printf("show tracker: announce=\"%s\"\n", announce);
-		g_printf("show tracker: scrape=\"%s\"\n", scrape);
-#endif
-
-		if (announce == NULL || scrape == NULL)
-			continue;
 
 		gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
 

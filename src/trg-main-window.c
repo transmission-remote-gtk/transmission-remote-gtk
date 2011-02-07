@@ -1274,7 +1274,6 @@ static GObject *trg_main_window_constructor(GType type,
     TrgMainWindowPrivate *priv;
     GtkWidget *w;
     GtkWidget *outerVbox;
-    GError *iconError = NULL;
     GtkWidget *toolbarHbox;
     gint width, height;
 
@@ -1284,6 +1283,7 @@ static GObject *trg_main_window_constructor(GType type,
 			    construct_params));
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(self);
 
+    gtk_window_set_icon_name(GTK_WINDOW(self), "transmission-remote-gtk");
     gtk_window_set_title(GTK_WINDOW(self), PACKAGE_NAME);
     gtk_container_set_border_width(GTK_CONTAINER(self), 5);
     gtk_window_set_default_size(GTK_WINDOW(self), 1000, 600);
@@ -1291,14 +1291,6 @@ static GObject *trg_main_window_constructor(GType type,
 		     G_CALLBACK(delete_event), NULL);
     g_signal_connect(G_OBJECT(self), "destroy", G_CALLBACK(destroy_window),
 		     NULL);
-
-    gtk_window_set_icon_from_file
-	(GTK_WINDOW(self), TRG_WINDOW_ICON, &iconError);
-
-    if (iconError != NULL) {
-	g_printf("setting icon failed: %s\n", iconError->message);
-	g_error_free(iconError);
-    }
 
     priv->torrentModel = trg_torrent_model_new();
     g_signal_connect(priv->torrentModel, "torrent-completed",
