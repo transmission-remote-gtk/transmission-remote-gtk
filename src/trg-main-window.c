@@ -953,6 +953,8 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
 
     g_mutex_lock(client->updateMutex);
 
+    client->updateSerial++;
+
     trg_torrent_model_update(priv->torrentModel, priv->client,
 			     response, &stats, first);
 
@@ -963,8 +965,6 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
     trg_status_bar_update(priv->statusBar, &stats);
 
     g_timeout_add_seconds(3, trg_update_torrents_timerfunc, data);
-
-    client->updateSerial++;
 
     gdk_threads_leave();
     response_unref(response);

@@ -77,17 +77,12 @@ gint get_first_selected(trg_client *client, TrgTorrentTreeView * view, GtkTreeIt
 
     if ((firstNode = g_list_first(selectionList)) != NULL) {
 	if (gtk_tree_model_get_iter(model, iter, firstNode->data) == TRUE) {
-	    gboolean locked;
 		gtk_tree_model_get(model, iter,
 			       TORRENT_COLUMN_JSON, json,
 			       TORRENT_COLUMN_ID, &id,
 			       TORRENT_COLUMN_UPDATESERIAL, &updateSerial, -1);
 
-		locked = g_mutex_trylock(client->updateMutex);
-	    if (locked)
-	    	g_mutex_unlock(client->updateMutex);
-
-	    if (updateSerial < (locked ? client->updateSerial-1 : client->updateSerial))
+	    if (updateSerial < client->updateSerial)
 	    	id = -1;
 	}
     }
