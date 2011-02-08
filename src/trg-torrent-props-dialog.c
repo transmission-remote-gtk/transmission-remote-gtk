@@ -265,7 +265,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->tv));
     rowCount = gtk_tree_selection_count_selected_rows(selection);
-    get_first_selected(priv->tv, &iter, &json);
+    get_first_selected(priv->client, priv->tv, &iter, &json);
     priv->targetIds = build_json_id_array(priv->tv);
 
     if (rowCount > 1) {

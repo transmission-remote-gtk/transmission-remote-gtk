@@ -172,7 +172,7 @@ static gboolean update_selected_torrent_notebook(TrgMainWindow * win,
 
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     newFirstSelected =
-	get_first_selected(priv->torrentTreeView, &iter, &json);
+	get_first_selected(priv->client, priv->torrentTreeView, &iter, &json);
 
     if (priv->selectedTorrentId >= 0
 	&& (priv->selectedTorrentId != newFirstSelected
@@ -574,20 +574,20 @@ static void remove_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindowPrivate *priv;
     GtkTreeSelection *selection;
+    JsonArray *ids;
 
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
     selection =
 	gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->torrentTreeView));
-
+    ids = build_json_id_array(priv->torrentTreeView);
     if (confirm_action_dialog
 	(GTK_WINDOW(data), selection,
 	 "<big><b>Remove torrent \"%s\"?</b></big>",
 	 "<big><b>Remove %d torrents?</b></big>",
 	 GTK_STOCK_REMOVE) == GTK_RESPONSE_ACCEPT)
 	dispatch_async(priv->client,
-		       torrent_remove(build_json_id_array
-				      (priv->torrentTreeView),
+		       torrent_remove(ids,
 				      FALSE),
 		       on_generic_interactive_action, data);
 }
@@ -596,11 +596,13 @@ static void delete_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindowPrivate *priv;
     GtkTreeSelection *selection;
+    JsonArray *ids;
 
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
     selection =
 	gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->torrentTreeView));
+    ids = build_json_id_array(priv->torrentTreeView);
 
     if (confirm_action_dialog
 	(GTK_WINDOW(data), selection,
@@ -608,8 +610,7 @@ static void delete_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 	 "<big><b>Remove and delete %d torrents?</b></big>",
 	 GTK_STOCK_DELETE) == GTK_RESPONSE_ACCEPT)
 	dispatch_async(priv->client,
-		       torrent_remove(build_json_id_array
-				      (priv->torrentTreeView),
+		       torrent_remove(ids,
 				      TRUE),
 		       on_generic_interactive_action, data);
 }
@@ -1122,6 +1123,8 @@ static gboolean torrent_tv_key_press_event(GtkWidget * w,
 	    delete_cb(w, data);
 	else
 	    remove_cb(w, data);
+    } else if (key->keyval == GDK_Return) {
+    	open_props_cb(w, data);
     }
     return FALSE;
 }

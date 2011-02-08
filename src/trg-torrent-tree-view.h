@@ -51,7 +51,7 @@ GType trg_torrent_tree_view_get_type(void);
 
 TrgTorrentTreeView *trg_torrent_tree_view_new(GtkTreeModel * model);
 JsonArray *build_json_id_array(TrgTorrentTreeView * tv);
-gint get_first_selected(TrgTorrentTreeView * view, GtkTreeIter * iter,
+gint get_first_selected(trg_client *client, TrgTorrentTreeView * view, GtkTreeIter * iter,
 			JsonObject ** json);
 
 G_END_DECLS

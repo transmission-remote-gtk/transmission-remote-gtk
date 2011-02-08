@@ -60,14 +60,15 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
 				   TORRENT_COLUMN_RATIO, -1);
 }
 
-gint get_first_selected(TrgTorrentTreeView * view, GtkTreeIter * iter,
+gint get_first_selected(trg_client *client, TrgTorrentTreeView * view, GtkTreeIter * iter,
 			JsonObject ** json)
 {
     GtkTreeModel *model;
     GtkTreeSelection *selection;
     GList *selectionList;
     GList *firstNode;
-    gint id = -1;
+    gint64 id = -1;
+    gint64 updateSerial = -1;
 
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
 
@@ -76,9 +77,18 @@ gint get_first_selected(TrgTorrentTreeView * view, GtkTreeIter * iter,
 
     if ((firstNode = g_list_first(selectionList)) != NULL) {
 	if (gtk_tree_model_get_iter(model, iter, firstNode->data) == TRUE) {
-	    gtk_tree_model_get(model, iter,
+	    gboolean locked;
+		gtk_tree_model_get(model, iter,
 			       TORRENT_COLUMN_JSON, json,
-			       TORRENT_COLUMN_ID, &id, -1);
+			       TORRENT_COLUMN_ID, &id,
+			       TORRENT_COLUMN_UPDATESERIAL, &updateSerial, -1);
+
+		locked = g_mutex_trylock(client->updateMutex);
+	    if (locked)
+	    	g_mutex_unlock(client->updateMutex);
+
+	    if (updateSerial < (locked ? client->updateSerial-1 : client->updateSerial))
+	    	id = -1;
 	}
     }
 
@@ -94,7 +104,7 @@ trg_torrent_model_get_json_id_array_foreach(GtkTreeModel * model,
 					    gpointer data)
 {
     JsonArray *output = (JsonArray *) data;
-    gint id;
+    gint64 id;
     gtk_tree_model_get(model, iter, TORRENT_COLUMN_ID, &id, -1);
     json_array_add_int_element(output, id);
 }

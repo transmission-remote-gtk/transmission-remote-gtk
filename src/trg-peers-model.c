@@ -43,16 +43,18 @@ G_DEFINE_TYPE(TrgPeersModel, trg_peers_model, GTK_TYPE_LIST_STORE)
 
 typedef struct _TrgPeersModelPrivate TrgPeersModelPrivate;
 
-struct _TrgPeersModelPrivate {
 #ifdef HAVE_GEOIP
+struct _TrgPeersModelPrivate {
 	GeoIP *geoip;
-#endif
 };
+#endif
 
 static void
 trg_peers_model_class_init(TrgPeersModelClass * klass G_GNUC_UNUSED)
 {
+#ifdef HAVE_GEOIP
 	  g_type_class_add_private (klass, sizeof (TrgPeersModelPrivate));
+#endif
 }
 
 gboolean
@@ -126,7 +128,9 @@ static void resolved_dns_cb(GObject * source_object,
 void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 			    JsonObject * t, gboolean first)
 {
+#ifdef HAVE_GEOIP
 	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+#endif
 
     JsonArray *peers;
     GtkTreeIter peerIter;
@@ -141,7 +145,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
     for (j = 0; j < json_array_get_length(peers); j++) {
 	JsonObject *peer;
 	const gchar *address=NULL, *flagStr;
-#if HAVE_GEOIP
+#ifdef HAVE_GEOIP
 	const gchar *country = NULL;
 #endif
 	peer = json_node_get_object(json_array_get_element(peers, j));
@@ -151,7 +155,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 	    gtk_list_store_append(GTK_LIST_STORE(model), &peerIter);
 
 	    address = peer_get_address(peer);
-#if HAVE_GEOIP
+#ifdef HAVE_GEOIP
         if (priv->geoip != NULL)
             country = GeoIP_country_name_by_addr(priv->geoip, address);
 #endif
@@ -210,7 +214,9 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
 static void trg_peers_model_init(TrgPeersModel * self)
 {
-	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(self);
+#ifdef HAVE_GEOIP
+    TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(self);
+#endif
 
     GType column_types[PEERSCOL_COLUMNS];
 
