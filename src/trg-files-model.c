@@ -116,7 +116,7 @@ static void trg_files_model_init(TrgFilesModel * self)
 gboolean
 trg_files_model_update_foreach(GtkListStore * model,
 			       GtkTreePath * path G_GNUC_UNUSED,
-                               GtkTreeIter * iter,
+			       GtkTreeIter * iter,
 			       gpointer data G_GNUC_UNUSED)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);

@@ -69,7 +69,8 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
 
     session_get_version(session, &version);
     statusMsg =
-	g_strdup_printf("Connected to Transmission %g, getting torrents...", version);
+	g_strdup_printf
+	("Connected to Transmission %g, getting torrents...", version);
     g_printf("%s\n", statusMsg);
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);

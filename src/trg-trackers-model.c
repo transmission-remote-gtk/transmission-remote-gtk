@@ -39,31 +39,31 @@ void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
     gtk_list_store_clear(GTK_LIST_STORE(model));
 
     for (j = 0; j < json_array_get_length(trackers); j++) {
-		GtkTreeIter trackIter;
-		JsonObject *tracker =
-			json_node_get_object(json_array_get_element(trackers, j));
+	GtkTreeIter trackIter;
+	JsonObject *tracker =
+	    json_node_get_object(json_array_get_element(trackers, j));
 
-		announce = tracker_get_announce(tracker);
-		scrape = tracker_get_scrape(tracker);
+	announce = tracker_get_announce(tracker);
+	scrape = tracker_get_scrape(tracker);
 
-		gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
+	gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
 
 #ifdef DEBUG
-		gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-				TRACKERCOL_ICON, GTK_STOCK_NETWORK, -1);
-		gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-				TRACKERCOL_TIER, tracker_get_tier(tracker), -1);
-		gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-				TRACKERCOL_ANNOUNCE, announce, -1);
-		gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-				TRACKERCOL_SCRAPE, scrape, -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+			   TRACKERCOL_ICON, GTK_STOCK_NETWORK, -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+			   TRACKERCOL_TIER, tracker_get_tier(tracker), -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+			   TRACKERCOL_ANNOUNCE, announce, -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+			   TRACKERCOL_SCRAPE, scrape, -1);
 #else
-		gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-				   TRACKERCOL_ICON, GTK_STOCK_NETWORK,
-				   TRACKERCOL_TIER,
-				   tracker_get_tier(tracker),
-				   TRACKERCOL_ANNOUNCE,
-				   announce, TRACKERCOL_SCRAPE, scrape, -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+			   TRACKERCOL_ICON, GTK_STOCK_NETWORK,
+			   TRACKERCOL_TIER,
+			   tracker_get_tier(tracker),
+			   TRACKERCOL_ANNOUNCE,
+			   announce, TRACKERCOL_SCRAPE, scrape, -1);
 #endif
     }
 }

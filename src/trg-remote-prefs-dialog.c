@@ -148,7 +148,7 @@ static void update_session(GtkDialog * dlg)
 
 static void
 trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
-                             gpointer data G_GNUC_UNUSED)
+			     gpointer data G_GNUC_UNUSED)
 {
     if (res_id == GTK_RESPONSE_ACCEPT) {
 	update_session(dlg);

@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <string.h>
 #include <glib-object.h>
 #include <gconf/gconf-client.h>
 
@@ -34,9 +35,9 @@ trg_client *trg_init_client()
     return client;
 }
 
-#define check_for_error(error) if (error) { g_error_free(error); return FALSE; }
+#define check_for_error(error) if (error) { g_error_free(error); return TRG_GCONF_SCHEMA_ERROR; }
 
-gboolean trg_client_populate_with_settings(trg_client * tc,
+int trg_client_populate_with_settings(trg_client * tc,
 					   GConfClient * gconf)
 {
     gint port;
@@ -57,15 +58,19 @@ gboolean trg_client_populate_with_settings(trg_client * tc,
 
     host = gconf_client_get_string(gconf, TRG_GCONF_KEY_HOSTNAME, &error);
     check_for_error(error);
+    if (!host || strlen(host) < 1)
+    	return TRG_NO_HOSTNAME_SET;
 
-	tc->url = g_strdup_printf("http://%s:%d/transmission/rpc", host, port);
-	g_free(host);
+    tc->url = g_strdup_printf("http://%s:%d/transmission/rpc", host, port);
+    g_free(host);
 
-    tc->username = gconf_client_get_string(gconf, TRG_GCONF_KEY_USERNAME, &error);
+    tc->username =
+	gconf_client_get_string(gconf, TRG_GCONF_KEY_USERNAME, &error);
     check_for_error(error);
 
-    tc->password = gconf_client_get_string(gconf, TRG_GCONF_KEY_PASSWORD, &error);
+    tc->password =
+	gconf_client_get_string(gconf, TRG_GCONF_KEY_PASSWORD, &error);
     check_for_error(error);
 
-    return TRUE;
+    return 0;
 }

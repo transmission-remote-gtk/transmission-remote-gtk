@@ -102,8 +102,7 @@ trg_cell_renderer_speed_class_init(TrgCellRendererSpeedClass * klass)
     g_type_class_add_private(klass, sizeof(TrgCellRendererSpeedPrivate));
 }
 
-static void
-trg_cell_renderer_speed_init(TrgCellRendererSpeed * self)
+static void trg_cell_renderer_speed_init(TrgCellRendererSpeed * self)
 {
     g_object_set(self, "xalign", 1.0f, NULL);
 }

@@ -104,7 +104,8 @@ trg_cell_renderer_priority_class_init(TrgCellRendererPriorityClass * klass)
 }
 
 static void
-trg_cell_renderer_priority_init(TrgCellRendererPriority * self G_GNUC_UNUSED)
+trg_cell_renderer_priority_init(TrgCellRendererPriority *
+				self G_GNUC_UNUSED)
 {
 }
 

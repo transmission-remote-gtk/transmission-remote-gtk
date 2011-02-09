@@ -27,7 +27,8 @@ G_DEFINE_TYPE(TrgTorrentTreeView, trg_torrent_tree_view,
 	      TRG_TYPE_TREE_VIEW)
 
 static void
-trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass * klass G_GNUC_UNUSED)
+trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass *
+				 klass G_GNUC_UNUSED)
 {
 }
 
@@ -60,8 +61,8 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
 				   TORRENT_COLUMN_RATIO, -1);
 }
 
-gint get_first_selected(trg_client *client, TrgTorrentTreeView * view, GtkTreeIter * iter,
-			JsonObject ** json)
+gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
+			GtkTreeIter * iter, JsonObject ** json)
 {
     GtkTreeModel *model;
     GtkTreeSelection *selection;
@@ -77,13 +78,14 @@ gint get_first_selected(trg_client *client, TrgTorrentTreeView * view, GtkTreeIt
 
     if ((firstNode = g_list_first(selectionList)) != NULL) {
 	if (gtk_tree_model_get_iter(model, iter, firstNode->data) == TRUE) {
-		gtk_tree_model_get(model, iter,
+	    gtk_tree_model_get(model, iter,
 			       TORRENT_COLUMN_JSON, json,
 			       TORRENT_COLUMN_ID, &id,
-			       TORRENT_COLUMN_UPDATESERIAL, &updateSerial, -1);
+			       TORRENT_COLUMN_UPDATESERIAL, &updateSerial,
+			       -1);
 
 	    if (updateSerial < client->updateSerial)
-	    	id = -1;
+		id = -1;
 	}
     }
 
@@ -94,7 +96,8 @@ gint get_first_selected(trg_client *client, TrgTorrentTreeView * view, GtkTreeIt
 
 void
 trg_torrent_model_get_json_id_array_foreach(GtkTreeModel * model,
-					    GtkTreePath * path G_GNUC_UNUSED,
+					    GtkTreePath *
+					    path G_GNUC_UNUSED,
 					    GtkTreeIter * iter,
 					    gpointer data)
 {

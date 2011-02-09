@@ -72,7 +72,7 @@ trg_preferences_dialog_set_property(GObject * object,
 
 static void
 trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
-                            gpointer data G_GNUC_UNUSED)
+			    gpointer data G_GNUC_UNUSED)
 {
     switch (res_id) {
     default:
@@ -83,9 +83,9 @@ trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
 
 static void
 trg_preferences_dialog_get_property(GObject * object,
-                                    guint prop_id,
-                                    GValue * value,
-                                    GParamSpec * pspec G_GNUC_UNUSED)
+				    guint prop_id,
+				    GValue * value,
+				    GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgPreferencesDialog *pref_dlg = TRG_PREFERENCES_DIALOG(object);
 
@@ -194,7 +194,7 @@ static GtkWidget *new_entry(GConfClient * gconf, const char *key)
     return w;
 }
 
-static GtkWidget *trg_prefs_desktopPage(GConfClient *gconf)
+static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf)
 {
     GtkWidget *tray, *tray_min, *t;
     gint row = 0;
@@ -204,12 +204,14 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient *gconf)
     hig_workarea_add_section_title(t, &row, "System Tray");
 
     tray = new_check_button(gconf, "Show in system tray",
-			 TRG_GCONF_KEY_SYSTEM_TRAY);
+			    TRG_GCONF_KEY_SYSTEM_TRAY);
     hig_workarea_add_wide_control(t, &row, tray);
 
     tray_min = new_check_button(gconf, "Minimise to system tray",
-			 TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
-    gtk_widget_set_sensitive(tray_min, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tray)));
+				TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
+    gtk_widget_set_sensitive(tray_min,
+			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+							  (tray)));
     g_signal_connect(G_OBJECT(tray), "toggled",
 		     G_CALLBACK(toggle_active_arg_is_sensitive), tray_min);
     hig_workarea_add_wide_control(t, &row, tray_min);

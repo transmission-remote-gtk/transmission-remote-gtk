@@ -78,8 +78,8 @@ trg_torrent_props_dialog_set_property(GObject * object,
 	priv->tv = g_value_get_object(value);
 	break;
     case PROP_CLIENT:
-    	priv->client = g_value_get_pointer(value);
-    	break;
+	priv->client = g_value_get_pointer(value);
+	break;
     }
 }
 
@@ -87,7 +87,7 @@ static void
 trg_torrent_props_dialog_get_property(GObject * object,
 				      guint prop_id,
 				      GValue * value,
-                                      GParamSpec * pspec G_GNUC_UNUSED)
+				      GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgTorrentPropsDialogPrivate *priv =
 	TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(object);
@@ -100,14 +100,14 @@ trg_torrent_props_dialog_get_property(GObject * object,
 	g_value_set_object(value, priv->parent);
 	break;
     case PROP_CLIENT:
-    	g_value_set_pointer(value, priv->client);
-    	break;
+	g_value_set_pointer(value, priv->client);
+	break;
     }
 }
 
 static void
 trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
-                              gpointer data G_GNUC_UNUSED)
+			      gpointer data G_GNUC_UNUSED)
 {
     TrgTorrentPropsDialogPrivate *priv;
     JsonNode *request;
@@ -137,12 +137,10 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
 				    (priv->seedRatioLimit), args);
     json_object_set_int_member(args, FIELD_SEED_RATIO_MODE,
 			       gtk_combo_box_get_active(GTK_COMBO_BOX
-							(priv->
-							 seedRatioMode)));
+							(priv->seedRatioMode)));
     json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
 			       gtk_combo_box_get_active(GTK_COMBO_BOX
-							(priv->
-							 bandwidthPriorityCombo))
+							(priv->bandwidthPriorityCombo))
 			       + 1);
 
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
@@ -380,7 +378,7 @@ TrgTorrentPropsDialog *trg_torrent_props_dialog_new(GtkWindow * window,
 						    trg_client * client)
 {
     return g_object_new(TRG_TYPE_TORRENT_PROPS_DIALOG,
-		       "parent-window", window,
-		       "torrent-tree-view", treeview,
-		       "trg-client", client, NULL);
+			"parent-window", window,
+			"torrent-tree-view", treeview,
+			"trg-client", client, NULL);
 }

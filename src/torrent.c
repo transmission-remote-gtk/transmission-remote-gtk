@@ -166,18 +166,18 @@ gdouble torrent_get_percent_done(JsonObject * t)
 
 gchar *torrent_get_status_icon(guint flags)
 {
-        if (flags & TORRENT_FLAG_ERROR)
-                return g_strdup(GTK_STOCK_DIALOG_WARNING);
-        else if (flags & TORRENT_FLAG_DOWNLOADING)
-                return g_strdup(GTK_STOCK_GO_DOWN);
-        else if (flags & TORRENT_FLAG_PAUSED)
-                return g_strdup(GTK_STOCK_MEDIA_PAUSE);
-        else if (flags & TORRENT_FLAG_SEEDING)
-                return g_strdup(GTK_STOCK_GO_UP);
-        else if (flags & TORRENT_FLAG_CHECKING)
-                return g_strdup(GTK_STOCK_REFRESH);
-        else
-                return g_strdup(GTK_STOCK_DIALOG_QUESTION);
+    if (flags & TORRENT_FLAG_ERROR)
+	return g_strdup(GTK_STOCK_DIALOG_WARNING);
+    else if (flags & TORRENT_FLAG_DOWNLOADING)
+	return g_strdup(GTK_STOCK_GO_DOWN);
+    else if (flags & TORRENT_FLAG_PAUSED)
+	return g_strdup(GTK_STOCK_MEDIA_PAUSE);
+    else if (flags & TORRENT_FLAG_SEEDING)
+	return g_strdup(GTK_STOCK_GO_UP);
+    else if (flags & TORRENT_FLAG_CHECKING)
+	return g_strdup(GTK_STOCK_REFRESH);
+    else
+	return g_strdup(GTK_STOCK_DIALOG_QUESTION);
 }
 
 const gchar *torrent_get_errorstr(JsonObject * t)

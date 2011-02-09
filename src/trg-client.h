@@ -20,6 +20,9 @@
 #ifndef TRG_CLIENT_H_
 #define TRG_CLIENT_H_
 
+#define TRG_GCONF_SCHEMA_ERROR -1
+#define TRG_NO_HOSTNAME_SET -2
+
 #include <json-glib/json-glib.h>
 #include <gconf/gconf-client.h>
 
@@ -39,7 +42,7 @@ typedef struct {
 } trg_client;
 
 trg_client *trg_init_client();
-gboolean trg_client_populate_with_settings(trg_client * tc,
+int trg_client_populate_with_settings(trg_client * tc,
 					   GConfClient * gconf);
 
 #endif				/* TRG_CLIENT_H_ */

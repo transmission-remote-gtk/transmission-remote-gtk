@@ -27,7 +27,7 @@
 #define TORRENT_FLAG_INCOMPLETE        (1 << 2)	/* 0x02 */
 #define TORRENT_FLAG_SEEDING           (1 << 3)	/* 0x04 */
 #define TORRENT_FLAG_CHECKING          (1 << 4)	/* 0x08 */
-#define TORRENT_FLAG_WAITING_CHECK     (1 << 5) /* 0x16 */
+#define TORRENT_FLAG_WAITING_CHECK     (1 << 5)	/* 0x16 */
 #define TORRENT_FLAG_DOWNLOADING       (1 << 6)	/* 0x32 */
 #define TORRENT_FLAG_PAUSED            (1 << 7)	/* 0x64 */
 

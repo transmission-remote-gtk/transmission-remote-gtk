@@ -37,15 +37,13 @@
 #include "util.h"
 
 G_DEFINE_TYPE(TrgPeersModel, trg_peers_model, GTK_TYPE_LIST_STORE)
-
 #define TRG_PEERS_MODEL_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_PEERS_MODEL, TrgPeersModelPrivate))
-
 #ifdef HAVE_GEOIP
 typedef struct _TrgPeersModelPrivate TrgPeersModelPrivate;
 
 struct _TrgPeersModelPrivate {
-	GeoIP *geoip;
+    GeoIP *geoip;
 };
 #endif
 
@@ -53,15 +51,14 @@ static void
 trg_peers_model_class_init(TrgPeersModelClass * klass G_GNUC_UNUSED)
 {
 #ifdef HAVE_GEOIP
-	  g_type_class_add_private (klass, sizeof (TrgPeersModelPrivate));
+    g_type_class_add_private(klass, sizeof(TrgPeersModelPrivate));
 #endif
 }
 
 gboolean
 find_existing_peer_item_foreachfunc(GtkTreeModel * model,
-                                    GtkTreePath * path G_GNUC_UNUSED,
-                                    GtkTreeIter * iter,
-                                    gpointer data)
+				    GtkTreePath * path G_GNUC_UNUSED,
+				    GtkTreeIter * iter, gpointer data)
 {
     struct peerAndIter *pi;
     gchar *ip;
@@ -129,7 +126,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 			    JsonObject * t, gboolean first)
 {
 #ifdef HAVE_GEOIP
-	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+    TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
 #endif
 
     JsonArray *peers;
@@ -144,7 +141,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
     for (j = 0; j < json_array_get_length(peers); j++) {
 	JsonObject *peer;
-	const gchar *address=NULL, *flagStr;
+	const gchar *address = NULL, *flagStr;
 #ifdef HAVE_GEOIP
 	const gchar *country = NULL;
 #endif
@@ -156,17 +153,18 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
 	    address = peer_get_address(peer);
 #ifdef HAVE_GEOIP
-        if (priv->geoip != NULL)
-            country = GeoIP_country_name_by_addr(priv->geoip, address);
+	    if (priv->geoip != NULL)
+		country = GeoIP_country_name_by_addr(priv->geoip, address);
 #endif
-        gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
-                        PEERSCOL_ICON, GTK_STOCK_NETWORK,
-                        PEERSCOL_IP, address,
+	    gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
+			       PEERSCOL_ICON, GTK_STOCK_NETWORK,
+			       PEERSCOL_IP, address,
 #if HAVE_GEOIP
-                        PEERSCOL_COUNTRY, country != NULL ? country : "",
+			       PEERSCOL_COUNTRY,
+			       country != NULL ? country : "",
 #endif
-                        PEERSCOL_CLIENT, peer_get_client_name(peer),
-                        -1);
+			       PEERSCOL_CLIENT, peer_get_client_name(peer),
+			       -1);
 
 	    isNew = TRUE;
 	} else {
@@ -238,7 +236,9 @@ static void trg_peers_model_init(TrgPeersModel * self)
 
 #if HAVE_GEOIP
     if (g_file_test(TRG_GEOIP_DATABASE, G_FILE_TEST_EXISTS) == TRUE)
-    	priv->geoip = GeoIP_open(TRG_GEOIP_DATABASE, GEOIP_STANDARD | GEOIP_CHECK_CACHE);
+	priv->geoip =
+	    GeoIP_open(TRG_GEOIP_DATABASE,
+		       GEOIP_STANDARD | GEOIP_CHECK_CACHE);
 #endif
 }
 

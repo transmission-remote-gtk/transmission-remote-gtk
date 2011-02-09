@@ -59,7 +59,7 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
 				  PEERSCOL_PROGRESS, -1);
     trg_tree_view_add_column(TRG_TREE_VIEW(self), "Flags", PEERSCOL_FLAGS);
     trg_tree_view_add_column(TRG_TREE_VIEW(self), "Client",
-                             PEERSCOL_CLIENT);
+			     PEERSCOL_CLIENT);
 }
 
 TrgPeersTreeView *trg_peers_tree_view_new(TrgPeersModel * model)

@@ -194,55 +194,60 @@ update_torrent_iter(gint64 serial, TrgTorrentModel * model,
 
 #ifdef DEBUG
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_ICON, statusIcon, -1);
+		       TORRENT_COLUMN_ICON, statusIcon, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
+		       TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
+		       TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_DONE, torrent_get_percent_done(t), -1);
+		       TORRENT_COLUMN_DONE, torrent_get_percent_done(t),
+		       -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_STATUS,
+		       statusString, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_STATUS, statusString, -1);
+		       TORRENT_COLUMN_DOWNSPEED, downRate, -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_FLAGS,
+		       newFlags, -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_UPSPEED,
+		       upRate, -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_ETA,
+		       torrent_get_eta(t), -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_DOWNSPEED, downRate, -1);
+		       TORRENT_COLUMN_UPLOADED, uploaded, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_FLAGS, newFlags, -1);
+		       TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_RATIO,
+		       uploaded > 0
+		       && downloaded >
+		       0 ? (double) uploaded / (double) downloaded : 0,
+		       -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_ID, id,
+		       -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_JSON, t,
+		       -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_UPSPEED, upRate, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_ETA, torrent_get_eta(t), -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_UPLOADED, uploaded, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_RATIO,
-    		uploaded > 0 && downloaded > 0 ? (double) uploaded / (double) downloaded : 0, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_ID, id, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_JSON, t, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
-    		TORRENT_COLUMN_UPDATESERIAL, serial, -1);
+		       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #else
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-                       TORRENT_COLUMN_ICON, statusIcon,
-                       TORRENT_COLUMN_NAME, torrent_get_name(t),
-                       TORRENT_COLUMN_SIZE, torrent_get_size(t),
-                       TORRENT_COLUMN_DONE,
-                       torrent_get_percent_done(t),
-                       TORRENT_COLUMN_STATUS, statusString,
-                       TORRENT_COLUMN_DOWNSPEED, downRate,
-                       TORRENT_COLUMN_FLAGS, newFlags,
-                       TORRENT_COLUMN_UPSPEED, upRate,
-                       TORRENT_COLUMN_ETA, torrent_get_eta(t),
-                       TORRENT_COLUMN_UPLOADED, uploaded,
-                       TORRENT_COLUMN_DOWNLOADED, downloaded,
-                       TORRENT_COLUMN_RATIO,
-                       uploaded >
-                       0 && downloaded > 0 ? (double) uploaded / (double) downloaded : 0,
-                       TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
-                       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
+		       TORRENT_COLUMN_ICON, statusIcon,
+		       TORRENT_COLUMN_NAME, torrent_get_name(t),
+		       TORRENT_COLUMN_SIZE, torrent_get_size(t),
+		       TORRENT_COLUMN_DONE,
+		       torrent_get_percent_done(t),
+		       TORRENT_COLUMN_STATUS, statusString,
+		       TORRENT_COLUMN_DOWNSPEED, downRate,
+		       TORRENT_COLUMN_FLAGS, newFlags,
+		       TORRENT_COLUMN_UPSPEED, upRate,
+		       TORRENT_COLUMN_ETA, torrent_get_eta(t),
+		       TORRENT_COLUMN_UPLOADED, uploaded,
+		       TORRENT_COLUMN_DOWNLOADED, downloaded,
+		       TORRENT_COLUMN_RATIO,
+		       uploaded >
+		       0
+		       && downloaded >
+		       0 ? (double) uploaded / (double) downloaded : 0,
+		       TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
+		       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif
 
     if ((lastFlags & TORRENT_FLAG_DOWNLOADING)

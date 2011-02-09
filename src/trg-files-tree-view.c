@@ -49,7 +49,7 @@ static void trg_files_tree_view_class_init(TrgFilesTreeViewClass * klass)
 static void set_unwanted_foreachfunc(GtkTreeModel * model,
 				     GtkTreePath * path G_GNUC_UNUSED,
 				     GtkTreeIter * iter,
-                                     gpointer data G_GNUC_UNUSED)
+				     gpointer data G_GNUC_UNUSED)
 {
     gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED,
 		       FALSE, FILESCOL_ICON, GTK_STOCK_CANCEL, -1);
@@ -57,7 +57,7 @@ static void set_unwanted_foreachfunc(GtkTreeModel * model,
 
 static void set_wanted_foreachfunc(GtkTreeModel * model,
 				   GtkTreePath * path G_GNUC_UNUSED,
-                                   GtkTreeIter * iter,
+				   GtkTreeIter * iter,
 				   gpointer data G_GNUC_UNUSED)
 {
     gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED,
@@ -65,9 +65,9 @@ static void set_wanted_foreachfunc(GtkTreeModel * model,
 }
 
 static void set_low_foreachfunc(GtkTreeModel * model,
-                                GtkTreePath * path G_GNUC_UNUSED,
+				GtkTreePath * path G_GNUC_UNUSED,
 				GtkTreeIter * iter,
-                                gpointer data G_GNUC_UNUSED)
+				gpointer data G_GNUC_UNUSED)
 {
     gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_PRIORITY,
 		       T_PRIORITY_LOW, -1);
@@ -75,7 +75,7 @@ static void set_low_foreachfunc(GtkTreeModel * model,
 
 static void set_normal_foreachfunc(GtkTreeModel * model,
 				   GtkTreePath * path G_GNUC_UNUSED,
-                                   GtkTreeIter * iter,
+				   GtkTreeIter * iter,
 				   gpointer data G_GNUC_UNUSED)
 {
     gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_PRIORITY,
@@ -83,9 +83,9 @@ static void set_normal_foreachfunc(GtkTreeModel * model,
 }
 
 static void set_high_foreachfunc(GtkTreeModel * model,
-                                 GtkTreePath * path G_GNUC_UNUSED,
+				 GtkTreePath * path G_GNUC_UNUSED,
 				 GtkTreeIter * iter,
-                                 gpointer data G_GNUC_UNUSED)
+				 gpointer data G_GNUC_UNUSED)
 {
     gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_PRIORITY,
 		       T_PRIORITY_HIGH, -1);
@@ -99,7 +99,8 @@ static void add_file_id_to_array(JsonObject * args, gchar * key,
 }
 
 static void send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
-						GtkTreePath * path G_GNUC_UNUSED,
+						GtkTreePath *
+						path G_GNUC_UNUSED,
 						GtkTreeIter * iter,
 						gpointer data)
 {
