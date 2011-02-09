@@ -39,7 +39,7 @@ Transmission BitTorrent client via its RPC interface.
 %setup -q
 
 %build
-%configure
+%configure --without-libgeoip
 make %{?_smp_mflags}
 
 %install
