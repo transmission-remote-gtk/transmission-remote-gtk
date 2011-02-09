@@ -273,7 +273,7 @@ static const gchar *make_error_message(JsonObject * response, int status)
     }
 }
 
-static void open_props_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+static void open_props_cb(GtkWidget * w, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     TrgTorrentPropsDialog *dialog =
@@ -282,6 +282,15 @@ static void open_props_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 				     priv->client);
 
     gtk_widget_show_all(GTK_WIDGET(dialog));
+}
+
+void
+torrent_tv_onRowActivated (GtkTreeView        *treeview,
+                     GtkTreePath        *path G_GNUC_UNUSED,
+                     GtkTreeViewColumn  *col G_GNUC_UNUSED,
+                     gpointer            userdata)
+{
+	open_props_cb(GTK_WIDGET(treeview), userdata);
 }
 
 /* Use synchronous dispatch() in our dedicated thread function.
@@ -1392,6 +1401,7 @@ static GObject *trg_main_window_constructor(GType type,
 		     G_CALLBACK(torrent_tv_popup_menu_cb), self);
     g_signal_connect(priv->torrentTreeView, "button-press-event",
 		     G_CALLBACK(torrent_tv_button_pressed_cb), self);
+    g_signal_connect(priv->torrentTreeView, "row-activated", G_CALLBACK(torrent_tv_onRowActivated), self);
 
     outerVbox = gtk_vbox_new(FALSE, 0);
     gtk_container_add(GTK_CONTAINER(self), outerVbox);
