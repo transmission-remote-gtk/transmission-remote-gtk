@@ -39,7 +39,8 @@ G_DEFINE_TYPE(TrgTorrentPropsDialog, trg_torrent_props_dialog,
 enum {
     PROP_0,
     PROP_TREEVIEW,
-    PROP_PARENT_WINDOW
+    PROP_PARENT_WINDOW,
+    PROP_CLIENT
 };
 
 #define TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(o) \
@@ -76,6 +77,9 @@ trg_torrent_props_dialog_set_property(GObject * object,
     case PROP_TREEVIEW:
 	priv->tv = g_value_get_object(value);
 	break;
+    case PROP_CLIENT:
+    	priv->client = g_value_get_pointer(value);
+    	break;
     }
 }
 
@@ -95,6 +99,9 @@ trg_torrent_props_dialog_get_property(GObject * object,
     case PROP_PARENT_WINDOW:
 	g_value_set_object(value, priv->parent);
 	break;
+    case PROP_CLIENT:
+    	g_value_set_pointer(value, priv->client);
+    	break;
     }
 }
 
@@ -348,6 +355,17 @@ trg_torrent_props_dialog_class_init(TrgTorrentPropsDialogClass * klass)
 				     G_PARAM_STATIC_NAME |
 				     G_PARAM_STATIC_NICK |
 				     G_PARAM_STATIC_BLURB));
+
+    g_object_class_install_property(object_class,
+				    PROP_CLIENT,
+				    g_param_spec_pointer
+				    ("trg-client", "TClient",
+				     "Client",
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT_ONLY |
+				     G_PARAM_STATIC_NAME |
+				     G_PARAM_STATIC_NICK |
+				     G_PARAM_STATIC_BLURB));
 }
 
 static void
@@ -361,15 +379,8 @@ TrgTorrentPropsDialog *trg_torrent_props_dialog_new(GtkWindow * window,
 						    treeview,
 						    trg_client * client)
 {
-    GObject *obj;
-    TrgTorrentPropsDialogPrivate *priv;
-
-    obj = g_object_new(TRG_TYPE_TORRENT_PROPS_DIALOG,
+    return g_object_new(TRG_TYPE_TORRENT_PROPS_DIALOG,
 		       "parent-window", window,
-		       "torrent-tree-view", treeview, NULL);
-
-    priv = TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(obj);
-    priv->client = client;
-
-    return TRG_TORRENT_PROPS_DIALOG(obj);
+		       "torrent-tree-view", treeview,
+		       "trg-client", client, NULL);
 }

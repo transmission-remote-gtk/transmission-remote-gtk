@@ -41,9 +41,9 @@ G_DEFINE_TYPE(TrgPeersModel, trg_peers_model, GTK_TYPE_LIST_STORE)
 #define TRG_PEERS_MODEL_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_PEERS_MODEL, TrgPeersModelPrivate))
 
+#ifdef HAVE_GEOIP
 typedef struct _TrgPeersModelPrivate TrgPeersModelPrivate;
 
-#ifdef HAVE_GEOIP
 struct _TrgPeersModelPrivate {
 	GeoIP *geoip;
 };
