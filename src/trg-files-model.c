@@ -33,7 +33,7 @@ G_DEFINE_TYPE(TrgFilesModel, trg_files_model, GTK_TYPE_LIST_STORE)
 typedef struct _TrgFilesModelPrivate TrgFilesModelPrivate;
 
 struct _TrgFilesModelPrivate {
-    gint torrentId;
+    gint64 torrentId;
     JsonArray *files;
     JsonArray *wanted;
     JsonArray *priorities;
@@ -166,7 +166,7 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
     }
 }
 
-gint trg_files_model_get_torrent_id(TrgFilesModel * model)
+gint64 trg_files_model_get_torrent_id(TrgFilesModel * model)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     return priv->torrentId;

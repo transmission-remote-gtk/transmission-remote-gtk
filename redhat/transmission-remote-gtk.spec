@@ -63,10 +63,10 @@ export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
 gconftool-2 --makefile-install-rule \
   %{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null || :
 
-update-desktop-database %{_datadir}/applications
+update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 
 %postun
-update-desktop-database %{_datadir}/applications
+update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 
 %preun
 if [ "$1" -eq 0 ]; then

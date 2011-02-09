@@ -105,7 +105,7 @@ static void send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
 						gpointer data)
 {
     JsonObject *args = (JsonObject *) data;
-    gint priority, id;
+    gint64 priority, id;
     gboolean wanted;
 
     gtk_tree_model_get(model, iter, FILESCOL_WANTED, &wanted,
@@ -138,7 +138,7 @@ static void send_updated_file_prefs(TrgFilesTreeView * tv)
     JsonObject *args;
     GtkTreeSelection *selection;
     GtkTreeModel *model;
-    gint targetId;
+    gint64 targetId;
     JsonArray *targetIdArray;
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tv));
