@@ -28,6 +28,19 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/ssl</key>
+      <applyto>/apps/transmission-remote-gtk/ssl</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>0</default>
+
+      <locale name="C">
+        <short>SSL</short>
+        <long>SSL</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/system-tray</key>
       <applyto>/apps/transmission-remote-gtk/system-tray</applyto>
       <owner>transmission-remote-gtk</owner>

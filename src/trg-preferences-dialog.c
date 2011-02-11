@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
@@ -236,6 +236,10 @@ static GtkWidget *trg_prefs_serverPage(GConfClient * gconf)
 
     w = new_check_button(gconf, "Automatically connect",
 			 TRG_GCONF_KEY_AUTO_CONNECT);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = new_check_button(gconf, "SSL",
+			 TRG_GCONF_KEY_SSL);
     hig_workarea_add_wide_control(t, &row, w);
 
     hig_workarea_add_section_divider(t, &row);

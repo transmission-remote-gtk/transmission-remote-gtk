@@ -33,6 +33,7 @@ typedef struct {
     gint failCount;
     gint64 updateSerial;
     JsonObject *session;
+    gboolean ssl;
     char *url;
     char *username;
     char *password;

@@ -61,7 +61,10 @@ int trg_client_populate_with_settings(trg_client * tc,
     if (!host || strlen(host) < 1)
     	return TRG_NO_HOSTNAME_SET;
 
-    tc->url = g_strdup_printf("http://%s:%d/transmission/rpc", host, port);
+    tc->ssl = gconf_client_get_bool(gconf, TRG_GCONF_KEY_SSL, &error);
+    check_for_error(error);
+
+    tc->url = g_strdup_printf("%s://%s:%d/transmission/rpc", tc->ssl ? "https" : "http", host, port);
     g_free(host);
 
     tc->username =

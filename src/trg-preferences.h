@@ -25,6 +25,7 @@
 #define TRG_GCONF_KEY_USERNAME      "/apps/transmission-remote-gtk/username"
 #define TRG_GCONF_KEY_PASSWORD      "/apps/transmission-remote-gtk/password"
 #define TRG_GCONF_KEY_AUTO_CONNECT  "/apps/transmission-remote-gtk/auto-connect"
+#define TRG_GCONF_KEY_SSL			"/apps/transmission-remote-gtk/ssl"
 #define TRG_GCONF_KEY_WINDOW_WIDTH  "/apps/transmission-remote-gtk/window-width"
 #define TRG_GCONF_KEY_WINDOW_HEIGHT  "/apps/transmission-remote-gtk/window-height"
 #define TRG_GCONF_KEY_SYSTEM_TRAY  "/apps/transmission-remote-gtk/system-tray"
