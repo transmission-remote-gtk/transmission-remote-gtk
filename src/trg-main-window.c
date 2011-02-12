@@ -196,8 +196,9 @@ static void response_unref(JsonObject * response)
 	json_object_unref(response);
 }
 
-static void on_torrent_completed(TrgTorrentModel * model,
-				 GtkTreeIter * iter, gpointer * data)
+static void torrent_event_notification(TrgTorrentModel * model,
+				 gchar *icon, gchar *desc, gint tmout,
+				 gchar *prefKey, GtkTreeIter * iter, gpointer * data)
 {
     TrgMainWindowPrivate *priv;
     gchar *name;
@@ -209,14 +210,16 @@ static void on_torrent_completed(TrgTorrentModel * model,
 	|| !gtk_status_icon_is_embedded(priv->statusIcon))
 	return;
 
+    if (!gconf_client_get_bool(priv->client->gconf, prefKey, NULL))
+    	return;
+
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
 		       TORRENT_COLUMN_NAME, &name, -1);
 
     notify =
 	notify_notification_new(name,
-				"This torrent has finished downloading",
-				GTK_STOCK_APPLY
-/* the fourth argument was removed in libnotify 0.7.0 */
+				desc,
+				icon
 #if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7)
 				, NULL
 #endif
@@ -227,11 +230,25 @@ static void on_torrent_completed(TrgTorrentModel * model,
 #endif
 
     notify_notification_set_urgency(notify, NOTIFY_URGENCY_LOW);
-    notify_notification_set_timeout(notify, 8000);
+    notify_notification_set_timeout(notify, tmout);
 
     g_free(name);
 
     notify_notification_show(notify, NULL);
+}
+
+static void on_torrent_completed(TrgTorrentModel * model,
+				 GtkTreeIter * iter, gpointer * data)
+{
+	torrent_event_notification(model, GTK_STOCK_APPLY, "This torrent has completed.",
+			8000, TRG_GCONF_KEY_COMPLETE_NOTIFY, iter, data);
+}
+
+static void on_torrent_added(TrgTorrentModel * model,
+				 GtkTreeIter * iter, gpointer * data)
+{
+	torrent_event_notification(model, GTK_STOCK_ADD, "This torrent has been added.",
+			3000, TRG_GCONF_KEY_ADD_NOTIFY, iter, data);
 }
 
 static gboolean delete_event(GtkWidget * w,
@@ -616,6 +633,8 @@ static void remove_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 		       torrent_remove(ids,
 				      FALSE),
 		       on_generic_interactive_action, data);
+    else
+    	json_array_unref(ids);
 }
 
 static void delete_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
@@ -639,6 +658,8 @@ static void delete_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 		       torrent_remove(ids,
 				      TRUE),
 		       on_generic_interactive_action, data);
+    else
+    	json_array_unref(ids);
 }
 
 static
@@ -710,14 +731,14 @@ void on_session_set(JsonObject * response, int status, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
+    if (status == CURLE_OK || status == FAIL_RESPONSE_UNSUCCESSFUL)
+	dispatch_async(priv->client, session_get(), on_session_get, data);
+
     gdk_threads_enter();
     trg_dialog_error_handler(TRG_MAIN_WINDOW(data), response, status);
     gdk_threads_leave();
 
     response_unref(response);
-
-    if (status == CURLE_OK || status == FAIL_RESPONSE_UNSUCCESSFUL)
-	dispatch_async(priv->client, session_get(), on_session_get, data);
 }
 
 static void on_session_get(JsonObject * response, int status,
@@ -1256,7 +1277,7 @@ static GtkWidget *limit_menu_new(TrgMainWindow *win, gchar *title, gchar *enable
                            g_strdup(speedKey), g_free);
     g_object_set_data_full(G_OBJECT(menu), "enabledKey",
                            g_strdup(enabledKey), g_free);
-    g_object_set_data(G_OBJECT(menu), "limit-ids", ids);
+    g_object_set_data_full(G_OBJECT(menu), "limit-ids", ids, (GDestroyNotify)json_array_unref);
 
 	item = gtk_check_menu_item_new_with_label("No Limit");
 	gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), limit < 0);
@@ -1500,6 +1521,8 @@ static GObject *trg_main_window_constructor(GType type,
     priv->torrentModel = trg_torrent_model_new();
     g_signal_connect(priv->torrentModel, "torrent-completed",
 		     G_CALLBACK(on_torrent_completed), self);
+    g_signal_connect(priv->torrentModel, "torrent-added",
+		     G_CALLBACK(on_torrent_added), self);
 
     priv->filteredTorrentModel =
 	gtk_tree_model_filter_new(GTK_TREE_MODEL(priv->torrentModel),

@@ -196,7 +196,7 @@ static GtkWidget *new_entry(GConfClient * gconf, const char *key)
 
 static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf)
 {
-    GtkWidget *tray, *tray_min, *t;
+    GtkWidget *tray, *w, *t;
     gint row = 0;
 
     t = hig_workarea_create();
@@ -207,14 +207,32 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf)
 			    TRG_GCONF_KEY_SYSTEM_TRAY);
     hig_workarea_add_wide_control(t, &row, tray);
 
-    tray_min = new_check_button(gconf, "Minimise to system tray",
+    w = new_check_button(gconf, "Minimise to system tray",
 				TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
-    gtk_widget_set_sensitive(tray_min,
+    gtk_widget_set_sensitive(w,
 			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
 							  (tray)));
     g_signal_connect(G_OBJECT(tray), "toggled",
-		     G_CALLBACK(toggle_active_arg_is_sensitive), tray_min);
-    hig_workarea_add_wide_control(t, &row, tray_min);
+		     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = new_check_button(gconf, "Torrent added notifications",
+				TRG_GCONF_KEY_ADD_NOTIFY);
+    gtk_widget_set_sensitive(w,
+			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+							  (tray)));
+    g_signal_connect(G_OBJECT(tray), "toggled",
+		     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = new_check_button(gconf, "Torrent complete notifications",
+				TRG_GCONF_KEY_COMPLETE_NOTIFY);
+    gtk_widget_set_sensitive(w,
+			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+							  (tray)));
+    g_signal_connect(G_OBJECT(tray), "toggled",
+		     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    hig_workarea_add_wide_control(t, &row, w);
 
     return t;
 }

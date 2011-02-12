@@ -32,6 +32,7 @@
 
 enum {
     TMODEL_TORRENT_COMPLETED,
+    TMODEL_TORRENT_ADDED,
     TMODEL_SIGNAL_COUNT
 };
 
@@ -69,6 +70,14 @@ static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
 		     NULL, g_cclosure_marshal_VOID__POINTER,
 		     G_TYPE_NONE, 1, G_TYPE_POINTER);
 
+    signals[TMODEL_TORRENT_ADDED] =
+	g_signal_new("torrent-added",
+		     G_TYPE_FROM_CLASS(object_class),
+		     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+		     G_STRUCT_OFFSET(TrgTorrentModelClass,
+				     torrent_added), NULL,
+		     NULL, g_cclosure_marshal_VOID__POINTER,
+		     G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 static void trg_torrent_model_count_peers(TrgTorrentModel * model,
@@ -316,10 +325,14 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 	t = json_array_get_object_element(newTorrents, i);
 
 	if (first == TRUE
-	    || find_existing_torrent_item(model, t, &iter) == FALSE)
+	    || find_existing_torrent_item(model, t, &iter) == FALSE) {
 	    gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-
-	update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
+	    update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
+	    if (!first)
+	    	g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0, &iter);
+    } else {
+    	update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
+    }
     }
 
     json_array_ref(newTorrents);

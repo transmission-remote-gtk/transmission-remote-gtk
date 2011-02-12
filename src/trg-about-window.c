@@ -62,7 +62,7 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),
 				 PACKAGE_VERSION);
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
-				   "(C) 2011 Alan F");
+				   "(C) 2011 Alan Fitton");
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
 				  "A remote client to transmission-daemon.");
     /* Set the license text, which is usually loaded from a file. Also, set the

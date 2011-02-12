@@ -41,6 +41,32 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/add-notify</key>
+      <applyto>/apps/transmission-remote-gtk/add-notify</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>0</default>
+
+      <locale name="C">
+        <short>Added notifications</short>
+        <long>Added notifications</long>
+      </locale>
+    </schema>
+    
+    <schema>
+      <key>/schemas/apps/transmission-remote-gtk/complete-notify</key>
+      <applyto>/apps/transmission-remote-gtk/complete-notify</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>0</default>
+
+      <locale name="C">
+        <short>Complete notifications</short>
+        <long>Complete notifications</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/system-tray</key>
       <applyto>/apps/transmission-remote-gtk/system-tray</applyto>
       <owner>transmission-remote-gtk</owner>
