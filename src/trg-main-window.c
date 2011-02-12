@@ -1174,8 +1174,6 @@ static gboolean torrent_tv_key_press_event(GtkWidget * w,
 	    delete_cb(w, data);
 	else
 	    remove_cb(w, data);
-    } else if (key->keyval == GDK_Return) {
-	open_props_cb(w, data);
     }
     return FALSE;
 }
