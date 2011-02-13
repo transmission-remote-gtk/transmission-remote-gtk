@@ -25,6 +25,8 @@
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 
+#include "trg-main-window.h"
+
 G_BEGIN_DECLS typedef struct _TrgPreferencesDialog TrgPreferencesDialog;
 typedef struct _TrgPreferencesDialogClass TrgPreferencesDialogClass;
 typedef struct _TrgPreferencesDialogPrivate TrgPreferencesDialogPrivate;
@@ -47,7 +49,7 @@ struct _TrgPreferencesDialogClass {
 
 GType trg_preferences_dialog_get_type(void);
 
-GtkWidget *trg_preferences_dialog_get_instance(GtkWindow * parent,
+GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow *win,
 					       GConfClient * client);
 G_END_DECLS
 #endif				/* TRG_PREFERENCES_WINDOW_H_ */

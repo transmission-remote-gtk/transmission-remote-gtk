@@ -33,6 +33,7 @@ enum {
     PROP_PAUSE_BUTTON,
     PROP_VERIFY_BUTTON,
     PROP_PROPS_BUTTON,
+    PROP_MOVE_BUTTON,
     PROP_REMOTE_PREFS_BUTTON,
     PROP_LOCAL_PREFS_BUTTON,
     PROP_ABOUT_BUTTON,
@@ -51,6 +52,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_disconnect;
     GtkWidget *mb_add;
     GtkWidget *mb_add_url;
+    GtkWidget *mb_move;
     GtkWidget *mb_remove;
     GtkWidget *mb_delete;
     GtkWidget *mb_resume;
@@ -87,6 +89,7 @@ void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
     gtk_widget_set_sensitive(priv->mb_resume, sensitive);
     gtk_widget_set_sensitive(priv->mb_pause, sensitive);
     gtk_widget_set_sensitive(priv->mb_verify, sensitive);
+    gtk_widget_set_sensitive(priv->mb_move, sensitive);
 }
 
 static void
@@ -112,6 +115,9 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
 	break;
     case PROP_DELETE_BUTTON:
 	g_value_set_object(value, priv->mb_delete);
+	break;
+    case PROP_MOVE_BUTTON:
+	g_value_set_object(value, priv->mb_move);
 	break;
     case PROP_RESUME_BUTTON:
 	g_value_set_object(value, priv->mb_resume);
@@ -272,6 +278,9 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
     priv->mb_verify =
 	trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Verify",
 			      GTK_STOCK_REFRESH, FALSE);
+    priv->mb_move =
+	trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Move",
+			GTK_STOCK_HARDDISK, FALSE);
     priv->mb_remove =
 	trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Remove",
 			      GTK_STOCK_REMOVE, FALSE);
@@ -319,6 +328,8 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
 				     "add-url-button", "Add URL Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_REMOVE_BUTTON,
 				     "remove-button", "Remove Button");
+    trg_menu_bar_install_widget_prop(object_class, PROP_MOVE_BUTTON,
+				     "move-button", "Move Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_DELETE_BUTTON,
 				     "delete-button", "Delete Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_RESUME_BUTTON,

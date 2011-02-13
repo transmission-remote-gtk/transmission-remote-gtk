@@ -29,6 +29,7 @@
 #include "hig.h"
 #include "trg-preferences-dialog.h"
 #include "trg-json-widgets.h"
+#include "trg-main-window.h"
 #include "trg-preferences.h"
 
 #define TRG_PREFERENCES_DIALOG_GET_PRIVATE(object) \
@@ -40,14 +41,14 @@ G_DEFINE_TYPE(TrgPreferencesDialog, trg_preferences_dialog,
 enum {
     PROP_0,
     PROP_GCONF_CLIENT,
-    PROP_PARENT_WINDOW
+    PROP_MAIN_WINDOW
 };
 
 #define GCONF_OBJECT_KEY        "gconf-key"
 
 struct _TrgPreferencesDialogPrivate {
     GConfClient *gconf;
-    GtkWindow *parent;
+    TrgMainWindow *win;
 };
 
 static GObject *instance = NULL;
@@ -58,14 +59,14 @@ trg_preferences_dialog_set_property(GObject * object,
 				    const GValue * value,
 				    GParamSpec * pspec G_GNUC_UNUSED)
 {
-    TrgPreferencesDialog *pref_dlg = TRG_PREFERENCES_DIALOG(object);
+    TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
     switch (prop_id) {
     case PROP_GCONF_CLIENT:
-	pref_dlg->priv->gconf = g_value_get_object(value);
+	priv->gconf = g_value_get_object(value);
 	break;
-    case PROP_PARENT_WINDOW:
-	pref_dlg->priv->parent = g_value_get_object(value);
+    case PROP_MAIN_WINDOW:
+	priv->win = g_value_get_object(value);
 	break;
     }
 }
@@ -87,14 +88,14 @@ trg_preferences_dialog_get_property(GObject * object,
 				    GValue * value,
 				    GParamSpec * pspec G_GNUC_UNUSED)
 {
-    TrgPreferencesDialog *pref_dlg = TRG_PREFERENCES_DIALOG(object);
+    TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
     switch (prop_id) {
     case PROP_GCONF_CLIENT:
-	g_value_set_object(value, pref_dlg->priv->gconf);
+	g_value_set_object(value, priv->gconf);
 	break;
-    case PROP_PARENT_WINDOW:
-	g_value_set_object(value, pref_dlg->priv->parent);
+    case PROP_MAIN_WINDOW:
+	g_value_set_object(value, priv->win);
 	break;
     }
 }
@@ -194,7 +195,15 @@ static GtkWidget *new_entry(GConfClient * gconf, const char *key)
     return w;
 }
 
-static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf)
+static void toggle_tray_icon(GtkToggleButton * w, gpointer win)
+{
+	if (gtk_toggle_button_get_active(w))
+		trg_main_window_add_status_icon(TRG_MAIN_WINDOW(win));
+	else
+		trg_main_window_remove_status_icon(TRG_MAIN_WINDOW(win));
+}
+
+static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf, TrgMainWindow *win)
 {
     GtkWidget *tray, *w, *t;
     gint row = 0;
@@ -205,6 +214,7 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf)
 
     tray = new_check_button(gconf, "Show in system tray",
 			    TRG_GCONF_KEY_SYSTEM_TRAY);
+    g_signal_connect(G_OBJECT(tray), "toggled", G_CALLBACK(toggle_tray_icon), win);
     hig_workarea_add_wide_control(t, &row, tray);
 
     w = new_check_button(gconf, "Minimise to system tray",
@@ -290,7 +300,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
 							   construct_params);
     priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
-    gtk_window_set_transient_for(GTK_WINDOW(object), priv->parent);
+    gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->win));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
 			  GTK_RESPONSE_CLOSE);
@@ -308,7 +318,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
 			     gtk_label_new("Connection"));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-			     trg_prefs_desktopPage(priv->gconf),
+			     trg_prefs_desktopPage(priv->gconf, priv->win),
 			     gtk_label_new("Desktop"));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
@@ -347,10 +357,10 @@ trg_preferences_dialog_class_init(TrgPreferencesDialogClass * class)
 							G_PARAM_STATIC_BLURB));
 
     g_object_class_install_property(g_object_class,
-				    PROP_PARENT_WINDOW,
+				    PROP_MAIN_WINDOW,
 				    g_param_spec_object
-				    ("parent-window", "Parent window",
-				     "Parent window", GTK_TYPE_WINDOW,
+				    ("main-window", "Main Window",
+				     "Main Window", TRG_TYPE_MAIN_WINDOW,
 				     G_PARAM_READWRITE |
 				     G_PARAM_CONSTRUCT_ONLY |
 				     G_PARAM_STATIC_NAME |
@@ -363,17 +373,14 @@ trg_preferences_dialog_class_init(TrgPreferencesDialogClass * class)
 
 static void trg_preferences_dialog_init(TrgPreferencesDialog * pref_dlg)
 {
-    pref_dlg->priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(pref_dlg);
-
-    pref_dlg->priv->gconf = NULL;
 }
 
-GtkWidget *trg_preferences_dialog_get_instance(GtkWindow * parent,
+GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow *win,
 					       GConfClient * client)
 {
     if (instance == NULL) {
 	instance = g_object_new(TRG_TYPE_PREFERENCES_DIALOG,
-				"parent-window", parent,
+				"main-window", win,
 				"gconf-client", client, NULL);
     }
 

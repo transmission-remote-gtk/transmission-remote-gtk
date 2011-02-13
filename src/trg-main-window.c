@@ -54,6 +54,7 @@
 #include "trg-trackers-tree-view.h"
 #include "trg-trackers-model.h"
 #include "trg-state-selector.h"
+#include "trg-torrent-move-dialog.h"
 #include "trg-torrent-props-dialog.h"
 #include "trg-torrent-add-url-dialog.h"
 #include "trg-toolbar.h"
@@ -62,62 +63,69 @@
 #include "trg-remote-prefs-dialog.h"
 #include "trg-preferences-dialog.h"
 
-/* Events */
-
-static void on_torrent_get(JsonObject * response, int status,
-			   gpointer data);
-
-static void on_torrent_get_first(JsonObject * response, int status,
-				 gpointer data);
-
-static void on_torrent_get_multipurpose(JsonObject * response,
-					gboolean first, int status,
-					gpointer data);
-
-static void trg_main_window_conn_changed(TrgMainWindow * win,
-					 gboolean connected);
-static void
-trg_main_window_update_notebook_displays(TrgMainWindow * win,
-					 JsonObject * t,
-					 GtkTreeIter * iter,
-					 gboolean first);
-
-static gboolean torrent_selection_changed(GtkWidget * w, gpointer data);
-
+static gboolean update_selected_torrent_notebook(TrgMainWindow *win, gboolean first);
+static void response_unref(JsonObject *response);
+static void torrent_event_notification(TrgTorrentModel *model, gchar *icon, gchar *desc, gint tmout, gchar *prefKey, GtkTreeIter *iter, gpointer *data);
+static void on_torrent_completed(TrgTorrentModel *model, GtkTreeIter *iter, gpointer *data);
+static void on_torrent_added(TrgTorrentModel *model, GtkTreeIter *iter, gpointer *data);
+static gboolean delete_event(GtkWidget *w, GdkEvent *event, gpointer *data);
+static void destroy_window(GtkWidget *w, gpointer data);
+static const gchar *make_error_message(JsonObject *response, int status);
+static void torrent_tv_onRowActivated(GtkTreeView *treeview, GtkTreePath *path, GtkTreeViewColumn *col, gpointer userdata);
+static gpointer add_files_threadfunc(gpointer data);
+static void add_url_cb(GtkWidget *w, gpointer data);
+static void add_cb(GtkWidget *w, gpointer data);
+static void disconnect_cb(GtkWidget *w, gpointer data);
+static void connect_cb(GtkWidget *w, gpointer data);
+static void open_local_prefs_cb(GtkWidget *w, gpointer data);
+static void open_remote_prefs_cb(GtkWidget *w, gpointer data);
+static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow *win);
+static void verify_cb(GtkWidget *w, gpointer data);
+static void pause_cb(GtkWidget *w, gpointer data);
+static void resume_cb(GtkWidget *w, gpointer data);
+static void remove_cb(GtkWidget *w, gpointer data);
+static void move_cb(GtkWidget *w, gpointer data);
+static void delete_cb(GtkWidget *w, gpointer data);
+static void open_props_cb(GtkWidget *w, gpointer data);
+static gint confirm_action_dialog(GtkWindow *win, GtkTreeSelection *selection, gchar *question_single, gchar *question_multi, gchar *action_stock);
+static GtkWidget *my_scrolledwin_new(GtkWidget *child);
+static void view_states_toggled_cb(GtkCheckMenuItem *w, gpointer data);
+static void view_notebook_toggled_cb(GtkCheckMenuItem *w, gpointer data);
+static GtkWidget *trg_main_window_notebook_new(TrgMainWindow *win);
+static void on_session_get(JsonObject *response, int status, gpointer data);
+static void on_torrent_get_first(JsonObject *response, int status, gpointer data);
+static void on_torrent_get(JsonObject *response, int status, gpointer data);
 static gboolean trg_update_torrents_timerfunc(gpointer data);
-
-static void destroy_window();
-
-static void on_torrent_completed(TrgTorrentModel * model,
-				 GtkTreeIter * iter, gpointer * data);
-
-static void on_session_get(JsonObject * response, int status,
-			   gpointer data);
-
-static void entry_filter_changed_cb(GtkWidget * w, gpointer data);
-
-/* Actions */
-
-static void connect_cb(GtkWidget * w, gpointer data);
-static void disconnect_cb(GtkWidget * w, gpointer data);
-static void add_cb(GtkWidget * w, gpointer data);
-static void resume_cb(GtkWidget * w, gpointer data);
-static void pause_cb(GtkWidget * w, gpointer data);
-static void verify_cb(GtkWidget * w, gpointer data);
-static void remove_cb(GtkWidget * w, gpointer data);
-static void delete_cb(GtkWidget * w, gpointer data);
-static void open_about_cb(GtkWidget * w, GtkWindow * parent);
-
-/* Utility */
-
-static
-void trg_main_window_torrent_scrub(TrgMainWindow * win);
-static const gchar *make_error_message(JsonObject * response, int status);
-static GtkWidget *my_scrolledwin_new(GtkWidget * child);
-static gboolean
-trg_dialog_error_handler(TrgMainWindow * win, JsonObject * response,
-			 int status);
-static void response_unref(JsonObject * response);
+static void trg_main_window_update_notebook_displays(TrgMainWindow *win, JsonObject *t, GtkTreeIter *iter, gboolean first);
+static void open_about_cb(GtkWidget *w, GtkWindow *parent);
+static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel *model, GtkTreeIter *iter, gpointer data);
+static TrgTorrentTreeView *trg_main_window_torrent_tree_view_new(TrgMainWindow *win, GtkTreeModel *model, TrgStateSelector *selector);
+static gboolean trg_dialog_error_handler(TrgMainWindow *win, JsonObject *response, int status);
+static gboolean torrent_selection_changed(GtkWidget *w, gpointer data);
+static void trg_main_window_torrent_scrub(TrgMainWindow *win);
+static void on_torrent_get_multipurpose(JsonObject *response, gboolean first, int status, gpointer data);
+static void entry_filter_changed_cb(GtkWidget *w, gpointer data);
+static void torrent_state_selection_changed(TrgStateSelector *selector, guint flag, gpointer data);
+static void trg_main_window_conn_changed(TrgMainWindow *win, gboolean connected);
+static void trg_main_window_get_property(GObject *object, guint property_id, GValue *value, GParamSpec *pspec);
+static void trg_main_window_set_property(GObject *object, guint property_id, const GValue *value, GParamSpec *pspec);
+static void quit_cb(GtkWidget *w, gpointer data);
+static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow *win);
+static void status_icon_activated(GtkStatusIcon *icon, gpointer data);
+static void clear_filter_entry_cb(GtkWidget *w, gpointer data);
+static gboolean torrent_tv_key_press_event(GtkWidget *w, GdkEventKey *key, gpointer data);
+static GtkWidget *trg_imagemenuitem_new(GtkMenuShell *shell, char *text, char *stock_id, gboolean sensitive, GCallback cb, gpointer cbdata);
+static void set_limit_cb(GtkWidget *w, gpointer data);
+static GtkWidget *limit_item_new(TrgMainWindow *win, GtkWidget *menu, gint64 currentLimit, gint limit);
+static GtkWidget *limit_menu_new(TrgMainWindow *win, gchar *title, gchar *enabledKey, gchar *speedKey, JsonArray *ids);
+static void trg_torrent_tv_view_menu(GtkWidget *treeview, GdkEventButton *event, gpointer data);
+static void trg_status_icon_view_menu(GtkStatusIcon *icon, GdkEventButton *event, gpointer data);
+static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon *icon, gpointer userdata);
+static gboolean status_icon_button_press_event(GtkStatusIcon *icon, GdkEventButton *event, gpointer data);
+static gboolean torrent_tv_button_pressed_cb(GtkWidget *treeview, GdkEventButton *event, gpointer userdata);
+static gboolean torrent_tv_popup_menu_cb(GtkWidget *treeview, gpointer userdata);
+static void status_bar_text_pushed(GtkStatusbar *statusbar, guint context_id, gchar *text, gpointer user_data);
+static gboolean window_state_event(GtkWidget *widget, GdkEventWindowState *event, gpointer trayIcon);
 
 G_DEFINE_TYPE(TrgMainWindow, trg_main_window, GTK_TYPE_WINDOW)
 #define TRG_MAIN_WINDOW_GET_PRIVATE(o) \
@@ -131,6 +139,7 @@ struct _TrgMainWindowPrivate {
 
     TrgStatusBar *statusBar;
     GtkStatusIcon *statusIcon;
+    GdkPixbuf *icon;
     TrgStateSelector *stateSelector;
     TrgGeneralPanel *genDetails;
     GtkWidget *notebook;
@@ -302,7 +311,7 @@ static void open_props_cb(GtkWidget * w, gpointer data)
     gtk_widget_show_all(GTK_WIDGET(dialog));
 }
 
-void
+static void
 torrent_tv_onRowActivated (GtkTreeView        *treeview,
                      GtkTreePath        *path G_GNUC_UNUSED,
                      GtkTreeViewColumn  *col G_GNUC_UNUSED,
@@ -315,6 +324,12 @@ torrent_tv_onRowActivated (GtkTreeView        *treeview,
  * This means torrents are added in sequence, instead of dispatch_async()
  * working concurrently for each upload.
  */
+
+struct add_torrent_threadfunc_args {
+    GSList *list;
+    trg_client *client;
+    gpointer cb_data;
+};
 
 static gpointer add_files_threadfunc(gpointer data)
 {
@@ -483,7 +498,7 @@ static void open_local_prefs_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
-    GtkWidget *dlg = trg_preferences_dialog_get_instance(GTK_WINDOW(data),
+    GtkWidget *dlg = trg_preferences_dialog_get_instance(TRG_MAIN_WINDOW(data),
 							 priv->
 							 client->gconf);
     gtk_widget_show_all(dlg);
@@ -611,6 +626,13 @@ static gint confirm_action_dialog(GtkWindow * win,
     response = gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
     return response;
+}
+
+static void move_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    TrgTorrentMoveDialog *dlg = trg_torrent_move_dialog_new(TRG_MAIN_WINDOW(data), priv->client, priv->torrentTreeView);
+    gtk_widget_show_all(GTK_WIDGET(dlg));
 }
 
 static void remove_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
@@ -1106,7 +1128,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
     GObject *b_connect, *b_disconnect, *b_add, *b_resume, *b_pause,
 	*b_verify, *b_remove, *b_delete, *b_props, *b_local_prefs,
 	*b_remote_prefs, *b_about, *b_view_states, *b_view_notebook,
-	*b_add_url, *b_quit;
+	*b_add_url, *b_quit, *b_move;
     TrgMenuBar *menuBar;
 
     menuBar = trg_menu_bar_new(win);
@@ -1119,6 +1141,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 		 "pause-button", &b_pause,
 		 "delete-button", &b_delete,
 		 "remove-button", &b_remove,
+		 "move-button", &b_move,
 		 "verify-button", &b_verify,
 		 "props-button", &b_props,
 		 "remote-prefs-button", &b_remote_prefs,
@@ -1137,6 +1160,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
     g_signal_connect(b_verify, "activate", G_CALLBACK(verify_cb), win);
     g_signal_connect(b_delete, "activate", G_CALLBACK(delete_cb), win);
     g_signal_connect(b_remove, "activate", G_CALLBACK(remove_cb), win);
+    g_signal_connect(b_move, "activate", G_CALLBACK(move_cb), win);
     g_signal_connect(b_about, "activate", G_CALLBACK(open_about_cb), win);
     g_signal_connect(b_local_prefs, "activate",
 		     G_CALLBACK(open_local_prefs_cb), win);
@@ -1325,6 +1349,9 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Verify",
 			  GTK_STOCK_REFRESH, TRUE, G_CALLBACK(verify_cb),
 			  data);
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Move",
+			  GTK_STOCK_HARDDISK, TRUE, G_CALLBACK(move_cb),
+			  data);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Remove", GTK_STOCK_REMOVE,
 			  TRUE, G_CALLBACK(remove_cb), data);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Remove & Delete",
@@ -1475,6 +1502,35 @@ static gboolean window_state_event(GtkWidget * widget,
     return TRUE;
 }
 
+void trg_main_window_remove_status_icon(TrgMainWindow *win)
+{
+	TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+
+	if (priv->statusIcon != NULL)
+		g_object_unref(G_OBJECT(priv->statusIcon));
+
+	priv->statusIcon = NULL;
+}
+
+void trg_main_window_add_status_icon(TrgMainWindow *win)
+{
+	TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+
+	if (priv->icon == NULL)
+		return;
+
+	priv->statusIcon = gtk_status_icon_new_from_pixbuf(priv->icon);
+	gtk_status_icon_set_screen(priv->statusIcon,
+				   gtk_window_get_screen(GTK_WINDOW
+							 (win)));
+	g_signal_connect(priv->statusIcon, "activate",
+			 G_CALLBACK(status_icon_activated), win);
+	g_signal_connect(priv->statusIcon, "button-press-event",
+			 G_CALLBACK(status_icon_button_press_event), win);
+	g_signal_connect(priv->statusIcon, "popup-menu",
+			 G_CALLBACK(trg_status_icon_popup_menu_cb), win);
+}
+
 static GObject *trg_main_window_constructor(GType type,
 					    guint
 					    n_construct_properties,
@@ -1487,7 +1543,6 @@ static GObject *trg_main_window_constructor(GType type,
     GtkWidget *outerVbox;
     GtkWidget *toolbarHbox;
     GtkIconTheme *theme;
-    GdkPixbuf *icon;
     gint width, height;
     GError *error = NULL;
     gboolean tray;
@@ -1499,12 +1554,12 @@ static GObject *trg_main_window_constructor(GType type,
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(self);
 
     theme = gtk_icon_theme_get_default();
-    icon =
+    priv->icon =
 	gtk_icon_theme_load_icon(theme, PACKAGE_NAME, 48,
 				 GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
 
-    if (icon)
-	gtk_window_set_default_icon(icon);
+    if (priv->icon)
+	gtk_window_set_default_icon(priv->icon);
 
     gtk_window_set_title(GTK_WINDOW(self), PACKAGE_NAME);
     gtk_container_set_border_width(GTK_CONTAINER(self), 5);
@@ -1620,18 +1675,9 @@ static GObject *trg_main_window_constructor(GType type,
     }
 
     if (tray) {
-	priv->statusIcon = gtk_status_icon_new_from_pixbuf(icon);
-	gtk_status_icon_set_screen(priv->statusIcon,
-				   gtk_window_get_screen(GTK_WINDOW
-							 (self)));
-	g_signal_connect(priv->statusIcon, "activate",
-			 G_CALLBACK(status_icon_activated), self);
-	g_signal_connect(priv->statusIcon, "button-press-event",
-			 G_CALLBACK(status_icon_button_press_event), self);
-	g_signal_connect(priv->statusIcon, "popup-menu",
-			 G_CALLBACK(trg_status_icon_popup_menu_cb), self);
+    	trg_main_window_add_status_icon(self);
     } else {
-	priv->statusIcon = NULL;
+    	priv->statusIcon = NULL;
     }
 
     priv->statusBar = trg_status_bar_new();

@@ -17,7 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
@@ -26,7 +26,7 @@
 #include <json-glib/json-glib.h>
 #include <gio/gio.h>
 #include <glib/gstdio.h>
-#if HAVE_GEOIP
+#ifdef HAVE_GEOIP
 #include <GeoIP.h>
 #endif
 
@@ -159,7 +159,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 	    gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
 			       PEERSCOL_ICON, GTK_STOCK_NETWORK,
 			       PEERSCOL_IP, address,
-#if HAVE_GEOIP
+#ifdef HAVE_GEOIP
 			       PEERSCOL_COUNTRY,
 			       country != NULL ? country : "",
 #endif
@@ -220,7 +220,7 @@ static void trg_peers_model_init(TrgPeersModel * self)
 
     column_types[PEERSCOL_ICON] = G_TYPE_STRING;
     column_types[PEERSCOL_IP] = G_TYPE_STRING;
-#if HAVE_GEOIP
+#ifdef HAVE_GEOIP
     column_types[PEERSCOL_COUNTRY] = G_TYPE_STRING;
 #endif
     column_types[PEERSCOL_HOST] = G_TYPE_STRING;
@@ -234,7 +234,7 @@ static void trg_peers_model_init(TrgPeersModel * self)
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
 				    PEERSCOL_COLUMNS, column_types);
 
-#if HAVE_GEOIP
+#ifdef HAVE_GEOIP
     if (g_file_test(TRG_GEOIP_DATABASE, G_FILE_TEST_EXISTS) == TRUE)
 	priv->geoip =
 	    GeoIP_open(TRG_GEOIP_DATABASE,

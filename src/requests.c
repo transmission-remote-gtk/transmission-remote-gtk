@@ -45,6 +45,15 @@ JsonNode *session_get()
     return generic_request(METHOD_SESSION_GET, NULL);
 }
 
+JsonNode *torrent_set_location(JsonArray *array, gchar *location, gboolean move)
+{
+	JsonNode *req = generic_request(METHOD_TORRENT_SET_LOCATION, array);
+	JsonObject *args = node_get_arguments(req);
+	json_object_set_boolean_member(args, FIELD_MOVE, move);
+	json_object_set_string_member(args, FIELD_LOCATION, location);
+	return req;
+}
+
 JsonNode *torrent_start(JsonArray * array)
 {
     return generic_request(METHOD_TORRENT_START, array);

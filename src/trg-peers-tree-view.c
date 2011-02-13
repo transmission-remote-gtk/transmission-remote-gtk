@@ -17,11 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#if HAVE_CONFIG_H
+#ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
 
-#if HAVE_GEOIP
+#ifdef HAVE_GEOIP
 #include <GeoIP.h>
 #endif
 
