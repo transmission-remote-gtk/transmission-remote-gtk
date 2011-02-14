@@ -98,8 +98,9 @@ static void update_session(GtkDialog * dlg)
 			       args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
 			       (priv->start_added_torrent_check), args);
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON(priv->cache_size_mb_spin),
-				 args);
+    if (priv->cache_size_mb_spin != NULL)
+	gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
+				     (priv->cache_size_mb_spin), args);
 
     /* Connection */
 
@@ -351,6 +352,7 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
 
     GtkWidget *w, *tb, *t;
     gint row = 0;
+    gint64 cache_size_mb;
 
     t = hig_workarea_create();
 
@@ -391,12 +393,14 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
 		     G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    w = priv->cache_size_mb_spin =
-	gtk_spin_button_new_with_range(0, INT_MAX, 1);
-    widget_set_json_key(w, SGET_CACHE_SIZE_MB);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-			      session_get_cache_size_mb(s));
-    hig_workarea_add_row(t, &row, "Cache size (MB)", w, w);
+    cache_size_mb = session_get_cache_size_mb(s);
+    if (cache_size_mb >= 0) {
+	w = priv->cache_size_mb_spin =
+	    gtk_spin_button_new_with_range(0, INT_MAX, 1);
+	widget_set_json_key(w, SGET_CACHE_SIZE_MB);
+	gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), cache_size_mb);
+	hig_workarea_add_row(t, &row, "Cache size (MB)", w, w);
+    }
 
     w = priv->rename_partial_files_check =
 	hig_workarea_add_wide_checkbutton(t, &row,

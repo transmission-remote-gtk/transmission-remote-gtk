@@ -111,7 +111,10 @@ gboolean session_get_torrent_done_enabled(JsonObject * s)
 
 gint64 session_get_cache_size_mb(JsonObject * s)
 {
-    return json_object_get_int_member(s, SGET_CACHE_SIZE_MB);
+    if (json_object_has_member(s, SGET_CACHE_SIZE_MB))
+	return json_object_get_int_member(s, SGET_CACHE_SIZE_MB);
+    else
+	return -1;
 }
 
 gdouble session_get_seed_ratio_limit(JsonObject * s)

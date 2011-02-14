@@ -123,9 +123,9 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
 						   GtkTreeIter * iter,
 						   gpointer data);
 static TrgTorrentTreeView
-    *trg_main_window_torrent_tree_view_new(TrgMainWindow * win,
-					   GtkTreeModel * model,
-					   TrgStateSelector * selector);
+    * trg_main_window_torrent_tree_view_new(TrgMainWindow * win,
+					    GtkTreeModel * model,
+					    TrgStateSelector * selector);
 static gboolean trg_dialog_error_handler(TrgMainWindow * win,
 					 JsonObject * response,
 					 int status);
