@@ -51,7 +51,7 @@ gint64 torrent_get_id(JsonObject * t)
 
 const gchar *torrent_get_download_dir(JsonObject * t)
 {
-	return json_object_get_string_member(t, FIELD_DOWNLOAD_DIR);
+    return json_object_get_string_member(t, FIELD_DOWNLOAD_DIR);
 }
 
 const gchar *torrent_get_name(JsonObject * t)

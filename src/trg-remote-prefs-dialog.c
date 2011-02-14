@@ -32,7 +32,7 @@
 G_DEFINE_TYPE(TrgRemotePrefsDialog, trg_remote_prefs_dialog,
 	      GTK_TYPE_DIALOG)
 #define TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialogPrivate))
+(G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialogPrivate))
 enum {
     PROP_0,
     PROP_PARENT,

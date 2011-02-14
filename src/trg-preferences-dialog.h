@@ -49,7 +49,7 @@ struct _TrgPreferencesDialogClass {
 
 GType trg_preferences_dialog_get_type(void);
 
-GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow *win,
+GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow * win,
 					       GConfClient * client);
 G_END_DECLS
 #endif				/* TRG_PREFERENCES_WINDOW_H_ */

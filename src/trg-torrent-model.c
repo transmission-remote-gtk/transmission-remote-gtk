@@ -329,10 +329,11 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 	    gtk_list_store_append(GTK_LIST_STORE(model), &iter);
 	    update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
 	    if (!first)
-	    	g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0, &iter);
-    } else {
-    	update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
-    }
+		g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0,
+			      &iter);
+	} else {
+	    update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
+	}
     }
 
     json_array_ref(newTorrents);

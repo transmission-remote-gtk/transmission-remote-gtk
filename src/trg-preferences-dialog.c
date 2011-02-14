@@ -59,7 +59,8 @@ trg_preferences_dialog_set_property(GObject * object,
 				    const GValue * value,
 				    GParamSpec * pspec G_GNUC_UNUSED)
 {
-    TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
+    TrgPreferencesDialogPrivate *priv =
+	TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
     switch (prop_id) {
     case PROP_GCONF_CLIENT:
@@ -88,7 +89,8 @@ trg_preferences_dialog_get_property(GObject * object,
 				    GValue * value,
 				    GParamSpec * pspec G_GNUC_UNUSED)
 {
-    TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
+    TrgPreferencesDialogPrivate *priv =
+	TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
     switch (prop_id) {
     case PROP_GCONF_CLIENT:
@@ -197,13 +199,14 @@ static GtkWidget *new_entry(GConfClient * gconf, const char *key)
 
 static void toggle_tray_icon(GtkToggleButton * w, gpointer win)
 {
-	if (gtk_toggle_button_get_active(w))
-		trg_main_window_add_status_icon(TRG_MAIN_WINDOW(win));
-	else
-		trg_main_window_remove_status_icon(TRG_MAIN_WINDOW(win));
+    if (gtk_toggle_button_get_active(w))
+	trg_main_window_add_status_icon(TRG_MAIN_WINDOW(win));
+    else
+	trg_main_window_remove_status_icon(TRG_MAIN_WINDOW(win));
 }
 
-static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf, TrgMainWindow *win)
+static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
+					TrgMainWindow * win)
 {
     GtkWidget *tray, *w, *t;
     gint row = 0;
@@ -214,11 +217,12 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf, TrgMainWindow *win)
 
     tray = new_check_button(gconf, "Show in system tray",
 			    TRG_GCONF_KEY_SYSTEM_TRAY);
-    g_signal_connect(G_OBJECT(tray), "toggled", G_CALLBACK(toggle_tray_icon), win);
+    g_signal_connect(G_OBJECT(tray), "toggled",
+		     G_CALLBACK(toggle_tray_icon), win);
     hig_workarea_add_wide_control(t, &row, tray);
 
     w = new_check_button(gconf, "Minimise to system tray",
-				TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
+			 TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
     gtk_widget_set_sensitive(w,
 			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
 							  (tray)));
@@ -227,7 +231,7 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf, TrgMainWindow *win)
     hig_workarea_add_wide_control(t, &row, w);
 
     w = new_check_button(gconf, "Torrent added notifications",
-				TRG_GCONF_KEY_ADD_NOTIFY);
+			 TRG_GCONF_KEY_ADD_NOTIFY);
     gtk_widget_set_sensitive(w,
 			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
 							  (tray)));
@@ -236,7 +240,7 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf, TrgMainWindow *win)
     hig_workarea_add_wide_control(t, &row, w);
 
     w = new_check_button(gconf, "Torrent complete notifications",
-				TRG_GCONF_KEY_COMPLETE_NOTIFY);
+			 TRG_GCONF_KEY_COMPLETE_NOTIFY);
     gtk_widget_set_sensitive(w,
 			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
 							  (tray)));
@@ -266,8 +270,7 @@ static GtkWidget *trg_prefs_serverPage(GConfClient * gconf)
 			 TRG_GCONF_KEY_AUTO_CONNECT);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = new_check_button(gconf, "SSL",
-			 TRG_GCONF_KEY_SSL);
+    w = new_check_button(gconf, "SSL", TRG_GCONF_KEY_SSL);
     hig_workarea_add_wide_control(t, &row, w);
 
     hig_workarea_add_section_divider(t, &row);
@@ -300,7 +303,8 @@ static GObject *trg_preferences_dialog_constructor(GType type,
 							   construct_params);
     priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
-    gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->win));
+    gtk_window_set_transient_for(GTK_WINDOW(object),
+				 GTK_WINDOW(priv->win));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
 			  GTK_RESPONSE_CLOSE);
@@ -375,7 +379,7 @@ static void trg_preferences_dialog_init(TrgPreferencesDialog * pref_dlg)
 {
 }
 
-GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow *win,
+GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow * win,
 					       GConfClient * client)
 {
     if (instance == NULL) {

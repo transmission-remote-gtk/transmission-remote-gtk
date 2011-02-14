@@ -44,6 +44,6 @@ typedef struct {
 
 trg_client *trg_init_client();
 int trg_client_populate_with_settings(trg_client * tc,
-					   GConfClient * gconf);
+				      GConfClient * gconf);
 
 #endif				/* TRG_CLIENT_H_ */

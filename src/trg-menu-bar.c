@@ -37,6 +37,7 @@ enum {
     PROP_REMOTE_PREFS_BUTTON,
     PROP_LOCAL_PREFS_BUTTON,
     PROP_ABOUT_BUTTON,
+    PROP_VIEW_STATS_BUTTON,
     PROP_VIEW_STATES_BUTTON,
     PROP_VIEW_NOTEBOOK_BUTTON,
     PROP_QUIT
@@ -63,6 +64,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_remote_prefs;
     GtkWidget *mb_view_states;
     GtkWidget *mb_view_notebook;
+    GtkWidget *mb_view_stats;
     GtkWidget *mb_about;
     GtkWidget *mb_quit;
 };
@@ -76,6 +78,7 @@ void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
     gtk_widget_set_sensitive(priv->mb_connect, !connected);
     gtk_widget_set_sensitive(priv->mb_disconnect, connected);
     gtk_widget_set_sensitive(priv->mb_remote_prefs, connected);
+    gtk_widget_set_sensitive(priv->mb_view_stats, connected);
 }
 
 void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
@@ -146,6 +149,9 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
     case PROP_VIEW_NOTEBOOK_BUTTON:
 	g_value_set_object(value, priv->mb_view_notebook);
 	break;
+    case PROP_VIEW_STATS_BUTTON:
+	g_value_set_object(value, priv->mb_view_stats);
+	break;
     case PROP_QUIT:
 	g_value_set_object(value, priv->mb_quit);
 	break;
@@ -206,9 +212,12 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBarPrivate * priv)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
 				   (priv->mb_view_notebook), TRUE);
 
+    priv->mb_view_stats = gtk_menu_item_new_with_label("Statistics");
+
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_states);
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
 			  priv->mb_view_notebook);
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_stats);
 
     return view;
 }
@@ -280,7 +289,7 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
 			      GTK_STOCK_REFRESH, FALSE);
     priv->mb_move =
 	trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Move",
-			GTK_STOCK_HARDDISK, FALSE);
+			      GTK_STOCK_HARDDISK, FALSE);
     priv->mb_remove =
 	trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Remove",
 			      GTK_STOCK_REMOVE, FALSE);
@@ -342,6 +351,10 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
 				     "props-button", "Props Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_ABOUT_BUTTON,
 				     "about-button", "About Button");
+    trg_menu_bar_install_widget_prop(object_class,
+				     PROP_VIEW_STATS_BUTTON,
+				     "view-stats-button",
+				     "View stats button");
     trg_menu_bar_install_widget_prop(object_class,
 				     PROP_VIEW_STATES_BUTTON,
 				     "view-states-button",

@@ -48,8 +48,8 @@ typedef struct {
 			       GtkTreeIter * iter, JsonObject * t,
 			       gpointer data);
     void (*torrent_added) (TrgTorrentModel * model,
-    			       GtkTreeIter * iter, JsonObject * t,
-    			       gpointer data);
+			   GtkTreeIter * iter, JsonObject * t,
+			   gpointer data);
 } TrgTorrentModelClass;
 
 typedef struct {

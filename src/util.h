@@ -23,6 +23,7 @@
 #define UTIL_H_
 
 #include <glib-object.h>
+#include <json-glib/json-glib.h>
 
 #define trg_strlspeed(a, b) tr_strlspeed(a, b, sizeof(a))
 #define trg_strlpercent(a, b) tr_strlpercent(a, b, sizeof(a))
@@ -52,5 +53,7 @@ size_t tr_strlcpy(char *dst, const void *src, size_t siz);
 double tr_truncd(double x, int decimal_places);
 int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
 		     va_list ap);
+void response_unref(JsonObject * response);
+const gchar *make_error_message(JsonObject * response, int status);
 
 #endif				/* UTIL_H_ */

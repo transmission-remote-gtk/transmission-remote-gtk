@@ -24,11 +24,39 @@
 #include <string.h>
 
 #include <glib-object.h>
+#include <curl/curl.h>
+#include <json-glib/json-glib.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 
 #include "util.h"
+#include "dispatch.h"
+
+const gchar *make_error_message(JsonObject * response, int status)
+{
+    if (status == FAIL_JSON_DECODE) {
+	return g_strdup("JSON decoding error.");
+    } else if (status == FAIL_RESPONSE_UNSUCCESSFUL) {
+	const gchar *resultStr =
+	    json_object_get_string_member(response, "result");
+	if (resultStr == NULL)
+	    return g_strdup("Server responded, but with no result.");
+	else
+	    return g_strdup(resultStr);
+    } else if (status <= -100) {
+	return g_strdup_printf("Request failed with HTTP code %d",
+			       -(status + 100));
+    } else {
+	return g_strdup(curl_easy_strerror(status));
+    }
+}
+
+void response_unref(JsonObject * response)
+{
+    if (response != NULL)
+	json_object_unref(response);
+}
 
 char *tr_strlpercent(char *buf, double x, size_t buflen)
 {

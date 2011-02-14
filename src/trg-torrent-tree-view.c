@@ -36,7 +36,7 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
 {
     trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(tv),
 					 TORRENT_COLUMN_ICON,
-					 TORRENT_COLUMN_NAME, "Name", -1);
+					 TORRENT_COLUMN_NAME, "Name", 300);
     trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), "Size",
 				  TORRENT_COLUMN_SIZE, -1);
     trg_tree_view_add_prog_column(TRG_TREE_VIEW(tv), "Done",

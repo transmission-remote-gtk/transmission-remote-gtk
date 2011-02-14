@@ -95,6 +95,9 @@
 #define METHOD_TORRENT_VERIFY   "torrent-verify"
 #define METHOD_TORRENT_REMOVE   "torrent-remove"
 #define METHOD_TORRENT_ADD      "torrent-add"
+#define METHOD_PORT_TEST		"port-test"
+#define METHOD_BLOCKLIST_UPDATE	"blocklist-update"
+#define METHOD_SESSION_STATS	"session-stats"
 
 #define PARAM_IDS               "ids"
 #define PARAM_DELETE_LOCAL_DATA "delete-local-data"

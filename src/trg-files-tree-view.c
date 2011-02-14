@@ -69,12 +69,12 @@ static void set_low_foreachfunc(GtkTreeModel * model,
 				GtkTreeIter * iter,
 				gpointer data G_GNUC_UNUSED)
 {
-	GValue value = { 0 };
-	g_value_init (&value, G_TYPE_INT64);
-	g_value_set_int64 (&value, T_PRIORITY_LOW);
+    GValue value = { 0 };
+    g_value_init(&value, G_TYPE_INT64);
+    g_value_set_int64(&value, T_PRIORITY_LOW);
 
-    gtk_list_store_set_value(GTK_LIST_STORE(model), iter, FILESCOL_PRIORITY,
-		       &value);
+    gtk_list_store_set_value(GTK_LIST_STORE(model), iter,
+			     FILESCOL_PRIORITY, &value);
 }
 
 static void set_normal_foreachfunc(GtkTreeModel * model,
