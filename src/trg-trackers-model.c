@@ -28,16 +28,44 @@
 
 G_DEFINE_TYPE(TrgTrackersModel, trg_trackers_model, GTK_TYPE_LIST_STORE)
 
+#define TRG_TRACKERS_MODEL_GET_PRIVATE(o) \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModelPrivate))
+typedef struct _TrgTrackersModelPrivate TrgTrackersModelPrivate;
+
+struct _TrgTrackersModelPrivate {
+    gint64 torrentId;
+    gint64 updateBarrier;
+};
+
+void trg_trackers_model_set_no_selection(TrgTrackersModel * model)
+{
+	TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
+	priv->torrentId = -1;
+}
+
+gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model)
+{
+    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
+    return priv->torrentId;
+}
+
 void trg_trackers_model_update(TrgTrackersModel * model, gint64 updateSerial, JsonObject * t, gboolean first)
 {
+	TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
+
     guint j;
     JsonArray *trackers;
     const gchar *announce;
     const gchar *scrape;
 
-    trackers = torrent_get_trackers(t);
+    if (first) {
+    	gtk_list_store_clear(GTK_LIST_STORE(model));
+    	priv->torrentId = torrent_get_id(t);
+    } else if (priv->updateBarrier == TRACKERS_UPDATE_BARRIER_FULL || (priv->updateBarrier >= 0 && priv->updateBarrier > updateSerial)) {
+    	return;
+    }
 
-    gtk_list_store_clear(GTK_LIST_STORE(model));
+    trackers = torrent_get_trackers(t);
 
     for (j = 0; j < json_array_get_length(trackers); j++) {
 	GtkTreeIter trackIter;
@@ -80,12 +108,22 @@ void trg_trackers_model_update(TrgTrackersModel * model, gint64 updateSerial, Js
 }
 
 static void
-trg_trackers_model_class_init(TrgTrackersModelClass * klass G_GNUC_UNUSED)
+trg_trackers_model_class_init(TrgTrackersModelClass * klass)
 {
+	g_type_class_add_private(klass, sizeof(TrgTrackersModelPrivate));
+}
+
+void trg_trackers_model_set_update_barrier(TrgTrackersModel * model,
+					gint64 barrier)
+{
+    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
+    priv->updateBarrier = barrier;
 }
 
 static void trg_trackers_model_init(TrgTrackersModel * self)
 {
+	TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(self);
+
     GType column_types[TRACKERCOL_COLUMNS];
 
     column_types[TRACKERCOL_ICON] = G_TYPE_STRING;
@@ -94,6 +132,9 @@ static void trg_trackers_model_init(TrgTrackersModel * self)
     column_types[TRACKERCOL_SCRAPE] = G_TYPE_STRING;
     column_types[TRACKERCOL_ID] = G_TYPE_INT64;
     column_types[TRACKERCOL_UPDATESERIAL] = G_TYPE_INT64;
+
+    priv->updateBarrier = TRACKERS_UPDATE_BARRIER_NONE;
+    priv->torrentId = -1;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
 				    TRACKERCOL_COLUMNS, column_types);

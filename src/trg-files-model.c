@@ -80,7 +80,7 @@ trg_files_model_iter_update(TrgFilesModel * model,
 		       FILESCOL_PROGRESS, progress, -1);
 
     if (priv->updateBarrier < 0
-	|| priv->currentSerial >= priv->updateBarrier) {
+	|| priv->currentSerial > priv->updateBarrier) {
 	gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
 			   FILESCOL_ICON,
 			   wanted ? GTK_STOCK_FILE :
@@ -139,7 +139,7 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     guint j;
 
-    if (first == TRUE)
+    if (first)
 	gtk_list_store_clear(GTK_LIST_STORE(model));
 
     priv->torrentId = torrent_get_id(t);

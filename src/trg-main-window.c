@@ -771,7 +771,7 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 
     priv->trackersModel = trg_trackers_model_new();
     priv->trackersTreeView =
-	trg_trackers_tree_view_new(priv->trackersModel, priv->client);
+	trg_trackers_tree_view_new(priv->trackersModel, priv->client, win);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
 			     my_scrolledwin_new(GTK_WIDGET
 						(priv->trackersTreeView)),
@@ -988,6 +988,9 @@ torrent_selection_changed(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     trg_toolbar_torrent_actions_sensitive(priv->toolBar, isSelected);
     trg_menu_bar_torrent_actions_sensitive(priv->menuBar, isSelected);
 
+    if (!isSelected)
+    	trg_trackers_model_set_no_selection(TRG_TRACKERS_MODEL(priv->trackersModel));
+
     return TRUE;
 }
 
@@ -1051,7 +1054,7 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
 					       statusBarMsg);
 	    g_free((gpointer) msg);
 	    g_free(statusBarMsg);
-	    g_timeout_add_seconds(3, trg_update_torrents_timerfunc, data);
+	    g_timeout_add_seconds(client->interval, trg_update_torrents_timerfunc, data);
 	}
 	gdk_threads_leave();
 	response_unref(response);
@@ -1078,7 +1081,7 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
 
     trg_status_bar_update(priv->statusBar, &stats);
 
-    g_timeout_add_seconds(3, trg_update_torrents_timerfunc, data);
+    g_timeout_add_seconds(client->interval, trg_update_torrents_timerfunc, data);
 
     gdk_threads_leave();
     response_unref(response);

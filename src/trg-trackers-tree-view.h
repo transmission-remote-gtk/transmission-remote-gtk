@@ -26,6 +26,7 @@
 #include "trg-trackers-model.h"
 #include "trg-tree-view.h"
 #include "trg-client.h"
+#include "trg-main-window.h"
 
 G_BEGIN_DECLS
 #define TRG_TYPE_TRACKERS_TREE_VIEW trg_trackers_tree_view_get_type()
@@ -49,7 +50,7 @@ typedef struct {
 
 GType trg_trackers_tree_view_get_type(void);
 
-TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model, trg_client *client);
+TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model, trg_client *client, TrgMainWindow *win);
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView *tv, trg_client *tc);
 
 G_END_DECLS

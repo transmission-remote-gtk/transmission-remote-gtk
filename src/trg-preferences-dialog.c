@@ -41,6 +41,7 @@ G_DEFINE_TYPE(TrgPreferencesDialog, trg_preferences_dialog,
 enum {
     PROP_0,
     PROP_GCONF_CLIENT,
+    PROP_TRG_CLIENT,
     PROP_MAIN_WINDOW
 };
 
@@ -49,6 +50,7 @@ enum {
 struct _TrgPreferencesDialogPrivate {
     GConfClient *gconf;
     TrgMainWindow *win;
+    trg_client *client;
 };
 
 static GObject *instance = NULL;
@@ -69,6 +71,9 @@ trg_preferences_dialog_set_property(GObject * object,
     case PROP_MAIN_WINDOW:
 	priv->win = g_value_get_object(value);
 	break;
+    case PROP_TRG_CLIENT:
+    	priv->client = g_value_get_pointer(value);
+    	break;
     }
 }
 
@@ -76,11 +81,8 @@ static void
 trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
 			    gpointer data G_GNUC_UNUSED)
 {
-    switch (res_id) {
-    default:
 	gtk_widget_destroy(GTK_WIDGET(dlg));
 	instance = NULL;
-    }
 }
 
 static void
@@ -99,6 +101,9 @@ trg_preferences_dialog_get_property(GObject * object,
     case PROP_MAIN_WINDOW:
 	g_value_set_object(value, priv->win);
 	break;
+    case PROP_TRG_CLIENT:
+    	g_value_set_pointer(value, priv->client);
+    	break;
     }
 }
 
@@ -125,6 +130,12 @@ static GtkWidget *new_check_button(GConfClient * gconf,
 				 gconf_client_get_bool(gconf, key, NULL));
     g_signal_connect(w, "toggled", G_CALLBACK(toggled_cb), gconf);
     return w;
+}
+
+static void interval_changed_cb(GtkWidget *w, gpointer data)
+{
+	trg_client *client = (trg_client*)data;
+	client->interval = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w));
 }
 
 static void spun_cb_int(GtkWidget * widget, gpointer gconf)
@@ -251,7 +262,7 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
     return t;
 }
 
-static GtkWidget *trg_prefs_serverPage(GConfClient * gconf)
+static GtkWidget *trg_prefs_serverPage(GConfClient * gconf, trg_client *client)
 {
     GtkWidget *w, *t;
     gint row = 0;
@@ -272,6 +283,10 @@ static GtkWidget *trg_prefs_serverPage(GConfClient * gconf)
 
     w = new_check_button(gconf, "SSL", TRG_GCONF_KEY_SSL);
     hig_workarea_add_wide_control(t, &row, w);
+
+    w = new_spin_button(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, 1, 60, 1);
+    g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb), client);
+    hig_workarea_add_row(t, &row, "Update interval:", w, NULL);
 
     hig_workarea_add_section_divider(t, &row);
     hig_workarea_add_section_title(t, &row, "Authentication");
@@ -318,7 +333,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     notebook = gtk_notebook_new();
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-			     trg_prefs_serverPage(priv->gconf),
+			     trg_prefs_serverPage(priv->gconf, priv->client),
 			     gtk_label_new("Connection"));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
@@ -343,6 +358,17 @@ trg_preferences_dialog_class_init(TrgPreferencesDialogClass * class)
     g_object_class->constructor = trg_preferences_dialog_constructor;
     g_object_class->set_property = trg_preferences_dialog_set_property;
     g_object_class->get_property = trg_preferences_dialog_get_property;
+
+    g_object_class_install_property(g_object_class,
+				    PROP_TRG_CLIENT,
+				    g_param_spec_pointer
+				    ("trg-client", "TClient",
+				     "Client",
+				     G_PARAM_READWRITE |
+				     G_PARAM_CONSTRUCT_ONLY |
+				     G_PARAM_STATIC_NAME |
+				     G_PARAM_STATIC_NICK |
+				     G_PARAM_STATIC_BLURB));
 
     g_object_class_install_property(g_object_class,
 				    PROP_GCONF_CLIENT,
@@ -385,6 +411,7 @@ GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow * win,
     if (instance == NULL) {
 	instance = g_object_new(TRG_TYPE_PREFERENCES_DIALOG,
 				"main-window", win,
+				"trg-client", client,
 				"gconf-client", client, NULL);
     }
 

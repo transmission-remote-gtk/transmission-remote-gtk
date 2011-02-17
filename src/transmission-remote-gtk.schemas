@@ -80,6 +80,19 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/update-interval</key>
+      <applyto>/apps/transmission-remote-gtk/update-interval</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>int</type>
+      <default>3</default>
+
+      <locale name="C">
+        <short>Update interval seconds</short>
+        <long>Update interval seconds</long>
+      </locale>
+    </schema>
+    
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/window-height</key>
       <applyto>/apps/transmission-remote-gtk/window-height</applyto>
       <owner>transmission-remote-gtk</owner>

@@ -24,6 +24,11 @@
 #include "trg-client.h"
 #include "trg-preferences.h"
 
+gboolean trg_client_supports_tracker_edit(trg_client *tc)
+{
+	return tc->session != NULL && tc->version >= 2.10;
+}
+
 trg_client *trg_init_client()
 {
     trg_client *client;
@@ -77,6 +82,11 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
 	g_strdup_printf("%s://%s:%d/transmission/rpc",
 			tc->ssl ? "https" : "http", host, port);
     g_free(host);
+
+    tc->interval = gconf_client_get_int(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, &error);
+    check_for_error(error);
+    if (tc->interval < 1)
+    	tc->interval = 3;
 
     tc->username =
 	gconf_client_get_string(gconf, TRG_GCONF_KEY_USERNAME, &error);

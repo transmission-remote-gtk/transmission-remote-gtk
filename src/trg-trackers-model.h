@@ -23,6 +23,9 @@
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
 
+#define TRACKERS_UPDATE_BARRIER_NONE -1
+#define TRACKERS_UPDATE_BARRIER_FULL -2
+
 G_BEGIN_DECLS
 #define TRG_TYPE_TRACKERS_MODEL trg_trackers_model_get_type()
 #define TRG_TRACKERS_MODEL(obj) \
@@ -50,6 +53,10 @@ TrgTrackersModel *trg_trackers_model_new(void);
 G_END_DECLS
 
 void trg_trackers_model_update(TrgTrackersModel * model, gint64 updateSerial, JsonObject * t, gboolean first);
+void trg_trackers_model_set_update_barrier(TrgTrackersModel * model,
+					gint64 serial);
+gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model);
+void trg_trackers_model_set_no_selection(TrgTrackersModel * model);
 
 enum {
     TRACKERCOL_ICON,

@@ -94,7 +94,7 @@ gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
     return id;
 }
 
-void
+static void
 trg_torrent_model_get_json_id_array_foreach(GtkTreeModel * model,
 					    GtkTreePath *
 					    path G_GNUC_UNUSED,
