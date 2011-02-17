@@ -51,6 +51,7 @@ JsonArray *torrent_get_wanted(JsonObject * t);
 JsonArray *torrent_get_priorities(JsonObject * t);
 gint64 torrent_get_id(JsonObject * t);
 gint64 tracker_get_tier(JsonObject * t);
+gint64 tracker_get_id(JsonObject *t);
 const gchar *tracker_get_announce(JsonObject * t);
 const gchar *tracker_get_scrape(JsonObject * t);
 JsonArray *torrent_get_files(JsonObject * args);

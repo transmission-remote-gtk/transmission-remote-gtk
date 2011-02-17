@@ -179,7 +179,6 @@ trg_menu_bar_install_widget_prop(GObjectClass * class, guint propId,
 							G_PARAM_STATIC_BLURB));
 }
 
-static
 GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, char *text,
 				 char *stock_id, gboolean sensitive)
 {

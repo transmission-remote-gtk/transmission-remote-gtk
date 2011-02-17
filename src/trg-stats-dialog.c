@@ -199,8 +199,16 @@ static void update_time_stat(JsonObject * args, GtkTreeRowReference * rr,
 static void on_stats_reply(JsonObject * response, int status,
 			   gpointer data)
 {
-    TrgStatsDialogPrivate *priv = TRG_STATS_DIALOG_GET_PRIVATE(data);
+    TrgStatsDialogPrivate *priv;
     JsonObject *args;
+
+    if (!TRG_IS_STATS_DIALOG(data))
+    {
+    	response_unref(response);
+    	return;
+    }
+
+    priv = TRG_STATS_DIALOG_GET_PRIVATE(data);
 
     if (status == CURLE_OK) {
 	args = get_arguments(response);

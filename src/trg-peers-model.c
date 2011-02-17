@@ -171,7 +171,6 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 	    isNew = FALSE;
 	}
 
-
 	flagStr = peer_get_flagstr(peer);
 	gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
 			   PEERSCOL_FLAGS, flagStr,

@@ -59,7 +59,7 @@ typedef struct {
     gint down;
     gint paused;
     gint count;
-} TrgTorrentModelClassUpdateStats;
+} trg_torrent_model_update_stats;
 
 GType trg_torrent_model_get_type(void);
 
@@ -72,7 +72,7 @@ find_existing_peer_item(GtkListStore * model, JsonObject * p,
 
 void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 			      JsonObject * response,
-			      TrgTorrentModelClassUpdateStats * stats,
+			      trg_torrent_model_update_stats * stats,
 			      gboolean first);
 
 enum {
@@ -94,12 +94,6 @@ enum {
     TORRENT_COLUMN_UPDATESERIAL,
     TORRENT_COLUMN_FLAGS,
     TORRENT_COLUMN_COLUMNS
-};
-
-struct idAndIter {
-    gint id;
-    GtkTreeIter *iter;
-    gboolean found;
 };
 
 #endif				/* TRG_TORRENT_MODEL_H_ */

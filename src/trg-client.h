@@ -34,6 +34,7 @@ typedef struct {
     gint64 updateSerial;
     JsonObject *session;
     gboolean ssl;
+    float version;
     char *url;
     char *username;
     char *password;
@@ -45,5 +46,6 @@ typedef struct {
 trg_client *trg_init_client();
 int trg_client_populate_with_settings(trg_client * tc,
 				      GConfClient * gconf);
+void trg_client_set_session(trg_client *tc, JsonObject *session);
 
 #endif				/* TRG_CLIENT_H_ */

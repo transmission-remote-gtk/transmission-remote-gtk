@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #ifndef TRG_MODEL_H_
 #define TRG_MODEL_H_
 
@@ -25,5 +24,9 @@
 
 void trg_model_remove_removed(GtkListStore * model, gint serial_column,
 			      gint64 currentSerial);
+
+gboolean
+find_existing_model_item(GtkTreeModel * model, gint search_column, gint64 id,
+			   GtkTreeIter * iter);
 
 #endif				/* TRG_MODEL_H_ */

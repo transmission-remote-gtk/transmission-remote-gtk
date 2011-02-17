@@ -133,7 +133,7 @@ void trg_tree_view_add_ratio_column(TrgTreeView * tv, char *title,
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 }
 
-void trg_tree_view_add_column_fixed_width(TrgTreeView * tv, char *title,
+GtkCellRenderer *trg_tree_view_add_column_fixed_width(TrgTreeView * tv, char *title,
 					  int index, int width)
 {
     GtkCellRenderer *renderer;
@@ -145,6 +145,8 @@ void trg_tree_view_add_column_fixed_width(TrgTreeView * tv, char *title,
 
     trg_tree_view_std_column_setup(column, index, width);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
+
+    return renderer;
 }
 
 void

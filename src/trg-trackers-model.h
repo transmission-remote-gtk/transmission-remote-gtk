@@ -48,14 +48,16 @@ GType trg_trackers_model_get_type(void);
 TrgTrackersModel *trg_trackers_model_new(void);
 
 G_END_DECLS
-    void
-trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t);
+
+void trg_trackers_model_update(TrgTrackersModel * model, gint64 updateSerial, JsonObject * t, gboolean first);
 
 enum {
     TRACKERCOL_ICON,
     TRACKERCOL_TIER,
     TRACKERCOL_ANNOUNCE,
     TRACKERCOL_SCRAPE,
+    TRACKERCOL_ID,
+    TRACKERCOL_UPDATESERIAL,
     TRACKERCOL_COLUMNS
 };
 

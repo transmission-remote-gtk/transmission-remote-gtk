@@ -19,6 +19,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <json-glib/json-glib.h>
 
 struct trg_model_remove_removed_foreachfunc_args {
     gint64 currentSerial;
@@ -62,4 +63,43 @@ trg_model_remove_removed(GtkListStore * model, gint serial_column,
 	}
 	g_list_free(args.toRemove);
     }
+}
+
+struct find_existing_item_foreach_args {
+    gint64 id;
+    gint search_column;
+    GtkTreeIter *iter;
+    gboolean found;
+};
+
+static gboolean
+find_existing_item_foreachfunc(GtkTreeModel * model,
+				       GtkTreePath * path G_GNUC_UNUSED,
+				       GtkTreeIter * iter, gpointer data)
+{
+    struct find_existing_item_foreach_args *args = (struct find_existing_item_foreach_args *) data;
+    gint64 currentId;
+
+    gtk_tree_model_get(model, iter, args->search_column, &currentId, -1);
+    if (currentId == args->id) {
+	args->iter = iter;
+	return args->found = TRUE;
+    }
+
+    return FALSE;
+}
+
+gboolean
+find_existing_model_item(GtkTreeModel * model, gint search_column, gint64 id,
+			   GtkTreeIter * iter)
+{
+    struct find_existing_item_foreach_args args;
+    args.id = id;
+    args.found = FALSE;
+    args.search_column = search_column;
+    gtk_tree_model_foreach(model,
+			   find_existing_item_foreachfunc, &args);
+    if (args.found == TRUE)
+	*iter = *(args.iter);
+    return args.found;
 }

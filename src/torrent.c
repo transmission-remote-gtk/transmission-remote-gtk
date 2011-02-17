@@ -208,6 +208,11 @@ gchar *torrent_get_status_string(gint64 value)
     }
 }
 
+gint64 tracker_get_id(JsonObject *t)
+{
+	return json_object_get_int_member(t, FIELD_ID);
+}
+
 gint64 tracker_get_tier(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_TIER);

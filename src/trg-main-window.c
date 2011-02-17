@@ -762,7 +762,7 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 
     GtkWidget *notebook = gtk_notebook_new();
 
-    gtk_widget_set_size_request(notebook, -1, 200);
+    gtk_widget_set_size_request(notebook, -1, 170);
 
     priv->genDetails = trg_general_panel_new(priv->sortedTorrentModel);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
@@ -771,7 +771,7 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 
     priv->trackersModel = trg_trackers_model_new();
     priv->trackersTreeView =
-	trg_trackers_tree_view_new(priv->trackersModel);
+	trg_trackers_tree_view_new(priv->trackersModel, priv->client);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
 			     my_scrolledwin_new(GTK_WIDGET
 						(priv->trackersTreeView)),
@@ -827,16 +827,15 @@ static void on_session_get(JsonObject * response, int status,
 
     newSession = get_arguments(response);
 
-    if (client->session != NULL) {
-	json_object_unref(client->session);
-    } else {
+    if (client->session == NULL) {
 	trg_status_bar_connect(priv->statusBar, newSession);
 	trg_main_window_conn_changed(win, TRUE);
 
 	dispatch_async(client, torrent_get(), on_torrent_get_first, data);
     }
 
-    client->session = newSession;
+    trg_client_set_session(client, newSession);
+    trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
 
     gdk_threads_leave();
     json_object_ref(newSession);
@@ -878,10 +877,7 @@ trg_main_window_update_notebook_displays(TrgMainWindow * win,
     client = priv->client;
 
     trg_general_panel_update(priv->genDetails, t, iter);
-
-    if (first == TRUE)
-	trg_trackers_model_update(priv->trackersModel, t);
-
+	trg_trackers_model_update(priv->trackersModel, client->updateSerial, t, first);
     trg_files_model_update(priv->filesModel, client->updateSerial,
 			   t, first);
     trg_peers_model_update(priv->peersModel, client->updateSerial,
@@ -1021,7 +1017,7 @@ static void
 on_torrent_get_multipurpose(JsonObject * response, gboolean first,
 			    int status, gpointer data)
 {
-    TrgTorrentModelClassUpdateStats stats;
+    trg_torrent_model_update_stats stats;
     TrgMainWindowPrivate *priv;
     trg_client *client;
 

@@ -48,6 +48,8 @@ typedef struct {
 GType trg_menu_bar_get_type(void);
 
 TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win);
+GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, char *text,
+				 char *stock_id, gboolean sensitive);
 
 G_END_DECLS
     void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,

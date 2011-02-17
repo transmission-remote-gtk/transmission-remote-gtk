@@ -23,11 +23,12 @@
 
 #include "config.h"
 #include "torrent.h"
+#include "trg-model.h"
 #include "trg-trackers-model.h"
 
 G_DEFINE_TYPE(TrgTrackersModel, trg_trackers_model, GTK_TYPE_LIST_STORE)
 
-void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
+void trg_trackers_model_update(TrgTrackersModel * model, gint64 updateSerial, JsonObject * t, gboolean first)
 {
     guint j;
     JsonArray *trackers;
@@ -42,11 +43,13 @@ void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
 	GtkTreeIter trackIter;
 	JsonObject *tracker =
 	    json_node_get_object(json_array_get_element(trackers, j));
+	gint64 trackerId = tracker_get_id(tracker);
 
 	announce = tracker_get_announce(tracker);
 	scrape = tracker_get_scrape(tracker);
 
-	gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
+	if (first || find_existing_model_item(GTK_TREE_MODEL(model), TRACKERCOL_ID, trackerId, &trackIter) == FALSE)
+		gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
 
 #ifdef DEBUG
 	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
@@ -57,15 +60,23 @@ void trg_trackers_model_update(TrgTrackersModel * model, JsonObject * t)
 			   TRACKERCOL_ANNOUNCE, announce, -1);
 	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
 			   TRACKERCOL_SCRAPE, scrape, -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter, TRACKERCOL_ID, trackerId, -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter, TRACKERCOL_UPDATESERIAL, updateSerial, -1);
 #else
 	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
 			   TRACKERCOL_ICON, GTK_STOCK_NETWORK,
+			   TRACKERCOL_ID, trackerId,
+			   TRACKERCOL_UPDATESERIAL, updateSerial,
 			   TRACKERCOL_TIER,
 			   tracker_get_tier(tracker),
 			   TRACKERCOL_ANNOUNCE,
 			   announce, TRACKERCOL_SCRAPE, scrape, -1);
 #endif
     }
+
+    trg_model_remove_removed(GTK_LIST_STORE(model),
+			     TRACKERCOL_UPDATESERIAL,
+			     updateSerial);
 }
 
 static void
@@ -81,6 +92,8 @@ static void trg_trackers_model_init(TrgTrackersModel * self)
     column_types[TRACKERCOL_TIER] = G_TYPE_INT64;
     column_types[TRACKERCOL_ANNOUNCE] = G_TYPE_STRING;
     column_types[TRACKERCOL_SCRAPE] = G_TYPE_STRING;
+    column_types[TRACKERCOL_ID] = G_TYPE_INT64;
+    column_types[TRACKERCOL_UPDATESERIAL] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
 				    TRACKERCOL_COLUMNS, column_types);

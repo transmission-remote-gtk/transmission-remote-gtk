@@ -77,7 +77,7 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
 }
 
 void trg_status_bar_update(TrgStatusBar * sb,
-			   TrgTorrentModelClassUpdateStats * stats)
+			   trg_torrent_model_update_stats * stats)
 {
     TrgStatusBarPrivate *priv;
     gchar *statusBarUpdate;

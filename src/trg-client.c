@@ -37,6 +37,16 @@ trg_client *trg_init_client()
 
 #define check_for_error(error) if (error) { g_error_free(error); return TRG_GCONF_SCHEMA_ERROR; }
 
+void trg_client_set_session(trg_client *tc, JsonObject *session)
+{
+	if (tc->session != NULL)
+		json_object_unref(tc->session);
+
+	session_get_version(session, &(tc->version));
+
+	tc->session = session;
+}
+
 int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
 {
     gint port;
