@@ -762,7 +762,7 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 
     GtkWidget *notebook = gtk_notebook_new();
 
-    gtk_widget_set_size_request(notebook, -1, 170);
+    gtk_widget_set_size_request(notebook, -1, 190);
 
     priv->genDetails = trg_general_panel_new(priv->sortedTorrentModel);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),

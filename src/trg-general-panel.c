@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <string.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
@@ -26,6 +27,7 @@
 #include "trg-torrent-model.h"
 
 static void gtk_label_clear(GtkLabel * l);
+static GtkLabel *gen_panel_label_get_key_label(GtkLabel *l);
 static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
                                              char *key, int col, int row);
 
@@ -47,6 +49,8 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_down_rate_label;
     GtkLabel *gen_up_rate_label;
     GtkLabel *gen_ratio_label;
+    GtkLabel *gen_downloaddir_label;
+    GtkLabel *gen_error_label;
     GtkTreeModel *model;
 };
 
@@ -66,11 +70,19 @@ void trg_general_panel_clear(TrgGeneralPanel * panel)
     gtk_label_clear(priv->gen_down_rate_label);
     gtk_label_clear(priv->gen_up_rate_label);
     gtk_label_clear(priv->gen_ratio_label);
+    gtk_label_clear(priv->gen_downloaddir_label);
+    gtk_label_clear(priv->gen_error_label);
+    gtk_label_clear(gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label)));
 }
 
 static void gtk_label_clear(GtkLabel * l)
 {
     gtk_label_set_text(l, "");
+}
+
+static GtkLabel *gen_panel_label_get_key_label(GtkLabel *l)
+{
+    return GTK_LABEL(g_object_get_data(G_OBJECT(l), "key-label"));
 }
 
 static void trg_general_panel_class_init(TrgGeneralPanelClass * klass)
@@ -85,8 +97,10 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gchar buf[32];
     gint sizeOfBuf;
     gchar *statusString;
+    const gchar *errorStr;
     gint64 eta;
     gint seeders, leechers;
+    GtkLabel *keyLabel;
 
     priv = TRG_GENERAL_PANEL_GET_PRIVATE(panel);
 
@@ -121,6 +135,20 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
 
     gtk_label_set_text(GTK_LABEL(priv->gen_name_label),
                        torrent_get_name(t));
+
+    gtk_label_set_text(GTK_LABEL(priv->gen_downloaddir_label), torrent_get_download_dir(t));
+
+    errorStr = torrent_get_errorstr(t);
+    keyLabel = gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label));
+    if (strlen(errorStr) > 0) {
+        gchar *errorValMarkup = g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>", errorStr);
+        gtk_label_set_markup(GTK_LABEL(priv->gen_error_label), errorValMarkup);
+        g_free(errorValMarkup);
+        gtk_label_set_markup(keyLabel, "<span fgcolor=\"red\">Error:</span>");
+    } else {
+        gtk_label_clear(GTK_LABEL(priv->gen_error_label));
+        gtk_label_clear(keyLabel);
+    }
 
     if ((eta = torrent_get_eta(t)) > 0) {
         tr_strltime_long(buf, eta, sizeOfBuf);
@@ -195,6 +223,12 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
         trg_general_panel_add_label(self, "Status:", 0, 4);
     priv->gen_ratio_label =
         trg_general_panel_add_label(self, "Ratio:", 1, 4);
+
+    priv->gen_downloaddir_label =
+        trg_general_panel_add_label(self, "Location:", 0, 5);
+
+    priv->gen_error_label =
+        trg_general_panel_add_label(self, "", 0, 6);
 
     gtk_widget_set_sensitive(GTK_WIDGET(self), FALSE);
 }
