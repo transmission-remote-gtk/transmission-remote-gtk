@@ -23,6 +23,7 @@
 #include "trg-main-window.h"
 #include "trg-remote-prefs-dialog.h"
 #include "hig.h"
+#include "util.h"
 #include "dispatch.h"
 #include "requests.h"
 #include "json.h"
@@ -70,6 +71,8 @@ struct _TrgRemotePrefsDialogPrivate {
     GtkWidget *speed_limit_down_spin;
     GtkWidget *speed_limit_up_check;
     GtkWidget *speed_limit_up_spin;
+    GtkWidget *port_test_label;
+    GtkWidget *port_test_button;
 };
 
 static GObject *instance = NULL;
@@ -283,6 +286,40 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
     return t;
 }
 
+static void on_port_tested(JsonObject * response, int status,
+                           gpointer data)
+{
+    if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
+        TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+
+        gtk_button_set_label(GTK_BUTTON(priv->port_test_button), "Retest");
+        gtk_widget_set_sensitive(priv->port_test_button, TRUE);
+
+        if (status == CURLE_OK)
+        {
+            gboolean isOpen = json_object_get_boolean_member(get_arguments(response), "port-is-open");
+            if (isOpen)
+                gtk_label_set_markup(GTK_LABEL(priv->port_test_label), "Port is <span fgcolor=\"green\">open</span>");
+            else
+                gtk_label_set_markup(GTK_LABEL(priv->port_test_label), "Port is <span fgcolor=\"red\">closed</span>");
+        }
+    }
+
+    response_unref(response);
+}
+
+static void port_test_cb(GtkButton *b, gpointer data)
+{
+    TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+    JsonNode *req = port_test();
+
+    gtk_label_set_text(GTK_LABEL(priv->port_test_label), "Port test");
+    gtk_button_set_label(b, "Testing...");
+    gtk_widget_set_sensitive(GTK_WIDGET(b), FALSE);
+
+    dispatch_async(priv->client, req, on_port_tested, data);
+}
+
 static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
                                       JsonObject * s)
 {
@@ -340,6 +377,11 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
                                           "Local peer discovery",
                                           session_get_lpd_enabled(s));
     widget_set_json_key(w, SGET_LPD_ENABLED);
+
+    priv->port_test_label = gtk_label_new("Port test");
+    w = priv->port_test_button = gtk_button_new_with_label("Test");
+    g_signal_connect(w, "clicked", G_CALLBACK(port_test_cb), win);
+    hig_workarea_add_row_w(t, &row, priv->port_test_label, w, NULL);
 
     return t;
 }
