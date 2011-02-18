@@ -48,38 +48,6 @@ trg_trackers_tree_view_class_init(TrgTrackersTreeViewClass * klass)
     g_type_class_add_private(klass, sizeof(TrgTrackersTreeViewPrivate));
 }
 
-static void
-trg_trackers_tree_view_json_id_array_foreach(GtkTreeModel * model,
-                                             GtkTreePath *
-                                             path G_GNUC_UNUSED,
-                                             GtkTreeIter * iter,
-                                             gpointer data)
-{
-    JsonArray *output = (JsonArray *) data;
-    gint64 id;
-    gtk_tree_model_get(model, iter, TRACKERCOL_ID, &id, -1);
-    json_array_add_int_element(output, id);
-}
-
-static JsonArray *trackers_build_json_id_array(TrgTrackersTreeView * tv)
-{
-    GtkTreeSelection *selection =
-        gtk_tree_view_get_selection(GTK_TREE_VIEW(tv));
-
-    JsonArray *ids = json_array_new();
-    gtk_tree_selection_selected_foreach(selection,
-                                        (GtkTreeSelectionForeachFunc)
-                                        trg_trackers_tree_view_json_id_array_foreach,
-                                        ids);
-
-    if (json_array_get_length(ids) < 1) {
-        json_array_unref(ids);
-        return NULL;
-    }
-
-    return ids;
-}
-
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
                                            trg_client * tc)
 {
@@ -224,25 +192,42 @@ static void delete_tracker(GtkWidget * w, gpointer data)
 {
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(data);
-    TrgTrackersTreeView *tv = TRG_TRACKERS_TREE_VIEW(data);
-    TrgTrackersModel *model =
-        TRG_TRACKERS_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(data)));
+    GtkTreeView *tv = GTK_TREE_VIEW(data);
+    GList *selectionRefs = trg_tree_view_get_selected_refs_list(tv);
+    GtkTreeModel *model = gtk_tree_view_get_model(tv);
+    JsonArray *trackerIds = json_array_new();
+    JsonArray *torrentIds = json_array_new();
 
-    JsonArray *trackerIds, *torrentIds;
     JsonNode *req;
     JsonObject *args;
+    GList *li;
 
-    if ((trackerIds = trackers_build_json_id_array(tv)) == NULL)
-        return;
+    for (li = selectionRefs; li != NULL; li = g_list_next(li)) {
+        GtkTreeRowReference *rr = (GtkTreeRowReference*)li->data;
+        GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+        if (path != NULL) {
+            gint64 trackerId;
+            GtkTreeIter trackerIter;
+            gtk_tree_model_get_iter(model, &trackerIter, path);
+            gtk_tree_model_get(model, &trackerIter, TRACKERCOL_ID, &trackerId, -1);
+            json_array_add_int_element(trackerIds, trackerId);
+            gtk_list_store_remove(GTK_LIST_STORE(model), &trackerIter);
+            gtk_tree_path_free(path);
+        }
+        gtk_tree_row_reference_free(rr);
+    }
+    g_list_free(selectionRefs);
 
-    torrentIds = json_array_new();
     json_array_add_int_element(torrentIds,
-                               trg_trackers_model_get_torrent_id(model));
+                               trg_trackers_model_get_torrent_id(TRG_TRACKERS_MODEL(model)));
 
     req = torrent_set(torrentIds);
     args = node_get_arguments(req);
 
     json_object_set_array_member(args, "trackerRemove", trackerIds);
+
+    trg_trackers_model_set_update_barrier(TRG_TRACKERS_MODEL(model),
+                                          priv->client->updateSerial + 1);
 
     dispatch_async(priv->client, req, on_generic_interactive_action,
                    priv->win);
