@@ -45,11 +45,11 @@ G_BEGIN_DECLS
 typedef struct {
     GtkListStoreClass parent_class;
     void (*torrent_completed) (TrgTorrentModel * model,
-			       GtkTreeIter * iter, JsonObject * t,
-			       gpointer data);
+                               GtkTreeIter * iter, JsonObject * t,
+                               gpointer data);
     void (*torrent_added) (TrgTorrentModel * model,
-			   GtkTreeIter * iter, JsonObject * t,
-			   gpointer data);
+                           GtkTreeIter * iter, JsonObject * t,
+                           gpointer data);
 } TrgTorrentModelClass;
 
 typedef struct {
@@ -68,12 +68,12 @@ TrgTorrentModel *trg_torrent_model_new();
 G_END_DECLS
     gboolean
 find_existing_peer_item(GtkListStore * model, JsonObject * p,
-			GtkTreeIter * iter);
+                        GtkTreeIter * iter);
 
 void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
-			      JsonObject * response,
-			      trg_torrent_model_update_stats * stats,
-			      gboolean first);
+                              JsonObject * response,
+                              trg_torrent_model_update_stats * stats,
+                              gboolean first);
 
 enum {
     TORRENT_COLUMN_ICON,
@@ -96,4 +96,4 @@ enum {
     TORRENT_COLUMN_COLUMNS
 };
 
-#endif				/* TRG_TORRENT_MODEL_H_ */
+#endif                          /* TRG_TORRENT_MODEL_H_ */

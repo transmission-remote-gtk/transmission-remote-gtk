@@ -53,7 +53,7 @@ TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model);
 
 G_END_DECLS
     void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
-				  GtkTreeIter * iter);
+                                  GtkTreeIter * iter);
 void trg_general_panel_clear(TrgGeneralPanel * panel);
 
-#endif				/* TRG_GENERAL_PANEL_H_ */
+#endif                          /* TRG_GENERAL_PANEL_H_ */

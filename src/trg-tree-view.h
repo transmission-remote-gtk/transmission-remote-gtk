@@ -48,27 +48,29 @@ GtkWidget *trg_tree_view_new(void);
 
 G_END_DECLS
 #define trg_tree_view_add_column(tv, title, index) trg_tree_view_add_column_fixed_width(tv, title, index, -1)
-GtkCellRenderer *trg_tree_view_add_column_fixed_width(TrgTreeView * treeview,
-					  char *title, int index,
-					  int width);
+    GtkCellRenderer * trg_tree_view_add_column_fixed_width(TrgTreeView *
+                                                           treeview,
+                                                           char *title,
+                                                           int index,
+                                                           int width);
 
 void trg_tree_view_add_pixbuf_text_column(TrgTreeView *
-					  treeview,
-					  int iconIndex,
-					  int nameIndex,
-					  gchar * text, int width);
+                                          treeview,
+                                          int iconIndex,
+                                          int nameIndex,
+                                          gchar * text, int width);
 
 void trg_tree_view_add_speed_column(TrgTreeView * tv, char *title,
-				    int index, int width);
+                                    int index, int width);
 void trg_tree_view_add_size_column(TrgTreeView * tv, char *title,
-				   int index, int width);
+                                   int index, int width);
 void trg_tree_view_add_prog_column(TrgTreeView * tv, gchar * title,
-				   gint index, gint width);
+                                   gint index, gint width);
 void trg_tree_view_add_ratio_column(TrgTreeView * tv, char *title,
-				    int index, int width);
+                                    int index, int width);
 void trg_tree_view_add_eta_column(TrgTreeView * tv, char *title, int index,
-				  int width);
+                                  int width);
 void trg_tree_view_std_column_setup(GtkTreeViewColumn * column, int index,
-				    int width);
+                                    int width);
 
-#endif				/* _TRG_TREE_VIEW_H_ */
+#endif                          /* _TRG_TREE_VIEW_H_ */

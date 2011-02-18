@@ -36,9 +36,9 @@ JsonNode *torrent_remove(JsonArray * array, int removeData);
 JsonNode *torrent_add(gchar * filename, gboolean paused);
 JsonNode *torrent_add_url(const gchar * url, gboolean paused);
 JsonNode *torrent_set_location(JsonArray * array, gchar * location,
-			       gboolean move);
+                               gboolean move);
 JsonNode *blocklist_update();
 JsonNode *port_test();
 JsonNode *session_stats();
 
-#endif				/* REQUESTS_H_ */
+#endif                          /* REQUESTS_H_ */

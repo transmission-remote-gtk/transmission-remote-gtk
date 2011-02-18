@@ -46,8 +46,8 @@ typedef struct {
 
 trg_client *trg_init_client();
 int trg_client_populate_with_settings(trg_client * tc,
-				      GConfClient * gconf);
-void trg_client_set_session(trg_client *tc, JsonObject *session);
-gboolean trg_client_supports_tracker_edit(trg_client *tc);
+                                      GConfClient * gconf);
+void trg_client_set_session(trg_client * tc, JsonObject * session);
+gboolean trg_client_supports_tracker_edit(trg_client * tc);
 
-#endif				/* TRG_CLIENT_H_ */
+#endif                          /* TRG_CLIENT_H_ */

@@ -29,7 +29,7 @@ enum {
 };
 
 G_DEFINE_TYPE(TrgCellRendererWanted, trg_cell_renderer_wanted,
-	      GTK_TYPE_CELL_RENDERER_TEXT)
+              GTK_TYPE_CELL_RENDERER_TEXT)
 #define TRG_CELL_RENDERER_WANTED_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CELL_RENDERER_WANTED, TrgCellRendererWantedPrivate))
 typedef struct _TrgCellRendererWantedPrivate TrgCellRendererWantedPrivate;
@@ -40,35 +40,35 @@ struct _TrgCellRendererWantedPrivate {
 
 static void
 trg_cell_renderer_wanted_get_property(GObject * object, guint property_id,
-				      GValue * value, GParamSpec * pspec)
+                                      GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererWantedPrivate *priv =
-	TRG_CELL_RENDERER_WANTED_GET_PRIVATE(object);
+        TRG_CELL_RENDERER_WANTED_GET_PRIVATE(object);
     switch (property_id) {
     case PROP_WANTED_VALUE:
-	g_value_set_boolean(value, priv->wanted_value);
-	break;
+        g_value_set_boolean(value, priv->wanted_value);
+        break;
     default:
-	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
 }
 
 static void
 trg_cell_renderer_wanted_set_property(GObject * object, guint property_id,
-				      const GValue * value,
-				      GParamSpec * pspec)
+                                      const GValue * value,
+                                      GParamSpec * pspec)
 {
     TrgCellRendererWantedPrivate *priv =
-	TRG_CELL_RENDERER_WANTED_GET_PRIVATE(object);
+        TRG_CELL_RENDERER_WANTED_GET_PRIVATE(object);
     if (property_id == PROP_WANTED_VALUE) {
-	priv->wanted_value = g_value_get_boolean(value);
-	if (priv->wanted_value) {
-	    g_object_set(object, "text", "Yes", NULL);
-	} else {
-	    g_object_set(object, "text", "No", NULL);
-	}
+        priv->wanted_value = g_value_get_boolean(value);
+        if (priv->wanted_value) {
+            g_object_set(object, "text", "Yes", NULL);
+        } else {
+            g_object_set(object, "text", "No", NULL);
+        }
     } else {
-	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
 }
 
@@ -81,14 +81,14 @@ trg_cell_renderer_wanted_class_init(TrgCellRendererWantedClass * klass)
     object_class->set_property = trg_cell_renderer_wanted_set_property;
 
     g_object_class_install_property(object_class,
-				    PROP_WANTED_VALUE,
-				    g_param_spec_boolean
-				    ("wanted-value", "Wanted Value",
-				     "Wanted Value", TRUE,
-				     G_PARAM_READWRITE |
-				     G_PARAM_STATIC_NAME |
-				     G_PARAM_STATIC_NICK |
-				     G_PARAM_STATIC_BLURB));
+                                    PROP_WANTED_VALUE,
+                                    g_param_spec_boolean
+                                    ("wanted-value", "Wanted Value",
+                                     "Wanted Value", TRUE,
+                                     G_PARAM_READWRITE |
+                                     G_PARAM_STATIC_NAME |
+                                     G_PARAM_STATIC_NICK |
+                                     G_PARAM_STATIC_BLURB));
 
     g_type_class_add_private(klass, sizeof(TrgCellRendererWantedPrivate));
 }
@@ -101,6 +101,6 @@ trg_cell_renderer_wanted_init(TrgCellRendererWanted * self G_GNUC_UNUSED)
 GtkCellRenderer *trg_cell_renderer_wanted_new(void)
 {
     return
-	GTK_CELL_RENDERER(g_object_new
-			  (TRG_TYPE_CELL_RENDERER_WANTED, NULL));
+        GTK_CELL_RENDERER(g_object_new
+                          (TRG_TYPE_CELL_RENDERER_WANTED, NULL));
 }

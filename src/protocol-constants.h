@@ -27,7 +27,7 @@
 
 /* torrents */
 
-#define FIELD_TORRENTS          "torrents"	/* parent node */
+#define FIELD_TORRENTS          "torrents"      /* parent node */
 #define FIELD_ANNOUNCE_URL      "announceUrl"
 #define FIELD_LEFT_UNTIL_DONE   "leftUntilDone"
 #define FIELD_TOTAL_SIZE        "totalSize"
@@ -119,4 +119,4 @@ enum {
 #define TFILE_BYTES_COMPLETED                   "bytesCompleted"
 #define TFILE_NAME                              "name"
 
-#endif				/* PROTOCOL_CONSTANTS_H_ */
+#endif                          /* PROTOCOL_CONSTANTS_H_ */

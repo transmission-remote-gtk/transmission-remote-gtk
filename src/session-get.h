@@ -86,4 +86,4 @@ gint64 session_get_speed_limit_up(JsonObject * s);
 gboolean session_get_speed_limit_down_enabled(JsonObject * s);
 gint64 session_get_speed_limit_down(JsonObject * s);
 
-#endif				/* SESSION_GET_H_ */
+#endif                          /* SESSION_GET_H_ */

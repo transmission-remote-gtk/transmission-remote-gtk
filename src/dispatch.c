@@ -41,35 +41,35 @@ JsonObject *dispatch(trg_client * client, JsonNode * req, int *status)
     json_node_free(req);
 #ifdef DEBUG
     if (g_getenv("TRG_SHOW_OUTGOING") != NULL)
-	g_printf("=>(outgoing)=> %s\n", serialized);
+        g_printf("=>(outgoing)=> %s\n", serialized);
 #endif
     response = trg_http_perform(client, serialized);
     g_free(serialized);
 
     if (status != NULL)
-	*status = response->status;
+        *status = response->status;
 
     if (response->status != CURLE_OK) {
-	http_response_free(response);
-	return NULL;
+        http_response_free(response);
+        return NULL;
     }
 
     deserialized = trg_deserialize(response, &decode_error);
     http_response_free(response);
 
     if (decode_error != NULL) {
-	g_printf("JSON decoding error: %s\n", decode_error->message);
-	g_error_free(decode_error);
-	if (status != NULL)
-	    *status = FAIL_JSON_DECODE;
-	return NULL;
+        g_printf("JSON decoding error: %s\n", decode_error->message);
+        g_error_free(decode_error);
+        if (status != NULL)
+            *status = FAIL_JSON_DECODE;
+        return NULL;
     }
 
     result = json_object_get_member(deserialized, "result");
     if (status != NULL
-	&& (result == NULL
-	    || g_strcmp0(json_node_get_string(result), "success") != 0))
-	*status = FAIL_RESPONSE_UNSUCCESSFUL;
+        && (result == NULL
+            || g_strcmp0(json_node_get_string(result), "success") != 0))
+        *status = FAIL_RESPONSE_UNSUCCESSFUL;
 
     return deserialized;
 }
@@ -80,14 +80,14 @@ static gpointer dispatch_async_threadfunc(gpointer ptr)
     int status;
     JsonObject *result = dispatch(args->client, args->req, &status);
     if (args->callback != NULL)
-	args->callback(result, status, args->data);
+        args->callback(result, status, args->data);
     g_free(args);
     return NULL;
 }
 
 GThread *dispatch_async(trg_client * client, JsonNode * req,
-			void (*callback) (JsonObject *, int, gpointer),
-			gpointer data)
+                        void (*callback) (JsonObject *, int, gpointer),
+                        gpointer data)
 {
     GError *error = NULL;
     GThread *thread;
@@ -100,13 +100,13 @@ GThread *dispatch_async(trg_client * client, JsonNode * req,
     args->client = client;
 
     thread =
-	g_thread_create(dispatch_async_threadfunc, args, FALSE, &error);
+        g_thread_create(dispatch_async_threadfunc, args, FALSE, &error);
     if (error != NULL) {
-	g_printf("thread creation error: %s\n", error->message);
-	g_error_free(error);
-	g_free(args);
-	return NULL;
+        g_printf("thread creation error: %s\n", error->message);
+        g_error_free(error);
+        g_free(args);
+        return NULL;
     } else {
-	return thread;
+        return thread;
     }
 }

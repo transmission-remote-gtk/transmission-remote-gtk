@@ -30,11 +30,11 @@ void widget_set_json_key(GtkWidget * w, gchar * key);
 
 void gtk_spin_button_json_int_out(GtkSpinButton * spin, JsonObject * out);
 void gtk_spin_button_json_double_out(GtkSpinButton * spin,
-				     JsonObject * out);
+                                     JsonObject * out);
 gboolean gtk_toggle_button_json_out(GtkToggleButton * button,
-				    JsonObject * out);
+                                    JsonObject * out);
 void gtk_entry_json_output(GtkEntry * e, JsonObject * out);
 void gtk_combo_box_json_string_output(GtkComboBox * c, JsonObject * out);
 void toggle_active_arg_is_sensitive(GtkToggleButton * b, gpointer data);
 
-#endif				/* TRG_JSON_WIDGETS_H_ */
+#endif                          /* TRG_JSON_WIDGETS_H_ */

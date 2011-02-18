@@ -52,7 +52,7 @@ typedef struct {
     /* SIGNALS */
 
     void (*torrent_state_changed) (TrgStateSelector * selector,
-				   guint flag, gpointer data);
+                                   guint flag, gpointer data);
 } TrgStateSelectorClass;
 
 GType trg_state_selector_get_type(void);
@@ -60,4 +60,4 @@ TrgStateSelector *trg_state_selector_new(void);
 
 G_END_DECLS guint32 trg_state_selector_get_flag(TrgStateSelector * s);
 
-#endif				/* TRG_STATE_LIST_H_ */
+#endif                          /* TRG_STATE_LIST_H_ */

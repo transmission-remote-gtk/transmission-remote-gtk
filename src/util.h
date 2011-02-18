@@ -41,7 +41,7 @@ char *tr_strltime_short(char *buf, gint64 seconds, size_t buflen);
 char *tr_strpercent(char *buf, double x, size_t buflen);
 char *tr_strlpercent(char *buf, double x, size_t buflen);
 char *tr_strratio(char *buf, size_t buflen, double ratio,
-		  const char *infinity);
+                  const char *infinity);
 char *tr_strlratio(char *buf, double ratio, size_t buflen);
 char *tr_strlspeed(char *buf, double kb_sec, size_t buflen);
 char *tr_strlsize(char *buf, guint64 size, size_t buflen);
@@ -52,8 +52,8 @@ int tr_snprintf(char *buf, size_t buflen, const char *fmt, ...);
 size_t tr_strlcpy(char *dst, const void *src, size_t siz);
 double tr_truncd(double x, int decimal_places);
 int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
-		     va_list ap);
+                     va_list ap);
 void response_unref(JsonObject * response);
 const gchar *make_error_message(JsonObject * response, int status);
 
-#endif				/* UTIL_H_ */
+#endif                          /* UTIL_H_ */

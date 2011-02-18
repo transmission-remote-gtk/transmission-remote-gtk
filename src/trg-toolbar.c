@@ -58,69 +58,69 @@ struct _TrgToolbarPrivate {
 
 static void
 trg_toolbar_get_property(GObject * object, guint property_id,
-			 GValue * value, GParamSpec * pspec)
+                         GValue * value, GParamSpec * pspec)
 {
     TrgToolbarPrivate *priv = TRG_TOOLBAR_GET_PRIVATE(object);
 
     switch (property_id) {
     case PROP_CONNECT_BUTTON:
-	g_value_set_object(value, priv->tb_connect);
-	break;
+        g_value_set_object(value, priv->tb_connect);
+        break;
     case PROP_DISCONNECT_BUTTON:
-	g_value_set_object(value, priv->tb_disconnect);
-	break;
+        g_value_set_object(value, priv->tb_disconnect);
+        break;
     case PROP_ADD_BUTTON:
-	g_value_set_object(value, priv->tb_add);
-	break;
+        g_value_set_object(value, priv->tb_add);
+        break;
 /*	case PROP_ADD_URL_BUTTON:
 	        g_value_set_object(value, priv->tb_add_url);
 	        break;*/
     case PROP_REMOVE_BUTTON:
-	g_value_set_object(value, priv->tb_remove);
-	break;
+        g_value_set_object(value, priv->tb_remove);
+        break;
     case PROP_DELETE_BUTTON:
-	g_value_set_object(value, priv->tb_delete);
-	break;
+        g_value_set_object(value, priv->tb_delete);
+        break;
     case PROP_RESUME_BUTTON:
-	g_value_set_object(value, priv->tb_resume);
-	break;
+        g_value_set_object(value, priv->tb_resume);
+        break;
     case PROP_PAUSE_BUTTON:
-	g_value_set_object(value, priv->tb_pause);
-	break;
-	/*case PROP_VERIFY_BUTTON:
-	   g_value_set_object(value, priv->tb_verify);
-	   break; */
+        g_value_set_object(value, priv->tb_pause);
+        break;
+        /*case PROP_VERIFY_BUTTON:
+           g_value_set_object(value, priv->tb_verify);
+           break; */
     case PROP_PROPS_BUTTON:
-	g_value_set_object(value, priv->tb_props);
-	break;
+        g_value_set_object(value, priv->tb_props);
+        break;
     case PROP_REMOTE_PREFS_BUTTON:
-	g_value_set_object(value, priv->tb_remote_prefs);
-	break;
+        g_value_set_object(value, priv->tb_remote_prefs);
+        break;
     case PROP_LOCAL_PREFS_BUTTON:
-	g_value_set_object(value, priv->tb_local_prefs);
-	break;
+        g_value_set_object(value, priv->tb_local_prefs);
+        break;
     default:
-	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
 }
 
 static void
 trg_toolbar_install_widget_prop(GObjectClass * class, guint propId,
-				const gchar * name, const gchar * nick)
+                                const gchar * name, const gchar * nick)
 {
     g_object_class_install_property(class,
-				    propId,
-				    g_param_spec_object(name,
-							nick,
-							nick,
-							GTK_TYPE_WIDGET,
-							G_PARAM_READABLE
-							|
-							G_PARAM_STATIC_NAME
-							|
-							G_PARAM_STATIC_NICK
-							|
-							G_PARAM_STATIC_BLURB));
+                                    propId,
+                                    g_param_spec_object(name,
+                                                        nick,
+                                                        nick,
+                                                        GTK_TYPE_WIDGET,
+                                                        G_PARAM_READABLE
+                                                        |
+                                                        G_PARAM_STATIC_NAME
+                                                        |
+                                                        G_PARAM_STATIC_NICK
+                                                        |
+                                                        G_PARAM_STATIC_BLURB));
 }
 
 static void trg_toolbar_class_init(TrgToolbarClass * klass)
@@ -129,44 +129,44 @@ static void trg_toolbar_class_init(TrgToolbarClass * klass)
     object_class->get_property = trg_toolbar_get_property;
 
     trg_toolbar_install_widget_prop(object_class, PROP_CONNECT_BUTTON,
-				    "connect-button", "Connect Button");
+                                    "connect-button", "Connect Button");
     trg_toolbar_install_widget_prop(object_class,
-				    PROP_DISCONNECT_BUTTON,
-				    "disconnect-button",
-				    "Disconnect Button");
+                                    PROP_DISCONNECT_BUTTON,
+                                    "disconnect-button",
+                                    "Disconnect Button");
     trg_toolbar_install_widget_prop(object_class, PROP_ADD_BUTTON,
-				    "add-button", "Add Button");
+                                    "add-button", "Add Button");
     trg_toolbar_install_widget_prop(object_class, PROP_ADD_URL_BUTTON,
-				    "add-url-button", "Add URL Button");
+                                    "add-url-button", "Add URL Button");
     trg_toolbar_install_widget_prop(object_class, PROP_REMOVE_BUTTON,
-				    "remove-button", "Remove Button");
+                                    "remove-button", "Remove Button");
     trg_toolbar_install_widget_prop(object_class, PROP_DELETE_BUTTON,
-				    "delete-button", "Delete Button");
+                                    "delete-button", "Delete Button");
     trg_toolbar_install_widget_prop(object_class, PROP_RESUME_BUTTON,
-				    "resume-button", "Resume Button");
+                                    "resume-button", "Resume Button");
     trg_toolbar_install_widget_prop(object_class, PROP_PAUSE_BUTTON,
-				    "pause-button", "Pause Button");
+                                    "pause-button", "Pause Button");
     /*trg_toolbar_install_widget_prop(object_class, PROP_VERIFY_BUTTON,
        "verify-button", "Verify Button"); */
     trg_toolbar_install_widget_prop(object_class, PROP_PROPS_BUTTON,
-				    "props-button", "Props Button");
+                                    "props-button", "Props Button");
     trg_toolbar_install_widget_prop(object_class,
-				    PROP_REMOTE_PREFS_BUTTON,
-				    "remote-prefs-button",
-				    "Remote Prefs Button");
+                                    PROP_REMOTE_PREFS_BUTTON,
+                                    "remote-prefs-button",
+                                    "Remote Prefs Button");
     trg_toolbar_install_widget_prop(object_class,
-				    PROP_LOCAL_PREFS_BUTTON,
-				    "local-prefs-button",
-				    "Local Prefs Button");
+                                    PROP_LOCAL_PREFS_BUTTON,
+                                    "local-prefs-button",
+                                    "Local Prefs Button");
 
     g_type_class_add_private(klass, sizeof(TrgToolbarPrivate));
 }
 
 static
 GtkWidget *trg_toolbar_item_new(TrgToolbar * toolbar,
-				gchar * text G_GNUC_UNUSED,
-				int *index, gchar * icon,
-				gboolean sensitive)
+                                gchar * text G_GNUC_UNUSED,
+                                int *index, gchar * icon,
+                                gboolean sensitive)
 {
     GtkToolItem *w = gtk_tool_button_new_from_stock(icon);
     gtk_widget_set_sensitive(GTK_WIDGET(w), sensitive);
@@ -186,7 +186,7 @@ void trg_toolbar_connected_change(TrgToolbar * tb, gboolean connected)
 }
 
 void trg_toolbar_torrent_actions_sensitive(TrgToolbar * tb,
-					   gboolean sensitive)
+                                           gboolean sensitive)
 {
     TrgToolbarPrivate *priv = TRG_TOOLBAR_GET_PRIVATE(tb);
 
@@ -207,19 +207,19 @@ static void trg_toolbar_init(TrgToolbar * self)
     priv = TRG_TOOLBAR_GET_PRIVATE(self);
 
     gtk_orientable_set_orientation(GTK_ORIENTABLE(self),
-				   GTK_ORIENTATION_HORIZONTAL);
+                                   GTK_ORIENTATION_HORIZONTAL);
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(self),
-			      GTK_ICON_SIZE_LARGE_TOOLBAR);
+                              GTK_ICON_SIZE_LARGE_TOOLBAR);
     gtk_toolbar_set_style(GTK_TOOLBAR(self), GTK_TOOLBAR_ICONS);
 
     priv->tb_connect =
-	trg_toolbar_item_new(self, "Connect", &position,
-			     GTK_STOCK_CONNECT, TRUE);
+        trg_toolbar_item_new(self, "Connect", &position,
+                             GTK_STOCK_CONNECT, TRUE);
     priv->tb_disconnect =
-	trg_toolbar_item_new(self, "Disconnect", &position,
-			     GTK_STOCK_DISCONNECT, FALSE);
+        trg_toolbar_item_new(self, "Disconnect", &position,
+                             GTK_STOCK_DISCONNECT, FALSE);
     priv->tb_add =
-	trg_toolbar_item_new(self, "Add", &position, GTK_STOCK_ADD, FALSE);
+        trg_toolbar_item_new(self, "Add", &position, GTK_STOCK_ADD, FALSE);
 
     /*priv->tb_add_url =
        trg_toolbar_item_new(self, "Add URL", 3, GTK_STOCK_ADD, FALSE); */
@@ -228,23 +228,23 @@ static void trg_toolbar_init(TrgToolbar * self)
     gtk_toolbar_insert(GTK_TOOLBAR(self), separator, position++);
 
     priv->tb_resume =
-	trg_toolbar_item_new(self, "Resume", &position,
-			     GTK_STOCK_MEDIA_PLAY, FALSE);
+        trg_toolbar_item_new(self, "Resume", &position,
+                             GTK_STOCK_MEDIA_PLAY, FALSE);
     priv->tb_pause =
-	trg_toolbar_item_new(self, "Pause", &position,
-			     GTK_STOCK_MEDIA_PAUSE, FALSE);
+        trg_toolbar_item_new(self, "Pause", &position,
+                             GTK_STOCK_MEDIA_PAUSE, FALSE);
 
     priv->tb_props =
-	trg_toolbar_item_new(self, "Properties", &position,
-			     GTK_STOCK_PROPERTIES, FALSE);
+        trg_toolbar_item_new(self, "Properties", &position,
+                             GTK_STOCK_PROPERTIES, FALSE);
 
     priv->tb_remove =
-	trg_toolbar_item_new(self, "Remove", &position,
-			     GTK_STOCK_REMOVE, FALSE);
+        trg_toolbar_item_new(self, "Remove", &position,
+                             GTK_STOCK_REMOVE, FALSE);
 
     priv->tb_delete =
-	trg_toolbar_item_new(self, "Remove with data",
-			     &position, GTK_STOCK_DELETE, FALSE);
+        trg_toolbar_item_new(self, "Remove with data",
+                             &position, GTK_STOCK_DELETE, FALSE);
 
     /*priv->tb_verify =
        trg_toolbar_item_new(self, "Verify", 11,
@@ -254,12 +254,12 @@ static void trg_toolbar_init(TrgToolbar * self)
     gtk_toolbar_insert(GTK_TOOLBAR(self), separator, position++);
 
     priv->tb_local_prefs =
-	trg_toolbar_item_new(self, "Local Preferences", &position,
-			     GTK_STOCK_PREFERENCES, TRUE);
+        trg_toolbar_item_new(self, "Local Preferences", &position,
+                             GTK_STOCK_PREFERENCES, TRUE);
 
     priv->tb_remote_prefs =
-	trg_toolbar_item_new(self, "Remote Preferences",
-			     &position, GTK_STOCK_NETWORK, FALSE);
+        trg_toolbar_item_new(self, "Remote Preferences",
+                             &position, GTK_STOCK_NETWORK, FALSE);
 }
 
 TrgToolbar *trg_toolbar_new(void)

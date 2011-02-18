@@ -41,39 +41,39 @@ static guint signals[TMODEL_SIGNAL_COUNT] = { 0 };
 G_DEFINE_TYPE(TrgTorrentModel, trg_torrent_model, GTK_TYPE_LIST_STORE)
 
 static guint32 torrent_get_flags(JsonObject * t, gint64 status,
-				 trg_torrent_model_update_stats * stats);
+                                 trg_torrent_model_update_stats * stats);
 
 static void
 update_torrent_iter(gint64 serial, TrgTorrentModel * model,
-		    GtkTreeIter * iter, JsonObject * t,
-		    trg_torrent_model_update_stats * stats);
+                    GtkTreeIter * iter, JsonObject * t,
+                    trg_torrent_model_update_stats * stats);
 
 static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
     signals[TMODEL_TORRENT_COMPLETED] =
-	g_signal_new("torrent-completed",
-		     G_TYPE_FROM_CLASS(object_class),
-		     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		     G_STRUCT_OFFSET(TrgTorrentModelClass,
-				     torrent_completed), NULL,
-		     NULL, g_cclosure_marshal_VOID__POINTER,
-		     G_TYPE_NONE, 1, G_TYPE_POINTER);
+        g_signal_new("torrent-completed",
+                     G_TYPE_FROM_CLASS(object_class),
+                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                     G_STRUCT_OFFSET(TrgTorrentModelClass,
+                                     torrent_completed), NULL,
+                     NULL, g_cclosure_marshal_VOID__POINTER,
+                     G_TYPE_NONE, 1, G_TYPE_POINTER);
 
     signals[TMODEL_TORRENT_ADDED] =
-	g_signal_new("torrent-added",
-		     G_TYPE_FROM_CLASS(object_class),
-		     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		     G_STRUCT_OFFSET(TrgTorrentModelClass,
-				     torrent_added), NULL,
-		     NULL, g_cclosure_marshal_VOID__POINTER,
-		     G_TYPE_NONE, 1, G_TYPE_POINTER);
+        g_signal_new("torrent-added",
+                     G_TYPE_FROM_CLASS(object_class),
+                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                     G_STRUCT_OFFSET(TrgTorrentModelClass,
+                                     torrent_added), NULL,
+                     NULL, g_cclosure_marshal_VOID__POINTER,
+                     G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 static void trg_torrent_model_count_peers(TrgTorrentModel * model,
-					  GtkTreeIter * iter,
-					  JsonObject * t)
+                                          GtkTreeIter * iter,
+                                          JsonObject * t)
 {
     JsonArray *peers;
     gint seeders, leechers;
@@ -85,20 +85,20 @@ static void trg_torrent_model_count_peers(TrgTorrentModel * model,
     leechers = 0;
 
     for (j = 0; j < json_array_get_length(peers); j++) {
-	JsonObject *peer;
+        JsonObject *peer;
 
-	peer = json_node_get_object(json_array_get_element(peers, j));
+        peer = json_node_get_object(json_array_get_element(peers, j));
 
-	if (peer_get_is_downloading_from(peer))
-	    seeders++;
+        if (peer_get_is_downloading_from(peer))
+            seeders++;
 
-	if (peer_get_is_uploading_to(peer))
-	    leechers++;
+        if (peer_get_is_uploading_to(peer))
+            leechers++;
     }
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_SEEDS, seeders,
-		       TORRENT_COLUMN_LEECHERS, leechers, -1);
+                       TORRENT_COLUMN_SEEDS, seeders,
+                       TORRENT_COLUMN_LEECHERS, leechers, -1);
 }
 
 static void trg_torrent_model_init(TrgTorrentModel * self)
@@ -124,50 +124,50 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_FLAGS] = G_TYPE_INT;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
-				    TORRENT_COLUMN_COLUMNS, column_types);
+                                    TORRENT_COLUMN_COLUMNS, column_types);
 }
 
 static guint32 torrent_get_flags(JsonObject * t, gint64 status,
-				 trg_torrent_model_update_stats * stats)
+                                 trg_torrent_model_update_stats * stats)
 {
     guint32 flags = 0;
     switch (status) {
     case STATUS_DOWNLOADING:
-	flags |= TORRENT_FLAG_DOWNLOADING;
-	stats->down++;
-	break;
+        flags |= TORRENT_FLAG_DOWNLOADING;
+        stats->down++;
+        break;
     case STATUS_PAUSED:
-	flags |= TORRENT_FLAG_PAUSED;
-	stats->paused++;
-	break;
+        flags |= TORRENT_FLAG_PAUSED;
+        stats->paused++;
+        break;
     case STATUS_SEEDING:
-	flags |= TORRENT_FLAG_SEEDING;
-	stats->seeding++;
-	break;
+        flags |= TORRENT_FLAG_SEEDING;
+        stats->seeding++;
+        break;
     case STATUS_CHECKING:
-	flags |= TORRENT_FLAG_CHECKING;
-	break;
+        flags |= TORRENT_FLAG_CHECKING;
+        break;
     case STATUS_WAITING_TO_CHECK:
-	flags |= TORRENT_FLAG_WAITING_CHECK;
-	flags |= TORRENT_FLAG_CHECKING;
-	break;
+        flags |= TORRENT_FLAG_WAITING_CHECK;
+        flags |= TORRENT_FLAG_CHECKING;
+        break;
     }
 
     if (torrent_get_is_finished(t) == TRUE)
-	flags |= TORRENT_FLAG_COMPLETE;
+        flags |= TORRENT_FLAG_COMPLETE;
     else
-	flags |= TORRENT_FLAG_INCOMPLETE;
+        flags |= TORRENT_FLAG_INCOMPLETE;
 
     if (strlen(torrent_get_errorstr(t)) > 0)
-	flags |= TORRENT_FLAG_ERROR;
+        flags |= TORRENT_FLAG_ERROR;
 
     return flags;
 }
 
 static void
 update_torrent_iter(gint64 serial, TrgTorrentModel * model,
-		    GtkTreeIter * iter, JsonObject * t,
-		    trg_torrent_model_update_stats * stats)
+                    GtkTreeIter * iter, JsonObject * t,
+                    trg_torrent_model_update_stats * stats)
 {
     guint lastFlags, newFlags;
     gchar *statusString, *statusIcon;
@@ -190,69 +190,69 @@ update_torrent_iter(gint64 serial, TrgTorrentModel * model,
     statusIcon = torrent_get_status_icon(newFlags);
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
-		       TORRENT_COLUMN_FLAGS, &lastFlags, -1);
+                       TORRENT_COLUMN_FLAGS, &lastFlags, -1);
 
 #ifdef DEBUG
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_ICON, statusIcon, -1);
+                       TORRENT_COLUMN_ICON, statusIcon, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
+                       TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
+                       TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_DONE, torrent_get_percent_done(t),
-		       -1);
+                       TORRENT_COLUMN_DONE, torrent_get_percent_done(t),
+                       -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_STATUS,
-		       statusString, -1);
+                       statusString, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_DOWNSPEED, downRate, -1);
+                       TORRENT_COLUMN_DOWNSPEED, downRate, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_FLAGS,
-		       newFlags, -1);
+                       newFlags, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_UPSPEED,
-		       upRate, -1);
+                       upRate, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_ETA,
-		       torrent_get_eta(t), -1);
+                       torrent_get_eta(t), -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_UPLOADED, uploaded, -1);
+                       TORRENT_COLUMN_UPLOADED, uploaded, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
+                       TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_RATIO,
-		       uploaded > 0
-		       && downloaded >
-		       0 ? (double) uploaded / (double) downloaded : 0,
-		       -1);
+                       uploaded > 0
+                       && downloaded >
+                       0 ? (double) uploaded / (double) downloaded : 0,
+                       -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_ID, id,
-		       -1);
+                       -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_JSON, t,
-		       -1);
+                       -1);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
+                       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #else
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       TORRENT_COLUMN_ICON, statusIcon,
-		       TORRENT_COLUMN_NAME, torrent_get_name(t),
-		       TORRENT_COLUMN_SIZE, torrent_get_size(t),
-		       TORRENT_COLUMN_DONE,
-		       torrent_get_percent_done(t),
-		       TORRENT_COLUMN_STATUS, statusString,
-		       TORRENT_COLUMN_DOWNSPEED, downRate,
-		       TORRENT_COLUMN_FLAGS, newFlags,
-		       TORRENT_COLUMN_UPSPEED, upRate,
-		       TORRENT_COLUMN_ETA, torrent_get_eta(t),
-		       TORRENT_COLUMN_UPLOADED, uploaded,
-		       TORRENT_COLUMN_DOWNLOADED, downloaded,
-		       TORRENT_COLUMN_RATIO,
-		       uploaded >
-		       0
-		       && downloaded >
-		       0 ? (double) uploaded / (double) downloaded : 0,
-		       TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
-		       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
+                       TORRENT_COLUMN_ICON, statusIcon,
+                       TORRENT_COLUMN_NAME, torrent_get_name(t),
+                       TORRENT_COLUMN_SIZE, torrent_get_size(t),
+                       TORRENT_COLUMN_DONE,
+                       torrent_get_percent_done(t),
+                       TORRENT_COLUMN_STATUS, statusString,
+                       TORRENT_COLUMN_DOWNSPEED, downRate,
+                       TORRENT_COLUMN_FLAGS, newFlags,
+                       TORRENT_COLUMN_UPSPEED, upRate,
+                       TORRENT_COLUMN_ETA, torrent_get_eta(t),
+                       TORRENT_COLUMN_UPLOADED, uploaded,
+                       TORRENT_COLUMN_DOWNLOADED, downloaded,
+                       TORRENT_COLUMN_RATIO,
+                       uploaded >
+                       0
+                       && downloaded >
+                       0 ? (double) uploaded / (double) downloaded : 0,
+                       TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
+                       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif
 
     if ((lastFlags & TORRENT_FLAG_DOWNLOADING)
-	&& (newFlags & TORRENT_FLAG_COMPLETE))
-	g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
+        && (newFlags & TORRENT_FLAG_COMPLETE))
+        g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
 
     trg_torrent_model_count_peers(model, iter, t);
 
@@ -266,9 +266,9 @@ TrgTorrentModel *trg_torrent_model_new(void)
 }
 
 void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
-			      JsonObject * response,
-			      trg_torrent_model_update_stats * stats,
-			      gboolean first)
+                              JsonObject * response,
+                              trg_torrent_model_update_stats * stats,
+                              gboolean first)
 {
     int i;
     JsonArray *newTorrents;
@@ -277,31 +277,34 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
     stats->count = json_array_get_length(newTorrents);
 
     for (i = 0; i < stats->count; i++) {
-	GtkTreeIter iter;
-	JsonObject *t;
+        GtkTreeIter iter;
+        JsonObject *t;
 
-	t = json_array_get_object_element(newTorrents, i);
+        t = json_array_get_object_element(newTorrents, i);
 
-	if (first == TRUE
-	    || find_existing_model_item(GTK_TREE_MODEL(model), TORRENT_COLUMN_ID, torrent_get_id(t), &iter) == FALSE) {
-	    gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-	    update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
-	    if (!first)
-		g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0,
-			      &iter);
-	} else {
-	    update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
-	}
+        if (first == TRUE
+            || find_existing_model_item(GTK_TREE_MODEL(model),
+                                        TORRENT_COLUMN_ID,
+                                        torrent_get_id(t),
+                                        &iter) == FALSE) {
+            gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+            update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
+            if (!first)
+                g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0,
+                              &iter);
+        } else {
+            update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
+        }
     }
 
     json_array_ref(newTorrents);
 
     if (tc->torrents != NULL)
-	json_array_unref(tc->torrents);
+        json_array_unref(tc->torrents);
 
     tc->torrents = newTorrents;
 
     trg_model_remove_removed(GTK_LIST_STORE(model),
-			     TORRENT_COLUMN_UPDATESERIAL,
-			     tc->updateSerial);
+                             TORRENT_COLUMN_UPDATESERIAL,
+                             tc->updateSerial);
 }

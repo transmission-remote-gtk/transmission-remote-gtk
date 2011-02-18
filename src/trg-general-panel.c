@@ -27,7 +27,7 @@
 
 static void gtk_label_clear(GtkLabel * l);
 static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
-					     char *key, int col, int row);
+                                             char *key, int col, int row);
 
 G_DEFINE_TYPE(TrgGeneralPanel, trg_general_panel, GTK_TYPE_FIXED)
 #define TRG_GENERAL_PANEL_GET_PRIVATE(o) \
@@ -79,7 +79,7 @@ static void trg_general_panel_class_init(TrgGeneralPanelClass * klass)
 }
 
 void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
-			      GtkTreeIter * iter)
+                              GtkTreeIter * iter)
 {
     TrgGeneralPanelPrivate *priv;
     gchar buf[32];
@@ -108,8 +108,8 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gtk_label_set_text(GTK_LABEL(priv->gen_downloaded_label), buf);
 
     trg_strlratio(buf,
-		 (double) torrent_get_uploaded(t) /
-		 (double) torrent_get_downloaded(t));
+                  (double) torrent_get_uploaded(t) /
+                  (double) torrent_get_downloaded(t));
     gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), buf);
 
     statusString = torrent_get_status_string(torrent_get_status(t));
@@ -120,20 +120,20 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gtk_label_set_text(GTK_LABEL(priv->gen_completed_label), buf);
 
     gtk_label_set_text(GTK_LABEL(priv->gen_name_label),
-		       torrent_get_name(t));
+                       torrent_get_name(t));
 
     if ((eta = torrent_get_eta(t)) > 0) {
-	tr_strltime_long(buf, eta, sizeOfBuf);
-	gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), buf);
+        tr_strltime_long(buf, eta, sizeOfBuf);
+        gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), buf);
     } else {
-	gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), "N/A");
+        gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), "N/A");
     }
 
     seeders = 0;
     leechers = 0;
     gtk_tree_model_get(GTK_TREE_MODEL(priv->model), iter,
-		       TORRENT_COLUMN_SEEDS, &seeders,
-		       TORRENT_COLUMN_LEECHERS, &leechers, -1);
+                       TORRENT_COLUMN_SEEDS, &seeders,
+                       TORRENT_COLUMN_LEECHERS, &leechers, -1);
 
     snprintf(buf, sizeof(buf), "%d", seeders);
     gtk_label_set_text(GTK_LABEL(priv->gen_seeders_label), buf);
@@ -142,7 +142,7 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
 }
 
 static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
-					     char *key, int col, int row)
+                                             char *key, int col, int row)
 {
     GtkWidget *keyLabel;
     GtkWidget *value;
@@ -153,12 +153,12 @@ static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
     gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
     g_free(keyMarkup);
     gtk_fixed_put(GTK_FIXED(fixed), keyLabel, 10 + (col * 280),
-		  10 + (row * 22));
+                  10 + (row * 22));
 
     value = gtk_label_new(NULL);
     gtk_label_set_selectable(GTK_LABEL(value), TRUE);
     gtk_fixed_put(GTK_FIXED(fixed), value, 140 + (col * 300),
-		  10 + (row * 22));
+                  10 + (row * 22));
     g_object_set_data(G_OBJECT(value), "key-label", keyLabel);
 
     return GTK_LABEL(value);
@@ -169,32 +169,32 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
     TrgGeneralPanelPrivate *priv = TRG_GENERAL_PANEL_GET_PRIVATE(self);
 
     priv->gen_name_label =
-	trg_general_panel_add_label(self, "Name:", 0, 0);
+        trg_general_panel_add_label(self, "Name:", 0, 0);
 
     priv->gen_size_label =
-	trg_general_panel_add_label(self, "Size:", 0, 1);
+        trg_general_panel_add_label(self, "Size:", 0, 1);
     priv->gen_eta_label = trg_general_panel_add_label(self, "ETA:", 1, 1);
     priv->gen_completed_label =
-	trg_general_panel_add_label(self, "Completed:", 2, 1);
+        trg_general_panel_add_label(self, "Completed:", 2, 1);
 
     priv->gen_seeders_label =
-	trg_general_panel_add_label(self, "Seeders:", 0, 2);
+        trg_general_panel_add_label(self, "Seeders:", 0, 2);
     priv->gen_down_rate_label =
-	trg_general_panel_add_label(self, "Rate Down:", 1, 2);
+        trg_general_panel_add_label(self, "Rate Down:", 1, 2);
     priv->gen_downloaded_label =
-	trg_general_panel_add_label(self, "Downloaded:", 2, 2);
+        trg_general_panel_add_label(self, "Downloaded:", 2, 2);
 
     priv->gen_leechers_label =
-	trg_general_panel_add_label(self, "Leechers:", 0, 3);
+        trg_general_panel_add_label(self, "Leechers:", 0, 3);
     priv->gen_up_rate_label =
-	trg_general_panel_add_label(self, "Rate Up:", 1, 3);
+        trg_general_panel_add_label(self, "Rate Up:", 1, 3);
     priv->gen_uploaded_label =
-	trg_general_panel_add_label(self, "Uploaded:", 2, 3);
+        trg_general_panel_add_label(self, "Uploaded:", 2, 3);
 
     priv->gen_status_label =
-	trg_general_panel_add_label(self, "Status:", 0, 4);
+        trg_general_panel_add_label(self, "Status:", 0, 4);
     priv->gen_ratio_label =
-	trg_general_panel_add_label(self, "Ratio:", 1, 4);
+        trg_general_panel_add_label(self, "Ratio:", 1, 4);
 
     gtk_widget_set_sensitive(GTK_WIDGET(self), FALSE);
 }

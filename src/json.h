@@ -27,8 +27,8 @@
 
 gchar *trg_serialize(JsonNode * req);
 JsonObject *trg_deserialize(struct http_response *response,
-			    GError ** error);
+                            GError ** error);
 JsonObject *get_arguments(JsonObject * req);
 JsonObject *node_get_arguments(JsonNode * req);
 
-#endif				/* JSON_H_ */
+#endif                          /* JSON_H_ */

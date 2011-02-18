@@ -32,26 +32,26 @@
 #include "http.h"
 
 static struct http_response *trg_http_perform_inner(trg_client * client,
-						    gchar * req,
-						    gboolean recurse);
+                                                    gchar * req,
+                                                    gboolean recurse);
 
 static size_t http_receive_callback(void *ptr, size_t size, size_t nmemb,
-				    void *data);
+                                    void *data);
 
 static size_t header_callback(void *ptr, size_t size, size_t nmemb,
-			      void *data);
+                              void *data);
 
 void http_response_free(struct http_response *response)
 {
     if (response->data != NULL)
-	g_free(response->data);
+        g_free(response->data);
 
     g_free(response);
 }
 
 static struct http_response *trg_http_perform_inner(trg_client * tc,
-						    gchar * req,
-						    gboolean recurse)
+                                                    gchar * req,
+                                                    gboolean recurse)
 {
     CURL *handle;
     long httpCode;
@@ -71,17 +71,17 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     curl_easy_setopt(handle, CURLOPT_URL, tc->url);
     curl_easy_setopt(handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION,
-		     &http_receive_callback);
+                     &http_receive_callback);
     curl_easy_setopt(handle, CURLOPT_WRITEDATA, (void *) response);
     curl_easy_setopt(handle, CURLOPT_HEADERFUNCTION, &header_callback);
     curl_easy_setopt(handle, CURLOPT_WRITEHEADER, (void *) tc);
     curl_easy_setopt(handle, CURLOPT_POSTFIELDS, req);
     if (tc->ssl)
-	curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0);
 
     if (tc->session_id != NULL) {
-	headers = curl_slist_append(headers, tc->session_id);
-	curl_easy_setopt(handle, CURLOPT_HTTPHEADER, headers);
+        headers = curl_slist_append(headers, tc->session_id);
+        curl_easy_setopt(handle, CURLOPT_HTTPHEADER, headers);
     }
 
     response->status = curl_easy_perform(handle);
@@ -90,15 +90,15 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     curl_easy_cleanup(handle);
 
     if (headers != NULL)
-	curl_slist_free_all(headers);
+        curl_slist_free_all(headers);
 
     if (response->status == CURLE_OK) {
-	if (httpCode == HTTP_CONFLICT && recurse == TRUE) {
-	    http_response_free(response);
-	    return trg_http_perform_inner(tc, req, FALSE);
-	} else if (httpCode != HTTP_OK) {
-	    response->status = (-httpCode) - 100;
-	}
+        if (httpCode == HTTP_CONFLICT && recurse == TRUE) {
+            http_response_free(response);
+            return trg_http_perform_inner(tc, req, FALSE);
+        } else if (httpCode != HTTP_OK) {
+            response->status = (-httpCode) - 100;
+        }
     }
 
     return response;
@@ -117,29 +117,29 @@ http_receive_callback(void *ptr, size_t size, size_t nmemb, void *data)
 
     mem->data = realloc(mem->data, mem->size + realsize + 1);
     if (mem->data) {
-	memcpy(&(mem->data[mem->size]), ptr, realsize);
-	mem->size += realsize;
-	mem->data[mem->size] = 0;
+        memcpy(&(mem->data[mem->size]), ptr, realsize);
+        mem->size += realsize;
+        mem->data[mem->size] = 0;
     }
     return realsize;
 }
 
 static size_t header_callback(void *ptr, size_t size, size_t nmemb,
-			      void *data)
+                              void *data)
 {
     char *header = (char *) (ptr);
     trg_client *client = (trg_client *) data;
 
     if (g_str_has_prefix(header, "X-Transmission-Session-Id: ") == TRUE) {
-	char *nl;
+        char *nl;
 
-	if (client->session_id != NULL)
-	    g_free(client->session_id);
+        if (client->session_id != NULL)
+            g_free(client->session_id);
 
-	client->session_id = g_strdup(header);
-	nl = strrchr(client->session_id, '\r');
-	if (nl)
-	    *nl = '\0';
+        client->session_id = g_strdup(header);
+        nl = strrchr(client->session_id, '\r');
+        if (nl)
+            *nl = '\0';
     }
 
     return (nmemb * size);

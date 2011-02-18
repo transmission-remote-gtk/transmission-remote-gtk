@@ -34,7 +34,7 @@ struct dispatch_async_args {
 
 JsonObject *dispatch(trg_client * client, JsonNode * req, int *status);
 GThread *dispatch_async(trg_client * client, JsonNode * req,
-			void (*callback) (JsonObject *, int, gpointer),
-			gpointer data);
+                        void (*callback) (JsonObject *, int, gpointer),
+                        gpointer data);
 
-#endif				/* DISPATCH_H_ */
+#endif                          /* DISPATCH_H_ */

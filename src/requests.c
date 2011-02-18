@@ -34,8 +34,8 @@ JsonNode *generic_request(gchar * method, JsonArray * ids)
     JsonNode *root = base_request(method);
 
     if (ids != NULL)
-	json_object_set_array_member(node_get_arguments(root),
-				     PARAM_IDS, ids);
+        json_object_set_array_member(node_get_arguments(root),
+                                     PARAM_IDS, ids);
 
     return root;
 }
@@ -61,7 +61,7 @@ JsonNode *session_get()
 }
 
 JsonNode *torrent_set_location(JsonArray * array, gchar * location,
-			       gboolean move)
+                               gboolean move)
 {
     JsonNode *req = generic_request(METHOD_TORRENT_SET_LOCATION, array);
     JsonObject *args = node_get_arguments(req);
@@ -101,7 +101,7 @@ JsonNode *torrent_remove(JsonArray * array, gboolean removeData)
     JsonObject *args = node_get_arguments(root);
     json_object_set_array_member(args, PARAM_IDS, array);
     json_object_set_boolean_member(args, PARAM_DELETE_LOCAL_DATA,
-				   removeData);
+                                   removeData);
     return root;
 }
 
@@ -146,7 +146,7 @@ JsonNode *torrent_get()
     json_array_add_string_element(fields, FIELD_WANTED);
     json_array_add_string_element(fields, FIELD_PRIORITIES);
     json_object_set_array_member(node_get_arguments(root),
-				 PARAM_FIELDS, fields);
+                                 PARAM_FIELDS, fields);
     return root;
 }
 

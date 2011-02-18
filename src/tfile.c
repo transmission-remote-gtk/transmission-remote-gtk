@@ -25,7 +25,7 @@
 gdouble file_get_progress(JsonObject * f)
 {
     return ((gdouble) file_get_bytes_completed(f) /
-	    (gdouble) file_get_length(f)) * 100.0;
+            (gdouble) file_get_length(f)) * 100.0;
 }
 
 gint64 file_get_length(JsonObject * f)

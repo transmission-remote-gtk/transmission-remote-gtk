@@ -28,16 +28,16 @@
 G_DEFINE_TYPE(TrgTreeView, trg_tree_view, GTK_TYPE_TREE_VIEW)
 
 void trg_tree_view_std_column_setup(GtkTreeViewColumn * column, int index,
-				    int width)
+                                    int width)
 {
     gtk_tree_view_column_set_resizable(column, TRUE);
     gtk_tree_view_column_set_reorderable(column, TRUE);
     gtk_tree_view_column_set_sort_column_id(column, index);
 
     if (width > 0) {
-	gtk_tree_view_column_set_sizing(column,
-					GTK_TREE_VIEW_COLUMN_FIXED);
-	gtk_tree_view_column_set_fixed_width(column, width);
+        gtk_tree_view_column_set_sizing(column,
+                                        GTK_TREE_VIEW_COLUMN_FIXED);
+        gtk_tree_view_column_set_fixed_width(column, width);
     }
 }
 
@@ -52,96 +52,97 @@ static void trg_tree_view_init(TrgTreeView * tv)
     gtk_tree_view_set_headers_clickable(GTK_TREE_VIEW(tv), TRUE);
     gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(tv), TRUE);
     gtk_tree_selection_set_mode(gtk_tree_view_get_selection
-				(GTK_TREE_VIEW(tv)),
-				GTK_SELECTION_MULTIPLE);
+                                (GTK_TREE_VIEW(tv)),
+                                GTK_SELECTION_MULTIPLE);
 
     gtk_widget_set_sensitive(GTK_WIDGET(tv), FALSE);
 }
 
 void trg_tree_view_add_size_column(TrgTreeView * tv, char *title,
-				   int index, int width)
+                                   int index, int width)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
 
     renderer = trg_cell_renderer_size_new();
     column = gtk_tree_view_column_new_with_attributes(title, renderer,
-						      "size-value",
-						      index, NULL);
+                                                      "size-value",
+                                                      index, NULL);
 
     trg_tree_view_std_column_setup(column, index, width);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 }
 
 void trg_tree_view_add_eta_column(TrgTreeView * tv, char *title, int index,
-				  int width)
+                                  int width)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
 
     renderer = trg_cell_renderer_eta_new();
     column = gtk_tree_view_column_new_with_attributes(title, renderer,
-						      "eta-value",
-						      index, NULL);
+                                                      "eta-value",
+                                                      index, NULL);
 
     trg_tree_view_std_column_setup(column, index, width);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 }
 
 void trg_tree_view_add_prog_column(TrgTreeView * tv,
-				   gchar * title, gint index, gint width)
+                                   gchar * title, gint index, gint width)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
 
     renderer = gtk_cell_renderer_progress_new();
     column = gtk_tree_view_column_new_with_attributes(title, renderer,
-						      "value", index,
-						      NULL);
+                                                      "value", index,
+                                                      NULL);
 
     trg_tree_view_std_column_setup(column, index, width);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 }
 
 void trg_tree_view_add_speed_column(TrgTreeView * tv, char *title,
-				    int index, int width)
+                                    int index, int width)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
 
     renderer = trg_cell_renderer_speed_new();
     column = gtk_tree_view_column_new_with_attributes(title, renderer,
-						      "speed-value",
-						      index, NULL);
+                                                      "speed-value",
+                                                      index, NULL);
 
     trg_tree_view_std_column_setup(column, index, width);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 }
 
 void trg_tree_view_add_ratio_column(TrgTreeView * tv, char *title,
-				    int index, int width)
+                                    int index, int width)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
 
     renderer = trg_cell_renderer_ratio_new();
     column = gtk_tree_view_column_new_with_attributes(title, renderer,
-						      "ratio-value",
-						      index, NULL);
+                                                      "ratio-value",
+                                                      index, NULL);
 
     trg_tree_view_std_column_setup(column, index, width);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 }
 
-GtkCellRenderer *trg_tree_view_add_column_fixed_width(TrgTreeView * tv, char *title,
-					  int index, int width)
+GtkCellRenderer *trg_tree_view_add_column_fixed_width(TrgTreeView * tv,
+                                                      char *title,
+                                                      int index, int width)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column;
 
     renderer = gtk_cell_renderer_text_new();
     column = gtk_tree_view_column_new_with_attributes(title, renderer,
-						      "text", index, NULL);
+                                                      "text", index, NULL);
 
     trg_tree_view_std_column_setup(column, index, width);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
@@ -151,9 +152,9 @@ GtkCellRenderer *trg_tree_view_add_column_fixed_width(TrgTreeView * tv, char *ti
 
 void
 trg_tree_view_add_pixbuf_text_column(TrgTreeView * tv,
-				     int iconIndex,
-				     int nameIndex,
-				     gchar * text, int width)
+                                     int iconIndex,
+                                     int nameIndex,
+                                     gchar * text, int width)
 {
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
@@ -164,12 +165,12 @@ trg_tree_view_add_pixbuf_text_column(TrgTreeView * tv,
     gtk_tree_view_column_set_title(GTK_TREE_VIEW_COLUMN(column), text);
     gtk_tree_view_column_pack_start(column, renderer, FALSE);
     gtk_tree_view_column_set_attributes(column, renderer, "stock-id",
-					iconIndex, NULL);
+                                        iconIndex, NULL);
 
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_column_pack_start(column, renderer, TRUE);
     gtk_tree_view_column_set_attributes(column, renderer, "text",
-					nameIndex, NULL);
+                                        nameIndex, NULL);
 
     trg_tree_view_std_column_setup(column, nameIndex, width);
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);

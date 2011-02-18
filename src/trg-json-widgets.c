@@ -25,7 +25,7 @@
 void toggle_active_arg_is_sensitive(GtkToggleButton * b, gpointer data)
 {
     gtk_widget_set_sensitive(GTK_WIDGET(data),
-			     gtk_toggle_button_get_active(b));
+                             gtk_toggle_button_get_active(b));
 }
 
 void gtk_spin_button_json_int_out(GtkSpinButton * spin, JsonObject * out)
@@ -42,11 +42,11 @@ void gtk_combo_box_json_string_output(GtkComboBox * c, JsonObject * out)
 }
 
 void gtk_spin_button_json_double_out(GtkSpinButton * spin,
-				     JsonObject * out)
+                                     JsonObject * out)
 {
     gchar *key = g_object_get_data(G_OBJECT(spin), JSON_OBJECT_KEY);
     json_object_set_double_member(out, key,
-				  gtk_spin_button_get_value(spin));
+                                  gtk_spin_button_get_value(spin));
 }
 
 void gtk_entry_json_output(GtkEntry * e, JsonObject * out)
@@ -58,11 +58,11 @@ void gtk_entry_json_output(GtkEntry * e, JsonObject * out)
 void widget_set_json_key(GtkWidget * w, gchar * key)
 {
     g_object_set_data_full(G_OBJECT(w), JSON_OBJECT_KEY,
-			   g_strdup(key), g_free);
+                           g_strdup(key), g_free);
 }
 
 gboolean gtk_toggle_button_json_out(GtkToggleButton * button,
-				    JsonObject * out)
+                                    JsonObject * out)
 {
     gboolean active = gtk_toggle_button_get_active(button);
     gchar *key = g_object_get_data(G_OBJECT(button), JSON_OBJECT_KEY);

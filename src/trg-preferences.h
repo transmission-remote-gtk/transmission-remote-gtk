@@ -34,4 +34,4 @@
 #define TRG_GCONF_KEY_SYSTEM_TRAY  "/apps/transmission-remote-gtk/system-tray"
 #define TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE  "/apps/transmission-remote-gtk/system-tray-minimise"
 
-#endif				/* TRG_PREFERENCES_H_ */
+#endif                          /* TRG_PREFERENCES_H_ */

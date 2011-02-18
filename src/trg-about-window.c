@@ -41,37 +41,37 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gtk_window_set_destroy_with_parent(GTK_WINDOW(dialog), TRUE);
 
     logo =
-	gdk_pixbuf_new_from_file("/usr/share/pixmaps/transmission.png",
-				 &error);
+        gdk_pixbuf_new_from_file("/usr/share/pixmaps/transmission.png",
+                                 &error);
     if (error == NULL)
-	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), logo);
+        gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), logo);
     else {
-	if (error->domain == GDK_PIXBUF_ERROR)
-	    g_print("GdkPixbufError: %s\n", error->message);
-	else if (error->domain == G_FILE_ERROR)
-	    g_print("GFileError: %s\n", error->message);
-	else
-	    g_print
-		("An error in the domain: %d has occurred!\n",
-		 error->domain);
-	g_error_free(error);
+        if (error->domain == GDK_PIXBUF_ERROR)
+            g_print("GdkPixbufError: %s\n", error->message);
+        else if (error->domain == G_FILE_ERROR)
+            g_print("GFileError: %s\n", error->message);
+        else
+            g_print
+                ("An error in the domain: %d has occurred!\n",
+                 error->domain);
+        g_error_free(error);
     }
 
     /* Set application data that will be displayed in the main dialog. */
     gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),
-				 PACKAGE_VERSION);
+                                 PACKAGE_VERSION);
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
-				   "(C) 2011 Alan Fitton");
+                                   "(C) 2011 Alan Fitton");
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
-				  "A remote client to transmission-daemon.");
+                                  "A remote client to transmission-daemon.");
     /* Set the license text, which is usually loaded from a file. Also, set the
      * web site address and label. */
     gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog), "GPL2");
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog),
-				 "http://code.google.com/p/transmission-remote-gtk/");
+                                 "http://code.google.com/p/transmission-remote-gtk/");
     gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog),
-				       "http://code.google.com/p/transmission-remote-gtk/");
+                                       "http://code.google.com/p/transmission-remote-gtk/");
 
     /* Set the application authors, documenters and translators. */
     gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(dialog), trgAuthors);

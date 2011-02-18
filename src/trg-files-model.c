@@ -42,8 +42,8 @@ struct _TrgFilesModelPrivate {
 };
 
 static void trg_files_model_iter_new(TrgFilesModel * model,
-				     GtkTreeIter * iter, JsonObject * file,
-				     int id)
+                                     GtkTreeIter * iter, JsonObject * file,
+                                     int id)
 {
     char size[32];
 
@@ -51,12 +51,12 @@ static void trg_files_model_iter_new(TrgFilesModel * model,
 
     trg_strlsize(size, file_get_length(file));
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-		       FILESCOL_NAME, file_get_name(file),
-		       FILESCOL_SIZE, size, FILESCOL_ID, id, -1);
+                       FILESCOL_NAME, file_get_name(file),
+                       FILESCOL_SIZE, size, FILESCOL_ID, id, -1);
 }
 
 void trg_files_model_set_update_barrier(TrgFilesModel * model,
-					gint64 serial)
+                                        gint64 serial)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     priv->updateBarrier = serial;
@@ -64,28 +64,28 @@ void trg_files_model_set_update_barrier(TrgFilesModel * model,
 
 static void
 trg_files_model_iter_update(TrgFilesModel * model,
-			    GtkTreeIter * filesIter, JsonObject * file,
-			    JsonArray * wantedArray,
-			    JsonArray * prioritiesArray, int id)
+                            GtkTreeIter * filesIter, JsonObject * file,
+                            JsonArray * wantedArray,
+                            JsonArray * prioritiesArray, int id)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
 
     gboolean wanted = json_node_get_int(json_array_get_element
-					(wantedArray, id)) == 1;
+                                        (wantedArray, id)) == 1;
     gint64 priority =
-	json_node_get_int(json_array_get_element(prioritiesArray, id));
+        json_node_get_int(json_array_get_element(prioritiesArray, id));
     gdouble progress = file_get_progress(file);
 
     gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
-		       FILESCOL_PROGRESS, progress, -1);
+                       FILESCOL_PROGRESS, progress, -1);
 
     if (priv->updateBarrier < 0
-	|| priv->currentSerial > priv->updateBarrier) {
-	gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
-			   FILESCOL_ICON,
-			   wanted ? GTK_STOCK_FILE :
-			   GTK_STOCK_STOP, FILESCOL_WANTED, wanted,
-			   FILESCOL_PRIORITY, priority, -1);
+        || priv->currentSerial > priv->updateBarrier) {
+        gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
+                           FILESCOL_ICON,
+                           wanted ? GTK_STOCK_FILE :
+                           GTK_STOCK_STOP, FILESCOL_WANTED, wanted,
+                           FILESCOL_PRIORITY, priority, -1);
     }
 }
 
@@ -110,14 +110,14 @@ static void trg_files_model_init(TrgFilesModel * self)
     column_types[FILESCOL_PRIORITY] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
-				    FILESCOL_COLUMNS, column_types);
+                                    FILESCOL_COLUMNS, column_types);
 }
 
 gboolean
 trg_files_model_update_foreach(GtkListStore * model,
-			       GtkTreePath * path G_GNUC_UNUSED,
-			       GtkTreeIter * iter,
-			       gpointer data G_GNUC_UNUSED)
+                               GtkTreePath * path G_GNUC_UNUSED,
+                               GtkTreeIter * iter,
+                               gpointer data G_GNUC_UNUSED)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     JsonObject *file;
@@ -127,20 +127,20 @@ trg_files_model_update_foreach(GtkListStore * model,
 
     file = json_node_get_object(json_array_get_element(priv->files, id));
     trg_files_model_iter_update(TRG_FILES_MODEL(model), iter, file,
-				priv->wanted, priv->priorities, id);
+                                priv->wanted, priv->priorities, id);
 
     return FALSE;
 }
 
 void
 trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
-		       JsonObject * t, gboolean first)
+                       JsonObject * t, gboolean first)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     guint j;
 
     if (first)
-	gtk_list_store_clear(GTK_LIST_STORE(model));
+        gtk_list_store_clear(GTK_LIST_STORE(model));
 
     priv->torrentId = torrent_get_id(t);
     priv->priorities = torrent_get_priorities(t);
@@ -149,20 +149,20 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
     priv->currentSerial = updateSerial;
 
     if (first == TRUE) {
-	for (j = 0; j < json_array_get_length(priv->files); j++) {
-	    JsonObject *file =
-		json_node_get_object(json_array_get_element
-				     (priv->files, j));
-	    GtkTreeIter filesIter;
-	    trg_files_model_iter_new(model, &filesIter, file, j);
-	    trg_files_model_iter_update(model, &filesIter,
-					file, priv->wanted,
-					priv->priorities, j);
-	}
+        for (j = 0; j < json_array_get_length(priv->files); j++) {
+            JsonObject *file =
+                json_node_get_object(json_array_get_element
+                                     (priv->files, j));
+            GtkTreeIter filesIter;
+            trg_files_model_iter_new(model, &filesIter, file, j);
+            trg_files_model_iter_update(model, &filesIter,
+                                        file, priv->wanted,
+                                        priv->priorities, j);
+        }
     } else {
-	gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-			       (GtkTreeModelForeachFunc)
-			       trg_files_model_update_foreach, NULL);
+        gtk_tree_model_foreach(GTK_TREE_MODEL(model),
+                               (GtkTreeModelForeachFunc)
+                               trg_files_model_update_foreach, NULL);
     }
 }
 

@@ -49,9 +49,9 @@ typedef struct {
 GType trg_remote_prefs_dialog_get_type(void);
 
 TrgRemotePrefsDialog *trg_remote_prefs_dialog_get_instance(TrgMainWindow *
-							   parent,
-							   trg_client *
-							   client);
+                                                           parent,
+                                                           trg_client *
+                                                           client);
 
 G_END_DECLS
-#endif				/* TRG_REMOTE_PREFS_DIALOG_H_ */
+#endif                          /* TRG_REMOTE_PREFS_DIALOG_H_ */

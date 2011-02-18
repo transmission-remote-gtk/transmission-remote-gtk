@@ -45,7 +45,7 @@ gchar *trg_serialize(JsonNode * req)
 }
 
 JsonObject *trg_deserialize(struct http_response * response,
-			    GError ** error)
+                            GError ** error)
 {
     JsonParser *parser;
     JsonNode *root;
@@ -53,30 +53,30 @@ JsonObject *trg_deserialize(struct http_response * response,
 
     parser = json_parser_new();
     json_parser_load_from_data(parser, response->data, response->size,
-			       error);
+                               error);
     if (*error == NULL) {
-	root = json_parser_get_root(parser);
+        root = json_parser_get_root(parser);
 #ifdef DEBUG
-	if (g_getenv("TRG_SHOW_INCOMING") != NULL) {
-	    g_printf("incoming JSON data:\n%s\n", response->data);
-	} else if (g_getenv("TRG_SHOW_INCOMING_PRETTY") != NULL) {
-	    JsonGenerator *pg;
-	    gsize len;
-	    gchar *pgdata;
+        if (g_getenv("TRG_SHOW_INCOMING") != NULL) {
+            g_printf("incoming JSON data:\n%s\n", response->data);
+        } else if (g_getenv("TRG_SHOW_INCOMING_PRETTY") != NULL) {
+            JsonGenerator *pg;
+            gsize len;
+            gchar *pgdata;
 
-	    pg = json_generator_new();
-	    g_object_set(pg, "pretty", TRUE, NULL);
-	    json_generator_set_root(pg, root);
+            pg = json_generator_new();
+            g_object_set(pg, "pretty", TRUE, NULL);
+            json_generator_set_root(pg, root);
 
-	    pgdata = json_generator_to_data(pg, &len);
-	    g_printf("incoming JSON data:\n%s\n", pgdata);
-	    g_free(pgdata);
+            pgdata = json_generator_to_data(pg, &len);
+            g_printf("incoming JSON data:\n%s\n", pgdata);
+            g_free(pgdata);
 
-	    g_object_unref(pg);
-	}
+            g_object_unref(pg);
+        }
 #endif
-	ret = json_node_get_object(root);
-	json_object_ref(ret);
+        ret = json_node_get_object(root);
+        json_object_ref(ret);
     }
 
     g_object_unref(parser);

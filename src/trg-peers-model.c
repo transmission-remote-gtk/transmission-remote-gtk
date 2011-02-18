@@ -57,8 +57,8 @@ trg_peers_model_class_init(TrgPeersModelClass * klass G_GNUC_UNUSED)
 
 gboolean
 find_existing_peer_item_foreachfunc(GtkTreeModel * model,
-				    GtkTreePath * path G_GNUC_UNUSED,
-				    GtkTreeIter * iter, gpointer data)
+                                    GtkTreePath * path G_GNUC_UNUSED,
+                                    GtkTreeIter * iter, gpointer data)
 {
     struct peerAndIter *pi;
     gchar *ip;
@@ -67,8 +67,8 @@ find_existing_peer_item_foreachfunc(GtkTreeModel * model,
 
     gtk_tree_model_get(model, iter, PEERSCOL_IP, &ip, -1);
     if (g_strcmp0(ip, pi->ip) == 0) {
-	pi->iter = *iter;
-	pi->found = TRUE;
+        pi->iter = *iter;
+        pi->found = TRUE;
     }
     g_free(ip);
     return pi->found;
@@ -76,23 +76,23 @@ find_existing_peer_item_foreachfunc(GtkTreeModel * model,
 
 gboolean
 find_existing_peer_item(TrgPeersModel * model, JsonObject * p,
-			GtkTreeIter * iter)
+                        GtkTreeIter * iter)
 {
     struct peerAndIter pi;
     pi.ip = peer_get_address(p);
     pi.found = FALSE;
 
     gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-			   find_existing_peer_item_foreachfunc, &pi);
+                           find_existing_peer_item_foreachfunc, &pi);
 
     if (pi.found == TRUE)
-	*iter = pi.iter;
+        *iter = pi.iter;
 
     return pi.found;
 }
 
 static void resolved_dns_cb(GObject * source_object,
-			    GAsyncResult * res, gpointer data)
+                            GAsyncResult * res, gpointer data)
 {
     GtkTreeRowReference *treeRef;
     GtkTreeModel *model;
@@ -103,27 +103,27 @@ static void resolved_dns_cb(GObject * source_object,
     path = gtk_tree_row_reference_get_path(treeRef);
 
     if (path != NULL) {
-	gchar *rdns =
-	    g_resolver_lookup_by_address_finish(G_RESOLVER(source_object),
-						res, NULL);
-	if (rdns != NULL) {
-	    GtkTreeIter iter;
-	    if (gtk_tree_model_get_iter(model, &iter, path) == TRUE) {
-		gdk_threads_enter();
-		gtk_list_store_set(GTK_LIST_STORE(model),
-				   &iter, PEERSCOL_HOST, rdns, -1);
-		gdk_threads_leave();
-	    }
-	    g_free(rdns);
-	}
-	gtk_tree_path_free(path);
+        gchar *rdns =
+            g_resolver_lookup_by_address_finish(G_RESOLVER(source_object),
+                                                res, NULL);
+        if (rdns != NULL) {
+            GtkTreeIter iter;
+            if (gtk_tree_model_get_iter(model, &iter, path) == TRUE) {
+                gdk_threads_enter();
+                gtk_list_store_set(GTK_LIST_STORE(model),
+                                   &iter, PEERSCOL_HOST, rdns, -1);
+                gdk_threads_leave();
+            }
+            g_free(rdns);
+        }
+        gtk_tree_path_free(path);
     }
 
     gtk_tree_row_reference_free(treeRef);
 }
 
 void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
-			    JsonObject * t, gboolean first)
+                            JsonObject * t, gboolean first)
 {
 #ifdef HAVE_GEOIP
     TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
@@ -137,76 +137,76 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
     peers = torrent_get_peers(t);
 
     if (first == TRUE)
-	gtk_list_store_clear(GTK_LIST_STORE(model));
+        gtk_list_store_clear(GTK_LIST_STORE(model));
 
     for (j = 0; j < json_array_get_length(peers); j++) {
-	JsonObject *peer;
-	const gchar *address = NULL, *flagStr;
+        JsonObject *peer;
+        const gchar *address = NULL, *flagStr;
 #ifdef HAVE_GEOIP
-	const gchar *country = NULL;
+        const gchar *country = NULL;
 #endif
-	peer = json_node_get_object(json_array_get_element(peers, j));
+        peer = json_node_get_object(json_array_get_element(peers, j));
 
-	if (first == TRUE
-	    || find_existing_peer_item(model, peer, &peerIter) == FALSE) {
-	    gtk_list_store_append(GTK_LIST_STORE(model), &peerIter);
+        if (first == TRUE
+            || find_existing_peer_item(model, peer, &peerIter) == FALSE) {
+            gtk_list_store_append(GTK_LIST_STORE(model), &peerIter);
 
-	    address = peer_get_address(peer);
+            address = peer_get_address(peer);
 #ifdef HAVE_GEOIP
-	    if (priv->geoip != NULL)
-		country = GeoIP_country_name_by_addr(priv->geoip, address);
+            if (priv->geoip != NULL)
+                country = GeoIP_country_name_by_addr(priv->geoip, address);
 #endif
-	    gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
-			       PEERSCOL_ICON, GTK_STOCK_NETWORK,
-			       PEERSCOL_IP, address,
+            gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
+                               PEERSCOL_ICON, GTK_STOCK_NETWORK,
+                               PEERSCOL_IP, address,
 #ifdef HAVE_GEOIP
-			       PEERSCOL_COUNTRY,
-			       country != NULL ? country : "",
+                               PEERSCOL_COUNTRY,
+                               country != NULL ? country : "",
 #endif
-			       PEERSCOL_CLIENT, peer_get_client_name(peer),
-			       -1);
+                               PEERSCOL_CLIENT, peer_get_client_name(peer),
+                               -1);
 
-	    isNew = TRUE;
-	} else {
-	    isNew = FALSE;
-	}
+            isNew = TRUE;
+        } else {
+            isNew = FALSE;
+        }
 
-	flagStr = peer_get_flagstr(peer);
-	gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
-			   PEERSCOL_FLAGS, flagStr,
-			   PEERSCOL_PROGRESS,
-			   peer_get_progress(peer),
-			   PEERSCOL_DOWNSPEED,
-			   peer_get_rate_to_client(peer),
-			   PEERSCOL_UPSPEED,
-			   peer_get_rate_to_peer(peer),
-			   PEERSCOL_UPDATESERIAL, updateSerial, -1);
+        flagStr = peer_get_flagstr(peer);
+        gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
+                           PEERSCOL_FLAGS, flagStr,
+                           PEERSCOL_PROGRESS,
+                           peer_get_progress(peer),
+                           PEERSCOL_DOWNSPEED,
+                           peer_get_rate_to_client(peer),
+                           PEERSCOL_UPSPEED,
+                           peer_get_rate_to_peer(peer),
+                           PEERSCOL_UPDATESERIAL, updateSerial, -1);
 
-	if (isNew == TRUE) {
-	    GtkTreePath *path;
-	    GtkTreeRowReference *treeRef;
-	    GInetAddress *inetAddr;
-	    GResolver *resolver;
+        if (isNew == TRUE) {
+            GtkTreePath *path;
+            GtkTreeRowReference *treeRef;
+            GInetAddress *inetAddr;
+            GResolver *resolver;
 
-	    path =
-		gtk_tree_model_get_path(GTK_TREE_MODEL(model), &peerIter);
-	    treeRef =
-		gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
-	    gtk_tree_path_free(path);
+            path =
+                gtk_tree_model_get_path(GTK_TREE_MODEL(model), &peerIter);
+            treeRef =
+                gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
+            gtk_tree_path_free(path);
 
-	    inetAddr = g_inet_address_new_from_string(address);
-	    resolver = g_resolver_get_default();
-	    g_resolver_lookup_by_address_async(resolver,
-					       inetAddr, NULL,
-					       resolved_dns_cb, treeRef);
-	    g_object_unref(resolver);
-	    g_object_unref(inetAddr);
-	}
+            inetAddr = g_inet_address_new_from_string(address);
+            resolver = g_resolver_get_default();
+            g_resolver_lookup_by_address_async(resolver,
+                                               inetAddr, NULL,
+                                               resolved_dns_cb, treeRef);
+            g_object_unref(resolver);
+            g_object_unref(inetAddr);
+        }
     }
 
     if (first == FALSE)
-	trg_model_remove_removed(GTK_LIST_STORE(model),
-				 PEERSCOL_UPDATESERIAL, updateSerial);
+        trg_model_remove_removed(GTK_LIST_STORE(model),
+                                 PEERSCOL_UPDATESERIAL, updateSerial);
 }
 
 static void trg_peers_model_init(TrgPeersModel * self)
@@ -231,13 +231,13 @@ static void trg_peers_model_init(TrgPeersModel * self)
     column_types[PEERSCOL_UPDATESERIAL] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
-				    PEERSCOL_COLUMNS, column_types);
+                                    PEERSCOL_COLUMNS, column_types);
 
 #ifdef HAVE_GEOIP
     if (g_file_test(TRG_GEOIP_DATABASE, G_FILE_TEST_EXISTS) == TRUE)
-	priv->geoip =
-	    GeoIP_open(TRG_GEOIP_DATABASE,
-		       GEOIP_STANDARD | GEOIP_CHECK_CACHE);
+        priv->geoip =
+            GeoIP_open(TRG_GEOIP_DATABASE,
+                       GEOIP_STANDARD | GEOIP_CHECK_CACHE);
 #endif
 }
 

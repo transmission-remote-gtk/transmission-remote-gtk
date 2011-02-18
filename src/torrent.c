@@ -161,28 +161,28 @@ gdouble torrent_get_percent_done(JsonObject * t)
     json_node_get_value(percentDone, &a);
     switch (G_VALUE_TYPE(&a)) {
     case G_TYPE_INT64:
-	return (gdouble) g_value_get_int64(&a) * 100.0;
+        return (gdouble) g_value_get_int64(&a) * 100.0;
     case G_TYPE_DOUBLE:
-	return g_value_get_double(&a) * 100.0;
+        return g_value_get_double(&a) * 100.0;
     default:
-	return 0.0;
+        return 0.0;
     }
 }
 
 gchar *torrent_get_status_icon(guint flags)
 {
     if (flags & TORRENT_FLAG_ERROR)
-	return g_strdup(GTK_STOCK_DIALOG_WARNING);
+        return g_strdup(GTK_STOCK_DIALOG_WARNING);
     else if (flags & TORRENT_FLAG_DOWNLOADING)
-	return g_strdup(GTK_STOCK_GO_DOWN);
+        return g_strdup(GTK_STOCK_GO_DOWN);
     else if (flags & TORRENT_FLAG_PAUSED)
-	return g_strdup(GTK_STOCK_MEDIA_PAUSE);
+        return g_strdup(GTK_STOCK_MEDIA_PAUSE);
     else if (flags & TORRENT_FLAG_SEEDING)
-	return g_strdup(GTK_STOCK_GO_UP);
+        return g_strdup(GTK_STOCK_GO_UP);
     else if (flags & TORRENT_FLAG_CHECKING)
-	return g_strdup(GTK_STOCK_REFRESH);
+        return g_strdup(GTK_STOCK_REFRESH);
     else
-	return g_strdup(GTK_STOCK_DIALOG_QUESTION);
+        return g_strdup(GTK_STOCK_DIALOG_QUESTION);
 }
 
 const gchar *torrent_get_errorstr(JsonObject * t)
@@ -194,23 +194,23 @@ gchar *torrent_get_status_string(gint64 value)
 {
     switch (value) {
     case STATUS_DOWNLOADING:
-	return g_strdup("Downloading");
+        return g_strdup("Downloading");
     case STATUS_PAUSED:
-	return g_strdup("Paused");
+        return g_strdup("Paused");
     case STATUS_SEEDING:
-	return g_strdup("Seeding");
+        return g_strdup("Seeding");
     case STATUS_CHECKING:
-	return g_strdup("Checking");
+        return g_strdup("Checking");
     case STATUS_WAITING_TO_CHECK:
-	return g_strdup("Waiting To Check");
+        return g_strdup("Waiting To Check");
     default:
-	return g_strdup("Unknown");
+        return g_strdup("Unknown");
     }
 }
 
-gint64 tracker_get_id(JsonObject *t)
+gint64 tracker_get_id(JsonObject * t)
 {
-	return json_object_get_int_member(t, FIELD_ID);
+    return json_object_get_int_member(t, FIELD_ID);
 }
 
 gint64 tracker_get_tier(JsonObject * t)

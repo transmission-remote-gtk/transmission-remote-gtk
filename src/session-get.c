@@ -27,7 +27,7 @@
 int session_get_version(JsonObject * s, float *version)
 {
     const gchar *versionStr =
-	json_object_get_string_member(s, SGET_VERSION);
+        json_object_get_string_member(s, SGET_VERSION);
     return sscanf(versionStr, "%f", version);
 }
 
@@ -49,7 +49,7 @@ const gchar *session_get_download_dir(JsonObject * s)
 gboolean session_get_peer_port_random(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
-					  SGET_PEER_PORT_RANDOM_ON_START);
+                                          SGET_PEER_PORT_RANDOM_ON_START);
 }
 
 gint64 session_get_peer_port(JsonObject * s)
@@ -100,21 +100,21 @@ gboolean session_get_seed_ratio_limited(JsonObject * s)
 const gchar *session_get_torrent_done_filename(JsonObject * s)
 {
     return json_object_get_string_member(s,
-					 SGET_SCRIPT_TORRENT_DONE_FILENAME);
+                                         SGET_SCRIPT_TORRENT_DONE_FILENAME);
 }
 
 gboolean session_get_torrent_done_enabled(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
-					  SGET_SCRIPT_TORRENT_DONE_ENABLED);
+                                          SGET_SCRIPT_TORRENT_DONE_ENABLED);
 }
 
 gint64 session_get_cache_size_mb(JsonObject * s)
 {
     if (json_object_has_member(s, SGET_CACHE_SIZE_MB))
-	return json_object_get_int_member(s, SGET_CACHE_SIZE_MB);
+        return json_object_get_int_member(s, SGET_CACHE_SIZE_MB);
     else
-	return -1;
+        return -1;
 }
 
 gdouble session_get_seed_ratio_limit(JsonObject * s)
@@ -130,7 +130,7 @@ gboolean session_get_start_added_torrents(JsonObject * s)
 gboolean session_get_trash_original_torrent_files(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
-					  SGET_TRASH_ORIGINAL_TORRENT_FILES);
+                                          SGET_TRASH_ORIGINAL_TORRENT_FILES);
 }
 
 gboolean session_get_speed_limit_up_enabled(JsonObject * s)
@@ -156,7 +156,7 @@ gint64 session_get_speed_limit_up(JsonObject * s)
 gboolean session_get_speed_limit_down_enabled(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
-					  SGET_SPEED_LIMIT_DOWN_ENABLED);
+                                          SGET_SPEED_LIMIT_DOWN_ENABLED);
 }
 
 gint64 session_get_speed_limit_down(JsonObject * s)

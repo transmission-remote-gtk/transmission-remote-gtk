@@ -24,9 +24,9 @@
 #include "trg-client.h"
 #include "trg-preferences.h"
 
-gboolean trg_client_supports_tracker_edit(trg_client *tc)
+gboolean trg_client_supports_tracker_edit(trg_client * tc)
 {
-	return tc->session != NULL && tc->version >= 2.10;
+    return tc->session != NULL && tc->version >= 2.10;
 }
 
 trg_client *trg_init_client()
@@ -42,14 +42,14 @@ trg_client *trg_init_client()
 
 #define check_for_error(error) if (error) { g_error_free(error); return TRG_GCONF_SCHEMA_ERROR; }
 
-void trg_client_set_session(trg_client *tc, JsonObject *session)
+void trg_client_set_session(trg_client * tc, JsonObject * session)
 {
-	if (tc->session != NULL)
-		json_object_unref(tc->session);
+    if (tc->session != NULL)
+        json_object_unref(tc->session);
 
-	session_get_version(session, &(tc->version));
+    session_get_version(session, &(tc->version));
 
-	tc->session = session;
+    tc->session = session;
 }
 
 int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
@@ -73,27 +73,28 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
     host = gconf_client_get_string(gconf, TRG_GCONF_KEY_HOSTNAME, &error);
     check_for_error(error);
     if (!host || strlen(host) < 1)
-	return TRG_NO_HOSTNAME_SET;
+        return TRG_NO_HOSTNAME_SET;
 
     tc->ssl = gconf_client_get_bool(gconf, TRG_GCONF_KEY_SSL, &error);
     check_for_error(error);
 
     tc->url =
-	g_strdup_printf("%s://%s:%d/transmission/rpc",
-			tc->ssl ? "https" : "http", host, port);
+        g_strdup_printf("%s://%s:%d/transmission/rpc",
+                        tc->ssl ? "https" : "http", host, port);
     g_free(host);
 
-    tc->interval = gconf_client_get_int(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, &error);
+    tc->interval =
+        gconf_client_get_int(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, &error);
     check_for_error(error);
     if (tc->interval < 1)
-    	tc->interval = 3;
+        tc->interval = 3;
 
     tc->username =
-	gconf_client_get_string(gconf, TRG_GCONF_KEY_USERNAME, &error);
+        gconf_client_get_string(gconf, TRG_GCONF_KEY_USERNAME, &error);
     check_for_error(error);
 
     tc->password =
-	gconf_client_get_string(gconf, TRG_GCONF_KEY_PASSWORD, &error);
+        gconf_client_get_string(gconf, TRG_GCONF_KEY_PASSWORD, &error);
     check_for_error(error);
 
     return 0;

@@ -28,4 +28,4 @@ gint64 file_get_bytes_completed(JsonObject * f);
 const gchar *file_get_name(JsonObject * f);
 gdouble file_get_progress(JsonObject * f);
 
-#endif				/* TFILE_H_ */
+#endif                          /* TFILE_H_ */

@@ -36,7 +36,7 @@
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), TRG_TYPE_PREFERENCES_DIALOG, TrgPreferencesDialogPrivate))
 
 G_DEFINE_TYPE(TrgPreferencesDialog, trg_preferences_dialog,
-	      GTK_TYPE_DIALOG)
+              GTK_TYPE_DIALOG)
 
 enum {
     PROP_0,
@@ -57,53 +57,53 @@ static GObject *instance = NULL;
 
 static void
 trg_preferences_dialog_set_property(GObject * object,
-				    guint prop_id,
-				    const GValue * value,
-				    GParamSpec * pspec G_GNUC_UNUSED)
+                                    guint prop_id,
+                                    const GValue * value,
+                                    GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgPreferencesDialogPrivate *priv =
-	TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
+        TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
     switch (prop_id) {
     case PROP_GCONF_CLIENT:
-	priv->gconf = g_value_get_object(value);
-	break;
+        priv->gconf = g_value_get_object(value);
+        break;
     case PROP_MAIN_WINDOW:
-	priv->win = g_value_get_object(value);
-	break;
+        priv->win = g_value_get_object(value);
+        break;
     case PROP_TRG_CLIENT:
-    	priv->client = g_value_get_pointer(value);
-    	break;
+        priv->client = g_value_get_pointer(value);
+        break;
     }
 }
 
 static void
 trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
-			    gpointer data G_GNUC_UNUSED)
+                            gpointer data G_GNUC_UNUSED)
 {
-	gtk_widget_destroy(GTK_WIDGET(dlg));
-	instance = NULL;
+    gtk_widget_destroy(GTK_WIDGET(dlg));
+    instance = NULL;
 }
 
 static void
 trg_preferences_dialog_get_property(GObject * object,
-				    guint prop_id,
-				    GValue * value,
-				    GParamSpec * pspec G_GNUC_UNUSED)
+                                    guint prop_id,
+                                    GValue * value,
+                                    GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgPreferencesDialogPrivate *priv =
-	TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
+        TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
     switch (prop_id) {
     case PROP_GCONF_CLIENT:
-	g_value_set_object(value, priv->gconf);
-	break;
+        g_value_set_object(value, priv->gconf);
+        break;
     case PROP_MAIN_WINDOW:
-	g_value_set_object(value, priv->win);
-	break;
+        g_value_set_object(value, priv->win);
+        break;
     case PROP_TRG_CLIENT:
-    	g_value_set_pointer(value, priv->client);
-    	break;
+        g_value_set_pointer(value, priv->client);
+        break;
     }
 }
 
@@ -119,23 +119,24 @@ static void toggled_cb(GtkToggleButton * w, gpointer gconf)
 }
 
 static GtkWidget *new_check_button(GConfClient * gconf,
-				   const char *mnemonic, const char *key)
+                                   const char *mnemonic, const char *key)
 {
     GtkWidget *w = gtk_check_button_new_with_mnemonic(mnemonic);
 
     g_object_set_data_full(G_OBJECT(w), GCONF_OBJECT_KEY,
-			   g_strdup(key), g_free);
+                           g_strdup(key), g_free);
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-				 gconf_client_get_bool(gconf, key, NULL));
+                                 gconf_client_get_bool(gconf, key, NULL));
     g_signal_connect(w, "toggled", G_CALLBACK(toggled_cb), gconf);
     return w;
 }
 
-static void interval_changed_cb(GtkWidget *w, gpointer data)
+static void interval_changed_cb(GtkWidget * w, gpointer data)
 {
-	trg_client *client = (trg_client*)data;
-	client->interval = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w));
+    trg_client *client = (trg_client *) data;
+    client->interval =
+        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w));
 }
 
 static void spun_cb_int(GtkWidget * widget, gpointer gconf)
@@ -145,14 +146,14 @@ static void spun_cb_int(GtkWidget * widget, gpointer gconf)
     key = g_object_get_data(G_OBJECT(widget), GCONF_OBJECT_KEY);
 
     gconf_client_set_int(GCONF_CLIENT(gconf),
-			 key,
-			 gtk_spin_button_get_value_as_int
-			 (GTK_SPIN_BUTTON(widget)), NULL);
+                         key,
+                         gtk_spin_button_get_value_as_int
+                         (GTK_SPIN_BUTTON(widget)), NULL);
 }
 
 static GtkWidget *new_spin_button(GConfClient * gconf,
-				  const char *key,
-				  int low, int high, int step)
+                                  const char *key,
+                                  int low, int high, int step)
 {
     GtkWidget *w;
     gint currentValue;
@@ -160,17 +161,17 @@ static GtkWidget *new_spin_button(GConfClient * gconf,
 
     w = gtk_spin_button_new_with_range(low, high, step);
     g_object_set_data_full(G_OBJECT(w), GCONF_OBJECT_KEY,
-			   g_strdup(key), g_free);
+                           g_strdup(key), g_free);
 
     gtk_spin_button_set_digits(GTK_SPIN_BUTTON(w), 0);
 
     currentValue = gconf_client_get_int(gconf, key, &error);
 
     if (error != NULL) {
-	g_error_free(error);
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), 9091);
+        g_error_free(error);
+        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), 9091);
     } else {
-	gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), currentValue);
+        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), currentValue);
     }
 
     g_signal_connect(w, "value-changed", G_CALLBACK(spun_cb_int), gconf);
@@ -197,12 +198,12 @@ static GtkWidget *new_entry(GConfClient * gconf, const char *key)
     value = gconf_client_get_string(gconf, key, NULL);
 
     if (value != NULL) {
-	gtk_entry_set_text(GTK_ENTRY(w), value);
-	g_free((gpointer) value);
+        gtk_entry_set_text(GTK_ENTRY(w), value);
+        g_free((gpointer) value);
     }
 
     g_object_set_data_full(G_OBJECT(w), GCONF_OBJECT_KEY,
-			   g_strdup(key), g_free);
+                           g_strdup(key), g_free);
 
     g_signal_connect(w, "changed", G_CALLBACK(entry_changed_cb), gconf);
     return w;
@@ -211,13 +212,13 @@ static GtkWidget *new_entry(GConfClient * gconf, const char *key)
 static void toggle_tray_icon(GtkToggleButton * w, gpointer win)
 {
     if (gtk_toggle_button_get_active(w))
-	trg_main_window_add_status_icon(TRG_MAIN_WINDOW(win));
+        trg_main_window_add_status_icon(TRG_MAIN_WINDOW(win));
     else
-	trg_main_window_remove_status_icon(TRG_MAIN_WINDOW(win));
+        trg_main_window_remove_status_icon(TRG_MAIN_WINDOW(win));
 }
 
 static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
-					TrgMainWindow * win)
+                                        TrgMainWindow * win)
 {
     GtkWidget *tray, *w, *t;
     gint row = 0;
@@ -227,42 +228,43 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
     hig_workarea_add_section_title(t, &row, "System Tray");
 
     tray = new_check_button(gconf, "Show in system tray",
-			    TRG_GCONF_KEY_SYSTEM_TRAY);
+                            TRG_GCONF_KEY_SYSTEM_TRAY);
     g_signal_connect(G_OBJECT(tray), "toggled",
-		     G_CALLBACK(toggle_tray_icon), win);
+                     G_CALLBACK(toggle_tray_icon), win);
     hig_workarea_add_wide_control(t, &row, tray);
 
     w = new_check_button(gconf, "Minimise to system tray",
-			 TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
+                         TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
     gtk_widget_set_sensitive(w,
-			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-							  (tray)));
+                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+                                                          (tray)));
     g_signal_connect(G_OBJECT(tray), "toggled",
-		     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_wide_control(t, &row, w);
 
     w = new_check_button(gconf, "Torrent added notifications",
-			 TRG_GCONF_KEY_ADD_NOTIFY);
+                         TRG_GCONF_KEY_ADD_NOTIFY);
     gtk_widget_set_sensitive(w,
-			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-							  (tray)));
+                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+                                                          (tray)));
     g_signal_connect(G_OBJECT(tray), "toggled",
-		     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_wide_control(t, &row, w);
 
     w = new_check_button(gconf, "Torrent complete notifications",
-			 TRG_GCONF_KEY_COMPLETE_NOTIFY);
+                         TRG_GCONF_KEY_COMPLETE_NOTIFY);
     gtk_widget_set_sensitive(w,
-			     gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-							  (tray)));
+                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+                                                          (tray)));
     g_signal_connect(G_OBJECT(tray), "toggled",
-		     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_wide_control(t, &row, w);
 
     return t;
 }
 
-static GtkWidget *trg_prefs_serverPage(GConfClient * gconf, trg_client *client)
+static GtkWidget *trg_prefs_serverPage(GConfClient * gconf,
+                                       trg_client * client)
 {
     GtkWidget *w, *t;
     gint row = 0;
@@ -278,14 +280,15 @@ static GtkWidget *trg_prefs_serverPage(GConfClient * gconf, trg_client *client)
     hig_workarea_add_row(t, &row, "Port:", w, NULL);
 
     w = new_check_button(gconf, "Automatically connect",
-			 TRG_GCONF_KEY_AUTO_CONNECT);
+                         TRG_GCONF_KEY_AUTO_CONNECT);
     hig_workarea_add_wide_control(t, &row, w);
 
     w = new_check_button(gconf, "SSL", TRG_GCONF_KEY_SSL);
     hig_workarea_add_wide_control(t, &row, w);
 
     w = new_spin_button(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, 1, 60, 1);
-    g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb), client);
+    g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb),
+                     client);
     hig_workarea_add_row(t, &row, "Update interval:", w, NULL);
 
     hig_workarea_add_section_divider(t, &row);
@@ -302,48 +305,49 @@ static GtkWidget *trg_prefs_serverPage(GConfClient * gconf, trg_client *client)
 }
 
 static GObject *trg_preferences_dialog_constructor(GType type,
-						   guint
-						   n_construct_properties,
-						   GObjectConstructParam *
-						   construct_params)
+                                                   guint
+                                                   n_construct_properties,
+                                                   GObjectConstructParam *
+                                                   construct_params)
 {
     GObject *object;
     TrgPreferencesDialogPrivate *priv;
     GtkWidget *notebook;
 
     object =
-	G_OBJECT_CLASS
-	(trg_preferences_dialog_parent_class)->constructor(type,
-							   n_construct_properties,
-							   construct_params);
+        G_OBJECT_CLASS
+        (trg_preferences_dialog_parent_class)->constructor(type,
+                                                           n_construct_properties,
+                                                           construct_params);
     priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
 
     gtk_window_set_transient_for(GTK_WINDOW(object),
-				 GTK_WINDOW(priv->win));
+                                 GTK_WINDOW(priv->win));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
-			  GTK_RESPONSE_CLOSE);
+                          GTK_RESPONSE_CLOSE);
     gtk_window_set_title(GTK_WINDOW(object), "Local Preferences");
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
     g_signal_connect(G_OBJECT(object),
-		     "response",
-		     G_CALLBACK(trg_preferences_response_cb), NULL);
+                     "response",
+                     G_CALLBACK(trg_preferences_response_cb), NULL);
 
     notebook = gtk_notebook_new();
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-			     trg_prefs_serverPage(priv->gconf, priv->client),
-			     gtk_label_new("Connection"));
+                             trg_prefs_serverPage(priv->gconf,
+                                                  priv->client),
+                             gtk_label_new("Connection"));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-			     trg_prefs_desktopPage(priv->gconf, priv->win),
-			     gtk_label_new("Desktop"));
+                             trg_prefs_desktopPage(priv->gconf, priv->win),
+                             gtk_label_new("Desktop"));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(object)->vbox), notebook,
-		       TRUE, TRUE, 0);
+                       TRUE, TRUE, 0);
 
     gtk_widget_show_all(GTK_DIALOG(object)->vbox);
 
@@ -360,45 +364,45 @@ trg_preferences_dialog_class_init(TrgPreferencesDialogClass * class)
     g_object_class->get_property = trg_preferences_dialog_get_property;
 
     g_object_class_install_property(g_object_class,
-				    PROP_TRG_CLIENT,
-				    g_param_spec_pointer
-				    ("trg-client", "TClient",
-				     "Client",
-				     G_PARAM_READWRITE |
-				     G_PARAM_CONSTRUCT_ONLY |
-				     G_PARAM_STATIC_NAME |
-				     G_PARAM_STATIC_NICK |
-				     G_PARAM_STATIC_BLURB));
+                                    PROP_TRG_CLIENT,
+                                    g_param_spec_pointer
+                                    ("trg-client", "TClient",
+                                     "Client",
+                                     G_PARAM_READWRITE |
+                                     G_PARAM_CONSTRUCT_ONLY |
+                                     G_PARAM_STATIC_NAME |
+                                     G_PARAM_STATIC_NICK |
+                                     G_PARAM_STATIC_BLURB));
 
     g_object_class_install_property(g_object_class,
-				    PROP_GCONF_CLIENT,
-				    g_param_spec_object("gconf-client",
-							"GConf Client",
-							"GConf Client",
-							GCONF_TYPE_CLIENT,
-							G_PARAM_READWRITE
-							|
-							G_PARAM_CONSTRUCT_ONLY
-							|
-							G_PARAM_STATIC_NAME
-							|
-							G_PARAM_STATIC_NICK
-							|
-							G_PARAM_STATIC_BLURB));
+                                    PROP_GCONF_CLIENT,
+                                    g_param_spec_object("gconf-client",
+                                                        "GConf Client",
+                                                        "GConf Client",
+                                                        GCONF_TYPE_CLIENT,
+                                                        G_PARAM_READWRITE
+                                                        |
+                                                        G_PARAM_CONSTRUCT_ONLY
+                                                        |
+                                                        G_PARAM_STATIC_NAME
+                                                        |
+                                                        G_PARAM_STATIC_NICK
+                                                        |
+                                                        G_PARAM_STATIC_BLURB));
 
     g_object_class_install_property(g_object_class,
-				    PROP_MAIN_WINDOW,
-				    g_param_spec_object
-				    ("main-window", "Main Window",
-				     "Main Window", TRG_TYPE_MAIN_WINDOW,
-				     G_PARAM_READWRITE |
-				     G_PARAM_CONSTRUCT_ONLY |
-				     G_PARAM_STATIC_NAME |
-				     G_PARAM_STATIC_NICK |
-				     G_PARAM_STATIC_BLURB));
+                                    PROP_MAIN_WINDOW,
+                                    g_param_spec_object
+                                    ("main-window", "Main Window",
+                                     "Main Window", TRG_TYPE_MAIN_WINDOW,
+                                     G_PARAM_READWRITE |
+                                     G_PARAM_CONSTRUCT_ONLY |
+                                     G_PARAM_STATIC_NAME |
+                                     G_PARAM_STATIC_NICK |
+                                     G_PARAM_STATIC_BLURB));
 
     g_type_class_add_private(g_object_class,
-			     sizeof(TrgPreferencesDialogPrivate));
+                             sizeof(TrgPreferencesDialogPrivate));
 }
 
 static void trg_preferences_dialog_init(TrgPreferencesDialog * pref_dlg)
@@ -406,13 +410,13 @@ static void trg_preferences_dialog_init(TrgPreferencesDialog * pref_dlg)
 }
 
 GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow * win,
-					       GConfClient * client)
+                                               GConfClient * client)
 {
     if (instance == NULL) {
-	instance = g_object_new(TRG_TYPE_PREFERENCES_DIALOG,
-				"main-window", win,
-				"trg-client", client,
-				"gconf-client", client, NULL);
+        instance = g_object_new(TRG_TYPE_PREFERENCES_DIALOG,
+                                "main-window", win,
+                                "trg-client", client,
+                                "gconf-client", client, NULL);
     }
 
     return GTK_WIDGET(instance);

@@ -40,4 +40,4 @@ struct http_response {
 void http_response_free(struct http_response *response);
 struct http_response *trg_http_perform(trg_client * client, gchar * req);
 
-#endif				/* HTTP_H_ */
+#endif                          /* HTTP_H_ */

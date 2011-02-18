@@ -22,4 +22,4 @@
 
 char *base64encode(char *filename);
 
-#endif				/* BASE64_H_ */
+#endif                          /* BASE64_H_ */

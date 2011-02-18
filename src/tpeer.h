@@ -44,4 +44,4 @@ gint64 peer_get_rate_to_peer(JsonObject * p);
 gboolean peer_get_is_uploading_to(JsonObject * p);
 gboolean peer_get_is_downloading_from(JsonObject * p);
 
-#endif				/* TPEER_H_ */
+#endif                          /* TPEER_H_ */

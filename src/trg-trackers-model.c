@@ -19,7 +19,6 @@
 
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
-#include <glib/gprintf.h>
 
 #include "config.h"
 #include "torrent.h"
@@ -27,7 +26,6 @@
 #include "trg-trackers-model.h"
 
 G_DEFINE_TYPE(TrgTrackersModel, trg_trackers_model, GTK_TYPE_LIST_STORE)
-
 #define TRG_TRACKERS_MODEL_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModelPrivate))
 typedef struct _TrgTrackersModelPrivate TrgTrackersModelPrivate;
@@ -39,8 +37,8 @@ struct _TrgTrackersModelPrivate {
 
 void trg_trackers_model_set_no_selection(TrgTrackersModel * model)
 {
-	TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
-	priv->torrentId = -1;
+    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
+    priv->torrentId = -1;
 }
 
 gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model)
@@ -49,9 +47,11 @@ gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model)
     return priv->torrentId;
 }
 
-void trg_trackers_model_update(TrgTrackersModel * model, gint64 updateSerial, JsonObject * t, gboolean first)
+void trg_trackers_model_update(TrgTrackersModel * model,
+                               gint64 updateSerial, JsonObject * t,
+                               gboolean first)
 {
-	TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
+    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
 
     guint j;
     JsonArray *trackers;
@@ -59,62 +59,67 @@ void trg_trackers_model_update(TrgTrackersModel * model, gint64 updateSerial, Js
     const gchar *scrape;
 
     if (first) {
-    	gtk_list_store_clear(GTK_LIST_STORE(model));
-    	priv->torrentId = torrent_get_id(t);
-    } else if (priv->updateBarrier == TRACKERS_UPDATE_BARRIER_FULL || (priv->updateBarrier >= 0 && priv->updateBarrier > updateSerial)) {
-    	return;
+        gtk_list_store_clear(GTK_LIST_STORE(model));
+        priv->torrentId = torrent_get_id(t);
+    } else if (priv->updateBarrier == TRACKERS_UPDATE_BARRIER_FULL
+               || (priv->updateBarrier >= 0
+                   && priv->updateBarrier > updateSerial)) {
+        return;
     }
 
     trackers = torrent_get_trackers(t);
 
     for (j = 0; j < json_array_get_length(trackers); j++) {
-	GtkTreeIter trackIter;
-	JsonObject *tracker =
-	    json_node_get_object(json_array_get_element(trackers, j));
-	gint64 trackerId = tracker_get_id(tracker);
+        GtkTreeIter trackIter;
+        JsonObject *tracker =
+            json_node_get_object(json_array_get_element(trackers, j));
+        gint64 trackerId = tracker_get_id(tracker);
 
-	announce = tracker_get_announce(tracker);
-	scrape = tracker_get_scrape(tracker);
+        announce = tracker_get_announce(tracker);
+        scrape = tracker_get_scrape(tracker);
 
-	if (first || find_existing_model_item(GTK_TREE_MODEL(model), TRACKERCOL_ID, trackerId, &trackIter) == FALSE)
-		gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
+        if (first
+            || find_existing_model_item(GTK_TREE_MODEL(model),
+                                        TRACKERCOL_ID, trackerId,
+                                        &trackIter) == FALSE)
+            gtk_list_store_append(GTK_LIST_STORE(model), &trackIter);
 
 #ifdef DEBUG
-	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-			   TRACKERCOL_ICON, GTK_STOCK_NETWORK, -1);
-	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-			   TRACKERCOL_TIER, tracker_get_tier(tracker), -1);
-	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-			   TRACKERCOL_ANNOUNCE, announce, -1);
-	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-			   TRACKERCOL_SCRAPE, scrape, -1);
-	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter, TRACKERCOL_ID, trackerId, -1);
-	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter, TRACKERCOL_UPDATESERIAL, updateSerial, -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                           TRACKERCOL_ICON, GTK_STOCK_NETWORK, -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                           TRACKERCOL_TIER, tracker_get_tier(tracker), -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                           TRACKERCOL_ANNOUNCE, announce, -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                           TRACKERCOL_SCRAPE, scrape, -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                           TRACKERCOL_ID, trackerId, -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                           TRACKERCOL_UPDATESERIAL, updateSerial, -1);
 #else
-	gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-			   TRACKERCOL_ICON, GTK_STOCK_NETWORK,
-			   TRACKERCOL_ID, trackerId,
-			   TRACKERCOL_UPDATESERIAL, updateSerial,
-			   TRACKERCOL_TIER,
-			   tracker_get_tier(tracker),
-			   TRACKERCOL_ANNOUNCE,
-			   announce, TRACKERCOL_SCRAPE, scrape, -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                           TRACKERCOL_ICON, GTK_STOCK_NETWORK,
+                           TRACKERCOL_ID, trackerId,
+                           TRACKERCOL_UPDATESERIAL, updateSerial,
+                           TRACKERCOL_TIER,
+                           tracker_get_tier(tracker),
+                           TRACKERCOL_ANNOUNCE,
+                           announce, TRACKERCOL_SCRAPE, scrape, -1);
 #endif
     }
 
     trg_model_remove_removed(GTK_LIST_STORE(model),
-			     TRACKERCOL_UPDATESERIAL,
-			     updateSerial);
+                             TRACKERCOL_UPDATESERIAL, updateSerial);
 }
 
-static void
-trg_trackers_model_class_init(TrgTrackersModelClass * klass)
+static void trg_trackers_model_class_init(TrgTrackersModelClass * klass)
 {
-	g_type_class_add_private(klass, sizeof(TrgTrackersModelPrivate));
+    g_type_class_add_private(klass, sizeof(TrgTrackersModelPrivate));
 }
 
 void trg_trackers_model_set_update_barrier(TrgTrackersModel * model,
-					gint64 barrier)
+                                           gint64 barrier)
 {
     TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
     priv->updateBarrier = barrier;
@@ -122,7 +127,7 @@ void trg_trackers_model_set_update_barrier(TrgTrackersModel * model,
 
 static void trg_trackers_model_init(TrgTrackersModel * self)
 {
-	TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(self);
+    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(self);
 
     GType column_types[TRACKERCOL_COLUMNS];
 
@@ -137,7 +142,7 @@ static void trg_trackers_model_init(TrgTrackersModel * self)
     priv->torrentId = -1;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
-				    TRACKERCOL_COLUMNS, column_types);
+                                    TRACKERCOL_COLUMNS, column_types);
 }
 
 TrgTrackersModel *trg_trackers_model_new(void)

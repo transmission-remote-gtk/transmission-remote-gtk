@@ -61,11 +61,11 @@ gdouble peer_get_progress(JsonObject * p)
 gint64 peer_get_rate_to_client(JsonObject * p)
 {
     return (gint64)
-	json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_CLIENT));
+        json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_CLIENT));
 }
 
 gint64 peer_get_rate_to_peer(JsonObject * p)
 {
     return (gint64)
-	json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_PEER));
+        json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_PEER));
 }

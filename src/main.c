@@ -41,9 +41,9 @@ enum {
 
 static UniqueResponse
 message_received_cb(UniqueApp * app G_GNUC_UNUSED,
-		    gint command,
-		    UniqueMessageData * message,
-		    guint time_, gpointer user_data)
+                    gint command,
+                    UniqueMessageData * message,
+                    guint time_, gpointer user_data)
 {
     TrgMainWindow *win;
     UniqueResponse res;
@@ -52,21 +52,21 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 
     switch (command) {
     case UNIQUE_ACTIVATE:
-	gtk_window_set_screen(GTK_WINDOW(user_data),
-			      unique_message_data_get_screen(message));
-	gtk_window_present_with_time(GTK_WINDOW(user_data), time_);
-	res = UNIQUE_RESPONSE_OK;
-	break;
+        gtk_window_set_screen(GTK_WINDOW(user_data),
+                              unique_message_data_get_screen(message));
+        gtk_window_present_with_time(GTK_WINDOW(user_data), time_);
+        res = UNIQUE_RESPONSE_OK;
+        break;
     case COMMAND_ADD:
-	res =
-	    trg_add_from_filename(win,
-				  unique_message_data_get_filename
-				  (message)) ? UNIQUE_RESPONSE_OK :
-	    UNIQUE_RESPONSE_FAIL;
-	break;
+        res =
+            trg_add_from_filename(win,
+                                  unique_message_data_get_filename
+                                  (message)) ? UNIQUE_RESPONSE_OK :
+            UNIQUE_RESPONSE_FAIL;
+        break;
     default:
-	res = UNIQUE_RESPONSE_OK;
-	break;
+        res = UNIQUE_RESPONSE_OK;
+        break;
     }
 
     return res;
@@ -85,47 +85,47 @@ int main(int argc, char *argv[])
     gtk_init(&argc, &argv);
 
     app = unique_app_new_with_commands("org.eth0.uk.org.trg", NULL,
-				       "add", COMMAND_ADD, NULL);
+                                       "add", COMMAND_ADD, NULL);
 
     if (unique_app_is_running(app)) {
-	UniqueCommand command;
-	UniqueResponse response;
-	UniqueMessageData *message;
+        UniqueCommand command;
+        UniqueResponse response;
+        UniqueMessageData *message;
 
-	if (argc > 1) {
-	    command = COMMAND_ADD;
-	    message = unique_message_data_new();
-	    unique_message_data_set_filename(message, argv[1]);
-	} else {
-	    command = UNIQUE_ACTIVATE;
-	    message = NULL;
-	}
+        if (argc > 1) {
+            command = COMMAND_ADD;
+            message = unique_message_data_new();
+            unique_message_data_set_filename(message, argv[1]);
+        } else {
+            command = UNIQUE_ACTIVATE;
+            message = NULL;
+        }
 
-	response = unique_app_send_message(app, command, message);
-	unique_message_data_free(message);
+        response = unique_app_send_message(app, command, message);
+        unique_message_data_free(message);
 
-	if (response == UNIQUE_RESPONSE_OK) {
-	    returnValue = 0;
-	} else {
-	    returnValue = 1;
-	}
+        if (response == UNIQUE_RESPONSE_OK) {
+            returnValue = 0;
+        } else {
+            returnValue = 1;
+        }
     } else {
-	client = trg_init_client();
+        client = trg_init_client();
 
-	curl_global_init(CURL_GLOBAL_ALL);
+        curl_global_init(CURL_GLOBAL_ALL);
 
-	window = trg_main_window_new(client);
-	unique_app_watch_window(app, GTK_WINDOW(window));
+        window = trg_main_window_new(client);
+        unique_app_watch_window(app, GTK_WINDOW(window));
 
-	g_signal_connect(app, "message-received",
-			 G_CALLBACK(message_received_cb), window);
+        g_signal_connect(app, "message-received",
+                         G_CALLBACK(message_received_cb), window);
 
-	gtk_widget_show_all(GTK_WIDGET(window));
+        gtk_widget_show_all(GTK_WIDGET(window));
 
-	auto_connect_if_required(window, client);
-	gtk_main();
+        auto_connect_if_required(window, client);
+        gtk_main();
 
-	curl_global_cleanup();
+        curl_global_cleanup();
     }
 
     g_object_unref(app);

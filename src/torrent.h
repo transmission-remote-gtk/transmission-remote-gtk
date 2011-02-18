@@ -22,14 +22,14 @@
 
 #include <json-glib/json-glib.h>
 
-#define TORRENT_FLAG_ERROR             (1 << 0)	/* 0x01 */
-#define TORRENT_FLAG_COMPLETE          (1 << 1)	/* 0x02 */
-#define TORRENT_FLAG_INCOMPLETE        (1 << 2)	/* 0x02 */
-#define TORRENT_FLAG_SEEDING           (1 << 3)	/* 0x04 */
-#define TORRENT_FLAG_CHECKING          (1 << 4)	/* 0x08 */
-#define TORRENT_FLAG_WAITING_CHECK     (1 << 5)	/* 0x16 */
-#define TORRENT_FLAG_DOWNLOADING       (1 << 6)	/* 0x32 */
-#define TORRENT_FLAG_PAUSED            (1 << 7)	/* 0x64 */
+#define TORRENT_FLAG_ERROR             (1 << 0) /* 0x01 */
+#define TORRENT_FLAG_COMPLETE          (1 << 1) /* 0x02 */
+#define TORRENT_FLAG_INCOMPLETE        (1 << 2) /* 0x02 */
+#define TORRENT_FLAG_SEEDING           (1 << 3) /* 0x04 */
+#define TORRENT_FLAG_CHECKING          (1 << 4) /* 0x08 */
+#define TORRENT_FLAG_WAITING_CHECK     (1 << 5) /* 0x16 */
+#define TORRENT_FLAG_DOWNLOADING       (1 << 6) /* 0x32 */
+#define TORRENT_FLAG_PAUSED            (1 << 7) /* 0x64 */
 
 gint64 torrent_get_size(JsonObject * t);
 const gchar *torrent_get_name(JsonObject * t);
@@ -51,7 +51,7 @@ JsonArray *torrent_get_wanted(JsonObject * t);
 JsonArray *torrent_get_priorities(JsonObject * t);
 gint64 torrent_get_id(JsonObject * t);
 gint64 tracker_get_tier(JsonObject * t);
-gint64 tracker_get_id(JsonObject *t);
+gint64 tracker_get_id(JsonObject * t);
 const gchar *tracker_get_announce(JsonObject * t);
 const gchar *tracker_get_scrape(JsonObject * t);
 JsonArray *torrent_get_files(JsonObject * args);
@@ -70,4 +70,4 @@ gint64 torrent_get_peer_limit(JsonObject * t);
 
 JsonArray *get_torrents(JsonObject * response);
 
-#endif				/* TORRENT_H_ */
+#endif                          /* TORRENT_H_ */

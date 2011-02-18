@@ -45,14 +45,14 @@ static void trg_status_bar_init(TrgStatusBar * self)
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(self);
 
     priv->connectionCtx =
-	gtk_statusbar_get_context_id(GTK_STATUSBAR(self), "connection");
+        gtk_statusbar_get_context_id(GTK_STATUSBAR(self), "connection");
     priv->countSpeedsCtx =
-	gtk_statusbar_get_context_id(GTK_STATUSBAR(self),
-				     "counts and speeds");
+        gtk_statusbar_get_context_id(GTK_STATUSBAR(self),
+                                     "counts and speeds");
 }
 
 void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
-					const gchar * msg)
+                                        const gchar * msg)
 {
     TrgStatusBarPrivate *priv;
 
@@ -69,15 +69,15 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
 
     session_get_version(session, &version);
     statusMsg =
-	g_strdup_printf
-	("Connected to Transmission %g, getting torrents...", version);
+        g_strdup_printf
+        ("Connected to Transmission %g, getting torrents...", version);
     g_printf("%s\n", statusMsg);
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);
 }
 
 void trg_status_bar_update(TrgStatusBar * sb,
-			   trg_torrent_model_update_stats * stats)
+                           trg_torrent_model_update_stats * stats)
 {
     TrgStatusBarPrivate *priv;
     gchar *statusBarUpdate;
@@ -86,18 +86,18 @@ void trg_status_bar_update(TrgStatusBar * sb,
     priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
 
     trg_strlspeed(downRateTotalString,
-		  stats->downRateTotal / KILOBYTE_FACTOR);
+                  stats->downRateTotal / KILOBYTE_FACTOR);
     trg_strlspeed(upRateTotalString, stats->upRateTotal / KILOBYTE_FACTOR);
 
     statusBarUpdate =
-	g_strdup_printf
-	("%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
-	 stats->count,
-	 downRateTotalString, upRateTotalString,
-	 stats->seeding, stats->down, stats->paused);
+        g_strdup_printf
+        ("%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
+         stats->count,
+         downRateTotalString, upRateTotalString,
+         stats->seeding, stats->down, stats->paused);
     gtk_statusbar_pop(GTK_STATUSBAR(sb), priv->countSpeedsCtx);
     gtk_statusbar_push(GTK_STATUSBAR(sb),
-		       priv->countSpeedsCtx, statusBarUpdate);
+                       priv->countSpeedsCtx, statusBarUpdate);
     g_free(statusBarUpdate);
 }
 
