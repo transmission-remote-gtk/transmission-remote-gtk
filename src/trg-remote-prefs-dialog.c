@@ -428,6 +428,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     tb = priv->blocklist_check =
         gtk_check_button_new_with_mnemonic(stringValue);
     g_free((gchar*)stringValue);
+    widget_set_json_key(tb, SGET_BLOCKLIST_ENABLED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
                                  session_get_blocklist_enabled(s));
 
