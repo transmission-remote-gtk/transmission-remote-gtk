@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <string.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
