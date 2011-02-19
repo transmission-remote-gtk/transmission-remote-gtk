@@ -32,6 +32,7 @@ enum {
     PROP_RESUME_BUTTON,
     PROP_PAUSE_BUTTON,
     PROP_VERIFY_BUTTON,
+    PROP_REANNOUNCE_BUTTON,
     PROP_PROPS_BUTTON,
     PROP_MOVE_BUTTON,
     PROP_REMOTE_PREFS_BUTTON,
@@ -59,6 +60,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_resume;
     GtkWidget *mb_pause;
     GtkWidget *mb_verify;
+    GtkWidget *mb_reannounce;
     GtkWidget *mb_props;
     GtkWidget *mb_local_prefs;
     GtkWidget *mb_remote_prefs;
@@ -92,6 +94,7 @@ void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
     gtk_widget_set_sensitive(priv->mb_resume, sensitive);
     gtk_widget_set_sensitive(priv->mb_pause, sensitive);
     gtk_widget_set_sensitive(priv->mb_verify, sensitive);
+    gtk_widget_set_sensitive(priv->mb_reannounce, sensitive);
     gtk_widget_set_sensitive(priv->mb_move, sensitive);
 }
 
@@ -130,6 +133,9 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
         break;
     case PROP_VERIFY_BUTTON:
         g_value_set_object(value, priv->mb_verify);
+        break;
+    case PROP_REANNOUNCE_BUTTON:
+        g_value_set_object(value, priv->mb_reannounce);
         break;
     case PROP_PROPS_BUTTON:
         g_value_set_object(value, priv->mb_props);
@@ -286,6 +292,9 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
     priv->mb_verify =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Verify",
                               GTK_STOCK_REFRESH, FALSE);
+    priv->mb_reannounce =
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Re-announce",
+                              GTK_STOCK_REFRESH, FALSE);
     priv->mb_move =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Move",
                               GTK_STOCK_HARDDISK, FALSE);
@@ -344,6 +353,8 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "resume-button", "Resume Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_VERIFY_BUTTON,
                                      "verify-button", "Verify Button");
+    trg_menu_bar_install_widget_prop(object_class, PROP_REANNOUNCE_BUTTON,
+                                     "reannounce-button", "Re-announce Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PAUSE_BUTTON,
                                      "pause-button", "Pause Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PROPS_BUTTON,

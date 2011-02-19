@@ -55,5 +55,6 @@ int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
                      va_list ap);
 void response_unref(JsonObject * response);
 const gchar *make_error_message(JsonObject * response, int status);
+void trg_error_dialog(GtkWindow *parent, int status, JsonObject *response);
 
 #endif                          /* UTIL_H_ */

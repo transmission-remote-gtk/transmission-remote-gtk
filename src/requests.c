@@ -80,6 +80,11 @@ JsonNode *torrent_pause(JsonArray * array)
     return generic_request(METHOD_TORRENT_STOP, array);
 }
 
+JsonNode *torrent_reannounce(JsonArray *array)
+{
+    return generic_request(METHOD_TORRENT_REANNOUNCE, array);
+}
+
 JsonNode *torrent_verify(JsonArray * array)
 {
     return generic_request(METHOD_TORRENT_VERIFY, array);

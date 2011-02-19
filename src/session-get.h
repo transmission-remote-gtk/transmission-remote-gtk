@@ -58,6 +58,9 @@
 #define SGET_CACHE_SIZE_MB                      "cache-size-mb"
 #define SGET_SCRIPT_TORRENT_DONE_FILENAME       "script-torrent-done-filename"
 #define SGET_SCRIPT_TORRENT_DONE_ENABLED        "script-torrent-done-enabled"
+#define SGET_BLOCKLIST_URL                     "blocklist-url"
+#define SGET_BLOCKLIST_ENABLED                 "blocklist-enabled"
+#define SGET_BLOCKLIST_SIZE                    "blocklist-size"
 
 const gchar *session_get_torrent_done_filename(JsonObject * s);
 gboolean session_get_torrent_done_enabled(JsonObject * s);
@@ -73,6 +76,7 @@ gint64 session_get_peer_limit_per_torrent(JsonObject * s);
 gboolean session_get_port_forwarding_enabled(JsonObject * s);
 const gchar *session_get_blocklist_url(JsonObject * s);
 gboolean session_get_blocklist_enabled(JsonObject * s);
+gint64 session_get_blocklist_size(JsonObject * s);
 gboolean session_get_rename_partial_files(JsonObject * s);
 const gchar *session_get_encryption(JsonObject * s);
 const gchar *session_get_incomplete_dir(JsonObject * s);

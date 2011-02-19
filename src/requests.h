@@ -32,6 +32,7 @@ JsonNode *torrent_set(JsonArray * array);
 JsonNode *torrent_pause(JsonArray * array);
 JsonNode *torrent_start(JsonArray * array);
 JsonNode *torrent_verify(JsonArray * array);
+JsonNode *torrent_reannounce(JsonArray *array);
 JsonNode *torrent_remove(JsonArray * array, int removeData);
 JsonNode *torrent_add(gchar * filename, gboolean paused);
 JsonNode *torrent_add_url(const gchar * url, gboolean paused);

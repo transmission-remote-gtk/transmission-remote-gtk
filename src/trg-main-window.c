@@ -91,6 +91,7 @@ static void open_local_prefs_cb(GtkWidget * w, gpointer data);
 static void open_remote_prefs_cb(GtkWidget * w, gpointer data);
 static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow * win);
 static void verify_cb(GtkWidget * w, gpointer data);
+static void reannounce_cb(GtkWidget * w, gpointer data);
 static void pause_cb(GtkWidget * w, gpointer data);
 static void resume_cb(GtkWidget * w, gpointer data);
 static void remove_cb(GtkWidget * w, gpointer data);
@@ -584,6 +585,16 @@ static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow * win)
                      G_CALLBACK(open_remote_prefs_cb), win);
 
     return toolBar;
+}
+
+static void reannounce_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+
+    dispatch_async(priv->client,
+                   torrent_reannounce(build_json_id_array
+                                  (priv->torrentTreeView)),
+                   on_generic_interactive_action, data);
 }
 
 static void verify_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
@@ -1177,7 +1188,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
     GObject *b_connect, *b_disconnect, *b_add, *b_resume, *b_pause,
         *b_verify, *b_remove, *b_delete, *b_props, *b_local_prefs,
         *b_remote_prefs, *b_about, *b_view_states, *b_view_notebook,
-        *b_view_stats, *b_add_url, *b_quit, *b_move;
+        *b_view_stats, *b_add_url, *b_quit, *b_move, *b_reannounce;
     TrgMenuBar *menuBar;
 
     menuBar = trg_menu_bar_new(win);
@@ -1192,6 +1203,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                  "remove-button", &b_remove,
                  "move-button", &b_move,
                  "verify-button", &b_verify,
+                 "reannounce-button", &b_reannounce,
                  "props-button", &b_props,
                  "remote-prefs-button", &b_remote_prefs,
                  "local-prefs-button", &b_local_prefs,
@@ -1208,6 +1220,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
     g_signal_connect(b_resume, "activate", G_CALLBACK(resume_cb), win);
     g_signal_connect(b_pause, "activate", G_CALLBACK(pause_cb), win);
     g_signal_connect(b_verify, "activate", G_CALLBACK(verify_cb), win);
+    g_signal_connect(b_reannounce, "activate", G_CALLBACK(reannounce_cb), win);
     g_signal_connect(b_delete, "activate", G_CALLBACK(delete_cb), win);
     g_signal_connect(b_remove, "activate", G_CALLBACK(remove_cb), win);
     g_signal_connect(b_move, "activate", G_CALLBACK(move_cb), win);
@@ -1405,6 +1418,9 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
                           G_CALLBACK(pause_cb), data);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Verify",
                           GTK_STOCK_REFRESH, TRUE, G_CALLBACK(verify_cb),
+                          data);
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Re-announce",
+                          GTK_STOCK_REFRESH, TRUE, G_CALLBACK(reannounce_cb),
                           data);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Move",
                           GTK_STOCK_HARDDISK, TRUE, G_CALLBACK(move_cb),

@@ -33,6 +33,20 @@
 #include "util.h"
 #include "dispatch.h"
 
+void trg_error_dialog(GtkWindow *parent, int status, JsonObject *response)
+{
+    const gchar *msg = make_error_message(response, status);
+    GtkWidget *dialog = gtk_message_dialog_new(parent,
+                                               GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_ERROR,
+                                               GTK_BUTTONS_OK, "%s",
+                                               msg);
+    gtk_window_set_title(GTK_WINDOW(dialog), "Error");
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+    g_free((gpointer) msg);
+}
+
 const gchar *make_error_message(JsonObject * response, int status)
 {
     if (status == FAIL_JSON_DECODE) {

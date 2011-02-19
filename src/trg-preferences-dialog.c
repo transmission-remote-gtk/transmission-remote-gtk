@@ -141,9 +141,7 @@ static void interval_changed_cb(GtkWidget * w, gpointer data)
 
 static void spun_cb_int(GtkWidget * widget, gpointer gconf)
 {
-    gchar *key;
-
-    key = g_object_get_data(G_OBJECT(widget), GCONF_OBJECT_KEY);
+    gchar *key = g_object_get_data(G_OBJECT(widget), GCONF_OBJECT_KEY);
 
     gconf_client_set_int(GCONF_CLIENT(gconf),
                          key,

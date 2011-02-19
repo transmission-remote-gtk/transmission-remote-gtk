@@ -221,16 +221,7 @@ static void on_stats_reply(JsonObject * response, int status,
         if (priv->client->session != NULL)
             g_timeout_add_seconds(5, trg_update_stats_timerfunc, data);
     } else {
-        const gchar *msg = make_error_message(response, status);
-        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(data),
-                                                   GTK_DIALOG_MODAL,
-                                                   GTK_MESSAGE_ERROR,
-                                                   GTK_BUTTONS_OK, "%s",
-                                                   msg);
-        gtk_window_set_title(GTK_WINDOW(dialog), "Error");
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
-        g_free((gpointer) msg);
+        trg_error_dialog(GTK_WINDOW(data), status, response);
     }
 
     response_unref(response);
