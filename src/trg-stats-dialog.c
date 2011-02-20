@@ -202,6 +202,8 @@ static void on_stats_reply(JsonObject * response, int status,
     TrgStatsDialogPrivate *priv;
     JsonObject *args;
 
+    gdk_threads_enter();
+
     if (!TRG_IS_STATS_DIALOG(data)) {
         response_unref(response);
         return;
@@ -223,6 +225,8 @@ static void on_stats_reply(JsonObject * response, int status,
     } else {
         trg_error_dialog(GTK_WINDOW(data), status, response);
     }
+
+    gdk_threads_leave();
 
     response_unref(response);
 }

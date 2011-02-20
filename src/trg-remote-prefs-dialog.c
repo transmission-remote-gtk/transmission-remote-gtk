@@ -295,6 +295,8 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
 static void on_port_tested(JsonObject * response, int status,
                            gpointer data)
 {
+    gdk_threads_enter();
+
     if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
         TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
 
@@ -311,9 +313,10 @@ static void on_port_tested(JsonObject * response, int status,
         } else {
             trg_error_dialog(GTK_WINDOW(data), status, response);
         }
-    }
+   }
 
-    response_unref(response);
+   gdk_threads_leave();
+   response_unref(response);
 }
 
 static void port_test_cb(GtkButton *b, gpointer data)
@@ -331,6 +334,8 @@ static void port_test_cb(GtkButton *b, gpointer data)
 static void on_blocklist_updated(JsonObject * response, int status,
                            gpointer data)
 {
+    gdk_threads_enter();
+
     if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
         TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
 
@@ -346,6 +351,8 @@ static void on_blocklist_updated(JsonObject * response, int status,
             trg_error_dialog(GTK_WINDOW(data), status, response);
         }
     }
+
+    gdk_threads_leave();
 
     response_unref(response);
 }
