@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
@@ -29,32 +28,24 @@
 #include "trg-about-window.h"
 #include "util.h"
 
-GtkWidget *trg_about_window_new(GtkWindow * parent)
+GtkWidget *trg_about_window_new(GtkWindow *parent)
 {
     GtkWidget *dialog;
     GdkPixbuf *logo;
-    GError *error = NULL;
-    const gchar *trgAuthors[] = { "Alan Fitton <ajf@eth0.org.uk>", NULL };
+
+    const gchar *trgAuthors[] = { "Alan Fitton <alan@eth0.org.uk>", NULL };
 
     dialog = gtk_about_dialog_new();
     gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
     gtk_window_set_destroy_with_parent(GTK_WINDOW(dialog), TRUE);
 
-    logo =
-        gdk_pixbuf_new_from_file("/usr/share/pixmaps/transmission.png",
-                                 &error);
-    if (error == NULL)
+    logo = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PACKAGE_NAME, 48,
+            GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
+
+    if (logo != NULL)
+    {
         gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), logo);
-    else {
-        if (error->domain == GDK_PIXBUF_ERROR)
-            g_print("GdkPixbufError: %s\n", error->message);
-        else if (error->domain == G_FILE_ERROR)
-            g_print("GFileError: %s\n", error->message);
-        else
-            g_print
-                ("An error in the domain: %d has occurred!\n",
-                 error->domain);
-        g_error_free(error);
+        g_object_unref(logo);
     }
 
     /* Set application data that will be displayed in the main dialog. */

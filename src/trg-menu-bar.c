@@ -219,6 +219,7 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBarPrivate * priv)
                                    (priv->mb_view_notebook), TRUE);
 
     priv->mb_view_stats = gtk_menu_item_new_with_mnemonic("_Statistics");
+    gtk_widget_set_sensitive(priv->mb_view_stats, FALSE);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_states);
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),

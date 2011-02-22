@@ -109,4 +109,4 @@ install-icons:
         done
 
 transmission-remote-gtk.desktop: transmission-remote-gtk.desktop.in
-	sed -e 's,@bindir\@,$(bindir),g' $< > $@
+	sed -e 's,@bindir\@,$(bindir),g' <transmission-remote-gtk.desktop.in > $@
