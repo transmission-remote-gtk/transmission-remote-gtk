@@ -77,7 +77,7 @@ gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
     selectionList = gtk_tree_selection_get_selected_rows(selection, NULL);
 
     if ((firstNode = g_list_first(selectionList)) != NULL) {
-        if (gtk_tree_model_get_iter(model, iter, firstNode->data) == TRUE) {
+        if (gtk_tree_model_get_iter(model, iter, (GtkTreePath*)firstNode->data)) {
             gtk_tree_model_get(model, iter,
                                TORRENT_COLUMN_JSON, json,
                                TORRENT_COLUMN_ID, &id,
@@ -89,6 +89,7 @@ gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
         }
     }
 
+    g_list_foreach (selectionList, (GFunc) gtk_tree_path_free, NULL);
     g_list_free(selectionList);
 
     return id;

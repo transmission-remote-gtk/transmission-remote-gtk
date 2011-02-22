@@ -638,6 +638,7 @@ static gint confirm_action_dialog(GtkWindow * win,
         gtk_tree_model_get(GTK_TREE_MODEL
                            (priv->sortedTorrentModel),
                            &firstIter, TORRENT_COLUMN_NAME, &name, -1);
+        g_list_foreach (list, (GFunc) gtk_tree_path_free, NULL);
         g_list_free(list);
 
         dialog =
