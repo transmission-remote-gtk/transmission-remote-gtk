@@ -9,12 +9,12 @@ URL: http://code.google.com/p/transmission-remote-gtk/
 Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
-Requires: gtk2
-Requires: glib2
+Requires: gtk2 >= 2.16
+Requires: glib2 >= 2.22
 Requires: unique
 Requires: GConf2
 Requires: libnotify
-Requires: json-glib
+Requires: json-glib >= 0.8
 Requires: libcurl
 
 BuildRequires: gtk2-devel
@@ -89,6 +89,19 @@ fi
 %{_datadir}/icons/hicolor/48x48/apps/transmission-remote-gtk.png
 
 %changelog
+* Mon Feb 21 2011 Alan Fitton <alan@eth0.org.uk> - 0.2.1
+- Fix crash in update-blocklist/port-test callbacks.
+- Menu bar mnemonics.
+
+* Sat Feb 19 2011 Alan Fitton <alan@eth0.org.uk> - 0.2
+- SSL support.
+- Statistics dialog.
+- Fix for setting low priority files.
+- Port testing.
+- Blocklist settings and updates.
+- Torrent reannounce.
+- Tracker add/edit/delete.
+
 * Mon Feb 07 2011 Alan Fitton <alan@eth0.org.uk> - 0.1.1
 - Squash a couple of nasty first release bugs.
 

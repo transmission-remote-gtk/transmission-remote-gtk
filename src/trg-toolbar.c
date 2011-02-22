@@ -206,8 +206,6 @@ static void trg_toolbar_init(TrgToolbar * self)
 
     priv = TRG_TOOLBAR_GET_PRIVATE(self);
 
-    gtk_orientable_set_orientation(GTK_ORIENTABLE(self),
-                                   GTK_ORIENTATION_HORIZONTAL);
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(self),
                               GTK_ICON_SIZE_LARGE_TOOLBAR);
     gtk_toolbar_set_style(GTK_TOOLBAR(self), GTK_TOOLBAR_ICONS);

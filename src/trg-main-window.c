@@ -105,6 +105,7 @@ static gint confirm_action_dialog(GtkWindow * win,
                                   gchar * action_stock);
 static GtkWidget *my_scrolledwin_new(GtkWidget * child);
 static void view_stats_toggled_cb(GtkWidget * w, gpointer data);
+static void trg_widget_set_visible(GtkWidget *w, gboolean visible);
 static void view_states_toggled_cb(GtkCheckMenuItem * w, gpointer data);
 static void view_notebook_toggled_cb(GtkCheckMenuItem * w, gpointer data);
 static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win);
@@ -752,17 +753,28 @@ static void view_stats_toggled_cb(GtkWidget * w, gpointer data)
     gtk_widget_show_all(GTK_WIDGET(dlg));
 }
 
+/* gtk_widget_set_sensitive() was introduced in 2.18, we can have a minimum of
+ * 2.16 otherwise. */
+
+static void trg_widget_set_visible(GtkWidget *w, gboolean visible)
+{
+    if (visible)
+        gtk_widget_show(w);
+    else
+        gtk_widget_hide(w);
+}
+
 static void view_states_toggled_cb(GtkCheckMenuItem * w, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-    gtk_widget_set_visible(GTK_WIDGET(priv->stateSelector),
+    trg_widget_set_visible(GTK_WIDGET(priv->stateSelector),
                            gtk_check_menu_item_get_active(w));
 }
 
 static void view_notebook_toggled_cb(GtkCheckMenuItem * w, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-    gtk_widget_set_visible(priv->notebook,
+    trg_widget_set_visible(priv->notebook,
                            gtk_check_menu_item_get_active(w));
 }
 

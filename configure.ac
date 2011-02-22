@@ -15,11 +15,11 @@ AC_TYPE_SIZE_T
 
 AM_GCONF_SOURCE_2
 
-PKG_CHECK_MODULES([jsonglib], [json-glib-1.0])
+PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
 PKG_CHECK_MODULES([gconf], [gconf-2.0])
-PKG_CHECK_MODULES([gtk], [gtk+-2.0])
-PKG_CHECK_MODULES([gio], [gio-2.0])
+PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
+PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
 PKG_CHECK_MODULES([unique], [unique-1.0])
 PKG_CHECK_MODULES([notify], [libnotify])
 LIBCURL_CHECK_CONFIG([yes], [7.0], [], [AC_MSG_ERROR(["libcurl not found"])])
