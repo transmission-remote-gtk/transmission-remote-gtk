@@ -1662,7 +1662,6 @@ static GObject *trg_main_window_constructor(GType type,
         gtk_window_set_default_icon(priv->icon);
 
     gtk_window_set_title(GTK_WINDOW(self), PACKAGE_NAME);
-    gtk_container_set_border_width(GTK_CONTAINER(self), 5);
     gtk_window_set_default_size(GTK_WINDOW(self), 1000, 600);
     g_signal_connect(G_OBJECT(self), "delete-event",
                      G_CALLBACK(delete_event), NULL);
