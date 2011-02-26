@@ -13,6 +13,13 @@ AC_PROG_CC
 AC_CHECK_HEADERS([stdlib.h string.h])
 AC_TYPE_SIZE_T
 
+OSNAME=`uname -s`
+case "$OSNAME" in
+        FreeBSD*)
+                CPPFLAGS="$CPPFLAGS -I/usr/local/include"
+        ;;
+esac
+
 AM_GCONF_SOURCE_2
 
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
