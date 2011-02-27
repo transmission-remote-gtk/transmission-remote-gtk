@@ -32,7 +32,7 @@ typedef struct _TrgTrackersModelPrivate TrgTrackersModelPrivate;
 
 struct _TrgTrackersModelPrivate {
     gint64 torrentId;
-    gint64 updateBarrier;
+    gint64 accept;
 };
 
 void trg_trackers_model_set_no_selection(TrgTrackersModel * model)
@@ -61,9 +61,8 @@ void trg_trackers_model_update(TrgTrackersModel * model,
     if (first) {
         gtk_list_store_clear(GTK_LIST_STORE(model));
         priv->torrentId = torrent_get_id(t);
-    } else if (priv->updateBarrier == TRACKERS_UPDATE_BARRIER_FULL
-               || (priv->updateBarrier >= 0
-                   && priv->updateBarrier > updateSerial)) {
+        accept = TRUE;
+    } else if (!priv->accept) {
         return;
     }
 
@@ -118,11 +117,11 @@ static void trg_trackers_model_class_init(TrgTrackersModelClass * klass)
     g_type_class_add_private(klass, sizeof(TrgTrackersModelPrivate));
 }
 
-void trg_trackers_model_set_update_barrier(TrgTrackersModel * model,
-                                           gint64 barrier)
+void trg_trackers_model_set_accept(TrgTrackersModel * model,
+                                           gboolean accept)
 {
     TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
-    priv->updateBarrier = barrier;
+    priv->accept = accept;
 }
 
 static void trg_trackers_model_init(TrgTrackersModel * self)
@@ -138,7 +137,7 @@ static void trg_trackers_model_init(TrgTrackersModel * self)
     column_types[TRACKERCOL_ID] = G_TYPE_INT64;
     column_types[TRACKERCOL_UPDATESERIAL] = G_TYPE_INT64;
 
-    priv->updateBarrier = TRACKERS_UPDATE_BARRIER_NONE;
+    priv->accept = TRUE;
     priv->torrentId = -1;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),

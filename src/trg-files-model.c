@@ -37,8 +37,7 @@ struct _TrgFilesModelPrivate {
     JsonArray *files;
     JsonArray *wanted;
     JsonArray *priorities;
-    gint64 updateBarrier;
-    gint64 currentSerial;
+    gboolean accept;
 };
 
 static void trg_files_model_iter_new(TrgFilesModel * model,
@@ -55,11 +54,11 @@ static void trg_files_model_iter_new(TrgFilesModel * model,
                        FILESCOL_SIZE, size, FILESCOL_ID, id, -1);
 }
 
-void trg_files_model_set_update_barrier(TrgFilesModel * model,
-                                        gint64 serial)
+void trg_files_model_set_accept(TrgFilesModel * model,
+                                        gboolean accept)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
-    priv->updateBarrier = serial;
+    priv->accept = accept;
 }
 
 static void
@@ -79,8 +78,7 @@ trg_files_model_iter_update(TrgFilesModel * model,
     gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
                        FILESCOL_PROGRESS, progress, -1);
 
-    if (priv->updateBarrier < 0
-        || priv->currentSerial > priv->updateBarrier) {
+    if (priv->accept) {
         gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
                            FILESCOL_ICON,
                            wanted ? GTK_STOCK_FILE :
@@ -99,7 +97,7 @@ static void trg_files_model_init(TrgFilesModel * self)
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(self);
     GType column_types[FILESCOL_COLUMNS];
 
-    priv->updateBarrier = -1;
+    priv->accept = TRUE;
 
     column_types[FILESCOL_ICON] = G_TYPE_STRING;
     column_types[FILESCOL_NAME] = G_TYPE_STRING;
@@ -146,9 +144,9 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
     priv->priorities = torrent_get_priorities(t);
     priv->wanted = torrent_get_wanted(t);
     priv->files = torrent_get_files(t);
-    priv->currentSerial = updateSerial;
 
     if (first == TRUE) {
+        priv->accept = TRUE;
         for (j = 0; j < json_array_get_length(priv->files); j++) {
             JsonObject *file =
                 json_node_get_object(json_array_get_element

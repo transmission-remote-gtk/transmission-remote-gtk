@@ -1,5 +1,5 @@
 Name: transmission-remote-gtk
-Version: 0.2.1
+Version: 0.2.2
 Release: 1%{?dist:%{dist}}
 Summary: Remote control client for Transmission BitTorrent
 
@@ -89,6 +89,14 @@ fi
 %{_datadir}/icons/hicolor/48x48/apps/transmission-remote-gtk.png
 
 %changelog
+* Sun Feb 27 2011 Alan Fitton <alan@eth0.org.uk> - 0.2.2
+- Put versions in some spec/configure deps.
+- Include libcurl.m4.
+- Better (easier) FreeBSD compilation.
+- Remove 5px window border (much better on some dark themes).
+- Fix hardcoded path to Transmission icon in about dialog.
+- Fix a leak from gtk_tree_selection_get_selected_rows().
+
 * Mon Feb 21 2011 Alan Fitton <alan@eth0.org.uk> - 0.2.1
 - Fix crash in update-blocklist/port-test callbacks.
 - Menu bar mnemonics.

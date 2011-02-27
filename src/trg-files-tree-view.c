@@ -135,6 +135,19 @@ static void remove_array_if_empty(JsonObject * args, gchar * key)
         json_object_remove_member(args, key);
 }
 
+static void
+on_files_update(JsonObject * response, int status,
+                              gpointer data)
+{
+    TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(data);
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(data));
+
+    trg_files_model_set_accept(TRG_FILES_MODEL(model),
+                                       TRUE);
+
+    on_generic_interactive_action(response, status, priv->win);
+}
+
 static void send_updated_file_prefs(TrgFilesTreeView * tv)
 {
     TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(tv);
@@ -175,10 +188,11 @@ static void send_updated_file_prefs(TrgFilesTreeView * tv)
     remove_array_if_empty(args, FIELD_FILES_PRIORITY_NORMAL);
     remove_array_if_empty(args, FIELD_FILES_PRIORITY_LOW);
 
-    trg_files_model_set_update_barrier(TRG_FILES_MODEL(model),
-                                       priv->client->updateSerial + 1);
-    dispatch_async(priv->client, req, on_generic_interactive_action,
-                   priv->win);
+    trg_files_model_set_accept(TRG_FILES_MODEL(model),
+                                       FALSE);
+
+    dispatch_async(priv->client, req, on_files_update,
+                   tv);
 }
 
 static void set_low(GtkWidget * w G_GNUC_UNUSED, gpointer data)

@@ -40,22 +40,22 @@ JsonNode *generic_request(gchar * method, JsonArray * ids)
     return root;
 }
 
-JsonNode *session_stats()
+JsonNode *session_stats(void)
 {
     return generic_request(METHOD_SESSION_STATS, NULL);
 }
 
-JsonNode *blocklist_update()
+JsonNode *blocklist_update(void)
 {
     return generic_request(METHOD_BLOCKLIST_UPDATE, NULL);
 }
 
-JsonNode *port_test()
+JsonNode *port_test(void)
 {
     return generic_request(METHOD_PORT_TEST, NULL);
 }
 
-JsonNode *session_get()
+JsonNode *session_get(void)
 {
     return generic_request(METHOD_SESSION_GET, NULL);
 }
@@ -110,7 +110,7 @@ JsonNode *torrent_remove(JsonArray * array, gboolean removeData)
     return root;
 }
 
-JsonNode *torrent_get()
+JsonNode *torrent_get(void)
 {
     JsonNode *root = base_request(METHOD_TORRENT_GET);
     JsonArray *fields = json_array_new();

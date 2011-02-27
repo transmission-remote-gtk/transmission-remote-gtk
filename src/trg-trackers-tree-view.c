@@ -48,6 +48,19 @@ trg_trackers_tree_view_class_init(TrgTrackersTreeViewClass * klass)
     g_type_class_add_private(klass, sizeof(TrgTrackersTreeViewPrivate));
 }
 
+static void
+on_trackers_update(JsonObject * response, int status,
+                              gpointer data)
+{
+    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(data);
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(data));
+
+    trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model),
+                                       TRUE);
+
+    on_generic_interactive_action(response, status, priv->win);
+}
+
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
                                            trg_client * tc)
 {
@@ -104,11 +117,8 @@ static void trg_tracker_announce_edited(GtkCellRendererText * renderer,
 
     g_free(icon);
 
-    trg_trackers_model_set_update_barrier(TRG_TRACKERS_MODEL(model),
-                                          priv->client->updateSerial + 1);
-
-    dispatch_async(priv->client, req, on_generic_interactive_action,
-                   priv->win);
+    dispatch_async(priv->client, req, on_trackers_update,
+                   user_data);
 }
 
 static void trg_tracker_announce_editing_started(GtkCellRenderer *
@@ -120,20 +130,17 @@ static void trg_tracker_announce_editing_started(GtkCellRenderer *
     TrgTrackersModel *model =
         TRG_TRACKERS_MODEL(gtk_tree_view_get_model
                            (GTK_TREE_VIEW(user_data)));
-    trg_trackers_model_set_update_barrier(model,
-                                          TRACKERS_UPDATE_BARRIER_FULL);
+
+    trg_trackers_model_set_accept(model, FALSE);
 }
 
 static void trg_tracker_announce_editing_canceled(GtkWidget * w,
                                                   gpointer data)
 {
-    TrgTrackersTreeViewPrivate *priv =
-        TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(data);
     TrgTrackersModel *model =
         TRG_TRACKERS_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(data)));
 
-    trg_trackers_model_set_update_barrier(model,
-                                          priv->client->updateSerial + 1);
+    trg_trackers_model_set_accept(model, TRUE);
 }
 
 static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
@@ -226,11 +233,9 @@ static void delete_tracker(GtkWidget * w, gpointer data)
 
     json_object_set_array_member(args, "trackerRemove", trackerIds);
 
-    trg_trackers_model_set_update_barrier(TRG_TRACKERS_MODEL(model),
-                                          priv->client->updateSerial + 1);
+    trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model), FALSE);
 
-    dispatch_async(priv->client, req, on_generic_interactive_action,
-                   priv->win);
+    dispatch_async(priv->client, req, on_trackers_update, data);
 }
 
 static void
@@ -310,10 +315,10 @@ view_onButtonPressed(GtkWidget * treeview, GdkEventButton * event,
             gtk_tree_path_free(path);
 
             view_popup_menu(treeview, event, userdata);
-            return TRUE;
         } else if (trg_trackers_model_get_torrent_id(model) >= 0) {
             view_popup_menu_add_only(treeview, event, userdata);
         }
+        return TRUE;
     }
 
     return FALSE;

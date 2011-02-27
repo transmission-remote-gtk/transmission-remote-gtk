@@ -26,8 +26,8 @@
 JsonNode *generic_request(gchar * method, JsonArray * array);
 
 JsonNode *session_set(void);
-JsonNode *session_get();
-JsonNode *torrent_get();
+JsonNode *session_get(void);
+JsonNode *torrent_get(void);
 JsonNode *torrent_set(JsonArray * array);
 JsonNode *torrent_pause(JsonArray * array);
 JsonNode *torrent_start(JsonArray * array);
@@ -38,8 +38,8 @@ JsonNode *torrent_add(gchar * filename, gboolean paused);
 JsonNode *torrent_add_url(const gchar * url, gboolean paused);
 JsonNode *torrent_set_location(JsonArray * array, gchar * location,
                                gboolean move);
-JsonNode *blocklist_update();
-JsonNode *port_test();
-JsonNode *session_stats();
+JsonNode *blocklist_update(void);
+JsonNode *port_test(void);
+JsonNode *session_stats(void);
 
 #endif                          /* REQUESTS_H_ */

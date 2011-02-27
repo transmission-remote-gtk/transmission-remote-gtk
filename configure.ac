@@ -1,6 +1,5 @@
-#AC_PREREQ([2.65])
-AC_INIT(transmission-remote-gtk, 0.2.1, alan@eth0.org.uk)
-AM_INIT_AUTOMAKE(transmission-remote-gtk, 0.2.1)
+AC_INIT(transmission-remote-gtk, 0.2.2, alan@eth0.org.uk)
+AM_INIT_AUTOMAKE(transmission-remote-gtk, 0.2.2)
 AC_OUTPUT(Makefile src/Makefile)
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])

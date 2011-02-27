@@ -1024,9 +1024,17 @@ void
 on_generic_interactive_action(JsonObject * response, int status,
                               gpointer data)
 {
-    gdk_threads_enter();
-    trg_dialog_error_handler(TRG_MAIN_WINDOW(data), response, status);
-    gdk_threads_leave();
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+
+    if (priv->client->session != NULL)
+    {
+        gdk_threads_enter();
+        trg_dialog_error_handler(TRG_MAIN_WINDOW(data), response, status);
+        gdk_threads_leave();
+
+        if (status == CURLE_OK || status == FAIL_RESPONSE_UNSUCCESSFUL)
+            dispatch_async(priv->client, torrent_get(), on_torrent_get, data);
+    }
 
     response_unref(response);
 }
@@ -1053,14 +1061,14 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     client = priv->client;
 
-    gdk_threads_enter();
-
     /* Disconnected between request and response callback */
     if (client->session == NULL) {
-        gdk_threads_leave();
         response_unref(response);
         return;
     }
+
+    g_mutex_lock(client->updateMutex);
+    gdk_threads_enter();
 
     if (status != CURLE_OK) {
         client->failCount++;
@@ -1084,6 +1092,7 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
                                   trg_update_torrents_timerfunc, data);
         }
         gdk_threads_leave();
+        g_mutex_unlock(client->updateMutex);
         response_unref(response);
         return;
     }
@@ -1095,8 +1104,6 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
     stats.down = 0;
     stats.paused = 0;
 
-    g_mutex_lock(client->updateMutex);
-
     client->updateSerial++;
 
     trg_torrent_model_update(priv->torrentModel, priv->client,
@@ -1104,14 +1111,13 @@ on_torrent_get_multipurpose(JsonObject * response, gboolean first,
 
     update_selected_torrent_notebook(TRG_MAIN_WINDOW(data), first);
 
-    g_mutex_unlock(client->updateMutex);
-
     trg_status_bar_update(priv->statusBar, &stats);
 
     g_timeout_add_seconds(client->interval, trg_update_torrents_timerfunc,
                           data);
 
     gdk_threads_leave();
+    g_mutex_unlock(client->updateMutex);
     response_unref(response);
 }
 

@@ -143,7 +143,7 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
                                                         (priv->
                                                          bandwidthPriorityCombo))
-                               + 1);
+                               - 1);
 
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
                                  (priv->peer_limit_spin), args);
