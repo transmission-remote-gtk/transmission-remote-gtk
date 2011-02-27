@@ -61,7 +61,7 @@ void trg_trackers_model_update(TrgTrackersModel * model,
     if (first) {
         gtk_list_store_clear(GTK_LIST_STORE(model));
         priv->torrentId = torrent_get_id(t);
-        accept = TRUE;
+        priv->accept = TRUE;
     } else if (!priv->accept) {
         return;
     }

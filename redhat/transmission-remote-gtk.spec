@@ -90,6 +90,8 @@ fi
 
 %changelog
 * Sun Feb 27 2011 Alan Fitton <alan@eth0.org.uk> - 0.2.2
+- Fix torrent bandwidth priority setting.
+- Better suspending of tracker/files update until ack.
 - Put versions in some spec/configure deps.
 - Include libcurl.m4.
 - Better (easier) FreeBSD compilation.
