@@ -26,10 +26,13 @@
 #include <curl/curl.h>
 #include <curl/types.h>
 #include <curl/easy.h>
+
+#include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 #include <unique/unique.h>
+
 #include "http.h"
 #include "trg-main-window.h"
 #include "trg-client.h"
@@ -84,6 +87,8 @@ int main(int argc, char *argv[])
     g_thread_init(NULL);
     gdk_threads_init();
     gtk_init(&argc, &argv);
+
+    textdomain(PACKAGE_NAME);
 
     if ((withUnique = g_getenv("TRG_NOUNIQUE") == NULL))
         app = unique_app_new_with_commands("org.eth0.uk.org.trg", NULL,
