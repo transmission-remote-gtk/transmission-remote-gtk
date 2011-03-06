@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
@@ -85,9 +86,9 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
     w = hig_workarea_add_row(t, &row, "URL:", w, NULL);
 
     priv->startCheck =
-        hig_workarea_add_wide_checkbutton(t, &row, "Start Paused", FALSE);
+        hig_workarea_add_wide_checkbutton(t, &row, _("Start Paused"), FALSE);
 
-    gtk_window_set_title(GTK_WINDOW(self), "Add torrent from URL");
+    gtk_window_set_title(GTK_WINDOW(self), _("Add torrent from URL"));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(self), TRUE);
 
     gtk_dialog_add_button(GTK_DIALOG(self), GTK_STOCK_CLOSE,

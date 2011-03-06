@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "trg-trackers-tree-view.h"
@@ -148,7 +149,7 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
 
     trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(self),
                                          TRACKERCOL_ICON,
-                                         TRACKERCOL_TIER, "Tier", -1);
+                                         TRACKERCOL_TIER, _("Tier"), -1);
 
     priv->announceRenderer = gtk_cell_renderer_text_new();
     g_signal_connect(priv->announceRenderer, "edited",
@@ -161,7 +162,7 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
                      self);
 
     priv->announceColumn =
-        gtk_tree_view_column_new_with_attributes("Announce URL",
+        gtk_tree_view_column_new_with_attributes(_("Announce URL"),
                                                  priv->announceRenderer,
                                                  "text",
                                                  TRACKERCOL_ANNOUNCE,
@@ -171,7 +172,7 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
                                    TRACKERCOL_ANNOUNCE, -1);
     gtk_tree_view_append_column(GTK_TREE_VIEW(self), priv->announceColumn);
 
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), "Scrape URL",
+    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Scrape URL"),
                              TRACKERCOL_SCRAPE);
 }
 
@@ -247,7 +248,7 @@ view_popup_menu_add_only(GtkWidget * treeview, GdkEventButton * event,
     menu = gtk_menu_new();
 
     menuitem =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(menu), "Add", GTK_STOCK_ADD,
+        trg_menu_bar_item_new(GTK_MENU_SHELL(menu), _("Add"), GTK_STOCK_ADD,
                               TRUE);
     g_signal_connect(menuitem, "activate", G_CALLBACK(add_tracker),
                      treeview);
@@ -268,13 +269,13 @@ view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
     menu = gtk_menu_new();
 
     menuitem =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(menu), "Delete",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(menu), _("Delete"),
                               GTK_STOCK_DELETE, TRUE);
     g_signal_connect(menuitem, "activate", G_CALLBACK(delete_tracker),
                      treeview);
 
     menuitem =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(menu), "Add", GTK_STOCK_ADD,
+        trg_menu_bar_item_new(GTK_MENU_SHELL(menu), _("Add"), GTK_STOCK_ADD,
                               TRUE);
     g_signal_connect(menuitem, "activate", G_CALLBACK(add_tracker),
                      treeview);

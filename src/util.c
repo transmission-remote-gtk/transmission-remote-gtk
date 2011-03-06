@@ -23,6 +23,7 @@
 #include <math.h>
 #include <string.h>
 
+#include <glib/gi18n.h>
 #include <glib-object.h>
 #include <curl/curl.h>
 #include <json-glib/json-glib.h>
@@ -42,7 +43,7 @@ void trg_error_dialog(GtkWindow * parent, int status,
                                                GTK_MESSAGE_ERROR,
                                                GTK_BUTTONS_OK, "%s",
                                                msg);
-    gtk_window_set_title(GTK_WINDOW(dialog), "Error");
+    gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
     g_free((gpointer) msg);
@@ -51,16 +52,16 @@ void trg_error_dialog(GtkWindow * parent, int status,
 const gchar *make_error_message(JsonObject * response, int status)
 {
     if (status == FAIL_JSON_DECODE) {
-        return g_strdup("JSON decoding error.");
+        return g_strdup(_("JSON decoding error."));
     } else if (status == FAIL_RESPONSE_UNSUCCESSFUL) {
         const gchar *resultStr =
             json_object_get_string_member(response, "result");
         if (resultStr == NULL)
-            return g_strdup("Server responded, but with no result.");
+            return g_strdup(_("Server responded, but with no result."));
         else
             return g_strdup(resultStr);
     } else if (status <= -100) {
-        return g_strdup_printf("Request failed with HTTP code %d",
+        return g_strdup_printf(_("Request failed with HTTP code %d"),
                                -(status + 100));
     } else {
         return g_strdup(curl_easy_strerror(status));
@@ -123,7 +124,7 @@ char *tr_strlratio(char *buf, double ratio, size_t buflen)
 char *tr_strlsize(char *buf, guint64 size, size_t buflen)
 {
     if (!size)
-        g_strlcpy(buf, "None", buflen);
+        g_strlcpy(buf, _("None"), buflen);
 #if GLIB_CHECK_VERSION( 2, 16, 0 )
     else {
         char *tmp = g_format_size_for_display(size);
@@ -157,13 +158,13 @@ char *tr_strlspeed(char *buf, double kb_sec, size_t buflen)
     const double speed = kb_sec;
 
     if (speed < 1000.0)         /* 0.0 KB to 999.9 KB */
-        g_snprintf(buf, buflen, "%.1f KB/s", speed);
+        g_snprintf(buf, buflen, _("%.1f KB/s"), speed);
     else if (speed < 102400.0)  /* 0.98 MB to 99.99 MB */
-        g_snprintf(buf, buflen, "%.2f MB/s", (speed / KILOBYTE_FACTOR));
+        g_snprintf(buf, buflen, _("%.2f MB/s"), (speed / KILOBYTE_FACTOR));
     else if (speed < 1024000.0) /* 100.0 MB to 999.9 MB */
-        g_snprintf(buf, buflen, "%.1f MB/s", (speed / MEGABYTE_FACTOR));
+        g_snprintf(buf, buflen, _("%.1f MB/s"), (speed / MEGABYTE_FACTOR));
     else                        /* insane speeds */
-        g_snprintf(buf, buflen, "%.2f GB/s", (speed / GIGABYTE_FACTOR));
+        g_snprintf(buf, buflen, _("%.2f GB/s"), (speed / GIGABYTE_FACTOR));
 
     return buf;
 }
@@ -197,12 +198,12 @@ char *tr_strltime_long(char *buf, gint64 seconds, size_t buflen)
     minutes = (seconds % 3600) / 60;
     seconds = (seconds % 3600) % 60;
 
-    g_snprintf(d, sizeof(d), days > 1 ? "%d days" : "%d day", days);
-    g_snprintf(h, sizeof(h), hours > 1 ? "%d hours" : "%d hour", hours);
-    g_snprintf(m, sizeof(m), minutes > 1 ? "%d minutes" : "%d minute",
-               minutes);
+    g_snprintf(d, sizeof(d), ngettext("%d days", "%d day", days), days);
+    g_snprintf(h, sizeof(h), ngettext("%d hours", "%d hour", hours), hours);
+    g_snprintf(m, sizeof(m), ngettext("%d minutes", "%d minute",
+               minutes), minutes);
     g_snprintf(s, sizeof(s),
-               seconds > 1 ? "%ld seconds" : "%ld second", seconds);
+               ngettext("%ld seconds", "%ld second", seconds), seconds);
 
     if (days) {
         if (days >= 4 || !hours) {

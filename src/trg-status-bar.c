@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 
@@ -70,7 +71,7 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
     session_get_version(session, &version);
     statusMsg =
         g_strdup_printf
-        ("Connected to Transmission %g, getting torrents...", version);
+        (_("Connected to Transmission %g, getting torrents..."), version);
     g_printf("%s\n", statusMsg);
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);
@@ -91,7 +92,7 @@ void trg_status_bar_update(TrgStatusBar * sb,
 
     statusBarUpdate =
         g_strdup_printf
-        ("%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
+        (_("%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"),
          stats->count,
          downRateTotalString, upRateTotalString,
          stats->seeding, stats->down, stats->paused);

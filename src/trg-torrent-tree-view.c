@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "trg-tree-view.h"
@@ -36,28 +37,28 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
 {
     trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(tv),
                                          TORRENT_COLUMN_ICON,
-                                         TORRENT_COLUMN_NAME, "Name", 300);
-    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), "Size",
+                                         TORRENT_COLUMN_NAME, _("Name"), 300);
+    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), _("Size"),
                                   TORRENT_COLUMN_SIZE, -1);
-    trg_tree_view_add_prog_column(TRG_TREE_VIEW(tv), "Done",
+    trg_tree_view_add_prog_column(TRG_TREE_VIEW(tv), _("Done"),
                                   TORRENT_COLUMN_DONE, 70);
-    trg_tree_view_add_column(TRG_TREE_VIEW(tv), "Status",
+    trg_tree_view_add_column(TRG_TREE_VIEW(tv), _("Status"),
                              TORRENT_COLUMN_STATUS);
-    trg_tree_view_add_column(TRG_TREE_VIEW(tv), "Seeds",
+    trg_tree_view_add_column(TRG_TREE_VIEW(tv), _("Seeds"),
                              TORRENT_COLUMN_SEEDS);
-    trg_tree_view_add_column(TRG_TREE_VIEW(tv), "Leechers",
+    trg_tree_view_add_column(TRG_TREE_VIEW(tv), _("Leechers"),
                              TORRENT_COLUMN_LEECHERS);
-    trg_tree_view_add_speed_column(TRG_TREE_VIEW(tv), "Down Speed",
+    trg_tree_view_add_speed_column(TRG_TREE_VIEW(tv), _("Down Speed"),
                                    TORRENT_COLUMN_DOWNSPEED, -1);
-    trg_tree_view_add_speed_column(TRG_TREE_VIEW(tv), "Up Speed",
+    trg_tree_view_add_speed_column(TRG_TREE_VIEW(tv), _("Up Speed"),
                                    TORRENT_COLUMN_UPSPEED, -1);
-    trg_tree_view_add_eta_column(TRG_TREE_VIEW(tv), "ETA",
+    trg_tree_view_add_eta_column(TRG_TREE_VIEW(tv), _("ETA"),
                                  TORRENT_COLUMN_ETA, -1);
-    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), "Uploaded",
+    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), _("Uploaded"),
                                   TORRENT_COLUMN_UPLOADED, -1);
-    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), "Downloaded",
+    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), _("Downloaded"),
                                   TORRENT_COLUMN_DOWNLOADED, -1);
-    trg_tree_view_add_ratio_column(TRG_TREE_VIEW(tv), "Ratio",
+    trg_tree_view_add_ratio_column(TRG_TREE_VIEW(tv), _("Ratio"),
                                    TORRENT_COLUMN_RATIO, -1);
 }
 

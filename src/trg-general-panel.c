@@ -19,6 +19,7 @@
 
 #include <string.h>
 #include <glib-object.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "torrent.h"
@@ -144,14 +145,18 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     keyLabel =
         gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label));
     if (strlen(errorStr) > 0) {
-        gchar *errorValMarkup =
+        gchar *markup =
             g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>",
                                     errorStr);
         gtk_label_set_markup(GTK_LABEL(priv->gen_error_label),
-                             errorValMarkup);
-        g_free(errorValMarkup);
+                             markup);
+        g_free(markup);
+
+        markup = g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>",
+                                            _("Error"));
         gtk_label_set_markup(keyLabel,
-                             "<span fgcolor=\"red\">Error:</span>");
+                             markup);
+        g_free(markup);
     } else {
         gtk_label_clear(GTK_LABEL(priv->gen_error_label));
         gtk_label_clear(keyLabel);
@@ -161,7 +166,7 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         tr_strltime_long(buf, eta, sizeOfBuf);
         gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), buf);
     } else {
-        gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), "N/A");
+        gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), _("N/A"));
     }
 
     seeders = 0;
@@ -184,7 +189,7 @@ static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
     gchar *keyMarkup;
 
     keyLabel = gtk_label_new(NULL);
-    keyMarkup = g_markup_printf_escaped("<b>%s</b>", key);
+    keyMarkup = g_markup_printf_escaped("<b>%s:</b>", key);
     gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
     g_free(keyMarkup);
     gtk_fixed_put(GTK_FIXED(fixed), keyLabel, 10 + (col * 280),
@@ -204,35 +209,35 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
     TrgGeneralPanelPrivate *priv = TRG_GENERAL_PANEL_GET_PRIVATE(self);
 
     priv->gen_name_label =
-        trg_general_panel_add_label(self, "Name:", 0, 0);
+        trg_general_panel_add_label(self, _("Name"), 0, 0);
 
     priv->gen_size_label =
-        trg_general_panel_add_label(self, "Size:", 0, 1);
-    priv->gen_eta_label = trg_general_panel_add_label(self, "ETA:", 1, 1);
+        trg_general_panel_add_label(self, _("Size"), 0, 1);
+    priv->gen_eta_label = trg_general_panel_add_label(self, _("ETA"), 1, 1);
     priv->gen_completed_label =
-        trg_general_panel_add_label(self, "Completed:", 2, 1);
+        trg_general_panel_add_label(self, _("Completed"), 2, 1);
 
     priv->gen_seeders_label =
-        trg_general_panel_add_label(self, "Seeders:", 0, 2);
+        trg_general_panel_add_label(self, _("Seeders"), 0, 2);
     priv->gen_down_rate_label =
-        trg_general_panel_add_label(self, "Rate Down:", 1, 2);
+        trg_general_panel_add_label(self, _("Rate Down"), 1, 2);
     priv->gen_downloaded_label =
-        trg_general_panel_add_label(self, "Downloaded:", 2, 2);
+        trg_general_panel_add_label(self, _("Downloaded"), 2, 2);
 
     priv->gen_leechers_label =
-        trg_general_panel_add_label(self, "Leechers:", 0, 3);
+        trg_general_panel_add_label(self, _("Leechers"), 0, 3);
     priv->gen_up_rate_label =
-        trg_general_panel_add_label(self, "Rate Up:", 1, 3);
+        trg_general_panel_add_label(self, _("Rate Up"), 1, 3);
     priv->gen_uploaded_label =
-        trg_general_panel_add_label(self, "Uploaded:", 2, 3);
+        trg_general_panel_add_label(self, _("Uploaded"), 2, 3);
 
     priv->gen_status_label =
-        trg_general_panel_add_label(self, "Status:", 0, 4);
+        trg_general_panel_add_label(self, _("Status"), 0, 4);
     priv->gen_ratio_label =
-        trg_general_panel_add_label(self, "Ratio:", 1, 4);
+        trg_general_panel_add_label(self, _("Ratio"), 1, 4);
 
     priv->gen_downloaddir_label =
-        trg_general_panel_add_label(self, "Location:", 0, 5);
+        trg_general_panel_add_label(self, _("Location"), 0, 5);
 
     priv->gen_error_label = trg_general_panel_add_label(self, "", 0, 6);
 

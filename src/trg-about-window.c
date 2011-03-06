@@ -21,6 +21,7 @@
 #include "config.h"
 #endif
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
@@ -49,23 +50,19 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
         g_object_unref(logo);
     }
 
-    /* Set application data that will be displayed in the main dialog. */
     gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),
                                  PACKAGE_VERSION);
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
                                    "(C) 2011 Alan Fitton");
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
-                                  "A remote client to transmission-daemon.");
-    /* Set the license text, which is usually loaded from a file. Also, set the
-     * web site address and label. */
+                                  _("A remote client to transmission-daemon."));
     gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog), "GPL2");
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog),
                                  "http://code.google.com/p/transmission-remote-gtk/");
     gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog),
                                        "http://code.google.com/p/transmission-remote-gtk/");
 
-    /* Set the application authors, documenters and translators. */
     gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(dialog), trgAuthors);
     /*gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(dialog), documenters);
        gtk_about_dialog_set_translator_credits(GTK_ABOUT_DIALOG(dialog),

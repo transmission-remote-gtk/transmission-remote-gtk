@@ -26,6 +26,7 @@
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 #include <gdk/gdkkeysyms.h>
@@ -423,7 +424,7 @@ static void add_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 
     filter = gtk_file_filter_new();
     gtk_file_filter_add_pattern(filter, "*.torrent");
-    gtk_file_filter_set_name(filter, "BitTorrent Metadata");
+    gtk_file_filter_set_name(filter, _("BitTorrent Metadata"));
     gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
 
     if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
@@ -508,13 +509,13 @@ static void connect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
         switch (populate_result) {
         case TRG_GCONF_SCHEMA_ERROR:
             msg =
-                "Unable to retrieve connection settings from GConf. Schema not installed?";
+                _("Unable to retrieve connection settings from GConf. Schema not installed?");
             break;
         case TRG_NO_HOSTNAME_SET:
-            msg = "No hostname set";
+            msg = _("No hostname set");
             break;
         default:
-            msg = "Unknown error getting settings";
+            msg = _("Unknown error getting settings");
             break;
         }
 
@@ -531,7 +532,7 @@ static void connect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
         return;
     }
 
-    trg_status_bar_push_connection_msg(priv->statusBar, "Connecting...");
+    trg_status_bar_push_connection_msg(priv->statusBar, _("Connecting..."));
     dispatch_async(priv->client, session_get(), on_session_get, data);
 }
 
@@ -702,8 +703,8 @@ static void remove_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     ids = build_json_id_array(priv->torrentTreeView);
     if (confirm_action_dialog
         (GTK_WINDOW(data), selection,
-         "<big><b>Remove torrent \"%s\"?</b></big>",
-         "<big><b>Remove %d torrents?</b></big>",
+         _("<big><b>Remove torrent \"%s\"?</b></big>"),
+         _("<big><b>Remove %d torrents?</b></big>"),
          GTK_STOCK_REMOVE) == GTK_RESPONSE_ACCEPT)
         dispatch_async(priv->client,
                        torrent_remove(ids,
@@ -727,8 +728,8 @@ static void delete_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 
     if (confirm_action_dialog
         (GTK_WINDOW(data), selection,
-         "<big><b>Remove and delete torrent \"%s\"?</b></big>",
-         "<big><b>Remove and delete %d torrents?</b></big>",
+         _("<big><b>Remove and delete torrent \"%s\"?</b></big>"),
+         _("<big><b>Remove and delete %d torrents?</b></big>"),
          GTK_STOCK_DELETE) == GTK_RESPONSE_ACCEPT)
         dispatch_async(priv->client,
                        torrent_remove(ids,
@@ -796,7 +797,7 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
     priv->genDetails = trg_general_panel_new(priv->sortedTorrentModel);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              GTK_WIDGET(priv->genDetails),
-                             gtk_label_new("General"));
+                             gtk_label_new(_("General")));
 
     priv->trackersModel = trg_trackers_model_new();
     priv->trackersTreeView =
@@ -804,7 +805,7 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              my_scrolledwin_new(GTK_WIDGET
                                                 (priv->trackersTreeView)),
-                             gtk_label_new("Trackers"));
+                             gtk_label_new(_("Trackers")));
 
     priv->filesModel = trg_files_model_new();
     priv->filesTreeView =
@@ -812,19 +813,19 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              my_scrolledwin_new(GTK_WIDGET
                                                 (priv->filesTreeView)),
-                             gtk_label_new("Files"));
+                             gtk_label_new(_("Files")));
 
     priv->peersModel = trg_peers_model_new();
     priv->peersTreeView = trg_peers_tree_view_new(priv->peersModel);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              my_scrolledwin_new(GTK_WIDGET
                                                 (priv->peersTreeView)),
-                             gtk_label_new("Peers"));
+                             gtk_label_new(_("Peers")));
 
     priv->graph = trg_torrent_graph_new(gtk_widget_get_style(notebook));
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              GTK_WIDGET(priv->graph),
-                             gtk_label_new("Graph"));
+                             gtk_label_new(_("Graph")));
     trg_torrent_graph_start(priv->graph);
 
     return notebook;
@@ -912,7 +913,7 @@ on_torrent_get(JsonObject * response, int mode,
 
             msg = make_error_message(response, status);
             statusBarMsg =
-                g_strdup_printf("Request %d/%d failed: %s",
+                g_strdup_printf(_("Request %d/%d failed: %s"),
                                 client->failCount, 3, msg);
             trg_status_bar_push_connection_msg(priv->statusBar,
                                                statusBarMsg);
@@ -1411,7 +1412,7 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
     g_object_set_data_full(G_OBJECT(menu), "limit-ids", ids,
                            (GDestroyNotify) json_array_unref);
 
-    item = gtk_check_menu_item_new_with_label("No Limit");
+    item = gtk_check_menu_item_new_with_label(_("No Limit"));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), limit < 0);
     g_object_set_data(G_OBJECT(item), "limit", GINT_TO_POINTER(-1));
     g_signal_connect(item, "activate", G_CALLBACK(set_limit_cb), win);
@@ -1448,36 +1449,36 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
     menu = gtk_menu_new();
     ids = build_json_id_array(TRG_TORRENT_TREE_VIEW(treeview));
 
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Properties",
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Properties"),
                           GTK_STOCK_PROPERTIES, TRUE,
                           G_CALLBACK(open_props_cb), data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Resume",
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Resume"),
                           GTK_STOCK_MEDIA_PLAY, TRUE,
                           G_CALLBACK(resume_cb), data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Pause",
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Pause"),
                           GTK_STOCK_MEDIA_PAUSE, TRUE,
                           G_CALLBACK(pause_cb), data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Verify",
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Verify"),
                           GTK_STOCK_REFRESH, TRUE, G_CALLBACK(verify_cb),
                           data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Re-announce",
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Re-announce"),
                           GTK_STOCK_REFRESH, TRUE,
                           G_CALLBACK(reannounce_cb), data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Move", GTK_STOCK_HARDDISK,
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Move"), GTK_STOCK_HARDDISK,
                           TRUE, G_CALLBACK(move_cb), data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Remove", GTK_STOCK_REMOVE,
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove"), GTK_STOCK_REMOVE,
                           TRUE, G_CALLBACK(remove_cb), data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Remove & Delete",
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove & Delete"),
                           GTK_STOCK_DELETE, TRUE, G_CALLBACK(delete_cb),
                           data);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                           limit_menu_new(TRG_MAIN_WINDOW(data),
-                                         "Down Limit",
+                                         _("Down Limit"),
                                          FIELD_DOWNLOAD_LIMITED,
                                          FIELD_DOWNLOAD_LIMIT, ids));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
-                          limit_menu_new(TRG_MAIN_WINDOW(data), "Up Limit",
+                          limit_menu_new(TRG_MAIN_WINDOW(data), _("Up Limit"),
                                          FIELD_UPLOAD_LIMITED,
                                          FIELD_UPLOAD_LIMIT, ids));
 
@@ -1499,28 +1500,28 @@ trg_status_icon_view_menu(GtkStatusIcon * icon G_GNUC_UNUSED,
     menu = gtk_menu_new();
 
     if (!connected) {
-        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Connect",
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Connect"),
                               GTK_STOCK_CONNECT, !connected,
                               G_CALLBACK(connect_cb), data);
     } else {
-        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Disconnect",
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Disconnect"),
                               GTK_STOCK_DISCONNECT, connected,
                               G_CALLBACK(disconnect_cb), data);
 
-        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Add", GTK_STOCK_ADD,
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add"), GTK_STOCK_ADD,
                               connected, G_CALLBACK(add_cb), data);
-        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Add from URL",
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add from URL"),
                               GTK_STOCK_ADD, connected,
                               G_CALLBACK(add_url_cb), data);
 
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                               limit_menu_new(TRG_MAIN_WINDOW(data),
-                                             "Down Limit",
+                                             _("Down Limit"),
                                              SGET_SPEED_LIMIT_DOWN_ENABLED,
                                              SGET_SPEED_LIMIT_DOWN, NULL));
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                               limit_menu_new(TRG_MAIN_WINDOW(data),
-                                             "Up Limit",
+                                             _("Up Limit"),
                                              SGET_SPEED_LIMIT_UP_ENABLED,
                                              SGET_SPEED_LIMIT_UP, NULL));
     }

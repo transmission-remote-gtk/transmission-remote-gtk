@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "trg-client.h"
@@ -249,16 +250,16 @@ view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
 
     menu = gtk_menu_new();
 
-    menuitem = gtk_menu_item_new_with_label("High Priority");
+    menuitem = gtk_menu_item_new_with_label(_("High Priority"));
     g_signal_connect(menuitem, "activate", G_CALLBACK(set_high), treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
-    menuitem = gtk_menu_item_new_with_label("Normal Priority");
+    menuitem = gtk_menu_item_new_with_label(_("Normal Priority"));
     g_signal_connect(menuitem, "activate", G_CALLBACK(set_normal),
                      treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
-    menuitem = gtk_menu_item_new_with_label("Low Priority");
+    menuitem = gtk_menu_item_new_with_label(_("Low Priority"));
     g_signal_connect(menuitem, "activate", G_CALLBACK(set_low), treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
@@ -269,7 +270,7 @@ view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(menuitem), TRUE);
     gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
                                               (menuitem), TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(menuitem), "Download");
+    gtk_menu_item_set_label(GTK_MENU_ITEM(menuitem), _("Download"));
     g_signal_connect(menuitem, "activate", G_CALLBACK(set_wanted),
                      treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
@@ -278,7 +279,7 @@ view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(menuitem), TRUE);
     gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
                                               (menuitem), TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(menuitem), "Skip");
+    gtk_menu_item_set_label(GTK_MENU_ITEM(menuitem), _("Skip"));
     g_signal_connect(menuitem, "activate", G_CALLBACK(set_unwanted),
                      treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
@@ -360,14 +361,14 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
 {
     trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(self),
                                          FILESCOL_ICON, FILESCOL_NAME,
-                                         "Name", -1);
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), "Size", FILESCOL_SIZE);
-    trg_tree_view_add_prog_column(TRG_TREE_VIEW(self), "Progress",
+                                         _("Name"), -1);
+    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Size"), FILESCOL_SIZE);
+    trg_tree_view_add_prog_column(TRG_TREE_VIEW(self), _("Progress"),
                                   FILESCOL_PROGRESS, -1);
     trg_files_tree_view_add_wanted_column(TRG_TREE_VIEW(self),
-                                          "Wanted", FILESCOL_WANTED, -1);
+                                          _("Wanted"), FILESCOL_WANTED, -1);
     trg_files_tree_view_add_priority_column(TRG_TREE_VIEW(self),
-                                            "Priority",
+                                            _("Priority"),
                                             FILESCOL_PRIORITY, -1);
 
     g_signal_connect(self, "button-press-event",

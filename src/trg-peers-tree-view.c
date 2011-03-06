@@ -26,6 +26,7 @@
 #endif
 
 #include <glib-object.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "trg-tree-view.h"
@@ -44,21 +45,21 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
     trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW
                                          (self),
                                          PEERSCOL_ICON,
-                                         PEERSCOL_IP, "IP", 160);
-    trg_tree_view_add_column_fixed_width(TRG_TREE_VIEW(self), "Host",
+                                         PEERSCOL_IP, _("IP"), 160);
+    trg_tree_view_add_column_fixed_width(TRG_TREE_VIEW(self), _("Host"),
                                          PEERSCOL_HOST, 250);
 #ifdef HAVE_GEOIP
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), "Country",
+    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Country"),
                              PEERSCOL_COUNTRY);
 #endif
-    trg_tree_view_add_speed_column(TRG_TREE_VIEW(self), "Down Speed",
+    trg_tree_view_add_speed_column(TRG_TREE_VIEW(self), _("Down Speed"),
                                    PEERSCOL_DOWNSPEED, -1);
-    trg_tree_view_add_speed_column(TRG_TREE_VIEW(self), "Up Speed",
+    trg_tree_view_add_speed_column(TRG_TREE_VIEW(self), _("Up Speed"),
                                    PEERSCOL_UPSPEED, -1);
-    trg_tree_view_add_prog_column(TRG_TREE_VIEW(self), "Progress",
+    trg_tree_view_add_prog_column(TRG_TREE_VIEW(self), _("Progress"),
                                   PEERSCOL_PROGRESS, -1);
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), "Flags", PEERSCOL_FLAGS);
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), "Client",
+    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Flags"), PEERSCOL_FLAGS);
+    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Client"),
                              PEERSCOL_CLIENT);
 }
 

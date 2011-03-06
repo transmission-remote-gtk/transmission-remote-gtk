@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include "trg-toolbar.h"
 
@@ -211,13 +212,13 @@ static void trg_toolbar_init(TrgToolbar * self)
     gtk_toolbar_set_style(GTK_TOOLBAR(self), GTK_TOOLBAR_ICONS);
 
     priv->tb_connect =
-        trg_toolbar_item_new(self, "Connect", &position,
+        trg_toolbar_item_new(self, _("Connect"), &position,
                              GTK_STOCK_CONNECT, TRUE);
     priv->tb_disconnect =
-        trg_toolbar_item_new(self, "Disconnect", &position,
+        trg_toolbar_item_new(self, _("Disconnect"), &position,
                              GTK_STOCK_DISCONNECT, FALSE);
     priv->tb_add =
-        trg_toolbar_item_new(self, "Add", &position, GTK_STOCK_ADD, FALSE);
+        trg_toolbar_item_new(self, _("Add"), &position, GTK_STOCK_ADD, FALSE);
 
     /*priv->tb_add_url =
        trg_toolbar_item_new(self, "Add URL", 3, GTK_STOCK_ADD, FALSE); */
@@ -226,22 +227,22 @@ static void trg_toolbar_init(TrgToolbar * self)
     gtk_toolbar_insert(GTK_TOOLBAR(self), separator, position++);
 
     priv->tb_resume =
-        trg_toolbar_item_new(self, "Resume", &position,
+        trg_toolbar_item_new(self, _("Resume"), &position,
                              GTK_STOCK_MEDIA_PLAY, FALSE);
     priv->tb_pause =
-        trg_toolbar_item_new(self, "Pause", &position,
+        trg_toolbar_item_new(self, _("Pause"), &position,
                              GTK_STOCK_MEDIA_PAUSE, FALSE);
 
     priv->tb_props =
-        trg_toolbar_item_new(self, "Properties", &position,
+        trg_toolbar_item_new(self, _("Properties"), &position,
                              GTK_STOCK_PROPERTIES, FALSE);
 
     priv->tb_remove =
-        trg_toolbar_item_new(self, "Remove", &position,
+        trg_toolbar_item_new(self, _("Remove"), &position,
                              GTK_STOCK_REMOVE, FALSE);
 
     priv->tb_delete =
-        trg_toolbar_item_new(self, "Remove with data",
+        trg_toolbar_item_new(self, _("Remove with data"),
                              &position, GTK_STOCK_DELETE, FALSE);
 
     /*priv->tb_verify =
@@ -252,11 +253,11 @@ static void trg_toolbar_init(TrgToolbar * self)
     gtk_toolbar_insert(GTK_TOOLBAR(self), separator, position++);
 
     priv->tb_local_prefs =
-        trg_toolbar_item_new(self, "Local Preferences", &position,
+        trg_toolbar_item_new(self, _("Local Preferences"), &position,
                              GTK_STOCK_PREFERENCES, TRUE);
 
     priv->tb_remote_prefs =
-        trg_toolbar_item_new(self, "Remote Preferences",
+        trg_toolbar_item_new(self, _("Remote Preferences"),
                              &position, GTK_STOCK_NETWORK, FALSE);
 }
 

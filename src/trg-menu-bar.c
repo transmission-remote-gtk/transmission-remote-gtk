@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include "trg-main-window.h"
 #include "trg-menu-bar.h"
@@ -204,21 +205,21 @@ GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, char *text,
 
 static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBarPrivate * priv)
 {
-    GtkWidget *view = gtk_menu_item_new_with_mnemonic("_View");
+    GtkWidget *view = gtk_menu_item_new_with_mnemonic(_("_View"));
     GtkWidget *viewMenu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), viewMenu);
 
     priv->mb_view_states =
-        gtk_check_menu_item_new_with_label("State selector");
+        gtk_check_menu_item_new_with_label(_("State selector"));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
                                    (priv->mb_view_states), TRUE);
 
     priv->mb_view_notebook =
-        gtk_check_menu_item_new_with_mnemonic("Torrent _details");
+        gtk_check_menu_item_new_with_mnemonic(_("Torrent _details"));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
                                    (priv->mb_view_notebook), TRUE);
 
-    priv->mb_view_stats = gtk_menu_item_new_with_mnemonic("_Statistics");
+    priv->mb_view_stats = gtk_menu_item_new_with_mnemonic(_("_Statistics"));
     gtk_widget_set_sensitive(priv->mb_view_stats, FALSE);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_states);
@@ -232,18 +233,18 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBarPrivate * priv)
 static
 GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBarPrivate * priv)
 {
-    GtkWidget *opts = gtk_menu_item_new_with_mnemonic("_Options");
+    GtkWidget *opts = gtk_menu_item_new_with_mnemonic(_("_Options"));
     GtkWidget *optsMenu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(opts), optsMenu);
 
     priv->mb_local_prefs =
         trg_menu_bar_item_new(GTK_MENU_SHELL(optsMenu),
-                              "_Local Preferences",
+                              _("_Local Preferences"),
                               GTK_STOCK_PREFERENCES, TRUE);
 
     priv->mb_remote_prefs =
         trg_menu_bar_item_new(GTK_MENU_SHELL(optsMenu),
-                              "_Remote Preferences",
+                              _("_Remote Preferences"),
                               GTK_STOCK_NETWORK, FALSE);
 
     return opts;
@@ -252,25 +253,25 @@ GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBarPrivate * priv)
 static
 GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBarPrivate * priv)
 {
-    GtkWidget *file = gtk_menu_item_new_with_mnemonic("_File");
+    GtkWidget *file = gtk_menu_item_new_with_mnemonic(_("_File"));
     GtkWidget *fileMenu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(file), fileMenu);
 
     priv->mb_connect =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), "_Connect",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Connect"),
                               GTK_STOCK_CONNECT, TRUE);
     priv->mb_disconnect =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), "_Disconnect",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Disconnect"),
                               GTK_STOCK_DISCONNECT, FALSE);
     priv->mb_add =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), "_Add",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Add"),
                               GTK_STOCK_ADD, FALSE);
     priv->mb_add_url =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), "Add from _URL",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("Add from _URL"),
                               GTK_STOCK_ADD, FALSE);
 
     priv->mb_quit =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), "_Quit",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Quit"),
                               GTK_STOCK_QUIT, TRUE);
 
     return file;
@@ -279,7 +280,7 @@ GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBarPrivate * priv)
 static
 GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
 {
-    GtkWidget *torrent = gtk_menu_item_new_with_mnemonic("_Torrent");
+    GtkWidget *torrent = gtk_menu_item_new_with_mnemonic(_("_Torrent"));
     GtkWidget *torrentMenu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(torrent), torrentMenu);
 
@@ -287,26 +288,26 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                               "Properties", GTK_STOCK_PROPERTIES, FALSE);
     priv->mb_resume =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "_Resume",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Resume"),
                               GTK_STOCK_MEDIA_PLAY, FALSE);
     priv->mb_pause =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "_Pause",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Pause"),
                               GTK_STOCK_MEDIA_PAUSE, FALSE);
     priv->mb_verify =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "_Verify",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Verify"),
                               GTK_STOCK_REFRESH, FALSE);
     priv->mb_reannounce =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Re-_announce",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("Re-_announce"),
                               GTK_STOCK_REFRESH, FALSE);
     priv->mb_move =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "_Move",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Move"),
                               GTK_STOCK_HARDDISK, FALSE);
     priv->mb_remove =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), "Remove",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("Remove"),
                               GTK_STOCK_REMOVE, FALSE);
     priv->mb_delete =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              "Remove and Delete", GTK_STOCK_DELETE,
+                              _("Remove and Delete"), GTK_STOCK_DELETE,
                               FALSE);
 
     return torrent;
@@ -317,13 +318,13 @@ GtkWidget *trg_menu_bar_help_menu_new(TrgMenuBar * menuBar)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menuBar);
 
-    GtkWidget *help = gtk_menu_item_new_with_mnemonic("_Help");
+    GtkWidget *help = gtk_menu_item_new_with_mnemonic(_("_Help"));
     GtkWidget *helpMenu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(help), helpMenu);
     gtk_menu_shell_append(GTK_MENU_SHELL(menuBar), help);
 
     priv->mb_about =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(helpMenu), "_About",
+        trg_menu_bar_item_new(GTK_MENU_SHELL(helpMenu), _("_About"),
                               GTK_STOCK_ABOUT, TRUE);
 
     return helpMenu;

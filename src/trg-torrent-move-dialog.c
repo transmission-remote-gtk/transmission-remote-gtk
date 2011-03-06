@@ -18,6 +18,7 @@
  */
 
 #include <string.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
@@ -92,17 +93,17 @@ static void trg_torrent_move_dialog_init(TrgTorrentMoveDialog * self)
 
     w = priv->location_combo = gtk_combo_box_entry_new_text();
     g_signal_connect(w, "changed", G_CALLBACK(location_changed), self);
-    w = hig_workarea_add_row(t, &row, "Location:", w, NULL);
+    w = hig_workarea_add_row(t, &row, _("Location:"), w, NULL);
 
     priv->move_check =
-        hig_workarea_add_wide_checkbutton(t, &row, "Move", TRUE);
+        hig_workarea_add_wide_checkbutton(t, &row, _("Move"), TRUE);
 
     gtk_window_set_destroy_with_parent(GTK_WINDOW(self), TRUE);
 
     gtk_dialog_add_button(GTK_DIALOG(self), GTK_STOCK_CLOSE,
                           GTK_RESPONSE_CANCEL);
     priv->move_button =
-        gtk_dialog_add_button(GTK_DIALOG(self), "Move",
+        gtk_dialog_add_button(GTK_DIALOG(self), _("Move"),
                               GTK_RESPONSE_ACCEPT);
     gtk_widget_set_sensitive(priv->move_button, FALSE);
 
@@ -150,10 +151,10 @@ TrgTorrentMoveDialog *trg_torrent_move_dialog_new(TrgMainWindow * win,
         gtk_combo_box_append_text(GTK_COMBO_BOX(priv->location_combo),
                                   current_location);
         gtk_combo_box_set_active(GTK_COMBO_BOX(priv->location_combo), 0);
-        msg = g_strdup_printf("Move %s", name);
+        msg = g_strdup_printf(_("Move %s"), name);
         g_free(name);
     } else {
-        msg = g_strdup_printf("Move %d torrents", count);
+        msg = g_strdup_printf(_("Move %d torrents"), count);
     }
 
     gtk_window_set_transient_for(GTK_WINDOW(obj), GTK_WINDOW(win));

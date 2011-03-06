@@ -26,8 +26,8 @@
 
 #include <glib.h>
 #include <cairo.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <gtk/gtkenums.h>
 
 #include "trg-torrent-graph.h"
 #include "util.h"
@@ -39,6 +39,7 @@
 #define GRAPH_OUT_COLOR "#2D7DB3"
 #define GRAPH_IN_COLOR "#844798"
 #define GRAPH_LINE_WIDTH 3
+#define GRAPH_FRAME_WIDTH 4
 
 G_DEFINE_TYPE(TrgTorrentGraph, trg_torrent_graph, GTK_TYPE_VBOX)
 #define TRG_TORRENT_GRAPH_GET_PRIVATE(o) \
@@ -46,7 +47,6 @@ G_DEFINE_TYPE(TrgTorrentGraph, trg_torrent_graph, GTK_TYPE_VBOX)
 typedef struct _TrgTorrentGraphPrivate TrgTorrentGraphPrivate;
 
 struct _TrgTorrentGraphPrivate {
-
     double fontsize;
     double rmargin;
     double indent;
@@ -101,7 +101,6 @@ trg_torrent_graph_set_property(GObject * object, guint property_id,
     }
 }
 
-#define FRAME_WIDTH 4
 void trg_torrent_graph_draw_background(TrgTorrentGraph * g)
 {
     TrgTorrentGraphPrivate *priv;
@@ -125,7 +124,7 @@ void trg_torrent_graph_draw_background(TrgTorrentGraph * g)
         (priv->draw_width - 2.0 - priv->rmargin -
          priv->indent) / (GRAPH_NUM_POINTS - 3);
     priv->graph_buffer_offset =
-        (int) (1.5 * priv->graph_delx) + FRAME_WIDTH;
+        (int) (1.5 * priv->graph_delx) + GRAPH_FRAME_WIDTH;
 
     gtk_widget_get_allocation(priv->disp, &allocation);
     priv->background =
@@ -135,7 +134,7 @@ void trg_torrent_graph_draw_background(TrgTorrentGraph * g)
 
     gdk_cairo_set_source_color(cr, &priv->style->bg[GTK_STATE_NORMAL]);
     cairo_paint(cr);
-    cairo_translate(cr, FRAME_WIDTH, FRAME_WIDTH);
+    cairo_translate(cr, GRAPH_FRAME_WIDTH, GRAPH_FRAME_WIDTH);
     cairo_set_source_rgb(cr, 1.0, 1.0, 1.0);
     cairo_rectangle(cr, priv->rmargin + priv->indent, 0,
                     priv->draw_width - priv->rmargin - priv->indent,
@@ -159,7 +158,6 @@ void trg_torrent_graph_draw_background(TrgTorrentGraph * g)
             y = i * priv->graph_dely + priv->fontsize / 2.0;
 
         gdk_cairo_set_source_color(cr, &priv->style->fg[GTK_STATE_NORMAL]);
-        /* operation orders matters so it's 0 if i == num_bars */
         rate = priv->max - (i * priv->max / num_bars);
         trg_strlspeed(caption, (gint64) (rate / 1024));
         cairo_text_extents(cr, caption, &extents);
@@ -228,8 +226,8 @@ trg_torrent_graph_configure(GtkWidget * widget,
     TrgTorrentGraphPrivate *priv = TRG_TORRENT_GRAPH_GET_PRIVATE(data_ptr);
 
     gtk_widget_get_allocation(widget, &allocation);
-    priv->draw_width = allocation.width - 2 * FRAME_WIDTH;
-    priv->draw_height = allocation.height - 2 * FRAME_WIDTH;
+    priv->draw_width = allocation.width - 2 * GRAPH_FRAME_WIDTH;
+    priv->draw_height = allocation.height - 2 * GRAPH_FRAME_WIDTH;
 
     trg_torrent_graph_clear_background(g);
 
@@ -256,9 +254,8 @@ trg_torrent_graph_expose(GtkWidget * widget,
     float *fp;
     gdouble sample_width, x_offset;
 
-    if (priv->background == NULL) {
+    if (priv->background == NULL)
         trg_torrent_graph_draw_background(g);
-    }
 
     window = gtk_widget_get_window(priv->disp);
     gtk_widget_get_allocation(priv->disp, &allocation);
@@ -280,10 +277,10 @@ trg_torrent_graph_expose(GtkWidget * widget,
     cairo_set_line_width(cr, GRAPH_LINE_WIDTH);
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
     cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-    cairo_rectangle(cr, priv->rmargin + priv->indent + FRAME_WIDTH + 1,
-                    FRAME_WIDTH - 1,
+    cairo_rectangle(cr, priv->rmargin + priv->indent + GRAPH_FRAME_WIDTH + 1,
+                    GRAPH_FRAME_WIDTH - 1,
                     priv->draw_width - priv->rmargin - priv->indent - 1,
-                    priv->real_draw_height + FRAME_WIDTH - 1);
+                    priv->real_draw_height + GRAPH_FRAME_WIDTH - 1);
     cairo_clip(cr);
 
     for (j = 0; j < GRAPH_NUM_LINES; ++j) {
@@ -394,12 +391,12 @@ static void trg_torrent_graph_update_net(TrgTorrentGraph * g)
     fp[1] = 1.0f * priv->in / priv->max;
 
     trg_strlspeed(speed, (gint64)(priv->out/1024));
-    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_OUT_COLOR"\">Uploading: %s</span>", speed);
+    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_OUT_COLOR"\">%s: %s</span>", _("Total Uploading"), speed);
     gtk_label_set_markup(GTK_LABEL(priv->label_out), labelMarkup);
     g_free(labelMarkup);
 
     trg_strlspeed(speed, (gint64)(priv->in/1024));
-    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_IN_COLOR"\">Downloading: %s</span>", speed);
+    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_IN_COLOR"\">%s: %s</span>", _("Total Downloading"), speed);
     gtk_label_set_markup(GTK_LABEL(priv->label_in), labelMarkup);
     g_free(labelMarkup);
 

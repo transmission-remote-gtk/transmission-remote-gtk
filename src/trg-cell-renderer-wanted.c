@@ -18,6 +18,7 @@
  */
 
 #include <stdint.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "trg-cell-renderer-wanted.h"
@@ -63,9 +64,9 @@ trg_cell_renderer_wanted_set_property(GObject * object, guint property_id,
     if (property_id == PROP_WANTED_VALUE) {
         priv->wanted_value = g_value_get_boolean(value);
         if (priv->wanted_value) {
-            g_object_set(object, "text", "Yes", NULL);
+            g_object_set(object, "text", _("Yes"), NULL);
         } else {
-            g_object_set(object, "text", "No", NULL);
+            g_object_set(object, "text", _("No"), NULL);
         }
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);

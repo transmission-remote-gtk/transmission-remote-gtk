@@ -18,6 +18,7 @@
  */
 
 #include <glib-object.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "torrent.h"
@@ -127,21 +128,21 @@ static void trg_state_selector_init(TrgStateSelector * self)
         gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING,
                            G_TYPE_STRING, G_TYPE_UINT);
 
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_ABOUT, "All", 0);
+    trg_state_selector_add_state(store, &iter, GTK_STOCK_ABOUT, _("All"), 0);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_DOWN,
-                                 "Downloading", TORRENT_FLAG_DOWNLOADING);
+                                 _("Downloading"), TORRENT_FLAG_DOWNLOADING);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_MEDIA_PAUSE,
-                                 "Paused", TORRENT_FLAG_PAUSED);
+                                 _("Paused"), TORRENT_FLAG_PAUSED);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_REFRESH,
-                                 "Checking", TORRENT_FLAG_CHECKING);
+                                 _("Checking"), TORRENT_FLAG_CHECKING);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_APPLY,
-                                 "Complete", TORRENT_FLAG_COMPLETE);
+                                 _("Complete"), TORRENT_FLAG_COMPLETE);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_SELECT_ALL,
-                                 "Incomplete", TORRENT_FLAG_INCOMPLETE);
+                                 _("Incomplete"), TORRENT_FLAG_INCOMPLETE);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_UP,
-                                 "Seeding", TORRENT_FLAG_SEEDING);
+                                 _("Seeding"), TORRENT_FLAG_SEEDING);
     trg_state_selector_add_state(store, &iter,
-                                 GTK_STOCK_DIALOG_WARNING, "Error",
+                                 GTK_STOCK_DIALOG_WARNING, _("Error"),
                                  TORRENT_FLAG_ERROR);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(self), GTK_TREE_MODEL(store));

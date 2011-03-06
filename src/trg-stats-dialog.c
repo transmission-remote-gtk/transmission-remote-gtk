@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 #include <curl/curl.h>
@@ -89,14 +90,6 @@ trg_stats_dialog_set_property(GObject * object, guint property_id,
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
 }
-
-/*static void
-trg_stats_dialog_dispose (GObject *object)
-{
-  TrgStatsDialogPrivate *priv = TRG_STATS_DIALOG_GET_PRIVATE(object);
-
-  G_OBJECT_CLASS (trg_stats_dialog_parent_class)->dispose (object);
-}*/
 
 static void
 trg_stats_response_cb(GtkDialog * dlg, gint res_id,
@@ -271,7 +264,7 @@ static GObject *trg_stats_dialog_constructor(GType type,
                                                      construct_params);
     TrgStatsDialogPrivate *priv = TRG_STATS_DIALOG_GET_PRIVATE(obj);
 
-    gtk_window_set_title(GTK_WINDOW(obj), "Statistics");
+    gtk_window_set_title(GTK_WINDOW(obj), _("Statistics"));
     gtk_window_set_transient_for(GTK_WINDOW(obj),
                                  GTK_WINDOW(priv->parent));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(obj), TRUE);
@@ -290,23 +283,23 @@ static GObject *trg_stats_dialog_constructor(GType type,
                            G_TYPE_STRING);
 
     priv->rr_down =
-        stats_dialog_add_statistic(priv->model, "Download Total");
-    priv->rr_up = stats_dialog_add_statistic(priv->model, "Upload Total");
+        stats_dialog_add_statistic(priv->model, _("Download Total"));
+    priv->rr_up = stats_dialog_add_statistic(priv->model, _("Upload Total"));
     priv->rr_files_added =
-        stats_dialog_add_statistic(priv->model, "Files Added");
+        stats_dialog_add_statistic(priv->model, _("Files Added"));
     priv->rr_session_count =
-        stats_dialog_add_statistic(priv->model, "Session Count");
+        stats_dialog_add_statistic(priv->model, _("Session Count"));
     priv->rr_active =
-        stats_dialog_add_statistic(priv->model, "Time Active");
+        stats_dialog_add_statistic(priv->model, _("Time Active"));
 
     tv = priv->tv = trg_tree_view_new();
     gtk_widget_set_sensitive(tv, TRUE);
 
-    trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_STAT, "Statistic",
+    trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_STAT, _("Statistic"),
                          170);
-    trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_SESSION, "Session",
+    trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_SESSION, _("Session"),
                          100);
-    trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_CUMULAT, "Cumulative",
+    trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_CUMULAT, _("Cumulative"),
                          100);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(tv),

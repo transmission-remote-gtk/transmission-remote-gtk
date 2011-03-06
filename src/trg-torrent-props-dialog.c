@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
@@ -169,26 +170,26 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
 
     t = hig_workarea_create();
 
-    hig_workarea_add_section_title(t, &row, "Bandwidth");
+    hig_workarea_add_section_title(t, &row, _("Bandwidth"));
 
     w = priv->honor_limits_check =
         hig_workarea_add_wide_checkbutton(t, &row,
-                                          "Honor global limits",
+                                          _("Honor global limits"),
                                           torrent_get_honors_session_limits
                                           (json));
     widget_set_json_key(w, FIELD_HONORS_SESSION_LIMITS);
 
     w = priv->bandwidthPriorityCombo = gtk_combo_box_new_text();
     widget_set_json_key(w, FIELD_BANDWIDTH_PRIORITY);
-    gtk_combo_box_append_text(GTK_COMBO_BOX(w), "Low");
-    gtk_combo_box_append_text(GTK_COMBO_BOX(w), "Normal");
-    gtk_combo_box_append_text(GTK_COMBO_BOX(w), "High");
+    gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Low"));
+    gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Normal"));
+    gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("High"));
     gtk_combo_box_set_active(GTK_COMBO_BOX(w),
                              torrent_get_bandwidth_priority(json) + 1);
-    hig_workarea_add_row(t, &row, "Torrent priority:", w, NULL);
+    hig_workarea_add_row(t, &row, _("Torrent priority:"), w, NULL);
 
     tb = priv->down_limited_check = gtk_check_button_new_with_mnemonic
-        ("Limit download speed (Kbps)");
+        (_("Limit download speed (Kbps)"));
     widget_set_json_key(tb, FIELD_DOWNLOAD_LIMITED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
                                  torrent_get_download_limited(json));
@@ -201,7 +202,7 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     tb = priv->up_limited_check = gtk_check_button_new_with_mnemonic
-        ("Limit upload speed (Kbps)");
+        (_("Limit upload speed (Kbps)"));
     widget_set_json_key(tb, FIELD_UPLOAD_LIMITED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
                                  torrent_get_upload_limited(json));
@@ -213,17 +214,17 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
                               torrent_get_upload_limit(json));
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    hig_workarea_add_section_title(t, &row, "Seeding");
+    hig_workarea_add_section_title(t, &row, _("Seeding"));
 
     w = priv->seedRatioMode = gtk_combo_box_new_text();
     widget_set_json_key(GTK_WIDGET(w), FIELD_SEED_RATIO_MODE);
-    gtk_combo_box_append_text(GTK_COMBO_BOX(w), "Use global settings");
-    gtk_combo_box_append_text(GTK_COMBO_BOX(w), "Stop seeding at ratio");
+    gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Use global settings"));
+    gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Stop seeding at ratio"));
     gtk_combo_box_append_text(GTK_COMBO_BOX(w),
-                              "Seed regardless of ratio");
+                              _("Seed regardless of ratio"));
     gtk_combo_box_set_active(GTK_COMBO_BOX(w),
                              torrent_get_seed_ratio_mode(json));
-    hig_workarea_add_row(t, &row, "Seed ratio mode:", w, NULL);
+    hig_workarea_add_row(t, &row, _("Seed ratio mode:"), w, NULL);
 
     w = priv->seedRatioLimit =
         gtk_spin_button_new_with_range(0, INT_MAX, 0.2);
@@ -231,18 +232,18 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
     widget_set_json_key(GTK_WIDGET(w), FIELD_SEED_RATIO_LIMIT);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
                               torrent_get_seed_ratio_limit(json));
-    hig_workarea_add_row(t, &row, "Seed ratio limit:", w, w);
+    hig_workarea_add_row(t, &row, _("Seed ratio limit:"), w, w);
     g_signal_connect(G_OBJECT(priv->seedRatioMode), "changed",
                      G_CALLBACK(seed_ratio_mode_changed_cb), w);
 
-    hig_workarea_add_section_title(t, &row, "Peers");
+    hig_workarea_add_section_title(t, &row, _("Peers"));
 
     w = priv->peer_limit_spin =
         gtk_spin_button_new_with_range(0, INT_MAX, 5);
     widget_set_json_key(GTK_WIDGET(w), FIELD_PEER_LIMIT);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
                               torrent_get_peer_limit(json));
-    hig_workarea_add_row(t, &row, "Peer limit:", w, w);
+    hig_workarea_add_row(t, &row, _("Peer limit:"), w, w);
 
     return t;
 }
@@ -275,7 +276,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     if (rowCount > 1) {
         gchar *windowTitle =
-            g_strdup_printf("Multiple (%d) torrent properties",
+            g_strdup_printf(_("Multiple (%d) torrent properties"),
                             rowCount);
         gtk_window_set_title(GTK_WINDOW(object), windowTitle);
         g_free(windowTitle);
@@ -309,7 +310,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_props_limitsPage
                              (TRG_TORRENT_PROPS_DIALOG(object), json),
-                             gtk_label_new("Limits"));
+                             gtk_label_new(_("Limits")));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 

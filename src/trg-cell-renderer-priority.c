@@ -18,6 +18,7 @@
  */
 
 #include <stdint.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "trg-cell-renderer-priority.h"
@@ -68,11 +69,11 @@ trg_cell_renderer_priority_set_property(GObject * object,
     if (property_id == PROP_PRIORITY_VALUE) {
         priv->priority_value = g_value_get_int64(value);
         if (priv->priority_value == T_PRIORITY_LOW) {
-            g_object_set(object, "text", "Low", NULL);
+            g_object_set(object, "text", _("Low"), NULL);
         } else if (priv->priority_value == T_PRIORITY_HIGH) {
-            g_object_set(object, "text", "High", NULL);
+            g_object_set(object, "text", _("High"), NULL);
         } else {
-            g_object_set(object, "text", "Normal", NULL);
+            g_object_set(object, "text", _("Normal"), NULL);
         }
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);

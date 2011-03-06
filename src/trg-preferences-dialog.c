@@ -22,6 +22,7 @@
 #endif
 
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
@@ -223,15 +224,15 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
 
     t = hig_workarea_create();
 
-    hig_workarea_add_section_title(t, &row, "System Tray");
+    hig_workarea_add_section_title(t, &row, _("System Tray"));
 
-    tray = new_check_button(gconf, "Show in system tray",
+    tray = new_check_button(gconf, _("Show in system tray"),
                             TRG_GCONF_KEY_SYSTEM_TRAY);
     g_signal_connect(G_OBJECT(tray), "toggled",
                      G_CALLBACK(toggle_tray_icon), win);
     hig_workarea_add_wide_control(t, &row, tray);
 
-    w = new_check_button(gconf, "Minimise to system tray",
+    w = new_check_button(gconf, _("Minimise to system tray"),
                          TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE);
     gtk_widget_set_sensitive(w,
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
@@ -240,7 +241,7 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
                      G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = new_check_button(gconf, "Torrent added notifications",
+    w = new_check_button(gconf, _("Torrent added notifications"),
                          TRG_GCONF_KEY_ADD_NOTIFY);
     gtk_widget_set_sensitive(w,
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
@@ -249,7 +250,7 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
                      G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = new_check_button(gconf, "Torrent complete notifications",
+    w = new_check_button(gconf, _("Torrent complete notifications"),
                          TRG_GCONF_KEY_COMPLETE_NOTIFY);
     gtk_widget_set_sensitive(w,
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
@@ -269,35 +270,35 @@ static GtkWidget *trg_prefs_serverPage(GConfClient * gconf,
 
     t = hig_workarea_create();
 
-    hig_workarea_add_section_title(t, &row, "Server");
+    hig_workarea_add_section_title(t, &row, _("Server"));
 
     w = new_entry(gconf, TRG_GCONF_KEY_HOSTNAME);
-    hig_workarea_add_row(t, &row, "Host:", w, NULL);
+    hig_workarea_add_row(t, &row, _("Host:"), w, NULL);
 
     w = new_spin_button(gconf, TRG_GCONF_KEY_PORT, 1, 65535, 1);
-    hig_workarea_add_row(t, &row, "Port:", w, NULL);
+    hig_workarea_add_row(t, &row, _("Port:"), w, NULL);
 
-    w = new_check_button(gconf, "Automatically connect",
+    w = new_check_button(gconf, _("Automatically connect"),
                          TRG_GCONF_KEY_AUTO_CONNECT);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = new_check_button(gconf, "SSL", TRG_GCONF_KEY_SSL);
+    w = new_check_button(gconf, _("SSL"), TRG_GCONF_KEY_SSL);
     hig_workarea_add_wide_control(t, &row, w);
 
     w = new_spin_button(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, 1, 60, 1);
     g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb),
                      client);
-    hig_workarea_add_row(t, &row, "Update interval:", w, NULL);
+    hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
 
     hig_workarea_add_section_divider(t, &row);
-    hig_workarea_add_section_title(t, &row, "Authentication");
+    hig_workarea_add_section_title(t, &row, _("Authentication"));
 
     w = new_entry(gconf, TRG_GCONF_KEY_USERNAME);
-    hig_workarea_add_row(t, &row, "Username:", w, NULL);
+    hig_workarea_add_row(t, &row, _("Username:"), w, NULL);
 
     w = new_entry(gconf, TRG_GCONF_KEY_PASSWORD);
     gtk_entry_set_visibility(GTK_ENTRY(w), FALSE);
-    hig_workarea_add_row(t, &row, "Password:", w, NULL);
+    hig_workarea_add_row(t, &row, _("Password:"), w, NULL);
 
     return t;
 }
@@ -324,7 +325,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
                           GTK_RESPONSE_CLOSE);
-    gtk_window_set_title(GTK_WINDOW(object), "Local Preferences");
+    gtk_window_set_title(GTK_WINDOW(object), _("Local Preferences"));
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
     g_signal_connect(G_OBJECT(object),
@@ -336,11 +337,11 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_serverPage(priv->gconf,
                                                   priv->client),
-                             gtk_label_new("Connection"));
+                             gtk_label_new(_("Connection")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_desktopPage(priv->gconf, priv->win),
-                             gtk_label_new("Desktop"));
+                             gtk_label_new(_("Desktop")));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 
