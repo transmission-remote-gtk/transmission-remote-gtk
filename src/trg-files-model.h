@@ -68,7 +68,6 @@ void
 trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
                        JsonObject * t, gboolean first);
 gint64 trg_files_model_get_torrent_id(TrgFilesModel * model);
-void trg_files_model_set_accept(TrgFilesModel * model,
-                                        gboolean accept);
+void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept);
 
 #endif                          /* TRG_FILES_MODEL_H_ */

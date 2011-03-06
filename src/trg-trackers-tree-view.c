@@ -49,14 +49,13 @@ trg_trackers_tree_view_class_init(TrgTrackersTreeViewClass * klass)
 }
 
 static void
-on_trackers_update(JsonObject * response, int status,
-                              gpointer data)
+on_trackers_update(JsonObject * response, int status, gpointer data)
 {
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(data);
+    TrgTrackersTreeViewPrivate *priv =
+        TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(data);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(data));
 
-    trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model),
-                                       TRUE);
+    trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model), TRUE);
 
     on_generic_interactive_action(response, status, priv->win);
 }
@@ -117,8 +116,7 @@ static void trg_tracker_announce_edited(GtkCellRendererText * renderer,
 
     g_free(icon);
 
-    dispatch_async(priv->client, req, on_trackers_update,
-                   user_data);
+    dispatch_async(priv->client, req, on_trackers_update, user_data);
 }
 
 static void trg_tracker_announce_editing_started(GtkCellRenderer *
@@ -210,13 +208,14 @@ static void delete_tracker(GtkWidget * w, gpointer data)
     GList *li;
 
     for (li = selectionRefs; li != NULL; li = g_list_next(li)) {
-        GtkTreeRowReference *rr = (GtkTreeRowReference*)li->data;
+        GtkTreeRowReference *rr = (GtkTreeRowReference *) li->data;
         GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
         if (path != NULL) {
             gint64 trackerId;
             GtkTreeIter trackerIter;
             gtk_tree_model_get_iter(model, &trackerIter, path);
-            gtk_tree_model_get(model, &trackerIter, TRACKERCOL_ID, &trackerId, -1);
+            gtk_tree_model_get(model, &trackerIter, TRACKERCOL_ID,
+                               &trackerId, -1);
             json_array_add_int_element(trackerIds, trackerId);
             gtk_list_store_remove(GTK_LIST_STORE(model), &trackerIter);
             gtk_tree_path_free(path);
@@ -226,7 +225,8 @@ static void delete_tracker(GtkWidget * w, gpointer data)
     g_list_free(selectionRefs);
 
     json_array_add_int_element(torrentIds,
-                               trg_trackers_model_get_torrent_id(TRG_TRACKERS_MODEL(model)));
+                               trg_trackers_model_get_torrent_id
+                               (TRG_TRACKERS_MODEL(model)));
 
     req = torrent_set(torrentIds);
     args = node_get_arguments(req);

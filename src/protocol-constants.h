@@ -106,6 +106,7 @@
 #define PARAM_FIELDS            "fields"
 #define PARAM_METAINFO          "metainfo"
 #define PARAM_FILENAME          "filename"
+#define PARAM_PAUSED            "paused"
 #define PARAM_TAG               "tag"
 
 enum {

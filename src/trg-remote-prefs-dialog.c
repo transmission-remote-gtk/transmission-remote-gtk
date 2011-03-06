@@ -124,7 +124,7 @@ static void update_session(GtkDialog * dlg)
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON(priv->peer_port_spin),
                                  args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                                   (priv->blocklist_check), args);
+                               (priv->blocklist_check), args);
     if (priv->blocklist_url_entry)
         gtk_entry_json_output(GTK_ENTRY(priv->blocklist_url_entry), args);
 
@@ -298,30 +298,35 @@ static void on_port_tested(JsonObject * response, int status,
     gdk_threads_enter();
 
     if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
-        TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+        TrgRemotePrefsDialogPrivate *priv =
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
 
         gtk_button_set_label(GTK_BUTTON(priv->port_test_button), "Retest");
         gtk_widget_set_sensitive(priv->port_test_button, TRUE);
 
-        if (status == CURLE_OK)
-        {
-            gboolean isOpen = json_object_get_boolean_member(get_arguments(response), "port-is-open");
+        if (status == CURLE_OK) {
+            gboolean isOpen =
+                json_object_get_boolean_member(get_arguments(response),
+                                               "port-is-open");
             if (isOpen)
-                gtk_label_set_markup(GTK_LABEL(priv->port_test_label), "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>");
+                gtk_label_set_markup(GTK_LABEL(priv->port_test_label),
+                                     "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>");
             else
-                gtk_label_set_markup(GTK_LABEL(priv->port_test_label), "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>");
+                gtk_label_set_markup(GTK_LABEL(priv->port_test_label),
+                                     "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>");
         } else {
             trg_error_dialog(GTK_WINDOW(data), status, response);
         }
-   }
+    }
 
-   gdk_threads_leave();
-   response_unref(response);
+    gdk_threads_leave();
+    response_unref(response);
 }
 
-static void port_test_cb(GtkButton *b, gpointer data)
+static void port_test_cb(GtkButton * b, gpointer data)
 {
-    TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+    TrgRemotePrefsDialogPrivate *priv =
+        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
     JsonNode *req = port_test();
 
     gtk_label_set_text(GTK_LABEL(priv->port_test_label), "Port test");
@@ -332,20 +337,26 @@ static void port_test_cb(GtkButton *b, gpointer data)
 }
 
 static void on_blocklist_updated(JsonObject * response, int status,
-                           gpointer data)
+                                 gpointer data)
 {
     gdk_threads_enter();
 
     if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
-        TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+        TrgRemotePrefsDialogPrivate *priv =
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
 
         gtk_widget_set_sensitive(priv->blocklist_update_button, TRUE);
-        gtk_button_set_label(GTK_BUTTON(priv->blocklist_update_button), "Update");
+        gtk_button_set_label(GTK_BUTTON(priv->blocklist_update_button),
+                             "Update");
 
         if (status == CURLE_OK) {
             JsonObject *args = get_arguments(response);
-            gchar *labelText = g_strdup_printf("Blocklist (%ld entries)", json_object_get_int_member(args, SGET_BLOCKLIST_SIZE));
-            gtk_button_set_label(GTK_BUTTON(priv->blocklist_check), labelText);
+            gchar *labelText =
+                g_strdup_printf("Blocklist (%ld entries)",
+                                json_object_get_int_member(args,
+                                                           SGET_BLOCKLIST_SIZE));
+            gtk_button_set_label(GTK_BUTTON(priv->blocklist_check),
+                                 labelText);
             g_free(labelText);
         } else {
             trg_error_dialog(GTK_WINDOW(data), status, response);
@@ -357,9 +368,10 @@ static void on_blocklist_updated(JsonObject * response, int status,
     response_unref(response);
 }
 
-static void update_blocklist_cb(GtkButton *b, gpointer data)
+static void update_blocklist_cb(GtkButton * b, gpointer data)
 {
-    TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+    TrgRemotePrefsDialogPrivate *priv =
+        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
     JsonNode *req = blocklist_update();
 
     gtk_widget_set_sensitive(GTK_WIDGET(b), FALSE);
@@ -431,16 +443,20 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
                                           session_get_lpd_enabled(s));
     widget_set_json_key(w, SGET_LPD_ENABLED);
 
-    stringValue = g_strdup_printf("Blocklist (%ld entries)", session_get_blocklist_size(s));
+    stringValue =
+        g_strdup_printf("Blocklist (%ld entries)",
+                        session_get_blocklist_size(s));
     tb = priv->blocklist_check =
         gtk_check_button_new_with_mnemonic(stringValue);
-    g_free((gchar*)stringValue);
+    g_free((gchar *) stringValue);
     widget_set_json_key(tb, SGET_BLOCKLIST_ENABLED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
                                  session_get_blocklist_enabled(s));
 
-    w = priv->blocklist_update_button = gtk_button_new_with_label("Update");
-    g_signal_connect(G_OBJECT(w), "clicked", G_CALLBACK(update_blocklist_cb), win);
+    w = priv->blocklist_update_button =
+        gtk_button_new_with_label("Update");
+    g_signal_connect(G_OBJECT(w), "clicked",
+                     G_CALLBACK(update_blocklist_cb), win);
 
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
@@ -450,8 +466,8 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
         widget_set_json_key(w, SGET_BLOCKLIST_URL);
         gtk_entry_set_text(GTK_ENTRY(w), session_get_blocklist_url(s));
         gtk_widget_set_sensitive(w,
-                                 gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                              (tb)));
+                                 gtk_toggle_button_get_active
+                                 (GTK_TOGGLE_BUTTON(tb)));
         g_signal_connect(G_OBJECT(tb), "toggled",
                          G_CALLBACK(toggle_active_arg_is_sensitive), w);
         hig_workarea_add_row(t, &row, "Blocklist URL:", w, NULL);

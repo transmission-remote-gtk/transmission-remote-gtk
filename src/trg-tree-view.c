@@ -27,7 +27,7 @@
 
 G_DEFINE_TYPE(TrgTreeView, trg_tree_view, GTK_TYPE_TREE_VIEW)
 
-GList *trg_tree_view_get_selected_refs_list(GtkTreeView *tv)
+GList *trg_tree_view_get_selected_refs_list(GtkTreeView * tv)
 {
     GtkTreeModel *model = gtk_tree_view_get_model(tv);
     GtkTreeSelection *selection = gtk_tree_view_get_selection(tv);
@@ -36,7 +36,7 @@ GList *trg_tree_view_get_selected_refs_list(GtkTreeView *tv)
 
     selectionList = gtk_tree_selection_get_selected_rows(selection, NULL);
     for (li = selectionList; li != NULL; li = g_list_next(li)) {
-        GtkTreePath *path = (GtkTreePath*)li->data;
+        GtkTreePath *path = (GtkTreePath *) li->data;
         GtkTreeRowReference *ref = gtk_tree_row_reference_new(model, path);
         gtk_tree_path_free(path);
         refList = g_list_append(refList, ref);

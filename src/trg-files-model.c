@@ -54,8 +54,7 @@ static void trg_files_model_iter_new(TrgFilesModel * model,
                        FILESCOL_SIZE, size, FILESCOL_ID, id, -1);
 }
 
-void trg_files_model_set_accept(TrgFilesModel * model,
-                                        gboolean accept)
+void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     priv->accept = accept;

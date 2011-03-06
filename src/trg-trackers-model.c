@@ -118,7 +118,7 @@ static void trg_trackers_model_class_init(TrgTrackersModelClass * klass)
 }
 
 void trg_trackers_model_set_accept(TrgTrackersModel * model,
-                                           gboolean accept)
+                                   gboolean accept)
 {
     TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
     priv->accept = accept;

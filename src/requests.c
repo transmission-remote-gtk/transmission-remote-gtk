@@ -80,7 +80,7 @@ JsonNode *torrent_pause(JsonArray * array)
     return generic_request(METHOD_TORRENT_STOP, array);
 }
 
-JsonNode *torrent_reannounce(JsonArray *array)
+JsonNode *torrent_reannounce(JsonArray * array)
 {
     return generic_request(METHOD_TORRENT_REANNOUNCE, array);
 }
@@ -155,11 +155,12 @@ JsonNode *torrent_get(void)
     return root;
 }
 
-JsonNode *torrent_add_url(const gchar * url, gboolean paused G_GNUC_UNUSED)
+JsonNode *torrent_add_url(const gchar * url, gboolean paused)
 {
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);
     json_object_set_string_member(args, PARAM_FILENAME, url);
+    json_object_set_boolean_member(args, PARAM_PAUSED, paused);
     return root;
 }
 

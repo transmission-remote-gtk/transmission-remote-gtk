@@ -27,7 +27,7 @@
 #include "trg-torrent-model.h"
 
 static void gtk_label_clear(GtkLabel * l);
-static GtkLabel *gen_panel_label_get_key_label(GtkLabel *l);
+static GtkLabel *gen_panel_label_get_key_label(GtkLabel * l);
 static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
                                              char *key, int col, int row);
 
@@ -72,7 +72,8 @@ void trg_general_panel_clear(TrgGeneralPanel * panel)
     gtk_label_clear(priv->gen_ratio_label);
     gtk_label_clear(priv->gen_downloaddir_label);
     gtk_label_clear(priv->gen_error_label);
-    gtk_label_clear(gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label)));
+    gtk_label_clear(gen_panel_label_get_key_label
+                    (GTK_LABEL(priv->gen_error_label)));
 }
 
 static void gtk_label_clear(GtkLabel * l)
@@ -80,7 +81,7 @@ static void gtk_label_clear(GtkLabel * l)
     gtk_label_set_text(l, "");
 }
 
-static GtkLabel *gen_panel_label_get_key_label(GtkLabel *l)
+static GtkLabel *gen_panel_label_get_key_label(GtkLabel * l)
 {
     return GTK_LABEL(g_object_get_data(G_OBJECT(l), "key-label"));
 }
@@ -136,15 +137,21 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gtk_label_set_text(GTK_LABEL(priv->gen_name_label),
                        torrent_get_name(t));
 
-    gtk_label_set_text(GTK_LABEL(priv->gen_downloaddir_label), torrent_get_download_dir(t));
+    gtk_label_set_text(GTK_LABEL(priv->gen_downloaddir_label),
+                       torrent_get_download_dir(t));
 
     errorStr = torrent_get_errorstr(t);
-    keyLabel = gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label));
+    keyLabel =
+        gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label));
     if (strlen(errorStr) > 0) {
-        gchar *errorValMarkup = g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>", errorStr);
-        gtk_label_set_markup(GTK_LABEL(priv->gen_error_label), errorValMarkup);
+        gchar *errorValMarkup =
+            g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>",
+                                    errorStr);
+        gtk_label_set_markup(GTK_LABEL(priv->gen_error_label),
+                             errorValMarkup);
         g_free(errorValMarkup);
-        gtk_label_set_markup(keyLabel, "<span fgcolor=\"red\">Error:</span>");
+        gtk_label_set_markup(keyLabel,
+                             "<span fgcolor=\"red\">Error:</span>");
     } else {
         gtk_label_clear(GTK_LABEL(priv->gen_error_label));
         gtk_label_clear(keyLabel);
@@ -185,7 +192,7 @@ static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
 
     value = gtk_label_new(NULL);
     gtk_label_set_selectable(GTK_LABEL(value), TRUE);
-    gtk_fixed_put(GTK_FIXED(fixed), value, 140 + (col * 300),
+    gtk_fixed_put(GTK_FIXED(fixed), value, 120 + (col * 300),
                   10 + (row * 22));
     g_object_set_data(G_OBJECT(value), "key-label", keyLabel);
 
@@ -227,8 +234,7 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
     priv->gen_downloaddir_label =
         trg_general_panel_add_label(self, "Location:", 0, 5);
 
-    priv->gen_error_label =
-        trg_general_panel_add_label(self, "", 0, 6);
+    priv->gen_error_label = trg_general_panel_add_label(self, "", 0, 6);
 
     gtk_widget_set_sensitive(GTK_WIDGET(self), FALSE);
 }

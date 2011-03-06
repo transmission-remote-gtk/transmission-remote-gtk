@@ -75,19 +75,21 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 int main(int argc, char *argv[])
 {
     int returnValue;
-    UniqueApp *app;
+    UniqueApp *app = NULL;
     TrgMainWindow *window;
     trg_client *client;
+    gboolean withUnique;
 
     g_type_init();
     g_thread_init(NULL);
     gdk_threads_init();
     gtk_init(&argc, &argv);
 
-    app = unique_app_new_with_commands("org.eth0.uk.org.trg", NULL,
-                                       "add", COMMAND_ADD, NULL);
+    if ((withUnique = g_getenv("TRG_NOUNIQUE") == NULL))
+        app = unique_app_new_with_commands("org.eth0.uk.org.trg", NULL,
+                                           "add", COMMAND_ADD, NULL);
 
-    if (unique_app_is_running(app)) {
+    if (withUnique && unique_app_is_running(app)) {
         UniqueCommand command;
         UniqueResponse response;
         UniqueMessageData *message;
@@ -115,10 +117,12 @@ int main(int argc, char *argv[])
         curl_global_init(CURL_GLOBAL_ALL);
 
         window = trg_main_window_new(client);
-        unique_app_watch_window(app, GTK_WINDOW(window));
 
-        g_signal_connect(app, "message-received",
-                         G_CALLBACK(message_received_cb), window);
+        if (withUnique) {
+            unique_app_watch_window(app, GTK_WINDOW(window));
+            g_signal_connect(app, "message-received",
+                             G_CALLBACK(message_received_cb), window);
+        }
 
         gtk_widget_show_all(GTK_WIDGET(window));
 
@@ -128,7 +132,9 @@ int main(int argc, char *argv[])
         curl_global_cleanup();
     }
 
-    g_object_unref(app);
+    if (withUnique)
+        g_object_unref(app);
+
     gdk_threads_leave();
 
     return EXIT_SUCCESS;

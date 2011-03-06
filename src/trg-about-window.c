@@ -28,7 +28,7 @@
 #include "trg-about-window.h"
 #include "util.h"
 
-GtkWidget *trg_about_window_new(GtkWindow *parent)
+GtkWidget *trg_about_window_new(GtkWindow * parent)
 {
     GtkWidget *dialog;
     GdkPixbuf *logo;
@@ -39,11 +39,12 @@ GtkWidget *trg_about_window_new(GtkWindow *parent)
     gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
     gtk_window_set_destroy_with_parent(GTK_WINDOW(dialog), TRUE);
 
-    logo = gtk_icon_theme_load_icon(gtk_icon_theme_get_default(), PACKAGE_NAME, 48,
-            GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
+    logo =
+        gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
+                                 PACKAGE_NAME, 48,
+                                 GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
 
-    if (logo != NULL)
-    {
+    if (logo != NULL) {
         gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), logo);
         g_object_unref(logo);
     }

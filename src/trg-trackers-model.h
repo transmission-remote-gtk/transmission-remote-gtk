@@ -52,7 +52,7 @@ G_END_DECLS
                                    gint64 updateSerial, JsonObject * t,
                                    gboolean first);
 void trg_trackers_model_set_accept(TrgTrackersModel * model,
-                                           gboolean accept);
+                                   gboolean accept);
 gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model);
 void trg_trackers_model_set_no_selection(TrgTrackersModel * model);
 

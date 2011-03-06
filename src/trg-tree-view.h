@@ -48,14 +48,13 @@ GtkWidget *trg_tree_view_new(void);
 
 G_END_DECLS
 #define trg_tree_view_add_column(tv, title, index) trg_tree_view_add_column_fixed_width(tv, title, index, -1)
+    GList * trg_tree_view_get_selected_refs_list(GtkTreeView * tv);
 
-GList *trg_tree_view_get_selected_refs_list(GtkTreeView *tv);
-
-GtkCellRenderer * trg_tree_view_add_column_fixed_width(TrgTreeView *
-                                                           treeview,
-                                                           char *title,
-                                                           int index,
-                                                           int width);
+GtkCellRenderer *trg_tree_view_add_column_fixed_width(TrgTreeView *
+                                                      treeview,
+                                                      char *title,
+                                                      int index,
+                                                      int width);
 
 void trg_tree_view_add_pixbuf_text_column(TrgTreeView *
                                           treeview,

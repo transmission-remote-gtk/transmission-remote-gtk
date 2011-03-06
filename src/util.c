@@ -33,7 +33,8 @@
 #include "util.h"
 #include "dispatch.h"
 
-void trg_error_dialog(GtkWindow *parent, int status, JsonObject *response)
+void trg_error_dialog(GtkWindow * parent, int status,
+                      JsonObject * response)
 {
     const gchar *msg = make_error_message(response, status);
     GtkWidget *dialog = gtk_message_dialog_new(parent,

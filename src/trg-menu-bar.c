@@ -269,8 +269,9 @@ GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBarPrivate * priv)
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), "Add from _URL",
                               GTK_STOCK_ADD, FALSE);
 
-    priv->mb_quit = trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), "_Quit",
-                                          GTK_STOCK_QUIT, TRUE);
+    priv->mb_quit =
+        trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), "_Quit",
+                              GTK_STOCK_QUIT, TRUE);
 
     return file;
 }
@@ -356,19 +357,18 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
     trg_menu_bar_install_widget_prop(object_class, PROP_VERIFY_BUTTON,
                                      "verify-button", "Verify Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_REANNOUNCE_BUTTON,
-                                     "reannounce-button", "Re-announce Button");
+                                     "reannounce-button",
+                                     "Re-announce Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PAUSE_BUTTON,
                                      "pause-button", "Pause Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PROPS_BUTTON,
                                      "props-button", "Props Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_ABOUT_BUTTON,
                                      "about-button", "About Button");
-    trg_menu_bar_install_widget_prop(object_class,
-                                     PROP_VIEW_STATS_BUTTON,
+    trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_STATS_BUTTON,
                                      "view-stats-button",
                                      "View stats button");
-    trg_menu_bar_install_widget_prop(object_class,
-                                     PROP_VIEW_STATES_BUTTON,
+    trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_STATES_BUTTON,
                                      "view-states-button",
                                      "View states Button");
     trg_menu_bar_install_widget_prop(object_class,
@@ -379,12 +379,10 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      PROP_REMOTE_PREFS_BUTTON,
                                      "remote-prefs-button",
                                      "Remote Prefs Button");
-    trg_menu_bar_install_widget_prop(object_class,
-                                     PROP_LOCAL_PREFS_BUTTON,
+    trg_menu_bar_install_widget_prop(object_class, PROP_LOCAL_PREFS_BUTTON,
                                      "local-prefs-button",
                                      "Local Prefs Button");
-    trg_menu_bar_install_widget_prop(object_class,
-                                     PROP_QUIT,
+    trg_menu_bar_install_widget_prop(object_class, PROP_QUIT,
                                      "quit-button", "Quit Button");
 }
 
