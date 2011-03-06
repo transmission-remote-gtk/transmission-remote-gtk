@@ -198,12 +198,12 @@ char *tr_strltime_long(char *buf, gint64 seconds, size_t buflen)
     minutes = (seconds % 3600) / 60;
     seconds = (seconds % 3600) % 60;
 
-    g_snprintf(d, sizeof(d), ngettext("%d days", "%d day", days), days);
-    g_snprintf(h, sizeof(h), ngettext("%d hours", "%d hour", hours), hours);
-    g_snprintf(m, sizeof(m), ngettext("%d minutes", "%d minute",
+    g_snprintf(d, sizeof(d), ngettext("%d day", "%d days", days), days);
+    g_snprintf(h, sizeof(h), ngettext("%d hour", "%d hours", hours), hours);
+    g_snprintf(m, sizeof(m), ngettext("%d minute", "%d minutes",
                minutes), minutes);
     g_snprintf(s, sizeof(s),
-               ngettext("%ld seconds", "%ld second", seconds), seconds);
+               ngettext("%ld second", "%ld seconds", seconds), seconds);
 
     if (days) {
         if (days >= 4 || !hours) {
