@@ -394,12 +394,12 @@ static void trg_torrent_graph_update_net(TrgTorrentGraph * g)
     fp[1] = 1.0f * priv->in / priv->max;
 
     trg_strlspeed(speed, (gint64)(priv->out/1024));
-    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_OUT_COLOR"\">Outgoing: %s</span>", speed);
+    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_OUT_COLOR"\">Uploading: %s</span>", speed);
     gtk_label_set_markup(GTK_LABEL(priv->label_out), labelMarkup);
     g_free(labelMarkup);
 
     trg_strlspeed(speed, (gint64)(priv->in/1024));
-    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_IN_COLOR"\">Incoming: %s</span>", speed);
+    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_IN_COLOR"\">Downloading: %s</span>", speed);
     gtk_label_set_markup(GTK_LABEL(priv->label_in), labelMarkup);
     g_free(labelMarkup);
 
