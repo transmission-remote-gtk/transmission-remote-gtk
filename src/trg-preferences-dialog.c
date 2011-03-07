@@ -208,6 +208,14 @@ static GtkWidget *new_entry(GConfClient * gconf, const char *key)
     return w;
 }
 
+static void toggle_show_graph(GtkToggleButton * w, gpointer win)
+{
+    if (gtk_toggle_button_get_active(w))
+        trg_main_window_add_graph(TRG_MAIN_WINDOW(win), TRUE);
+    else
+        trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
+}
+
 static void toggle_tray_icon(GtkToggleButton * w, gpointer win)
 {
     if (gtk_toggle_button_get_active(w))
@@ -223,6 +231,14 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
     gint row = 0;
 
     t = hig_workarea_create();
+
+    hig_workarea_add_section_title(t, &row, _("Features"));
+
+    w = new_check_button(gconf, _("Show graph"),
+                            TRG_GCONF_KEY_SHOW_GRAPH);
+    g_signal_connect(G_OBJECT(w), "toggled",
+                     G_CALLBACK(toggle_show_graph), win);
+    hig_workarea_add_wide_control(t, &row, w);
 
     hig_workarea_add_section_title(t, &row, _("System Tray"));
 

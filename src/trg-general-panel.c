@@ -189,7 +189,7 @@ static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
     gchar *keyMarkup;
 
     keyLabel = gtk_label_new(NULL);
-    keyMarkup = g_markup_printf_escaped("<b>%s:</b>", key);
+    keyMarkup = g_markup_printf_escaped(strlen(key) > 0 ? "<b>%s:</b>" : "", key);
     gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
     g_free(keyMarkup);
     gtk_fixed_put(GTK_FIXED(fixed), keyLabel, 10 + (col * 280),

@@ -28,6 +28,19 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/show-graph</key>
+      <applyto>/apps/transmission-remote-gtk/show-graph</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>1</default>
+
+      <locale name="C">
+        <short>Show graph</short>
+        <long>Show graph</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/ssl</key>
       <applyto>/apps/transmission-remote-gtk/ssl</applyto>
       <owner>transmission-remote-gtk</owner>

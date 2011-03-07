@@ -66,6 +66,9 @@ void auto_connect_if_required(TrgMainWindow * win, trg_client * tc);
 TrgMainWindow *trg_main_window_new(trg_client * tc);
 void trg_main_window_add_status_icon(TrgMainWindow * win);
 void trg_main_window_remove_status_icon(TrgMainWindow * win);
+void trg_main_window_add_graph(TrgMainWindow * win, gboolean show);
+void trg_main_window_remove_graph(TrgMainWindow * win);
 
 G_END_DECLS
 #endif                          /* MAIN_WINDOW_H_ */
+

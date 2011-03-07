@@ -32,6 +32,7 @@
 #define TRG_GCONF_KEY_WINDOW_WIDTH  "/apps/transmission-remote-gtk/window-width"
 #define TRG_GCONF_KEY_WINDOW_HEIGHT  "/apps/transmission-remote-gtk/window-height"
 #define TRG_GCONF_KEY_SYSTEM_TRAY  "/apps/transmission-remote-gtk/system-tray"
+#define TRG_GCONF_KEY_SHOW_GRAPH  "/apps/transmission-remote-gtk/show-graph"
 #define TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE  "/apps/transmission-remote-gtk/system-tray-minimise"
 
 #endif                          /* TRG_PREFERENCES_H_ */

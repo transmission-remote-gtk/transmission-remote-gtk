@@ -224,6 +224,7 @@ struct _TrgMainWindowPrivate {
     TrgPeersTreeView *peersTreeView;
 
     TrgTorrentGraph *graph;
+    gint graphNotebookIndex;
 
     GtkWidget *hpaned, *vpaned;
     GtkWidget *filterEntry, *filterEntryClearButton;
@@ -790,7 +791,9 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
-    GtkWidget *notebook = gtk_notebook_new();
+    GtkWidget *notebook = priv->notebook = gtk_notebook_new();
+    gboolean show_graph;
+    GError *error = NULL;
 
     gtk_widget_set_size_request(notebook, -1, 190);
 
@@ -822,11 +825,20 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
                                                 (priv->peersTreeView)),
                              gtk_label_new(_("Peers")));
 
-    priv->graph = trg_torrent_graph_new(gtk_widget_get_style(notebook));
-    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-                             GTK_WIDGET(priv->graph),
-                             gtk_label_new(_("Graph")));
-    trg_torrent_graph_start(priv->graph);
+
+    show_graph = gconf_client_get_bool(priv->client->gconf, TRG_GCONF_KEY_SHOW_GRAPH,
+                                              &error);
+
+    if (error) {
+        g_error_free(error);
+        show_graph = TRUE;
+    }
+
+    if (show_graph) {
+        trg_main_window_add_graph(win, FALSE);
+    } else {
+        priv->graphNotebookIndex = -1;
+    }
 
     return notebook;
 }
@@ -943,7 +955,9 @@ on_torrent_get(JsonObject * response, int mode,
     update_selected_torrent_notebook(TRG_MAIN_WINDOW(data), first);
 
     trg_status_bar_update(priv->statusBar, &stats);
-    trg_torrent_graph_set_speed(priv->graph, &stats);
+
+    if (priv->graphNotebookIndex >= 0)
+        trg_torrent_graph_set_speed(priv->graph, &stats);
 
     if (mode != TORRENT_GET_MODE_INTERACTION)
         g_timeout_add_seconds(client->interval, trg_update_torrents_timerfunc, data);
@@ -1639,6 +1653,32 @@ void trg_main_window_remove_status_icon(TrgMainWindow * win)
         g_object_unref(G_OBJECT(priv->statusIcon));
 
     priv->statusIcon = NULL;
+}
+
+void trg_main_window_add_graph(TrgMainWindow * win, gboolean show)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+
+    priv->graph = trg_torrent_graph_new(gtk_widget_get_style(priv->notebook));
+    priv->graphNotebookIndex = gtk_notebook_append_page(GTK_NOTEBOOK(priv->notebook),
+                             GTK_WIDGET(priv->graph),
+                             gtk_label_new(_("Graph")));
+
+    if (show)
+        gtk_widget_show_all(priv->notebook);
+
+    trg_torrent_graph_start(priv->graph);
+}
+
+void trg_main_window_remove_graph(TrgMainWindow * win)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+
+    if (priv->graphNotebookIndex >= 0)
+    {
+        gtk_notebook_remove_page(GTK_NOTEBOOK(priv->notebook), priv->graphNotebookIndex);
+        priv->graphNotebookIndex = -1;
+    }
 }
 
 void trg_main_window_add_status_icon(TrgMainWindow * win)
