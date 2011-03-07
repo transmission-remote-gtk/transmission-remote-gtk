@@ -219,7 +219,8 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBarPrivate * priv)
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
                                    (priv->mb_view_notebook), TRUE);
 
-    priv->mb_view_stats = gtk_menu_item_new_with_mnemonic(_("_Statistics"));
+    priv->mb_view_stats =
+        gtk_menu_item_new_with_mnemonic(_("_Statistics"));
     gtk_widget_set_sensitive(priv->mb_view_stats, FALSE);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_states);
@@ -297,8 +298,8 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Verify"),
                               GTK_STOCK_REFRESH, FALSE);
     priv->mb_reannounce =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("Re-_announce"),
-                              GTK_STOCK_REFRESH, FALSE);
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
+                              _("Re-_announce"), GTK_STOCK_REFRESH, FALSE);
     priv->mb_move =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Move"),
                               GTK_STOCK_HARDDISK, FALSE);

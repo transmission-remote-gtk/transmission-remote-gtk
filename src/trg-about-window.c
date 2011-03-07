@@ -56,7 +56,8 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
                                    "(C) 2011 Alan Fitton");
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
-                                  _("A remote client to transmission-daemon."));
+                                  _
+                                  ("A remote client to transmission-daemon."));
     gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog), "GPL2");
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog),
                                  "http://code.google.com/p/transmission-remote-gtk/");

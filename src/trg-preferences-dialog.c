@@ -234,8 +234,7 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
 
     hig_workarea_add_section_title(t, &row, _("Features"));
 
-    w = new_check_button(gconf, _("Show graph"),
-                            TRG_GCONF_KEY_SHOW_GRAPH);
+    w = new_check_button(gconf, _("Show graph"), TRG_GCONF_KEY_SHOW_GRAPH);
     g_signal_connect(G_OBJECT(w), "toggled",
                      G_CALLBACK(toggle_show_graph), win);
     hig_workarea_add_wide_control(t, &row, w);

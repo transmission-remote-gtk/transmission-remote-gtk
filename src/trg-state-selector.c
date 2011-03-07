@@ -128,9 +128,11 @@ static void trg_state_selector_init(TrgStateSelector * self)
         gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING,
                            G_TYPE_STRING, G_TYPE_UINT);
 
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_ABOUT, _("All"), 0);
+    trg_state_selector_add_state(store, &iter, GTK_STOCK_ABOUT, _("All"),
+                                 0);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_DOWN,
-                                 _("Downloading"), TORRENT_FLAG_DOWNLOADING);
+                                 _("Downloading"),
+                                 TORRENT_FLAG_DOWNLOADING);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_MEDIA_PAUSE,
                                  _("Paused"), TORRENT_FLAG_PAUSED);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_REFRESH,
@@ -141,9 +143,8 @@ static void trg_state_selector_init(TrgStateSelector * self)
                                  _("Incomplete"), TORRENT_FLAG_INCOMPLETE);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_UP,
                                  _("Seeding"), TORRENT_FLAG_SEEDING);
-    trg_state_selector_add_state(store, &iter,
-                                 GTK_STOCK_DIALOG_WARNING, _("Error"),
-                                 TORRENT_FLAG_ERROR);
+    trg_state_selector_add_state(store, &iter, GTK_STOCK_DIALOG_WARNING,
+                                 _("Error"), TORRENT_FLAG_ERROR);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(self), GTK_TREE_MODEL(store));
     gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(self), TRUE);

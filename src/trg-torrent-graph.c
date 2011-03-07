@@ -201,7 +201,7 @@ void trg_torrent_graph_draw_background(TrgTorrentGraph * g)
     cairo_destroy(cr);
 }
 
-void trg_torrent_graph_set_nothing(TrgTorrentGraph *g)
+void trg_torrent_graph_set_nothing(TrgTorrentGraph * g)
 {
     TrgTorrentGraphPrivate *priv = TRG_TORRENT_GRAPH_GET_PRIVATE(g);
 
@@ -277,7 +277,8 @@ trg_torrent_graph_expose(GtkWidget * widget,
     cairo_set_line_width(cr, GRAPH_LINE_WIDTH);
     cairo_set_line_cap(cr, CAIRO_LINE_CAP_ROUND);
     cairo_set_line_join(cr, CAIRO_LINE_JOIN_ROUND);
-    cairo_rectangle(cr, priv->rmargin + priv->indent + GRAPH_FRAME_WIDTH + 1,
+    cairo_rectangle(cr,
+                    priv->rmargin + priv->indent + GRAPH_FRAME_WIDTH + 1,
                     GRAPH_FRAME_WIDTH - 1,
                     priv->draw_width - priv->rmargin - priv->indent - 1,
                     priv->real_draw_height + GRAPH_FRAME_WIDTH - 1);
@@ -390,13 +391,19 @@ static void trg_torrent_graph_update_net(TrgTorrentGraph * g)
     fp[0] = 1.0f * priv->out / priv->max;
     fp[1] = 1.0f * priv->in / priv->max;
 
-    trg_strlspeed(speed, (gint64)(priv->out/1024));
-    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_OUT_COLOR"\">%s: %s</span>", _("Total Uploading"), speed);
+    trg_strlspeed(speed, (gint64) (priv->out / 1024));
+    labelMarkup =
+        g_markup_printf_escaped("<span font_size=\"small\" color=\""
+                                GRAPH_OUT_COLOR "\">%s: %s</span>",
+                                _("Total Uploading"), speed);
     gtk_label_set_markup(GTK_LABEL(priv->label_out), labelMarkup);
     g_free(labelMarkup);
 
-    trg_strlspeed(speed, (gint64)(priv->in/1024));
-    labelMarkup = g_markup_printf_escaped("<span font_size=\"small\" color=\""GRAPH_IN_COLOR"\">%s: %s</span>", _("Total Downloading"), speed);
+    trg_strlspeed(speed, (gint64) (priv->in / 1024));
+    labelMarkup =
+        g_markup_printf_escaped("<span font_size=\"small\" color=\""
+                                GRAPH_IN_COLOR "\">%s: %s</span>",
+                                _("Total Downloading"), speed);
     gtk_label_set_markup(GTK_LABEL(priv->label_in), labelMarkup);
     g_free(labelMarkup);
 
@@ -524,7 +531,8 @@ static GObject *trg_torrent_graph_constructor(GType type,
     for (i = 0; i < GRAPH_NUM_DATA_BLOCK_ELEMENTS; i++) {
         priv->data_block[i] = -1.0f;
         if (i % GRAPH_NUM_LINES == 0)
-            priv->points = g_list_append(priv->points, &priv->data_block[i]);
+            priv->points =
+                g_list_append(priv->points, &priv->data_block[i]);
     }
 
     return object;

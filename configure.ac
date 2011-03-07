@@ -28,6 +28,8 @@ PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
 PKG_CHECK_MODULES([unique], [unique-1.0])
 PKG_CHECK_MODULES([notify], [libnotify])
+PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
+
 LIBCURL_CHECK_CONFIG([yes], [7.0], [], [AC_MSG_ERROR(["libcurl not found"])])
 
 AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))

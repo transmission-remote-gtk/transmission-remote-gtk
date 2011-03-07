@@ -17,9 +17,17 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <string.h>
 #include <glib-object.h>
 #include <gconf/gconf-client.h>
+
+#ifdef HAVE_LIBPROXY
+#include <proxy.h>
+#endif
 
 #include "trg-client.h"
 #include "trg-preferences.h"
@@ -57,6 +65,9 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
     gint port;
     gchar *host;
     GError *error = NULL;
+#ifdef HAVE_LIBPROXY
+    pxProxyFactory *pf = NULL;
+#endif
 
     g_free(tc->url);
     tc->url = NULL;
@@ -96,6 +107,26 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
     tc->password =
         gconf_client_get_string(gconf, TRG_GCONF_KEY_PASSWORD, &error);
     check_for_error(error);
+
+    g_free(tc->proxy);
+    tc->proxy = NULL;
+
+#ifdef HAVE_LIBPROXY
+    if ((pf = px_proxy_factory_new())) {
+        char **proxies = px_proxy_factory_get_proxies(pf, tc->url);
+        int i;
+
+        for (i = 0; proxies[i]; i++) {
+            if (g_str_has_prefix(proxies[i], "http")) {
+                g_free(tc->proxy);
+                tc->proxy = g_strdup(proxies[i]);
+            }
+            g_free(proxies[i]);
+        }
+
+        g_free(proxies);
+    }
+#endif
 
     return 0;
 }

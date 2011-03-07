@@ -148,14 +148,12 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gchar *markup =
             g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>",
                                     errorStr);
-        gtk_label_set_markup(GTK_LABEL(priv->gen_error_label),
-                             markup);
+        gtk_label_set_markup(GTK_LABEL(priv->gen_error_label), markup);
         g_free(markup);
 
         markup = g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>",
-                                            _("Error"));
-        gtk_label_set_markup(keyLabel,
-                             markup);
+                                         _("Error"));
+        gtk_label_set_markup(keyLabel, markup);
         g_free(markup);
     } else {
         gtk_label_clear(GTK_LABEL(priv->gen_error_label));
@@ -189,7 +187,8 @@ static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
     gchar *keyMarkup;
 
     keyLabel = gtk_label_new(NULL);
-    keyMarkup = g_markup_printf_escaped(strlen(key) > 0 ? "<b>%s:</b>" : "", key);
+    keyMarkup =
+        g_markup_printf_escaped(strlen(key) > 0 ? "<b>%s:</b>" : "", key);
     gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
     g_free(keyMarkup);
     gtk_fixed_put(GTK_FIXED(fixed), keyLabel, 10 + (col * 280),
@@ -213,7 +212,8 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
 
     priv->gen_size_label =
         trg_general_panel_add_label(self, _("Size"), 0, 1);
-    priv->gen_eta_label = trg_general_panel_add_label(self, _("ETA"), 1, 1);
+    priv->gen_eta_label =
+        trg_general_panel_add_label(self, _("ETA"), 1, 1);
     priv->gen_completed_label =
         trg_general_panel_add_label(self, _("Completed"), 2, 1);
 

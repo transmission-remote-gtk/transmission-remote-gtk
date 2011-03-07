@@ -86,7 +86,8 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
     w = hig_workarea_add_row(t, &row, "URL:", w, NULL);
 
     priv->startCheck =
-        hig_workarea_add_wide_checkbutton(t, &row, _("Start Paused"), FALSE);
+        hig_workarea_add_wide_checkbutton(t, &row, _("Start Paused"),
+                                          FALSE);
 
     gtk_window_set_title(GTK_WINDOW(self), _("Add torrent from URL"));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(self), TRUE);

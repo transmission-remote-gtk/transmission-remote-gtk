@@ -362,11 +362,12 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
     trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(self),
                                          FILESCOL_ICON, FILESCOL_NAME,
                                          _("Name"), -1);
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Size"), FILESCOL_SIZE);
+    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Size"),
+                             FILESCOL_SIZE);
     trg_tree_view_add_prog_column(TRG_TREE_VIEW(self), _("Progress"),
                                   FILESCOL_PROGRESS, -1);
-    trg_files_tree_view_add_wanted_column(TRG_TREE_VIEW(self),
-                                          _("Wanted"), FILESCOL_WANTED, -1);
+    trg_files_tree_view_add_wanted_column(TRG_TREE_VIEW(self), _("Wanted"),
+                                          FILESCOL_WANTED, -1);
     trg_files_tree_view_add_priority_column(TRG_TREE_VIEW(self),
                                             _("Priority"),
                                             FILESCOL_PRIORITY, -1);

@@ -39,6 +39,7 @@ typedef struct {
     char *url;
     char *username;
     char *password;
+    char *proxy;
     JsonArray *torrents;
     GConfClient *gconf;
     GMutex *updateMutex;

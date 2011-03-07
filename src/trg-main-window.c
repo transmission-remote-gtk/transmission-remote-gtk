@@ -114,14 +114,13 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win);
 static void on_session_get(JsonObject * response, int status,
                            gpointer data);
 static void on_torrent_get(JsonObject * response,
-                                        int mode, int status,
-                                        gpointer data);
+                           int mode, int status, gpointer data);
 static void on_torrent_get_first(JsonObject * response, int status,
                                  gpointer data);
 static void on_torrent_get_update(JsonObject * response, int status,
-                           gpointer data);
+                                  gpointer data);
 static void on_torrent_get_interactive(JsonObject * response, int status,
-                           gpointer data);
+                                       gpointer data);
 static gboolean trg_update_torrents_timerfunc(gpointer data);
 static void trg_main_window_update_notebook_displays(TrgMainWindow * win,
                                                      JsonObject * t,
@@ -510,7 +509,8 @@ static void connect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
         switch (populate_result) {
         case TRG_GCONF_SCHEMA_ERROR:
             msg =
-                _("Unable to retrieve connection settings from GConf. Schema not installed?");
+                _
+                ("Unable to retrieve connection settings from GConf. Schema not installed?");
             break;
         case TRG_NO_HOSTNAME_SET:
             msg = _("No hostname set");
@@ -533,7 +533,8 @@ static void connect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
         return;
     }
 
-    trg_status_bar_push_connection_msg(priv->statusBar, _("Connecting..."));
+    trg_status_bar_push_connection_msg(priv->statusBar,
+                                       _("Connecting..."));
     dispatch_async(priv->client, session_get(), on_session_get, data);
 }
 
@@ -826,8 +827,9 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
                              gtk_label_new(_("Peers")));
 
 
-    show_graph = gconf_client_get_bool(priv->client->gconf, TRG_GCONF_KEY_SHOW_GRAPH,
-                                              &error);
+    show_graph =
+        gconf_client_get_bool(priv->client->gconf,
+                              TRG_GCONF_KEY_SHOW_GRAPH, &error);
 
     if (error) {
         g_error_free(error);
@@ -891,8 +893,7 @@ static void on_session_get(JsonObject * response, int status,
 }
 
 static void
-on_torrent_get(JsonObject * response, int mode,
-                            int status, gpointer data)
+on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
 {
     trg_torrent_model_update_stats stats;
     TrgMainWindowPrivate *priv;
@@ -960,7 +961,8 @@ on_torrent_get(JsonObject * response, int mode,
         trg_torrent_graph_set_speed(priv->graph, &stats);
 
     if (mode != TORRENT_GET_MODE_INTERACTION)
-        g_timeout_add_seconds(client->interval, trg_update_torrents_timerfunc, data);
+        g_timeout_add_seconds(client->interval,
+                              trg_update_torrents_timerfunc, data);
 
     gdk_threads_leave();
     g_mutex_unlock(client->updateMutex);
@@ -973,13 +975,14 @@ on_torrent_get_first(JsonObject * response, int status, gpointer data)
     on_torrent_get(response, TORRENT_GET_MODE_FIRST, status, data);
 }
 
-static void on_torrent_get_interactive(JsonObject * response, int status, gpointer data)
+static void on_torrent_get_interactive(JsonObject * response, int status,
+                                       gpointer data)
 {
     on_torrent_get(response, TORRENT_GET_MODE_INTERACTION, status, data);
 }
 
 static void on_torrent_get_update(JsonObject * response, int status,
-                           gpointer data)
+                                  gpointer data)
 {
     on_torrent_get(response, TORRENT_GET_MODE_UPDATE, status, data);
 }
@@ -989,7 +992,8 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
     if (priv->client->session != NULL)
-        dispatch_async(priv->client, torrent_get(), on_torrent_get_update, data);
+        dispatch_async(priv->client, torrent_get(), on_torrent_get_update,
+                       data);
 
     return FALSE;
 }
@@ -1138,8 +1142,8 @@ on_generic_interactive_action(JsonObject * response, int status,
         gdk_threads_leave();
 
         if (status == CURLE_OK || status == FAIL_RESPONSE_UNSUCCESSFUL)
-            dispatch_async(priv->client, torrent_get(), on_torrent_get_interactive,
-                           data);
+            dispatch_async(priv->client, torrent_get(),
+                           on_torrent_get_interactive, data);
     }
 
     response_unref(response);
@@ -1478,10 +1482,12 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Re-announce"),
                           GTK_STOCK_REFRESH, TRUE,
                           G_CALLBACK(reannounce_cb), data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Move"), GTK_STOCK_HARDDISK,
-                          TRUE, G_CALLBACK(move_cb), data);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove"), GTK_STOCK_REMOVE,
-                          TRUE, G_CALLBACK(remove_cb), data);
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Move"),
+                          GTK_STOCK_HARDDISK, TRUE, G_CALLBACK(move_cb),
+                          data);
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove"),
+                          GTK_STOCK_REMOVE, TRUE, G_CALLBACK(remove_cb),
+                          data);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove & Delete"),
                           GTK_STOCK_DELETE, TRUE, G_CALLBACK(delete_cb),
                           data);
@@ -1492,7 +1498,8 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
                                          FIELD_DOWNLOAD_LIMITED,
                                          FIELD_DOWNLOAD_LIMIT, ids));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
-                          limit_menu_new(TRG_MAIN_WINDOW(data), _("Up Limit"),
+                          limit_menu_new(TRG_MAIN_WINDOW(data),
+                                         _("Up Limit"),
                                          FIELD_UPLOAD_LIMITED,
                                          FIELD_UPLOAD_LIMIT, ids));
 
@@ -1522,8 +1529,9 @@ trg_status_icon_view_menu(GtkStatusIcon * icon G_GNUC_UNUSED,
                               GTK_STOCK_DISCONNECT, connected,
                               G_CALLBACK(disconnect_cb), data);
 
-        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add"), GTK_STOCK_ADD,
-                              connected, G_CALLBACK(add_cb), data);
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add"),
+                              GTK_STOCK_ADD, connected, G_CALLBACK(add_cb),
+                              data);
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add from URL"),
                               GTK_STOCK_ADD, connected,
                               G_CALLBACK(add_url_cb), data);
@@ -1659,10 +1667,12 @@ void trg_main_window_add_graph(TrgMainWindow * win, gboolean show)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
-    priv->graph = trg_torrent_graph_new(gtk_widget_get_style(priv->notebook));
-    priv->graphNotebookIndex = gtk_notebook_append_page(GTK_NOTEBOOK(priv->notebook),
-                             GTK_WIDGET(priv->graph),
-                             gtk_label_new(_("Graph")));
+    priv->graph =
+        trg_torrent_graph_new(gtk_widget_get_style(priv->notebook));
+    priv->graphNotebookIndex =
+        gtk_notebook_append_page(GTK_NOTEBOOK(priv->notebook),
+                                 GTK_WIDGET(priv->graph),
+                                 gtk_label_new(_("Graph")));
 
     if (show)
         gtk_widget_show_all(priv->notebook);
@@ -1674,9 +1684,9 @@ void trg_main_window_remove_graph(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
-    if (priv->graphNotebookIndex >= 0)
-    {
-        gtk_notebook_remove_page(GTK_NOTEBOOK(priv->notebook), priv->graphNotebookIndex);
+    if (priv->graphNotebookIndex >= 0) {
+        gtk_notebook_remove_page(GTK_NOTEBOOK(priv->notebook),
+                                 priv->graphNotebookIndex);
         priv->graphNotebookIndex = -1;
     }
 }

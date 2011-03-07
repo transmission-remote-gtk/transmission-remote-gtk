@@ -76,8 +76,15 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     curl_easy_setopt(handle, CURLOPT_HEADERFUNCTION, &header_callback);
     curl_easy_setopt(handle, CURLOPT_WRITEHEADER, (void *) tc);
     curl_easy_setopt(handle, CURLOPT_POSTFIELDS, req);
+
     if (tc->ssl)
         curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0);
+
+    if (tc->proxy) {
+        curl_easy_setopt(handle, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+        curl_easy_setopt(handle, CURLOPT_PROXY, tc->proxy);
+    }
+
 
     if (tc->session_id != NULL) {
         headers = curl_slist_append(headers, tc->session_id);

@@ -71,7 +71,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-torrent-graph.c \
 	  $(NULL)
 
-transmission_remote_gtk_LDFLAGS = -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gconf_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS)
+transmission_remote_gtk_LDFLAGS = -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gconf_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS)
 
 install-data-local: install-icons update-icon-cache
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule $(srcdir)/$(schema_DATA)

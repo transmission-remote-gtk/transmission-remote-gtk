@@ -199,9 +199,10 @@ char *tr_strltime_long(char *buf, gint64 seconds, size_t buflen)
     seconds = (seconds % 3600) % 60;
 
     g_snprintf(d, sizeof(d), ngettext("%d day", "%d days", days), days);
-    g_snprintf(h, sizeof(h), ngettext("%d hour", "%d hours", hours), hours);
-    g_snprintf(m, sizeof(m), ngettext("%d minute", "%d minutes",
-               minutes), minutes);
+    g_snprintf(h, sizeof(h), ngettext("%d hour", "%d hours", hours),
+               hours);
+    g_snprintf(m, sizeof(m), ngettext("%d minute", "%d minutes", minutes),
+               minutes);
     g_snprintf(s, sizeof(s),
                ngettext("%ld second", "%ld seconds", seconds), seconds);
 

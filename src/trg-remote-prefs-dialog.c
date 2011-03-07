@@ -302,7 +302,8 @@ static void on_port_tested(JsonObject * response, int status,
         TrgRemotePrefsDialogPrivate *priv =
             TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
 
-        gtk_button_set_label(GTK_BUTTON(priv->port_test_button), _("Retest"));
+        gtk_button_set_label(GTK_BUTTON(priv->port_test_button),
+                             _("Retest"));
         gtk_widget_set_sensitive(priv->port_test_button, TRUE);
 
         if (status == CURLE_OK) {
@@ -311,10 +312,12 @@ static void on_port_tested(JsonObject * response, int status,
                                                "port-is-open");
             if (isOpen)
                 gtk_label_set_markup(GTK_LABEL(priv->port_test_label),
-                                     _("Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"));
+                                     _
+                                     ("Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"));
             else
                 gtk_label_set_markup(GTK_LABEL(priv->port_test_label),
-                                     _("Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"));
+                                     _
+                                     ("Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"));
         } else {
             trg_error_dialog(GTK_WINDOW(data), status, response);
         }
@@ -544,7 +547,8 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
 
     w = priv->trash_original_torrent_files_check =
         hig_workarea_add_wide_checkbutton(t, &row,
-                                          _("Trash original torrent files"),
+                                          _
+                                          ("Trash original torrent files"),
                                           session_get_trash_original_torrent_files
                                           (s));
     widget_set_json_key(w, SGET_TRASH_ORIGINAL_TORRENT_FILES);

@@ -71,4 +71,3 @@ void trg_main_window_remove_graph(TrgMainWindow * win);
 
 G_END_DECLS
 #endif                          /* MAIN_WINDOW_H_ */
-

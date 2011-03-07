@@ -218,7 +218,8 @@ static void trg_toolbar_init(TrgToolbar * self)
         trg_toolbar_item_new(self, _("Disconnect"), &position,
                              GTK_STOCK_DISCONNECT, FALSE);
     priv->tb_add =
-        trg_toolbar_item_new(self, _("Add"), &position, GTK_STOCK_ADD, FALSE);
+        trg_toolbar_item_new(self, _("Add"), &position, GTK_STOCK_ADD,
+                             FALSE);
 
     /*priv->tb_add_url =
        trg_toolbar_item_new(self, "Add URL", 3, GTK_STOCK_ADD, FALSE); */

@@ -92,9 +92,9 @@ void trg_status_bar_update(TrgStatusBar * sb,
 
     statusBarUpdate =
         g_strdup_printf
-        (_("%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"),
-         stats->count,
-         downRateTotalString, upRateTotalString,
+        (_
+         ("%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"),
+         stats->count, downRateTotalString, upRateTotalString,
          stats->seeding, stats->down, stats->paused);
     gtk_statusbar_pop(GTK_STATUSBAR(sb), priv->countSpeedsCtx);
     gtk_statusbar_push(GTK_STATUSBAR(sb),

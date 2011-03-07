@@ -284,7 +284,8 @@ static GObject *trg_stats_dialog_constructor(GType type,
 
     priv->rr_down =
         stats_dialog_add_statistic(priv->model, _("Download Total"));
-    priv->rr_up = stats_dialog_add_statistic(priv->model, _("Upload Total"));
+    priv->rr_up =
+        stats_dialog_add_statistic(priv->model, _("Upload Total"));
     priv->rr_files_added =
         stats_dialog_add_statistic(priv->model, _("Files Added"));
     priv->rr_session_count =
@@ -299,8 +300,8 @@ static GObject *trg_stats_dialog_constructor(GType type,
                          170);
     trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_SESSION, _("Session"),
                          100);
-    trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_CUMULAT, _("Cumulative"),
-                         100);
+    trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_CUMULAT,
+                         _("Cumulative"), 100);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(tv),
                             GTK_TREE_MODEL(priv->model));

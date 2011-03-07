@@ -138,10 +138,12 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
                                     (priv->seedRatioLimit), args);
     json_object_set_int_member(args, FIELD_SEED_RATIO_MODE,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
-                                                        (priv->seedRatioMode)));
+                                                        (priv->
+                                                         seedRatioMode)));
     json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
-                                                        (priv->bandwidthPriorityCombo))
+                                                        (priv->
+                                                         bandwidthPriorityCombo))
                                - 1);
 
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
@@ -219,7 +221,8 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
     w = priv->seedRatioMode = gtk_combo_box_new_text();
     widget_set_json_key(GTK_WIDGET(w), FIELD_SEED_RATIO_MODE);
     gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Use global settings"));
-    gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Stop seeding at ratio"));
+    gtk_combo_box_append_text(GTK_COMBO_BOX(w),
+                              _("Stop seeding at ratio"));
     gtk_combo_box_append_text(GTK_COMBO_BOX(w),
                               _("Seed regardless of ratio"));
     gtk_combo_box_set_active(GTK_COMBO_BOX(w),
