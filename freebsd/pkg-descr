@@ -1,0 +1,11 @@
+transmission-remote-gtk is a GTK application for remote management of the
+Transmission BitTorrent client via its RPC interface.
+
+- Remotely add (file/url), start, stop, remove, remove & delete, verify
+  torrents.
+- Works as a .torrent handler (eg. from a web browser).
+- Set torrent properties such as speed, seed, and peer limits.
+- Change remote settings like global limits, download directory, and
+  connectivity preferences.
+
+WWW: http://code.google.com/p/transmission-remote-gtk/

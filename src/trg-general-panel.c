@@ -27,12 +27,15 @@
 #include "trg-general-panel.h"
 #include "trg-torrent-model.h"
 
+#define TRG_GENERAL_PANEL_COLUMNS 3
+#define TRG_GENERAL_PANEL_COLUMNS_TOTAL 6
+
 static void gtk_label_clear(GtkLabel * l);
 static GtkLabel *gen_panel_label_get_key_label(GtkLabel * l);
-static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
-                                             char *key, int col, int row);
+static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * gp,
+                                             char *key, guint col, guint row);
 
-G_DEFINE_TYPE(TrgGeneralPanel, trg_general_panel, GTK_TYPE_FIXED)
+G_DEFINE_TYPE(TrgGeneralPanel, trg_general_panel, GTK_TYPE_TABLE)
 #define TRG_GENERAL_PANEL_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanelPrivate))
 typedef struct _TrgGeneralPanelPrivate TrgGeneralPanelPrivate;
@@ -179,36 +182,51 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gtk_label_set_text(GTK_LABEL(priv->gen_leechers_label), buf);
 }
 
-static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel * fixed,
-                                             char *key, int col, int row)
+static GtkLabel *trg_general_panel_add_label_with_width(TrgGeneralPanel *gp,
+                                             char *key, guint col, guint row, gint width)
 {
     GtkWidget *keyLabel;
     GtkWidget *value;
+    GtkWidget *alignment;
     gchar *keyMarkup;
+    int startCol = (col == 0) ? 0 : col*2;
 
+    alignment = gtk_alignment_new(0, 0, 0, 0);
     keyLabel = gtk_label_new(NULL);
     keyMarkup =
         g_markup_printf_escaped(strlen(key) > 0 ? "<b>%s:</b>" : "", key);
     gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
     g_free(keyMarkup);
-    gtk_fixed_put(GTK_FIXED(fixed), keyLabel, 10 + (col * 280),
-                  10 + (row * 22));
+    gtk_container_add(GTK_CONTAINER(alignment), keyLabel);
+    gtk_table_attach(GTK_TABLE(gp), alignment, startCol, startCol+1, row, row+1, GTK_FILL, 0, 2, 2);
 
+    alignment = gtk_alignment_new(0, 0, 0, 0);
     value = gtk_label_new(NULL);
-    gtk_label_set_selectable(GTK_LABEL(value), TRUE);
-    gtk_fixed_put(GTK_FIXED(fixed), value, 120 + (col * 300),
-                  10 + (row * 22));
     g_object_set_data(G_OBJECT(value), "key-label", keyLabel);
+    gtk_label_set_selectable(GTK_LABEL(value), TRUE);
+    gtk_container_add(GTK_CONTAINER(alignment), value);
+    gtk_table_attach(GTK_TABLE(gp), alignment, startCol+1, width < 0 ? TRG_GENERAL_PANEL_COLUMNS_TOTAL-1 : startCol+1+width, row, row+1, GTK_FILL | GTK_SHRINK, 0, 2, 2);
 
     return GTK_LABEL(value);
+}
+
+static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel *gp,
+                                             char *key, guint col, guint row)
+{
+    return trg_general_panel_add_label_with_width(gp, key, col, row, 1);
 }
 
 static void trg_general_panel_init(TrgGeneralPanel * self)
 {
     TrgGeneralPanelPrivate *priv = TRG_GENERAL_PANEL_GET_PRIVATE(self);
+    int i;
+
+    g_object_set(G_OBJECT(self), "n-columns", TRG_GENERAL_PANEL_COLUMNS_TOTAL,
+            "n-rows", 7,
+            NULL);
 
     priv->gen_name_label =
-        trg_general_panel_add_label(self, _("Name"), 0, 0);
+        trg_general_panel_add_label_with_width(self, _("Name"), 0, 0, -1);
 
     priv->gen_size_label =
         trg_general_panel_add_label(self, _("Size"), 0, 1);
@@ -240,6 +258,9 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
         trg_general_panel_add_label(self, _("Location"), 0, 5);
 
     priv->gen_error_label = trg_general_panel_add_label(self, "", 0, 6);
+
+    for (i = 0; i < TRG_GENERAL_PANEL_COLUMNS_TOTAL; i++)
+        gtk_table_set_col_spacing(GTK_TABLE(self), i, i % 2 == 0 ? 20 : 40);
 
     gtk_widget_set_sensitive(GTK_WIDGET(self), FALSE);
 }

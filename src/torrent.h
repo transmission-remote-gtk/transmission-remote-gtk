@@ -30,6 +30,7 @@
 #define TORRENT_FLAG_WAITING_CHECK     (1 << 5) /* 0x16 */
 #define TORRENT_FLAG_DOWNLOADING       (1 << 6) /* 0x32 */
 #define TORRENT_FLAG_PAUSED            (1 << 7) /* 0x64 */
+#define FILTER_FLAG_TRACKER            (1 << 8) /* 0x128 */
 
 gint64 torrent_get_size(JsonObject * t);
 const gchar *torrent_get_name(JsonObject * t);

@@ -855,3 +855,7 @@ msgstr "_Hilfe"
 #: src/trg-menu-bar.c:327
 msgid "_About"
 msgstr "Ü_ber"
+
+#: src/trg-preferences-dialog.c:237
+msgid "Show graph"
+msgstr "Zeigen graph"

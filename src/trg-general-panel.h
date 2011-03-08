@@ -40,11 +40,11 @@ G_BEGIN_DECLS
 #define TRG_GENERAL_PANEL_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanelClass))
     typedef struct {
-    GtkFixed parent;
+    GtkTable parent;
 } TrgGeneralPanel;
 
 typedef struct {
-    GtkFixedClass parent_class;
+    GtkTableClass parent_class;
 } TrgGeneralPanelClass;
 
 GType trg_general_panel_get_type(void);

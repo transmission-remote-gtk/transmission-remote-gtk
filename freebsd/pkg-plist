@@ -1,0 +1,8 @@
+bin/transmission-remote-gtk
+share/icons/hicolor/scalable/apps/transmission-remote-gtk.svg
+share/icons/hicolor/16x16/apps/transmission-remote-gtk.png
+share/icons/hicolor/24x24/apps/transmission-remote-gtk.png
+share/icons/hicolor/48x48/apps/transmission-remote-gtk.png
+share/icons/hicolor/22x22/apps/transmission-remote-gtk.png
+share/icons/hicolor/32x32/apps/transmission-remote-gtk.png
+share/applications/transmission-remote-gtk.desktop

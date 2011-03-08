@@ -796,7 +796,7 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
     gboolean show_graph;
     GError *error = NULL;
 
-    gtk_widget_set_size_request(notebook, -1, 190);
+    gtk_widget_set_size_request(notebook, -1, 175);
 
     priv->genDetails = trg_general_panel_new(priv->sortedTorrentModel);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
@@ -1052,7 +1052,7 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
             gchar *filterTextFolded = g_utf8_casefold(filterText, -1);
             gchar *nameFolded = g_utf8_casefold(name, -1);
 
-            if (!strstr(nameFolded, filterTextFolded))
+            if (strstr(nameFolded, filterTextFolded))
                 visible = FALSE;
 
             g_free(filterTextFolded);
