@@ -189,18 +189,18 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
 static GtkLabel *trg_general_panel_add_label_with_width(TrgGeneralPanel *gp,
                                              char *key, guint col, guint row, gint width)
 {
-    GtkWidget *keyLabel;
-    GtkWidget *value;
-    GtkWidget *alignment;
-    gchar *keyMarkup;
+    GtkWidget *value, *keyLabel, *alignment;
+
     int startCol = (col == 0) ? 0 : col*2;
 
     alignment = gtk_alignment_new(0, 0, 0, 0);
     keyLabel = gtk_label_new(NULL);
-    keyMarkup =
-        g_markup_printf_escaped(strlen(key) > 0 ? "<b>%s:</b>" : "", key);
-    gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
-    g_free(keyMarkup);
+    if (strlen(key) > 0) {
+        gchar *keyMarkup =
+            g_markup_printf_escaped(strlen(key) > 0 ? "<b>%s:</b>" : "", key);
+        gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
+        g_free(keyMarkup);
+    }
     gtk_container_add(GTK_CONTAINER(alignment), keyLabel);
     gtk_table_attach(GTK_TABLE(gp), alignment, startCol, startCol+1, row, row+1, GTK_FILL, 0, TRG_GENERAL_PANEL_SPACING_X, TRG_GENERAL_PANEL_SPACING_Y);
 
