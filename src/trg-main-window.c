@@ -1048,8 +1048,17 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
     } else if (name != NULL) {
         const gchar *filterText =
             gtk_entry_get_text(GTK_ENTRY(priv->filterEntry));
-        if (strlen(filterText) > 0 && strstr(name, filterText) == NULL)
-            visible = FALSE;
+        if (strlen(filterText) > 0) {
+            gchar *filterTextFolded = g_utf8_casefold(filterText, -1);
+            gchar *nameFolded = g_utf8_casefold(name, -1);
+
+            if (!strstr(nameFolded, filterTextFolded))
+                visible = FALSE;
+
+            g_free(filterTextFolded);
+            g_free(nameFolded);
+        }
+
     }
 
     g_free(name);
