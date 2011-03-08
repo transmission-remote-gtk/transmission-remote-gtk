@@ -88,6 +88,11 @@ int main(int argc, char *argv[])
     gdk_threads_init();
     gtk_init(&argc, &argv);
 
+    setlocale( LC_ALL, "" );
+    bindtextdomain( GETTEXT_PACKAGE, TRGLOCALEDIR );
+    bind_textdomain_codeset( GETTEXT_PACKAGE, "UTF-8" );
+    textdomain( GETTEXT_PACKAGE );
+
     textdomain(PACKAGE_NAME);
 
     if ((withUnique = g_getenv("TRG_NOUNIQUE") == NULL))

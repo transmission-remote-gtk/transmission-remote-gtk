@@ -64,6 +64,39 @@ AC_DEFUN([AM_GCONF_SOURCE_2],
   AM_CONDITIONAL([GCONF_SCHEMAS_INSTALL], [test "$enable_schemas_install" != no])
 ])
 
+# nls.m4 serial 5 (gettext-0.18)
+dnl Copyright (C) 1995-2003, 2005-2006, 2008-2010 Free Software Foundation,
+dnl Inc.
+dnl This file is free software; the Free Software Foundation
+dnl gives unlimited permission to copy and/or distribute it,
+dnl with or without modifications, as long as this notice is preserved.
+dnl
+dnl This file can can be used in projects which are not available under
+dnl the GNU General Public License or the GNU Library General Public
+dnl License but which still want to provide support for the GNU gettext
+dnl functionality.
+dnl Please note that the actual code of the GNU gettext library is covered
+dnl by the GNU Library General Public License, and the rest of the GNU
+dnl gettext package package is covered by the GNU General Public License.
+dnl They are *not* in the public domain.
+
+dnl Authors:
+dnl   Ulrich Drepper <drepper@cygnus.com>, 1995-2000.
+dnl   Bruno Haible <haible@clisp.cons.org>, 2000-2003.
+
+AC_PREREQ([2.50])
+
+AC_DEFUN([AM_NLS],
+[
+  AC_MSG_CHECKING([whether NLS is requested])
+  dnl Default is enabled NLS
+  AC_ARG_ENABLE([nls],
+    [  --disable-nls           do not use Native Language Support],
+    USE_NLS=$enableval, USE_NLS=yes)
+  AC_MSG_RESULT([$USE_NLS])
+  AC_SUBST([USE_NLS])
+])
+
 # Copyright (C) 2002, 2003, 2005, 2006, 2007, 2008  Free Software Foundation, Inc.
 #
 # This file is free software; the Free Software Foundation
@@ -684,6 +717,41 @@ AC_MSG_RESULT([$_am_result])
 rm -f confinc confmf
 ])
 
+# Copyright (C) 1999, 2000, 2001, 2003, 2004, 2005, 2008
+# Free Software Foundation, Inc.
+#
+# This file is free software; the Free Software Foundation
+# gives unlimited permission to copy and/or distribute it,
+# with or without modifications, as long as this notice is preserved.
+
+# serial 6
+
+# AM_PROG_CC_C_O
+# --------------
+# Like AC_PROG_CC_C_O, but changed for automake.
+AC_DEFUN([AM_PROG_CC_C_O],
+[AC_REQUIRE([AC_PROG_CC_C_O])dnl
+AC_REQUIRE([AM_AUX_DIR_EXPAND])dnl
+AC_REQUIRE_AUX_FILE([compile])dnl
+# FIXME: we rely on the cache variable name because
+# there is no other way.
+set dummy $CC
+am_cc=`echo $[2] | sed ['s/[^a-zA-Z0-9_]/_/g;s/^[0-9]/_/']`
+eval am_t=\$ac_cv_prog_cc_${am_cc}_c_o
+if test "$am_t" != yes; then
+   # Losing compiler, so override with the script.
+   # FIXME: It is wrong to rewrite CC.
+   # But if we don't then we get into trouble of one sort or another.
+   # A longer-term fix would be to have automake use am__CC in this case,
+   # and then we could set am__CC="\$(top_srcdir)/compile \$(CC)"
+   CC="$am_aux_dir/compile $CC"
+fi
+dnl Make sure AC_PROG_CC is never called again, or it will override our
+dnl setting of CC.
+m4_define([AC_PROG_CC],
+          [m4_fatal([AC_PROG_CC cannot be called after AM_PROG_CC_C_O])])
+])
+
 # Fake the existence of programs that GNU maintainers use.  -*- Autoconf -*-
 
 # Copyright (C) 1997, 1999, 2000, 2001, 2003, 2004, 2005, 2008
@@ -1021,5 +1089,11 @@ AC_SUBST([am__tar])
 AC_SUBST([am__untar])
 ]) # _AM_PROG_TAR
 
+m4_include([m4/intltool.m4])
 m4_include([m4/libcurl.m4])
+m4_include([m4/libtool.m4])
+m4_include([m4/ltoptions.m4])
+m4_include([m4/ltsugar.m4])
+m4_include([m4/ltversion.m4])
+m4_include([m4/lt~obsolete.m4])
 m4_include([m4/pkg.m4])

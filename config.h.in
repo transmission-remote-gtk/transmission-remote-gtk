@@ -3,6 +3,12 @@
 /* enable debugging */
 #undef DEBUG
 
+/* foo */
+#undef GETTEXT_PACKAGE
+
+/* Define to 1 if you have the <dlfcn.h> header file. */
+#undef HAVE_DLFCN_H
+
 /* GeoIP Support. */
 #undef HAVE_GEOIP
 
@@ -89,6 +95,13 @@
 
 /* Defined if libcurl supports TFTP */
 #undef LIBCURL_PROTOCOL_TFTP
+
+/* Define to the sub-directory in which libtool stores uninstalled libraries.
+   */
+#undef LT_OBJDIR
+
+/* Define to 1 if your C compiler doesn't accept -c and -o together. */
+#undef NO_MINUS_C_MINUS_O
 
 /* Name of package */
 #undef PACKAGE

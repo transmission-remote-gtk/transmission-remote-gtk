@@ -1,14 +1,21 @@
+AC_PREREQ(2.63)
+
 AC_INIT(transmission-remote-gtk, 0.2.2, alan@eth0.org.uk)
-AM_INIT_AUTOMAKE(transmission-remote-gtk, 0.2.2)
-AC_OUTPUT(Makefile src/Makefile)
+AC_CONFIG_SRCDIR(src)
+AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
+AM_INIT_AUTOMAKE([foreign])
+AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_MACRO_DIR([m4])
 
 m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
-AC_CONFIG_MACRO_DIR([m4])
-AC_CONFIG_SRCDIR([src/main.c])
-AC_CONFIG_HEADERS([config.h])
-
 AC_PROG_CC
+AM_PROG_CC_C_O
+
+AC_PROG_INSTALL
+LT_INIT
+IT_PROG_INTLTOOL([0.35.0])
+
 AC_CHECK_HEADERS([stdlib.h string.h])
 AC_TYPE_SIZE_T
 
@@ -19,7 +26,12 @@ case "$OSNAME" in
         ;;
 esac
 
-AM_GCONF_SOURCE_2
+ALL_LINGUAS=$(egrep -v ^# po/LINGUAS)
+trglocaledir='${prefix}/${DATADIRNAME}/locale'
+AC_SUBST(trglocaledir)
+GETTEXT_PACKAGE=AC_PACKAGE_NAME
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
 
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
@@ -29,7 +41,6 @@ PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
 PKG_CHECK_MODULES([unique], [unique-1.0])
 PKG_CHECK_MODULES([notify], [libnotify])
 PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
-
 LIBCURL_CHECK_CONFIG([yes], [7.0], [], [AC_MSG_ERROR(["libcurl not found"])])
 
 AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
@@ -50,4 +61,6 @@ if test x$enable_debug = xyes; then
     AC_DEFINE([DEBUG], [],  [enable debugging])
 fi
 
-AC_OUTPUT
+AM_GCONF_SOURCE_2
+
+AC_OUTPUT([Makefile po/Makefile.in src/Makefile])
