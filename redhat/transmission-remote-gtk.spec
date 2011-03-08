@@ -14,10 +14,12 @@ Requires: glib2 >= 2.22
 Requires: unique
 Requires: GConf2
 Requires: libnotify
+Requires: libproxy
 Requires: json-glib >= 0.8
 Requires: libcurl
 
 BuildRequires: gtk2-devel
+BuildRequires: libproxy-devel
 BuildRequires: glib2-devel
 BuildRequires: unique-devel
 BuildRequires: GConf2-devel

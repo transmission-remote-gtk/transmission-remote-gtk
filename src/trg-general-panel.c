@@ -27,8 +27,12 @@
 #include "trg-general-panel.h"
 #include "trg-torrent-model.h"
 
-#define TRG_GENERAL_PANEL_COLUMNS 3
-#define TRG_GENERAL_PANEL_COLUMNS_TOTAL 6
+#define TRG_GENERAL_PANEL_WIDTH_FROM_KEY    20
+#define TRG_GENERAL_PANEL_WIDTH_FROM_VALUE  60
+#define TRG_GENERAL_PANEL_SPACING_X         4
+#define TRG_GENERAL_PANEL_SPACING_Y         2
+#define TRG_GENERAL_PANEL_COLUMNS           3
+#define TRG_GENERAL_PANEL_COLUMNS_TOTAL     (TRG_GENERAL_PANEL_COLUMNS*2)
 
 static void gtk_label_clear(GtkLabel * l);
 static GtkLabel *gen_panel_label_get_key_label(GtkLabel * l);
@@ -198,14 +202,14 @@ static GtkLabel *trg_general_panel_add_label_with_width(TrgGeneralPanel *gp,
     gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
     g_free(keyMarkup);
     gtk_container_add(GTK_CONTAINER(alignment), keyLabel);
-    gtk_table_attach(GTK_TABLE(gp), alignment, startCol, startCol+1, row, row+1, GTK_FILL, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(gp), alignment, startCol, startCol+1, row, row+1, GTK_FILL, 0, TRG_GENERAL_PANEL_SPACING_X, TRG_GENERAL_PANEL_SPACING_Y);
 
     alignment = gtk_alignment_new(0, 0, 0, 0);
     value = gtk_label_new(NULL);
     g_object_set_data(G_OBJECT(value), "key-label", keyLabel);
     gtk_label_set_selectable(GTK_LABEL(value), TRUE);
     gtk_container_add(GTK_CONTAINER(alignment), value);
-    gtk_table_attach(GTK_TABLE(gp), alignment, startCol+1, width < 0 ? TRG_GENERAL_PANEL_COLUMNS_TOTAL-1 : startCol+1+width, row, row+1, GTK_FILL | GTK_SHRINK, 0, 2, 2);
+    gtk_table_attach(GTK_TABLE(gp), alignment, startCol+1, width < 0 ? TRG_GENERAL_PANEL_COLUMNS_TOTAL-1 : startCol+1+width, row, row+1, GTK_FILL | GTK_SHRINK, 0, TRG_GENERAL_PANEL_SPACING_X, TRG_GENERAL_PANEL_SPACING_Y);
 
     return GTK_LABEL(value);
 }
@@ -255,12 +259,12 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
         trg_general_panel_add_label(self, _("Ratio"), 1, 4);
 
     priv->gen_downloaddir_label =
-        trg_general_panel_add_label(self, _("Location"), 0, 5);
+        trg_general_panel_add_label_with_width(self, _("Location"), 0, 5, -1);
 
-    priv->gen_error_label = trg_general_panel_add_label(self, "", 0, 6);
+    priv->gen_error_label = trg_general_panel_add_label_with_width(self, "", 0, 6, -1);
 
     for (i = 0; i < TRG_GENERAL_PANEL_COLUMNS_TOTAL; i++)
-        gtk_table_set_col_spacing(GTK_TABLE(self), i, i % 2 == 0 ? 20 : 40);
+        gtk_table_set_col_spacing(GTK_TABLE(self), i, i % 2 == 0 ? TRG_GENERAL_PANEL_WIDTH_FROM_KEY : TRG_GENERAL_PANEL_WIDTH_FROM_VALUE);
 
     gtk_widget_set_sensitive(GTK_WIDGET(self), FALSE);
 }
