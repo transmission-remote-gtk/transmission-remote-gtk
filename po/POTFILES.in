@@ -1,5 +1,6 @@
 src/trg-about-window.c
 src/trg-cell-renderer-wanted.c
+src/torrent.c
 src/trg-files-tree-view.c
 src/trg-general-panel.c
 src/trg-main-window.c

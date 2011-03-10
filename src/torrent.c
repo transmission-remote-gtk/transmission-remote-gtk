@@ -18,6 +18,7 @@
  */
 
 #include <glib-object.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
@@ -195,17 +196,17 @@ gchar *torrent_get_status_string(gint64 value)
 {
     switch (value) {
     case STATUS_DOWNLOADING:
-        return g_strdup("Downloading");
+        return g_strdup(_("Downloading"));
     case STATUS_PAUSED:
-        return g_strdup("Paused");
+        return g_strdup(_("Paused"));
     case STATUS_SEEDING:
-        return g_strdup("Seeding");
+        return g_strdup(_("Seeding"));
     case STATUS_CHECKING:
-        return g_strdup("Checking");
+        return g_strdup(_("Checking"));
     case STATUS_WAITING_TO_CHECK:
-        return g_strdup("Waiting To Check");
+        return g_strdup(_("Waiting To Check"));
     default:
-        return g_strdup("Unknown");
+        return g_strdup(_("Unknown"));
     }
 }
 

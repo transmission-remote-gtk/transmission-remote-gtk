@@ -26,7 +26,6 @@ case "$OSNAME" in
         ;;
 esac
 
-ALL_LINGUAS=$(egrep -v ^# po/LINGUAS)
 trglocaledir='${prefix}/${DATADIRNAME}/locale'
 AC_SUBST(trglocaledir)
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
