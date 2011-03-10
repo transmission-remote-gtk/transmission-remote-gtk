@@ -1,0 +1,865 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-03-08 22:04+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: Youn sok Choi <digitie@gmail.com>\n"
+"Language-Team: none\n"
+"Language: Korean\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: src/trg-about-window.c:60
+msgid "A remote client to transmission-daemon."
+msgstr "트랜스미션 데몬의 원격 클라이언트."
+
+#: src/trg-cell-renderer-wanted.c:67
+msgid "Yes"
+msgstr "예"
+
+#: src/trg-cell-renderer-wanted.c:69
+msgid "No"
+msgstr "아니오"
+
+#: src/trg-files-tree-view.c:253
+msgid "High Priority"
+msgstr "높음"
+
+#: src/trg-files-tree-view.c:257
+msgid "Normal Priority"
+msgstr "보통"
+
+#: src/trg-files-tree-view.c:262
+msgid "Low Priority"
+msgstr "낮음"
+
+#: src/trg-files-tree-view.c:273
+msgid "Download"
+msgstr "다운로드"
+
+#: src/trg-files-tree-view.c:282
+msgid "Skip"
+msgstr "생략"
+
+#: src/trg-files-tree-view.c:364 src/trg-general-panel.c:229
+#: src/trg-torrent-tree-view.c:40
+msgid "Name"
+msgstr "이름"
+
+#: src/trg-files-tree-view.c:365 src/trg-general-panel.c:232
+#: src/trg-torrent-tree-view.c:42
+msgid "Size"
+msgstr "크기"
+
+#: src/trg-files-tree-view.c:367 src/trg-peers-tree-view.c:59
+msgid "Progress"
+msgstr "진행량"
+
+#: src/trg-files-tree-view.c:369
+msgid "Wanted"
+msgstr "필요함"
+
+#: src/trg-files-tree-view.c:372
+msgid "Priority"
+msgstr "우선순위"
+
+#: src/trg-general-panel.c:158 src/trg-state-selector.c:147 src/util.c:46
+msgid "Error"
+msgstr "오류"
+
+#: src/trg-general-panel.c:170
+msgid "N/A"
+msgstr "알수없음"
+
+#: src/trg-general-panel.c:234 src/trg-torrent-tree-view.c:56
+msgid "ETA"
+msgstr "남은 시간"
+
+#: src/trg-general-panel.c:236
+msgid "Completed"
+msgstr "완료됨"
+
+#: src/trg-general-panel.c:239
+msgid "Seeders"
+msgstr "시더"
+
+#: src/trg-general-panel.c:241
+msgid "Rate Down"
+msgstr "다운로드 속도"
+
+#: src/trg-general-panel.c:243 src/trg-torrent-tree-view.c:60
+msgid "Downloaded"
+msgstr "다운로드 됨"
+
+#: src/trg-general-panel.c:246 src/trg-torrent-tree-view.c:50
+msgid "Leechers"
+msgstr "리쳐"
+
+#: src/trg-general-panel.c:248
+msgid "Rate Up"
+msgstr "업로드 속도"
+
+#: src/trg-general-panel.c:250 src/trg-torrent-tree-view.c:58
+msgid "Uploaded"
+msgstr "업로드 함"
+
+#: src/trg-general-panel.c:253 src/trg-torrent-tree-view.c:46
+msgid "Status"
+msgstr "상태"
+
+#: src/trg-general-panel.c:255 src/trg-torrent-tree-view.c:62
+msgid "Ratio"
+msgstr "비율"
+
+#: src/trg-general-panel.c:258
+msgid "Location"
+msgstr "위치"
+
+#: src/trg-main-window.c:427
+msgid "BitTorrent Metadata"
+msgstr "토렌트 파일"
+
+#: src/trg-main-window.c:513
+msgid ""
+"Unable to retrieve connection settings from GConf. Schema not installed?"
+msgstr "연결 정보를 GConf 스키마에서 얻어올 수 없습니다. 스키마를 설치하였는지 확인하십시오."
+
+#: src/trg-main-window.c:516
+msgid "No hostname set"
+msgstr "호스트를 설정하지 않았습니다"
+
+#: src/trg-main-window.c:519
+msgid "Unknown error getting settings"
+msgstr "설정을 얻어오는 중 알수없는 에러가 발생하였습니다"
+
+#: src/trg-main-window.c:537
+msgid "Connecting..."
+msgstr "연결중..."
+
+#: src/trg-main-window.c:708
+#, c-format
+msgid "<big><b>Remove torrent \"%s\"?</b></big>"
+msgstr "<big><b>\"%s\" 토렌트를 제거하시겠습니까?</b></big>"
+
+#: src/trg-main-window.c:709
+#, c-format
+msgid "<big><b>Remove %d torrents?</b></big>"
+msgstr "<big><b>%d 개의 토렌트를 제거하시겠습니까?</b></big>"
+
+#: src/trg-main-window.c:733
+#, c-format
+msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
+msgstr "<big><b>\"%s\" 토렌트를 삭제하고 제거하시겠습니까?</b></big>"
+
+#: src/trg-main-window.c:734
+#, c-format
+msgid "<big><b>Remove and delete %d torrents?</b></big>"
+msgstr "<big><b>%d 개의 토렌트를 삭제하고 제거하시겠습니까?</b></big>"
+
+#: src/trg-main-window.c:804 src/trg-remote-prefs-dialog.c:612
+msgid "General"
+msgstr "일반"
+
+#: src/trg-main-window.c:812
+msgid "Trackers"
+msgstr "트래커"
+
+#: src/trg-main-window.c:820
+msgid "Files"
+msgstr "파일"
+
+#: src/trg-main-window.c:827 src/trg-remote-prefs-dialog.c:277
+#: src/trg-torrent-props-dialog.c:242
+msgid "Peers"
+msgstr "피어"
+
+#: src/trg-main-window.c:929
+#, c-format
+msgid "Request %d/%d failed: %s"
+msgstr "%d/%d 요청 실패: %s"
+
+#: src/trg-main-window.c:1442
+msgid "No Limit"
+msgstr "제한없음"
+
+#: src/trg-main-window.c:1479 src/trg-toolbar.c:238
+msgid "Properties"
+msgstr "속성"
+
+#: src/trg-main-window.c:1482 src/trg-toolbar.c:231
+msgid "Resume"
+msgstr "다시시작"
+
+#: src/trg-main-window.c:1485 src/trg-toolbar.c:234
+msgid "Pause"
+msgstr "멈춤"
+
+#: src/trg-main-window.c:1488
+msgid "Verify"
+msgstr "검사"
+
+#: src/trg-main-window.c:1491
+msgid "Re-announce"
+msgstr "다시 알림"
+
+#: src/trg-main-window.c:1494 src/trg-torrent-move-dialog.c:99
+#: src/trg-torrent-move-dialog.c:106
+msgid "Move"
+msgstr "옮기기"
+
+#: src/trg-main-window.c:1497 src/trg-menu-bar.c:307 src/trg-toolbar.c:242
+msgid "Remove"
+msgstr "제거"
+
+#: src/trg-main-window.c:1500
+msgid "Remove & Delete"
+msgstr "파일을 삭제하고 제거"
+
+#: src/trg-main-window.c:1506 src/trg-main-window.c:1550
+msgid "Down Limit"
+msgstr "다운로드 속도제한"
+
+#: src/trg-main-window.c:1511 src/trg-main-window.c:1555
+msgid "Up Limit"
+msgstr "업로드 속도제한"
+
+#: src/trg-main-window.c:1533 src/trg-toolbar.c:215
+msgid "Connect"
+msgstr "연결"
+
+#: src/trg-main-window.c:1537 src/trg-toolbar.c:218
+msgid "Disconnect"
+msgstr "연결 끊기"
+
+#: src/trg-main-window.c:1541 src/trg-toolbar.c:221
+#: src/trg-trackers-tree-view.c:251 src/trg-trackers-tree-view.c:278
+msgid "Add"
+msgstr "파일 추가"
+
+#: src/trg-main-window.c:1544
+msgid "Add from URL"
+msgstr "주소 추가"
+
+#: src/trg-main-window.c:1684
+msgid "Graph"
+msgstr "그래프"
+
+#: src/trg-menu-bar.c:208
+msgid "_View"
+msgstr "보기(_V)"
+
+#: src/trg-menu-bar.c:213
+msgid "State selector"
+msgstr "상태 선택"
+
+#: src/trg-menu-bar.c:218
+msgid "Torrent _details"
+msgstr "토렌트 상세정보(_D)"
+
+#: src/trg-menu-bar.c:223
+msgid "_Statistics"
+msgstr "통계(_S)"
+
+#: src/trg-menu-bar.c:237
+msgid "_Options"
+msgstr "설정(_O)"
+
+#: src/trg-menu-bar.c:243
+msgid "_Local Preferences"
+msgstr "로컬 설정(_L)"
+
+#: src/trg-menu-bar.c:248
+msgid "_Remote Preferences"
+msgstr "원격 설정(_R)"
+
+#: src/trg-menu-bar.c:257
+msgid "_File"
+msgstr "파일(_F)"
+
+#: src/trg-menu-bar.c:262
+msgid "_Connect"
+msgstr "연결(_C)"
+
+#: src/trg-menu-bar.c:265
+msgid "_Disconnect"
+msgstr "연결 끊기(_D)"
+
+#: src/trg-menu-bar.c:268
+msgid "_Add"
+msgstr "파일 추가(_A)"
+
+#: src/trg-menu-bar.c:271
+msgid "Add from _URL"
+msgstr "주소 추가(_U)"
+
+#: src/trg-menu-bar.c:275
+msgid "_Quit"
+msgstr "종료(_Q)"
+
+#: src/trg-menu-bar.c:284
+msgid "_Torrent"
+msgstr "토렌트(_T)"
+
+#: src/trg-menu-bar.c:292
+msgid "_Resume"
+msgstr "다시 시작(_R)"
+
+#: src/trg-menu-bar.c:295
+msgid "_Pause"
+msgstr "일시중지(_P)"
+
+#: src/trg-menu-bar.c:298
+msgid "_Verify"
+msgstr "검사(_V)"
+
+#: src/trg-menu-bar.c:302
+msgid "Re-_announce"
+msgstr "다시 알림(_A)"
+
+#: src/trg-menu-bar.c:304
+msgid "_Move"
+msgstr "위치설정(_M)"
+
+#: src/trg-menu-bar.c:311
+msgid "Remove and Delete"
+msgstr "파일을 삭제하고 제거"
+
+#: src/trg-menu-bar.c:322
+msgid "_Help"
+msgstr "도움말(_H)"
+
+#: src/trg-menu-bar.c:328
+msgid "_About"
+msgstr "정보(_A)"
+
+#: src/trg-peers-tree-view.c:48
+msgid "IP"
+msgstr "IP"
+
+#: src/trg-peers-tree-view.c:49
+msgid "Host"
+msgstr "호스트"
+
+#: src/trg-peers-tree-view.c:52
+msgid "Country"
+msgstr "국가"
+
+#: src/trg-peers-tree-view.c:55 src/trg-torrent-tree-view.c:52
+msgid "Down Speed"
+msgstr "다운로드 속도"
+
+#: src/trg-peers-tree-view.c:57 src/trg-torrent-tree-view.c:54
+msgid "Up Speed"
+msgstr "업로드 속도"
+
+#: src/trg-peers-tree-view.c:61
+msgid "Flags"
+msgstr "플래그"
+
+#: src/trg-peers-tree-view.c:63
+msgid "Client"
+msgstr "클라이언트"
+
+#: src/trg-preferences-dialog.c:235
+msgid "Features"
+msgstr "기능"
+
+#: src/trg-preferences-dialog.c:237
+msgid "Show graph"
+msgstr "그래프 보이기"
+
+#: src/trg-preferences-dialog.c:242
+msgid "System Tray"
+msgstr "시스템 알림영역"
+
+#: src/trg-preferences-dialog.c:244
+msgid "Show in system tray"
+msgstr "시스템 알림영역에 표시"
+
+#: src/trg-preferences-dialog.c:250
+msgid "Minimise to system tray"
+msgstr "최소화했을 때 시스템 알림영역으로 보내기"
+
+#: src/trg-preferences-dialog.c:259
+msgid "Torrent added notifications"
+msgstr "토렌트가 추가되면 팝업 알림 표시"
+
+#: src/trg-preferences-dialog.c:268
+msgid "Torrent complete notifications"
+msgstr "다운로드가 완료되면 팝업 알림 표시"
+
+#: src/trg-preferences-dialog.c:288
+msgid "Server"
+msgstr "서버"
+
+#: src/trg-preferences-dialog.c:291
+msgid "Host:"
+msgstr "호스트:"
+
+#: src/trg-preferences-dialog.c:294
+msgid "Port:"
+msgstr "포트:"
+
+#: src/trg-preferences-dialog.c:296
+msgid "Automatically connect"
+msgstr "시작시 자동으로 연결"
+
+#: src/trg-preferences-dialog.c:300
+msgid "SSL"
+msgstr "SSL"
+
+#: src/trg-preferences-dialog.c:306
+msgid "Update interval:"
+msgstr "업데이트 주기"
+
+#: src/trg-preferences-dialog.c:309
+msgid "Authentication"
+msgstr "인증"
+
+#: src/trg-preferences-dialog.c:312
+msgid "Username:"
+msgstr "사용자 이름:"
+
+#: src/trg-preferences-dialog.c:316
+msgid "Password:"
+msgstr "암호:"
+
+#: src/trg-preferences-dialog.c:343 src/trg-toolbar.c:257
+msgid "Local Preferences"
+msgstr "로컬 설정"
+
+#: src/trg-preferences-dialog.c:355
+msgid "Connection"
+msgstr "연결"
+
+#: src/trg-preferences-dialog.c:359
+msgid "Desktop"
+msgstr "바탕 화면"
+
+#: src/trg-remote-prefs-dialog.c:218 src/trg-torrent-props-dialog.c:175
+msgid "Bandwidth"
+msgstr "속도"
+
+#: src/trg-remote-prefs-dialog.c:221
+msgid "Limit download speed (KB/s)"
+msgstr "다운로드 속도 제한 (KB/s)"
+
+#: src/trg-remote-prefs-dialog.c:240
+msgid "Limit upload speed (KB/s)"
+msgstr "업로드 속도 제한 (KB/s)"
+
+#: src/trg-remote-prefs-dialog.c:257 src/trg-state-selector.c:145
+#: src/trg-torrent-props-dialog.c:219
+msgid "Seeding"
+msgstr "배포"
+
+#: src/trg-remote-prefs-dialog.c:260
+msgid "Seed ratio limit"
+msgstr "배포 비율 제한"
+
+#: src/trg-remote-prefs-dialog.c:284
+msgid "Global peer limit"
+msgstr "전체 최대 피어"
+
+#: src/trg-remote-prefs-dialog.c:291
+msgid "Per torrent peer limit"
+msgstr "토렌트 당 최대 피어 수"
+
+#: src/trg-remote-prefs-dialog.c:306
+msgid "Retest"
+msgstr "다시 검사"
+
+#: src/trg-remote-prefs-dialog.c:316
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+msgstr "포트가 <span font_weight=\"bold\" fgcolor=\"darkgreen\">열림</span>"
+
+#: src/trg-remote-prefs-dialog.c:320
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+msgstr "포트가 <span font_weight=\"bold\" fgcolor=\"red\">닫힘</span>"
+
+#: src/trg-remote-prefs-dialog.c:336 src/trg-remote-prefs-dialog.c:420
+msgid "Port test"
+msgstr "포트 검사"
+
+#: src/trg-remote-prefs-dialog.c:337
+msgid "Testing..."
+msgstr "검사 중..."
+
+#: src/trg-remote-prefs-dialog.c:359 src/trg-remote-prefs-dialog.c:451
+#, c-format
+msgid "Blocklist (%ld entries)"
+msgstr "차단 목록 사용 (%ld 개의 규칙 포함)"
+
+#: src/trg-remote-prefs-dialog.c:382
+msgid "Updating..."
+msgstr "업데이트 중..."
+
+#: src/trg-remote-prefs-dialog.c:401
+msgid "Required"
+msgstr "암호화 요구"
+
+#: src/trg-remote-prefs-dialog.c:402
+msgid "Preferred"
+msgstr "암호화 선호"
+
+#: src/trg-remote-prefs-dialog.c:403
+msgid "Tolerated"
+msgstr "암호화 허용"
+
+#: src/trg-remote-prefs-dialog.c:412
+msgid "Encryption"
+msgstr "암호화 모드"
+
+#: src/trg-remote-prefs-dialog.c:418
+msgid "Peer port"
+msgstr "피어 포트"
+
+#: src/trg-remote-prefs-dialog.c:421
+msgid "Test"
+msgstr "테스트"
+
+#: src/trg-remote-prefs-dialog.c:427
+msgid "Random peer port on start"
+msgstr "시작할 때 임의의 포트를 선택"
+
+#: src/trg-remote-prefs-dialog.c:433
+msgid "Peer port forwarding"
+msgstr "피어 포트 포워딩"
+
+#: src/trg-remote-prefs-dialog.c:440
+msgid "Peer exchange (PEX)"
+msgstr "피어 교환 (PEX)"
+
+#: src/trg-remote-prefs-dialog.c:446
+msgid "Local peer discovery"
+msgstr "로컬 피어 검색 (LPD)"
+
+#: src/trg-remote-prefs-dialog.c:461
+msgid "Update"
+msgstr "업데이트"
+
+#: src/trg-remote-prefs-dialog.c:477
+msgid "Blocklist URL:"
+msgstr "차단목록 주소:"
+
+#: src/trg-remote-prefs-dialog.c:498
+msgid "Download directory"
+msgstr "다운로드 위치"
+
+#: src/trg-remote-prefs-dialog.c:501
+msgid "Incomplete download dir"
+msgstr "미 완료 토렌트 위치"
+
+#: src/trg-remote-prefs-dialog.c:517
+msgid "Torrent done script"
+msgstr "토렌트가 완료되면 스크립트 불러오기"
+
+#: src/trg-remote-prefs-dialog.c:538
+msgid "Cache size (MB)"
+msgstr "캐쉬 크기 (MB)"
+
+#: src/trg-remote-prefs-dialog.c:543
+msgid "Rename partial files"
+msgstr "완료되지 않은 파일 이름 바꾸기"
+
+#: src/trg-remote-prefs-dialog.c:551
+msgid "Trash original torrent files"
+msgstr "토렌트 파일을 휴지통에 버림"
+
+#: src/trg-remote-prefs-dialog.c:558
+msgid "Start added torrents"
+msgstr "추가되면 시작하기"
+
+#: src/trg-remote-prefs-dialog.c:584 src/trg-toolbar.c:261
+msgid "Remote Preferences"
+msgstr "원격 설정"
+
+#: src/trg-remote-prefs-dialog.c:617
+msgid "Connections"
+msgstr "연결"
+
+#: src/trg-remote-prefs-dialog.c:622 src/trg-torrent-props-dialog.c:316
+msgid "Limits"
+msgstr "제한"
+
+#: src/trg-state-selector.c:131
+msgid "All"
+msgstr "모두"
+
+#: src/trg-state-selector.c:134
+msgid "Downloading"
+msgstr "다운로드 중"
+
+#: src/trg-state-selector.c:137
+msgid "Paused"
+msgstr "멈춤"
+
+#: src/trg-state-selector.c:139
+msgid "Checking"
+msgstr "확인 중"
+
+#: src/trg-state-selector.c:141
+msgid "Complete"
+msgstr "완료 됨"
+
+#: src/trg-state-selector.c:143
+msgid "Incomplete"
+msgstr "미완료"
+
+#: src/trg-stats-dialog.c:267
+msgid "Statistics"
+msgstr "통계"
+
+#: src/trg-stats-dialog.c:286
+msgid "Download Total"
+msgstr "전체 다운로드량"
+
+#: src/trg-stats-dialog.c:288
+msgid "Upload Total"
+msgstr "전체 업로드량"
+
+#: src/trg-stats-dialog.c:290
+msgid "Files Added"
+msgstr "추가된 파일 갯수"
+
+#: src/trg-stats-dialog.c:292
+msgid "Session Count"
+msgstr "세션 횟수"
+
+#: src/trg-stats-dialog.c:294
+msgid "Time Active"
+msgstr "사용 시간"
+
+#: src/trg-stats-dialog.c:299
+msgid "Statistic"
+msgstr "통계 자료 이름"
+
+#: src/trg-stats-dialog.c:301
+msgid "Session"
+msgstr "세션"
+
+#: src/trg-stats-dialog.c:304
+msgid "Cumulative"
+msgstr "누적"
+
+#: src/trg-status-bar.c:74
+#, c-format
+msgid "Connected to Transmission %g, getting torrents..."
+msgstr "트랜스미션에 접속됨 %g, 토렌트 정보를 받는 중"
+
+#: src/trg-status-bar.c:96
+#, c-format
+msgid ""
+"%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
+msgstr "%d 개의 토렌트 ..  다운로드 속도: %s, 업로드 속도: %s  ..  %d 개 배포 중, %d 개 다운로드 중, %d 개 멈춤"
+
+#: src/trg-toolbar.c:246
+msgid "Remove with data"
+msgstr "데이터와 함께 제거"
+
+#: src/trg-torrent-add-url-dialog.c:89
+msgid "Start Paused"
+msgstr "멈춤 상태로 시작"
+
+#: src/trg-torrent-add-url-dialog.c:92
+msgid "Add torrent from URL"
+msgstr "주소 추가"
+
+#: src/trg-torrent-graph.c:398
+msgid "Total Uploading"
+msgstr "전체 업로드"
+
+#: src/trg-torrent-graph.c:406
+msgid "Total Downloading"
+msgstr "전체 다운로드"
+
+#: src/trg-torrent-move-dialog.c:96
+msgid "Location:"
+msgstr "위치:"
+
+#: src/trg-torrent-move-dialog.c:154
+#, c-format
+msgid "Move %s"
+msgstr "%s 옮기기"
+
+#: src/trg-torrent-move-dialog.c:157
+#, c-format
+msgid "Move %d torrents"
+msgstr "%d 개의 토렌트 옮기기"
+
+#: src/trg-torrent-props-dialog.c:179
+msgid "Honor global limits"
+msgstr "전체 제한 존중"
+
+#: src/trg-torrent-props-dialog.c:186
+msgid "Low"
+msgstr "낮음"
+
+#: src/trg-torrent-props-dialog.c:187
+msgid "Normal"
+msgstr "보통"
+
+#: src/trg-torrent-props-dialog.c:188
+msgid "High"
+msgstr "높음"
+
+#: src/trg-torrent-props-dialog.c:191
+msgid "Torrent priority:"
+msgstr "토렌트 우선 순위"
+
+#: src/trg-torrent-props-dialog.c:194
+msgid "Limit download speed (Kbps)"
+msgstr "다운로드 속도 제한 (KB/s)"
+
+#: src/trg-torrent-props-dialog.c:207
+msgid "Limit upload speed (Kbps)"
+msgstr "업로드 속도 제한 (KB/s)"
+
+#: src/trg-torrent-props-dialog.c:223
+msgid "Use global settings"
+msgstr "전체 설정 사용"
+
+#: src/trg-torrent-props-dialog.c:225
+msgid "Stop seeding at ratio"
+msgstr "비율이 다음에 도달할 때까지만 배포"
+
+#: src/trg-torrent-props-dialog.c:227
+msgid "Seed regardless of ratio"
+msgstr "비율과 상관없이 배포"
+
+#: src/trg-torrent-props-dialog.c:230
+msgid "Seed ratio mode:"
+msgstr "배포 비율 설정"
+
+#: src/trg-torrent-props-dialog.c:238
+msgid "Seed ratio limit:"
+msgstr "배포 제한 비율"
+
+#: src/trg-torrent-props-dialog.c:249
+msgid "Peer limit:"
+msgstr "최대 피어"
+
+#: src/trg-torrent-props-dialog.c:282
+#, c-format
+msgid "Multiple (%d) torrent properties"
+msgstr "%d 개의 토렌트 정보"
+
+#: src/trg-torrent-tree-view.c:44
+msgid "Done"
+msgstr "완료"
+
+#: src/trg-torrent-tree-view.c:48
+msgid "Seeds"
+msgstr "시더"
+
+#: src/trg-trackers-tree-view.c:152
+msgid "Tier"
+msgstr "티어"
+
+#: src/trg-trackers-tree-view.c:165
+msgid "Announce URL"
+msgstr "알림 주소"
+
+#: src/trg-trackers-tree-view.c:175
+msgid "Scrape URL"
+msgstr "스크랩 주소"
+
+#: src/trg-trackers-tree-view.c:272
+msgid "Delete"
+msgstr "삭제"
+
+#: src/util.c:55
+msgid "JSON decoding error."
+msgstr "JSON 디코드 오류."
+
+#: src/util.c:60
+msgid "Server responded, but with no result."
+msgstr "서버가 응답하였으나 결과가 없습니다."
+
+#: src/util.c:64
+#, c-format
+msgid "Request failed with HTTP code %d"
+msgstr "요청이 실패하였습니다. HTTP 코드 : %d"
+
+#: src/util.c:127
+msgid "None"
+msgstr "없음"
+
+#: src/util.c:137
+#, c-format
+msgid "%'u byte"
+msgid_plural "%'u bytes"
+msgstr[0] "%'u byte"
+msgstr[1] "%'u bytes"
+
+#: src/util.c:143
+#, c-format
+msgid "%'.1f KB"
+msgstr "%'.1f KB"
+
+#: src/util.c:146
+#, c-format
+msgid "%'.1f MB"
+msgstr "%'.1f MB"
+
+#: src/util.c:149
+#, c-format
+msgid "%'.1f GB"
+msgstr "%'.1f GB"
+
+#: src/util.c:161
+#, c-format
+msgid "%.1f KB/s"
+msgstr "%.1f KB/s"
+
+#: src/util.c:163
+#, c-format
+msgid "%.2f MB/s"
+msgstr "%.2f MB/s"
+
+#: src/util.c:165
+#, c-format
+msgid "%.1f MB/s"
+msgstr "%.1f MB/s"
+
+#: src/util.c:167
+#, c-format
+msgid "%.2f GB/s"
+msgstr "%.2f GB/s"
+
+#: src/util.c:201
+#, c-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d 일"
+msgstr[1] "%d 일"
+
+#: src/util.c:202
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d 시간"
+msgstr[1] "%d 시간"
+
+#: src/util.c:204
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d 분"
+msgstr[1] "%d 분"
+
+#: src/util.c:207
+#, c-format
+msgid "%ld second"
+msgid_plural "%ld seconds"
+msgstr[0] "%ld 초"
+msgstr[1] "%ld 초"

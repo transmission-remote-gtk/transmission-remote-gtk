@@ -22,7 +22,7 @@
 
 #include <gtk/gtk.h>
 
-void trg_model_remove_removed(GtkListStore * model, gint serial_column,
+guint trg_model_remove_removed(GtkListStore * model, gint serial_column,
                               gint64 currentSerial);
 
 gboolean

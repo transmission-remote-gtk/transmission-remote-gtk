@@ -34,6 +34,23 @@
 #include "util.h"
 #include "dispatch.h"
 
+GRegex *trg_uri_host_regex_new(void)
+{
+    return g_regex_new("^[^:/?#]+:?//([^/?#]*)", 0, 0, NULL);
+}
+
+gchar *trg_uri_host_extract(GRegex *rx, const gchar *uri)
+{
+    GMatchInfo *mi = NULL;
+    gchar *host = NULL;
+    g_regex_match (rx, uri, 0, &mi);
+    if (mi) {
+        host = g_match_info_fetch(mi, 1);
+        g_match_info_free (mi);
+    }
+    return host;
+}
+
 void trg_error_dialog(GtkWindow * parent, int status,
                       JsonObject * response)
 {

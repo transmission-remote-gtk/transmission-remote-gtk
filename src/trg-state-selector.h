@@ -22,11 +22,13 @@
 #define TRG_STATE_LIST_H_
 
 #include <glib-object.h>
+#include <json-glib/json-glib.h>
 
 enum {
     STATE_SELECTOR_ICON,
     STATE_SELECTOR_NAME,
     STATE_SELECTOR_BIT,
+    STATE_SELECTOR_SERIAL,
     STATE_SELECTOR_COLUMNS
 };
 
@@ -49,15 +51,17 @@ G_BEGIN_DECLS
 typedef struct {
     GtkTreeViewClass parent_class;
 
-    /* SIGNALS */
-
     void (*torrent_state_changed) (TrgStateSelector * selector,
-                                   guint flag, gpointer data);
+            guint flag, gpointer data);
+
 } TrgStateSelectorClass;
 
 GType trg_state_selector_get_type(void);
 TrgStateSelector *trg_state_selector_new(void);
 
 G_END_DECLS guint32 trg_state_selector_get_flag(TrgStateSelector * s);
+void trg_state_selector_update_trackers(TrgStateSelector *s, JsonArray *torrents, gint64 serial);
+gchar *trg_state_selector_get_selected_text(TrgStateSelector *s);
+GRegex *trg_state_selector_get_url_host_regex(TrgStateSelector *s);
 
 #endif                          /* TRG_STATE_LIST_H_ */

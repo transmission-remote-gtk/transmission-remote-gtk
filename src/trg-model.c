@@ -43,12 +43,13 @@ trg_model_remove_removed_foreachfunc(GtkTreeModel * model,
     return FALSE;
 }
 
-void
+guint
 trg_model_remove_removed(GtkListStore * model, gint serial_column,
                          gint64 currentSerial)
 {
     struct trg_model_remove_removed_foreachfunc_args args;
     GList *li;
+    guint removed = 0;
 
     args.toRemove = NULL;
     args.currentSerial = currentSerial;
@@ -60,9 +61,12 @@ trg_model_remove_removed(GtkListStore * model, gint serial_column,
              li = g_list_previous(li)) {
             gtk_list_store_remove(model, (GtkTreeIter *) li->data);
             gtk_tree_iter_free((GtkTreeIter *) li->data);
+            removed++;
         }
         g_list_free(args.toRemove);
     }
+
+    return removed;
 }
 
 struct find_existing_item_foreach_args {

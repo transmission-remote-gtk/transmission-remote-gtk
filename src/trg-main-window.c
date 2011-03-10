@@ -40,6 +40,7 @@
 #include "util.h"
 #include "requests.h"
 #include "session-get.h"
+#include "torrent.h"
 #include "protocol-constants.h"
 
 #include "trg-main-window.h"
@@ -72,13 +73,13 @@ static void torrent_event_notification(TrgTorrentModel * model,
                                        gchar * icon, gchar * desc,
                                        gint tmout, gchar * prefKey,
                                        GtkTreeIter * iter,
-                                       gpointer * data);
+                                       gpointer data);
 static void on_torrent_completed(TrgTorrentModel * model,
-                                 GtkTreeIter * iter, gpointer * data);
+                                 GtkTreeIter * iter, gpointer data);
 static void on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
-                             gpointer * data);
+                             gpointer data);
 static gboolean delete_event(GtkWidget * w, GdkEvent * event,
-                             gpointer * data);
+                             gpointer data);
 static void destroy_window(GtkWidget * w, gpointer data);
 static void torrent_tv_onRowActivated(GtkTreeView * treeview,
                                       GtkTreePath * path,
@@ -268,7 +269,7 @@ static gboolean update_selected_torrent_notebook(TrgMainWindow * win,
 static void torrent_event_notification(TrgTorrentModel * model,
                                        gchar * icon, gchar * desc,
                                        gint tmout, gchar * prefKey,
-                                       GtkTreeIter * iter, gpointer * data)
+                                       GtkTreeIter * iter, gpointer data)
 {
     TrgMainWindowPrivate *priv;
     gchar *name;
@@ -305,24 +306,30 @@ static void torrent_event_notification(TrgTorrentModel * model,
 }
 
 static void on_torrent_completed(TrgTorrentModel * model,
-                                 GtkTreeIter * iter, gpointer * data)
+                                 GtkTreeIter * iter, gpointer data)
 {
     torrent_event_notification(model, GTK_STOCK_APPLY,
-                               "This torrent has completed.", 8000,
+                               "This torrent has completed.", TORRENT_COMPLETE_NOTIFY_TMOUT,
                                TRG_GCONF_KEY_COMPLETE_NOTIFY, iter, data);
 }
 
+static void on_torrent_addremove(TrgTorrentModel *model, gpointer data)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    trg_state_selector_update_trackers(priv->stateSelector, priv->client->torrents, priv->client->updateSerial);
+}
+
 static void on_torrent_added(TrgTorrentModel * model,
-                             GtkTreeIter * iter, gpointer * data)
+                             GtkTreeIter * iter, gpointer data)
 {
     torrent_event_notification(model, GTK_STOCK_ADD,
-                               "This torrent has been added.", 3000,
+                               "This torrent has been added.", TORRENT_ADD_NOTIFY_TMOUT,
                                TRG_GCONF_KEY_ADD_NOTIFY, iter, data);
 }
 
 static gboolean delete_event(GtkWidget * w,
                              GdkEvent * event G_GNUC_UNUSED,
-                             gpointer * data G_GNUC_UNUSED)
+                             gpointer data G_GNUC_UNUSED)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(w);
     int width, height;
@@ -1043,9 +1050,20 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
                        TORRENT_COLUMN_FLAGS, &flags,
                        TORRENT_COLUMN_NAME, &name, -1);
 
-    if (criteria != 0 && !(flags & criteria)) {
-        visible = FALSE;
-    } else if (name != NULL) {
+    if (criteria != 0) {
+        if (criteria & FILTER_FLAG_TRACKER) {
+            gchar *text = trg_state_selector_get_selected_text(priv->stateSelector);
+            JsonObject *json = NULL;
+            gtk_tree_model_get(model, iter, TORRENT_COLUMN_JSON, &json, -1);
+
+            if (!torrent_has_tracker(json, trg_state_selector_get_url_host_regex(priv->stateSelector), text))
+                visible = FALSE;
+        } else if (!(flags & criteria)) {
+            visible = FALSE;
+        }
+    }
+
+    if (visible && name != NULL) {
         const gchar *filterText =
             gtk_entry_get_text(GTK_ENTRY(priv->filterEntry));
         if (strlen(filterText) > 0) {
@@ -1762,6 +1780,8 @@ static GObject *trg_main_window_constructor(GType type,
                      G_CALLBACK(on_torrent_completed), self);
     g_signal_connect(priv->torrentModel, "torrent-added",
                      G_CALLBACK(on_torrent_added), self);
+    g_signal_connect(priv->torrentModel, "torrent-addremove",
+                    G_CALLBACK(on_torrent_addremove), self);
 
     priv->filteredTorrentModel =
         gtk_tree_model_filter_new(GTK_TREE_MODEL(priv->torrentModel),

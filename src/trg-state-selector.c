@@ -18,11 +18,13 @@
  */
 
 #include <glib-object.h>
+#include <json-glib/json-glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "torrent.h"
 #include "trg-state-selector.h"
+#include "util.h"
 
 enum {
     SELECTOR_STATE_CHANGED,
@@ -38,7 +40,15 @@ typedef struct _TrgStateSelectorPrivate TrgStateSelectorPrivate;
 
 struct _TrgStateSelectorPrivate {
     guint flag;
+    GHashTable *trackers;
+    GRegex *urlHostRegex;
 };
+
+GRegex *trg_state_selector_get_url_host_regex(TrgStateSelector *s)
+{
+    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
+    return priv->urlHostRegex;
+}
 
 guint32 trg_state_selector_get_flag(TrgStateSelector * s)
 {
@@ -85,6 +95,104 @@ static void state_selection_changed(GtkTreeSelection * selection,
                   signals[SELECTOR_STATE_CHANGED], 0, priv->flag);
 }
 
+static GtkTreeRowReference *quick_tree_ref_new(GtkTreeModel *model, GtkTreeIter *iter)
+{
+    GtkTreePath *path = gtk_tree_model_get_path(model, iter);
+    GtkTreeRowReference *rr = gtk_tree_row_reference_new(model, path);
+    gtk_tree_path_free(path);
+    return rr;
+}
+
+struct cruft_remove_args {
+    GHashTable *table;
+    gint64 serial;
+};
+
+static gboolean trg_state_selector_remove_cruft(gpointer key, gpointer value, gpointer data)
+{
+    struct cruft_remove_args *args = (struct cruft_remove_args*)data;
+    GtkTreeRowReference *rr = (GtkTreeRowReference*)value;
+    GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
+    GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+    gboolean remove;
+
+    GtkTreeIter iter;
+    gint64 currentSerial;
+
+    gtk_tree_model_get_iter(model, &iter, path);
+    gtk_tree_model_get(model, &iter, STATE_SELECTOR_SERIAL, &currentSerial, -1);
+
+    remove = (args->serial != currentSerial);
+
+    gtk_tree_path_free(path);
+
+    return remove;
+}
+
+gchar *trg_state_selector_get_selected_text(TrgStateSelector *s)
+{
+    GtkTreeSelection *sel = gtk_tree_view_get_selection(GTK_TREE_VIEW(s));
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    gchar *name = NULL;
+
+    if (gtk_tree_selection_get_selected(sel, &model, &iter))
+        gtk_tree_model_get(model, &iter, STATE_SELECTOR_NAME, &name, -1);
+
+    return name;
+}
+
+void trg_state_selector_update_trackers(TrgStateSelector *s, JsonArray *torrents, gint64 serial)
+{
+    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
+    GtkTreeModel *model;
+    GtkTreeIter iter;
+    int i, j;
+    struct cruft_remove_args cruft;
+
+    model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
+
+    for (i = 0; i < json_array_get_length(torrents); i++) {
+        JsonObject *t = json_array_get_object_element(torrents, i);
+        JsonArray *trackers = torrent_get_trackers(t);
+
+        for (j = 0; j < json_array_get_length(trackers); j++) {
+            JsonObject *tracker = json_array_get_object_element(trackers, j);
+            const gchar *announceUrl = tracker_get_announce(tracker);
+            gchar *announceHost = trg_uri_host_extract(priv->urlHostRegex, announceUrl);
+            gpointer result;
+
+            if (!announceHost)
+                continue;
+
+            result = g_hash_table_lookup(priv->trackers, announceHost);
+
+            if (result)
+            {
+                GtkTreeRowReference *rr = (GtkTreeRowReference*)result;
+                GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+                gtk_tree_model_get_iter(model, &iter, path);
+                gtk_list_store_set(GTK_LIST_STORE(model), &iter,
+                        STATE_SELECTOR_SERIAL, serial, -1);
+                gtk_tree_path_free(path);
+            } else {
+                gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+                gtk_list_store_set(GTK_LIST_STORE(model), &iter,
+                                   STATE_SELECTOR_ICON, GTK_STOCK_NETWORK,
+                                   STATE_SELECTOR_NAME, announceHost,
+                                   STATE_SELECTOR_SERIAL, serial,
+                                   STATE_SELECTOR_BIT, FILTER_FLAG_TRACKER, -1);
+                g_hash_table_insert(priv->trackers, announceHost, quick_tree_ref_new(model, &iter));
+            }
+        }
+    }
+
+    cruft.serial = serial;
+    cruft.table = priv->trackers;
+
+    g_hash_table_foreach_remove(priv->trackers, trg_state_selector_remove_cruft, &cruft);
+}
+
 static void trg_state_selector_add_state(GtkListStore * model,
                                          GtkTreeIter * iter, gchar * icon,
                                          gchar * name, guint32 flag)
@@ -94,6 +202,18 @@ static void trg_state_selector_add_state(GtkListStore * model,
                        STATE_SELECTOR_ICON, icon,
                        STATE_SELECTOR_NAME, name,
                        STATE_SELECTOR_BIT, flag, -1);
+}
+
+static void remove_row_ref_and_free(GtkTreeRowReference *rr)
+{
+    GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
+    GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+    GtkTreeIter iter;
+
+    gtk_tree_model_get_iter(model, &iter, path);
+    gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+    gtk_tree_path_free(path);
+    gtk_tree_row_reference_free(rr);
 }
 
 static void trg_state_selector_init(TrgStateSelector * self)
@@ -107,6 +227,9 @@ static void trg_state_selector_init(TrgStateSelector * self)
 
     priv = TRG_STATE_SELECTOR_GET_PRIVATE(self);
     priv->flag = 0;
+
+    priv->urlHostRegex = trg_uri_host_regex_new();
+    priv->trackers = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)remove_row_ref_and_free);
 
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(self), FALSE);
 
@@ -126,7 +249,7 @@ static void trg_state_selector_init(TrgStateSelector * self)
 
     store =
         gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING,
-                           G_TYPE_STRING, G_TYPE_UINT);
+                           G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT64);
 
     trg_state_selector_add_state(store, &iter, GTK_STOCK_ABOUT, _("All"),
                                  0);
@@ -145,6 +268,8 @@ static void trg_state_selector_init(TrgStateSelector * self)
                                  _("Seeding"), TORRENT_FLAG_SEEDING);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_DIALOG_WARNING,
                                  _("Error"), TORRENT_FLAG_ERROR);
+    trg_state_selector_add_state(store, &iter, NULL,
+                                   NULL, 0);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(self), GTK_TREE_MODEL(store));
     gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(self), TRUE);

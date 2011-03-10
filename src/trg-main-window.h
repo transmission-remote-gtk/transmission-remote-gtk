@@ -57,6 +57,9 @@ typedef struct {
 #define TORRENT_GET_MODE_INTERACTION 1
 #define TORRENT_GET_MODE_UPDATE 2
 
+#define TORRENT_COMPLETE_NOTIFY_TMOUT 8000
+#define TORRENT_ADD_NOTIFY_TMOUT 3000
+
 GType trg_main_window_get_type(void);
 gboolean trg_add_from_filename(TrgMainWindow * win, gchar * fileName);
 void on_session_set(JsonObject * response, int status, gpointer data);

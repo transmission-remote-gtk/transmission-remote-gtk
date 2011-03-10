@@ -23,6 +23,7 @@
 
 #include "torrent.h"
 #include "protocol-constants.h"
+#include "util.h"
 
 JsonArray *torrent_get_peers(JsonObject * t)
 {
@@ -206,6 +207,24 @@ gchar *torrent_get_status_string(gint64 value)
     default:
         return g_strdup("Unknown");
     }
+}
+
+gboolean torrent_has_tracker(JsonObject *t, GRegex *rx, gchar *search)
+{
+    JsonArray *trackers = torrent_get_trackers(t);
+    int i;
+
+    for (i = 0; i < json_array_get_length(trackers); i++) {
+        JsonObject *tracker = json_array_get_object_element(trackers, i);
+        const gchar *trackerAnnounce = tracker_get_announce(tracker);
+        gchar *trackerAnnounceHost = trg_uri_host_extract(rx, trackerAnnounce);
+        int cmpResult = g_strcmp0(trackerAnnounceHost, search);
+        g_free(trackerAnnounceHost);
+        if (cmpResult == 0)
+            return TRUE;
+    }
+
+    return FALSE;
 }
 
 gint64 tracker_get_id(JsonObject * t)

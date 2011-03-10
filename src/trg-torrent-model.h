@@ -45,11 +45,13 @@ G_BEGIN_DECLS
 typedef struct {
     GtkListStoreClass parent_class;
     void (*torrent_completed) (TrgTorrentModel * model,
-                               GtkTreeIter * iter, JsonObject * t,
+                               GtkTreeIter * iter,
                                gpointer data);
     void (*torrent_added) (TrgTorrentModel * model,
-                           GtkTreeIter * iter, JsonObject * t,
+                           GtkTreeIter * iter,
                            gpointer data);
+
+    void (*torrent_removed) (TrgTorrentModel *model, gpointer data);
 } TrgTorrentModelClass;
 
 typedef struct {

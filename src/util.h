@@ -36,6 +36,9 @@
 #define MEGABYTE_FACTOR ( 1024.0 * 1024.0 )
 #define GIGABYTE_FACTOR ( 1024.0 * 1024.0 * 1024.0 )
 
+GRegex *trg_uri_host_regex_new(void);
+gchar *trg_uri_host_extract(GRegex *rx, const gchar *uri);
+
 char *tr_strltime_long(char *buf, gint64 seconds, size_t buflen);
 char *tr_strltime_short(char *buf, gint64 seconds, size_t buflen);
 char *tr_strpercent(char *buf, double x, size_t buflen);

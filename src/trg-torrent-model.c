@@ -33,6 +33,7 @@
 enum {
     TMODEL_TORRENT_COMPLETED,
     TMODEL_TORRENT_ADDED,
+    TMODEL_TORRENT_ADDREMOVE,
     TMODEL_SIGNAL_COUNT
 };
 
@@ -69,6 +70,16 @@ static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
                                      torrent_added), NULL,
                      NULL, g_cclosure_marshal_VOID__POINTER,
                      G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+    signals[TMODEL_TORRENT_ADDREMOVE] =
+        g_signal_new("torrent-addremove",
+                     G_TYPE_FROM_CLASS(object_class),
+                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                     G_STRUCT_OFFSET(TrgTorrentModelClass,
+                                     torrent_removed), NULL,
+                     NULL, g_cclosure_marshal_VOID__VOID,
+                     G_TYPE_NONE, 0);
+
 }
 
 static void trg_torrent_model_count_peers(TrgTorrentModel * model,
@@ -272,6 +283,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 {
     int i;
     JsonArray *newTorrents;
+    gboolean added = FALSE;
 
     newTorrents = get_torrents(get_arguments(response));
     stats->count = json_array_get_length(newTorrents);
@@ -287,8 +299,10 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
                                         TORRENT_COLUMN_ID,
                                         torrent_get_id(t),
                                         &iter) == FALSE) {
+            added = TRUE;
             gtk_list_store_append(GTK_LIST_STORE(model), &iter);
             update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
+
             if (!first)
                 g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0,
                               &iter);
@@ -304,7 +318,8 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 
     tc->torrents = newTorrents;
 
-    trg_model_remove_removed(GTK_LIST_STORE(model),
+    if (trg_model_remove_removed(GTK_LIST_STORE(model),
                              TORRENT_COLUMN_UPDATESERIAL,
-                             tc->updateSerial);
+                             tc->updateSerial) > 0 || added)
+        g_signal_emit(model, signals[TMODEL_TORRENT_ADDREMOVE], 0);
 }

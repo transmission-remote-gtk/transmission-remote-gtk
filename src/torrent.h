@@ -68,6 +68,7 @@ gboolean torrent_get_download_limited(JsonObject * t);
 gdouble torrent_get_seed_ratio_limit(JsonObject * t);
 gint64 torrent_get_seed_ratio_mode(JsonObject * t);
 gint64 torrent_get_peer_limit(JsonObject * t);
+gboolean torrent_has_tracker(JsonObject *t, GRegex *rx, gchar *search);
 
 JsonArray *get_torrents(JsonObject * response);
 
