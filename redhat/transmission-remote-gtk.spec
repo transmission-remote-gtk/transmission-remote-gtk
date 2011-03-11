@@ -89,6 +89,8 @@ fi
 %{_datadir}/icons/hicolor/24x24/apps/transmission-remote-gtk.png
 %{_datadir}/icons/hicolor/32x32/apps/transmission-remote-gtk.png
 %{_datadir}/icons/hicolor/48x48/apps/transmission-remote-gtk.png
+%{_datadir}/locale/de/LC_MESSAGES/transmission-remote-gtk.mo
+%{_datadir}/locale/ko/LC_MESSAGES/transmission-remote-gtk.mo
 
 %changelog
 * Sat Mar 11 2011 Alan Fitton <alan@eth0.org.uk> - 0.3
