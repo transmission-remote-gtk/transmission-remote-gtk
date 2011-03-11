@@ -28,6 +28,32 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/filter-dirs</key>
+      <applyto>/apps/transmission-remote-gtk/filter-dirs</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>0</default>
+
+      <locale name="C">
+        <short>Filter dirs</short>
+        <long>Filter dirs</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/transmission-remote-gtk/filter-trackers</key>
+      <applyto>/apps/transmission-remote-gtk/filter-trackers</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>1</default>
+
+      <locale name="C">
+        <short>Filter trackers</short>
+        <long>Filter trackers</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/ssl</key>
       <applyto>/apps/transmission-remote-gtk/ssl</applyto>
       <owner>transmission-remote-gtk</owner>
