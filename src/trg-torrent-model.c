@@ -77,8 +77,7 @@ static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
                      G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
                      G_STRUCT_OFFSET(TrgTorrentModelClass,
                                      torrent_removed), NULL,
-                     NULL, g_cclosure_marshal_VOID__VOID,
-                     G_TYPE_NONE, 0);
+                     NULL, g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
 }
 
@@ -319,7 +318,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
     tc->torrents = newTorrents;
 
     if (trg_model_remove_removed(GTK_LIST_STORE(model),
-                             TORRENT_COLUMN_UPDATESERIAL,
-                             tc->updateSerial) > 0 || added)
+                                 TORRENT_COLUMN_UPDATESERIAL,
+                                 tc->updateSerial) > 0 || added)
         g_signal_emit(model, signals[TMODEL_TORRENT_ADDREMOVE], 0);
 }

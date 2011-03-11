@@ -28,11 +28,13 @@
 #define TRG_GCONF_KEY_SSL			"/apps/transmission-remote-gtk/ssl"
 #define TRG_GCONF_KEY_UPDATE_INTERVAL "/apps/transmission-remote-gtk/update-interval"
 #define TRG_GCONF_KEY_COMPLETE_NOTIFY "/apps/transmission-remote-gtk/complete-notify"
-#define TRG_GCONF_KEY_ADD_NOTIFY "/apps/transmission-remote-gtk/add-notify"
+#define TRG_GCONF_KEY_ADD_NOTIFY    "/apps/transmission-remote-gtk/add-notify"
 #define TRG_GCONF_KEY_WINDOW_WIDTH  "/apps/transmission-remote-gtk/window-width"
-#define TRG_GCONF_KEY_WINDOW_HEIGHT  "/apps/transmission-remote-gtk/window-height"
-#define TRG_GCONF_KEY_SYSTEM_TRAY  "/apps/transmission-remote-gtk/system-tray"
-#define TRG_GCONF_KEY_SHOW_GRAPH  "/apps/transmission-remote-gtk/show-graph"
+#define TRG_GCONF_KEY_WINDOW_HEIGHT "/apps/transmission-remote-gtk/window-height"
+#define TRG_GCONF_KEY_SYSTEM_TRAY   "/apps/transmission-remote-gtk/system-tray"
+#define TRG_GCONF_KEY_SHOW_GRAPH    "/apps/transmission-remote-gtk/show-graph"
 #define TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE  "/apps/transmission-remote-gtk/system-tray-minimise"
+#define TRG_GCONF_KEY_FILTER_TRACKERS  "/apps/transmission-remote-gtk/filter-trackers"
+#define TRG_GCONF_KEY_FILTER_DIRS  "/apps/transmission-remote-gtk/filter-dirs"
 
 #endif                          /* TRG_PREFERENCES_H_ */

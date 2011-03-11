@@ -31,6 +31,7 @@
 #define TORRENT_FLAG_DOWNLOADING       (1 << 6) /* 0x32 */
 #define TORRENT_FLAG_PAUSED            (1 << 7) /* 0x64 */
 #define FILTER_FLAG_TRACKER            (1 << 8) /* 0x128 */
+#define FILTER_FLAG_DIR                (1 << 9) /* 0x256 */
 
 gint64 torrent_get_size(JsonObject * t);
 const gchar *torrent_get_name(JsonObject * t);
@@ -41,6 +42,7 @@ gint64 torrent_get_uploaded(JsonObject * t);
 gint64 torrent_get_downloaded(JsonObject * t);
 const gchar *torrent_get_errorstr(JsonObject * t);
 const gchar *torrent_get_download_dir(JsonObject * t);
+gchar *torrent_get_download_dir_short(JsonObject * t, GRegex * rx);
 gint64 torrent_get_have_unchecked(JsonObject * t);
 gint64 torrent_get_have_valid(JsonObject * t);
 gint64 torrent_get_status(JsonObject * t);
@@ -68,7 +70,7 @@ gboolean torrent_get_download_limited(JsonObject * t);
 gdouble torrent_get_seed_ratio_limit(JsonObject * t);
 gint64 torrent_get_seed_ratio_mode(JsonObject * t);
 gint64 torrent_get_peer_limit(JsonObject * t);
-gboolean torrent_has_tracker(JsonObject *t, GRegex *rx, gchar *search);
+gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search);
 
 JsonArray *get_torrents(JsonObject * response);
 

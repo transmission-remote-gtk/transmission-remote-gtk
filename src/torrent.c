@@ -210,7 +210,7 @@ gchar *torrent_get_status_string(gint64 value)
     }
 }
 
-gboolean torrent_has_tracker(JsonObject *t, GRegex *rx, gchar *search)
+gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
 {
     JsonArray *trackers = torrent_get_trackers(t);
     int i;
@@ -218,7 +218,8 @@ gboolean torrent_has_tracker(JsonObject *t, GRegex *rx, gchar *search)
     for (i = 0; i < json_array_get_length(trackers); i++) {
         JsonObject *tracker = json_array_get_object_element(trackers, i);
         const gchar *trackerAnnounce = tracker_get_announce(tracker);
-        gchar *trackerAnnounceHost = trg_uri_host_extract(rx, trackerAnnounce);
+        gchar *trackerAnnounceHost =
+            trg_gregex_get_first(rx, trackerAnnounce);
         int cmpResult = g_strcmp0(trackerAnnounceHost, search);
         g_free(trackerAnnounceHost);
         if (cmpResult == 0)
@@ -236,6 +237,12 @@ gint64 tracker_get_id(JsonObject * t)
 gint64 tracker_get_tier(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_TIER);
+}
+
+gchar *torrent_get_download_dir_short(JsonObject * t, GRegex * rx)
+{
+    const gchar *dir = torrent_get_download_dir(t);
+    return trg_gregex_get_first(rx, dir);
 }
 
 gint64 torrent_get_left_until_done(JsonObject * t)

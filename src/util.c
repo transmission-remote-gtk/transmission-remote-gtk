@@ -23,6 +23,7 @@
 #include <math.h>
 #include <string.h>
 
+#include <gconf/gconf-client.h>
 #include <glib/gi18n.h>
 #include <glib-object.h>
 #include <curl/curl.h>
@@ -36,19 +37,20 @@
 
 GRegex *trg_uri_host_regex_new(void)
 {
-    return g_regex_new("^[^:/?#]+:?//([^/?#]*)", 0, 0, NULL);
+    return g_regex_new("^[^:/?#]+:?//([^/?#]*)", G_REGEX_OPTIMIZE, 0,
+                       NULL);
 }
 
-gchar *trg_uri_host_extract(GRegex *rx, const gchar *uri)
+gchar *trg_gregex_get_first(GRegex * rx, const gchar * src)
 {
     GMatchInfo *mi = NULL;
-    gchar *host = NULL;
-    g_regex_match (rx, uri, 0, &mi);
+    gchar *dst = NULL;
+    g_regex_match(rx, src, 0, &mi);
     if (mi) {
-        host = g_match_info_fetch(mi, 1);
-        g_match_info_free (mi);
+        dst = g_match_info_fetch(mi, 1);
+        g_match_info_free(mi);
     }
-    return host;
+    return dst;
 }
 
 void trg_error_dialog(GtkWindow * parent, int status,
@@ -64,6 +66,17 @@ void trg_error_dialog(GtkWindow * parent, int status,
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
     g_free((gpointer) msg);
+}
+
+gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key)
+{
+    GError *error = NULL;
+    gboolean value = gconf_client_get_bool(gconf, key, &error);
+    if (error) {
+        g_error_free(error);
+        return TRUE;
+    }
+    return value;
 }
 
 const gchar *make_error_message(JsonObject * response, int status)

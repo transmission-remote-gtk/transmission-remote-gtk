@@ -1,6 +1,6 @@
 AC_PREREQ(2.63)
 
-AC_INIT(transmission-remote-gtk, 0.2.2, alan@eth0.org.uk)
+AC_INIT(transmission-remote-gtk, 0.3, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_INIT_AUTOMAKE([foreign])
