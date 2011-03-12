@@ -204,6 +204,7 @@ struct _TrgMainWindowPrivate {
     GtkStatusIcon *statusIcon;
     GdkPixbuf *icon;
     TrgStateSelector *stateSelector;
+    GtkWidget *stateSelectorScroller;
     TrgGeneralPanel *genDetails;
     GtkWidget *notebook;
 
@@ -784,7 +785,7 @@ static void trg_widget_set_visible(GtkWidget * w, gboolean visible)
 static void view_states_toggled_cb(GtkCheckMenuItem * w, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-    trg_widget_set_visible(GTK_WIDGET(priv->stateSelector),
+    trg_widget_set_visible(priv->stateSelectorScroller,
                            gtk_check_menu_item_get_active(w));
 }
 
@@ -1870,8 +1871,9 @@ static GObject *trg_main_window_constructor(GType type,
     gtk_paned_pack1(GTK_PANED(priv->vpaned), priv->hpaned, TRUE, TRUE);
 
     priv->stateSelector = trg_state_selector_new(priv->client);
+    priv->stateSelectorScroller = my_scrolledwin_new(GTK_WIDGET(priv->stateSelector));
     gtk_paned_pack1(GTK_PANED(priv->hpaned),
-                    my_scrolledwin_new(GTK_WIDGET(priv->stateSelector)),
+                    priv->stateSelectorScroller,
                     FALSE, FALSE);
 
     gtk_paned_pack2(GTK_PANED(priv->hpaned),
