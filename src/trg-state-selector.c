@@ -219,6 +219,9 @@ void trg_state_selector_update(TrgStateSelector * s)
     int i, j;
     struct cruft_remove_args cruft;
 
+    if (!client->session)
+        return;
+
     for (i = 0; i < json_array_get_length(client->torrents); i++) {
         JsonObject *t = json_array_get_object_element(client->torrents, i);
         gpointer result;

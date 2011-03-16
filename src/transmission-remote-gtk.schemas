@@ -132,6 +132,19 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/graph-span</key>
+      <applyto>/apps/transmission-remote-gtk/graph-span</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>int</type>
+      <default>60</default>
+
+      <locale name="C">
+        <short>Graph span</short>
+        <long>Graph span</long>
+      </locale>
+    </schema>
+    
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/window-width</key>
       <applyto>/apps/transmission-remote-gtk/window-width</applyto>
       <owner>transmission-remote-gtk</owner>

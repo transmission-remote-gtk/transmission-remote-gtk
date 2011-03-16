@@ -108,7 +108,7 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gint sizeOfBuf;
     gchar *statusString;
     const gchar *errorStr;
-    gint64 eta;
+    gint64 eta, uploaded, downloaded;
     gint seeders, leechers;
     GtkLabel *keyLabel;
 
@@ -125,16 +125,22 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     trg_strlspeed(buf, torrent_get_rate_up(t) / KILOBYTE_FACTOR);
     gtk_label_set_text(GTK_LABEL(priv->gen_up_rate_label), buf);
 
-    trg_strlsize(buf, torrent_get_uploaded(t));
+    uploaded = torrent_get_uploaded(t);
+    trg_strlsize(buf, uploaded);
     gtk_label_set_text(GTK_LABEL(priv->gen_uploaded_label), buf);
 
-    trg_strlsize(buf, torrent_get_downloaded(t));
+    downloaded = torrent_get_downloaded(t);
+    trg_strlsize(buf, downloaded);
     gtk_label_set_text(GTK_LABEL(priv->gen_downloaded_label), buf);
 
-    trg_strlratio(buf,
-                  (double) torrent_get_uploaded(t) /
-                  (double) torrent_get_downloaded(t));
-    gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), buf);
+    if (uploaded > 0 && downloaded > 0) {
+        trg_strlratio(buf,
+                      (double) uploaded /
+                      (double) downloaded);
+        gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), buf);
+    } else {
+        gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), _("N/A"));
+    }
 
     statusString = torrent_get_status_string(torrent_get_status(t));
     gtk_label_set_text(GTK_LABEL(priv->gen_status_label), statusString);
@@ -159,7 +165,7 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gtk_label_set_markup(GTK_LABEL(priv->gen_error_label), markup);
         g_free(markup);
 
-        markup = g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>",
+        markup = g_markup_printf_escaped("<span font_weight=\"bold\" fgcolor=\"red\">%s</span>",
                                          _("Error"));
         gtk_label_set_markup(keyLabel, markup);
         g_free(markup);

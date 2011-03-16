@@ -1035,12 +1035,12 @@ static gboolean
 trg_torrent_tree_view_visible_func(GtkTreeModel * model,
                                    GtkTreeIter * iter, gpointer data)
 {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+
     guint flags;
     gboolean visible;
     gchar *name;
     const gchar *filterText;
-
-    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
     guint32 criteria = trg_state_selector_get_flag(priv->stateSelector);
 
@@ -1240,8 +1240,10 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected)
 
         gtk_list_store_clear(GTK_LIST_STORE(priv->torrentModel));
         trg_main_window_torrent_scrub(win);
-        trg_torrent_graph_set_nothing(priv->graph);
         trg_state_selector_disconnect(priv->stateSelector);
+
+        if (priv->graphNotebookIndex >= 0)
+            trg_torrent_graph_set_nothing(priv->graph);
     }
 }
 
