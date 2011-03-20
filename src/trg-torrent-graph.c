@@ -23,7 +23,6 @@
  */
 
 #include <math.h>
-
 #include <glib.h>
 #include <cairo.h>
 #include <glib/gi18n.h>
@@ -31,6 +30,9 @@
 
 #include "trg-torrent-graph.h"
 #include "util.h"
+
+/* damn you freebsd */
+#define log2(x) (log(x)/M_LN2)
 
 #define GRAPH_NUM_POINTS 62
 #define GRAPH_MIN_HEIGHT 40
