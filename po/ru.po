@@ -1,0 +1,940 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: transmission-remote-gui\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2011-04-02 11:00+0000\n"
+"PO-Revision-Date: \n"
+"Last-Translator: Ivan Borisov <y3avd33v@gmail.com>\n"
+"Language-Team: \n"
+"Language: ru\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=((((n%10)==1)&&((n%100)!=11))?(0):(((((n%10)>=2)&&((n%10)<=4))&&(((n%100)<10)||((n%100)>=20)))?(1):2));\n"
+
+#: src/trg-about-window.c:60
+msgid "A remote client to transmission-daemon."
+msgstr "Клиент для transsmission-daemon."
+
+#: src/trg-cell-renderer-wanted.c:67
+msgid "Yes"
+msgstr "Да"
+
+#: src/trg-cell-renderer-wanted.c:69
+msgid "No"
+msgstr "Нет"
+
+#: src/torrent.c:199
+#: src/trg-state-selector.c:389
+msgid "Downloading"
+msgstr "Загружаются"
+
+#: src/torrent.c:201
+#: src/trg-state-selector.c:392
+msgid "Paused"
+msgstr "Остановлены"
+
+#: src/torrent.c:203
+#: src/trg-state-selector.c:400
+#: src/trg-remote-prefs-dialog.c:257
+#: src/trg-torrent-props-dialog.c:219
+msgid "Seeding"
+msgstr "Раздача"
+
+#: src/torrent.c:205
+#: src/trg-state-selector.c:394
+msgid "Checking"
+msgstr "Проверяются"
+
+#: src/torrent.c:207
+msgid "Waiting To Check"
+msgstr "Ждет проверки"
+
+#: src/torrent.c:209
+msgid "Unknown"
+msgstr "Неизвестный"
+
+#: src/trg-files-tree-view.c:253
+msgid "High Priority"
+msgstr "Высокий приоритет"
+
+#: src/trg-files-tree-view.c:257
+msgid "Normal Priority"
+msgstr "Обычный приоритет"
+
+#: src/trg-files-tree-view.c:262
+msgid "Low Priority"
+msgstr "Низкий приоритет"
+
+#: src/trg-files-tree-view.c:273
+msgid "Download"
+msgstr "Загрузить"
+
+#: src/trg-files-tree-view.c:282
+msgid "Skip"
+msgstr "Пропустить"
+
+#: src/trg-files-tree-view.c:364
+#: src/trg-general-panel.c:233
+#: src/trg-torrent-tree-view.c:40
+msgid "Name"
+msgstr "Имя"
+
+#: src/trg-files-tree-view.c:365
+#: src/trg-general-panel.c:236
+#: src/trg-torrent-tree-view.c:42
+msgid "Size"
+msgstr "Размер"
+
+#: src/trg-files-tree-view.c:367
+#: src/trg-peers-tree-view.c:59
+msgid "Progress"
+msgstr "Прогресс"
+
+#: src/trg-files-tree-view.c:369
+msgid "Wanted"
+msgstr "Загружать"
+
+#: src/trg-files-tree-view.c:372
+msgid "Priority"
+msgstr "Приоритет"
+
+#: src/trg-general-panel.c:162
+#: src/trg-state-selector.c:402
+#: src/util.c:65
+msgid "Error"
+msgstr "C ошибкой"
+
+#: src/trg-general-panel.c:174
+msgid "N/A"
+msgstr "Недоступен"
+
+#: src/trg-general-panel.c:238
+#: src/trg-torrent-tree-view.c:56
+msgid "ETA"
+msgstr "Осталось"
+
+#: src/trg-general-panel.c:240
+msgid "Completed"
+msgstr "Завершено"
+
+#: src/trg-general-panel.c:243
+msgid "Seeders"
+msgstr "Сидеры"
+
+#: src/trg-general-panel.c:245
+msgid "Rate Down"
+msgstr "Загрузка"
+
+#: src/trg-general-panel.c:247
+#: src/trg-torrent-tree-view.c:60
+msgid "Downloaded"
+msgstr "Загружено"
+
+#: src/trg-general-panel.c:250
+#: src/trg-torrent-tree-view.c:50
+msgid "Leechers"
+msgstr "Личеры"
+
+#: src/trg-general-panel.c:252
+msgid "Rate Up"
+msgstr "Отдача"
+
+#: src/trg-general-panel.c:254
+#: src/trg-torrent-tree-view.c:58
+msgid "Uploaded"
+msgstr "Отдано"
+
+#: src/trg-general-panel.c:257
+#: src/trg-torrent-tree-view.c:46
+msgid "Status"
+msgstr "Статус"
+
+#: src/trg-general-panel.c:259
+#: src/trg-torrent-tree-view.c:62
+msgid "Ratio"
+msgstr "Коэффициент отдачи"
+
+#: src/trg-general-panel.c:262
+msgid "Location"
+msgstr "Местоположение"
+
+#: src/trg-main-window.c:311
+msgid "This torrent has completed."
+msgstr "Этот торрент закачан."
+
+#: src/trg-main-window.c:326
+msgid "This torrent has been added."
+msgstr "Этот торрент был добавлен."
+
+#: src/trg-main-window.c:435
+msgid "BitTorrent Metadata"
+msgstr "Метаданные BitTorrent"
+
+#: src/trg-main-window.c:521
+msgid "Unable to retrieve connection settings from GConf. Schema not installed?"
+msgstr "Не могу полуить настройки соединения от GConf. Установлен ли файл schema?"
+
+#: src/trg-main-window.c:524
+msgid "No hostname set"
+msgstr "Не установлено имя сервера"
+
+#: src/trg-main-window.c:527
+msgid "Unknown error getting settings"
+msgstr "Неизвестная ошибка при чтении настроек"
+
+#: src/trg-main-window.c:545
+msgid "Connecting..."
+msgstr "Подключение..."
+
+#: src/trg-main-window.c:716
+#, c-format
+msgid "<big><b>Remove torrent \"%s\"?</b></big>"
+msgstr "<big><b>Удалить торрент \"%s\"?</b></big>"
+
+#: src/trg-main-window.c:717
+#, c-format
+msgid "<big><b>Remove %d torrents?</b></big>"
+msgid_plural "<big><b>Remove %d torrents?</b></big>"
+msgstr[0] "<big><b>Удалить %d торрент?</b></big>"
+msgstr[1] "<big><b>Удалить %d торрента?</b></big>"
+msgstr[2] "<big><b>Удалить %d торрентов?</b></big>"
+
+#: src/trg-main-window.c:741
+#, c-format
+msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
+msgstr "<big><b>Удалить торрент \"%s\" и файлы?</b></big>"
+
+#: src/trg-main-window.c:742
+#, c-format
+msgid "<big><b>Remove and delete %d torrents?</b></big>"
+msgid_plural "<big><b>Remove and delete %d torrents?</b></big>"
+msgstr[0] "<big><b>Удалить %d торрент и файлы?</b></big>"
+msgstr[1] "<big><b>Удалить %d торрента и файлы?</b></big>"
+msgstr[2] "<big><b>Удалить %d торрентов и файлы?</b></big>"
+
+#: src/trg-main-window.c:812
+#: src/trg-remote-prefs-dialog.c:612
+msgid "General"
+msgstr "Основные"
+
+#: src/trg-main-window.c:820
+msgid "Trackers"
+msgstr "Трекеры"
+
+#: src/trg-main-window.c:828
+msgid "Files"
+msgstr "Файлы"
+
+#: src/trg-main-window.c:835
+#: src/trg-remote-prefs-dialog.c:277
+#: src/trg-torrent-props-dialog.c:242
+msgid "Peers"
+msgstr "Пиры"
+
+#: src/trg-main-window.c:935
+#, c-format
+msgid "Request %d/%d failed: %s"
+msgstr "Запрос %d/%d окончился неудачно: %s"
+
+#: src/trg-main-window.c:1469
+msgid "No Limit"
+msgstr "Без ограничений"
+
+#: src/trg-main-window.c:1506
+#: src/trg-toolbar.c:238
+msgid "Properties"
+msgstr "Свойства"
+
+#: src/trg-main-window.c:1509
+#: src/trg-toolbar.c:231
+msgid "Resume"
+msgstr "Запустить"
+
+#: src/trg-main-window.c:1512
+#: src/trg-toolbar.c:234
+msgid "Pause"
+msgstr "Остановить"
+
+#: src/trg-main-window.c:1515
+msgid "Verify"
+msgstr "Проверить"
+
+#: src/trg-main-window.c:1518
+msgid "Re-announce"
+msgstr "Получить список пиров"
+
+#: src/trg-main-window.c:1521
+#: src/trg-torrent-move-dialog.c:99
+#: src/trg-torrent-move-dialog.c:106
+msgid "Move"
+msgstr "Переместить файлы"
+
+#: src/trg-main-window.c:1524
+#: src/trg-menu-bar.c:307
+#: src/trg-toolbar.c:242
+msgid "Remove"
+msgstr "Удалить"
+
+#: src/trg-main-window.c:1527
+msgid "Remove & Delete"
+msgstr "Удалить торрент и файлы"
+
+#: src/trg-main-window.c:1533
+#: src/trg-main-window.c:1577
+msgid "Down Limit"
+msgstr "Лимит скорость загрузки"
+
+#: src/trg-main-window.c:1538
+#: src/trg-main-window.c:1582
+msgid "Up Limit"
+msgstr "Лимит скорости отдачи"
+
+#: src/trg-main-window.c:1560
+#: src/trg-toolbar.c:215
+msgid "Connect"
+msgstr "Подключиться"
+
+#: src/trg-main-window.c:1564
+#: src/trg-toolbar.c:218
+msgid "Disconnect"
+msgstr "Отключиться"
+
+#: src/trg-main-window.c:1568
+#: src/trg-toolbar.c:221
+#: src/trg-trackers-tree-view.c:251
+#: src/trg-trackers-tree-view.c:278
+msgid "Add"
+msgstr "Добавить"
+
+#: src/trg-main-window.c:1571
+msgid "Add from URL"
+msgstr "Добавить по URL"
+
+#: src/trg-main-window.c:1711
+msgid "Graph"
+msgstr "График"
+
+#: src/trg-menu-bar.c:208
+msgid "_View"
+msgstr "_Вид"
+
+#: src/trg-menu-bar.c:213
+msgid "State selector"
+msgstr "Панель выбора состояния"
+
+#: src/trg-menu-bar.c:218
+msgid "Torrent _details"
+msgstr "_Детали торрента"
+
+#: src/trg-menu-bar.c:223
+msgid "_Statistics"
+msgstr "_Статистика"
+
+#: src/trg-menu-bar.c:237
+msgid "_Options"
+msgstr "_Опции"
+
+#: src/trg-menu-bar.c:243
+msgid "_Local Preferences"
+msgstr "_Настройки"
+
+#: src/trg-menu-bar.c:248
+msgid "_Remote Preferences"
+msgstr "Настройки _сервера"
+
+#: src/trg-menu-bar.c:257
+msgid "_File"
+msgstr "_Файл"
+
+#: src/trg-menu-bar.c:262
+msgid "_Connect"
+msgstr "_Подключиться"
+
+#: src/trg-menu-bar.c:265
+msgid "_Disconnect"
+msgstr "_Отключиться"
+
+#: src/trg-menu-bar.c:268
+msgid "_Add"
+msgstr "_Добавить"
+
+#: src/trg-menu-bar.c:271
+msgid "Add from _URL"
+msgstr "Добавить из _URL"
+
+#: src/trg-menu-bar.c:275
+msgid "_Quit"
+msgstr "_Выход"
+
+#: src/trg-menu-bar.c:284
+msgid "_Torrent"
+msgstr "_Торрент"
+
+#: src/trg-menu-bar.c:292
+msgid "_Resume"
+msgstr "П_родолжить"
+
+#: src/trg-menu-bar.c:295
+msgid "_Pause"
+msgstr "Пр_остановить"
+
+#: src/trg-menu-bar.c:298
+msgid "_Verify"
+msgstr "Про_верить"
+
+#: src/trg-menu-bar.c:302
+msgid "Re-_announce"
+msgstr "Получить _список пиров"
+
+#: src/trg-menu-bar.c:304
+msgid "_Move"
+msgstr "_Переместить файлы"
+
+#: src/trg-menu-bar.c:311
+msgid "Remove and Delete"
+msgstr "_Удалить торрент и файлы"
+
+#: src/trg-menu-bar.c:322
+msgid "_Help"
+msgstr "_Справка"
+
+#: src/trg-menu-bar.c:328
+msgid "_About"
+msgstr "_О программе"
+
+#: src/trg-peers-tree-view.c:48
+msgid "IP"
+msgstr "IP"
+
+#: src/trg-peers-tree-view.c:49
+msgid "Host"
+msgstr "Хост"
+
+#: src/trg-peers-tree-view.c:52
+msgid "Country"
+msgstr "Страна"
+
+#: src/trg-peers-tree-view.c:55
+#: src/trg-torrent-tree-view.c:52
+msgid "Down Speed"
+msgstr "Загрузка"
+
+#: src/trg-peers-tree-view.c:57
+#: src/trg-torrent-tree-view.c:54
+msgid "Up Speed"
+msgstr "Отдача"
+
+#: src/trg-peers-tree-view.c:61
+msgid "Flags"
+msgstr "Флаги"
+
+#: src/trg-peers-tree-view.c:63
+msgid "Client"
+msgstr "Клиент"
+
+#: src/trg-preferences-dialog.c:247
+msgid "Features"
+msgstr "Дополнительные"
+
+#: src/trg-preferences-dialog.c:249
+msgid "Directory filters"
+msgstr "Фильтры по директориям"
+
+#: src/trg-preferences-dialog.c:254
+msgid "Tracker filters"
+msgstr "Фильтры по трекерам"
+
+#: src/trg-preferences-dialog.c:259
+msgid "Show graph"
+msgstr "Показывать график"
+
+#: src/trg-preferences-dialog.c:264
+msgid "System Tray"
+msgstr "Трей"
+
+#: src/trg-preferences-dialog.c:266
+msgid "Show in system tray"
+msgstr "Показывать в трее"
+
+#: src/trg-preferences-dialog.c:272
+msgid "Minimise to system tray"
+msgstr "Сворачивать в трей"
+
+#: src/trg-preferences-dialog.c:281
+msgid "Torrent added notifications"
+msgstr "Уведомления о добавленных торрентах"
+
+#: src/trg-preferences-dialog.c:290
+msgid "Torrent complete notifications"
+msgstr "Уведомления о завершенных торрентах"
+
+#: src/trg-preferences-dialog.c:310
+msgid "Server"
+msgstr "Сервер"
+
+#: src/trg-preferences-dialog.c:313
+msgid "Host:"
+msgstr "Хост:"
+
+#: src/trg-preferences-dialog.c:316
+msgid "Port:"
+msgstr "Порт:"
+
+#: src/trg-preferences-dialog.c:318
+msgid "Automatically connect"
+msgstr "Подключаться автоматически"
+
+#: src/trg-preferences-dialog.c:322
+msgid "SSL"
+msgstr "SSL"
+
+#: src/trg-preferences-dialog.c:328
+msgid "Update interval:"
+msgstr "Интервал обновления:"
+
+#: src/trg-preferences-dialog.c:331
+msgid "Authentication"
+msgstr "Аутентификация"
+
+#: src/trg-preferences-dialog.c:334
+msgid "Username:"
+msgstr "Имя:"
+
+#: src/trg-preferences-dialog.c:338
+msgid "Password:"
+msgstr "Пароль:"
+
+#: src/trg-preferences-dialog.c:365
+#: src/trg-toolbar.c:257
+msgid "Local Preferences"
+msgstr "Настройки"
+
+#: src/trg-preferences-dialog.c:377
+msgid "Connection"
+msgstr "Соединение"
+
+#: src/trg-preferences-dialog.c:381
+msgid "Desktop"
+msgstr "Рабочий стол"
+
+#: src/trg-remote-prefs-dialog.c:218
+#: src/trg-torrent-props-dialog.c:175
+msgid "Bandwidth"
+msgstr "Скорость"
+
+#: src/trg-remote-prefs-dialog.c:221
+msgid "Limit download speed (KB/s)"
+msgstr "Ограничить скорость загрузки (КБ/с)"
+
+#: src/trg-remote-prefs-dialog.c:240
+msgid "Limit upload speed (KB/s)"
+msgstr "Ограничить скорость отдачи (КБ/с)"
+
+#: src/trg-remote-prefs-dialog.c:260
+msgid "Seed ratio limit"
+msgstr "Раздавать до достижения коэффициента отдачи"
+
+#: src/trg-remote-prefs-dialog.c:284
+msgid "Global peer limit"
+msgstr "Глобальный лимит пиров"
+
+#: src/trg-remote-prefs-dialog.c:291
+msgid "Per torrent peer limit"
+msgstr "Лимит пиров каждого торрента"
+
+#: src/trg-remote-prefs-dialog.c:306
+msgid "Retest"
+msgstr "Повторить тестирование"
+
+#: src/trg-remote-prefs-dialog.c:316
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+msgstr "Порт <span font_weight=\"bold\" fgcolor=\"darkgreen\">открыт</span>"
+
+#: src/trg-remote-prefs-dialog.c:320
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+msgstr "Порт <span font_weight=\"bold\" fgcolor=\"red\">закрыт</span>"
+
+#: src/trg-remote-prefs-dialog.c:336
+#: src/trg-remote-prefs-dialog.c:420
+msgid "Port test"
+msgstr "Тестировать порт"
+
+#: src/trg-remote-prefs-dialog.c:337
+msgid "Testing..."
+msgstr "Тестирование..."
+
+#: src/trg-remote-prefs-dialog.c:359
+#: src/trg-remote-prefs-dialog.c:451
+#, c-format
+msgid "Blocklist (%ld entry)"
+msgid_plural "Blocklist (%ld entries)"
+msgstr[0] "Блоклист (%ld запись)"
+msgstr[1] "Блоклист (%ld записи)"
+msgstr[2] "Блоклист (%ld записей)"
+
+#: src/trg-remote-prefs-dialog.c:382
+msgid "Updating..."
+msgstr "Обновляется..."
+
+#: src/trg-remote-prefs-dialog.c:401
+msgid "Required"
+msgstr "Wymagane"
+
+#: src/trg-remote-prefs-dialog.c:402
+msgid "Preferred"
+msgstr "Предпочтительно"
+
+#: src/trg-remote-prefs-dialog.c:403
+msgid "Tolerated"
+msgstr "Dopuszczane"
+
+#: src/trg-remote-prefs-dialog.c:412
+msgid "Encryption"
+msgstr "Шифрование трафика"
+
+#: src/trg-remote-prefs-dialog.c:418
+msgid "Peer port"
+msgstr "Порт"
+
+#: src/trg-remote-prefs-dialog.c:421
+msgid "Test"
+msgstr "Тест порта"
+
+#: src/trg-remote-prefs-dialog.c:427
+msgid "Random peer port on start"
+msgstr "Случайный порт при запуске"
+
+#: src/trg-remote-prefs-dialog.c:433
+msgid "Peer port forwarding"
+msgstr "Проброс порта"
+
+#: src/trg-remote-prefs-dialog.c:440
+msgid "Peer exchange (PEX)"
+msgstr "Обмен пирами (PEX)"
+
+#: src/trg-remote-prefs-dialog.c:446
+msgid "Local peer discovery"
+msgstr "Обнаружение локальных пиров"
+
+#: src/trg-remote-prefs-dialog.c:461
+msgid "Update"
+msgstr "Обновить блоклист"
+
+#: src/trg-remote-prefs-dialog.c:477
+msgid "Blocklist URL:"
+msgstr "URL блоклиста:"
+
+#: src/trg-remote-prefs-dialog.c:498
+msgid "Download directory"
+msgstr "Директория для загрузки"
+
+#: src/trg-remote-prefs-dialog.c:501
+msgid "Incomplete download dir"
+msgstr "Директория для не полностью загруженных файлов"
+
+#: src/trg-remote-prefs-dialog.c:517
+msgid "Torrent done script"
+msgstr "Скрипт, запускаемый после завершения торрента"
+
+#: src/trg-remote-prefs-dialog.c:538
+msgid "Cache size (MB)"
+msgstr "Размер кэша (МБ)"
+
+#: src/trg-remote-prefs-dialog.c:543
+msgid "Rename partial files"
+msgstr "Переименовывать не полностью загруженные файлы"
+
+#: src/trg-remote-prefs-dialog.c:551
+msgid "Trash original torrent files"
+msgstr "Удалять torrent файлы после добавления"
+
+#: src/trg-remote-prefs-dialog.c:558
+msgid "Start added torrents"
+msgstr "Запускать торренты после добавления"
+
+#: src/trg-remote-prefs-dialog.c:584
+#: src/trg-toolbar.c:261
+msgid "Remote Preferences"
+msgstr "Настройки сервера"
+
+#: src/trg-remote-prefs-dialog.c:617
+msgid "Connections"
+msgstr "Подключение"
+
+#: src/trg-remote-prefs-dialog.c:622
+#: src/trg-torrent-props-dialog.c:316
+msgid "Limits"
+msgstr "Ограничения"
+
+#: src/trg-state-selector.c:386
+msgid "All"
+msgstr "Все"
+
+#: src/trg-state-selector.c:396
+msgid "Complete"
+msgstr "Завершенные"
+
+#: src/trg-state-selector.c:398
+msgid "Incomplete"
+msgstr "Незавершенные"
+
+#: src/trg-stats-dialog.c:267
+msgid "Statistics"
+msgstr "Статистика"
+
+#: src/trg-stats-dialog.c:286
+msgid "Download Total"
+msgstr "Всего загружено"
+
+#: src/trg-stats-dialog.c:288
+msgid "Upload Total"
+msgstr "Всего отдано"
+
+#: src/trg-stats-dialog.c:290
+msgid "Files Added"
+msgstr "Файлов добавлено"
+
+#: src/trg-stats-dialog.c:292
+msgid "Session Count"
+msgstr "Количество сессий"
+
+#: src/trg-stats-dialog.c:294
+msgid "Time Active"
+msgstr "Время работы"
+
+#: src/trg-stats-dialog.c:299
+msgid "Statistic"
+msgstr "Статистика"
+
+#: src/trg-stats-dialog.c:301
+msgid "Session"
+msgstr "Текущая сессия"
+
+#: src/trg-stats-dialog.c:304
+msgid "Cumulative"
+msgstr "Всего"
+
+#: src/trg-status-bar.c:74
+#, c-format
+msgid "Connected to Transmission %g, getting torrents..."
+msgstr "Подключен к Transmission %g, получаю список торрентов..."
+
+#: src/trg-status-bar.c:96
+#, c-format
+msgid "%d torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
+msgid_plural "%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
+msgstr[0] "%d торрент ..  Загрузка %s, Отдача %s  ..  %d раздающихся, %d загружаемых, %d остановленных"
+msgstr[1] "%d торрента ..  Загрузка %s, Отдача %s  ..  %d раздающихся, %d загружаемых, %d остановленных"
+msgstr[2] "%d торрентов ..  Загрузка %s, Отдача %s  ..  %d раздающихся, %d загружаемых, %d остановленных"
+
+#: src/trg-toolbar.c:246
+msgid "Remove with data"
+msgstr "Удалить вместе с файлами"
+
+#: src/trg-torrent-add-url-dialog.c:89
+msgid "Start Paused"
+msgstr "Добавить остановленным"
+
+#: src/trg-torrent-add-url-dialog.c:92
+msgid "Add torrent from URL"
+msgstr "Добавить торрент из URL"
+
+#: src/trg-torrent-graph.c:398
+msgid "Total Uploading"
+msgstr "Общая скорость отдачи"
+
+#: src/trg-torrent-graph.c:406
+msgid "Total Downloading"
+msgstr "Общая скорость загруки"
+
+#: src/trg-torrent-move-dialog.c:96
+msgid "Location:"
+msgstr "Новое расположение:"
+
+#: src/trg-torrent-move-dialog.c:154
+#, c-format
+msgid "Move %s"
+msgstr "Переместить %s"
+
+#: src/trg-torrent-move-dialog.c:157
+#, c-format
+msgid "Move %d torrent"
+msgid_plural "Move %d torrents"
+msgstr[0] "Переместить %d торрент"
+msgstr[1] "Переместить %d торрента"
+msgstr[2] "Переместить %d торрентов"
+
+#: src/trg-torrent-props-dialog.c:179
+msgid "Honor global limits"
+msgstr "Использовать глобальные лимиты"
+
+#: src/trg-torrent-props-dialog.c:186
+msgid "Low"
+msgstr "Низкий"
+
+#: src/trg-torrent-props-dialog.c:187
+msgid "Normal"
+msgstr "Обычный"
+
+#: src/trg-torrent-props-dialog.c:188
+msgid "High"
+msgstr "Высокий"
+
+#: src/trg-torrent-props-dialog.c:191
+msgid "Torrent priority:"
+msgstr "Приоритет торрента:"
+
+#: src/trg-torrent-props-dialog.c:194
+msgid "Limit download speed (Kbps)"
+msgstr "Ограничить скорость загрузки (кбит/с)"
+
+#: src/trg-torrent-props-dialog.c:207
+msgid "Limit upload speed (Kbps)"
+msgstr "Ограничить скорость отдачи (кбит/с)"
+
+#: src/trg-torrent-props-dialog.c:223
+msgid "Use global settings"
+msgstr "Использовать глобальные настройки"
+
+#: src/trg-torrent-props-dialog.c:225
+msgid "Stop seeding at ratio"
+msgstr "Прекратить раздачу при коэффициенте отдачи"
+
+#: src/trg-torrent-props-dialog.c:227
+msgid "Seed regardless of ratio"
+msgstr "Раздавать без учета коэффициента отдачи"
+
+#: src/trg-torrent-props-dialog.c:230
+msgid "Seed ratio mode:"
+msgstr "Режим коэффициента отдачи:"
+
+#: src/trg-torrent-props-dialog.c:238
+msgid "Seed ratio limit:"
+msgstr "Лимит коэффициента раздачи:"
+
+#: src/trg-torrent-props-dialog.c:249
+msgid "Peer limit:"
+msgstr "Лимит пиров:"
+
+#: src/trg-torrent-props-dialog.c:282
+#, c-format
+msgid "Multiple (%d) torrent properties"
+msgstr "Свойства нескольких (%d) торрентов"
+
+#: src/trg-torrent-tree-view.c:44
+msgid "Done"
+msgstr "Готово"
+
+#: src/trg-torrent-tree-view.c:48
+msgid "Seeds"
+msgstr "Сиды"
+
+#: src/trg-trackers-tree-view.c:152
+msgid "Tier"
+msgstr "Номер"
+
+#: src/trg-trackers-tree-view.c:165
+msgid "Announce URL"
+msgstr "URL аннонса"
+
+#: src/trg-trackers-tree-view.c:175
+msgid "Scrape URL"
+msgstr "Scrape URL"
+
+#: src/trg-trackers-tree-view.c:272
+msgid "Delete"
+msgstr "Удалить"
+
+#: src/util.c:85
+msgid "JSON decoding error."
+msgstr "Ошибка декодирования JSON."
+
+#: src/util.c:90
+msgid "Server responded, but with no result."
+msgstr "Сервер ответил, но без результата"
+
+#: src/util.c:94
+#, c-format
+msgid "Request failed with HTTP code %d"
+msgstr "Запрос завершился с ошибкой. Код %d"
+
+#: src/util.c:157
+msgid "None"
+msgstr "Нет"
+
+#: src/util.c:167
+#, c-format
+msgid "%'u byte"
+msgid_plural "%'u bytes"
+msgstr[0] "%'u байт"
+msgstr[1] "%'u байта"
+msgstr[2] "%'u байт"
+
+#: src/util.c:173
+#, c-format
+msgid "%'.1f KB"
+msgstr "%'.1f КБ"
+
+#: src/util.c:176
+#, c-format
+msgid "%'.1f MB"
+msgstr "%'.1f МБ"
+
+#: src/util.c:179
+#, c-format
+msgid "%'.1f GB"
+msgstr "%'.1f ГБ"
+
+#: src/util.c:191
+#, c-format
+msgid "%.1f KB/s"
+msgstr "%.1f КБ/с"
+
+#: src/util.c:193
+#, c-format
+msgid "%.2f MB/s"
+msgstr "%.2f МБ/с"
+
+#: src/util.c:195
+#, c-format
+msgid "%.1f MB/s"
+msgstr "%.1f МБ/с"
+
+#: src/util.c:197
+#, c-format
+msgid "%.2f GB/s"
+msgstr "%.2f Гб/с"
+
+#: src/util.c:231
+#, c-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d день"
+msgstr[1] "%d дня"
+msgstr[2] "%d дней"
+
+#: src/util.c:232
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d час"
+msgstr[1] "%d часа"
+msgstr[2] "%d часов"
+
+#: src/util.c:234
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d минута"
+msgstr[1] "%d минуты"
+msgstr[2] "%d минут"
+
+#: src/util.c:237
+#, c-format
+msgid "%ld second"
+msgid_plural "%ld seconds"
+msgstr[0] "%ld секунда"
+msgstr[1] "%ld секунды"
+msgstr[2] "%ld секунд"
+

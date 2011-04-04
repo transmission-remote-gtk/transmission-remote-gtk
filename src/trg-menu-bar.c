@@ -287,7 +287,7 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
 
     priv->mb_props =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              "Properties", GTK_STOCK_PROPERTIES, FALSE);
+                              _("Properties"), GTK_STOCK_PROPERTIES, FALSE);
     priv->mb_resume =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Resume"),
                               GTK_STOCK_MEDIA_PLAY, FALSE);
