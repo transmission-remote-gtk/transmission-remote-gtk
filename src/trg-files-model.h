@@ -60,10 +60,6 @@ G_END_DECLS enum {
     FILESCOL_COLUMNS
 };
 
-#define T_PRIORITY_LOW -1
-#define T_PRIORITY_NORMAL 0
-#define T_PRIORITY_HIGH 1
-
 void
 trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
                        JsonObject * t, gboolean first);

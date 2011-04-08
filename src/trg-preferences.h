@@ -37,5 +37,10 @@
 #define TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE  "/apps/transmission-remote-gtk/system-tray-minimise"
 #define TRG_GCONF_KEY_FILTER_TRACKERS  "/apps/transmission-remote-gtk/filter-trackers"
 #define TRG_GCONF_KEY_FILTER_DIRS  "/apps/transmission-remote-gtk/filter-dirs"
+#define TRG_GCONF_KEY_LAST_TORRENT_DIR "/apps/transmission-remote-gtk/last-torrent-dir"
+#define TRG_GCONF_KEY_ADD_OPTIONS_DIALOG "/apps/transmission-remote-gtk/add-options-dialog"
+#define TRG_GCONF_KEY_START_PAUSED "/apps/transmission-remote-gtk/start-paused"
+
+gboolean pref_get_start_paused(GConfClient *gcc);
 
 #endif                          /* TRG_PREFERENCES_H_ */

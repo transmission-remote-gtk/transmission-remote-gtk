@@ -60,6 +60,7 @@
 #include "trg-torrent-move-dialog.h"
 #include "trg-torrent-props-dialog.h"
 #include "trg-torrent-add-url-dialog.h"
+#include "trg-torrent-add-dialog.h"
 #include "trg-toolbar.h"
 #include "trg-menu-bar.h"
 #include "trg-status-bar.h"
@@ -84,7 +85,6 @@ static void torrent_tv_onRowActivated(GtkTreeView * treeview,
                                       GtkTreePath * path,
                                       GtkTreeViewColumn * col,
                                       gpointer userdata);
-static gpointer add_files_threadfunc(gpointer data);
 static void add_url_cb(GtkWidget * w, gpointer data);
 static void add_cb(GtkWidget * w, gpointer data);
 static void disconnect_cb(GtkWidget * w, gpointer data);
@@ -370,40 +370,6 @@ torrent_tv_onRowActivated(GtkTreeView * treeview,
     open_props_cb(GTK_WIDGET(treeview), userdata);
 }
 
-/* Use synchronous dispatch() in our dedicated thread function.
- * This means torrents are added in sequence, instead of dispatch_async()
- * working concurrently for each upload.
- */
-
-struct add_torrent_threadfunc_args {
-    GSList *list;
-    trg_client *client;
-    gpointer cb_data;
-};
-
-static gpointer add_files_threadfunc(gpointer data)
-{
-    JsonObject *response;
-    JsonNode *request;
-    struct add_torrent_threadfunc_args *args;
-    gint status;
-    GSList *li;
-
-    args = (struct add_torrent_threadfunc_args *) data;
-
-    for (li = args->list; li != NULL; li = g_slist_next(li)) {
-        request = torrent_add((gchar *) li->data, FALSE);
-        g_free(li->data);
-        response = dispatch(args->client, request, &status);
-        on_generic_interactive_action(response, status, args->cb_data);
-    }
-
-    g_slist_free(args->list);
-    g_free(args);
-
-    return NULL;
-}
-
 static void add_url_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindow *win = TRG_MAIN_WINDOW(data);
@@ -416,47 +382,33 @@ static void add_url_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 
 static void add_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
-    TrgMainWindowPrivate *priv;
-    GtkWidget *dialog;
-    GtkFileFilter *filter;
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    /*TrgTorrentAddDialog *dialog;
+       GtkFileFilter *filter; */
 
-    priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    trg_torrent_add_dialog(TRG_MAIN_WINDOW(data), priv->client);
 
-    dialog = gtk_file_chooser_dialog_new("Open File",
-                                         GTK_WINDOW(data),
-                                         GTK_FILE_CHOOSER_ACTION_OPEN,
-                                         GTK_STOCK_CANCEL,
-                                         GTK_RESPONSE_CANCEL,
-                                         GTK_STOCK_OPEN,
-                                         GTK_RESPONSE_ACCEPT, NULL);
-    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
+    /*dialog = trg_torrent_add_dialog_new(TRG_MAIN_WINDOW(data), priv->client, NULL, TRUE);
+       gtk_dialog_run(GTK_DIALOG(dialog)); */
 
-    filter = gtk_file_filter_new();
-    gtk_file_filter_add_pattern(filter, "*.torrent");
-    gtk_file_filter_set_name(filter, _("BitTorrent Metadata"));
-    gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
+    /*dialog = gtk_file_chooser_dialog_new("Open File",
+       GTK_WINDOW(data),
+       GTK_FILE_CHOOSER_ACTION_OPEN,
+       GTK_STOCK_CANCEL,
+       GTK_RESPONSE_CANCEL,
+       GTK_STOCK_OPEN,
+       GTK_RESPONSE_ACCEPT, NULL);
+       gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
 
-    if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-        GThread *thread;
-        GError *error = NULL;
-        struct add_torrent_threadfunc_args *args;
+       filter = gtk_file_filter_new();
+       gtk_file_filter_add_pattern(filter, "*.torrent");
+       gtk_file_filter_set_name(filter, _("BitTorrent Metadata"));
+       gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
 
-        args = g_new(struct add_torrent_threadfunc_args, 1);
-        args->list =
-            gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(dialog));
-        args->cb_data = data;
-        args->client = priv->client;
+       if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
+       }
 
-        thread =
-            g_thread_create(add_files_threadfunc, args, FALSE, &error);
-        if (error != NULL) {
-            g_printf("thread creation error: %s\n", error->message);
-            g_error_free(error);
-            g_free(args);
-        }
-    }
-
-    gtk_widget_destroy(dialog);
+       gtk_widget_destroy(dialog); */
 }
 
 static void pause_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
@@ -474,7 +426,7 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar * fileName)
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
     if (g_file_test(fileName, G_FILE_TEST_EXISTS) == TRUE) {
-        JsonNode *torrentAddReq = torrent_add(fileName, FALSE);
+        JsonNode *torrentAddReq = torrent_add(fileName, pref_get_start_paused(priv->client->gconf));
         dispatch_async(priv->client, torrentAddReq,
                        on_generic_interactive_action, win);
         return TRUE;
@@ -1779,6 +1731,7 @@ static GObject *trg_main_window_constructor(GType type,
         gtk_icon_theme_load_icon(theme, PACKAGE_NAME, 48,
                                  GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
 
+    notify_init(PACKAGE_NAME);
     if (priv->icon)
         gtk_window_set_default_icon(priv->icon);
 
@@ -1874,9 +1827,9 @@ static GObject *trg_main_window_constructor(GType type,
     gtk_paned_pack1(GTK_PANED(priv->vpaned), priv->hpaned, TRUE, TRUE);
 
     priv->stateSelector = trg_state_selector_new(priv->client);
-    priv->stateSelectorScroller = my_scrolledwin_new(GTK_WIDGET(priv->stateSelector));
-    gtk_paned_pack1(GTK_PANED(priv->hpaned),
-                    priv->stateSelectorScroller,
+    priv->stateSelectorScroller =
+        my_scrolledwin_new(GTK_WIDGET(priv->stateSelector));
+    gtk_paned_pack1(GTK_PANED(priv->hpaned), priv->stateSelectorScroller,
                     FALSE, FALSE);
 
     gtk_paned_pack2(GTK_PANED(priv->hpaned),

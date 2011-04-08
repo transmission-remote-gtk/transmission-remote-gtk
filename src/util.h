@@ -37,6 +37,8 @@
 #define MEGABYTE_FACTOR ( 1024.0 * 1024.0 )
 #define GIGABYTE_FACTOR ( 1024.0 * 1024.0 * 1024.0 )
 
+void add_file_id_to_array(JsonObject * args, gchar * key, gint index);
+void g_str_slist_free(GSList * list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);
 gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key);

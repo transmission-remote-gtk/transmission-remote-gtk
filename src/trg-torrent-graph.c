@@ -17,7 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-/* This graph drawing code was taken from gnome-system-monitor (load-graph.cpp)
+/*
+ * This graph drawing code was taken from gnome-system-monitor (load-graph.cpp)
  * Converted the class from C++ to GObject, substituted out some STL (C++)
  * functions, and removed the unecessary parts for memory/cpu.
  */
@@ -61,7 +62,7 @@ struct _TrgTorrentGraphPrivate {
     double graph_delx;
     guint graph_buffer_offset;
 
-    GdkColor colors[2];
+    GdkColor colors[GRAPH_NUM_LINES];
 
     float data_block[GRAPH_NUM_POINTS * GRAPH_NUM_LINES];
     GList *points;

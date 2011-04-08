@@ -134,9 +134,7 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gtk_label_set_text(GTK_LABEL(priv->gen_downloaded_label), buf);
 
     if (uploaded > 0 && downloaded > 0) {
-        trg_strlratio(buf,
-                      (double) uploaded /
-                      (double) downloaded);
+        trg_strlratio(buf, (double) uploaded / (double) downloaded);
         gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), buf);
     } else {
         gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), _("N/A"));
@@ -165,8 +163,10 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gtk_label_set_markup(GTK_LABEL(priv->gen_error_label), markup);
         g_free(markup);
 
-        markup = g_markup_printf_escaped("<span font_weight=\"bold\" fgcolor=\"red\">%s</span>",
-                                         _("Error"));
+        markup =
+            g_markup_printf_escaped
+            ("<span font_weight=\"bold\" fgcolor=\"red\">%s</span>",
+             _("Error"));
         gtk_label_set_markup(keyLabel, markup);
         g_free(markup);
     } else {

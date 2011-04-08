@@ -250,8 +250,8 @@ void trg_state_selector_update(TrgStateSelector * s)
                 } else {
                     gtk_list_store_insert(GTK_LIST_STORE(model), &iter,
                                           9 +
-                                          g_hash_table_size(priv->
-                                                            trackers));
+                                          g_hash_table_size
+                                          (priv->trackers));
                     gtk_list_store_set(GTK_LIST_STORE(model), &iter,
                                        STATE_SELECTOR_ICON,
                                        GTK_STOCK_NETWORK,
@@ -441,7 +441,7 @@ TrgStateSelector *trg_state_selector_new(trg_client * client)
     priv->client = client;
     priv->showDirs =
         gconf_client_get_bool(client->gconf,
-                                      TRG_GCONF_KEY_FILTER_DIRS, NULL);
+                              TRG_GCONF_KEY_FILTER_DIRS, NULL);
     priv->showTrackers =
         gconf_client_get_bool_or_true(client->gconf,
                                       TRG_GCONF_KEY_FILTER_TRACKERS);

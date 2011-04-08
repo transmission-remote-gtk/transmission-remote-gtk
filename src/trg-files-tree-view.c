@@ -28,6 +28,7 @@
 #include "trg-cell-renderer-priority.h"
 #include "trg-main-window.h"
 #include "requests.h"
+#include "util.h"
 #include "json.h"
 #include "dispatch.h"
 #include "protocol-constants.h"
@@ -65,42 +66,16 @@ static void set_wanted_foreachfunc(GtkTreeModel * model,
                        TRUE, FILESCOL_ICON, GTK_STOCK_FILE, -1);
 }
 
-static void set_low_foreachfunc(GtkTreeModel * model,
-                                GtkTreePath * path G_GNUC_UNUSED,
-                                GtkTreeIter * iter,
-                                gpointer data G_GNUC_UNUSED)
+static void set_priority_foreachfunc(GtkTreeModel * model,
+                                     GtkTreePath * path G_GNUC_UNUSED,
+                                     GtkTreeIter * iter, gpointer data)
 {
     GValue value = { 0 };
     g_value_init(&value, G_TYPE_INT64);
-    g_value_set_int64(&value, T_PRIORITY_LOW);
+    g_value_set_int64(&value, (gint64) GPOINTER_TO_INT(data));
 
     gtk_list_store_set_value(GTK_LIST_STORE(model), iter,
                              FILESCOL_PRIORITY, &value);
-}
-
-static void set_normal_foreachfunc(GtkTreeModel * model,
-                                   GtkTreePath * path G_GNUC_UNUSED,
-                                   GtkTreeIter * iter,
-                                   gpointer data G_GNUC_UNUSED)
-{
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_PRIORITY,
-                       T_PRIORITY_NORMAL, -1);
-}
-
-static void set_high_foreachfunc(GtkTreeModel * model,
-                                 GtkTreePath * path G_GNUC_UNUSED,
-                                 GtkTreeIter * iter,
-                                 gpointer data G_GNUC_UNUSED)
-{
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_PRIORITY,
-                       T_PRIORITY_HIGH, -1);
-}
-
-static void add_file_id_to_array(JsonObject * args, gchar * key,
-                                 gint index)
-{
-    JsonArray *array = json_object_get_array_member(args, key);
-    json_array_add_int_element(array, index);
 }
 
 static void send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
@@ -121,19 +96,12 @@ static void send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
     else
         add_file_id_to_array(args, FIELD_FILES_WANTED, id);
 
-    if (priority == T_PRIORITY_LOW)
+    if (priority == TR_PRI_LOW)
         add_file_id_to_array(args, FIELD_FILES_PRIORITY_LOW, id);
-    else if (priority == T_PRIORITY_HIGH)
+    else if (priority == TR_PRI_HIGH)
         add_file_id_to_array(args, FIELD_FILES_PRIORITY_HIGH, id);
     else
         add_file_id_to_array(args, FIELD_FILES_PRIORITY_NORMAL, id);
-}
-
-static void remove_array_if_empty(JsonObject * args, gchar * key)
-{
-    JsonArray *array = json_object_get_array_member(args, key);
-    if (json_array_get_length(array) == 0)
-        json_object_remove_member(args, key);
 }
 
 static void
@@ -166,26 +134,9 @@ static void send_updated_file_prefs(TrgFilesTreeView * tv)
     req = torrent_set(targetIdArray);
     args = node_get_arguments(req);
 
-    json_object_set_array_member(args, FIELD_FILES_WANTED,
-                                 json_array_new());
-    json_object_set_array_member(args, FIELD_FILES_UNWANTED,
-                                 json_array_new());
-    json_object_set_array_member(args, FIELD_FILES_PRIORITY_HIGH,
-                                 json_array_new());
-    json_object_set_array_member(args, FIELD_FILES_PRIORITY_NORMAL,
-                                 json_array_new());
-    json_object_set_array_member(args, FIELD_FILES_PRIORITY_LOW,
-                                 json_array_new());
-
     gtk_tree_selection_selected_foreach(selection,
                                         send_updated_file_prefs_foreachfunc,
                                         args);
-
-    remove_array_if_empty(args, FIELD_FILES_WANTED);
-    remove_array_if_empty(args, FIELD_FILES_UNWANTED);
-    remove_array_if_empty(args, FIELD_FILES_PRIORITY_HIGH);
-    remove_array_if_empty(args, FIELD_FILES_PRIORITY_NORMAL);
-    remove_array_if_empty(args, FIELD_FILES_PRIORITY_LOW);
 
     trg_files_model_set_accept(TRG_FILES_MODEL(model), FALSE);
 
@@ -197,8 +148,9 @@ static void set_low(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     TrgFilesTreeView *tv = TRG_FILES_TREE_VIEW(data);
     GtkTreeSelection *selection =
         gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
-    gtk_tree_selection_selected_foreach(selection, set_low_foreachfunc,
-                                        NULL);
+    gtk_tree_selection_selected_foreach(selection,
+                                        set_priority_foreachfunc,
+                                        GINT_TO_POINTER(TR_PRI_LOW));
     send_updated_file_prefs(tv);
 }
 
@@ -208,7 +160,8 @@ static void set_normal(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     GtkTreeSelection *selection =
         gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
     gtk_tree_selection_selected_foreach(selection,
-                                        set_normal_foreachfunc, NULL);
+                                        set_priority_foreachfunc,
+                                        GINT_TO_POINTER(TR_PRI_NORMAL));
     send_updated_file_prefs(tv);
 }
 
@@ -218,7 +171,8 @@ static void set_high(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     GtkTreeSelection *selection =
         gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
     gtk_tree_selection_selected_foreach(selection,
-                                        set_high_foreachfunc, NULL);
+                                        set_priority_foreachfunc,
+                                        GINT_TO_POINTER(TR_PRI_HIGH));
     send_updated_file_prefs(tv);
 }
 
@@ -362,8 +316,8 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
     trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(self),
                                          FILESCOL_ICON, FILESCOL_NAME,
                                          _("Name"), -1);
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Size"),
-                             FILESCOL_SIZE);
+    trg_tree_view_add_size_column(TRG_TREE_VIEW(self), _("Size"),
+                                  FILESCOL_SIZE, -1);
     trg_tree_view_add_prog_column(TRG_TREE_VIEW(self), _("Progress"),
                                   FILESCOL_PROGRESS, -1);
     trg_files_tree_view_add_wanted_column(TRG_TREE_VIEW(self), _("Wanted"),

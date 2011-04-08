@@ -22,6 +22,7 @@
 #include <gtk/gtk.h>
 
 #include "trg-cell-renderer-priority.h"
+#include "protocol-constants.h"
 #include "trg-files-model.h"
 #include "util.h"
 
@@ -68,9 +69,9 @@ trg_cell_renderer_priority_set_property(GObject * object,
 
     if (property_id == PROP_PRIORITY_VALUE) {
         priv->priority_value = g_value_get_int64(value);
-        if (priv->priority_value == T_PRIORITY_LOW) {
+        if (priv->priority_value == TR_PRI_LOW) {
             g_object_set(object, "text", _("Low"), NULL);
-        } else if (priv->priority_value == T_PRIORITY_HIGH) {
+        } else if (priv->priority_value == TR_PRI_HIGH) {
             g_object_set(object, "text", _("High"), NULL);
         } else {
             g_object_set(object, "text", _("Normal"), NULL);
@@ -93,8 +94,8 @@ trg_cell_renderer_priority_class_init(TrgCellRendererPriorityClass * klass)
                                     g_param_spec_int64
                                     ("priority-value",
                                      "Priority Value",
-                                     "Priority Value", T_PRIORITY_LOW,
-                                     T_PRIORITY_HIGH, T_PRIORITY_NORMAL,
+                                     "Priority Value", TR_PRI_LOW,
+                                     TR_PRI_HIGH, TR_PRI_NORMAL,
                                      G_PARAM_READWRITE |
                                      G_PARAM_STATIC_NAME |
                                      G_PARAM_STATIC_NICK |

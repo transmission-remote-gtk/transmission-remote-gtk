@@ -164,12 +164,13 @@ JsonNode *torrent_add_url(const gchar * url, gboolean paused)
     return root;
 }
 
-JsonNode *torrent_add(gchar * filename, gboolean paused G_GNUC_UNUSED)
+JsonNode *torrent_add(gchar * filename, gboolean paused)
 {
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);
     gchar *encodedFile = base64encode(filename);
     json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
+    json_object_set_boolean_member(args, PARAM_PAUSED, paused);
     g_free(encodedFile);
     return root;
 }

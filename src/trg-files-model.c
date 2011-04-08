@@ -44,14 +44,12 @@ static void trg_files_model_iter_new(TrgFilesModel * model,
                                      GtkTreeIter * iter, JsonObject * file,
                                      int id)
 {
-    char size[32];
-
     gtk_list_store_append(GTK_LIST_STORE(model), iter);
 
-    trg_strlsize(size, file_get_length(file));
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
                        FILESCOL_NAME, file_get_name(file),
-                       FILESCOL_SIZE, size, FILESCOL_ID, id, -1);
+                       FILESCOL_SIZE, file_get_length(file),
+                       FILESCOL_ID, id, -1);
 }
 
 void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept)
@@ -100,7 +98,7 @@ static void trg_files_model_init(TrgFilesModel * self)
 
     column_types[FILESCOL_ICON] = G_TYPE_STRING;
     column_types[FILESCOL_NAME] = G_TYPE_STRING;
-    column_types[FILESCOL_SIZE] = G_TYPE_STRING;
+    column_types[FILESCOL_SIZE] = G_TYPE_INT64;
     column_types[FILESCOL_PROGRESS] = G_TYPE_DOUBLE;
     column_types[FILESCOL_ID] = G_TYPE_INT;
     column_types[FILESCOL_WANTED] = G_TYPE_BOOLEAN;

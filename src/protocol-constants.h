@@ -70,6 +70,7 @@
 #define FIELD_SEED_RATIO_LIMIT   "seedRatioLimit"
 #define FIELD_PEER_LIMIT         "peer-limit"
 #define FIELD_DOWNLOAD_DIR		"downloadDir"
+#define FIELD_FILE_DOWNLOAD_DIR "download-dir"
 
 #define FIELD_FILES_WANTED      "files-wanted"
 #define FIELD_FILES_UNWANTED    "files-unwanted"
@@ -115,7 +116,13 @@ enum {
     STATUS_DOWNLOADING = 4,
     STATUS_SEEDING = 8,
     STATUS_PAUSED = 16
-} TorrentState;
+};
+
+enum {
+    TR_PRI_LOW = -1,
+    TR_PRI_NORMAL = 0,          /* since NORMAL is 0, memset initializes nicely */
+    TR_PRI_HIGH = 1
+};
 
 #define TFILE_LENGTH                            "length"
 #define TFILE_BYTES_COMPLETED                   "bytesCompleted"

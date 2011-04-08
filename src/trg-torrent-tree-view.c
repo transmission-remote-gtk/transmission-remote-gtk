@@ -61,6 +61,9 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
                                   TORRENT_COLUMN_DOWNLOADED, -1);
     trg_tree_view_add_ratio_column(TRG_TREE_VIEW(tv), _("Ratio"),
                                    TORRENT_COLUMN_RATIO, -1);
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW(tv),
+                                    TORRENT_COLUMN_NAME);
+
 }
 
 gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
@@ -86,6 +89,8 @@ gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
                                TORRENT_COLUMN_UPDATESERIAL, &updateSerial,
                                -1);
 
+            /* This is about to be removed and won't have valid JSON pointed
+             * to by the model. */
             if (updateSerial < client->updateSerial)
                 id = -1;
         }

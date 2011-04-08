@@ -305,6 +305,26 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
     return t;
 }
 
+static GtkWidget *trg_prefs_behaviorPage(GConfClient *gconf)
+{
+    GtkWidget *w, *t;
+    gint row = 0;
+
+    t = hig_workarea_create();
+
+    hig_workarea_add_section_title(t, &row, _("Torrents"));
+
+    w = new_check_button(gconf, _("Start paused"),
+                         TRG_GCONF_KEY_START_PAUSED);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = new_check_button(gconf, _("Options dialog on add"),
+                         TRG_GCONF_KEY_ADD_OPTIONS_DIALOG);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    return t;
+}
+
 static GtkWidget *trg_prefs_serverPage(GConfClient * gconf,
                                        trg_client * client)
 {
@@ -385,6 +405,10 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_desktopPage(priv->gconf, priv->win),
                              gtk_label_new(_("Desktop")));
+
+    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+            trg_prefs_behaviorPage(priv->gconf),
+                             gtk_label_new(_("Behavior")));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 

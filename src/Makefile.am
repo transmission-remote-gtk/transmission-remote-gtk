@@ -69,6 +69,10 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-torrent-move-dialog.c \
 	  trg-stats-dialog.c \
 	  trg-torrent-graph.c \
+	  trg-torrent-add-dialog.c \
+	  trg-file-parser.c \
+	  bencode.c \
+	  trg-preferences.c \
 	  $(NULL)
 
 transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gconf_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS)

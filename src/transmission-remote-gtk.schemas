@@ -2,6 +2,19 @@
   <schemalist>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/add-dialog</key>
+      <applyto>/apps/transmission-remote-gtk/add-dialog</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>1</default>
+
+      <locale name="C">
+        <short>Show add dialog</short>
+        <long>Show add dialog</long>
+      </locale>
+    </schema>
+    
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/auto-connect</key>
       <applyto>/apps/transmission-remote-gtk/auto-connect</applyto>
       <owner>transmission-remote-gtk</owner>
@@ -106,6 +119,45 @@
     </schema>
 
     <schema>
+      <key>/schemas/apps/transmission-remote-gtk/add-options-dialog</key>
+      <applyto>/apps/transmission-remote-gtk/add-options-dialog</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>1</default>
+
+      <locale name="C">
+        <short>Options dialog</short>
+        <long>Options dialog</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/transmission-remote-gtk/start-paused</key>
+      <applyto>/apps/transmission-remote-gtk/start-paused</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>0</default>
+
+      <locale name="C">
+        <short>Start paused</short>
+        <long>Start paused</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/transmission-remote-gtk/show-graph</key>
+      <applyto>/apps/transmission-remote-gtk/show-graph</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>bool</type>
+      <default>0</default>
+
+      <locale name="C">
+        <short>Show graph</short>
+        <long>Show graph</long>
+      </locale>
+    </schema>
+
+    <schema>
       <key>/schemas/apps/transmission-remote-gtk/update-interval</key>
       <applyto>/apps/transmission-remote-gtk/update-interval</applyto>
       <owner>transmission-remote-gtk</owner>
@@ -167,6 +219,19 @@
       <locale name="C">
         <short>Port</short>
         <long>Port</long>
+      </locale>
+    </schema>
+
+    <schema>
+      <key>/schemas/apps/transmission-remote-gtk/last-torrent-dir</key>
+      <applyto>/apps/transmission-remote-gtk/last-torrent-dir</applyto>
+      <owner>transmission-remote-gtk</owner>
+      <type>string</type>
+      <default></default>
+
+      <locale name="C">
+        <short>Last torrent directory</short>
+        <long>Last torrent directory</long>
       </locale>
     </schema>
 

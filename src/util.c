@@ -35,6 +35,24 @@
 #include "util.h"
 #include "dispatch.h"
 
+void add_file_id_to_array(JsonObject * args, gchar * key, gint index)
+{
+    JsonArray *array;
+    if (json_object_has_member(args, key)) {
+        array = json_object_get_array_member(args, key);
+    } else {
+        array = json_array_new();
+        json_object_set_array_member(args, key, array);
+    }
+    json_array_add_int_element(array, index);
+}
+
+void g_str_slist_free(GSList * list)
+{
+    g_slist_foreach( list, (GFunc)g_free, NULL );
+    g_slist_free(list);
+}
+
 GRegex *trg_uri_host_regex_new(void)
 {
     return g_regex_new("^[^:/?#]+:?//([^/?#]*)", G_REGEX_OPTIMIZE, 0,
