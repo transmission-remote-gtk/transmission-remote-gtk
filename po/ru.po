@@ -103,7 +103,7 @@ msgstr "Приоритет"
 #: src/trg-state-selector.c:402
 #: src/util.c:65
 msgid "Error"
-msgstr "C ошибкой"
+msgstr "C ошибками"
 
 #: src/trg-general-panel.c:174
 msgid "N/A"
@@ -153,7 +153,7 @@ msgstr "Статус"
 #: src/trg-general-panel.c:259
 #: src/trg-torrent-tree-view.c:62
 msgid "Ratio"
-msgstr "Коэффициент отдачи"
+msgstr "Коэфф-т"
 
 #: src/trg-general-panel.c:262
 msgid "Location"
@@ -579,7 +579,7 @@ msgstr "Обновляется..."
 
 #: src/trg-remote-prefs-dialog.c:401
 msgid "Required"
-msgstr "Wymagane"
+msgstr "Требуется"
 
 #: src/trg-remote-prefs-dialog.c:402
 msgid "Preferred"
@@ -587,7 +587,7 @@ msgstr "Предпочтительно"
 
 #: src/trg-remote-prefs-dialog.c:403
 msgid "Tolerated"
-msgstr "Dopuszczane"
+msgstr "Допустимо"
 
 #: src/trg-remote-prefs-dialog.c:412
 msgid "Encryption"
