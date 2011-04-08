@@ -79,7 +79,7 @@ static gpointer dispatch_async_threadfunc(gpointer ptr)
     struct dispatch_async_args *args = (struct dispatch_async_args *) ptr;
     int status;
     JsonObject *result = dispatch(args->client, args->req, &status);
-    if (args->callback != NULL)
+    if (args->callback)
         args->callback(result, status, args->data);
     g_free(args);
     return NULL;
@@ -91,9 +91,8 @@ GThread *dispatch_async(trg_client * client, JsonNode * req,
 {
     GError *error = NULL;
     GThread *thread;
-    struct dispatch_async_args *args;
+    struct dispatch_async_args *args = g_new(struct dispatch_async_args, 1);
 
-    args = g_new(struct dispatch_async_args, 1);
     args->callback = callback;
     args->data = data;
     args->req = req;
@@ -101,7 +100,7 @@ GThread *dispatch_async(trg_client * client, JsonNode * req,
 
     thread =
         g_thread_create(dispatch_async_threadfunc, args, FALSE, &error);
-    if (error != NULL) {
+    if (error) {
         g_printf("thread creation error: %s\n", error->message);
         g_error_free(error);
         g_free(args);

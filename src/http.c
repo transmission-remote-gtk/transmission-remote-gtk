@@ -30,6 +30,9 @@
 
 #include "trg-client.h"
 #include "http.h"
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
 
 static struct http_response *trg_http_perform_inner(trg_client * client,
                                                     gchar * req,
@@ -65,7 +68,7 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
 
     handle = curl_easy_init();
 
-    curl_easy_setopt(handle, CURLOPT_USERAGENT, "trg");
+    curl_easy_setopt(handle, CURLOPT_USERAGENT, PACKAGE_NAME);
     curl_easy_setopt(handle, CURLOPT_PASSWORD, tc->password);
     curl_easy_setopt(handle, CURLOPT_USERNAME, tc->username);
     curl_easy_setopt(handle, CURLOPT_URL, tc->url);
@@ -86,7 +89,7 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     }
 
 
-    if (tc->session_id != NULL) {
+    if (tc->session_id) {
         headers = curl_slist_append(headers, tc->session_id);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, headers);
     }
@@ -137,10 +140,10 @@ static size_t header_callback(void *ptr, size_t size, size_t nmemb,
     char *header = (char *) (ptr);
     trg_client *client = (trg_client *) data;
 
-    if (g_str_has_prefix(header, "X-Transmission-Session-Id: ") == TRUE) {
+    if (g_str_has_prefix(header, "X-Transmission-Session-Id: ")) {
         char *nl;
 
-        if (client->session_id != NULL)
+        if (client->session_id)
             g_free(client->session_id);
 
         client->session_id = g_strdup(header);

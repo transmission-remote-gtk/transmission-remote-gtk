@@ -1,6 +1,6 @@
 AC_PREREQ(2.63)
 
-AC_INIT(transmission-remote-gtk, 0.3, alan@eth0.org.uk)
+AC_INIT(transmission-remote-gtk, 0.4, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_INIT_AUTOMAKE([foreign])
@@ -27,7 +27,9 @@ case "$OSNAME" in
 esac
 
 trglocaledir='${prefix}/${DATADIRNAME}/locale'
+trglicense='${docdir}/LICENSE.GPLv2'
 AC_SUBST(trglocaledir)
+AC_SUBST(trglicense)
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])

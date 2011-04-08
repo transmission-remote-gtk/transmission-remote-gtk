@@ -94,8 +94,6 @@ int main(int argc, char *argv[])
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
 
-    textdomain(PACKAGE_NAME);
-
     if ((withUnique = g_getenv("TRG_NOUNIQUE") == NULL))
         app = unique_app_new_with_commands("org.eth0.uk.org.trg", NULL,
                                            "add", COMMAND_ADD, NULL);

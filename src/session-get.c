@@ -64,11 +64,10 @@ gboolean session_get_port_forwarding_enabled(JsonObject * s)
 
 const gchar *session_get_blocklist_url(JsonObject * s)
 {
-    if (json_object_has_member(s, SGET_BLOCKLIST_URL)) {
+    if (json_object_has_member(s, SGET_BLOCKLIST_URL))
         return json_object_get_string_member(s, SGET_BLOCKLIST_URL);
-    } else {
+    else
         return NULL;
-    }
 }
 
 gint64 session_get_blocklist_size(JsonObject * s)
