@@ -20,8 +20,16 @@
 #include <glib.h>
 #include <gconf/gconf-client.h>
 
+#include "util.h"
 #include "trg-preferences.h"
 
-gboolean pref_get_start_paused(GConfClient *gcc) {
+gboolean pref_get_add_options_dialog(GConfClient * gcc)
+{
+    return gconf_client_get_bool_or_true(gcc,
+                                         TRG_GCONF_KEY_ADD_OPTIONS_DIALOG);
+}
+
+gboolean pref_get_start_paused(GConfClient * gcc)
+{
     return gconf_client_get_bool(gcc, TRG_GCONF_KEY_START_PAUSED, NULL);
 }

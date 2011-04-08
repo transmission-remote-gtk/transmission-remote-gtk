@@ -50,6 +50,7 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 {
     TrgMainWindow *win;
     UniqueResponse res;
+    gchar *fileName;
 
     win = TRG_MAIN_WINDOW(user_data);
 
@@ -61,10 +62,10 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
         res = UNIQUE_RESPONSE_OK;
         break;
     case COMMAND_ADD:
+        fileName = unique_message_data_get_filename(message);
         res =
             trg_add_from_filename(win,
-                                  unique_message_data_get_filename
-                                  (message)) ? UNIQUE_RESPONSE_OK :
+                                  fileName) ? UNIQUE_RESPONSE_OK :
             UNIQUE_RESPONSE_FAIL;
         break;
     default:

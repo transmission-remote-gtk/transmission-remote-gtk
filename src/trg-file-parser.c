@@ -15,9 +15,9 @@
 #define my_print_errno(x) printf("%s: error (%d) %s\n", __func__, errno, x);
 
 static trg_torrent_file_node
-    *trg_torrent_file_node_insert(trg_torrent_file_node * top,
-                                  be_node * file_node, guint index,
-                                  gint64 * total_length)
+    * trg_torrent_file_node_insert(trg_torrent_file_node * top,
+                                   be_node * file_node, guint index,
+                                   gint64 * total_length)
 {
     int i;
     trg_torrent_file_node *path_el_parent = top;

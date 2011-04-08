@@ -383,32 +383,8 @@ static void add_url_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 static void add_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-    /*TrgTorrentAddDialog *dialog;
-       GtkFileFilter *filter; */
 
     trg_torrent_add_dialog(TRG_MAIN_WINDOW(data), priv->client);
-
-    /*dialog = trg_torrent_add_dialog_new(TRG_MAIN_WINDOW(data), priv->client, NULL, TRUE);
-       gtk_dialog_run(GTK_DIALOG(dialog)); */
-
-    /*dialog = gtk_file_chooser_dialog_new("Open File",
-       GTK_WINDOW(data),
-       GTK_FILE_CHOOSER_ACTION_OPEN,
-       GTK_STOCK_CANCEL,
-       GTK_RESPONSE_CANCEL,
-       GTK_STOCK_OPEN,
-       GTK_RESPONSE_ACCEPT, NULL);
-       gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
-
-       filter = gtk_file_filter_new();
-       gtk_file_filter_add_pattern(filter, "*.torrent");
-       gtk_file_filter_set_name(filter, _("BitTorrent Metadata"));
-       gtk_file_chooser_add_filter(GTK_FILE_CHOOSER(dialog), filter);
-
-       if (gtk_dialog_run(GTK_DIALOG(dialog)) == GTK_RESPONSE_ACCEPT) {
-       }
-
-       gtk_widget_destroy(dialog); */
 }
 
 static void pause_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
@@ -426,10 +402,24 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar * fileName)
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
     if (g_file_test(fileName, G_FILE_TEST_EXISTS) == TRUE) {
-        JsonNode *torrentAddReq = torrent_add(fileName, pref_get_start_paused(priv->client->gconf));
-        dispatch_async(priv->client, torrentAddReq,
-                       on_generic_interactive_action, win);
+        if (pref_get_add_options_dialog(priv->client->gconf)) {
+            GSList *filesList = g_slist_append(NULL, fileName);
+            TrgTorrentAddDialog *dialog =
+                trg_torrent_add_dialog_new(win, priv->client, filesList);
+
+            gtk_widget_show_all(GTK_WIDGET(dialog));
+        } else {
+            JsonNode *torrentAddReq =
+                torrent_add(fileName,
+                            pref_get_start_paused(priv->client->gconf));
+            dispatch_async(priv->client, torrentAddReq,
+                           on_generic_interactive_action, win);
+            g_free(fileName);
+        }
         return TRUE;
+    } else {
+        g_printf("file doesn't exist: \"%s\"\n", fileName);
+        g_free(fileName);
     }
 
     return FALSE;

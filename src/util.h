@@ -22,6 +22,7 @@
 #ifndef UTIL_H_
 #define UTIL_H_
 
+#include <gtk/gtk.h>
 #include <gconf/gconf-client.h>
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
@@ -45,8 +46,7 @@ gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key);
 
 void response_unref(JsonObject * response);
 const gchar *make_error_message(JsonObject * response, int status);
-void trg_error_dialog(GtkWindow * parent, int status,
-                      JsonObject * response);
+void trg_error_dialog(GtkWindow * parent, int status, JsonObject * response);
 
 char *tr_strltime_long(char *buf, gint64 seconds, size_t buflen);
 char *tr_strltime_short(char *buf, gint64 seconds, size_t buflen);

@@ -45,7 +45,6 @@ enum {
     PROP_0,
     PROP_FILENAME,
     PROP_PARENT,
-    PROP_SHOW_OPTIONS,
     PROP_CLIENT
 };
 
@@ -75,7 +74,6 @@ typedef struct _TrgTorrentAddDialogPrivate
 struct _TrgTorrentAddDialogPrivate {
     trg_client *client;
     TrgMainWindow *parent;
-    gint show_options;
     GSList *filenames;
     GtkWidget *source_chooser;
     GtkWidget *dest_combo;
@@ -98,9 +96,6 @@ trg_torrent_add_dialog_set_property(GObject * object,
     case PROP_FILENAME:
         priv->filenames = g_value_get_pointer(value);
         break;
-    case PROP_SHOW_OPTIONS:
-        priv->show_options = g_value_get_int(value);
-        break;
     case PROP_PARENT:
         priv->parent = g_value_get_object(value);
         break;
@@ -122,9 +117,6 @@ trg_torrent_add_dialog_get_property(GObject * object,
     switch (prop_id) {
     case PROP_FILENAME:
         g_value_set_pointer(value, priv->filenames);
-        break;
-    case PROP_SHOW_OPTIONS:
-        g_value_set_int(value, priv->show_options);
         break;
     case PROP_PARENT:
         g_value_set_object(value, priv->parent);
@@ -370,8 +362,8 @@ setSubtree(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter,
 
         gtk_tree_model_iter_parent(model, &parent, iter);
     } else {
-        gtk_tree_store_set(GTK_TREE_STORE(model), &back_iter, column, new_value,
-                           -1);
+        gtk_tree_store_set(GTK_TREE_STORE(model), &back_iter, column,
+                           new_value, -1);
     }
 
     while (1) {
@@ -381,14 +373,14 @@ setSubtree(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter,
         if (!gtk_tree_model_iter_parent(model, &tmp_iter, &back_iter))
             break;
 
-        n_children =
-            gtk_tree_model_iter_n_children(model, &tmp_iter);
+        n_children = gtk_tree_model_iter_n_children(model, &tmp_iter);
 
         for (i = 0; i < n_children; i++) {
             GtkTreeIter child;
             gint current_value;
 
-            if (!gtk_tree_model_iter_nth_child(model, &child, &tmp_iter, i))
+            if (!gtk_tree_model_iter_nth_child
+                (model, &child, &tmp_iter, i))
                 continue;
 
             gtk_tree_model_get(model, &child, column, &current_value, -1);
@@ -851,8 +843,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     priv->paused_check =
         gtk_check_button_new_with_mnemonic(_("Start _paused"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->paused_check),
-                                 pref_get_start_paused(priv->client->
-                                                       gconf));
+                                 pref_get_start_paused(priv->
+                                                       client->gconf));
 
     priv->priority_combo = gtr_priority_combo_new();
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->priority_combo), 1);
@@ -969,19 +961,6 @@ trg_torrent_add_dialog_class_init(TrgTorrentAddDialogClass * klass)
                                                          G_PARAM_STATIC_BLURB));
 
     g_object_class_install_property(object_class,
-                                    PROP_SHOW_OPTIONS,
-                                    g_param_spec_int("show-options",
-                                                     "show-options",
-                                                     "show-options", 0, 1,
-                                                     1,
-                                                     G_PARAM_READWRITE |
-                                                     G_PARAM_CONSTRUCT_ONLY
-                                                     | G_PARAM_STATIC_NAME
-                                                     | G_PARAM_STATIC_NICK
-                                                     |
-                                                     G_PARAM_STATIC_BLURB));
-
-    g_object_class_install_property(object_class,
                                     PROP_PARENT,
                                     g_param_spec_object("parent", "parent",
                                                         "parent",
@@ -1002,12 +981,10 @@ static void trg_torrent_add_dialog_init(TrgTorrentAddDialog * self)
 
 TrgTorrentAddDialog *trg_torrent_add_dialog_new(TrgMainWindow * parent,
                                                 trg_client * client,
-                                                GSList * filenames,
-                                                gboolean showOptions)
+                                                GSList * filenames)
 {
     return g_object_new(TRG_TYPE_TORRENT_ADD_DIALOG,
                         "filenames", filenames,
-                        "show-options", showOptions ? 1 : 0,
                         "parent", parent, "client", client, NULL);
 }
 
@@ -1020,9 +997,8 @@ void trg_torrent_add_dialog(TrgMainWindow * win, trg_client * client)
 
     c = gtk_check_button_new_with_mnemonic(_("Show _options dialog"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(c),
-                                 gconf_client_get_bool_or_true(client->
-                                                               gconf,
-                                                               TRG_GCONF_KEY_ADD_OPTIONS_DIALOG));
+                                 pref_get_add_options_dialog
+                                 (client->gconf));
     gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER(w), c);
 
     if (gtk_dialog_run(GTK_DIALOG(w)) == GTK_RESPONSE_ACCEPT) {
@@ -1037,7 +1013,7 @@ void trg_torrent_add_dialog(TrgMainWindow * win, trg_client * client)
 
         if (showOptions) {
             TrgTorrentAddDialog *dialog =
-                trg_torrent_add_dialog_new(win, client, l, showOptions);
+                trg_torrent_add_dialog_new(win, client, l);
 
             gtk_widget_show_all(GTK_WIDGET(dialog));
         } else {

@@ -305,7 +305,7 @@ static GtkWidget *trg_prefs_desktopPage(GConfClient * gconf,
     return t;
 }
 
-static GtkWidget *trg_prefs_behaviorPage(GConfClient *gconf)
+static GtkWidget *trg_prefs_behaviorPage(GConfClient * gconf)
 {
     GtkWidget *w, *t;
     gint row = 0;
@@ -407,7 +407,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
                              gtk_label_new(_("Desktop")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-            trg_prefs_behaviorPage(priv->gconf),
+                             trg_prefs_behaviorPage(priv->gconf),
                              gtk_label_new(_("Behavior")));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);

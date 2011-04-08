@@ -50,8 +50,7 @@ GType trg_torrent_add_dialog_get_type(void);
 
 TrgTorrentAddDialog *trg_torrent_add_dialog_new(TrgMainWindow * win,
                                                 trg_client * client,
-                                                GSList * filenames,
-                                                gint showOptions);
+                                                GSList * filenames);
 void trg_torrent_add_dialog(TrgMainWindow * win, trg_client * client);
 
 G_END_DECLS

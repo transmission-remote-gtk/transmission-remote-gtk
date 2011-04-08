@@ -41,6 +41,7 @@
 #define TRG_GCONF_KEY_ADD_OPTIONS_DIALOG "/apps/transmission-remote-gtk/add-options-dialog"
 #define TRG_GCONF_KEY_START_PAUSED "/apps/transmission-remote-gtk/start-paused"
 
-gboolean pref_get_start_paused(GConfClient *gcc);
+gboolean pref_get_start_paused(GConfClient * gcc);
+gboolean pref_get_add_options_dialog(GConfClient * gcc);
 
 #endif                          /* TRG_PREFERENCES_H_ */

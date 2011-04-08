@@ -49,7 +49,7 @@ void add_file_id_to_array(JsonObject * args, gchar * key, gint index)
 
 void g_str_slist_free(GSList * list)
 {
-    g_slist_foreach( list, (GFunc)g_free, NULL );
+    g_slist_foreach(list, (GFunc) g_free, NULL);
     g_slist_free(list);
 }
 
