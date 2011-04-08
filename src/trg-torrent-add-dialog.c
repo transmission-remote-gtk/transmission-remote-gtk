@@ -703,11 +703,11 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
         gtk_tree_store_set(store, &child, FC_ICON,
                            node->children ? GTK_STOCK_DIRECTORY :
                            GTK_STOCK_FILE, -1);
+        gtk_tree_store_set(store, &child, FC_ENABLED, 1, -1);
         if (!node->children) {
             gtk_tree_store_set(store, &child, FC_INDEX, node->index, -1);
             gtk_tree_store_set(store, &child, FC_SIZE, node->length, -1);
             gtk_tree_store_set(store, &child, FC_PRIORITY, 0, -1);
-            gtk_tree_store_set(store, &child, FC_ENABLED, 1, -1);
         }
     }
 
