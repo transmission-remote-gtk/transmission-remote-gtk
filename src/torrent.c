@@ -61,6 +61,11 @@ const gchar *torrent_get_name(JsonObject * t)
     return json_object_get_string_member(t, FIELD_NAME);
 }
 
+gint64 torrent_get_added_date(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_ADDED_DATE);
+}
+
 gboolean torrent_get_honors_session_limits(JsonObject * t)
 {
     return json_object_get_boolean_member(t, FIELD_HONORS_SESSION_LIMITS);

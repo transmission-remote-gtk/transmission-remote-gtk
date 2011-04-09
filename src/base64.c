@@ -17,50 +17,49 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <stdlib.h>
+#include <sys/mman.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <string.h>
+#include <errno.h>
+
+#include <glib.h>
 
 #include "base64.h"
 
-static const char cb64[] =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-void encodeblock(unsigned char in[3], unsigned char out[4], int len)
-{
-    out[0] = cb64[in[0] >> 2];
-    out[1] = cb64[((in[0] & 0x03) << 4) | ((in[1] & 0xf0) >> 4)];
-    out[2] =
-        (unsigned char) (len >
-                         1 ? cb64[((in[1] & 0x0f) << 2) |
-                                  ((in[2] & 0xc0) >> 6)] : '=');
-    out[3] = (unsigned char) (len > 2 ? cb64[in[2] & 0x3f] : '=');
-}
+#define my_print_errno(x) printf("%s: error (%d) %s\n", __func__, errno, x);
 
 char *base64encode(char *filename)
 {
-    FILE *infile = fopen(filename, "rb");
-    unsigned char in[3], out[4];
-    int i, len, j = 0;
-    char *output = NULL;
-    while (!feof(infile)) {
-        len = 0;
-        for (i = 0; i < 3; i++) {
-            in[i] = (unsigned char) getc(infile);
-            if (!feof(infile)) {
-                len++;
-            } else {
-                in[i] = 0;
-            }
-        }
-        if (len) {
-            output = (char *) realloc(output, j + 5);
-            encodeblock(in, out, len);
-            for (i = 0; i < 4; i++) {
-                output[j++] = out[i];
-            }
-        }
+    gint fd = open(filename, O_RDONLY);
+    struct stat sb;
+    void *addr;
+    gchar *b64out = NULL;
+
+    if (fd < 0) {
+        my_print_errno("opening file");
+        return NULL;
     }
-    output[j] = '\0';
-    fclose(infile);
-    return output;
+
+    if (fstat(fd, &sb) == -1) {
+        my_print_errno("on fstat");
+        close(fd);
+        return NULL;
+    }
+
+    addr = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
+    if (addr == MAP_FAILED) {
+        my_print_errno("on mmap");
+        close(fd);
+        return NULL;
+    }
+
+    b64out = g_base64_encode((guchar*) addr, sb.st_size);
+    munmap(addr, sb.st_size);
+    close(fd);
+
+    return b64out;
 }

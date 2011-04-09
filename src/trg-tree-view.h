@@ -74,5 +74,7 @@ void trg_tree_view_add_eta_column(TrgTreeView * tv, char *title, int index,
                                   int width);
 void trg_tree_view_std_column_setup(GtkTreeViewColumn * column, int index,
                                     int width);
+void trg_tree_view_add_epoch_column(TrgTreeView * tv, char *title,
+                                    int index, int width);
 
 #endif                          /* _TRG_TREE_VIEW_H_ */

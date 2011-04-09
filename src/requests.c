@@ -122,6 +122,7 @@ JsonNode *torrent_get(void)
     json_array_add_string_element(fields, FIELD_RATEUPLOAD);
     json_array_add_string_element(fields, FIELD_RATEDOWNLOAD);
     json_array_add_string_element(fields, FIELD_STATUS);
+    json_array_add_string_element(fields, FIELD_ADDED_DATE);
     json_array_add_string_element(fields, FIELD_UPLOADEDEVER);
     json_array_add_string_element(fields, FIELD_SIZEWHENDONE);
     json_array_add_string_element(fields, FIELD_ID);

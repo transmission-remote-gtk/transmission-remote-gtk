@@ -24,6 +24,7 @@
 #include "trg-cell-renderer-size.h"
 #include "trg-cell-renderer-ratio.h"
 #include "trg-cell-renderer-eta.h"
+#include "trg-cell-renderer-epoch.h"
 
 G_DEFINE_TYPE(TrgTreeView, trg_tree_view, GTK_TYPE_TREE_VIEW)
 
@@ -131,6 +132,21 @@ void trg_tree_view_add_speed_column(TrgTreeView * tv, char *title,
     renderer = trg_cell_renderer_speed_new();
     column = gtk_tree_view_column_new_with_attributes(title, renderer,
                                                       "speed-value",
+                                                      index, NULL);
+
+    trg_tree_view_std_column_setup(column, index, width);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
+}
+
+void trg_tree_view_add_epoch_column(TrgTreeView * tv, char *title,
+                                    int index, int width)
+{
+    GtkCellRenderer *renderer;
+    GtkTreeViewColumn *column;
+
+    renderer = trg_cell_renderer_epoch_new();
+    column = gtk_tree_view_column_new_with_attributes(title, renderer,
+                                                      "epoch-value",
                                                       index, NULL);
 
     trg_tree_view_std_column_setup(column, index, width);

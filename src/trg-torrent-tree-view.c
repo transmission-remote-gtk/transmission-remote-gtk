@@ -61,6 +61,8 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
                                   TORRENT_COLUMN_DOWNLOADED, -1);
     trg_tree_view_add_ratio_column(TRG_TREE_VIEW(tv), _("Ratio"),
                                    TORRENT_COLUMN_RATIO, -1);
+    trg_tree_view_add_epoch_column(TRG_TREE_VIEW(tv), _("Added"),
+                                   TORRENT_COLUMN_ADDED, -1);
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tv),
                                     TORRENT_COLUMN_NAME);
 
