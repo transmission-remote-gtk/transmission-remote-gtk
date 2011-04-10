@@ -19,3 +19,5 @@ src/trg-torrent-props-dialog.c
 src/trg-torrent-tree-view.c
 src/trg-trackers-tree-view.c
 src/util.c
+src/trg-cell-renderer-priority.c
+src/trg-torrent-add-dialog.c

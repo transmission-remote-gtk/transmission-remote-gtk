@@ -23,7 +23,7 @@ schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = transmission-remote-gtk.schemas
 
 bin_PROGRAMS = transmission-remote-gtk
-INCLUDES = --pedantic -Wall -I.. -O2 -DTRGLICENSE=\""$(trglicense)"\" -DTRGLOCALEDIR=\""$(trglocaledir)"\" $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gconf_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS)
+INCLUDES = --pedantic -Wall -I.. -O2 -DTRGLICENSE=\""$(trglicense)"\" -DTRGLOCALEDIR=\""$(trglocaledir)"\" $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gconf_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) -std=c99
 
 transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \
@@ -82,6 +82,7 @@ install-data-local: install-icons update-icon-cache
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule $(srcdir)/$(schema_DATA)
 	$(INSTALL_DATA) -D ../COPYING $(docdir)/LICENSE.GPLv2
 	$(INSTALL_DATA) ../AUTHORS $(docdir)/AUTHORS
+	$(INSTALL_DATA) ../README $(docdir)/README
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t
 
