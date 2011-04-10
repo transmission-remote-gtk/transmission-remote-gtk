@@ -656,11 +656,12 @@ msgstr "누적"
 msgid "Connected to Transmission %g, getting torrents..."
 msgstr "트랜스미션에 접속됨 %g, 토렌트 정보를 받는 중"
 
-#: src/trg-status-bar.c:96
+#: src/trg-status-bar.c:95
 #, c-format
-msgid ""
-"%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
-msgstr "%d 개의 토렌트 ..  다운로드 속도: %s, 업로드 속도: %s  ..  %d 개 배포 중, %d 개 다운로드 중, %d 개 멈춤"
+msgid "%d torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
+msgid_plural "%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
+msgstr[0] "%d 개의 토렌트 ..  다운로드 속도: %s, 업로드 속도: %s  ..  %d 개 배포 중, %d 개 다운로드 중, %d 개 멈춤"
+msgstr[1] "%d 개의 토렌트 ..  다운로드 속도: %s, 업로드 속도: %s  ..  %d 개 배포 중, %d 개 다운로드 중, %d 개 멈춤"
 
 #: src/trg-toolbar.c:246
 msgid "Remove with data"
