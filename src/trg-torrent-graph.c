@@ -33,7 +33,7 @@
 #include "util.h"
 
 /* damn you freebsd */
-#define log2(x) (log(x)/M_LN2)
+#define log2(x) (log(x)/0.69314718055994530942)
 
 #define GRAPH_NUM_POINTS 62
 #define GRAPH_MIN_HEIGHT 40
