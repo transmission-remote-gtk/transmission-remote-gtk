@@ -37,6 +37,7 @@
 #include "trg-cell-renderer-size.h"
 #include "trg-preferences.h"
 #include "requests.h"
+#include "torrent.h"
 #include "json.h"
 #include "dispatch.h"
 #include "protocol-constants.h"
@@ -186,11 +187,31 @@ static gchar *trg_destination_folder_get(GtkComboBox * box)
 
 static GtkWidget *trg_destination_folder_new(trg_client * client)
 {
+    const gchar *defaultDownDir = json_object_get_string_member(client->session, SGET_DOWNLOAD_DIR);
     GtkWidget *combo = gtk_combo_box_entry_new_text();
-    gtk_combo_box_append_text(GTK_COMBO_BOX(combo),
-                              json_object_get_string_member
-                              (client->session, SGET_DOWNLOAD_DIR));
+    int i;
+    GSList *dirs = NULL;
+    GSList *li;
+
+    g_slist_str_set_add(&dirs, defaultDownDir);
+
+    g_mutex_lock(client->updateMutex);
+    for (i = 0; i < json_array_get_length(client->torrents); i++) {
+        JsonObject *t = json_node_get_object(json_array_get_element(client->torrents, i));
+        const gchar *dd = torrent_get_download_dir(t);
+        if (dd) {
+            g_printf("dd: %s\n", dd);
+            g_slist_str_set_add(&dirs, dd);
+        }
+    }
+    g_mutex_unlock(client->updateMutex);
+
+    for (li = dirs; li != NULL; li = g_slist_next(li))
+        gtk_combo_box_append_text(GTK_COMBO_BOX(combo), (gchar*)li->data);
+
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
+    g_str_slist_free(dirs);
+
     return combo;
 }
 

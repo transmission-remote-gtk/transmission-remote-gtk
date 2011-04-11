@@ -39,6 +39,7 @@
 #define GIGABYTE_FACTOR ( 1024.0 * 1024.0 * 1024.0 )
 
 void add_file_id_to_array(JsonObject * args, gchar * key, gint index);
+gboolean g_slist_str_set_add(GSList **list, const gchar *string);
 void g_str_slist_free(GSList * list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);

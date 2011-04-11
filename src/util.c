@@ -99,15 +99,28 @@ gint gconf_client_get_int_or_default(GConfClient * gconf, const gchar *key, int 
     return ret;
 }
 
+gboolean g_slist_str_set_add(GSList **list, const gchar *string)
+{
+    GSList *li;
+    for (li = *list; li != NULL; li = g_slist_next(li))
+        if (!g_strcmp0((gchar*)li->data, string))
+            return FALSE;
+
+    *list = g_slist_append(*list, g_strdup(string));
+    return TRUE;
+}
+
 gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key)
 {
     GError *error = NULL;
-    gboolean value = gconf_client_get_bool(gconf, key, &error);
+    GConfValue *value = gconf_client_get_without_default(gconf, key, &error);
+    gboolean ret = TRUE;
     if (error) {
         g_error_free(error);
-        return TRUE;
+    } else if (value) {
+        ret = gconf_value_get_bool(value);
     }
-    return value;
+    return ret;
 }
 
 const gchar *make_error_message(JsonObject * response, int status)
