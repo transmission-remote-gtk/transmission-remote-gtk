@@ -43,6 +43,7 @@ void g_str_slist_free(GSList * list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);
 gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key);
+gint gconf_client_get_int_or_default(GConfClient * gconf, const gchar *key, int deflt, GError **error);
 
 void response_unref(JsonObject * response);
 const gchar *make_error_message(JsonObject * response, int status);

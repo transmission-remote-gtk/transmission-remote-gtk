@@ -86,6 +86,19 @@ void trg_error_dialog(GtkWindow * parent, int status,
     g_free((gpointer) msg);
 }
 
+gint gconf_client_get_int_or_default(GConfClient * gconf, const gchar *key, int deflt, GError **error)
+{
+    GConfValue *value = gconf_client_get_without_default(gconf, key, error);
+    gint ret;
+    if (value) {
+        ret = gconf_value_get_int(value);
+        gconf_value_free(value);
+    } else {
+        ret = deflt;
+    }
+    return ret;
+}
+
 gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key)
 {
     GError *error = NULL;

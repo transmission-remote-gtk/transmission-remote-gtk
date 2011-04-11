@@ -20,6 +20,8 @@
 #ifndef TRG_PREFERENCES_H_
 #define TRG_PREFERENCES_H_
 
+#define TRG_PORT_DEFAULT            9091
+#define TRG_INTERVAL_DEFAULT        3
 #define TRG_GCONF_KEY_HOSTNAME      "/apps/transmission-remote-gtk/hostname"
 #define TRG_GCONF_KEY_PORT          "/apps/transmission-remote-gtk/port"
 #define TRG_GCONF_KEY_USERNAME      "/apps/transmission-remote-gtk/username"

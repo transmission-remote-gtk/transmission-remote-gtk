@@ -97,6 +97,8 @@ static void reannounce_cb(GtkWidget * w, gpointer data);
 static void pause_cb(GtkWidget * w, gpointer data);
 static void resume_cb(GtkWidget * w, gpointer data);
 static void remove_cb(GtkWidget * w, gpointer data);
+static void resume_all_cb(GtkWidget * w, gpointer data);
+static void pause_all_cb(GtkWidget * w, gpointer data);
 static void move_cb(GtkWidget * w, gpointer data);
 static void delete_cb(GtkWidget * w, gpointer data);
 static void open_props_cb(GtkWidget * w, gpointer data);
@@ -397,6 +399,15 @@ static void pause_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
                    on_generic_interactive_action, data);
 }
 
+static void pause_all_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+
+    dispatch_async(priv->client,
+                   torrent_pause(NULL),
+                   on_generic_interactive_action, data);
+}
+
 gboolean trg_add_from_filename(TrgMainWindow * win, gchar * fileName)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
@@ -423,6 +434,16 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar * fileName)
     }
 
     return FALSE;
+}
+
+static void resume_all_cb(GtkWidget *w G_GNUC_UNUSED, gpointer data)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+
+    g_printf("%s\n", __func__);
+    dispatch_async(priv->client,
+                   torrent_start(NULL),
+                   on_generic_interactive_action, data);
 }
 
 static void resume_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
@@ -1512,6 +1533,7 @@ trg_status_icon_view_menu(GtkStatusIcon * icon G_GNUC_UNUSED,
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add"),
                               GTK_STOCK_ADD, connected, G_CALLBACK(add_cb),
                               data);
+
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add from URL"),
                               GTK_STOCK_ADD, connected,
                               G_CALLBACK(add_url_cb), data);
@@ -1526,11 +1548,19 @@ trg_status_icon_view_menu(GtkStatusIcon * icon G_GNUC_UNUSED,
                                              _("Up Limit"),
                                              SGET_SPEED_LIMIT_UP_ENABLED,
                                              SGET_SPEED_LIMIT_UP, NULL));
+
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Resume All"),
+                              GTK_STOCK_MEDIA_PLAY, connected,
+                              G_CALLBACK(resume_all_cb), data);
+
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Pause All"),
+                              GTK_STOCK_MEDIA_PAUSE, connected,
+                              G_CALLBACK(pause_all_cb), data);
     }
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                           gtk_separator_menu_item_new());
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), "Quit", GTK_STOCK_QUIT,
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Quit"), GTK_STOCK_QUIT,
                           TRUE, G_CALLBACK(quit_cb), data);
 
     gtk_widget_show_all(menu);

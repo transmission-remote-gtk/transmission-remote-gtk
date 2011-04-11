@@ -31,6 +31,7 @@
 
 #include "trg-client.h"
 #include "trg-preferences.h"
+#include "util.h"
 
 gboolean trg_client_supports_tracker_edit(trg_client * tc)
 {
@@ -78,7 +79,7 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
     g_free(tc->password);
     tc->password = NULL;
 
-    port = gconf_client_get_int(gconf, TRG_GCONF_KEY_PORT, &error);
+    port = gconf_client_get_int_or_default(gconf, TRG_GCONF_KEY_PORT, TRG_PORT_DEFAULT, &error);
     check_for_error(error);
 
     host = gconf_client_get_string(gconf, TRG_GCONF_KEY_HOSTNAME, &error);
@@ -95,10 +96,10 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
     g_free(host);
 
     tc->interval =
-        gconf_client_get_int(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, &error);
+        gconf_client_get_int_or_default(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, TRG_INTERVAL_DEFAULT, &error);
     check_for_error(error);
     if (tc->interval < 1)
-        tc->interval = 3;
+        tc->interval = TRG_INTERVAL_DEFAULT;
 
     tc->username =
         gconf_client_get_string(gconf, TRG_GCONF_KEY_USERNAME, &error);

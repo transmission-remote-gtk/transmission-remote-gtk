@@ -32,6 +32,7 @@
 #include "trg-json-widgets.h"
 #include "trg-main-window.h"
 #include "trg-preferences.h"
+#include "util.h"
 
 #define TRG_PREFERENCES_DIALOG_GET_PRIVATE(object) \
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), TRG_TYPE_PREFERENCES_DIALOG, TrgPreferencesDialogPrivate))
@@ -151,12 +152,11 @@ static void spun_cb_int(GtkWidget * widget, gpointer gconf)
 }
 
 static GtkWidget *new_spin_button(GConfClient * gconf,
-                                  const char *key,
-                                  int low, int high, int step)
+                                  const gchar *key,
+                                  int low, int high, int step, int deflt)
 {
     GtkWidget *w;
     gint currentValue;
-    GError *error = NULL;
 
     w = gtk_spin_button_new_with_range(low, high, step);
     g_object_set_data_full(G_OBJECT(w), GCONF_OBJECT_KEY,
@@ -164,14 +164,9 @@ static GtkWidget *new_spin_button(GConfClient * gconf,
 
     gtk_spin_button_set_digits(GTK_SPIN_BUTTON(w), 0);
 
-    currentValue = gconf_client_get_int(gconf, key, &error);
+    currentValue = gconf_client_get_int_or_default(gconf, key, deflt, NULL);
 
-    if (error != NULL) {
-        g_error_free(error);
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), 9091);
-    } else {
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), currentValue);
-    }
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), currentValue);
 
     g_signal_connect(w, "value-changed", G_CALLBACK(spun_cb_int), gconf);
 
@@ -338,7 +333,7 @@ static GtkWidget *trg_prefs_serverPage(GConfClient * gconf,
     w = new_entry(gconf, TRG_GCONF_KEY_HOSTNAME);
     hig_workarea_add_row(t, &row, _("Host:"), w, NULL);
 
-    w = new_spin_button(gconf, TRG_GCONF_KEY_PORT, 1, 65535, 1);
+    w = new_spin_button(gconf, TRG_GCONF_KEY_PORT, 1, 65535, 1, TRG_PORT_DEFAULT);
     hig_workarea_add_row(t, &row, _("Port:"), w, NULL);
 
     w = new_check_button(gconf, _("Automatically connect"),
@@ -348,7 +343,7 @@ static GtkWidget *trg_prefs_serverPage(GConfClient * gconf,
     w = new_check_button(gconf, _("SSL"), TRG_GCONF_KEY_SSL);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = new_spin_button(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, 1, 60, 1);
+    w = new_spin_button(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, 1, 60, 1, TRG_INTERVAL_DEFAULT);
     g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb),
                      client);
     hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
