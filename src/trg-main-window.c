@@ -23,6 +23,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <glib/gstdio.h>
@@ -1157,9 +1158,15 @@ on_generic_interactive_action(JsonObject * response, int status,
         trg_dialog_error_handler(TRG_MAIN_WINDOW(data), response, status);
         gdk_threads_leave();
 
-        if (status == CURLE_OK || status == FAIL_RESPONSE_UNSUCCESSFUL)
+        if (status == CURLE_OK || status == FAIL_RESPONSE_UNSUCCESSFUL) {
+            struct timespec ts;
+            ts.tv_sec = 0;
+            ts.tv_nsec = 350000000;
+            nanosleep(&ts, NULL);
+
             dispatch_async(priv->client, torrent_get(FALSE),
                            on_torrent_get_interactive, data);
+        }
     }
 
     response_unref(response);
