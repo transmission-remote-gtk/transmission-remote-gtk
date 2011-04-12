@@ -83,16 +83,29 @@ fi
 %{_sysconfdir}/gconf/schemas/%{name}.schemas
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
-%{_datadir}/icons/hicolor/scalable/apps/transmission-remote-gtk.svg
-%{_datadir}/icons/hicolor/16x16/apps/transmission-remote-gtk.png
-%{_datadir}/icons/hicolor/22x22/apps/transmission-remote-gtk.png
-%{_datadir}/icons/hicolor/24x24/apps/transmission-remote-gtk.png
-%{_datadir}/icons/hicolor/32x32/apps/transmission-remote-gtk.png
-%{_datadir}/icons/hicolor/48x48/apps/transmission-remote-gtk.png
-%{_datadir}/locale/de/LC_MESSAGES/transmission-remote-gtk.mo
-%{_datadir}/locale/ko/LC_MESSAGES/transmission-remote-gtk.mo
+%{_datadir}/icons/hicolor/scalable/apps/%{name}.svg
+%{_datadir}/icons/hicolor/16x16/apps/%{name}.png
+%{_datadir}/icons/hicolor/22x22/apps/%{name}.png
+%{_datadir}/icons/hicolor/24x24/apps/%{name}.png
+%{_datadir}/icons/hicolor/32x32/apps/%{name}.png
+%{_datadir}/icons/hicolor/48x48/apps/%{name}.png
+%{_datadir}/locale/de/LC_MESSAGES/%{name}.mo
+%{_datadir}/locale/ko/LC_MESSAGES/%{name}.mo
+%{_datadir}/locale/pl/LC_MESSAGES/%{name}.mo
+%{_datadir}/locale/ru/LC_MESSAGES/%{name}.mo
 
 %changelog
+* Tue Apr 12 2011 Alan Fitton <alan@eth0.org.uk> - 0.4
+- Torrent add dialog.
+- Support for active only updates.
+- Other update performance improvements.
+- Pause/Resume all.
+- Polish and Russian translation.
+- Torrent added date/time column.
+- Fix gconf ints defaulting to one in prefs dialog.
+- Fix crash disconnecting with graph disabled.
+- Fix crash disabling tracker/dir filters while disconnected.
+
 * Sat Mar 11 2011 Alan Fitton <alan@eth0.org.uk> - 0.3
 - Case insensitive text filtering.
 - Speed graph.

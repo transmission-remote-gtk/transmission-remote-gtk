@@ -93,7 +93,7 @@ static void trg_torrent_move_dialog_init(TrgTorrentMoveDialog * self)
 
     w = priv->location_combo = gtk_combo_box_entry_new_text();
     g_signal_connect(w, "changed", G_CALLBACK(location_changed), self);
-    w = hig_workarea_add_row(t, &row, _("Location:"), w, NULL);
+    hig_workarea_add_row(t, &row, _("Location:"), w, NULL);
 
     priv->move_check =
         hig_workarea_add_wide_checkbutton(t, &row, _("Move"), TRUE);

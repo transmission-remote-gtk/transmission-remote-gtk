@@ -83,7 +83,7 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
 
     w = priv->urlEntry = gtk_entry_new();
     g_signal_connect(w, "changed", G_CALLBACK(url_entry_changed), self);
-    w = hig_workarea_add_row(t, &row, "URL:", w, NULL);
+    hig_workarea_add_row(t, &row, _("URL:"), w, NULL);
 
     priv->startCheck =
         hig_workarea_add_wide_checkbutton(t, &row, _("Start Paused"),

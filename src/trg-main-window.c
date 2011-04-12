@@ -272,13 +272,11 @@ static void torrent_event_notification(TrgTorrentModel * model,
                                        gint tmout, gchar * prefKey,
                                        GtkTreeIter * iter, gpointer data)
 {
-    TrgMainWindowPrivate *priv;
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     gchar *name;
     NotifyNotification *notify;
 
-    priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-
-    if (priv->statusIcon == NULL
+    if (!priv->statusIcon
         || !gtk_status_icon_is_embedded(priv->statusIcon))
         return;
 
@@ -847,7 +845,7 @@ static void on_session_get(JsonObject * response, int status,
 
     newSession = get_arguments(response);
 
-    if (client->session == NULL) {
+    if (!client->session) {
         float version;
         if (session_get_version(newSession, &version))
         {
@@ -1099,9 +1097,7 @@ static gboolean
 trg_dialog_error_handler(TrgMainWindow * win, JsonObject * response,
                          int status)
 {
-    TrgMainWindowPrivate *priv;
-
-    priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
     if (status != CURLE_OK) {
         GtkWidget *dialog;
@@ -1126,16 +1122,9 @@ trg_dialog_error_handler(TrgMainWindow * win, JsonObject * response,
 static gboolean
 torrent_selection_changed(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
-    TrgMainWindow *win;
-    TrgMainWindowPrivate *priv;
-    gboolean isSelected;
-    trg_client *client;
-
-    priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-    win = TRG_MAIN_WINDOW(data);
-    client = priv->client;
-
-    isSelected = update_selected_torrent_notebook(win, TORRENT_GET_MODE_FIRST);
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    TrgMainWindow *win = TRG_MAIN_WINDOW(data);
+    gboolean isSelected = update_selected_torrent_notebook(win, TORRENT_GET_MODE_FIRST);
 
     trg_toolbar_torrent_actions_sensitive(priv->toolBar, isSelected);
     trg_menu_bar_torrent_actions_sensitive(priv->menuBar, isSelected);
@@ -1153,7 +1142,7 @@ on_generic_interactive_action(JsonObject * response, int status,
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
-    if (priv->client->session != NULL) {
+    if (priv->client->session) {
         gdk_threads_enter();
         trg_dialog_error_handler(TRG_MAIN_WINDOW(data), response, status);
         gdk_threads_leave();
@@ -1389,10 +1378,10 @@ static void set_limit_cb(GtkWidget * w, gpointer data)
 
     JsonNode *req = NULL;
     JsonObject *args;
-    if (limitIds == NULL) {
-        req = session_set();
-    } else {
+    if (limitIds) {
         req = torrent_set((JsonArray *) limitIds);
+    } else {
+        req = session_set();
     }
 
     args = node_get_arguments(req);
@@ -1402,11 +1391,11 @@ static void set_limit_cb(GtkWidget * w, gpointer data)
 
     json_object_set_boolean_member(args, enabledKey, speed >= 0);
 
-    if (limitIds == NULL)
-        dispatch_async(priv->client, req, on_session_set, data);
-    else
+    if (limitIds)
         dispatch_async(priv->client, req, on_generic_interactive_action,
-                       data);
+                               data);
+    else
+        dispatch_async(priv->client, req, on_session_set, data);
 }
 
 static GtkWidget *limit_item_new(TrgMainWindow * win, GtkWidget * menu,
@@ -1443,11 +1432,11 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
     GtkWidget *toplevel, *menu, *item;
     gint64 limit;
 
-    if (ids == NULL)
-        current = priv->client->session;
-    else
+    if (ids)
         get_first_selected(priv->client, priv->torrentTreeView, &iter,
-                           &current);
+                                   &current);
+    else
+        current = priv->client->session;
 
     limit = json_object_get_boolean_member(current, enabledKey) ?
         json_object_get_int_member(current, speedKey) : -1;
@@ -1673,7 +1662,7 @@ static void status_bar_text_pushed(GtkStatusbar * statusbar,
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(user_data);
 
-    if (priv->statusIcon != NULL)
+    if (priv->statusIcon)
         gtk_status_icon_set_tooltip(priv->statusIcon, text);
 }
 
@@ -1683,7 +1672,7 @@ static gboolean window_state_event(GtkWidget * widget,
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(widget);
 
-    if (priv->statusIcon != NULL
+    if (priv->statusIcon
         && event->changed_mask == GDK_WINDOW_STATE_ICONIFIED
         && (event->new_window_state == GDK_WINDOW_STATE_ICONIFIED
             || event->new_window_state ==
@@ -1709,7 +1698,7 @@ void trg_main_window_remove_status_icon(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
-    if (priv->statusIcon != NULL)
+    if (priv->statusIcon)
         g_object_unref(G_OBJECT(priv->statusIcon));
 
     priv->statusIcon = NULL;
@@ -1747,7 +1736,7 @@ void trg_main_window_add_status_icon(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
-    if (priv->icon == NULL)
+    if (!priv->icon)
         return;
 
     priv->statusIcon = gtk_status_icon_new_from_pixbuf(priv->icon);
@@ -1964,7 +1953,7 @@ void auto_connect_if_required(TrgMainWindow * win, trg_client * tc)
     gchar *host =
         gconf_client_get_string(tc->gconf, TRG_GCONF_KEY_HOSTNAME,
                                 NULL);
-    if (host != NULL) {
+    if (host) {
         gint len = strlen(host);
         g_free(host);
         if (len > 0

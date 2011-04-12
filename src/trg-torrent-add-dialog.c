@@ -194,15 +194,19 @@ static GtkWidget *trg_destination_folder_new(trg_client * client)
     GList *li;
     GList *torrentItemRefs;
 
+    GtkTreeRowReference *rr;
+    GtkTreeModel *model;
+    GtkTreePath *path;
+    JsonObject *t;
+
     g_slist_str_set_add(&dirs, defaultDownDir);
 
     g_mutex_lock(client->updateMutex);
     torrentItemRefs = g_hash_table_get_values(client->torrentTable);
     for (li = torrentItemRefs; li; li = g_list_next(li)) {
-        GtkTreeRowReference *rr = (GtkTreeRowReference*)li->data;
-        GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
-        GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
-        JsonObject *t = NULL;
+        rr = (GtkTreeRowReference*)li->data;
+        model = gtk_tree_row_reference_get_model(rr);
+        path = gtk_tree_row_reference_get_path(rr);
 
         if (path) {
             GtkTreeIter iter;
