@@ -189,25 +189,39 @@ static GtkWidget *trg_destination_folder_new(trg_client * client)
 {
     const gchar *defaultDownDir = json_object_get_string_member(client->session, SGET_DOWNLOAD_DIR);
     GtkWidget *combo = gtk_combo_box_entry_new_text();
-    int i;
     GSList *dirs = NULL;
-    GSList *li;
+    GSList *sli;
+    GList *li;
+    GList *torrentItemRefs;
 
     g_slist_str_set_add(&dirs, defaultDownDir);
 
     g_mutex_lock(client->updateMutex);
-    for (i = 0; i < json_array_get_length(client->torrents); i++) {
-        JsonObject *t = json_node_get_object(json_array_get_element(client->torrents, i));
-        const gchar *dd = torrent_get_download_dir(t);
-        if (dd) {
-            g_printf("dd: %s\n", dd);
-            g_slist_str_set_add(&dirs, dd);
+    torrentItemRefs = g_hash_table_get_values(client->torrentTable);
+    for (li = torrentItemRefs; li; li = g_list_next(li)) {
+        GtkTreeRowReference *rr = (GtkTreeRowReference*)li->data;
+        GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
+        GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+        JsonObject *t = NULL;
+
+        if (path) {
+            GtkTreeIter iter;
+            if (gtk_tree_model_get_iter(model, &iter, path)) {
+                const gchar *dd;
+                gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &t, -1);
+                dd = torrent_get_download_dir(t);
+                if (dd)
+                    g_slist_str_set_add(&dirs, dd);
+
+            }
+            gtk_tree_path_free(path);
         }
     }
+    g_list_free(torrentItemRefs);
     g_mutex_unlock(client->updateMutex);
 
-    for (li = dirs; li != NULL; li = g_slist_next(li))
-        gtk_combo_box_append_text(GTK_COMBO_BOX(combo), (gchar*)li->data);
+    for (sli = dirs; sli != NULL; sli = g_slist_next(sli))
+        gtk_combo_box_append_text(GTK_COMBO_BOX(combo), (gchar*)sli->data);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
     g_str_slist_free(dirs);

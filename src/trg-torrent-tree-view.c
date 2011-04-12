@@ -65,7 +65,6 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
                                    TORRENT_COLUMN_ADDED, -1);
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tv),
                                     TORRENT_COLUMN_NAME);
-
 }
 
 gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
@@ -76,7 +75,6 @@ gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
     GList *selectionList;
     GList *firstNode;
     gint64 id = -1;
-    gint64 updateSerial = -1;
 
     model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
 
@@ -87,14 +85,8 @@ gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
         if (gtk_tree_model_get_iter
             (model, iter, (GtkTreePath *) firstNode->data)) {
             gtk_tree_model_get(model, iter, TORRENT_COLUMN_JSON, json,
-                               TORRENT_COLUMN_ID, &id,
-                               TORRENT_COLUMN_UPDATESERIAL, &updateSerial,
-                               -1);
+                               TORRENT_COLUMN_ID, &id, -1);
 
-            /* This is about to be removed and won't have valid JSON pointed
-             * to by the model. */
-            if (updateSerial < client->updateSerial)
-                id = -1;
         }
     }
 

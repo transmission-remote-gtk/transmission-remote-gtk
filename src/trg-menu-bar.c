@@ -31,7 +31,9 @@ enum {
     PROP_REMOVE_BUTTON,
     PROP_DELETE_BUTTON,
     PROP_RESUME_BUTTON,
+    PROP_RESUME_ALL_BUTTON,
     PROP_PAUSE_BUTTON,
+    PROP_PAUSE_ALL_BUTTON,
     PROP_VERIFY_BUTTON,
     PROP_REANNOUNCE_BUTTON,
     PROP_PROPS_BUTTON,
@@ -60,6 +62,8 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_delete;
     GtkWidget *mb_resume;
     GtkWidget *mb_pause;
+    GtkWidget *mb_resume_all;
+    GtkWidget *mb_pause_all;
     GtkWidget *mb_verify;
     GtkWidget *mb_reannounce;
     GtkWidget *mb_props;
@@ -82,6 +86,8 @@ void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
     gtk_widget_set_sensitive(priv->mb_disconnect, connected);
     gtk_widget_set_sensitive(priv->mb_remote_prefs, connected);
     gtk_widget_set_sensitive(priv->mb_view_stats, connected);
+    gtk_widget_set_sensitive(priv->mb_resume_all, connected);
+    gtk_widget_set_sensitive(priv->mb_pause_all, connected);
 }
 
 void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
@@ -129,8 +135,14 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
     case PROP_RESUME_BUTTON:
         g_value_set_object(value, priv->mb_resume);
         break;
+    case PROP_RESUME_ALL_BUTTON:
+        g_value_set_object(value, priv->mb_resume_all);
+        break;
     case PROP_PAUSE_BUTTON:
         g_value_set_object(value, priv->mb_pause);
+        break;
+    case PROP_PAUSE_ALL_BUTTON:
+        g_value_set_object(value, priv->mb_pause_all);
         break;
     case PROP_VERIFY_BUTTON:
         g_value_set_object(value, priv->mb_verify);
@@ -312,6 +324,15 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
                               _("Remove and Delete"), GTK_STOCK_DELETE,
                               FALSE);
 
+    gtk_menu_shell_append(GTK_MENU_SHELL(torrentMenu), gtk_separator_menu_item_new());
+
+    priv->mb_resume_all =
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Resume All"),
+                              GTK_STOCK_MEDIA_PLAY, FALSE);
+    priv->mb_pause_all =
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Pause All"),
+                              GTK_STOCK_MEDIA_PAUSE, FALSE);
+
     return torrent;
 }
 
@@ -357,11 +378,15 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "delete-button", "Delete Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_RESUME_BUTTON,
                                      "resume-button", "Resume Button");
+    trg_menu_bar_install_widget_prop(object_class, PROP_RESUME_ALL_BUTTON,
+                                     "resume-all-button", "Resume All Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_VERIFY_BUTTON,
                                      "verify-button", "Verify Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_REANNOUNCE_BUTTON,
                                      "reannounce-button",
                                      "Re-announce Button");
+    trg_menu_bar_install_widget_prop(object_class, PROP_PAUSE_ALL_BUTTON,
+                                     "pause-all-button", "Pause All Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PAUSE_BUTTON,
                                      "pause-button", "Pause Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PROPS_BUTTON,

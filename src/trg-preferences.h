@@ -42,6 +42,7 @@
 #define TRG_GCONF_KEY_LAST_TORRENT_DIR "/apps/transmission-remote-gtk/last-torrent-dir"
 #define TRG_GCONF_KEY_ADD_OPTIONS_DIALOG "/apps/transmission-remote-gtk/add-options-dialog"
 #define TRG_GCONF_KEY_START_PAUSED "/apps/transmission-remote-gtk/start-paused"
+#define TRG_GCONF_KEY_UPDATE_ACTIVE_ONLY "/apps/transmission-remote-gtk/update-active-only"
 
 gboolean pref_get_start_paused(GConfClient * gcc);
 gboolean pref_get_add_options_dialog(GConfClient * gcc);

@@ -68,8 +68,7 @@
 #include "trg-remote-prefs-dialog.h"
 #include "trg-preferences-dialog.h"
 
-static gboolean update_selected_torrent_notebook(TrgMainWindow * win,
-                                                 gboolean first);
+static gboolean update_selected_torrent_notebook(TrgMainWindow * win, gint mode);
 static void torrent_event_notification(TrgTorrentModel * model,
                                        gchar * icon, gchar * desc,
                                        gint tmout, gchar * prefKey,
@@ -119,6 +118,7 @@ static void on_torrent_get(JsonObject * response,
                            int mode, int status, gpointer data);
 static void on_torrent_get_first(JsonObject * response, int status,
                                  gpointer data);
+static void on_torrent_get_active(JsonObject *response, int status, gpointer data);
 static void on_torrent_get_update(JsonObject * response, int status,
                                   gpointer data);
 static void on_torrent_get_interactive(JsonObject * response, int status,
@@ -126,8 +126,7 @@ static void on_torrent_get_interactive(JsonObject * response, int status,
 static gboolean trg_update_torrents_timerfunc(gpointer data);
 static void trg_main_window_update_notebook_displays(TrgMainWindow * win,
                                                      JsonObject * t,
-                                                     GtkTreeIter * iter,
-                                                     gboolean first);
+                                                     GtkTreeIter * iter, gint mode);
 static void open_about_cb(GtkWidget * w, GtkWindow * parent);
 static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
                                                    GtkTreeIter * iter,
@@ -165,7 +164,7 @@ static GtkWidget *trg_imagemenuitem_new(GtkMenuShell * shell, char *text,
                                         GCallback cb, gpointer cbdata);
 static void set_limit_cb(GtkWidget * w, gpointer data);
 static GtkWidget *limit_item_new(TrgMainWindow * win, GtkWidget * menu,
-                                 gint64 currentLimit, gint limit);
+                                 gint64 currentLimit, gfloat limit);
 static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
                                  gchar * enabledKey, gchar * speedKey,
                                  JsonArray * ids);
@@ -241,8 +240,7 @@ static void trg_main_window_init(TrgMainWindow * self G_GNUC_UNUSED)
 {
 }
 
-static gboolean update_selected_torrent_notebook(TrgMainWindow * win,
-                                                 gboolean first)
+static gboolean update_selected_torrent_notebook(TrgMainWindow * win, gint mode)
 {
     TrgMainWindowPrivate *priv;
     GtkTreeIter iter;
@@ -261,7 +259,7 @@ static gboolean update_selected_torrent_notebook(TrgMainWindow * win,
     }
 
     if ((priv->selectedTorrentId = newFirstSelected) >= 0) {
-        trg_main_window_update_notebook_displays(win, json, &iter, first);
+        trg_main_window_update_notebook_displays(win, json, &iter, mode);
         return TRUE;
     }
 
@@ -440,7 +438,6 @@ static void resume_all_cb(GtkWidget *w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
-    g_printf("%s\n", __func__);
     dispatch_async(priv->client,
                    torrent_start(NULL),
                    on_generic_interactive_action, data);
@@ -516,7 +513,7 @@ static void open_local_prefs_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 
     GtkWidget *dlg =
         trg_preferences_dialog_get_instance(TRG_MAIN_WINDOW(data),
-                                            priv->client->gconf);
+                                            priv->client);
     gtk_widget_show_all(dlg);
 }
 
@@ -850,15 +847,32 @@ static void on_session_get(JsonObject * response, int status,
     newSession = get_arguments(response);
 
     if (client->session == NULL) {
+        float version;
+        if (session_get_version(newSession, &version))
+        {
+            if (version < TRANSMISSION_MIN_SUPPORTED) {
+                gchar *msg = g_strdup_printf(_("This application supports Transmission %.2f and later, you have %.2f."), TRANSMISSION_MIN_SUPPORTED, version);
+                GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(win),
+                                                GTK_DIALOG_MODAL,
+                                                GTK_MESSAGE_ERROR,
+                                                GTK_BUTTONS_OK, "%s", msg);
+                gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+                gtk_dialog_run(GTK_DIALOG(dialog));
+                gtk_widget_destroy(dialog);
+                g_free(msg);
+                goto out;
+            }
+        }
+
         trg_status_bar_connect(priv->statusBar, newSession);
         trg_main_window_conn_changed(win, TRUE);
-
-        dispatch_async(client, torrent_get(), on_torrent_get_first, data);
+        dispatch_async(client, torrent_get(FALSE), on_torrent_get_first, data);
     }
 
     trg_client_set_session(client, newSession);
     trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
 
+out:
     gdk_threads_leave();
     json_object_ref(newSession);
     response_unref(response);
@@ -871,15 +885,12 @@ on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
 
     trg_client *client = priv->client;
     trg_torrent_model_update_stats stats;
-    gboolean first;
 
     /* Disconnected between request and response callback */
-    if (client->session == NULL) {
+    if (!client->session) {
         response_unref(response);
         return;
     }
-
-    first = (mode == TORRENT_GET_MODE_FIRST);
 
     g_mutex_lock(client->updateMutex);
     gdk_threads_enter();
@@ -921,9 +932,10 @@ on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
     client->updateSerial++;
 
     trg_torrent_model_update(priv->torrentModel, priv->client,
-                             response, &stats, first);
+                             response, &stats, mode);
+    trg_torrent_model_stats_scan(priv->torrentModel, &stats);
 
-    update_selected_torrent_notebook(TRG_MAIN_WINDOW(data), first);
+    update_selected_torrent_notebook(TRG_MAIN_WINDOW(data), mode);
 
     trg_status_bar_update(priv->statusBar, &stats);
 
@@ -937,6 +949,12 @@ on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
     gdk_threads_leave();
     g_mutex_unlock(client->updateMutex);
     response_unref(response);
+}
+
+static void
+on_torrent_get_active(JsonObject *response, int status, gpointer data)
+{
+    on_torrent_get(response, TORRENT_GET_MODE_ACTIVE, status, data);
 }
 
 static void
@@ -961,8 +979,9 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
-    if (priv->client->session != NULL)
-        dispatch_async(priv->client, torrent_get(), on_torrent_get_update,
+    if (priv->client->session)
+        dispatch_async(priv->client, torrent_get(priv->client->activeOnlyUpdate),
+                priv->client->activeOnlyUpdate ? on_torrent_get_active : on_torrent_get_update,
                        data);
 
     return FALSE;
@@ -971,19 +990,18 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
 static void
 trg_main_window_update_notebook_displays(TrgMainWindow * win,
                                          JsonObject * t,
-                                         GtkTreeIter * iter,
-                                         gboolean first)
+                                         GtkTreeIter * iter, gint mode)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     trg_client *client = priv->client;
 
     trg_general_panel_update(priv->genDetails, t, iter);
     trg_trackers_model_update(priv->trackersModel, client->updateSerial, t,
-                              first);
+            mode);
     trg_files_model_update(priv->filesModel, client->updateSerial, t,
-                           first);
+            mode);
     trg_peers_model_update(priv->peersModel, client->updateSerial, t,
-                           first);
+            mode);
 }
 
 static void open_about_cb(GtkWidget * w G_GNUC_UNUSED, GtkWindow * parent)
@@ -1094,7 +1112,7 @@ trg_dialog_error_handler(TrgMainWindow * win, JsonObject * response,
                                         GTK_DIALOG_MODAL,
                                         GTK_MESSAGE_ERROR,
                                         GTK_BUTTONS_OK, "%s", msg);
-        gtk_window_set_title(GTK_WINDOW(dialog), "Error");
+        gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
         gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
         g_free((gpointer) msg);
@@ -1116,7 +1134,7 @@ torrent_selection_changed(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     win = TRG_MAIN_WINDOW(data);
     client = priv->client;
 
-    isSelected = update_selected_torrent_notebook(win, TRUE);
+    isSelected = update_selected_torrent_notebook(win, TORRENT_GET_MODE_FIRST);
 
     trg_toolbar_torrent_actions_sensitive(priv->toolBar, isSelected);
     trg_menu_bar_torrent_actions_sensitive(priv->menuBar, isSelected);
@@ -1140,7 +1158,7 @@ on_generic_interactive_action(JsonObject * response, int status,
         gdk_threads_leave();
 
         if (status == CURLE_OK || status == FAIL_RESPONSE_UNSUCCESSFUL)
-            dispatch_async(priv->client, torrent_get(),
+            dispatch_async(priv->client, torrent_get(FALSE),
                            on_torrent_get_interactive, data);
     }
 
@@ -1248,7 +1266,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
     GObject *b_connect, *b_disconnect, *b_add, *b_resume, *b_pause,
         *b_verify, *b_remove, *b_delete, *b_props, *b_local_prefs,
         *b_remote_prefs, *b_about, *b_view_states, *b_view_notebook,
-        *b_view_stats, *b_add_url, *b_quit, *b_move, *b_reannounce;
+        *b_view_stats, *b_add_url, *b_quit, *b_move, *b_reannounce,
+        *b_pause_all, *b_resume_all;
     TrgMenuBar *menuBar;
 
     menuBar = trg_menu_bar_new(win);
@@ -1258,7 +1277,9 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                  "add-button", &b_add,
                  "add-url-button", &b_add_url,
                  "resume-button", &b_resume,
+                 "resume-all-button", &b_resume_all,
                  "pause-button", &b_pause,
+                 "pause-all-button", &b_pause_all,
                  "delete-button", &b_delete,
                  "remove-button", &b_remove,
                  "move-button", &b_move,
@@ -1278,7 +1299,9 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
     g_signal_connect(b_add, "activate", G_CALLBACK(add_cb), win);
     g_signal_connect(b_add_url, "activate", G_CALLBACK(add_url_cb), win);
     g_signal_connect(b_resume, "activate", G_CALLBACK(resume_cb), win);
+    g_signal_connect(b_resume_all, "activate", G_CALLBACK(resume_all_cb), win);
     g_signal_connect(b_pause, "activate", G_CALLBACK(pause_cb), win);
+    g_signal_connect(b_pause_all, "activate", G_CALLBACK(pause_all_cb), win);
     g_signal_connect(b_verify, "activate", G_CALLBACK(verify_cb), win);
     g_signal_connect(b_reannounce, "activate", G_CALLBACK(reannounce_cb),
                      win);
@@ -1380,16 +1403,21 @@ static void set_limit_cb(GtkWidget * w, gpointer data)
 }
 
 static GtkWidget *limit_item_new(TrgMainWindow * win, GtkWidget * menu,
-                                 gint64 currentLimit, gint limit)
+                                 gint64 currentLimit, gfloat limit)
 {
     char speed[32];
     GtkWidget *item;
     gboolean active = limit < 0 ? FALSE : (currentLimit == (gint64) limit);
 
-    g_snprintf(speed, sizeof(speed), "%d KB/s", limit);
+	if (limit >= 1000)
+		g_snprintf(speed, sizeof(speed), "%.2f MB/s", limit / 1000);
+	else
+		g_snprintf(speed, sizeof(speed), "%.0f KB/s", limit);
+
     item = gtk_check_menu_item_new_with_label(speed);
 
-    g_object_set_data(G_OBJECT(item), "limit", GINT_TO_POINTER(limit));
+	/* Yeah, I know it's unsafe to cast from a float to an int, but its safe here */
+    g_object_set_data(G_OBJECT(item), "limit", GINT_TO_POINTER((gint)limit));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), active);
     g_signal_connect(item, "activate", G_CALLBACK(set_limit_cb), win);
 
@@ -1452,6 +1480,13 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
     limit_item_new(win, menu, limit, 300);
     limit_item_new(win, menu, limit, 400);
     limit_item_new(win, menu, limit, 500);
+    limit_item_new(win, menu, limit, 750);
+    limit_item_new(win, menu, limit, 1000);
+    limit_item_new(win, menu, limit, 1250);
+    limit_item_new(win, menu, limit, 1500);
+    limit_item_new(win, menu, limit, 2000);
+    limit_item_new(win, menu, limit, 2500);
+    limit_item_new(win, menu, limit, 3000);
 
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(toplevel), menu);
 
@@ -1766,6 +1801,8 @@ static GObject *trg_main_window_constructor(GType type,
                      G_CALLBACK(window_state_event), NULL);
 
     priv->torrentModel = trg_torrent_model_new();
+    priv->client->torrentTable = get_torrent_table(priv->torrentModel);
+
     g_signal_connect(priv->torrentModel, "torrent-completed",
                      G_CALLBACK(on_torrent_completed), self);
     g_signal_connect(priv->torrentModel, "torrent-added",

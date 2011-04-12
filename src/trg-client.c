@@ -45,6 +45,7 @@ trg_client *trg_init_client()
     client = g_new0(trg_client, 1);
     client->gconf = gconf_client_get_default();
     client->updateMutex = g_mutex_new();
+    client->activeOnlyUpdate = gconf_client_get_bool(client->gconf, TRG_GCONF_KEY_UPDATE_ACTIVE_ONLY, NULL);
 
     return client;
 }
@@ -56,7 +57,7 @@ void trg_client_set_session(trg_client * tc, JsonObject * session)
     if (tc->session != NULL)
         json_object_unref(tc->session);
 
-    session_get_version(session, &(tc->version));
+    session_get_version(session, &tc->version);
 
     tc->session = session;
 }

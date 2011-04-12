@@ -53,10 +53,6 @@ typedef struct {
     GtkWindowClass parent_class;
 } TrgMainWindowClass;
 
-#define TORRENT_GET_MODE_FIRST 0
-#define TORRENT_GET_MODE_INTERACTION 1
-#define TORRENT_GET_MODE_UPDATE 2
-
 #define TORRENT_COMPLETE_NOTIFY_TMOUT 8000
 #define TORRENT_ADD_NOTIFY_TMOUT 3000
 

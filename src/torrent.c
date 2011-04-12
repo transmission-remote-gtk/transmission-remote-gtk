@@ -265,6 +265,14 @@ const gchar *tracker_get_scrape(JsonObject * t)
     return json_object_get_string_member(t, FIELD_SCRAPE);
 }
 
+JsonArray *get_torrents_removed(JsonObject *response)
+{
+    if (G_UNLIKELY(json_object_has_member(response, FIELD_REMOVED)))
+        return json_object_get_array_member(response, FIELD_REMOVED);
+    else
+        return NULL;
+}
+
 JsonArray *get_torrents(JsonObject * response)
 {
     return json_object_get_array_member(response, FIELD_TORRENTS);

@@ -20,6 +20,13 @@
 #ifndef TRG_CLIENT_H_
 #define TRG_CLIENT_H_
 
+#define TRANSMISSION_MIN_SUPPORTED 2.0
+
+#define TORRENT_GET_MODE_FIRST 0
+#define TORRENT_GET_MODE_ACTIVE 1
+#define TORRENT_GET_MODE_INTERACTION 2
+#define TORRENT_GET_MODE_UPDATE 3
+
 #define TRG_GCONF_SCHEMA_ERROR -1
 #define TRG_NO_HOSTNAME_SET -2
 
@@ -30,6 +37,7 @@
 
 typedef struct {
     char *session_id;
+    gboolean activeOnlyUpdate;
     gint failCount;
     gint interval;
     gint64 updateSerial;
@@ -40,7 +48,7 @@ typedef struct {
     char *username;
     char *password;
     char *proxy;
-    JsonArray *torrents;
+    GHashTable *torrentTable;
     GConfClient *gconf;
     GMutex *updateMutex;
 } trg_client;

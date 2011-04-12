@@ -31,6 +31,7 @@
 #endif
 
 #include "torrent.h"
+#include "trg-client.h"
 #include "tpeer.h"
 #include "trg-peers-model.h"
 #include "trg-model.h"
@@ -123,7 +124,7 @@ static void resolved_dns_cb(GObject * source_object,
 }
 
 void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
-                            JsonObject * t, gboolean first)
+                            JsonObject * t, gint mode)
 {
 #ifdef HAVE_GEOIP
     TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
@@ -131,23 +132,22 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
     JsonArray *peers;
     GtkTreeIter peerIter;
-    guint j;
+    GList *li;
     gboolean isNew;
 
     peers = torrent_get_peers(t);
 
-    if (first == TRUE)
+    if (mode == TORRENT_GET_MODE_FIRST)
         gtk_list_store_clear(GTK_LIST_STORE(model));
 
-    for (j = 0; j < json_array_get_length(peers); j++) {
-        JsonObject *peer;
+    for (li = json_array_get_elements(peers); li; li = g_list_next(li)) {
+        JsonObject *peer = json_node_get_object((JsonNode*)li->data);
         const gchar *address = NULL, *flagStr;
 #ifdef HAVE_GEOIP
         const gchar *country = NULL;
 #endif
-        peer = json_node_get_object(json_array_get_element(peers, j));
 
-        if (first == TRUE
+        if (mode == TORRENT_GET_MODE_FIRST
             || find_existing_peer_item(model, peer, &peerIter) == FALSE) {
             gtk_list_store_append(GTK_LIST_STORE(model), &peerIter);
 
@@ -204,7 +204,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
         }
     }
 
-    if (first == FALSE)
+    if (mode != TORRENT_GET_MODE_FIRST)
         trg_model_remove_removed(GTK_LIST_STORE(model),
                                  PEERSCOL_UPDATESERIAL, updateSerial);
 }

@@ -21,6 +21,7 @@
 #include <json-glib/json-glib.h>
 
 #include "trg-files-model.h"
+#include "trg-client.h"
 #include "torrent.h"
 #include "tfile.h"
 #include "util.h"
@@ -129,30 +130,29 @@ trg_files_model_update_foreach(GtkListStore * model,
 
 void
 trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
-                       JsonObject * t, gboolean first)
+                       JsonObject * t, gint mode)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
-    guint j;
-
-    if (first)
-        gtk_list_store_clear(GTK_LIST_STORE(model));
+    GList *li;
+    gint j = 0;
 
     priv->torrentId = torrent_get_id(t);
     priv->priorities = torrent_get_priorities(t);
     priv->wanted = torrent_get_wanted(t);
     priv->files = torrent_get_files(t);
 
-    if (first == TRUE) {
+    if (mode == TORRENT_GET_MODE_FIRST) {
+        gtk_list_store_clear(GTK_LIST_STORE(model));
         priv->accept = TRUE;
-        for (j = 0; j < json_array_get_length(priv->files); j++) {
+        for (li = json_array_get_elements(priv->files); li; li = g_list_next(li)) {
             JsonObject *file =
-                json_node_get_object(json_array_get_element
-                                     (priv->files, j));
+                json_node_get_object((JsonNode*)li->data);
             GtkTreeIter filesIter;
             trg_files_model_iter_new(model, &filesIter, file, j);
             trg_files_model_iter_update(model, &filesIter,
                                         file, priv->wanted,
                                         priv->priorities, j);
+            j++;
         }
     } else {
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),

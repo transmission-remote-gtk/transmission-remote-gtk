@@ -73,7 +73,10 @@ find_existing_peer_item(GtkListStore * model, JsonObject * p,
 void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
                               JsonObject * response,
                               trg_torrent_model_update_stats * stats,
-                              gboolean first);
+                              gint mode);
+
+void trg_torrent_model_stats_scan(TrgTorrentModel *model, trg_torrent_model_update_stats *stats);
+GHashTable *get_torrent_table(TrgTorrentModel *model);
 
 enum {
     TORRENT_COLUMN_ICON,

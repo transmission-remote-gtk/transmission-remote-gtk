@@ -22,6 +22,7 @@
 
 #include "config.h"
 #include "torrent.h"
+#include "trg-client.h"
 #include "trg-model.h"
 #include "trg-trackers-model.h"
 
@@ -49,16 +50,16 @@ gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model)
 
 void trg_trackers_model_update(TrgTrackersModel * model,
                                gint64 updateSerial, JsonObject * t,
-                               gboolean first)
+                               gint mode)
 {
     TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
 
-    guint j;
     JsonArray *trackers;
+    GList *li;
     const gchar *announce;
     const gchar *scrape;
 
-    if (first) {
+    if (mode == TORRENT_GET_MODE_FIRST) {
         gtk_list_store_clear(GTK_LIST_STORE(model));
         priv->torrentId = torrent_get_id(t);
         priv->accept = TRUE;
@@ -68,16 +69,16 @@ void trg_trackers_model_update(TrgTrackersModel * model,
 
     trackers = torrent_get_trackers(t);
 
-    for (j = 0; j < json_array_get_length(trackers); j++) {
+    for (li = json_array_get_elements(trackers); li; li = g_list_next(li)) {
         GtkTreeIter trackIter;
         JsonObject *tracker =
-            json_node_get_object(json_array_get_element(trackers, j));
+            json_node_get_object((JsonNode*)li->data);
         gint64 trackerId = tracker_get_id(tracker);
 
         announce = tracker_get_announce(tracker);
         scrape = tracker_get_scrape(tracker);
 
-        if (first
+        if (mode == TORRENT_GET_MODE_FIRST
             || find_existing_model_item(GTK_TREE_MODEL(model),
                                         TRACKERCOL_ID, trackerId,
                                         &trackIter) == FALSE)

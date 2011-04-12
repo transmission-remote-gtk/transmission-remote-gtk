@@ -110,10 +110,18 @@ JsonNode *torrent_remove(JsonArray * array, gboolean removeData)
     return root;
 }
 
-JsonNode *torrent_get(void)
+JsonNode *torrent_get(gboolean recent)
 {
     JsonNode *root = base_request(METHOD_TORRENT_GET);
+    JsonObject *args = node_get_arguments(root);
     JsonArray *fields = json_array_new();
+
+    if (recent) {
+        JsonArray *ids = json_array_new();
+        json_array_add_string_element(ids, FIELD_RECENTLY_ACTIVE);
+        json_object_set_array_member(args, PARAM_IDS, ids);
+    }
+
     json_array_add_string_element(fields, FIELD_ETA);
     json_array_add_string_element(fields, FIELD_PEERS);
     json_array_add_string_element(fields, FIELD_FILES);
@@ -151,7 +159,7 @@ JsonNode *torrent_get(void)
     json_array_add_string_element(fields, FIELD_ERRORSTR);
     json_array_add_string_element(fields, FIELD_WANTED);
     json_array_add_string_element(fields, FIELD_PRIORITIES);
-    json_object_set_array_member(node_get_arguments(root),
+    json_object_set_array_member(args,
                                  PARAM_FIELDS, fields);
     return root;
 }

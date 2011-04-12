@@ -24,6 +24,7 @@
 
 #include "torrent.h"
 #include "trg-state-selector.h"
+#include "trg-torrent-model.h"
 #include "util.h"
 #include "trg-preferences.h"
 #include "trg-client.h"
@@ -216,22 +217,38 @@ void trg_state_selector_update(TrgStateSelector * s)
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
     trg_client *client = priv->client;
     GtkTreeIter iter;
-    int i, j;
+    GList *trackerItem, *li;
+    GList *torrentItemRefs = g_hash_table_get_values(client->torrentTable);
+
     struct cruft_remove_args cruft;
 
     if (!client->session)
         return;
 
-    for (i = 0; i < json_array_get_length(client->torrents); i++) {
-        JsonObject *t = json_array_get_object_element(client->torrents, i);
+    for (li = torrentItemRefs; li; li = g_list_next(li)) {
+        GtkTreeRowReference *rr = (GtkTreeRowReference*)li->data;
+        GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+        GtkTreeModel *torrentModel = gtk_tree_row_reference_get_model(rr);
+        JsonObject *t = NULL;
         gpointer result;
+
+        if (path) {
+            GtkTreeIter iter;
+            if (gtk_tree_model_get_iter(torrentModel, &iter, path)) {
+                gtk_tree_model_get(torrentModel, &iter, TORRENT_COLUMN_JSON, &t, -1);
+            }
+            gtk_tree_path_free(path);
+        }
+
+        if (!t)
+            continue;
 
         if (priv->showTrackers) {
             JsonArray *trackers = torrent_get_trackers(t);
 
-            for (j = 0; j < json_array_get_length(trackers); j++) {
+            for (trackerItem = json_array_get_elements(trackers); trackerItem; trackerItem = g_list_next(trackerItem)) {
                 JsonObject *tracker =
-                    json_array_get_object_element(trackers, j);
+                    json_node_get_object((JsonNode*)trackerItem->data);
                 const gchar *announceUrl = tracker_get_announce(tracker);
                 gchar *announceHost =
                     trg_gregex_get_first(priv->urlHostRegex, announceUrl);
@@ -289,6 +306,8 @@ void trg_state_selector_update(TrgStateSelector * s)
             }
         }
     }
+
+    g_list_free(torrentItemRefs);
 
     cruft.serial = client->updateSerial;
 

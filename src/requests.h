@@ -27,7 +27,7 @@ JsonNode *generic_request(gchar * method, JsonArray * array);
 
 JsonNode *session_set(void);
 JsonNode *session_get(void);
-JsonNode *torrent_get(void);
+JsonNode *torrent_get(gboolean recent);
 JsonNode *torrent_set(JsonArray * array);
 JsonNode *torrent_pause(JsonArray * array);
 JsonNode *torrent_start(JsonArray * array);

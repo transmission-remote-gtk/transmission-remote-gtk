@@ -27,7 +27,9 @@
 
 /* torrents */
 
+#define FIELD_RECENTLY_ACTIVE     "recently-active"
 #define FIELD_TORRENTS          "torrents"      /* parent node */
+#define FIELD_REMOVED           "removed"
 #define FIELD_ANNOUNCE_URL      "announceUrl"
 #define FIELD_LEFT_UNTIL_DONE   "leftUntilDone"
 #define FIELD_TOTAL_SIZE        "totalSize"

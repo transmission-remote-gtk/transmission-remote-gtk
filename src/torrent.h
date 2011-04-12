@@ -74,5 +74,6 @@ gint64 torrent_get_peer_limit(JsonObject * t);
 gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search);
 
 JsonArray *get_torrents(JsonObject * response);
+JsonArray *get_torrents_removed(JsonObject *response);
 
 #endif                          /* TORRENT_H_ */

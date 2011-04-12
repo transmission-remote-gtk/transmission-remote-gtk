@@ -105,7 +105,7 @@ static void trg_tracker_announce_edited(GtkCellRendererText * renderer,
     req = torrent_set(torrentIds);
     args = node_get_arguments(req);
 
-    if (g_strcmp0(icon, GTK_STOCK_ADD) == 0) {
+    if (!g_strcmp0(icon, GTK_STOCK_ADD)) {
         json_array_add_string_element(trackerModifiers, new_text);
         json_object_set_array_member(args, "trackerAdd", trackerModifiers);
     } else {

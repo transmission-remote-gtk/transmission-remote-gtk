@@ -41,17 +41,36 @@ static guint signals[TMODEL_SIGNAL_COUNT] = { 0 };
 
 G_DEFINE_TYPE(TrgTorrentModel, trg_torrent_model, GTK_TYPE_LIST_STORE)
 
-static guint32 torrent_get_flags(JsonObject * t, gint64 status,
-                                 trg_torrent_model_update_stats * stats);
+#define TRG_TORRENT_MODEL_GET_PRIVATE(o) \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_TORRENT_MODEL, TrgTorrentModelPrivate))
+
+typedef struct _TrgTorrentModelPrivate TrgTorrentModelPrivate;
+
+struct _TrgTorrentModelPrivate {
+    GHashTable *ht;
+};
 
 static void
-update_torrent_iter(gint64 serial, TrgTorrentModel * model,
+trg_torrent_model_dispose (GObject *object)
+{
+    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(object);
+    g_hash_table_destroy(priv->ht);
+  G_OBJECT_CLASS (trg_torrent_model_parent_class)->dispose (object);
+}
+
+static guint32 torrent_get_flags(JsonObject * t, gint64 status);
+
+static void
+update_torrent_iter(TrgTorrentModel * model, gint64 serial,
                     GtkTreeIter * iter, JsonObject * t,
                     trg_torrent_model_update_stats * stats);
 
 static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
+
+    g_type_class_add_private(klass, sizeof(TrgTorrentModelPrivate));
+    object_class->dispose = trg_torrent_model_dispose;
 
     signals[TMODEL_TORRENT_COMPLETED] =
         g_signal_new("torrent-completed",
@@ -87,17 +106,15 @@ static void trg_torrent_model_count_peers(TrgTorrentModel * model,
 {
     JsonArray *peers;
     gint seeders, leechers;
-    guint j;
+    GList *li;
 
     peers = torrent_get_peers(t);
 
     seeders = 0;
     leechers = 0;
 
-    for (j = 0; j < json_array_get_length(peers); j++) {
-        JsonObject *peer;
-
-        peer = json_node_get_object(json_array_get_element(peers, j));
+    for (li = json_array_get_elements(peers); li; li = g_list_next(li)) {
+        JsonObject *peer = json_node_get_object((JsonNode*)li->data);
 
         if (peer_get_is_downloading_from(peer))
             seeders++;
@@ -111,8 +128,26 @@ static void trg_torrent_model_count_peers(TrgTorrentModel * model,
                        TORRENT_COLUMN_LEECHERS, leechers, -1);
 }
 
+static void trg_torrent_model_ref_free(gpointer data)
+{
+    GtkTreeRowReference *rr = (GtkTreeRowReference*)data;
+    GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
+    GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+    if (path) {
+        GtkTreeIter iter;
+        if (gtk_tree_model_get_iter(model, &iter, path))
+            gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+
+        gtk_tree_path_free(path);
+    }
+
+    gtk_tree_row_reference_free(rr);
+}
+
 static void trg_torrent_model_init(TrgTorrentModel * self)
 {
+    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(self);
+
     GType column_types[TORRENT_COLUMN_COLUMNS];
 
     column_types[TORRENT_COLUMN_ICON] = G_TYPE_STRING;
@@ -136,24 +171,22 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
                                     TORRENT_COLUMN_COLUMNS, column_types);
+
+    priv->ht = g_hash_table_new_full(g_int64_hash, g_int64_equal, (GDestroyNotify)g_free, trg_torrent_model_ref_free);
 }
 
-static guint32 torrent_get_flags(JsonObject * t, gint64 status,
-                                 trg_torrent_model_update_stats * stats)
+static guint32 torrent_get_flags(JsonObject * t, gint64 status)
 {
     guint32 flags = 0;
     switch (status) {
     case STATUS_DOWNLOADING:
         flags |= TORRENT_FLAG_DOWNLOADING;
-        stats->down++;
         break;
     case STATUS_PAUSED:
         flags |= TORRENT_FLAG_PAUSED;
-        stats->paused++;
         break;
     case STATUS_SEEDING:
         flags |= TORRENT_FLAG_SEEDING;
-        stats->seeding++;
         break;
     case STATUS_CHECKING:
         flags |= TORRENT_FLAG_CHECKING;
@@ -175,12 +208,35 @@ static guint32 torrent_get_flags(JsonObject * t, gint64 status,
     return flags;
 }
 
+static gboolean
+trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
+                                     GtkTreePath * path G_GNUC_UNUSED,
+                                     GtkTreeIter * iter, gpointer gdata)
+{
+    trg_torrent_model_update_stats *stats = (trg_torrent_model_update_stats*)gdata;
+    guint flags;
+    gtk_tree_model_get(model, iter, TORRENT_COLUMN_FLAGS, &flags, -1);
+    if (flags & TORRENT_FLAG_SEEDING)
+        stats->seeding++;
+    else if (flags & TORRENT_FLAG_DOWNLOADING)
+        stats->down++;
+    else if (flags & TORRENT_FLAG_PAUSED)
+        stats->paused++;
+    return FALSE;
+}
+
+void trg_torrent_model_stats_scan(TrgTorrentModel *model, trg_torrent_model_update_stats *stats)
+{
+    gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_torrent_model_stats_scan_foreachfunc, stats);
+}
+
 static void
-update_torrent_iter(gint64 serial, TrgTorrentModel * model,
+update_torrent_iter(TrgTorrentModel * model, gint64 serial,
                     GtkTreeIter * iter, JsonObject * t,
                     trg_torrent_model_update_stats * stats)
 {
     guint lastFlags, newFlags;
+    JsonObject *lastJson;
     gchar *statusString, *statusIcon;
     gint64 downRate, upRate, downloaded, uploaded, id, status;
 
@@ -197,11 +253,14 @@ update_torrent_iter(gint64 serial, TrgTorrentModel * model,
 
     status = torrent_get_status(t);
     statusString = torrent_get_status_string(status);
-    newFlags = torrent_get_flags(t, status, stats);
+    newFlags = torrent_get_flags(t, status);
     statusIcon = torrent_get_status_icon(newFlags);
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
-                       TORRENT_COLUMN_FLAGS, &lastFlags, -1);
+                       TORRENT_COLUMN_FLAGS, &lastFlags,
+                       TORRENT_COLUMN_JSON, &lastJson, -1);
+
+    json_object_ref(t);
 
 #ifdef DEBUG
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
@@ -264,6 +323,9 @@ update_torrent_iter(gint64 serial, TrgTorrentModel * model,
                        TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif
 
+    if (lastJson)
+        json_object_unref(lastJson);
+
     if ((lastFlags & TORRENT_FLAG_DOWNLOADING)
         && (newFlags & TORRENT_FLAG_COMPLETE))
         g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
@@ -279,50 +341,123 @@ TrgTorrentModel *trg_torrent_model_new(void)
     return g_object_new(TRG_TYPE_TORRENT_MODEL, NULL);
 }
 
+struct TrgModelRemoveData {
+    GList *toRemove;
+    gint64 currentSerial;
+};
+
+GHashTable *get_torrent_table(TrgTorrentModel *model)
+{
+    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
+    return priv->ht;
+}
+
+gboolean
+trg_model_find_removed_foreachfunc(GtkTreeModel * model,
+                                     GtkTreePath * path G_GNUC_UNUSED,
+                                     GtkTreeIter * iter, gpointer gdata)
+{
+    struct TrgModelRemoveData *args = (struct TrgModelRemoveData *)gdata;
+    gint64 rowSerial;
+    gtk_tree_model_get(model, iter, TORRENT_COLUMN_UPDATESERIAL, &rowSerial, -1);
+    if (rowSerial != args->currentSerial) {
+        gint64 *id = g_new(gint64, 1);
+        gtk_tree_model_get(model, iter, TORRENT_COLUMN_ID, id, -1);
+        args->toRemove =
+            g_list_append(args->toRemove, id);
+    }
+
+    return FALSE;
+}
+
+GList *trg_torrent_model_find_removed(GtkTreeModel * model,
+                         gint64 currentSerial)
+{
+    struct TrgModelRemoveData args;
+
+    args.toRemove = NULL;
+    args.currentSerial = currentSerial;
+    gtk_tree_model_foreach(GTK_TREE_MODEL(model),
+            trg_model_find_removed_foreachfunc, &args);
+
+    return args.toRemove;
+}
+
 void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
                               JsonObject * response,
                               trg_torrent_model_update_stats * stats,
-                              gboolean first)
+                              gint mode)
 {
-    int i;
-    JsonArray *newTorrents;
+    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
+
+    JsonObject *args, *t;
+    GList *li;
+    gint64 id;
+    gint64 *idCopy;
+    JsonArray *newTorrents, *removedTorrents;
+    GtkTreeIter iter;
+    GtkTreePath *path;
+    GtkTreeRowReference *rr;
+    gpointer *result;
     gboolean added = FALSE;
+    gboolean removed = FALSE;
 
-    newTorrents = get_torrents(get_arguments(response));
-    stats->count = json_array_get_length(newTorrents);
+    args = get_arguments(response);
+    newTorrents = get_torrents(args);
 
-    for (i = 0; i < stats->count; i++) {
-        GtkTreeIter iter;
-        JsonObject *t;
+    for (li = json_array_get_elements(newTorrents); li; li = g_list_next(li)) {
+        t = json_node_get_object((JsonNode*)li->data);
+        id = torrent_get_id(t);
 
-        t = json_array_get_object_element(newTorrents, i);
+        result = mode == TORRENT_GET_MODE_FIRST ? NULL : g_hash_table_lookup(priv->ht, &id);
 
-        if (first == TRUE
-            || find_existing_model_item(GTK_TREE_MODEL(model),
-                                        TORRENT_COLUMN_ID,
-                                        torrent_get_id(t),
-                                        &iter) == FALSE) {
-            added = TRUE;
+        if (!result) {
             gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-            update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
 
-            if (!first)
+            update_torrent_iter(model, tc->updateSerial, &iter, t, stats);
+
+            path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
+            rr = gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
+            idCopy = g_new(gint64, 1);
+            *idCopy = id;
+            g_hash_table_insert(priv->ht, idCopy, rr);
+            gtk_tree_path_free(path);
+            added = TRUE;
+            if (mode != TORRENT_GET_MODE_FIRST)
                 g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0,
                               &iter);
         } else {
-            update_torrent_iter(tc->updateSerial, model, &iter, t, stats);
+            path = gtk_tree_row_reference_get_path((GtkTreeRowReference*)result);
+            if (path) {
+                if (gtk_tree_model_get_iter(GTK_TREE_MODEL(model), &iter, path)) {
+                    update_torrent_iter(model, tc->updateSerial, &iter, t, stats);
+                }
+                gtk_tree_path_free(path);
+            }
         }
     }
 
-    json_array_ref(newTorrents);
+    if (mode == TORRENT_GET_MODE_ACTIVE) {
+        removedTorrents = get_torrents_removed(args);
+        if (removedTorrents) {
+            for (li = json_array_get_elements(removedTorrents); li != NULL; li = g_list_next(li)) {
+                id = json_node_get_int((JsonNode*)li->data);
+                g_hash_table_remove(priv->ht, &id);
+                removed = TRUE;
+            }
+        }
+    } else if (mode >= TORRENT_GET_MODE_INTERACTION) {
+        GList *hitlist = trg_torrent_model_find_removed(GTK_TREE_MODEL(model), tc->updateSerial);
+        if (hitlist) {
+            for (li = hitlist; li; li = g_list_next(li)) {
+                g_hash_table_remove(priv->ht, li->data);
+                g_free(li->data);
+            }
+            removed = TRUE;
+            g_list_free(hitlist);
+        }
+    }
 
-    if (tc->torrents != NULL)
-        json_array_unref(tc->torrents);
-
-    tc->torrents = newTorrents;
-
-    if (trg_model_remove_removed(GTK_LIST_STORE(model),
-                                 TORRENT_COLUMN_UPDATESERIAL,
-                                 tc->updateSerial) > 0 || added)
+    if (added || removed)
         g_signal_emit(model, signals[TMODEL_TORRENT_ADDREMOVE], 0);
 }
