@@ -144,9 +144,9 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
     if (mode == TORRENT_GET_MODE_FIRST) {
         gtk_list_store_clear(GTK_LIST_STORE(model));
         priv->accept = TRUE;
-        for (li = json_array_get_elements(priv->files); li; li = g_list_next(li)) {
-            JsonObject *file =
-                json_node_get_object((JsonNode*)li->data);
+        for (li = json_array_get_elements(priv->files); li;
+             li = g_list_next(li)) {
+            JsonObject *file = json_node_get_object((JsonNode *) li->data);
             GtkTreeIter filesIter;
             trg_files_model_iter_new(model, &filesIter, file, j);
             trg_files_model_iter_update(model, &filesIter,

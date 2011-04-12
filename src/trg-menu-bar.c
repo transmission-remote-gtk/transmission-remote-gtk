@@ -324,11 +324,13 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
                               _("Remove and Delete"), GTK_STOCK_DELETE,
                               FALSE);
 
-    gtk_menu_shell_append(GTK_MENU_SHELL(torrentMenu), gtk_separator_menu_item_new());
+    gtk_menu_shell_append(GTK_MENU_SHELL(torrentMenu),
+                          gtk_separator_menu_item_new());
 
     priv->mb_resume_all =
-        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Resume All"),
-                              GTK_STOCK_MEDIA_PLAY, FALSE);
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
+                              _("_Resume All"), GTK_STOCK_MEDIA_PLAY,
+                              FALSE);
     priv->mb_pause_all =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Pause All"),
                               GTK_STOCK_MEDIA_PAUSE, FALSE);
@@ -379,14 +381,16 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
     trg_menu_bar_install_widget_prop(object_class, PROP_RESUME_BUTTON,
                                      "resume-button", "Resume Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_RESUME_ALL_BUTTON,
-                                     "resume-all-button", "Resume All Button");
+                                     "resume-all-button",
+                                     "Resume All Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_VERIFY_BUTTON,
                                      "verify-button", "Verify Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_REANNOUNCE_BUTTON,
                                      "reannounce-button",
                                      "Re-announce Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PAUSE_ALL_BUTTON,
-                                     "pause-all-button", "Pause All Button");
+                                     "pause-all-button",
+                                     "Pause All Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PAUSE_BUTTON,
                                      "pause-button", "Pause Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PROPS_BUTTON,

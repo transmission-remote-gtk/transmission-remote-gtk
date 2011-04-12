@@ -57,7 +57,7 @@ char *base64encode(char *filename)
         return NULL;
     }
 
-    b64out = g_base64_encode((guchar*) addr, sb.st_size);
+    b64out = g_base64_encode((guchar *) addr, sb.st_size);
     munmap(addr, sb.st_size);
     close(fd);
 

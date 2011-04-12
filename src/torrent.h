@@ -64,7 +64,7 @@ gboolean torrent_get_is_finished(JsonObject * t);
 gboolean torrent_get_honors_session_limits(JsonObject * t);
 gint64 torrent_get_bandwidth_priority(JsonObject * t);
 gint64 torrent_get_upload_limit(JsonObject * t);
-gint64 torrent_get_added_date(JsonObject *t);
+gint64 torrent_get_added_date(JsonObject * t);
 gboolean torrent_get_upload_limited(JsonObject * t);
 gint64 torrent_get_download_limit(JsonObject * t);
 gboolean torrent_get_download_limited(JsonObject * t);
@@ -74,6 +74,6 @@ gint64 torrent_get_peer_limit(JsonObject * t);
 gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search);
 
 JsonArray *get_torrents(JsonObject * response);
-JsonArray *get_torrents_removed(JsonObject *response);
+JsonArray *get_torrents_removed(JsonObject * response);
 
 #endif                          /* TORRENT_H_ */

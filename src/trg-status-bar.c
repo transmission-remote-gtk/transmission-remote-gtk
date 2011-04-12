@@ -92,11 +92,11 @@ void trg_status_bar_update(TrgStatusBar * sb,
 
     statusBarUpdate =
         g_strdup_printf
-        (ngettext("%d torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
-                "%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
-                stats->count),
-         stats->count, downRateTotalString, upRateTotalString,
-         stats->seeding, stats->down, stats->paused);
+        (ngettext
+         ("%d torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
+          "%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
+          stats->count), stats->count, downRateTotalString,
+         upRateTotalString, stats->seeding, stats->down, stats->paused);
     gtk_statusbar_pop(GTK_STATUSBAR(sb), priv->countSpeedsCtx);
     gtk_statusbar_push(GTK_STATUSBAR(sb),
                        priv->countSpeedsCtx, statusBarUpdate);

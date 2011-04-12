@@ -39,16 +39,19 @@
 #define GIGABYTE_FACTOR ( 1024.0 * 1024.0 * 1024.0 )
 
 void add_file_id_to_array(JsonObject * args, gchar * key, gint index);
-gboolean g_slist_str_set_add(GSList **list, const gchar *string);
+gboolean g_slist_str_set_add(GSList ** list, const gchar * string);
 void g_str_slist_free(GSList * list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);
 gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key);
-gint gconf_client_get_int_or_default(GConfClient * gconf, const gchar *key, int deflt, GError **error);
+gint gconf_client_get_int_or_default(GConfClient * gconf,
+                                     const gchar * key, int deflt,
+                                     GError ** error);
 
 void response_unref(JsonObject * response);
 const gchar *make_error_message(JsonObject * response, int status);
-void trg_error_dialog(GtkWindow * parent, int status, JsonObject * response);
+void trg_error_dialog(GtkWindow * parent, int status,
+                      JsonObject * response);
 
 char *tr_strltime_long(char *buf, gint64 seconds, size_t buflen);
 char *tr_strltime_short(char *buf, gint64 seconds, size_t buflen);

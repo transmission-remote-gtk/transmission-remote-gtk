@@ -71,8 +71,7 @@ void trg_trackers_model_update(TrgTrackersModel * model,
 
     for (li = json_array_get_elements(trackers); li; li = g_list_next(li)) {
         GtkTreeIter trackIter;
-        JsonObject *tracker =
-            json_node_get_object((JsonNode*)li->data);
+        JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
         gint64 trackerId = tracker_get_id(tracker);
 
         announce = tracker_get_announce(tracker);

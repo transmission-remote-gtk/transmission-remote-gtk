@@ -187,7 +187,8 @@ static gchar *trg_destination_folder_get(GtkComboBox * box)
 
 static GtkWidget *trg_destination_folder_new(trg_client * client)
 {
-    const gchar *defaultDownDir = json_object_get_string_member(client->session, SGET_DOWNLOAD_DIR);
+    const gchar *defaultDownDir =
+        json_object_get_string_member(client->session, SGET_DOWNLOAD_DIR);
     GtkWidget *combo = gtk_combo_box_entry_new_text();
     GSList *dirs = NULL;
     GSList *sli;
@@ -204,7 +205,7 @@ static GtkWidget *trg_destination_folder_new(trg_client * client)
     g_mutex_lock(client->updateMutex);
     torrentItemRefs = g_hash_table_get_values(client->torrentTable);
     for (li = torrentItemRefs; li; li = g_list_next(li)) {
-        rr = (GtkTreeRowReference*)li->data;
+        rr = (GtkTreeRowReference *) li->data;
         model = gtk_tree_row_reference_get_model(rr);
         path = gtk_tree_row_reference_get_path(rr);
 
@@ -212,7 +213,8 @@ static GtkWidget *trg_destination_folder_new(trg_client * client)
             GtkTreeIter iter;
             if (gtk_tree_model_get_iter(model, &iter, path)) {
                 const gchar *dd;
-                gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &t, -1);
+                gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &t,
+                                   -1);
                 dd = torrent_get_download_dir(t);
                 if (dd)
                     g_slist_str_set_add(&dirs, dd);
@@ -225,7 +227,8 @@ static GtkWidget *trg_destination_folder_new(trg_client * client)
     g_mutex_unlock(client->updateMutex);
 
     for (sli = dirs; sli != NULL; sli = g_slist_next(sli))
-        gtk_combo_box_append_text(GTK_COMBO_BOX(combo), (gchar*)sli->data);
+        gtk_combo_box_append_text(GTK_COMBO_BOX(combo),
+                                  (gchar *) sli->data);
 
     gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
     g_str_slist_free(dirs);
@@ -882,8 +885,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     priv->paused_check =
         gtk_check_button_new_with_mnemonic(_("Start _paused"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->paused_check),
-                                 pref_get_start_paused(priv->
-                                                       client->gconf));
+                                 pref_get_start_paused(priv->client->
+                                                       gconf));
 
     priv->priority_combo = gtr_priority_combo_new();
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->priority_combo), 1);

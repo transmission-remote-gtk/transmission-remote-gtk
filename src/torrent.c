@@ -61,7 +61,7 @@ const gchar *torrent_get_name(JsonObject * t)
     return json_object_get_string_member(t, FIELD_NAME);
 }
 
-gint64 torrent_get_added_date(JsonObject *t)
+gint64 torrent_get_added_date(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_ADDED_DATE);
 }
@@ -265,7 +265,7 @@ const gchar *tracker_get_scrape(JsonObject * t)
     return json_object_get_string_member(t, FIELD_SCRAPE);
 }
 
-JsonArray *get_torrents_removed(JsonObject *response)
+JsonArray *get_torrents_removed(JsonObject * response)
 {
     if (G_UNLIKELY(json_object_has_member(response, FIELD_REMOVED)))
         return json_object_get_array_member(response, FIELD_REMOVED);

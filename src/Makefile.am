@@ -80,9 +80,6 @@ transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthr
 
 install-data-local: install-icons update-icon-cache
 	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule $(srcdir)/$(schema_DATA)
-	$(INSTALL_DATA) -D ../COPYING $(docdir)/COPYING
-	$(INSTALL_DATA) ../AUTHORS $(docdir)/AUTHORS
-	$(INSTALL_DATA) ../README $(docdir)/README
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t
 

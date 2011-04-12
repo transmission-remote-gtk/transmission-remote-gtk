@@ -86,9 +86,12 @@ void trg_error_dialog(GtkWindow * parent, int status,
     g_free((gpointer) msg);
 }
 
-gint gconf_client_get_int_or_default(GConfClient * gconf, const gchar *key, int deflt, GError **error)
+gint gconf_client_get_int_or_default(GConfClient * gconf,
+                                     const gchar * key, int deflt,
+                                     GError ** error)
 {
-    GConfValue *value = gconf_client_get_without_default(gconf, key, error);
+    GConfValue *value =
+        gconf_client_get_without_default(gconf, key, error);
     gint ret;
     if (value) {
         ret = gconf_value_get_int(value);
@@ -99,11 +102,11 @@ gint gconf_client_get_int_or_default(GConfClient * gconf, const gchar *key, int 
     return ret;
 }
 
-gboolean g_slist_str_set_add(GSList **list, const gchar *string)
+gboolean g_slist_str_set_add(GSList ** list, const gchar * string)
 {
     GSList *li;
     for (li = *list; li != NULL; li = g_slist_next(li))
-        if (!g_strcmp0((gchar*)li->data, string))
+        if (!g_strcmp0((gchar *) li->data, string))
             return FALSE;
 
     *list = g_slist_append(*list, g_strdup(string));
@@ -113,7 +116,8 @@ gboolean g_slist_str_set_add(GSList **list, const gchar *string)
 gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key)
 {
     GError *error = NULL;
-    GConfValue *value = gconf_client_get_without_default(gconf, key, &error);
+    GConfValue *value =
+        gconf_client_get_without_default(gconf, key, &error);
     gboolean ret = TRUE;
     if (error) {
         g_error_free(error);

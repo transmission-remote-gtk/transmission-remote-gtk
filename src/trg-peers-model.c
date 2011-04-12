@@ -141,7 +141,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
         gtk_list_store_clear(GTK_LIST_STORE(model));
 
     for (li = json_array_get_elements(peers); li; li = g_list_next(li)) {
-        JsonObject *peer = json_node_get_object((JsonNode*)li->data);
+        JsonObject *peer = json_node_get_object((JsonNode *) li->data);
         const gchar *address = NULL, *flagStr;
 #ifdef HAVE_GEOIP
         const gchar *country = NULL;

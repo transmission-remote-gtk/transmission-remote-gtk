@@ -45,7 +45,9 @@ trg_client *trg_init_client()
     client = g_new0(trg_client, 1);
     client->gconf = gconf_client_get_default();
     client->updateMutex = g_mutex_new();
-    client->activeOnlyUpdate = gconf_client_get_bool(client->gconf, TRG_GCONF_KEY_UPDATE_ACTIVE_ONLY, NULL);
+    client->activeOnlyUpdate =
+        gconf_client_get_bool(client->gconf,
+                              TRG_GCONF_KEY_UPDATE_ACTIVE_ONLY, NULL);
 
     return client;
 }
@@ -80,7 +82,9 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
     g_free(tc->password);
     tc->password = NULL;
 
-    port = gconf_client_get_int_or_default(gconf, TRG_GCONF_KEY_PORT, TRG_PORT_DEFAULT, &error);
+    port =
+        gconf_client_get_int_or_default(gconf, TRG_GCONF_KEY_PORT,
+                                        TRG_PORT_DEFAULT, &error);
     check_for_error(error);
 
     host = gconf_client_get_string(gconf, TRG_GCONF_KEY_HOSTNAME, &error);
@@ -97,7 +101,9 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
     g_free(host);
 
     tc->interval =
-        gconf_client_get_int_or_default(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, TRG_INTERVAL_DEFAULT, &error);
+        gconf_client_get_int_or_default(gconf,
+                                        TRG_GCONF_KEY_UPDATE_INTERVAL,
+                                        TRG_INTERVAL_DEFAULT, &error);
     check_for_error(error);
     if (tc->interval < 1)
         tc->interval = TRG_INTERVAL_DEFAULT;

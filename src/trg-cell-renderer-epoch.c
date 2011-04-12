@@ -40,7 +40,7 @@ struct _TrgCellRendererEpochPrivate {
 
 static void
 trg_cell_renderer_epoch_get_property(GObject * object, guint property_id,
-                                   GValue * value, GParamSpec * pspec)
+                                     GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererEpochPrivate *priv =
         TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
@@ -55,8 +55,8 @@ trg_cell_renderer_epoch_get_property(GObject * object, guint property_id,
 
 static void
 trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
-                                   const GValue * value,
-                                   GParamSpec * pspec)
+                                     const GValue * value,
+                                     GParamSpec * pspec)
 {
     TrgCellRendererEpochPrivate *priv =
         TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
@@ -111,5 +111,6 @@ trg_cell_renderer_epoch_init(TrgCellRendererEpoch * self G_GNUC_UNUSED)
 GtkCellRenderer *trg_cell_renderer_epoch_new(void)
 {
     return
-        GTK_CELL_RENDERER(g_object_new(TRG_TYPE_CELL_RENDERER_EPOCH, NULL));
+        GTK_CELL_RENDERER(g_object_new
+                          (TRG_TYPE_CELL_RENDERER_EPOCH, NULL));
 }

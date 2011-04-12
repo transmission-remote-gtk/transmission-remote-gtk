@@ -48,7 +48,7 @@ GType trg_trackers_model_get_type(void);
 TrgTrackersModel *trg_trackers_model_new(void);
 
 G_END_DECLS
-void trg_trackers_model_update(TrgTrackersModel * model,
+    void trg_trackers_model_update(TrgTrackersModel * model,
                                    gint64 updateSerial, JsonObject * t,
                                    gint mode);
 void trg_trackers_model_set_accept(TrgTrackersModel * model,

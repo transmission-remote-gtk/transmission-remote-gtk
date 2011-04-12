@@ -159,8 +159,7 @@ JsonNode *torrent_get(gboolean recent)
     json_array_add_string_element(fields, FIELD_ERRORSTR);
     json_array_add_string_element(fields, FIELD_WANTED);
     json_array_add_string_element(fields, FIELD_PRIORITIES);
-    json_object_set_array_member(args,
-                                 PARAM_FIELDS, fields);
+    json_object_set_array_member(args, PARAM_FIELDS, fields);
     return root;
 }
 

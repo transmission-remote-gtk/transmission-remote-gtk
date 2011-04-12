@@ -101,9 +101,9 @@ trg_preferences_dialog_get_property(GObject * object,
     }
 }
 
-static void update_activeonly_cb(GtkToggleButton *w, gpointer data)
+static void update_activeonly_cb(GtkToggleButton * w, gpointer data)
 {
-    trg_client *client = (trg_client*)data;
+    trg_client *client = (trg_client *) data;
     client->activeOnlyUpdate = gtk_toggle_button_get_active(w);
 }
 
@@ -147,7 +147,7 @@ static void spun_cb_int(GtkWidget * widget, gpointer gconf)
 }
 
 static GtkWidget *new_spin_button(GConfClient * gconf,
-                                  const gchar *key,
+                                  const gchar * key,
                                   int low, int high, int step, int deflt)
 {
     GtkWidget *w;
@@ -159,7 +159,8 @@ static GtkWidget *new_spin_button(GConfClient * gconf,
 
     gtk_spin_button_set_digits(GTK_SPIN_BUTTON(w), 0);
 
-    currentValue = gconf_client_get_int_or_default(gconf, key, deflt, NULL);
+    currentValue =
+        gconf_client_get_int_or_default(gconf, key, deflt, NULL);
 
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), currentValue);
 
@@ -230,7 +231,7 @@ static void toggle_tray_icon(GtkToggleButton * w, gpointer win)
         trg_main_window_remove_status_icon(TRG_MAIN_WINDOW(win));
 }
 
-static GtkWidget *trg_prefs_desktopPage(trg_client *client,
+static GtkWidget *trg_prefs_desktopPage(trg_client * client,
                                         TrgMainWindow * win)
 {
     GtkWidget *tray, *w, *t;
@@ -297,7 +298,7 @@ static GtkWidget *trg_prefs_desktopPage(trg_client *client,
     return t;
 }
 
-static GtkWidget *trg_prefs_behaviorPage(trg_client *client)
+static GtkWidget *trg_prefs_behaviorPage(trg_client * client)
 {
     GtkWidget *w, *t;
     gint row = 0;
@@ -331,7 +332,8 @@ static GtkWidget *trg_prefs_serverPage(trg_client * client)
     w = new_entry(gconf, TRG_GCONF_KEY_HOSTNAME);
     hig_workarea_add_row(t, &row, _("Host:"), w, NULL);
 
-    w = new_spin_button(gconf, TRG_GCONF_KEY_PORT, 1, 65535, 1, TRG_PORT_DEFAULT);
+    w = new_spin_button(gconf, TRG_GCONF_KEY_PORT, 1, 65535, 1,
+                        TRG_PORT_DEFAULT);
     hig_workarea_add_row(t, &row, _("Port:"), w, NULL);
 
     w = new_check_button(gconf, _("Automatically connect"),
@@ -341,13 +343,16 @@ static GtkWidget *trg_prefs_serverPage(trg_client * client)
     w = new_check_button(gconf, _("SSL"), TRG_GCONF_KEY_SSL);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = new_spin_button(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, 1, 60, 1, TRG_INTERVAL_DEFAULT);
+    w = new_spin_button(gconf, TRG_GCONF_KEY_UPDATE_INTERVAL, 1, 60, 1,
+                        TRG_INTERVAL_DEFAULT);
     g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb),
                      client);
     hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
 
-    w = new_check_button(gconf, _("Update active torrents only"), TRG_GCONF_KEY_UPDATE_ACTIVE_ONLY);
-    g_signal_connect(w, "toggled", G_CALLBACK(update_activeonly_cb), client);
+    w = new_check_button(gconf, _("Update active torrents only"),
+                         TRG_GCONF_KEY_UPDATE_ACTIVE_ONLY);
+    g_signal_connect(w, "toggled", G_CALLBACK(update_activeonly_cb),
+                     client);
     hig_workarea_add_wide_control(t, &row, w);
 
     hig_workarea_add_section_divider(t, &row);
@@ -399,7 +404,8 @@ static GObject *trg_preferences_dialog_constructor(GType type,
                              gtk_label_new(_("Connection")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-                             trg_prefs_desktopPage(priv->client, priv->win),
+                             trg_prefs_desktopPage(priv->client,
+                                                   priv->win),
                              gtk_label_new(_("Desktop")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),

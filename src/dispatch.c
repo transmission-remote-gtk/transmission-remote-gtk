@@ -91,7 +91,8 @@ GThread *dispatch_async(trg_client * client, JsonNode * req,
 {
     GError *error = NULL;
     GThread *thread;
-    struct dispatch_async_args *args = g_new(struct dispatch_async_args, 1);
+    struct dispatch_async_args *args =
+        g_new(struct dispatch_async_args, 1);
 
     args->callback = callback;
     args->data = data;

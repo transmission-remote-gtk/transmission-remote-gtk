@@ -226,7 +226,7 @@ void trg_state_selector_update(TrgStateSelector * s)
         return;
 
     for (li = torrentItemRefs; li; li = g_list_next(li)) {
-        GtkTreeRowReference *rr = (GtkTreeRowReference*)li->data;
+        GtkTreeRowReference *rr = (GtkTreeRowReference *) li->data;
         GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
         GtkTreeModel *torrentModel = gtk_tree_row_reference_get_model(rr);
         JsonObject *t = NULL;
@@ -235,7 +235,8 @@ void trg_state_selector_update(TrgStateSelector * s)
         if (path) {
             GtkTreeIter iter;
             if (gtk_tree_model_get_iter(torrentModel, &iter, path)) {
-                gtk_tree_model_get(torrentModel, &iter, TORRENT_COLUMN_JSON, &t, -1);
+                gtk_tree_model_get(torrentModel, &iter,
+                                   TORRENT_COLUMN_JSON, &t, -1);
             }
             gtk_tree_path_free(path);
         }
@@ -246,9 +247,10 @@ void trg_state_selector_update(TrgStateSelector * s)
         if (priv->showTrackers) {
             JsonArray *trackers = torrent_get_trackers(t);
 
-            for (trackerItem = json_array_get_elements(trackers); trackerItem; trackerItem = g_list_next(trackerItem)) {
+            for (trackerItem = json_array_get_elements(trackers);
+                 trackerItem; trackerItem = g_list_next(trackerItem)) {
                 JsonObject *tracker =
-                    json_node_get_object((JsonNode*)trackerItem->data);
+                    json_node_get_object((JsonNode *) trackerItem->data);
                 const gchar *announceUrl = tracker_get_announce(tracker);
                 gchar *announceHost =
                     trg_gregex_get_first(priv->urlHostRegex, announceUrl);
