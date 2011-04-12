@@ -75,8 +75,6 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
                               trg_torrent_model_update_stats * stats,
                               gint mode);
 
-void trg_torrent_model_stats_scan(TrgTorrentModel * model,
-                                  trg_torrent_model_update_stats * stats);
 GHashTable *get_torrent_table(TrgTorrentModel * model);
 
 enum {

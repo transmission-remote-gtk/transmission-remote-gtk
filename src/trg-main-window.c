@@ -923,12 +923,12 @@ on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
     stats.seeding = 0;
     stats.down = 0;
     stats.paused = 0;
+    stats.count = 0;
 
     client->updateSerial++;
 
     trg_torrent_model_update(priv->torrentModel, priv->client,
                              response, &stats, mode);
-    trg_torrent_model_stats_scan(priv->torrentModel, &stats);
 
     update_selected_torrent_notebook(TRG_MAIN_WINDOW(data), mode);
 
@@ -977,8 +977,8 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
     if (priv->client->session)
         dispatch_async(priv->client,
                        torrent_get(priv->client->activeOnlyUpdate),
-                       priv->
-                       client->activeOnlyUpdate ? on_torrent_get_active :
+                       priv->client->
+                       activeOnlyUpdate ? on_torrent_get_active :
                        on_torrent_get_update, data);
 
     return FALSE;

@@ -224,15 +224,10 @@ trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
         stats->down++;
     else if (flags & TORRENT_FLAG_PAUSED)
         stats->paused++;
-    return FALSE;
-}
 
-void trg_torrent_model_stats_scan(TrgTorrentModel * model,
-                                  trg_torrent_model_update_stats * stats)
-{
-    gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-                           trg_torrent_model_stats_scan_foreachfunc,
-                           stats);
+    stats->count++;
+
+    return FALSE;
 }
 
 static void
@@ -398,9 +393,10 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 
     JsonObject *args, *t;
     GList *li;
+    GList *newTorrents;
     gint64 id;
     gint64 *idCopy;
-    JsonArray *newTorrents, *removedTorrents;
+    JsonArray *removedTorrents;
     GtkTreeIter iter;
     GtkTreePath *path;
     GtkTreeRowReference *rr;
@@ -408,9 +404,8 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
     gboolean addRemove = FALSE;
 
     args = get_arguments(response);
-    newTorrents = get_torrents(args);
 
-    for (li = json_array_get_elements(newTorrents); li;
+    for (li = json_array_get_elements(get_torrents(args)); li;
          li = g_list_next(li)) {
         t = json_node_get_object((JsonNode *) li->data);
         id = torrent_get_id(t);
@@ -475,4 +470,8 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 
     if (addRemove)
         g_signal_emit(model, signals[TMODEL_TORRENT_ADDREMOVE], 0);
+
+    gtk_tree_model_foreach(GTK_TREE_MODEL(model),
+                           trg_torrent_model_stats_scan_foreachfunc,
+                           stats);
 }
