@@ -27,7 +27,7 @@ case "$OSNAME" in
 esac
 
 trglocaledir='${prefix}/${DATADIRNAME}/locale'
-trglicense='${docdir}/COPYING'
+trglicense='${docdir}-$(PACKAGE_VERSION)/COPYING'
 AC_SUBST(trglocaledir)
 AC_SUBST(trglicense)
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
