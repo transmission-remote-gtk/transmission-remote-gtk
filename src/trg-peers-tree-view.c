@@ -62,6 +62,8 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
                              PEERSCOL_FLAGS);
     trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Client"),
                              PEERSCOL_CLIENT);
+
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), PEERSCOL_HOST);
 }
 
 TrgPeersTreeView *trg_peers_tree_view_new(TrgPeersModel * model)

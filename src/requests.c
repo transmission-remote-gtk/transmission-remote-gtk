@@ -116,11 +116,9 @@ JsonNode *torrent_get(gboolean recent)
     JsonObject *args = node_get_arguments(root);
     JsonArray *fields = json_array_new();
 
-    if (recent) {
-        JsonArray *ids = json_array_new();
-        json_array_add_string_element(ids, FIELD_RECENTLY_ACTIVE);
-        json_object_set_array_member(args, PARAM_IDS, ids);
-    }
+    if (recent)
+        json_object_set_string_member(args, PARAM_IDS,
+                                      FIELD_RECENTLY_ACTIVE);
 
     json_array_add_string_element(fields, FIELD_ETA);
     json_array_add_string_element(fields, FIELD_PEERS);

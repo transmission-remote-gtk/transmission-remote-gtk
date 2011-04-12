@@ -405,8 +405,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
     GtkTreePath *path;
     GtkTreeRowReference *rr;
     gpointer *result;
-    gboolean added = FALSE;
-    gboolean removed = FALSE;
+    gboolean addRemove = FALSE;
 
     args = get_arguments(response);
     newTorrents = get_torrents(args);
@@ -432,14 +431,13 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
             *idCopy = id;
             g_hash_table_insert(priv->ht, idCopy, rr);
             gtk_tree_path_free(path);
-            added = TRUE;
+            addRemove = TRUE;
             if (mode != TORRENT_GET_MODE_FIRST)
                 g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0,
                               &iter);
         } else {
-            path =
-                gtk_tree_row_reference_get_path((GtkTreeRowReference *)
-                                                result);
+            path = gtk_tree_row_reference_get_path((GtkTreeRowReference *)
+                                                   result);
             if (path) {
                 if (gtk_tree_model_get_iter
                     (GTK_TREE_MODEL(model), &iter, path)) {
@@ -451,17 +449,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
         }
     }
 
-    if (mode == TORRENT_GET_MODE_ACTIVE) {
-        removedTorrents = get_torrents_removed(args);
-        if (removedTorrents) {
-            for (li = json_array_get_elements(removedTorrents); li != NULL;
-                 li = g_list_next(li)) {
-                id = json_node_get_int((JsonNode *) li->data);
-                g_hash_table_remove(priv->ht, &id);
-                removed = TRUE;
-            }
-        }
-    } else if (mode >= TORRENT_GET_MODE_INTERACTION) {
+    if (mode == TORRENT_GET_MODE_UPDATE) {
         GList *hitlist =
             trg_torrent_model_find_removed(GTK_TREE_MODEL(model),
                                            tc->updateSerial);
@@ -470,11 +458,21 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
                 g_hash_table_remove(priv->ht, li->data);
                 g_free(li->data);
             }
-            removed = TRUE;
+            addRemove = TRUE;
             g_list_free(hitlist);
+        }
+    } else if (mode > TORRENT_GET_MODE_FIRST) {
+        removedTorrents = get_torrents_removed(args);
+        if (removedTorrents) {
+            for (li = json_array_get_elements(removedTorrents); li != NULL;
+                 li = g_list_next(li)) {
+                id = json_node_get_int((JsonNode *) li->data);
+                g_hash_table_remove(priv->ht, &id);
+                addRemove = TRUE;
+            }
         }
     }
 
-    if (added || removed)
+    if (addRemove)
         g_signal_emit(model, signals[TMODEL_TORRENT_ADDREMOVE], 0);
 }

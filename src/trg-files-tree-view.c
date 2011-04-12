@@ -325,6 +325,7 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
     trg_files_tree_view_add_priority_column(TRG_TREE_VIEW(self),
                                             _("Priority"),
                                             FILESCOL_PRIORITY, -1);
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), FILESCOL_NAME);
 
     g_signal_connect(self, "button-press-event",
                      G_CALLBACK(view_onButtonPressed), NULL);

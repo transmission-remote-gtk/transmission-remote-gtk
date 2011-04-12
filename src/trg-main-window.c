@@ -765,8 +765,6 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
     GtkWidget *notebook = priv->notebook = gtk_notebook_new();
-    gboolean show_graph;
-    GError *error = NULL;
 
     gtk_widget_set_size_request(notebook, -1, 175);
 
@@ -798,21 +796,11 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
                                                 (priv->peersTreeView)),
                              gtk_label_new(_("Peers")));
 
-
-    show_graph =
-        gconf_client_get_bool(priv->client->gconf,
-                              TRG_GCONF_KEY_SHOW_GRAPH, &error);
-
-    if (error) {
-        g_error_free(error);
-        show_graph = TRUE;
-    }
-
-    if (show_graph) {
+    if (gconf_client_get_bool
+        (priv->client->gconf, TRG_GCONF_KEY_SHOW_GRAPH, NULL))
         trg_main_window_add_graph(win, FALSE);
-    } else {
+    else
         priv->graphNotebookIndex = -1;
-    }
 
     return notebook;
 }
@@ -856,7 +844,7 @@ static void on_session_get(JsonObject * response, int status,
                 gchar *msg =
                     g_strdup_printf(_
                                     ("This application supports Transmission %.2f and later, you have %.2f."),
-                                    TRANSMISSION_MIN_SUPPORTED, version);
+TRANSMISSION_MIN_SUPPORTED, version);
                 GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(win),
                                                            GTK_DIALOG_MODAL,
                                                            GTK_MESSAGE_ERROR,
@@ -879,9 +867,9 @@ static void on_session_get(JsonObject * response, int status,
     trg_client_set_session(client, newSession);
     trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
 
+    json_object_ref(newSession);
   out:
     gdk_threads_leave();
-    json_object_ref(newSession);
     response_unref(response);
 }
 
@@ -989,8 +977,8 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
     if (priv->client->session)
         dispatch_async(priv->client,
                        torrent_get(priv->client->activeOnlyUpdate),
-                       priv->client->
-                       activeOnlyUpdate ? on_torrent_get_active :
+                       priv->
+                       client->activeOnlyUpdate ? on_torrent_get_active :
                        on_torrent_get_update, data);
 
     return FALSE;
@@ -1164,7 +1152,7 @@ on_generic_interactive_action(JsonObject * response, int status,
             ts.tv_nsec = 350000000;
             nanosleep(&ts, NULL);
 
-            dispatch_async(priv->client, torrent_get(FALSE),
+            dispatch_async(priv->client, torrent_get(TRUE),
                            on_torrent_get_interactive, data);
         }
     }
@@ -1690,19 +1678,11 @@ static gboolean window_state_event(GtkWidget * widget,
         && event->changed_mask == GDK_WINDOW_STATE_ICONIFIED
         && (event->new_window_state == GDK_WINDOW_STATE_ICONIFIED
             || event->new_window_state ==
-            (GDK_WINDOW_STATE_ICONIFIED | GDK_WINDOW_STATE_MAXIMIZED))) {
-        GError *error = NULL;
-        gboolean tray_min = gconf_client_get_bool(priv->client->gconf,
-                                                  TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE,
-                                                  &error);
-
-        if (error) {
-            g_error_free(error);
-            tray_min = TRUE;
-        }
-
-        if (tray_min)
-            gtk_widget_hide(GTK_WIDGET(widget));
+            (GDK_WINDOW_STATE_ICONIFIED | GDK_WINDOW_STATE_MAXIMIZED)) &&
+        gconf_client_get_bool_or_true(priv->client->gconf,
+                                      TRG_GCONF_KEY_SYSTEM_TRAY_MINIMISE))
+    {
+        gtk_widget_hide(GTK_WIDGET(widget));
     }
 
     return TRUE;
@@ -1972,8 +1952,7 @@ void auto_connect_if_required(TrgMainWindow * win, trg_client * tc)
         g_free(host);
         if (len > 0
             && gconf_client_get_bool(tc->gconf,
-                                     TRG_GCONF_KEY_AUTO_CONNECT,
-                                     NULL) == TRUE)
+                                     TRG_GCONF_KEY_AUTO_CONNECT, NULL))
             connect_cb(NULL, win);
     }
 }

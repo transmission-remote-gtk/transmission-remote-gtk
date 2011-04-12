@@ -885,8 +885,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     priv->paused_check =
         gtk_check_button_new_with_mnemonic(_("Start _paused"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->paused_check),
-                                 pref_get_start_paused(priv->client->
-                                                       gconf));
+                                 pref_get_start_paused(priv->
+                                                       client->gconf));
 
     priv->priority_combo = gtr_priority_combo_new();
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->priority_combo), 1);
