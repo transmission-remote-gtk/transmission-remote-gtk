@@ -27,7 +27,7 @@
 #include "http.h"
 #include "json.h"
 
-static void dispatch_async_threadfunc(gpointer task, gpointer user_data);
+static void dispatch_async_threadfunc(struct DispatchAsyncData *task, trg_client *client);
 
 JsonObject *dispatch(trg_client * client, JsonNode * req, int *status)
 {
@@ -74,22 +74,18 @@ JsonObject *dispatch(trg_client * client, JsonNode * req, int *status)
     return deserialized;
 }
 
-static void dispatch_async_threadfunc(gpointer task, gpointer user_data)
+static void dispatch_async_threadfunc(struct DispatchAsyncData *task, trg_client *client)
 {
-    trg_client *client = (trg_client*)user_data;
-    struct DispatchAsyncData *args = (struct DispatchAsyncData*)task;
-
     int status;
-    JsonObject *result = dispatch(client, args->req, &status);
-    if (args->callback)
-        args->callback(result, status, args->data);
-    g_free(args);
+    JsonObject *result = dispatch(client, task->req, &status);
+    if (task->callback)
+        task->callback(result, status, task->data);
+    g_free(task);
 }
 
 GThreadPool *dispatch_init_pool(trg_client *client)
 {
-    GThreadPool *pool = g_thread_pool_new((GFunc)dispatch_async_threadfunc, client, DISPATCH_POOL_SIZE, FALSE, NULL);
-    return pool;
+    return g_thread_pool_new((GFunc)dispatch_async_threadfunc, client, DISPATCH_POOL_SIZE, FALSE, NULL);
 }
 
 gboolean dispatch_async(trg_client * client, JsonNode * req,

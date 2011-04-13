@@ -154,7 +154,7 @@ static gpointer add_files_threadfunc(gpointer data)
         (struct add_torrent_threadfunc_args *) data;
     GSList *li;
 
-    for (li = files_thread_data->list; li != NULL; li = g_slist_next(li)) {
+    for (li = files_thread_data->list; li; li = g_slist_next(li)) {
         JsonNode *request =
             torrent_add((gchar *) li->data, files_thread_data->paused);
         JsonObject *args = node_get_arguments(request);
@@ -455,7 +455,6 @@ onViewPathToggled(GtkTreeView * view,
                         (G_OBJECT(col), TR_COLUMN_ID_KEY));
     if ((cid == FC_PRIORITY) || (cid == FC_ENABLED)) {
         GtkTreeIter iter;
-        /*GArray *indices = getActiveFilesForPath(view, path); */
         GtkTreeModel *model = gtk_tree_view_get_model(view);
 
         gtk_tree_model_get_iter(model, &iter, path);
@@ -745,9 +744,17 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
         }
     }
 
-    for (li = node->children; li != NULL; li = g_list_next(li))
+    for (li = node->children; li; li = g_list_next(li))
         store_add_node(store, node->name ? &child : NULL,
                        (trg_torrent_file_node *) li->data);
+}
+
+static void torrent_not_parsed_warning(GtkWindow *parent)
+{
+    GtkWidget *dialog = gtk_message_dialog_new(parent, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, _("Unable to parse torrent file. File preferences unavailable, but you can still try uploading it."));
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
 }
 
 static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
@@ -764,11 +771,18 @@ static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
         gchar *file_name = (gchar *) filenames->data;
         gchar *file_name_base = g_path_get_basename(file_name);
         trg_torrent_file *tor_data = trg_parse_torrent_file(file_name);
-        store_add_node(priv->store, NULL, tor_data->top_node);
-        trg_torrent_file_free(tor_data);
+
         gtk_button_set_label(chooser, file_name_base);
         g_free(file_name_base);
-        gtk_widget_set_sensitive(priv->file_list, TRUE);
+
+        if (!tor_data) {
+            torrent_not_parsed_warning(GTK_WINDOW(priv->parent));
+            gtk_widget_set_sensitive(priv->file_list, FALSE);
+        } else {
+            store_add_node(priv->store, NULL, tor_data->top_node);
+            trg_torrent_file_free(tor_data);
+            gtk_widget_set_sensitive(priv->file_list, TRUE);
+        }
     } else {
         gtk_widget_set_sensitive(priv->file_list, FALSE);
         if (nfiles < 1) {
@@ -918,13 +932,6 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     ++col;
     priv->dest_combo = trg_destination_folder_new(priv->client);
 
-    /*if( !gtk_file_chooser_set_current_folder( GTK_FILE_CHOOSER( w ),
-       data->downloadDir ) )
-       g_warning( "couldn't select '%s'", data->downloadDir );
-       list = get_recent_destinations( );
-       for( walk = list; walk; walk = walk->next )
-       gtk_file_chooser_add_shortcut_folder( GTK_FILE_CHOOSER( w ), walk->data, NULL );
-       g_slist_free( list ); */
     gtk_table_attach(GTK_TABLE(t), priv->dest_combo, col, col + 1, row,
                      row + 1, ~0, 0, 0, 0);
     gtk_label_set_mnemonic_widget(GTK_LABEL(l), priv->dest_combo);

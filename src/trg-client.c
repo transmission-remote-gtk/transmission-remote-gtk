@@ -32,6 +32,7 @@
 #include "trg-client.h"
 #include "trg-preferences.h"
 #include "util.h"
+#include "dispatch.h"
 
 gboolean trg_client_supports_tracker_edit(trg_client * tc)
 {
