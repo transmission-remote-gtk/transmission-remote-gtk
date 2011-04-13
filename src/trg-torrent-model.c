@@ -393,7 +393,6 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 
     JsonObject *args, *t;
     GList *li;
-    GList *newTorrents;
     gint64 id;
     gint64 *idCopy;
     JsonArray *removedTorrents;

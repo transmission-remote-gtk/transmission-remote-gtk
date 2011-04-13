@@ -873,6 +873,9 @@ TRANSMISSION_MIN_SUPPORTED, version);
     response_unref(response);
 }
 
+/*
+ * The callback for a torrent-get response.
+ */
 static void
 on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
 {

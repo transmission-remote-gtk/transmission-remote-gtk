@@ -48,6 +48,7 @@ trg_client *trg_init_client()
     client->activeOnlyUpdate =
         gconf_client_get_bool(client->gconf,
                               TRG_GCONF_KEY_UPDATE_ACTIVE_ONLY, NULL);
+    client->pool = dispatch_init_pool(client);
 
     return client;
 }

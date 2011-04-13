@@ -49,6 +49,7 @@ typedef struct {
     char *password;
     char *proxy;
     GHashTable *torrentTable;
+    GThreadPool *pool;
     GConfClient *gconf;
     GMutex *updateMutex;
 } trg_client;

@@ -25,16 +25,18 @@
 #define FAIL_JSON_DECODE -2
 #define FAIL_RESPONSE_UNSUCCESSFUL -3
 
-struct dispatch_async_args {
+#define DISPATCH_POOL_SIZE 4
+
+struct DispatchAsyncData {
     gpointer *data;
     JsonNode *req;
-    trg_client *client;
     void (*callback) (JsonObject *, int, gpointer);
 };
 
 JsonObject *dispatch(trg_client * client, JsonNode * req, int *status);
-GThread *dispatch_async(trg_client * client, JsonNode * req,
+gboolean dispatch_async(trg_client * client, JsonNode * req,
                         void (*callback) (JsonObject *, int, gpointer),
                         gpointer data);
+GThreadPool *dispatch_init_pool(trg_client *client);
 
 #endif                          /* DISPATCH_H_ */

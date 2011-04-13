@@ -88,7 +88,6 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
         curl_easy_setopt(handle, CURLOPT_PROXY, tc->proxy);
     }
 
-
     if (tc->session_id) {
         headers = curl_slist_append(headers, tc->session_id);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, headers);
