@@ -713,10 +713,10 @@ msgstr "Połączono z Transmission %g, pobieranie torentów..."
 
 #: src/trg-status-bar.c:95
 #, c-format
-msgid "%d torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
-msgid_plural "%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
-msgstr[0] "%d torentów ..  Pob. %s, Wys. %s  ..  %d rozsiewanych, %d pobieranych, %d zatrzymanych"
-msgstr[1] "%d torentów ..  Pob. %s, Wys. %s  ..  %d rozsiewanych, %d pobieranych, %d zatrzymanych"
+msgid "%d torrent ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
+msgid_plural "%d torrents ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
+msgstr[0] "%d torentów ..  Pob. %s%s, Wys. %s%s  ..  %d rozsiewanych, %d pobieranych, %d zatrzymanych"
+msgstr[1] "%d torentów ..  Pob. %s%s, Wys. %s%s  ..  %d rozsiewanych, %d pobieranych, %d zatrzymanych"
 
 #: src/trg-toolbar.c:246
 msgid "Remove with data"

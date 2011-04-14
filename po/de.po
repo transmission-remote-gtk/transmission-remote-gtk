@@ -585,12 +585,12 @@ msgstr "Verschiebe %s Torrents"
 msgid "Connected to Transmission %g, getting torrents..."
 msgstr "Verbunden mit Transmission %g, hole Torrents..."
 
-#: src/trg-status-bar.c:95
+#: src/trg-status-bar.c:119
 #, c-format
-msgid "%d torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
-msgid_plural "%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
-msgstr[0] "%d Torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
-msgstr[1] "%d Torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
+msgid "%d torrent ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
+msgid_plural "%d torrents ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
+msgstr[0] "%d Torrent ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
+msgstr[1] "%d Torrents ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
 
 #: src/trg-stats-dialog.c:267
 msgid "Statistics"

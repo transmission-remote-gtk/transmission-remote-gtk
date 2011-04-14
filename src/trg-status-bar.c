@@ -78,25 +78,49 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
 }
 
 void trg_status_bar_update(TrgStatusBar * sb,
-                           trg_torrent_model_update_stats * stats)
+                           trg_torrent_model_update_stats * stats, trg_client * client)
 {
     TrgStatusBarPrivate *priv;
     gchar *statusBarUpdate;
+	gint64 uplimitraw, downlimitraw;
     gchar downRateTotalString[32], upRateTotalString[32];
+	gchar uplimit[64], downlimit[64];
 
     priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
+
+	/* The session should always exist otherwise this function wouldn't be called */
+	downlimitraw = json_object_get_boolean_member(client->session, SGET_SPEED_LIMIT_DOWN_ENABLED) ?
+		json_object_get_int_member(client->session, SGET_SPEED_LIMIT_DOWN) : -1;
+
+	uplimitraw = json_object_get_boolean_member(client->session, SGET_SPEED_LIMIT_UP_ENABLED) ?
+		json_object_get_int_member(client->session, SGET_SPEED_LIMIT_UP) : -1;
 
     trg_strlspeed(downRateTotalString,
                   stats->downRateTotal / KILOBYTE_FACTOR);
     trg_strlspeed(upRateTotalString, stats->upRateTotal / KILOBYTE_FACTOR);
 
+	if (uplimitraw >= 0)
+	{
+		gchar uplimitstring[32];
+		trg_strlspeed(uplimitstring, uplimitraw);
+		g_snprintf(uplimit, sizeof(uplimit), _( " (Limit: %s)" ), uplimitstring);
+	}
+
+	if (downlimitraw >= 0)
+	{
+		gchar downlimitstring[32];
+		trg_strlspeed(downlimitstring, downlimitraw);
+		g_snprintf(downlimit, sizeof(downlimit), _( " (Limit: %s)" ), downlimitstring);
+	}
+
     statusBarUpdate =
         g_strdup_printf
         (ngettext
-         ("%d torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
-          "%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused",
-          stats->count), stats->count, downRateTotalString,
-         upRateTotalString, stats->seeding, stats->down, stats->paused);
+         ("%d torrent ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused",
+          "%d torrents ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused",
+          stats->count), stats->count, downRateTotalString, downlimitraw >= 0 ? downlimit : "",
+         upRateTotalString, uplimitraw >= 0 ? uplimit : "",
+		 stats->seeding, stats->down, stats->paused);
     gtk_statusbar_pop(GTK_STATUSBAR(sb), priv->countSpeedsCtx);
     gtk_statusbar_push(GTK_STATUSBAR(sb),
                        priv->countSpeedsCtx, statusBarUpdate);

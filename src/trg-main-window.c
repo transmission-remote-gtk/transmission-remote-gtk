@@ -935,7 +935,7 @@ on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
 
     update_selected_torrent_notebook(TRG_MAIN_WINDOW(data), mode);
 
-    trg_status_bar_update(priv->statusBar, &stats);
+    trg_status_bar_update(priv->statusBar, &stats, client);
 
     if (priv->graphNotebookIndex >= 0)
         trg_torrent_graph_set_speed(priv->graph, &stats);
@@ -1410,7 +1410,7 @@ static GtkWidget *limit_item_new(TrgMainWindow * win, GtkWidget * menu,
     gboolean active = limit < 0 ? FALSE : (currentLimit == (gint64) limit);
 
     if (limit >= 1000)
-        g_snprintf(speed, sizeof(speed), "%.2f MB/s", limit / 1000);
+        g_snprintf(speed, sizeof(speed), "%.2f MB/s", limit / 1024);
     else
         g_snprintf(speed, sizeof(speed), "%.0f KB/s", limit);
 
@@ -1482,12 +1482,12 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
     limit_item_new(win, menu, limit, 400);
     limit_item_new(win, menu, limit, 500);
     limit_item_new(win, menu, limit, 750);
-    limit_item_new(win, menu, limit, 1000);
-    limit_item_new(win, menu, limit, 1250);
-    limit_item_new(win, menu, limit, 1500);
-    limit_item_new(win, menu, limit, 2000);
-    limit_item_new(win, menu, limit, 2500);
-    limit_item_new(win, menu, limit, 3000);
+    limit_item_new(win, menu, limit, 1024);
+    limit_item_new(win, menu, limit, 1280);
+    limit_item_new(win, menu, limit, 1536);
+    limit_item_new(win, menu, limit, 2048);
+    limit_item_new(win, menu, limit, 2560);
+    limit_item_new(win, menu, limit, 3072);
 
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(toplevel), menu);
 

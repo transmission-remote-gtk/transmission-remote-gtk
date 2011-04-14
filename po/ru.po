@@ -720,13 +720,13 @@ msgstr "Всего"
 msgid "Connected to Transmission %g, getting torrents..."
 msgstr "Подключен к Transmission %g, получаю список торрентов..."
 
-#: src/trg-status-bar.c:96
+#: src/trg-status-bar.c:119
 #, c-format
-msgid "%d torrent ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
-msgid_plural "%d torrents ..  Down %s, Up %s  ..  %d seeding, %d downloading, %d paused"
-msgstr[0] "%d торрент ..  Загрузка %s, Отдача %s  ..  %d раздающихся, %d загружаемых, %d остановленных"
-msgstr[1] "%d торрента ..  Загрузка %s, Отдача %s  ..  %d раздающихся, %d загружаемых, %d остановленных"
-msgstr[2] "%d торрентов ..  Загрузка %s, Отдача %s  ..  %d раздающихся, %d загружаемых, %d остановленных"
+msgid "%d torrent ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
+msgid_plural "%d torrents ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
+msgstr[0] "%d торрент ..  Загрузка %s%s, Отдача %s%s  ..  %d раздающихся, %d загружаемых, %d остановленных"
+msgstr[1] "%d торрента ..  Загрузка %s%s, Отдача %s%s  ..  %d раздающихся, %d загружаемых, %d остановленных"
+msgstr[2] "%d торрентов ..  Загрузка %s%s, Отдача %s%s  ..  %d раздающихся, %d загружаемых, %d остановленных"
 
 #: src/trg-toolbar.c:246
 msgid "Remove with data"
