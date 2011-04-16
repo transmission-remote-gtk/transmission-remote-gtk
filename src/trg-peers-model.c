@@ -61,11 +61,9 @@ find_existing_peer_item_foreachfunc(GtkTreeModel * model,
                                     GtkTreePath * path G_GNUC_UNUSED,
                                     GtkTreeIter * iter, gpointer data)
 {
-    struct peerAndIter *pi;
+    struct peerAndIter *pi = (struct peerAndIter *)data;
+
     gchar *ip;
-
-    pi = (struct peerAndIter *) data;
-
     gtk_tree_model_get(model, iter, PEERSCOL_IP, &ip, -1);
     if (g_strcmp0(ip, pi->ip) == 0) {
         pi->iter = *iter;
@@ -132,7 +130,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
     JsonArray *peers;
     GtkTreeIter peerIter;
-    GList *li;
+    GList *li, *peersList;
     gboolean isNew;
 
     peers = torrent_get_peers(t);
@@ -140,7 +138,8 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
     if (mode == TORRENT_GET_MODE_FIRST)
         gtk_list_store_clear(GTK_LIST_STORE(model));
 
-    for (li = json_array_get_elements(peers); li; li = g_list_next(li)) {
+    peersList = json_array_get_elements(peers);
+    for (li = peersList; li; li = g_list_next(li)) {
         JsonObject *peer = json_node_get_object((JsonNode *) li->data);
         const gchar *address = NULL, *flagStr;
 #ifdef HAVE_GEOIP
@@ -153,7 +152,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
             address = peer_get_address(peer);
 #ifdef HAVE_GEOIP
-            if (priv->geoip != NULL)
+            if (priv->geoip)
                 country = GeoIP_country_name_by_addr(priv->geoip, address);
 #endif
             gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
@@ -161,7 +160,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
                                PEERSCOL_IP, address,
 #ifdef HAVE_GEOIP
                                PEERSCOL_COUNTRY,
-                               country != NULL ? country : "",
+                               country ? country : "",
 #endif
                                PEERSCOL_CLIENT, peer_get_client_name(peer),
                                -1);
@@ -183,15 +182,13 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
                            PEERSCOL_UPDATESERIAL, updateSerial, -1);
 
         if (isNew == TRUE) {
-            GtkTreePath *path;
-            GtkTreeRowReference *treeRef;
+            GtkTreePath *path =
+                    gtk_tree_model_get_path(GTK_TREE_MODEL(model), &peerIter);
+            GtkTreeRowReference *treeRef =
+                    gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
             GInetAddress *inetAddr;
             GResolver *resolver;
 
-            path =
-                gtk_tree_model_get_path(GTK_TREE_MODEL(model), &peerIter);
-            treeRef =
-                gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
             gtk_tree_path_free(path);
 
             inetAddr = g_inet_address_new_from_string(address);
@@ -203,6 +200,8 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
             g_object_unref(inetAddr);
         }
     }
+
+    g_list_free(peersList);
 
     if (mode != TORRENT_GET_MODE_FIRST)
         trg_model_remove_removed(GTK_LIST_STORE(model),
@@ -244,7 +243,5 @@ static void trg_peers_model_init(TrgPeersModel * self)
 
 TrgPeersModel *trg_peers_model_new()
 {
-    GObject *obj = g_object_new(TRG_TYPE_PEERS_MODEL, NULL);
-
-    return TRG_PEERS_MODEL(obj);
+    return g_object_new(TRG_TYPE_PEERS_MODEL, NULL);
 }

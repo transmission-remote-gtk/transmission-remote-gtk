@@ -41,9 +41,8 @@ gboolean trg_client_supports_tracker_edit(trg_client * tc)
 
 trg_client *trg_init_client()
 {
-    trg_client *client;
+    trg_client *client = g_new0(trg_client, 1);
 
-    client = g_new0(trg_client, 1);
     client->gconf = gconf_client_get_default();
     client->updateMutex = g_mutex_new();
     client->activeOnlyUpdate =

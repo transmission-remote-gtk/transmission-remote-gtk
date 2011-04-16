@@ -101,16 +101,14 @@ static void trg_torrent_model_count_peers(TrgTorrentModel * model,
                                           GtkTreeIter * iter,
                                           JsonObject * t)
 {
-    JsonArray *peers;
+    GList *peersList = json_array_get_elements(torrent_get_peers(t));
     gint seeders, leechers;
     GList *li;
-
-    peers = torrent_get_peers(t);
 
     seeders = 0;
     leechers = 0;
 
-    for (li = json_array_get_elements(peers); li; li = g_list_next(li)) {
+    for (li = peersList; li; li = g_list_next(li)) {
         JsonObject *peer = json_node_get_object((JsonNode *) li->data);
 
         if (peer_get_is_downloading_from(peer))
@@ -119,6 +117,8 @@ static void trg_torrent_model_count_peers(TrgTorrentModel * model,
         if (peer_get_is_uploading_to(peer))
             leechers++;
     }
+
+    g_list_free(peersList);
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
                        TORRENT_COLUMN_SEEDS, seeders,
@@ -391,6 +391,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
 {
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
 
+    GList *torrentList;
     JsonObject *args, *t;
     GList *li;
     gint64 id;
@@ -403,9 +404,9 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
     gboolean addRemove = FALSE;
 
     args = get_arguments(response);
+    torrentList = json_array_get_elements(get_torrents(args));
 
-    for (li = json_array_get_elements(get_torrents(args)); li;
-         li = g_list_next(li)) {
+    for (li = torrentList; li; li = g_list_next(li)) {
         t = json_node_get_object((JsonNode *) li->data);
         id = torrent_get_id(t);
 
@@ -442,6 +443,8 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
             }
         }
     }
+
+    g_list_free(torrentList);
 
     if (mode == TORRENT_GET_MODE_UPDATE) {
         GList *hitlist =

@@ -216,21 +216,23 @@ void trg_state_selector_update(TrgStateSelector * s)
     TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
     trg_client *client = priv->client;
-    GtkTreeIter iter;
-    GList *trackerItem, *li;
     GList *torrentItemRefs = g_hash_table_get_values(client->torrentTable);
-
+    GtkTreeIter iter;
+    GList *trackersList, *trackerItem, *li;
+    GtkTreeRowReference *rr;
+    GtkTreePath *path;
+    GtkTreeModel *torrentModel;
+    gpointer result;
     struct cruft_remove_args cruft;
 
     if (!client->session)
         return;
 
     for (li = torrentItemRefs; li; li = g_list_next(li)) {
-        GtkTreeRowReference *rr = (GtkTreeRowReference *) li->data;
-        GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
-        GtkTreeModel *torrentModel = gtk_tree_row_reference_get_model(rr);
         JsonObject *t = NULL;
-        gpointer result;
+        rr = (GtkTreeRowReference *) li->data;
+        path = gtk_tree_row_reference_get_path(rr);
+        torrentModel = gtk_tree_row_reference_get_model(rr);
 
         if (path) {
             GtkTreeIter iter;
@@ -245,9 +247,8 @@ void trg_state_selector_update(TrgStateSelector * s)
             continue;
 
         if (priv->showTrackers) {
-            JsonArray *trackers = torrent_get_trackers(t);
-
-            for (trackerItem = json_array_get_elements(trackers);
+            trackersList = json_array_get_elements(torrent_get_trackers(t));
+            for (trackerItem = trackersList;
                  trackerItem; trackerItem = g_list_next(trackerItem)) {
                 JsonObject *tracker =
                     json_node_get_object((JsonNode *) trackerItem->data);
@@ -284,6 +285,7 @@ void trg_state_selector_update(TrgStateSelector * s)
                                         quick_tree_ref_new(model, &iter));
                 }
             }
+            g_list_free(trackersList);
         }
 
         if (priv->showDirs) {

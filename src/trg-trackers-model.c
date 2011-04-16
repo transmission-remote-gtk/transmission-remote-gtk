@@ -54,8 +54,10 @@ void trg_trackers_model_update(TrgTrackersModel * model,
 {
     TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
 
-    JsonArray *trackers;
-    GList *li;
+    GtkTreeIter trackIter;
+    JsonObject *tracker;
+    gint64 trackerId;
+    GList *trackers, *li;
     const gchar *announce;
     const gchar *scrape;
 
@@ -67,13 +69,11 @@ void trg_trackers_model_update(TrgTrackersModel * model,
         return;
     }
 
-    trackers = torrent_get_trackers(t);
+    trackers = json_array_get_elements(torrent_get_trackers(t));
 
-    for (li = json_array_get_elements(trackers); li; li = g_list_next(li)) {
-        GtkTreeIter trackIter;
-        JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
-        gint64 trackerId = tracker_get_id(tracker);
-
+    for (li = trackers; li; li = g_list_next(li)) {
+        tracker = json_node_get_object((JsonNode *) li->data);
+        trackerId = tracker_get_id(tracker);
         announce = tracker_get_announce(tracker);
         scrape = tracker_get_scrape(tracker);
 
@@ -108,6 +108,7 @@ void trg_trackers_model_update(TrgTrackersModel * model,
 #endif
     }
 
+    g_list_free(trackers);
     trg_model_remove_removed(GTK_LIST_STORE(model),
                              TRACKERCOL_UPDATESERIAL, updateSerial);
 }
