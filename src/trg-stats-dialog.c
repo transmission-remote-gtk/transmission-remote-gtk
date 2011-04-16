@@ -65,16 +65,6 @@ static void on_stats_reply(JsonObject * response, int status,
                            gpointer data);
 
 static void
-trg_stats_dialog_get_property(GObject * object, guint property_id,
-                              GValue * value, GParamSpec * pspec)
-{
-    switch (property_id) {
-    default:
-        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
-    }
-}
-
-static void
 trg_stats_dialog_set_property(GObject * object, guint property_id,
                               const GValue * value, GParamSpec * pspec)
 {
@@ -195,12 +185,12 @@ static void on_stats_reply(JsonObject * response, int status,
     TrgStatsDialogPrivate *priv;
     JsonObject *args;
 
-    gdk_threads_enter();
-
     if (!TRG_IS_STATS_DIALOG(data)) {
         response_unref(response);
         return;
     }
+
+    gdk_threads_enter();
 
     priv = TRG_STATS_DIALOG_GET_PRIVATE(data);
 
@@ -213,7 +203,7 @@ static void on_stats_reply(JsonObject * response, int status,
         update_int_stat(args, priv->rr_session_count, "sessionCount");
         update_time_stat(args, priv->rr_active, "secondsActive");
 
-        if (priv->client->session != NULL)
+        if (priv->client->session)
             g_timeout_add_seconds(5, trg_update_stats_timerfunc, data);
     } else {
         trg_error_dialog(GTK_WINDOW(data), status, response);
@@ -321,7 +311,6 @@ static void trg_stats_dialog_class_init(TrgStatsDialogClass * klass)
 
     g_type_class_add_private(klass, sizeof(TrgStatsDialogPrivate));
 
-    object_class->get_property = trg_stats_dialog_get_property;
     object_class->set_property = trg_stats_dialog_set_property;
     object_class->constructor = trg_stats_dialog_constructor;
 

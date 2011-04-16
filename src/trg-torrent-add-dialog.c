@@ -373,8 +373,6 @@ static gboolean
 setSubtreeForeach(GtkTreeModel * model,
                   GtkTreePath * path, GtkTreeIter * iter, gpointer gdata)
 {
-    /*const gboolean is_file = !gtk_tree_model_iter_has_child(model, iter); */
-
     struct SubtreeForeachData *data = gdata;
 
     if (!gtk_tree_path_compare(path, data->path)

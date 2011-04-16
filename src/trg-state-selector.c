@@ -266,6 +266,7 @@ void trg_state_selector_update(TrgStateSelector * s)
                                                       *)
                                                      result,
                                                      client->updateSerial);
+                    g_free(announceHost);
                 } else {
                     gtk_list_store_insert(GTK_LIST_STORE(model), &iter,
                                           9 +

@@ -244,12 +244,6 @@ gint64 tracker_get_tier(JsonObject * t)
     return json_object_get_int_member(t, FIELD_TIER);
 }
 
-gchar *torrent_get_download_dir_short(JsonObject * t, GRegex * rx)
-{
-    const gchar *dir = torrent_get_download_dir(t);
-    return trg_gregex_get_first(rx, dir);
-}
-
 gint64 torrent_get_left_until_done(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_LEFTUNTILDONE);

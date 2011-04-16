@@ -42,7 +42,6 @@ gint64 torrent_get_uploaded(JsonObject * t);
 gint64 torrent_get_downloaded(JsonObject * t);
 const gchar *torrent_get_errorstr(JsonObject * t);
 const gchar *torrent_get_download_dir(JsonObject * t);
-gchar *torrent_get_download_dir_short(JsonObject * t, GRegex * rx);
 gint64 torrent_get_have_unchecked(JsonObject * t);
 gint64 torrent_get_have_valid(JsonObject * t);
 gint64 torrent_get_status(JsonObject * t);

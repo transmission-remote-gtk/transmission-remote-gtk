@@ -58,7 +58,7 @@ trg_client *trg_init_client()
 
 void trg_client_set_session(trg_client * tc, JsonObject * session)
 {
-    if (tc->session != NULL)
+    if (tc->session)
         json_object_unref(tc->session);
 
     session_get_version(session, &tc->version);
@@ -129,12 +129,14 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
         for (i = 0; proxies[i]; i++) {
             if (g_str_has_prefix(proxies[i], "http")) {
                 g_free(tc->proxy);
-                tc->proxy = g_strdup(proxies[i]);
+                tc->proxy = proxies[i];
+            } else {
+                g_free(proxies[i]);
             }
-            g_free(proxies[i]);
         }
 
         g_free(proxies);
+        px_proxy_factory_free(pf);
     }
 #endif
 
