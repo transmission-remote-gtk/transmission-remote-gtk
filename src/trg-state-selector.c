@@ -247,9 +247,10 @@ void trg_state_selector_update(TrgStateSelector * s)
             continue;
 
         if (priv->showTrackers) {
-            trackersList = json_array_get_elements(torrent_get_trackers(t));
-            for (trackerItem = trackersList;
-                 trackerItem; trackerItem = g_list_next(trackerItem)) {
+            trackersList =
+                json_array_get_elements(torrent_get_trackers(t));
+            for (trackerItem = trackersList; trackerItem;
+                 trackerItem = g_list_next(trackerItem)) {
                 JsonObject *tracker =
                     json_node_get_object((JsonNode *) trackerItem->data);
                 const gchar *announceUrl = tracker_get_announce(tracker);

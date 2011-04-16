@@ -27,7 +27,8 @@
 #include "http.h"
 #include "json.h"
 
-static void dispatch_async_threadfunc(struct DispatchAsyncData *task, trg_client *client);
+static void dispatch_async_threadfunc(struct DispatchAsyncData *task,
+                                      trg_client * client);
 
 JsonObject *dispatch(trg_client * client, JsonNode * req, int *status)
 {
@@ -67,14 +68,14 @@ JsonObject *dispatch(trg_client * client, JsonNode * req, int *status)
 
     result = json_object_get_member(deserialized, "result");
     if (status
-        && (!result
-            || g_strcmp0(json_node_get_string(result), "success")))
+        && (!result || g_strcmp0(json_node_get_string(result), "success")))
         *status = FAIL_RESPONSE_UNSUCCESSFUL;
 
     return deserialized;
 }
 
-static void dispatch_async_threadfunc(struct DispatchAsyncData *task, trg_client *client)
+static void dispatch_async_threadfunc(struct DispatchAsyncData *task,
+                                      trg_client * client)
 {
     int status;
     JsonObject *result = dispatch(client, task->req, &status);
@@ -83,9 +84,10 @@ static void dispatch_async_threadfunc(struct DispatchAsyncData *task, trg_client
     g_free(task);
 }
 
-GThreadPool *dispatch_init_pool(trg_client *client)
+GThreadPool *dispatch_init_pool(trg_client * client)
 {
-    return g_thread_pool_new((GFunc)dispatch_async_threadfunc, client, DISPATCH_POOL_SIZE, FALSE, NULL);
+    return g_thread_pool_new((GFunc) dispatch_async_threadfunc, client,
+                             DISPATCH_POOL_SIZE, FALSE, NULL);
 }
 
 gboolean dispatch_async(trg_client * client, JsonNode * req,
@@ -93,8 +95,7 @@ gboolean dispatch_async(trg_client * client, JsonNode * req,
                         gpointer data)
 {
     GError *error = NULL;
-    struct DispatchAsyncData *args =
-        g_new(struct DispatchAsyncData, 1);
+    struct DispatchAsyncData *args = g_new(struct DispatchAsyncData, 1);
 
     args->callback = callback;
     args->data = data;

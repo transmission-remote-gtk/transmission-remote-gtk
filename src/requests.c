@@ -110,15 +110,20 @@ JsonNode *torrent_remove(JsonArray * array, gboolean removeData)
     return root;
 }
 
-JsonNode *torrent_get(gboolean recent)
+JsonNode *torrent_get(gint64 id)
 {
     JsonNode *root = base_request(METHOD_TORRENT_GET);
     JsonObject *args = node_get_arguments(root);
     JsonArray *fields = json_array_new();
 
-    if (recent)
+    if (id == -2) {
         json_object_set_string_member(args, PARAM_IDS,
                                       FIELD_RECENTLY_ACTIVE);
+    } else if (id >= 0) {
+        JsonArray *ids = json_array_new();
+        json_array_add_int_element(ids, id);
+        json_object_set_array_member(args, PARAM_IDS, ids);
+    }
 
     json_array_add_string_element(fields, FIELD_ETA);
     json_array_add_string_element(fields, FIELD_PEERS);
@@ -191,4 +196,9 @@ static JsonNode *base_request(gchar * method)
     json_object_set_object_member(object, PARAM_ARGUMENTS, args);
     json_node_take_object(root, object);
     return root;
+}
+
+void request_set_tag(JsonNode * req, gint64 tag)
+{
+    json_object_set_int_member(json_node_get_object(req), PARAM_TAG, tag);
 }

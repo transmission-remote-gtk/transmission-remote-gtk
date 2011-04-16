@@ -103,6 +103,7 @@ static void trg_tracker_announce_edited(GtkCellRendererText * renderer,
     json_array_add_int_element(torrentIds, torrentId);
 
     req = torrent_set(torrentIds);
+    request_set_tag(req, torrentId);
     args = node_get_arguments(req);
 
     if (!g_strcmp0(icon, GTK_STOCK_ADD)) {
@@ -202,13 +203,15 @@ static void delete_tracker(GtkWidget * w, gpointer data)
     GList *selectionRefs = trg_tree_view_get_selected_refs_list(tv);
     GtkTreeModel *model = gtk_tree_view_get_model(tv);
     JsonArray *trackerIds = json_array_new();
+    gint64 torrentId =
+        trg_trackers_model_get_torrent_id(TRG_TRACKERS_MODEL(model));
     JsonArray *torrentIds = json_array_new();
 
     JsonNode *req;
     JsonObject *args;
     GList *li;
 
-    for (li = selectionRefs; li != NULL; li = g_list_next(li)) {
+    for (li = selectionRefs; li; li = g_list_next(li)) {
         GtkTreeRowReference *rr = (GtkTreeRowReference *) li->data;
         GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
         if (path != NULL) {
@@ -225,11 +228,10 @@ static void delete_tracker(GtkWidget * w, gpointer data)
     }
     g_list_free(selectionRefs);
 
-    json_array_add_int_element(torrentIds,
-                               trg_trackers_model_get_torrent_id
-                               (TRG_TRACKERS_MODEL(model)));
+    json_array_add_int_element(torrentIds, torrentId);
 
     req = torrent_set(torrentIds);
+    request_set_tag(req, torrentId);
     args = node_get_arguments(req);
 
     json_object_set_array_member(args, "trackerRemove", trackerIds);

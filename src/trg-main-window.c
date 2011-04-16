@@ -860,7 +860,7 @@ TRANSMISSION_MIN_SUPPORTED, version);
 
         trg_status_bar_connect(priv->statusBar, newSession);
         trg_main_window_conn_changed(win, TRUE);
-        dispatch_async(client, torrent_get(FALSE), on_torrent_get_first,
+        dispatch_async(client, torrent_get(-1), on_torrent_get_first,
                        data);
     }
 
@@ -979,9 +979,10 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
 
     if (priv->client->session)
         dispatch_async(priv->client,
-                       torrent_get(priv->client->activeOnlyUpdate),
-                       priv->client->
-                       activeOnlyUpdate ? on_torrent_get_active :
+                       torrent_get(priv->client->
+                                   activeOnlyUpdate ? -2 : -1),
+                       priv->
+                       client->activeOnlyUpdate ? on_torrent_get_active :
                        on_torrent_get_update, data);
 
     return FALSE;
@@ -1149,13 +1150,21 @@ on_generic_interactive_action(JsonObject * response, int status,
         trg_dialog_error_handler(TRG_MAIN_WINDOW(data), response, status);
         gdk_threads_leave();
 
-        if (status == CURLE_OK || status == FAIL_RESPONSE_UNSUCCESSFUL) {
-            struct timespec ts;
-            ts.tv_sec = 0;
-            ts.tv_nsec = 350000000;
-            nanosleep(&ts, NULL);
+        if (status == CURLE_OK) {
+            gint64 id;
+            if (json_object_has_member(response, PARAM_TAG)) {
+                id = json_object_get_int_member(response, PARAM_TAG);
+            } else if (priv->client->activeOnlyUpdate) {
+                id = -2;
+            } else {
+                id = -1;
+            }
+            /*struct timespec ts;
+               ts.tv_sec = 0;
+               ts.tv_nsec = 350000000;
+               nanosleep(&ts, NULL); */
 
-            dispatch_async(priv->client, torrent_get(TRUE),
+            dispatch_async(priv->client, torrent_get(id),
                            on_torrent_get_interactive, data);
         }
     }

@@ -27,7 +27,7 @@ JsonNode *generic_request(gchar * method, JsonArray * array);
 
 JsonNode *session_set(void);
 JsonNode *session_get(void);
-JsonNode *torrent_get(gboolean recent);
+JsonNode *torrent_get(gint64 id);
 JsonNode *torrent_set(JsonArray * array);
 JsonNode *torrent_pause(JsonArray * array);
 JsonNode *torrent_start(JsonArray * array);
@@ -41,5 +41,6 @@ JsonNode *torrent_set_location(JsonArray * array, gchar * location,
 JsonNode *blocklist_update(void);
 JsonNode *port_test(void);
 JsonNode *session_stats(void);
+void request_set_tag(JsonNode * req, gint64 tag);
 
 #endif                          /* REQUESTS_H_ */

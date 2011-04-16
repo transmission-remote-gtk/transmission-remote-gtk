@@ -747,9 +747,13 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
                        (trg_torrent_file_node *) li->data);
 }
 
-static void torrent_not_parsed_warning(GtkWindow *parent)
+static void torrent_not_parsed_warning(GtkWindow * parent)
 {
-    GtkWidget *dialog = gtk_message_dialog_new(parent, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK, _("Unable to parse torrent file. File preferences unavailable, but you can still try uploading it."));
+    GtkWidget *dialog =
+        gtk_message_dialog_new(parent, GTK_DIALOG_DESTROY_WITH_PARENT,
+                               GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
+                               _
+                               ("Unable to parse torrent file. File preferences unavailable, but you can still try uploading it."));
     gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
@@ -897,8 +901,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     priv->paused_check =
         gtk_check_button_new_with_mnemonic(_("Start _paused"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->paused_check),
-                                 pref_get_start_paused(priv->client->
-                                                       gconf));
+                                 pref_get_start_paused(priv->
+                                                       client->gconf));
 
     priv->priority_combo = gtr_priority_combo_new();
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->priority_combo), 1);

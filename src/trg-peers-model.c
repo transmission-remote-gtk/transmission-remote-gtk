@@ -61,7 +61,7 @@ find_existing_peer_item_foreachfunc(GtkTreeModel * model,
                                     GtkTreePath * path G_GNUC_UNUSED,
                                     GtkTreeIter * iter, gpointer data)
 {
-    struct peerAndIter *pi = (struct peerAndIter *)data;
+    struct peerAndIter *pi = (struct peerAndIter *) data;
 
     gchar *ip;
     gtk_tree_model_get(model, iter, PEERSCOL_IP, &ip, -1);
@@ -159,8 +159,7 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
                                PEERSCOL_ICON, GTK_STOCK_NETWORK,
                                PEERSCOL_IP, address,
 #ifdef HAVE_GEOIP
-                               PEERSCOL_COUNTRY,
-                               country ? country : "",
+                               PEERSCOL_COUNTRY, country ? country : "",
 #endif
                                PEERSCOL_CLIENT, peer_get_client_name(peer),
                                -1);
@@ -183,9 +182,9 @@ void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
 
         if (isNew == TRUE) {
             GtkTreePath *path =
-                    gtk_tree_model_get_path(GTK_TREE_MODEL(model), &peerIter);
+                gtk_tree_model_get_path(GTK_TREE_MODEL(model), &peerIter);
             GtkTreeRowReference *treeRef =
-                    gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
+                gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
             GInetAddress *inetAddr;
             GResolver *resolver;
 

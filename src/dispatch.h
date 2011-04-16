@@ -37,6 +37,6 @@ JsonObject *dispatch(trg_client * client, JsonNode * req, int *status);
 gboolean dispatch_async(trg_client * client, JsonNode * req,
                         void (*callback) (JsonObject *, int, gpointer),
                         gpointer data);
-GThreadPool *dispatch_init_pool(trg_client *client);
+GThreadPool *dispatch_init_pool(trg_client * client);
 
 #endif                          /* DISPATCH_H_ */
