@@ -979,10 +979,10 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
 
     if (priv->client->session)
         dispatch_async(priv->client,
-                       torrent_get(priv->client->
-                                   activeOnlyUpdate ? -2 : -1),
-                       priv->
-                       client->activeOnlyUpdate ? on_torrent_get_active :
+                       torrent_get(priv->
+                                   client->activeOnlyUpdate ? -2 : -1),
+                       priv->client->
+                       activeOnlyUpdate ? on_torrent_get_active :
                        on_torrent_get_update, data);
 
     return FALSE;
@@ -1032,7 +1032,7 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
         if (criteria & FILTER_FLAG_TRACKER) {
             gchar *text =
                 trg_state_selector_get_selected_text(priv->stateSelector);
-            JsonObject *json = NULL;
+            JsonObject *json;
             gtk_tree_model_get(model, iter, TORRENT_COLUMN_JSON, &json,
                                -1);
 
@@ -1159,10 +1159,6 @@ on_generic_interactive_action(JsonObject * response, int status,
             } else {
                 id = -1;
             }
-            /*struct timespec ts;
-               ts.tv_sec = 0;
-               ts.tv_nsec = 350000000;
-               nanosleep(&ts, NULL); */
 
             dispatch_async(priv->client, torrent_get(id),
                            on_torrent_get_interactive, data);

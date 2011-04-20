@@ -36,7 +36,7 @@
 
 gboolean trg_client_supports_tracker_edit(trg_client * tc)
 {
-    return tc->session != NULL && tc->version >= 2.10;
+    return tc->session && tc->version >= 2.10;
 }
 
 trg_client *trg_init_client()
