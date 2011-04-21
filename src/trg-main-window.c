@@ -1122,8 +1122,10 @@ torrent_selection_changed(GtkTreeSelection * selection, gpointer data)
     GList *firstNode;
     gint64 id;
 
-    if (trg_torrent_model_is_remove_in_progress(priv->torrentModel))
-        return FALSE;
+    if (trg_torrent_model_is_remove_in_progress(priv->torrentModel)) {
+        trg_main_window_torrent_scrub(win);
+        return TRUE;
+    }
 
     selectionList = gtk_tree_selection_get_selected_rows(selection, NULL);
     firstNode = g_list_first(selectionList);
@@ -1159,13 +1161,12 @@ on_generic_interactive_action(JsonObject * response, int status,
 
         if (status == CURLE_OK) {
             gint64 id;
-            if (json_object_has_member(response, PARAM_TAG)) {
+            if (json_object_has_member(response, PARAM_TAG))
                 id = json_object_get_int_member(response, PARAM_TAG);
-            } else if (priv->client->activeOnlyUpdate) {
+            else if (priv->client->activeOnlyUpdate)
                 id = -2;
-            } else {
+            else
                 id = -1;
-            }
 
             dispatch_async(priv->client, torrent_get(id),
                            on_torrent_get_interactive, data);
