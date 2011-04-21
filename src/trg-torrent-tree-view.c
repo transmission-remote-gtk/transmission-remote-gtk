@@ -67,35 +67,6 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
                                     TORRENT_COLUMN_NAME);
 }
 
-gint get_first_selected(trg_client * client, TrgTorrentTreeView * view,
-                        GtkTreeIter * iter, JsonObject ** json)
-{
-    GtkTreeModel *model;
-    GtkTreeSelection *selection;
-    GList *selectionList;
-    GList *firstNode;
-    gint64 id = -1;
-
-    model = gtk_tree_view_get_model(GTK_TREE_VIEW(view));
-
-    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(view));
-    selectionList = gtk_tree_selection_get_selected_rows(selection, NULL);
-
-    if ((firstNode = g_list_first(selectionList)) != NULL) {
-        if (gtk_tree_model_get_iter
-            (model, iter, (GtkTreePath *) firstNode->data)) {
-            gtk_tree_model_get(model, iter, TORRENT_COLUMN_JSON, json,
-                               TORRENT_COLUMN_ID, &id, -1);
-
-        }
-    }
-
-    g_list_foreach(selectionList, (GFunc) gtk_tree_path_free, NULL);
-    g_list_free(selectionList);
-
-    return id;
-}
-
 static void
 trg_torrent_model_get_json_id_array_foreach(GtkTreeModel * model,
                                             GtkTreePath *

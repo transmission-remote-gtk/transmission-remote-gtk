@@ -51,7 +51,7 @@ typedef struct _TrgTorrentPropsDialogPrivate TrgTorrentPropsDialogPrivate;
 struct _TrgTorrentPropsDialogPrivate {
     TrgTorrentTreeView *tv;
     trg_client *client;
-    GtkWindow *parent;
+    TrgMainWindow *parent;
     JsonArray *targetIds;
 
     GtkWidget *bandwidthPriorityCombo;
@@ -258,7 +258,6 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     GObject *object;
     TrgTorrentPropsDialogPrivate *priv;
     JsonObject *json;
-    GtkTreeIter iter;
     GtkTreeSelection *selection;
     gint rowCount;
     GtkWidget *notebook;
@@ -272,7 +271,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->tv));
     rowCount = gtk_tree_selection_count_selected_rows(selection);
-    get_first_selected(priv->client, priv->tv, &iter, &json);
+    get_torrent_data(priv->client->torrentTable, trg_mw_get_selected_torrent_id(priv->parent), &json, NULL);
     priv->targetIds = build_json_id_array(priv->tv);
 
     if (rowCount > 1) {
@@ -285,7 +284,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
         gtk_window_set_title(GTK_WINDOW(object), torrent_get_name(json));
     }
 
-    gtk_window_set_transient_for(GTK_WINDOW(object), priv->parent);
+    gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->parent));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
 
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
@@ -349,7 +348,7 @@ trg_torrent_props_dialog_class_init(TrgTorrentPropsDialogClass * klass)
                                     PROP_PARENT_WINDOW,
                                     g_param_spec_object
                                     ("parent-window", "Parent window",
-                                     "Parent window", GTK_TYPE_WINDOW,
+                                     "Parent window", TRG_TYPE_MAIN_WINDOW,
                                      G_PARAM_READWRITE |
                                      G_PARAM_CONSTRUCT_ONLY |
                                      G_PARAM_STATIC_NAME |

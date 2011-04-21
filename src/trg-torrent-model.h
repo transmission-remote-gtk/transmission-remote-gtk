@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #ifndef TRG_TORRENT_MODEL_H_
 #define TRG_TORRENT_MODEL_H_
 
@@ -76,6 +75,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
                               gint mode);
 
 GHashTable *get_torrent_table(TrgTorrentModel * model);
+gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel *model);
 
 enum {
     TORRENT_COLUMN_ICON,
