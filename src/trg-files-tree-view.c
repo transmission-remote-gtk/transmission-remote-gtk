@@ -280,58 +280,34 @@ static gboolean view_onPopupMenu(GtkWidget * treeview, gpointer userdata)
     return TRUE;
 }
 
-static void trg_files_tree_view_add_priority_column(TrgTreeView * tv,
-                                                    char *title, int index,
-                                                    int width)
-{
-    GtkCellRenderer *renderer;
-    GtkTreeViewColumn *column;
-
-    renderer = trg_cell_renderer_priority_new();
-    column = gtk_tree_view_column_new_with_attributes(title, renderer,
-                                                      "priority-value",
-                                                      index, NULL);
-
-    trg_tree_view_std_column_setup(column, index, width);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
-}
-
-static void trg_files_tree_view_add_wanted_column(TrgTreeView * tv,
-                                                  char *title, int index,
-                                                  int width)
-{
-    GtkCellRenderer *renderer;
-    GtkTreeViewColumn *column;
-
-    renderer = trg_cell_renderer_wanted_new();
-    column = gtk_tree_view_column_new_with_attributes(title, renderer,
-                                                      "wanted-value",
-                                                      index, NULL);
-
-    trg_tree_view_std_column_setup(column, index, width);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
-}
-
 static void trg_files_tree_view_init(TrgFilesTreeView * self)
 {
-    trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(self),
-                                         FILESCOL_ICON, FILESCOL_NAME,
-                                         _("Name"), -1);
-    trg_tree_view_add_size_column(TRG_TREE_VIEW(self), _("Size"),
-                                  FILESCOL_SIZE, -1);
-    trg_tree_view_add_prog_column(TRG_TREE_VIEW(self), _("Progress"),
-                                  FILESCOL_PROGRESS, -1);
-    trg_files_tree_view_add_wanted_column(TRG_TREE_VIEW(self), _("Wanted"),
-                                          FILESCOL_WANTED, -1);
-    trg_files_tree_view_add_priority_column(TRG_TREE_VIEW(self),
-                                            _("Priority"),
-                                            FILESCOL_PRIORITY, -1);
+    TrgTreeView *ttv = TRG_TREE_VIEW(self);
+    trg_column_description *desc;
+
+    desc =
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT, FILESCOL_NAME,
+                                 _("Name"), "name", 1);
+    desc->model_column_icon = FILESCOL_ICON;
+    desc->defaultWidth = 300;
+
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, FILESCOL_SIZE,
+                             _("Size"), "size", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_PROG, FILESCOL_PROGRESS,
+                             _("Progress"), "progress", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_WANT, FILESCOL_WANTED,
+                             _("Wanted"), "wanted", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_PRIO, FILESCOL_PRIORITY,
+                             _("Priority"), "priority", 1);
+
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), FILESCOL_NAME);
 
     g_signal_connect(self, "button-press-event",
                      G_CALLBACK(view_onButtonPressed), NULL);
     g_signal_connect(self, "popup-menu", G_CALLBACK(view_onPopupMenu),
                      NULL);
+
+    trg_tree_view_setup_columns(ttv);
 }
 
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,

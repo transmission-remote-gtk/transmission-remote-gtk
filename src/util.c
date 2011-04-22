@@ -105,7 +105,7 @@ gint gconf_client_get_int_or_default(GConfClient * gconf,
 gboolean g_slist_str_set_add(GSList ** list, const gchar * string)
 {
     GSList *li;
-    for (li = *list; li != NULL; li = g_slist_next(li))
+    for (li = *list; li; li = g_slist_next(li))
         if (!g_strcmp0((gchar *) li->data, string))
             return FALSE;
 
@@ -115,16 +115,14 @@ gboolean g_slist_str_set_add(GSList ** list, const gchar * string)
 
 gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key)
 {
-    GError *error = NULL;
-    GConfValue *value =
-        gconf_client_get_without_default(gconf, key, &error);
+    GConfValue *value = gconf_client_get_without_default(gconf, key, NULL);
     gboolean ret = TRUE;
-    if (error) {
-        g_error_free(error);
-    } else if (value) {
+
+    if (value) {
         ret = gconf_value_get_bool(value);
         gconf_value_free(value);
     }
+
     return ret;
 }
 

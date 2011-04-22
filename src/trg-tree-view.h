@@ -46,35 +46,39 @@ GType trg_tree_view_get_type(void);
 
 GtkWidget *trg_tree_view_new(void);
 
-G_END_DECLS
-#define trg_tree_view_add_column(tv, title, index) trg_tree_view_add_column_fixed_width(tv, title, index, -1)
-    GList * trg_tree_view_get_selected_refs_list(GtkTreeView * tv);
+G_END_DECLS GList * trg_tree_view_get_selected_refs_list(GtkTreeView * tv);
 
-GtkCellRenderer *trg_tree_view_add_column_fixed_width(TrgTreeView *
-                                                      treeview,
-                                                      char *title,
-                                                      int index,
-                                                      int width);
+enum {
+    TRG_COLTYPE_ICONTEXT,
+    TRG_COLTYPE_TEXT,
+    TRG_COLTYPE_SIZE,
+    TRG_COLTYPE_RATIO,
+    TRG_COLTYPE_EPOCH,
+    TRG_COLTYPE_SPEED,
+    TRG_COLTYPE_ETA,
+    TRG_COLTYPE_PROG,
+    TRG_COLTYPE_WANT,
+    TRG_COLTYPE_PRIO
+} TrgColumnType;
 
-void trg_tree_view_add_pixbuf_text_column(TrgTreeView *
-                                          treeview,
-                                          int iconIndex,
-                                          int nameIndex,
-                                          gchar * text, int width);
+typedef struct {
+    gint model_column;
+    gint model_column_icon;
+    gchar *header;
+    gchar *id;
+    gint show;
+    gint defaultWidth;
+    gint type;
+    GtkCellRenderer *customRenderer;
+    GtkTreeViewColumn **out;
+} trg_column_description;
 
-void trg_tree_view_add_speed_column(TrgTreeView * tv, char *title,
-                                    int index, int width);
-void trg_tree_view_add_size_column(TrgTreeView * tv, char *title,
-                                   int index, int width);
-void trg_tree_view_add_prog_column(TrgTreeView * tv, gchar * title,
-                                   gint index, gint width);
-void trg_tree_view_add_ratio_column(TrgTreeView * tv, char *title,
-                                    int index, int width);
-void trg_tree_view_add_eta_column(TrgTreeView * tv, char *title, int index,
-                                  int width);
-void trg_tree_view_std_column_setup(GtkTreeViewColumn * column, int index,
-                                    int width);
-void trg_tree_view_add_epoch_column(TrgTreeView * tv, char *title,
-                                    int index, int width);
+trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
+                                                 gint type,
+                                                 gint model_column,
+                                                 gchar * header,
+                                                 gchar * id, gint show);
+void trg_tree_view_setup_columns(TrgTreeView * tv);
+void trg_tree_view_persist(TrgTreeView * tv);
 
 #endif                          /* _TRG_TREE_VIEW_H_ */

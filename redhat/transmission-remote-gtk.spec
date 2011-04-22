@@ -1,5 +1,5 @@
 Name: transmission-remote-gtk
-Version: 0.4
+Version: 0.4.1
 Release: 1%{?dist:%{dist}}
 Summary: Remote control client for Transmission BitTorrent
 
@@ -95,6 +95,11 @@ fi
 %{_datadir}/locale/ru/LC_MESSAGES/%{name}.mo
 
 %changelog
+* Fri Apr 22 2011 Alan Fitton <alan@eth0.org.uk> - 0.4.1
+- Fix a few of small memory leaks.
+- Sync single torrent when file/trackers are changed.
+- Update efficiency improvement.
+
 * Tue Apr 12 2011 Alan Fitton <alan@eth0.org.uk> - 0.4
 - Torrent add dialog.
 - Support for active only updates.

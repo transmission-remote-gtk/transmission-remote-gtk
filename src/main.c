@@ -107,12 +107,12 @@ int main(int argc, char *argv[])
             gchar **files = g_new0(gchar *, argc);
             int i;
             for (i = 1; i < argc; i++)
-                files[i - 1] = g_strdup(argv[i]);
+                files[i - 1] = argv[i];
 
             command = COMMAND_ADD;
             message = unique_message_data_new();
             unique_message_data_set_uris(message, files);
-            g_strfreev(files);
+            g_free(files);
         } else {
             command = UNIQUE_ACTIVATE;
             message = NULL;

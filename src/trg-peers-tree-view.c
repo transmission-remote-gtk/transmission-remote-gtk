@@ -42,28 +42,34 @@ trg_peers_tree_view_class_init(TrgPeersTreeViewClass * klass G_GNUC_UNUSED)
 
 static void trg_peers_tree_view_init(TrgPeersTreeView * self)
 {
-    trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW
-                                         (self),
-                                         PEERSCOL_ICON,
-                                         PEERSCOL_IP, _("IP"), 160);
-    trg_tree_view_add_column_fixed_width(TRG_TREE_VIEW(self), _("Host"),
-                                         PEERSCOL_HOST, 250);
+    TrgTreeView *ttv = TRG_TREE_VIEW(self);
+    trg_column_description *desc;
+
+    desc =
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT, PEERSCOL_ICON,
+                                 _("IP"), "ip", 1);
+    desc->model_column_icon = PEERSCOL_ICON;
+
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_HOST,
+                             _("Host"), "host", 1);
+
 #ifdef HAVE_GEOIP
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Country"),
-                             PEERSCOL_COUNTRY);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_COUNTRY,
+                             _("Country"), "country", 1);
 #endif
-    trg_tree_view_add_speed_column(TRG_TREE_VIEW(self), _("Down Speed"),
-                                   PEERSCOL_DOWNSPEED, -1);
-    trg_tree_view_add_speed_column(TRG_TREE_VIEW(self), _("Up Speed"),
-                                   PEERSCOL_UPSPEED, -1);
-    trg_tree_view_add_prog_column(TRG_TREE_VIEW(self), _("Progress"),
-                                  PEERSCOL_PROGRESS, -1);
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Flags"),
-                             PEERSCOL_FLAGS);
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Client"),
-                             PEERSCOL_CLIENT);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_DOWNSPEED,
+                             _("Down Speed"), "down-speed", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_UPSPEED,
+                             _("Up Speed"), "up-speed", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_PROG, PEERSCOL_PROGRESS,
+                             _("Progress"), "progress", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_FLAGS,
+                             _("Flags"), "flags", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_CLIENT,
+                             _("Client"), "client", 1);
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), PEERSCOL_HOST);
+    trg_tree_view_setup_columns(ttv);
 }
 
 TrgPeersTreeView *trg_peers_tree_view_new(TrgPeersModel * model)

@@ -55,6 +55,7 @@ trg_torrent_move_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
 {
     TrgTorrentMoveDialogPrivate *priv =
         TRG_TORRENT_MOVE_DIALOG_GET_PRIVATE(dlg);
+
     if (res_id == GTK_RESPONSE_ACCEPT) {
         gchar *location =
             gtk_combo_box_get_active_text(GTK_COMBO_BOX
@@ -140,22 +141,18 @@ TrgTorrentMoveDialog *trg_torrent_move_dialog_new(TrgMainWindow * win,
                                                (GTK_TREE_VIEW(ttv)));
 
     if (count == 1) {
-        GtkTreeIter iter;
         JsonObject *json;
-        gchar *name;
+        const gchar *name;
         const gchar *current_location;
 
         get_torrent_data(client->torrentTable,
-                         trg_mw_get_selected_torrent_id(win), &json,
-                         &iter);
-        gtk_tree_model_get(trg_main_window_get_torrent_model(priv->win),
-                           &iter, TORRENT_COLUMN_NAME, &name, -1);
+                         trg_mw_get_selected_torrent_id(win), &json, NULL);
+        name = torrent_get_name(json);
         current_location = torrent_get_download_dir(json);
         gtk_combo_box_append_text(GTK_COMBO_BOX(priv->location_combo),
                                   current_location);
         gtk_combo_box_set_active(GTK_COMBO_BOX(priv->location_combo), 0);
         msg = g_strdup_printf(_("Move %s"), name);
-        g_free(name);
     } else {
         msg = g_strdup_printf(_("Move %d torrents"), count);
     }

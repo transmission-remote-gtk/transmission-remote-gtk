@@ -147,12 +147,20 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
 {
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(self);
+    TrgTreeView *ttv = TRG_TREE_VIEW(self);
+    trg_column_description *desc;
 
-    trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(self),
-                                         TRACKERCOL_ICON,
-                                         TRACKERCOL_TIER, _("Tier"), -1);
+    desc =
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT,
+                                 TRACKERCOL_TIER, _("Tier"), "tier", -1);
+    desc->model_column_icon = TRACKERCOL_ICON;
 
-    priv->announceRenderer = gtk_cell_renderer_text_new();
+    desc =
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
+                                 TRACKERCOL_ANNOUNCE, _("Announce URL"),
+                                 "announce-url", -1);
+    priv->announceRenderer = desc->customRenderer =
+        gtk_cell_renderer_text_new();
     g_signal_connect(priv->announceRenderer, "edited",
                      G_CALLBACK(trg_tracker_announce_edited), self);
     g_signal_connect(priv->announceRenderer, "editing-canceled",
@@ -161,20 +169,12 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
     g_signal_connect(priv->announceRenderer, "editing-started",
                      G_CALLBACK(trg_tracker_announce_editing_started),
                      self);
+    desc->out = &priv->announceColumn;
 
-    priv->announceColumn =
-        gtk_tree_view_column_new_with_attributes(_("Announce URL"),
-                                                 priv->announceRenderer,
-                                                 "text",
-                                                 TRACKERCOL_ANNOUNCE,
-                                                 NULL);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_SCRAPE,
+                             _("Scrape URL"), "scrape-url", 1);
 
-    trg_tree_view_std_column_setup(priv->announceColumn,
-                                   TRACKERCOL_ANNOUNCE, -1);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(self), priv->announceColumn);
-
-    trg_tree_view_add_column(TRG_TREE_VIEW(self), _("Scrape URL"),
-                             TRACKERCOL_SCRAPE);
+    trg_tree_view_setup_columns(ttv);
 }
 
 static void add_tracker(GtkWidget * w, gpointer data)
@@ -214,7 +214,7 @@ static void delete_tracker(GtkWidget * w, gpointer data)
     for (li = selectionRefs; li; li = g_list_next(li)) {
         GtkTreeRowReference *rr = (GtkTreeRowReference *) li->data;
         GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
-        if (path != NULL) {
+        if (path) {
             gint64 trackerId;
             GtkTreeIter trackerIter;
             gtk_tree_model_get_iter(model, &trackerIter, path);

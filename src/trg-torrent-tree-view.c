@@ -33,38 +33,52 @@ trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass *
 {
 }
 
-static void trg_torrent_tree_view_init(TrgTorrentTreeView * tv)
+static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
 {
-    trg_tree_view_add_pixbuf_text_column(TRG_TREE_VIEW(tv),
-                                         TORRENT_COLUMN_ICON,
-                                         TORRENT_COLUMN_NAME, _("Name"),
-                                         -1);
-    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), _("Size"),
-                                  TORRENT_COLUMN_SIZE, -1);
-    trg_tree_view_add_prog_column(TRG_TREE_VIEW(tv), _("Done"),
-                                  TORRENT_COLUMN_DONE, 70);
-    trg_tree_view_add_column(TRG_TREE_VIEW(tv), _("Status"),
-                             TORRENT_COLUMN_STATUS);
-    trg_tree_view_add_column(TRG_TREE_VIEW(tv), _("Seeds"),
-                             TORRENT_COLUMN_SEEDS);
-    trg_tree_view_add_column(TRG_TREE_VIEW(tv), _("Leechers"),
-                             TORRENT_COLUMN_LEECHERS);
-    trg_tree_view_add_speed_column(TRG_TREE_VIEW(tv), _("Down Speed"),
-                                   TORRENT_COLUMN_DOWNSPEED, -1);
-    trg_tree_view_add_speed_column(TRG_TREE_VIEW(tv), _("Up Speed"),
-                                   TORRENT_COLUMN_UPSPEED, -1);
-    trg_tree_view_add_eta_column(TRG_TREE_VIEW(tv), _("ETA"),
-                                 TORRENT_COLUMN_ETA, -1);
-    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), _("Uploaded"),
-                                  TORRENT_COLUMN_UPLOADED, -1);
-    trg_tree_view_add_size_column(TRG_TREE_VIEW(tv), _("Downloaded"),
-                                  TORRENT_COLUMN_DOWNLOADED, -1);
-    trg_tree_view_add_ratio_column(TRG_TREE_VIEW(tv), _("Ratio"),
-                                   TORRENT_COLUMN_RATIO, -1);
-    trg_tree_view_add_epoch_column(TRG_TREE_VIEW(tv), _("Added"),
-                                   TORRENT_COLUMN_ADDED, -1);
-    gtk_tree_view_set_search_column(GTK_TREE_VIEW(tv),
+    TrgTreeView *ttv = TRG_TREE_VIEW(tttv);
+    trg_column_description *desc;
+
+    desc =
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT,
+                                 TORRENT_COLUMN_NAME, _("Name"), "name",
+                                 1);
+    desc->model_column_icon = TORRENT_COLUMN_ICON;
+    desc->defaultWidth = 250;
+
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, TORRENT_COLUMN_SIZE,
+                             _("Size"), "size", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_PROG, TORRENT_COLUMN_DONE,
+                             _("Done"), "done", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TORRENT_COLUMN_STATUS,
+                             _("Status"), "status", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TORRENT_COLUMN_SEEDS,
+                             _("Seeds"), "seeds", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
+                             TORRENT_COLUMN_LEECHERS, _("Leechers"),
+                             "leechers", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED,
+                             TORRENT_COLUMN_DOWNSPEED, _("Down Speed"),
+                             "down-speed", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED,
+                             TORRENT_COLUMN_UPSPEED, _("Up Speed"),
+                             "up-speed", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_ETA, TORRENT_COLUMN_ETA,
+                             _("ETA"), "eta", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE,
+                             TORRENT_COLUMN_UPLOADED, _("Uploaded"),
+                             "uploaded", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE,
+                             TORRENT_COLUMN_DOWNLOADED, _("Downloaded"),
+                             "downloaded", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_RATIO, TORRENT_COLUMN_RATIO,
+                             _("Ratio"), "ratio", 1);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_EPOCH, TORRENT_COLUMN_ADDED,
+                             _("Added"), "added", 1);
+
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW(tttv),
                                     TORRENT_COLUMN_NAME);
+
+    trg_tree_view_setup_columns(ttv);
 }
 
 static void

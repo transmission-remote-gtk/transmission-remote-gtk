@@ -33,6 +33,7 @@
 #include <gdk/gdkkeysyms.h>
 #include <curl/curl.h>
 #include <libnotify/notify.h>
+#include <gconf/gconf-client.h>
 
 #include "dispatch.h"
 #include "trg-client.h"
@@ -354,6 +355,10 @@ static gboolean delete_event(GtkWidget * w,
                          height, NULL);
     gconf_client_set_int(priv->client->gconf, TRG_GCONF_KEY_WINDOW_WIDTH,
                          width, NULL);
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTreeView));
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTreeView));
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->torrentTreeView));
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTreeView));
 
     return FALSE;
 }
@@ -998,10 +1003,10 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
 
     if (priv->client->session)
         dispatch_async(priv->client,
-                       torrent_get(priv->client->
-                                   activeOnlyUpdate ? -2 : -1),
-                       priv->
-                       client->activeOnlyUpdate ? on_torrent_get_active :
+                       torrent_get(priv->
+                                   client->activeOnlyUpdate ? -2 : -1),
+                       priv->client->
+                       activeOnlyUpdate ? on_torrent_get_active :
                        on_torrent_get_update, data);
 
     return FALSE;
