@@ -138,10 +138,12 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
                                     (priv->seedRatioLimit), args);
     json_object_set_int_member(args, FIELD_SEED_RATIO_MODE,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
-                                                        (priv->seedRatioMode)));
+                                                        (priv->
+                                                         seedRatioMode)));
     json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
-                                                        (priv->bandwidthPriorityCombo))
+                                                        (priv->
+                                                         bandwidthPriorityCombo))
                                - 1);
 
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
@@ -271,7 +273,9 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->tv));
     rowCount = gtk_tree_selection_count_selected_rows(selection);
-    get_torrent_data(priv->client->torrentTable, trg_mw_get_selected_torrent_id(priv->parent), &json, NULL);
+    get_torrent_data(priv->client->torrentTable,
+                     trg_mw_get_selected_torrent_id(priv->parent), &json,
+                     NULL);
     priv->targetIds = build_json_id_array(priv->tv);
 
     if (rowCount > 1) {
@@ -284,7 +288,8 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
         gtk_window_set_title(GTK_WINDOW(object), torrent_get_name(json));
     }
 
-    gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->parent));
+    gtk_window_set_transient_for(GTK_WINDOW(object),
+                                 GTK_WINDOW(priv->parent));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
 
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,

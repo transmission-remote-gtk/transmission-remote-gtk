@@ -125,21 +125,6 @@ trg_torrent_add_dialog_get_property(GObject * object,
     }
 }
 
-/* Use synchronous dispatch() in our dedicated thread function.
- * This means torrents are added in sequence, instead of dispatch_async()
- * working concurrently for each upload.
- */
-
-struct add_torrent_threadfunc_args {
-    GSList *list;
-    trg_client *client;
-    gpointer cb_data;
-    gboolean paused;
-    gchar *dir;
-    gint priority;
-    gboolean extraArgs;
-};
-
 static void add_set_common_args(JsonObject * args, gint priority,
                                 gchar * dir)
 {
@@ -236,7 +221,7 @@ static GtkWidget *trg_destination_folder_new(trg_client * client)
     return combo;
 }
 
-static void launch_add_thread(struct add_torrent_threadfunc_args *args)
+void launch_add_thread(struct add_torrent_threadfunc_args *args)
 {
     GError *error = NULL;
     g_thread_create(add_files_threadfunc, args, FALSE, &error);
@@ -774,8 +759,12 @@ static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
         gchar *file_name_base = g_path_get_basename(file_name);
         trg_torrent_file *tor_data = trg_parse_torrent_file(file_name);
 
-        gtk_button_set_label(chooser, file_name_base);
-        g_free(file_name_base);
+        if (file_name_base) {
+            gtk_button_set_label(chooser, file_name_base);
+            g_free(file_name_base);
+        } else {
+            gtk_button_set_label(chooser, file_name);
+        }
 
         if (!tor_data) {
             torrent_not_parsed_warning(GTK_WINDOW(priv->parent));
@@ -901,8 +890,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     priv->paused_check =
         gtk_check_button_new_with_mnemonic(_("Start _paused"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->paused_check),
-                                 pref_get_start_paused(priv->client->
-                                                       gconf));
+                                 pref_get_start_paused(priv->
+                                                       client->gconf));
 
     priv->priority_combo = gtr_priority_combo_new();
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->priority_combo), 1);

@@ -135,11 +135,14 @@ static void trg_torrent_model_ref_free(gpointer data)
         GtkTreeIter iter;
         JsonObject *json;
         if (gtk_tree_model_get_iter(model, &iter, path)) {
-            gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json, -1);
+            gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json,
+                               -1);
             json_object_unref(json);
-            g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS, GINT_TO_POINTER(TRUE));
+            g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
+                              GINT_TO_POINTER(TRUE));
             gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
-            g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS, GINT_TO_POINTER(FALSE));
+            g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
+                              GINT_TO_POINTER(FALSE));
         }
 
         gtk_tree_path_free(path);
@@ -181,12 +184,15 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
                               (GDestroyNotify) g_free,
                               trg_torrent_model_ref_free);
 
-    g_object_set_data(G_OBJECT(self), PROP_REMOVE_IN_PROGRESS, GINT_TO_POINTER(FALSE));
+    g_object_set_data(G_OBJECT(self), PROP_REMOVE_IN_PROGRESS,
+                      GINT_TO_POINTER(FALSE));
 }
 
-gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel *model)
+gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model)
 {
-    return (gboolean)GPOINTER_TO_INT(g_object_get_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS));
+    return (gboolean)
+        GPOINTER_TO_INT(g_object_get_data
+                        (G_OBJECT(model), PROP_REMOVE_IN_PROGRESS));
 }
 
 static guint32 torrent_get_flags(JsonObject * t, gint64 status)
@@ -398,13 +404,14 @@ GList *trg_torrent_model_find_removed(GtkTreeModel * model,
     return args.toRemove;
 }
 
-gboolean get_torrent_data(GHashTable *table, gint64 id, JsonObject **t, GtkTreeIter *out_iter)
+gboolean get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
+                          GtkTreeIter * out_iter)
 {
     gpointer result = g_hash_table_lookup(table, &id);
     gboolean found = FALSE;
 
     if (result) {
-        GtkTreeRowReference *rr = (GtkTreeRowReference*)result;
+        GtkTreeRowReference *rr = (GtkTreeRowReference *) result;
         GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
         GtkTreeIter iter;
         if (path) {
@@ -413,7 +420,8 @@ gboolean get_torrent_data(GHashTable *table, gint64 id, JsonObject **t, GtkTreeI
             if (out_iter)
                 *out_iter = iter;
             if (t)
-                gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, t, -1);
+                gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, t,
+                                   -1);
             found = TRUE;
             gtk_tree_path_free(path);
         }

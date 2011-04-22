@@ -57,7 +57,7 @@ typedef struct {
 #define TORRENT_ADD_NOTIFY_TMOUT 3000
 
 GType trg_main_window_get_type(void);
-gboolean trg_add_from_filename(TrgMainWindow * win, gchar * fileName);
+gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
 void on_session_set(JsonObject * response, int status, gpointer data);
 void on_generic_interactive_action(JsonObject * response, int status,
                                    gpointer data);
@@ -68,8 +68,8 @@ void trg_main_window_remove_status_icon(TrgMainWindow * win);
 void trg_main_window_add_graph(TrgMainWindow * win, gboolean show);
 void trg_main_window_remove_graph(TrgMainWindow * win);
 TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win);
-gint trg_mw_get_selected_torrent_id(TrgMainWindow *win);
-GtkTreeModel *trg_main_window_get_torrent_model(TrgMainWindow *win);
+gint trg_mw_get_selected_torrent_id(TrgMainWindow * win);
+GtkTreeModel *trg_main_window_get_torrent_model(TrgMainWindow * win);
 
 G_END_DECLS
 #endif                          /* MAIN_WINDOW_H_ */

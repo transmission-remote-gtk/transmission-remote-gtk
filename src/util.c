@@ -123,6 +123,7 @@ gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key)
         g_error_free(error);
     } else if (value) {
         ret = gconf_value_get_bool(value);
+        gconf_value_free(value);
     }
     return ret;
 }

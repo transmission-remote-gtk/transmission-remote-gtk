@@ -50,7 +50,7 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 {
     TrgMainWindow *win;
     UniqueResponse res;
-    gchar *fileName;
+    gchar **uris;
 
     win = TRG_MAIN_WINDOW(user_data);
 
@@ -62,10 +62,10 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
         res = UNIQUE_RESPONSE_OK;
         break;
     case COMMAND_ADD:
-        fileName = unique_message_data_get_filename(message);
+        uris = unique_message_data_get_uris(message);
         res =
             trg_add_from_filename(win,
-                                  fileName) ? UNIQUE_RESPONSE_OK :
+                                  uris) ? UNIQUE_RESPONSE_OK :
             UNIQUE_RESPONSE_FAIL;
         break;
     default:
@@ -104,9 +104,15 @@ int main(int argc, char *argv[])
         UniqueMessageData *message;
 
         if (argc > 1) {
+            gchar **files = g_new0(gchar *, argc);
+            int i;
+            for (i = 1; i < argc; i++)
+                files[i - 1] = g_strdup(argv[i]);
+
             command = COMMAND_ADD;
             message = unique_message_data_new();
-            unique_message_data_set_filename(message, argv[1]);
+            unique_message_data_set_uris(message, files);
+            g_strfreev(files);
         } else {
             command = UNIQUE_ACTIVATE;
             message = NULL;

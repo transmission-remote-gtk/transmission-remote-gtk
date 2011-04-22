@@ -145,7 +145,9 @@ TrgTorrentMoveDialog *trg_torrent_move_dialog_new(TrgMainWindow * win,
         gchar *name;
         const gchar *current_location;
 
-        get_torrent_data(client->torrentTable, trg_mw_get_selected_torrent_id(win), &json, &iter);
+        get_torrent_data(client->torrentTable,
+                         trg_mw_get_selected_torrent_id(win), &json,
+                         &iter);
         gtk_tree_model_get(trg_main_window_get_torrent_model(priv->win),
                            &iter, TORRENT_COLUMN_NAME, &name, -1);
         current_location = torrent_get_download_dir(json);
