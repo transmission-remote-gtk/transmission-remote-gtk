@@ -78,7 +78,7 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 
 int main(int argc, char *argv[])
 {
-    int returnValue;
+    int returnValue = EXIT_SUCCESS;
     UniqueApp *app = NULL;
     TrgMainWindow *window;
     trg_client *client;
@@ -104,6 +104,9 @@ int main(int argc, char *argv[])
         UniqueMessageData *message;
 
         if (argc > 1) {
+            /* Turn the arguments into a null terminated array for libunique
+             * exclude the first (executable name).
+             */
             gchar **files = g_new0(gchar *, argc);
             int i;
             for (i = 1; i < argc; i++)
@@ -121,11 +124,8 @@ int main(int argc, char *argv[])
         response = unique_app_send_message(app, command, message);
         unique_message_data_free(message);
 
-        if (response == UNIQUE_RESPONSE_OK) {
-            returnValue = 0;
-        } else {
-            returnValue = 1;
-        }
+        if (response != UNIQUE_RESPONSE_OK)
+            returnValue = EXIT_FAILURE;
     } else {
         client = trg_init_client();
 
@@ -150,7 +150,5 @@ int main(int argc, char *argv[])
     if (withUnique)
         g_object_unref(app);
 
-    gdk_threads_leave();
-
-    return EXIT_SUCCESS;
+    return returnValue;
 }

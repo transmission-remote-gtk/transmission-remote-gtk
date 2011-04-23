@@ -64,12 +64,16 @@ trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
     if (property_id == PROP_EPOCH_VALUE) {
         gint64 new_value = g_value_get_int64(value);
         if (priv->epoch_value != new_value) {
-            GDateTime *dt = g_date_time_new_from_unix_utc(new_value);
-            gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
-            g_object_set(object, "text", timestring, NULL);
-            g_free(timestring);
-            g_date_time_unref(dt);
-            priv->epoch_value = new_value;
+            if (new_value > 0) {
+                GDateTime *dt = g_date_time_new_from_unix_utc(new_value);
+                gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
+                g_object_set(object, "text", timestring, NULL);
+                g_free(timestring);
+                g_date_time_unref(dt);
+                priv->epoch_value = new_value;
+            } else {
+                g_object_set(object, "text", "", NULL);
+            }
         }
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
