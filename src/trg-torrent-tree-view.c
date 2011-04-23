@@ -78,6 +78,9 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
                              _("Location"), "download-dir", TRG_COLUMN_EXTRA);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TORRENT_COLUMN_ID,
                              _("ID"), "id", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_PRIO, TORRENT_COLUMN_BANDWIDTH_PRIORITY,
+                             _("Bandwidth Priority"), "bandwidth-priority", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_EPOCH, TORRENT_COLUMN_DONE_DATE, _("Done Date"), "done-date", TRG_COLUMN_EXTRA);
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tttv),
                                     TORRENT_COLUMN_NAME);

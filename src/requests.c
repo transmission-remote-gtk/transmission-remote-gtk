@@ -140,7 +140,6 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_NAME);
     json_array_add_string_element(fields, FIELD_PERCENTDONE);
     json_array_add_string_element(fields, FIELD_COMMENT);
-    json_array_add_string_element(fields, FIELD_ADDED_DATE);
     json_array_add_string_element(fields, FIELD_TOTAL_SIZE);
     json_array_add_string_element(fields, FIELD_LEFT_UNTIL_DONE);
     json_array_add_string_element(fields, FIELD_ANNOUNCE_URL);
@@ -201,4 +200,10 @@ static JsonNode *base_request(gchar * method)
 void request_set_tag(JsonNode * req, gint64 tag)
 {
     json_object_set_int_member(json_node_get_object(req), PARAM_TAG, tag);
+}
+
+void request_set_tag_from_ids(JsonNode *req, JsonArray *ids)
+{
+    gint64 id = json_array_get_length(ids) == 1 ? json_array_get_int_element(ids, 0) : -1;
+    request_set_tag(req, id);
 }

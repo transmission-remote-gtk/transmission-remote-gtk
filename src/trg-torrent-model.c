@@ -176,6 +176,8 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_UPDATESERIAL] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_FLAGS] = G_TYPE_INT;
     column_types[TORRENT_COLUMN_DOWNLOADDIR] = G_TYPE_STRING;
+    column_types[TORRENT_COLUMN_BANDWIDTH_PRIORITY] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_DONE_DATE] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
                                     TORRENT_COLUMN_COLUMNS, column_types);
@@ -256,6 +258,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
                     GtkTreeIter * iter, JsonObject * t,
                     trg_torrent_model_update_stats * stats)
 {
+    GtkListStore *ls = GTK_LIST_STORE(model);
     guint lastFlags, newFlags;
     JsonObject *lastJson;
     gchar *statusString, *statusIcon;
@@ -284,48 +287,51 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
     json_object_ref(t);
 
 #ifdef DEBUG
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ICON, statusIcon, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_DONE, torrent_get_percent_done(t),
                        -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_STATUS,
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_STATUS,
                        statusString, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_DOWNSPEED, downRate, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_FLAGS,
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FLAGS,
                        newFlags, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_UPSPEED,
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPSPEED,
                        upRate, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_ETA,
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ETA,
                        torrent_get_eta(t), -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_UPLOADED, uploaded, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_RATIO,
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_RATIO,
                        uploaded > 0
                        && downloaded >
                        0 ? (double) uploaded / (double) downloaded : 0,
                        -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_ID, id,
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ID, id,
                        -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_JSON, t,
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_JSON, t,
                        -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_UPDATESERIAL, serial, -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        -1);
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_DOWNLOADDIR, torrent_get_download_dir(t));
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR, torrent_get_download_dir(t));
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY, torrent_get_bandwidth_priority(t));
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t), -1);
 #else
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+    gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ICON, statusIcon,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
+                       TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t),
                        TORRENT_COLUMN_NAME, torrent_get_name(t),
                        TORRENT_COLUMN_SIZE, torrent_get_size(t),
                        TORRENT_COLUMN_DONE,
@@ -343,6 +349,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
                        && downloaded >
                        0 ? (double) uploaded / (double) downloaded : 0,
                        TORRENT_COLUMN_DOWNLOADDIR, torrent_get_download_dir(t),
+                       TORRENT_COLUMN_BANDWIDTH_PRIORITY, torrent_get_bandwidth_priority(t),
                        TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
                        TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif

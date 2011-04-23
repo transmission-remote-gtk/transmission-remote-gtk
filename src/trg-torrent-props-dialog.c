@@ -122,6 +122,7 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
     }
 
     request = torrent_set(priv->targetIds);
+    request_set_tag_from_ids(request, priv->targetIds);
     args = node_get_arguments(request);
 
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON

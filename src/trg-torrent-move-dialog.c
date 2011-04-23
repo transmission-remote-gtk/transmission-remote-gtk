@@ -64,6 +64,7 @@ trg_torrent_move_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
                                                  gtk_toggle_button_get_active
                                                  (GTK_TOGGLE_BUTTON
                                                   (priv->move_check)));
+        request_set_tag_from_ids(request, priv->ids);
         g_free(location);
         dispatch_async(priv->client, request,
                        on_generic_interactive_action, data);
