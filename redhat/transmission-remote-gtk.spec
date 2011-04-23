@@ -95,10 +95,11 @@ fi
 %{_datadir}/locale/ru/LC_MESSAGES/%{name}.mo
 
 %changelog
-* Fri Apr 22 2011 Alan Fitton <alan@eth0.org.uk> - 0.4.1
+* Fri Apr 22 2011 Alan Fitton <alan@eth0.org.uk> - 0.5
 - Fix a few of small memory leaks.
 - Sync single torrent when file/trackers are changed.
 - Update efficiency improvement.
+- Customisable columns, new optional columns.
 
 * Tue Apr 12 2011 Alan Fitton <alan@eth0.org.uk> - 0.4
 - Torrent add dialog.
