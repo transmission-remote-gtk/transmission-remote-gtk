@@ -555,7 +555,7 @@ msgstr "Połączenie"
 
 #: src/trg-preferences-dialog.c:409
 msgid "Desktop"
-msgstr "Pulpit"
+msgstr "Okno programu"
 
 #: src/trg-preferences-dialog.c:413
 msgid "Behavior"
@@ -822,7 +822,7 @@ msgstr "Niski"
 #: src/trg-torrent-add-dialog.c:342
 #: src/trg-torrent-add-dialog.c:709
 msgid "Normal"
-msgstr "Normalny"
+msgstr "Zwykły"
 
 #: src/trg-torrent-props-dialog.c:186
 #: src/trg-cell-renderer-priority.c:75
@@ -874,7 +874,7 @@ msgstr "Właściwości wielu torentów (%d)"
 
 #: src/trg-torrent-tree-view.c:44
 msgid "Done"
-msgstr "Stan"
+msgstr "Postęp"
 
 #: src/trg-torrent-tree-view.c:48
 msgid "Seeds"
@@ -894,7 +894,7 @@ msgstr "Adres rozgłaszania"
 
 #: src/trg-trackers-tree-view.c:175
 msgid "Scrape URL"
-msgstr "Adres wyskrobany"
+msgstr "Adres zgarniania"
 
 #: src/trg-trackers-tree-view.c:272
 msgid "Delete"
@@ -1038,7 +1038,7 @@ msgstr "P_iorytet torenta:"
 
 #: src/trg-torrent-add-dialog.c:1040
 msgid "Show _options dialog"
-msgstr "Pokaż dialog _opcji"
+msgstr "Pokaż dodatkowe opcje"
 
 #~ msgid "BitTorrent Metadata"
 #~ msgstr "Metadane BitTorrent"
