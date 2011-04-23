@@ -152,13 +152,13 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
 
     desc =
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT,
-                                 TRACKERCOL_TIER, _("Tier"), "tier", -1);
+                                 TRACKERCOL_TIER, _("Tier"), "tier", 0);
     desc->model_column_icon = TRACKERCOL_ICON;
 
     desc =
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
                                  TRACKERCOL_ANNOUNCE, _("Announce URL"),
-                                 "announce-url", -1);
+                                 "announce-url", TRG_COLUMN_ALWAYS);
     priv->announceRenderer = desc->customRenderer =
         gtk_cell_renderer_text_new();
     g_signal_connect(priv->announceRenderer, "edited",
@@ -172,7 +172,7 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
     desc->out = &priv->announceColumn;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_SCRAPE,
-                             _("Scrape URL"), "scrape-url", 1);
+                             _("Scrape URL"), "scrape-url", 0);
 
     trg_tree_view_setup_columns(ttv);
 }

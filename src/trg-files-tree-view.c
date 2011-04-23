@@ -287,18 +287,18 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
 
     desc =
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT, FILESCOL_NAME,
-                                 _("Name"), "name", 1);
+                                 _("Name"), "name", 0);
     desc->model_column_icon = FILESCOL_ICON;
     desc->defaultWidth = 300;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, FILESCOL_SIZE,
-                             _("Size"), "size", 1);
+                             _("Size"), "size", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PROG, FILESCOL_PROGRESS,
-                             _("Progress"), "progress", 1);
+                             _("Progress"), "progress", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_WANT, FILESCOL_WANTED,
-                             _("Wanted"), "wanted", 1);
+                             _("Wanted"), "wanted", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PRIO, FILESCOL_PRIORITY,
-                             _("Priority"), "priority", 1);
+                             _("Priority"), "priority", 0);
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), FILESCOL_NAME);
 

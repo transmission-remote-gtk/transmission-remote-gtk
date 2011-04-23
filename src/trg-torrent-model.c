@@ -175,6 +175,7 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_JSON] = G_TYPE_POINTER;
     column_types[TORRENT_COLUMN_UPDATESERIAL] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_FLAGS] = G_TYPE_INT;
+    column_types[TORRENT_COLUMN_DOWNLOADDIR] = G_TYPE_STRING;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
                                     TORRENT_COLUMN_COLUMNS, column_types);
@@ -320,6 +321,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_DOWNLOADDIR, torrent_get_download_dir(t));
 #else
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
                        TORRENT_COLUMN_ICON, statusIcon,
@@ -340,6 +342,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
                        0
                        && downloaded >
                        0 ? (double) uploaded / (double) downloaded : 0,
+                       TORRENT_COLUMN_DOWNLOADDIR, torrent_get_download_dir(t),
                        TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
                        TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif

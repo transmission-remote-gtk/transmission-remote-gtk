@@ -433,7 +433,7 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
     int i;
 
     for (i = 0; uris[i]; i++)
-        filesList = g_slist_append(filesList, g_strdup(uris[i]));
+        filesList = g_slist_append(filesList, uris[i]);
 
     if (pref_get_add_options_dialog(client->gconf)) {
         gdk_threads_enter();
@@ -454,7 +454,7 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
         launch_add_thread(args);
     }
 
-    g_strfreev(uris);
+    g_free(uris);
 
     return TRUE;
 }

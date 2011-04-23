@@ -47,26 +47,26 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
 
     desc =
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT, PEERSCOL_ICON,
-                                 _("IP"), "ip", 1);
+                                 _("IP"), "ip", 0);
     desc->model_column_icon = PEERSCOL_ICON;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_HOST,
-                             _("Host"), "host", 1);
+                             _("Host"), "host", 0);
 
 #ifdef HAVE_GEOIP
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_COUNTRY,
-                             _("Country"), "country", 1);
+                             _("Country"), "country", 0);
 #endif
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_DOWNSPEED,
-                             _("Down Speed"), "down-speed", 1);
+                             _("Down Speed"), "down-speed", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_UPSPEED,
-                             _("Up Speed"), "up-speed", 1);
+                             _("Up Speed"), "up-speed", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PROG, PEERSCOL_PROGRESS,
-                             _("Progress"), "progress", 1);
+                             _("Progress"), "progress", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_FLAGS,
-                             _("Flags"), "flags", 1);
+                             _("Flags"), "flags", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_CLIENT,
-                             _("Client"), "client", 1);
+                             _("Client"), "client", 0);
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), PEERSCOL_HOST);
     trg_tree_view_setup_columns(ttv);
