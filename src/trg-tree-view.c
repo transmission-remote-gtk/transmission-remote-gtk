@@ -41,8 +41,9 @@ struct _TrgTreeViewPrivate {
 };
 
 static void trg_tree_view_add_column_after(TrgTreeView * tv,
-                                     trg_column_description * desc,
-                                     gchar ** widths, gint i, GtkTreeViewColumn *after_col);
+                                           trg_column_description * desc,
+                                           gchar ** widths, gint i,
+                                           GtkTreeViewColumn * after_col);
 
 trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
                                                  gint type,
@@ -100,9 +101,11 @@ static gchar **trg_gconf_get_csv(TrgTreeView * tv, gchar * key)
     return ret;
 }
 
-static void trg_tree_view_hide_column(GtkWidget *w, GtkTreeViewColumn *col)
+static void trg_tree_view_hide_column(GtkWidget * w,
+                                      GtkTreeViewColumn * col)
 {
-    trg_column_description *desc = g_object_get_data(G_OBJECT(col), "column-desc");
+    trg_column_description *desc =
+        g_object_get_data(G_OBJECT(col), "column-desc");
     GtkWidget *tv = gtk_tree_view_column_get_tree_view(col);
     desc->flags &= ~TRG_COLUMN_SHOWING;
     gtk_tree_view_remove_column(GTK_TREE_VIEW(tv), col);
@@ -115,17 +118,19 @@ static void trg_tree_view_add_column(TrgTreeView * tv,
     trg_tree_view_add_column_after(tv, desc, widths, i, NULL);
 }
 
-static void trg_tree_view_user_add_column_cb(GtkWidget *w, trg_column_description *desc)
+static void trg_tree_view_user_add_column_cb(GtkWidget * w,
+                                             trg_column_description * desc)
 {
     GtkTreeViewColumn *col = g_object_get_data(G_OBJECT(w), "parent-col");
-    TrgTreeView *tv = TRG_TREE_VIEW(gtk_tree_view_column_get_tree_view(col));
+    TrgTreeView *tv =
+        TRG_TREE_VIEW(gtk_tree_view_column_get_tree_view(col));
 
     trg_tree_view_add_column_after(tv, desc, NULL, -1, col);
 }
 
 static void
-view_popup_menu(GtkButton  *button, GdkEventButton * event,
-                GtkTreeViewColumn *column)
+view_popup_menu(GtkButton * button, GdkEventButton * event,
+                GtkTreeViewColumn * column)
 {
     GtkWidget *tv = gtk_tree_view_column_get_tree_view(column);
     TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
@@ -138,16 +143,19 @@ view_popup_menu(GtkButton  *button, GdkEventButton * event,
     desc = g_object_get_data(G_OBJECT(column), "column-desc");
     menuitem = gtk_check_menu_item_new_with_label(desc->header);
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menuitem), TRUE);
-    g_signal_connect(menuitem, "activate", G_CALLBACK(trg_tree_view_hide_column), column);
+    g_signal_connect(menuitem, "activate",
+                     G_CALLBACK(trg_tree_view_hide_column), column);
     gtk_widget_set_sensitive(menuitem, !(desc->flags & TRG_COLUMN_ALWAYS));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
     for (li = priv->columns; li; li = g_list_next(li)) {
-        trg_column_description *desc = (trg_column_description *)li->data;
+        trg_column_description *desc = (trg_column_description *) li->data;
         if (!(desc->flags & TRG_COLUMN_SHOWING)) {
             menuitem = gtk_check_menu_item_new_with_label(desc->header);
             g_object_set_data(G_OBJECT(menuitem), "parent-col", column);
-            g_signal_connect(menuitem, "activate", G_CALLBACK(trg_tree_view_user_add_column_cb), desc);
+            g_signal_connect(menuitem, "activate",
+                             G_CALLBACK(trg_tree_view_user_add_column_cb),
+                             desc);
             gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
         }
     }
@@ -159,8 +167,8 @@ view_popup_menu(GtkButton  *button, GdkEventButton * event,
 }
 
 static gboolean
-col_onButtonPressed(GtkButton* button, GdkEventButton * event,
-                     GtkTreeViewColumn *col)
+col_onButtonPressed(GtkButton * button, GdkEventButton * event,
+                    GtkTreeViewColumn * col)
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         view_popup_menu(button, event, col);
@@ -171,8 +179,9 @@ col_onButtonPressed(GtkButton* button, GdkEventButton * event,
 }
 
 static void trg_tree_view_add_column_after(TrgTreeView * tv,
-                                     trg_column_description * desc,
-                                     gchar ** widths, gint i, GtkTreeViewColumn *after_col)
+                                           trg_column_description * desc,
+                                           gchar ** widths, gint i,
+                                           GtkTreeViewColumn * after_col)
 {
     GtkCellRenderer *renderer;
     GtkTreeViewColumn *column = NULL;
@@ -180,8 +189,9 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
     switch (desc->type) {
     case TRG_COLTYPE_TEXT:
         renderer =
-            desc->customRenderer ? desc->
-            customRenderer : gtk_cell_renderer_text_new();
+            desc->
+            customRenderer ? desc->customRenderer :
+            gtk_cell_renderer_text_new();
         column =
             gtk_tree_view_column_new_with_attributes(desc->header,
                                                      renderer, "text",
@@ -296,7 +306,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 
     if (after_col)
-        gtk_tree_view_move_column_after(GTK_TREE_VIEW(tv), column, after_col);
+        gtk_tree_view_move_column_after(GTK_TREE_VIEW(tv), column,
+                                        after_col);
 
     g_signal_connect(column->button, "button-press-event",
                      G_CALLBACK(col_onButtonPressed), column);

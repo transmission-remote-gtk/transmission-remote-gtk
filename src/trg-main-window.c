@@ -1003,10 +1003,10 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
 
     if (priv->client->session)
         dispatch_async(priv->client,
-                       torrent_get(priv->
-                                   client->activeOnlyUpdate ? -2 : -1),
-                       priv->client->
-                       activeOnlyUpdate ? on_torrent_get_active :
+                       torrent_get(priv->client->
+                                   activeOnlyUpdate ? -2 : -1),
+                       priv->
+                       client->activeOnlyUpdate ? on_torrent_get_active :
                        on_torrent_get_update, data);
 
     return FALSE;

@@ -192,7 +192,7 @@ gchar *torrent_get_status_icon(guint flags)
         return g_strdup(GTK_STOCK_DIALOG_QUESTION);
 }
 
-gint64 torrent_get_done_date(JsonObject *t)
+gint64 torrent_get_done_date(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_DONE_DATE);
 }

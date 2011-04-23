@@ -42,6 +42,6 @@ JsonNode *blocklist_update(void);
 JsonNode *port_test(void);
 JsonNode *session_stats(void);
 void request_set_tag(JsonNode * req, gint64 tag);
-void request_set_tag_from_ids(JsonNode *req, JsonArray *ids);
+void request_set_tag_from_ids(JsonNode * req, JsonArray * ids);
 
 #endif                          /* REQUESTS_H_ */

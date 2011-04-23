@@ -46,7 +46,7 @@ GType trg_tree_view_get_type(void);
 
 GtkWidget *trg_tree_view_new(void);
 
-G_END_DECLS GList * trg_tree_view_get_selected_refs_list(GtkTreeView * tv);
+G_END_DECLS GList *trg_tree_view_get_selected_refs_list(GtkTreeView * tv);
 
 enum {
     TRG_COLTYPE_ICONTEXT,

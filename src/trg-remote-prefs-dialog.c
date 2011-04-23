@@ -110,9 +110,19 @@ static void update_session(GtkDialog * dlg)
 
     /* Connection */
 
-    encryption =
-        g_ascii_strdown(gtk_combo_box_get_active_text
-                        (GTK_COMBO_BOX(priv->encryption_combo)), -1);
+    switch (gtk_combo_box_get_active
+            (GTK_COMBO_BOX(priv->encryption_combo))) {
+    case 0:
+        encryption = "required";
+        break;
+    case 2:
+        encryption = "tolerated";
+        break;
+    default:
+        encryption = "preferred";
+        break;
+    }
+
     json_object_set_string_member(args, SGET_ENCRYPTION, encryption);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
                                (priv->peer_port_random_check), args);
@@ -151,8 +161,6 @@ static void update_session(GtkDialog * dlg)
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
                                  (priv->peer_limit_per_torrent_spin),
                                  args);
-
-    g_free(encryption);
 
     dispatch_async(priv->client, request, on_session_set, priv->parent);
 }

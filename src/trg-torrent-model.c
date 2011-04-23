@@ -287,8 +287,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
     json_object_ref(t);
 
 #ifdef DEBUG
-    gtk_list_store_set(ls, iter,
-                       TORRENT_COLUMN_ICON, statusIcon, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon, -1);
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
     gtk_list_store_set(ls, iter,
@@ -296,18 +295,13 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_DONE, torrent_get_percent_done(t),
                        -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_STATUS,
-                       statusString, -1);
-    gtk_list_store_set(ls, iter,
-                       TORRENT_COLUMN_DOWNSPEED, downRate, -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FLAGS,
-                       newFlags, -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPSPEED,
-                       upRate, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_STATUS, statusString, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNSPEED, downRate, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FLAGS, newFlags, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPSPEED, upRate, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ETA,
                        torrent_get_eta(t), -1);
-    gtk_list_store_set(ls, iter,
-                       TORRENT_COLUMN_UPLOADED, uploaded, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPLOADED, uploaded, -1);
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_RATIO,
@@ -315,18 +309,18 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
                        && downloaded >
                        0 ? (double) uploaded / (double) downloaded : 0,
                        -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ID, id,
-                       -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_JSON, t,
-                       -1);
-    gtk_list_store_set(ls, iter,
-                       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ID, id, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_JSON, t, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPDATESERIAL, serial, -1);
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR, torrent_get_download_dir(t));
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY, torrent_get_bandwidth_priority(t));
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR,
+                       torrent_get_download_dir(t));
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY,
+                       torrent_get_bandwidth_priority(t));
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DONE_DATE,
+                       torrent_get_done_date(t), -1);
 #else
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ICON, statusIcon,
@@ -348,8 +342,10 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
                        0
                        && downloaded >
                        0 ? (double) uploaded / (double) downloaded : 0,
-                       TORRENT_COLUMN_DOWNLOADDIR, torrent_get_download_dir(t),
-                       TORRENT_COLUMN_BANDWIDTH_PRIORITY, torrent_get_bandwidth_priority(t),
+                       TORRENT_COLUMN_DOWNLOADDIR,
+                       torrent_get_download_dir(t),
+                       TORRENT_COLUMN_BANDWIDTH_PRIORITY,
+                       torrent_get_bandwidth_priority(t),
                        TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
                        TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif
