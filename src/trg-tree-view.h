@@ -75,7 +75,7 @@ typedef struct {
 
 #define TRG_COLUMN_DEFAULT             0x00
 #define TRG_COLUMN_SHOWING             (1 << 0) /* 0x01 */
-#define TRG_COLUMN_ALWAYS              (1 << 1) /* 0x02 */
+#define TRG_COLUMN_UNREMOVABLE              (1 << 1) /* 0x02 */
 #define TRG_COLUMN_EXTRA               (1 << 2) /* 0x04 */
 
 trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,

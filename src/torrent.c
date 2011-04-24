@@ -222,21 +222,26 @@ gchar *torrent_get_status_string(gint64 value)
 
 gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
 {
-    JsonArray *trackers = torrent_get_trackers(t);
-    int i;
+    GList *trackers = json_array_get_elements(torrent_get_trackers(t));
+    gboolean ret = FALSE;
+    GList *li;
 
-    for (i = 0; i < json_array_get_length(trackers); i++) {
-        JsonObject *tracker = json_array_get_object_element(trackers, i);
+    for (li = trackers; li; li = g_list_next(li)) {
+        JsonObject *tracker = json_node_get_object((JsonNode*)li->data);
         const gchar *trackerAnnounce = tracker_get_announce(tracker);
         gchar *trackerAnnounceHost =
             trg_gregex_get_first(rx, trackerAnnounce);
         int cmpResult = g_strcmp0(trackerAnnounceHost, search);
         g_free(trackerAnnounceHost);
-        if (cmpResult == 0)
-            return TRUE;
+        if (!cmpResult) {
+            ret = TRUE;
+            break;
+        }
     }
 
-    return FALSE;
+    g_list_free(trackers);
+
+    return ret;
 }
 
 gint64 tracker_get_id(JsonObject * t)

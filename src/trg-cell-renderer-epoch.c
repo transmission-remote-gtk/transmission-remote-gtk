@@ -70,10 +70,10 @@ trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
                 g_object_set(object, "text", timestring, NULL);
                 g_free(timestring);
                 g_date_time_unref(dt);
-                priv->epoch_value = new_value;
             } else {
                 g_object_set(object, "text", "", NULL);
             }
+            priv->epoch_value = new_value;
         }
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);

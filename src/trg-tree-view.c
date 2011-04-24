@@ -145,7 +145,7 @@ view_popup_menu(GtkButton * button, GdkEventButton * event,
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menuitem), TRUE);
     g_signal_connect(menuitem, "activate",
                      G_CALLBACK(trg_tree_view_hide_column), column);
-    gtk_widget_set_sensitive(menuitem, !(desc->flags & TRG_COLUMN_ALWAYS));
+    gtk_widget_set_sensitive(menuitem, !(desc->flags & TRG_COLUMN_UNREMOVABLE));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
     for (li = priv->columns; li; li = g_list_next(li)) {
@@ -365,12 +365,12 @@ void trg_tree_view_setup_columns(TrgTreeView * tv)
 {
     TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
     gchar **columns = trg_gconf_get_csv(tv, "columns");
-    gchar **widths = trg_gconf_get_csv(tv, "widths");
     GList *li;
     int i;
     trg_column_description *desc;
 
     if (columns) {
+        gchar **widths = trg_gconf_get_csv(tv, "widths");
         for (i = 0; columns[i]; i++) {
             trg_column_description *desc =
                 trg_tree_view_find_column(tv, columns[i]);
@@ -378,7 +378,8 @@ void trg_tree_view_setup_columns(TrgTreeView * tv)
                 trg_tree_view_add_column(tv, desc, widths, i);
         }
         g_strfreev(columns);
-        g_strfreev(widths);
+        if (widths)
+            g_strfreev(widths);
     } else {
         for (li = priv->columns; li; li = g_list_next(li)) {
             desc = (trg_column_description *) li->data;

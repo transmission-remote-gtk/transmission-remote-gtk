@@ -152,13 +152,13 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
 
     desc =
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT,
-                                 TRACKERCOL_TIER, _("Tier"), "tier", 0);
+                                 TRACKERCOL_TIER, _("Tier"), "tier", TRG_COLUMN_UNREMOVABLE);
     desc->model_column_icon = TRACKERCOL_ICON;
 
     desc =
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
                                  TRACKERCOL_ANNOUNCE, _("Announce URL"),
-                                 "announce-url", TRG_COLUMN_ALWAYS);
+                                 "announce-url", TRG_COLUMN_UNREMOVABLE);
     priv->announceRenderer = desc->customRenderer =
         gtk_cell_renderer_text_new();
     g_signal_connect(priv->announceRenderer, "edited",

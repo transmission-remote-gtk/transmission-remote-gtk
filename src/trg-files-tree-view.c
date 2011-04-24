@@ -289,7 +289,7 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT, FILESCOL_NAME,
                                  _("Name"), "name", 0);
     desc->model_column_icon = FILESCOL_ICON;
-    desc->defaultWidth = 300;
+    desc->defaultWidth = 500;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, FILESCOL_SIZE,
                              _("Size"), "size", 0);
