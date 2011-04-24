@@ -316,9 +316,9 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR,
-                       torrent_get_download_dir(t));
+                       torrent_get_download_dir(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY,
-                       torrent_get_bandwidth_priority(t));
+                       torrent_get_bandwidth_priority(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DONE_DATE,
                        torrent_get_done_date(t), -1);
 #else
