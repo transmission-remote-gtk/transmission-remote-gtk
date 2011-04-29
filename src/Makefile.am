@@ -23,7 +23,7 @@ schemadir   = @GCONF_SCHEMA_FILE_DIR@
 schema_DATA = transmission-remote-gtk.schemas
 
 bin_PROGRAMS = transmission-remote-gtk
-INCLUDES = --pedantic -Wall -I.. -O2 -DTRGLICENSE=\""$(trglicense)"\" -DTRGLOCALEDIR=\""$(trglocaledir)"\" $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gconf_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) -std=gnu99
+INCLUDES = --pedantic -Wall -I.. -O2 -DTRGLICENSE=\""$(trglicense)"\" -DTRGLOCALEDIR=\""$(trglocaledir)"\" $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gconf_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
 
 transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \

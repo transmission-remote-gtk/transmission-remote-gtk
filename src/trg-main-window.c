@@ -944,12 +944,7 @@ on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
     }
 
     client->failCount = 0;
-    stats.downRateTotal = 0;
-    stats.upRateTotal = 0;
-    stats.seeding = 0;
-    stats.down = 0;
-    stats.paused = 0;
-    stats.count = 0;
+    memset(&stats, 0x0, sizeof(trg_torrent_model_update_stats));
 
     client->updateSerial++;
 
@@ -1000,12 +995,11 @@ static void on_torrent_get_update(JsonObject * response, int status,
 static gboolean trg_update_torrents_timerfunc(gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    trg_client *client = priv->client;
 
-    if (priv->client->session)
-        dispatch_async(priv->client,
-                       torrent_get(priv->client->
-                                   activeOnlyUpdate ? -2 : -1),
-                       priv->
+    if (client->session)
+        dispatch_async(client,
+                       torrent_get(client->activeOnlyUpdate ? -2 : -1),
                        client->activeOnlyUpdate ? on_torrent_get_active :
                        on_torrent_get_update, data);
 
@@ -1929,11 +1923,10 @@ static GObject *trg_main_window_constructor(GType type,
     tray =
         gconf_client_get_bool_or_true(priv->client->gconf,
                                       TRG_GCONF_KEY_SYSTEM_TRAY);
-    if (tray) {
+    if (tray)
         trg_main_window_add_status_icon(self);
-    } else {
+    else
         priv->statusIcon = NULL;
-    }
 
     priv->statusBar = trg_status_bar_new();
     g_signal_connect(priv->statusBar, "text-pushed",
