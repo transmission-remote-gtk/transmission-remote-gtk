@@ -262,7 +262,7 @@ static void update_selected_torrent_notebook(TrgMainWindow * win,
     JsonObject *t;
     GtkTreeIter iter;
 
-    if (id >= 0 && id != priv->selectedTorrentId
+    if (id >= 0
         && get_torrent_data(client->torrentTable, id, &t, &iter)) {
         trg_toolbar_torrent_actions_sensitive(priv->toolBar, TRUE);
         trg_menu_bar_torrent_actions_sensitive(priv->menuBar, TRUE);
@@ -273,7 +273,6 @@ static void update_selected_torrent_notebook(TrgMainWindow * win,
                                mode);
         trg_peers_model_update(priv->peersModel, client->updateSerial, t,
                                mode);
-
     } else if (id < 0) {
         trg_main_window_torrent_scrub(win);
         trg_toolbar_torrent_actions_sensitive(priv->toolBar, FALSE);
@@ -1407,11 +1406,11 @@ static void set_limit_cb(GtkWidget * w, gpointer data)
 
     JsonNode *req = NULL;
     JsonObject *args;
-    if (limitIds) {
+
+    if (limitIds)
         req = torrent_set((JsonArray *) limitIds);
-    } else {
+    else
         req = session_set();
-    }
 
     args = node_get_arguments(req);
 

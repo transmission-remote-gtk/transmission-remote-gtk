@@ -53,8 +53,8 @@ const gchar *make_error_message(JsonObject * response, int status);
 void trg_error_dialog(GtkWindow * parent, int status,
                       JsonObject * response);
 
-char *tr_strltime_long(char *buf, gint64 seconds, size_t buflen);
-char *tr_strltime_short(char *buf, gint64 seconds, size_t buflen);
+char *tr_strltime_long(char *buf, long seconds, size_t buflen);
+char *tr_strltime_short(char *buf, long seconds, size_t buflen);
 char *tr_strpercent(char *buf, double x, size_t buflen);
 char *tr_strlpercent(char *buf, double x, size_t buflen);
 char *tr_strratio(char *buf, size_t buflen, double ratio,

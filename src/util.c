@@ -246,7 +246,7 @@ char *tr_strlspeed(char *buf, double kb_sec, size_t buflen)
     return buf;
 }
 
-char *tr_strltime_short(char *buf, gint64 seconds, size_t buflen)
+char *tr_strltime_short(char *buf, long seconds, size_t buflen)
 {
     int hours, minutes;
 
@@ -262,7 +262,7 @@ char *tr_strltime_short(char *buf, gint64 seconds, size_t buflen)
     return buf;
 }
 
-char *tr_strltime_long(char *buf, gint64 seconds, size_t buflen)
+char *tr_strltime_long(char *buf, long seconds, size_t buflen)
 {
     int days, hours, minutes;
     char d[128], h[128], m[128], s[128];

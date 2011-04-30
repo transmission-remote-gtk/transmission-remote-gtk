@@ -122,9 +122,10 @@ static void trg_tracker_announce_edited(GtkCellRendererText * renderer,
 }
 
 static void trg_tracker_announce_editing_started(GtkCellRenderer *
-                                                 renderer,
+                                                 renderer G_GNUC_UNUSED,
                                                  GtkCellEditable *
-                                                 editable, gchar * path,
+                                                 editable G_GNUC_UNUSED,
+                                                 gchar * path G_GNUC_UNUSED,
                                                  gpointer user_data)
 {
     TrgTrackersModel *model =
@@ -134,7 +135,7 @@ static void trg_tracker_announce_editing_started(GtkCellRenderer *
     trg_trackers_model_set_accept(model, FALSE);
 }
 
-static void trg_tracker_announce_editing_canceled(GtkWidget * w,
+static void trg_tracker_announce_editing_canceled(GtkWidget * w G_GNUC_UNUSED,
                                                   gpointer data)
 {
     TrgTrackersModel *model =

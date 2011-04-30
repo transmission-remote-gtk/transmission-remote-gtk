@@ -46,7 +46,7 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
     trg_column_description *desc;
 
     desc =
-        trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT, PEERSCOL_ICON,
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT, PEERSCOL_IP,
                                  _("IP"), "ip", 0);
     desc->model_column_icon = PEERSCOL_ICON;
 

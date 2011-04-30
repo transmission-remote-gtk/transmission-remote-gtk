@@ -208,6 +208,7 @@ static GtkWidget *trg_destination_folder_new(trg_client * client)
             gtk_tree_path_free(path);
         }
     }
+
     g_list_free(torrentItemRefs);
     g_mutex_unlock(client->updateMutex);
 
