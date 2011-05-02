@@ -368,7 +368,7 @@ destroy_window(GtkWidget * w G_GNUC_UNUSED, gpointer data G_GNUC_UNUSED)
     gtk_main_quit();
 }
 
-static void open_props_cb(GtkWidget * w, gpointer data)
+static void open_props_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     TrgTorrentPropsDialog *dialog =
@@ -898,6 +898,7 @@ TRANSMISSION_MIN_SUPPORTED, version);
 /*
  * The callback for a torrent-get response.
  */
+
 static void
 on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
 {

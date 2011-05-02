@@ -513,12 +513,13 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
     } else if (mode > TORRENT_GET_MODE_FIRST) {
         removedTorrents = get_torrents_removed(args);
         if (removedTorrents) {
-            for (li = json_array_get_elements(removedTorrents); li != NULL;
-                 li = g_list_next(li)) {
+            GList *hitlist = json_array_get_elements(removedTorrents);
+            for (li = hitlist; li; li = g_list_next(li)) {
                 id = json_node_get_int((JsonNode *) li->data);
                 g_hash_table_remove(priv->ht, &id);
                 addRemove = TRUE;
             }
+            g_list_free(hitlist);
         }
     }
 
