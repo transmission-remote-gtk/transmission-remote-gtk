@@ -1060,17 +1060,19 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
 
     gtk_tree_model_get(model, iter, TORRENT_COLUMN_NAME, &name, -1);
     filterText = gtk_entry_get_text(GTK_ENTRY(priv->filterEntry));
-    if (strlen(filterText) > 0 && name) {
-        gchar *filterCmp = g_utf8_casefold(filterText, -1);
-        gchar *nameCmp = g_utf8_casefold(name, -1);
+    if (name) {
+        if (strlen(filterText) > 0) {
+            gchar *filterCmp = g_utf8_casefold(filterText, -1);
+            gchar *nameCmp = g_utf8_casefold(name, -1);
 
-        if (!strstr(nameCmp, filterCmp))
-            visible = FALSE;
+            if (!strstr(nameCmp, filterCmp))
+                visible = FALSE;
 
-        g_free(nameCmp);
-        g_free(filterCmp);
+            g_free(nameCmp);
+            g_free(filterCmp);
+        }
+        g_free(name);
     }
-    g_free(name);
 
     return visible;
 }
