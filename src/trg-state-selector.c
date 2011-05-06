@@ -456,6 +456,8 @@ static void trg_state_selector_init(TrgStateSelector * self)
                      G_CALLBACK(view_onButtonPressed), NULL);
     g_signal_connect(self, "popup-menu", G_CALLBACK(view_onPopupMenu),
                      NULL);
+
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), STATE_SELECTOR_NAME);
 }
 
 TrgStateSelector *trg_state_selector_new(trg_client * client)

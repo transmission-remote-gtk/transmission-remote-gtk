@@ -944,7 +944,7 @@ on_torrent_get(JsonObject * response, int mode, int status, gpointer data)
     }
 
     client->failCount = 0;
-    memset(&stats, 0x0, sizeof(trg_torrent_model_update_stats));
+    memset(&stats, 0, sizeof(trg_torrent_model_update_stats));
 
     client->updateSerial++;
 
@@ -1056,12 +1056,11 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
     }
 
     visible = TRUE;
-    name = NULL;
 
-    gtk_tree_model_get(model, iter, TORRENT_COLUMN_NAME, &name, -1);
     filterText = gtk_entry_get_text(GTK_ENTRY(priv->filterEntry));
-    if (name) {
-        if (strlen(filterText) > 0) {
+    if (strlen(filterText) > 0) {
+        gtk_tree_model_get(model, iter, TORRENT_COLUMN_NAME, &name, -1);
+        if (name) {
             gchar *filterCmp = g_utf8_casefold(filterText, -1);
             gchar *nameCmp = g_utf8_casefold(name, -1);
 
@@ -1070,8 +1069,8 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
 
             g_free(nameCmp);
             g_free(filterCmp);
+            g_free(name);
         }
-        g_free(name);
     }
 
     return visible;

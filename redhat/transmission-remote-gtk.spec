@@ -1,5 +1,5 @@
 Name: transmission-remote-gtk
-Version: 0.5
+Version: 0.5.1
 Release: 1%{?dist:%{dist}}
 Summary: Remote control client for Transmission BitTorrent
 
@@ -95,6 +95,11 @@ fi
 %{_datadir}/locale/ru/LC_MESSAGES/%{name}.mo
 
 %changelog
+* Fri May 6 2011 Alan Fitton <alan@eth0.org.uk> - 0.5.1
+- Use libproxy pkg-config CFLAGS in build, for older versions.
+- Fix updates inside the GtkNotebook.
+- Fix crash reported by atommixz.
+
 * Fri Apr 22 2011 Alan Fitton <alan@eth0.org.uk> - 0.5
 - Fix a few of small memory leaks.
 - Sync single torrent when file/trackers are changed.

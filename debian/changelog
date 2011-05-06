@@ -1,3 +1,9 @@
+transmission-remote-gtk (0.5.1-1) unstable; urgency=low
+
+  * Use libproxy pkg-config CFLAGS in build, for older versions.
+  * Fix updates inside the GtkNotebook.
+  * Fix crash reported by atommixz.
+
 transmission-remote-gtk (0.5-1) unstable; urgency=low
 
   * Fixes.
