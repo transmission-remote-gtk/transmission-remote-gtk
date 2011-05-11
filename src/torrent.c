@@ -227,7 +227,7 @@ gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
     GList *li;
 
     for (li = trackers; li; li = g_list_next(li)) {
-        JsonObject *tracker = json_node_get_object((JsonNode*)li->data);
+        JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
         const gchar *trackerAnnounce = tracker_get_announce(tracker);
         gchar *trackerAnnounceHost =
             trg_gregex_get_first(rx, trackerAnnounce);

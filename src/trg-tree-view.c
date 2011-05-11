@@ -145,7 +145,8 @@ view_popup_menu(GtkButton * button, GdkEventButton * event,
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menuitem), TRUE);
     g_signal_connect(menuitem, "activate",
                      G_CALLBACK(trg_tree_view_hide_column), column);
-    gtk_widget_set_sensitive(menuitem, !(desc->flags & TRG_COLUMN_UNREMOVABLE));
+    gtk_widget_set_sensitive(menuitem,
+                             !(desc->flags & TRG_COLUMN_UNREMOVABLE));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
     for (li = priv->columns; li; li = g_list_next(li)) {
@@ -189,8 +190,7 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
     switch (desc->type) {
     case TRG_COLTYPE_TEXT:
         renderer =
-            desc->
-            customRenderer ? desc->customRenderer :
+            desc->customRenderer ? desc->customRenderer :
             gtk_cell_renderer_text_new();
         column =
             gtk_tree_view_column_new_with_attributes(desc->header,

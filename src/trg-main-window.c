@@ -262,8 +262,7 @@ static void update_selected_torrent_notebook(TrgMainWindow * win,
     JsonObject *t;
     GtkTreeIter iter;
 
-    if (id >= 0
-        && get_torrent_data(client->torrentTable, id, &t, &iter)) {
+    if (id >= 0 && get_torrent_data(client->torrentTable, id, &t, &iter)) {
         trg_toolbar_torrent_actions_sensitive(priv->toolBar, TRUE);
         trg_menu_bar_torrent_actions_sensitive(priv->menuBar, TRUE);
         trg_general_panel_update(priv->genDetails, t, &iter);

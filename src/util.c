@@ -34,6 +34,7 @@
 
 #include "util.h"
 #include "dispatch.h"
+#include "trg-client.h"
 
 void add_file_id_to_array(JsonObject * args, gchar * key, gint index)
 {

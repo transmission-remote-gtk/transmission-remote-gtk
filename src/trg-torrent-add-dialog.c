@@ -35,6 +35,7 @@
 #include "trg-file-parser.h"
 #include "trg-torrent-add-dialog.h"
 #include "trg-cell-renderer-size.h"
+#include "trg-destination-combo.h"
 #include "trg-preferences.h"
 #include "requests.h"
 #include "torrent.h"
@@ -165,63 +166,6 @@ static gpointer add_files_threadfunc(gpointer data)
     return NULL;
 }
 
-static gchar *trg_destination_folder_get(GtkComboBox * box)
-{
-    return gtk_combo_box_get_active_text(box);
-}
-
-static GtkWidget *trg_destination_folder_new(trg_client * client)
-{
-    const gchar *defaultDownDir =
-        json_object_get_string_member(client->session, SGET_DOWNLOAD_DIR);
-    GtkWidget *combo = gtk_combo_box_entry_new_text();
-    GSList *dirs = NULL;
-    GSList *sli;
-    GList *li;
-    GList *torrentItemRefs;
-
-    GtkTreeRowReference *rr;
-    GtkTreeModel *model;
-    GtkTreePath *path;
-    JsonObject *t;
-
-    g_slist_str_set_add(&dirs, defaultDownDir);
-
-    g_mutex_lock(client->updateMutex);
-    torrentItemRefs = g_hash_table_get_values(client->torrentTable);
-    for (li = torrentItemRefs; li; li = g_list_next(li)) {
-        rr = (GtkTreeRowReference *) li->data;
-        model = gtk_tree_row_reference_get_model(rr);
-        path = gtk_tree_row_reference_get_path(rr);
-
-        if (path) {
-            GtkTreeIter iter;
-            if (gtk_tree_model_get_iter(model, &iter, path)) {
-                const gchar *dd;
-                gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &t,
-                                   -1);
-                dd = torrent_get_download_dir(t);
-                if (dd)
-                    g_slist_str_set_add(&dirs, dd);
-
-            }
-            gtk_tree_path_free(path);
-        }
-    }
-
-    g_list_free(torrentItemRefs);
-    g_mutex_unlock(client->updateMutex);
-
-    for (sli = dirs; sli != NULL; sli = g_slist_next(sli))
-        gtk_combo_box_append_text(GTK_COMBO_BOX(combo),
-                                  (gchar *) sli->data);
-
-    gtk_combo_box_set_active(GTK_COMBO_BOX(combo), 0);
-    g_str_slist_free(dirs);
-
-    return combo;
-}
-
 void launch_add_thread(struct add_torrent_threadfunc_args *args)
 {
     GError *error = NULL;
@@ -279,7 +223,7 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
             gtk_combo_box_get_active(GTK_COMBO_BOX(priv->priority_combo)) -
             1;
         gchar *dir =
-            trg_destination_folder_get(GTK_COMBO_BOX(priv->dest_combo));
+            gtk_combo_box_get_active_text(GTK_COMBO_BOX(priv->dest_combo));
 
         if (g_slist_length(priv->filenames) == 1) {
             JsonNode *req =
@@ -624,6 +568,7 @@ GtkWidget *gtr_file_list_new(GtkTreeStore ** store)
                                 G_TYPE_INT);    /* dl enabled */
 
     gtk_tree_view_set_model(tree_view, GTK_TREE_MODEL(*store));
+    g_object_unref(G_OBJECT(*store));
 
     /* create the scrolled window and stick the view in it */
     scroll = gtk_scrolled_window_new(NULL, NULL);
@@ -891,8 +836,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     priv->paused_check =
         gtk_check_button_new_with_mnemonic(_("Start _paused"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->paused_check),
-                                 pref_get_start_paused(priv->
-                                                       client->gconf));
+                                 pref_get_start_paused(priv->client->
+                                                       gconf));
 
     priv->priority_combo = gtr_priority_combo_new();
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->priority_combo), 1);
@@ -922,8 +867,9 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     gtk_table_attach(GTK_TABLE(t), l, col, col + 1, row, row + 1, GTK_FILL,
                      0, 0, 0);
     ++col;
-    priv->dest_combo = trg_destination_folder_new(priv->client);
 
+    priv->dest_combo = trg_destination_combo_new(priv->client);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(priv->dest_combo), 0);
     gtk_table_attach(GTK_TABLE(t), priv->dest_combo, col, col + 1, row,
                      row + 1, ~0, 0, 0, 0);
     gtk_label_set_mnemonic_widget(GTK_LABEL(l), priv->dest_combo);

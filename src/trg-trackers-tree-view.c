@@ -125,7 +125,8 @@ static void trg_tracker_announce_editing_started(GtkCellRenderer *
                                                  renderer G_GNUC_UNUSED,
                                                  GtkCellEditable *
                                                  editable G_GNUC_UNUSED,
-                                                 gchar * path G_GNUC_UNUSED,
+                                                 gchar *
+                                                 path G_GNUC_UNUSED,
                                                  gpointer user_data)
 {
     TrgTrackersModel *model =
@@ -135,7 +136,8 @@ static void trg_tracker_announce_editing_started(GtkCellRenderer *
     trg_trackers_model_set_accept(model, FALSE);
 }
 
-static void trg_tracker_announce_editing_canceled(GtkWidget * w G_GNUC_UNUSED,
+static void trg_tracker_announce_editing_canceled(GtkWidget *
+                                                  w G_GNUC_UNUSED,
                                                   gpointer data)
 {
     TrgTrackersModel *model =
@@ -153,7 +155,8 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
 
     desc =
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICONTEXT,
-                                 TRACKERCOL_TIER, _("Tier"), "tier", TRG_COLUMN_UNREMOVABLE);
+                                 TRACKERCOL_TIER, _("Tier"), "tier",
+                                 TRG_COLUMN_UNREMOVABLE);
     desc->model_column_icon = TRACKERCOL_ICON;
 
     desc =
