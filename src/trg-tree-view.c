@@ -30,6 +30,7 @@
 #include "trg-cell-renderer-epoch.h"
 #include "trg-cell-renderer-wanted.h"
 #include "trg-cell-renderer-priority.h"
+#include "trg-cell-renderer-numgtzero.h"
 
 G_DEFINE_TYPE(TrgTreeView, trg_tree_view, GTK_TYPE_TREE_VIEW)
 #define TRG_TREE_VIEW_GET_PRIVATE(o) \
@@ -280,6 +281,15 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
             gtk_tree_view_column_new_with_attributes(desc->header,
                                                      renderer,
                                                      "priority-value",
+                                                     desc->model_column,
+                                                     NULL);
+        break;
+    case TRG_COLTYPE_NUMGTZERO:
+        renderer = trg_cell_renderer_numgtzero_new();
+        column =
+            gtk_tree_view_column_new_with_attributes(desc->header,
+                                                     renderer,
+                                                     "value",
                                                      desc->model_column,
                                                      NULL);
         break;

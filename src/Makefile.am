@@ -67,6 +67,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-cell-renderer-wanted.c \
 	  trg-cell-renderer-priority.c \
 	  trg-cell-renderer-epoch.c \
+	  trg-cell-renderer-numgtzero.c \
 	  trg-torrent-move-dialog.c \
 	  trg-stats-dialog.c \
 	  trg-torrent-graph.c \

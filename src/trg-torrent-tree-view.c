@@ -51,9 +51,9 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
                              _("Done"), "done", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TORRENT_COLUMN_STATUS,
                              _("Status"), "status", 0);
-    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TORRENT_COLUMN_SEEDS,
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO, TORRENT_COLUMN_SEEDS,
                              _("Seeds"), "seeds", 0);
-    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_LEECHERS, _("Leechers"),
                              "leechers", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED,
