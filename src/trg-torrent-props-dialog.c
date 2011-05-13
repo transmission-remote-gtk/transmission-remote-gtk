@@ -116,7 +116,7 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
 
     priv = TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(dlg);
 
-    if (res_id != GTK_RESPONSE_ACCEPT) {
+    if (res_id != GTK_RESPONSE_OK) {
         gtk_widget_destroy(GTK_WIDGET(dlg));
         return;
     }
@@ -295,17 +295,17 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
                           GTK_RESPONSE_CLOSE);
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_APPLY,
-                          GTK_RESPONSE_ACCEPT);
+    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_OK,
+                          GTK_RESPONSE_OK);
 
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
     gtk_dialog_set_default_response(GTK_DIALOG(object),
-                                    GTK_RESPONSE_CLOSE);
+                                    GTK_RESPONSE_OK);
 
     gtk_dialog_set_alternative_button_order(GTK_DIALOG(object),
                                             GTK_RESPONSE_ACCEPT,
-                                            GTK_RESPONSE_CLOSE, -1);
+                                            GTK_RESPONSE_OK, -1);
 
     g_signal_connect(G_OBJECT(object),
                      "response",

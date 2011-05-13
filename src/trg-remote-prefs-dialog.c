@@ -169,7 +169,7 @@ static void
 trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
                              gpointer data G_GNUC_UNUSED)
 {
-    if (res_id == GTK_RESPONSE_ACCEPT)
+    if (res_id == GTK_RESPONSE_OK)
         update_session(dlg);
 
     gtk_widget_destroy(GTK_WIDGET(dlg));
@@ -596,16 +596,16 @@ static GObject *trg_remote_prefs_dialog_constructor(GType type,
 
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
                           GTK_RESPONSE_CLOSE);
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_APPLY,
-                          GTK_RESPONSE_ACCEPT);
+    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_OK,
+                          GTK_RESPONSE_OK);
 
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
     gtk_dialog_set_default_response(GTK_DIALOG(object),
-                                    GTK_RESPONSE_CLOSE);
+                                    GTK_RESPONSE_OK);
 
     gtk_dialog_set_alternative_button_order(GTK_DIALOG(object),
-                                            GTK_RESPONSE_ACCEPT,
+                                            GTK_RESPONSE_OK,
                                             GTK_RESPONSE_CLOSE, -1);
 
     g_signal_connect(G_OBJECT(object),

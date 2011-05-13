@@ -390,6 +390,10 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
                           GTK_RESPONSE_CLOSE);
+
+    gtk_dialog_set_default_response(GTK_DIALOG(object),
+                                    GTK_RESPONSE_CLOSE);
+
     gtk_window_set_title(GTK_WINDOW(object), _("Local Preferences"));
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
