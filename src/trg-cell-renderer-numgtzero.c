@@ -63,7 +63,9 @@ trg_cell_renderer_numgtzero_set_property(GObject * object, guint property_id,
     if (property_id == PROP_VALUE_VALUE) {
         priv->value_value = g_value_get_int64(value);
         if (priv->value_value > 0) {
-            g_object_set(object, "text", priv->value_value, NULL);
+            gchar size_text[32];
+            g_snprintf(size_text, sizeof(size_text), "%ld", priv->value_value);
+            g_object_set(object, "text", size_text, NULL);
         } else {
             g_object_set(object, "text", "", NULL);
         }
