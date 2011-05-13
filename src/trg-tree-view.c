@@ -321,14 +321,18 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
 void trg_tree_view_persist(TrgTreeView * tv)
 {
     GConfClient *gcc = gconf_client_get_default();
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tv));
     GList *cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(tv));
     gint n_cols = g_list_length(cols);
+    gint sort_column_id;
+    GtkSortType sort_type;
+    const gchar *tree_view_name = G_OBJECT_TYPE_NAME(tv);
     gchar *cols_key =
         g_strdup_printf("/apps/transmission-remote-gtk/%s-columns",
-                        G_OBJECT_TYPE_NAME(tv));
+                        tree_view_name);
     gchar *widths_key =
         g_strdup_printf("/apps/transmission-remote-gtk/%s-widths",
-                        G_OBJECT_TYPE_NAME(tv));
+                        tree_view_name);
     gchar **cols_v = g_new0(gchar *, n_cols + 1);
     gchar **widths_v = g_new0(gchar *, n_cols + 1);
     gchar *widths_js, *cols_js;
@@ -348,6 +352,20 @@ void trg_tree_view_persist(TrgTreeView * tv)
     widths_js = g_strjoinv(",", widths_v);
     cols_js = g_strjoinv(",", cols_v);
 
+    if (gtk_tree_sortable_get_sort_column_id
+        (GTK_TREE_SORTABLE(model), &sort_column_id, &sort_type)) {
+        gchar *sort_col_key =
+            g_strdup_printf("/apps/transmission-remote-gtk/%s-sort_col",
+                            tree_view_name);
+        gchar *sort_type_key =
+            g_strdup_printf("/apps/transmission-remote-gtk/%s-sort_type",
+                            tree_view_name);
+        gconf_client_set_int(gcc, sort_col_key, sort_column_id, NULL);
+        gconf_client_set_int(gcc, sort_type_key, (gint) sort_type, NULL);
+        g_free(sort_type_key);
+        g_free(sort_col_key);
+    }
+
     gconf_client_set_string(gcc, cols_key, cols_js, NULL);
     gconf_client_set_string(gcc, widths_key, widths_js, NULL);
 
@@ -358,6 +376,38 @@ void trg_tree_view_persist(TrgTreeView * tv)
     g_free(cols_v);
     g_strfreev(widths_v);
     g_list_free(cols);
+    g_object_unref(gcc);
+}
+
+void trg_tree_view_restore_sort(TrgTreeView * tv)
+{
+    GConfClient *gcc = gconf_client_get_default();
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tv));
+    gchar *sort_col_key =
+        g_strdup_printf("/apps/transmission-remote-gtk/%s-sort_col",
+                        G_OBJECT_TYPE_NAME(tv));
+    gchar *sort_type_key =
+        g_strdup_printf("/apps/transmission-remote-gtk/%s-sort_type",
+                        G_OBJECT_TYPE_NAME(tv));
+    GConfValue *sort_col_gv =
+        gconf_client_get_without_default(gcc, sort_col_key, NULL);
+    GConfValue *sort_type_gv =
+        gconf_client_get_without_default(gcc, sort_type_key, NULL);
+    if (sort_col_gv) {
+        gint sort_col_value = gconf_value_get_int(sort_col_gv);
+        GtkSortType sort_type_value = GTK_SORT_ASCENDING;
+        if (sort_type_gv) {
+            sort_type_value =
+                (GtkSortType) gconf_value_get_int(sort_type_gv);
+            gconf_value_free(sort_type_gv);
+        }
+        gconf_value_free(sort_col_gv);
+        gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model),
+                                             sort_col_value,
+                                             sort_type_value);
+    }
+    g_free(sort_col_key);
+    g_free(sort_type_key);
     g_object_unref(gcc);
 }
 

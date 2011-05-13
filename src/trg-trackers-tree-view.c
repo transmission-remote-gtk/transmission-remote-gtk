@@ -354,5 +354,7 @@ TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model,
     priv->client = client;
     priv->win = win;
 
+    trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
+
     return TRG_TRACKERS_TREE_VIEW(obj);
 }

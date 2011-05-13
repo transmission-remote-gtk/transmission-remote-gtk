@@ -14,7 +14,7 @@
 
  * You should have received a copy of the GNU General Public License along
  * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Streef, Fifth Floor, Boston, MA 02110-1301 USA.
+ * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 #ifdef HAVE_CONFIG_H
@@ -77,6 +77,7 @@ TrgPeersTreeView *trg_peers_tree_view_new(TrgPeersModel * model)
     GObject *obj = g_object_new(TRG_TYPE_PEERS_TREE_VIEW, NULL);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
+    trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
 
     return TRG_PEERS_TREE_VIEW(obj);
 }

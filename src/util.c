@@ -34,7 +34,6 @@
 
 #include "util.h"
 #include "dispatch.h"
-#include "trg-client.h"
 
 void add_file_id_to_array(JsonObject * args, gchar * key, gint index)
 {
@@ -182,7 +181,7 @@ char *tr_strratio(char *buf, size_t buflen, double ratio,
                   const char *infinity)
 {
     if ((int) ratio == TR_RATIO_NA)
-        tr_strlcpy(buf, "None", buflen);
+        tr_strlcpy(buf, _("None"), buflen);
     else if ((int) ratio == TR_RATIO_INF)
         tr_strlcpy(buf, infinity, buflen);
     else if (ratio < 10.0)

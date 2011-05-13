@@ -346,6 +346,11 @@ static gboolean delete_event(GtkWidget * w,
                              GdkEvent * event G_GNUC_UNUSED,
                              gpointer data G_GNUC_UNUSED)
 {
+    return FALSE;
+}
+
+static void destroy_window(GtkWidget * w, gpointer data G_GNUC_UNUSED)
+{
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(w);
     int width, height;
     gtk_window_get_size(GTK_WINDOW(w), &width, &height);
@@ -358,12 +363,6 @@ static gboolean delete_event(GtkWidget * w,
     trg_tree_view_persist(TRG_TREE_VIEW(priv->torrentTreeView));
     trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTreeView));
 
-    return FALSE;
-}
-
-static void
-destroy_window(GtkWidget * w G_GNUC_UNUSED, gpointer data G_GNUC_UNUSED)
-{
     gtk_main_quit();
 }
 

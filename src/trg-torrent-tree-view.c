@@ -123,6 +123,7 @@ TrgTorrentTreeView *trg_torrent_tree_view_new(GtkTreeModel * model)
     GObject *obj = g_object_new(TRG_TYPE_TORRENT_TREE_VIEW, NULL);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), model);
+    trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
 
     return TRG_TORRENT_TREE_VIEW(obj);
 }

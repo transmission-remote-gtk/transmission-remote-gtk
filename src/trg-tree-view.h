@@ -85,5 +85,6 @@ trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
                                                  gchar * id, gint flags);
 void trg_tree_view_setup_columns(TrgTreeView * tv);
 void trg_tree_view_persist(TrgTreeView * tv);
+void trg_tree_view_restore_sort(TrgTreeView * tv);
 
 #endif                          /* _TRG_TREE_VIEW_H_ */
