@@ -321,7 +321,7 @@ TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
     priv->client = client;
     priv->win = win;
 
-    trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
+    //trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
 
     return TRG_FILES_TREE_VIEW(obj);
 }
