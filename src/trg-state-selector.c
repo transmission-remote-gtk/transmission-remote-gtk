@@ -34,6 +34,8 @@ enum {
     SELECTOR_SIGNAL_COUNT
 };
 
+#define N_CATEGORIES 10
+
 static guint signals[SELECTOR_SIGNAL_COUNT] = { 0 };
 
 G_DEFINE_TYPE(TrgStateSelector, trg_state_selector, GTK_TYPE_TREE_VIEW)
@@ -271,7 +273,7 @@ void trg_state_selector_update(TrgStateSelector * s)
                     g_free(announceHost);
                 } else {
                     gtk_list_store_insert(GTK_LIST_STORE(model), &iter,
-                                          9 +
+                                          N_CATEGORIES +
                                           g_hash_table_size
                                           (priv->trackers));
                     gtk_list_store_set(GTK_LIST_STORE(model), &iter,
@@ -439,6 +441,8 @@ static void trg_state_selector_init(TrgStateSelector * self)
                                  _("Incomplete"), TORRENT_FLAG_INCOMPLETE);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_UP,
                                  _("Seeding"), TORRENT_FLAG_SEEDING);
+    trg_state_selector_add_state(store, &iter, GTK_STOCK_NETWORK,
+                                 _("Active"), TORRENT_FLAG_ACTIVE);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_DIALOG_WARNING,
                                  _("Error"), TORRENT_FLAG_ERROR);
     trg_state_selector_add_state(store, &iter, NULL, NULL, 0);

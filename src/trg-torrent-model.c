@@ -50,14 +50,14 @@ struct _TrgTorrentModelPrivate {
     GHashTable *ht;
 };
 
+static guint32 torrent_get_flags(JsonObject * t, gint64 status, gint64 downRate, gint64 upRate);
+
 static void trg_torrent_model_dispose(GObject * object)
 {
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(object);
     g_hash_table_destroy(priv->ht);
     G_OBJECT_CLASS(trg_torrent_model_parent_class)->dispose(object);
 }
-
-static guint32 torrent_get_flags(JsonObject * t, gint64 status);
 
 static void
 update_torrent_iter(TrgTorrentModel * model, gint64 serial,
@@ -198,7 +198,7 @@ gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model)
                         (G_OBJECT(model), PROP_REMOVE_IN_PROGRESS));
 }
 
-static guint32 torrent_get_flags(JsonObject * t, gint64 status)
+static guint32 torrent_get_flags(JsonObject * t, gint64 status, gint64 downRate, gint64 upRate)
 {
     guint32 flags = 0;
     switch (status) {
@@ -224,6 +224,9 @@ static guint32 torrent_get_flags(JsonObject * t, gint64 status)
         flags |= TORRENT_FLAG_COMPLETE;
     else
         flags |= TORRENT_FLAG_INCOMPLETE;
+
+    if (downRate > 0 || upRate > 0)
+        flags |= TORRENT_FLAG_ACTIVE;
 
     if (strlen(torrent_get_errorstr(t)) > 0)
         flags |= TORRENT_FLAG_ERROR;
@@ -277,7 +280,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
 
     status = torrent_get_status(t);
     statusString = torrent_get_status_string(status);
-    newFlags = torrent_get_flags(t, status);
+    newFlags = torrent_get_flags(t, status, downRate, upRate);
     statusIcon = torrent_get_status_icon(newFlags);
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
