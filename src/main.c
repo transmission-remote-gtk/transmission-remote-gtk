@@ -24,7 +24,6 @@
 #include <stdlib.h>
 
 #include <curl/curl.h>
-#include <curl/types.h>
 #include <curl/easy.h>
 
 #include <glib/gi18n.h>
@@ -95,7 +94,7 @@ int main(int argc, char *argv[])
     textdomain(GETTEXT_PACKAGE);
 
     if ((withUnique = g_getenv("TRG_NOUNIQUE") == NULL))
-        app = unique_app_new_with_commands("org.eth0.uk.org.trg", NULL,
+        app = unique_app_new_with_commands("uk.org.eth0.trg", NULL,
                                            "add", COMMAND_ADD, NULL);
 
     if (withUnique && unique_app_is_running(app)) {
