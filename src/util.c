@@ -109,7 +109,7 @@ gboolean g_slist_str_set_add(GSList ** list, const gchar * string)
         if (!g_strcmp0((gchar *) li->data, string))
             return FALSE;
 
-    *list = g_slist_append(*list, g_strdup(string));
+    *list = g_slist_insert_sorted(*list, g_strdup(string), (GCompareFunc)g_strcmp0);
     return TRUE;
 }
 

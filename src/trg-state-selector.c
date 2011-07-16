@@ -213,6 +213,52 @@ view_onButtonPressed(GtkWidget * treeview, GdkEventButton * event,
     return FALSE;
 }
 
+struct state_find_pos {
+    int offset;
+    int range;
+    int pos;
+    const gchar *name;
+};
+
+static gboolean trg_state_selector_find_pos_foreach(GtkTreeModel *model,
+        GtkTreePath *path, GtkTreeIter *iter, gpointer data)
+{
+    struct state_find_pos *args = (struct state_find_pos*)data;
+    gchar *name;
+    gboolean res;
+
+    if (args->pos < args->offset) {
+        args->pos++;
+        return FALSE;
+    } else if (args->range >= 0 && args->pos > args->offset + args->range - 1) {
+        return TRUE;
+    }
+
+    gtk_tree_model_get(model, iter, STATE_SELECTOR_NAME, &name, -1);
+    res = g_strcmp0(name, args->name) >= 0;
+    g_free(name);
+
+    if (!res)
+        args->pos++;
+
+    return res;
+}
+
+static void trg_state_selector_insert(TrgStateSelector *s,
+        int offset, gint range, const gchar *name, GtkTreeIter *iter)
+{
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
+
+    struct state_find_pos args;
+    args.offset = offset;
+    args.pos = 0;
+    args.range = range;
+    args.name = name;
+
+    gtk_tree_model_foreach(model, trg_state_selector_find_pos_foreach, &args);
+    gtk_list_store_insert (GTK_LIST_STORE(model), iter, args.pos);
+}
+
 void trg_state_selector_update(TrgStateSelector * s)
 {
     TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
@@ -272,10 +318,8 @@ void trg_state_selector_update(TrgStateSelector * s)
                                                      client->updateSerial);
                     g_free(announceHost);
                 } else {
-                    gtk_list_store_insert(GTK_LIST_STORE(model), &iter,
-                                          N_CATEGORIES +
-                                          g_hash_table_size
-                                          (priv->trackers));
+                    trg_state_selector_insert(s, N_CATEGORIES,
+                            g_hash_table_size(priv->trackers), announceHost, &iter);
                     gtk_list_store_set(GTK_LIST_STORE(model), &iter,
                                        STATE_SELECTOR_ICON,
                                        GTK_STOCK_NETWORK,
@@ -300,7 +344,8 @@ void trg_state_selector_update(TrgStateSelector * s)
                                                  result,
                                                  client->updateSerial);
             } else {
-                gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+                trg_state_selector_insert(s, N_CATEGORIES+
+                        g_hash_table_size(priv->trackers), -1, dir, &iter);
                 gtk_list_store_set(GTK_LIST_STORE(model), &iter,
                                    STATE_SELECTOR_ICON,
                                    GTK_STOCK_DIRECTORY,

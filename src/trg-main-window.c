@@ -785,7 +785,7 @@ GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 
     GtkWidget *notebook = priv->notebook = gtk_notebook_new();
 
-    gtk_widget_set_size_request(notebook, -1, 175);
+    gtk_widget_set_size_request(notebook, -1, 185);
 
     priv->genDetails =
         trg_general_panel_new(GTK_TREE_MODEL(priv->torrentModel));
