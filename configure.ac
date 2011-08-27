@@ -61,6 +61,4 @@ if test x$enable_debug = xyes; then
     AC_DEFINE([DEBUG], [],  [enable debugging])
 fi
 
-AM_GCONF_SOURCE_2
-
 AC_OUTPUT([Makefile po/Makefile.in src/Makefile])

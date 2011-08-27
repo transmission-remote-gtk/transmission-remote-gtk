@@ -47,7 +47,6 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %post
-
 update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 
 %postun
