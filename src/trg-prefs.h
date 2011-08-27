@@ -106,11 +106,12 @@ gchar *trg_prefs_get_string(TrgPrefs *p, gchar *key, int flags);
 int trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags);
 gdouble trg_prefs_get_double(TrgPrefs *p, gchar *key, int flags);
 gboolean trg_prefs_get_bool(TrgPrefs *p, gchar *key, int flags);
+JsonObject* trg_prefs_get_profile(TrgPrefs *p);
 JsonArray* trg_prefs_get_profiles(TrgPrefs *p);
 gint trg_prefs_get_profile_id(TrgPrefs *p);
-void trg_prefs_del_profile(TrgPrefs *p, guint index);
-void trg_prefs_set_profile(TrgPrefs *p, int index);
-gint trg_prefs_new_profile(TrgPrefs *p);
+void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile);
+void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile);
+JsonObject *trg_prefs_new_profile(TrgPrefs *p);
 JsonObject *trg_get_current_profile(TrgPrefs *p);
 JsonObject *trg_prefs_get_root(TrgPrefs *p);
 

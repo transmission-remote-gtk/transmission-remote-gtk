@@ -96,7 +96,7 @@ static void trg_pref_widget_save(TrgPreferencesDialog *dlg,
 static void trg_pref_widget_save_all(TrgPreferencesDialog *dlg) {
     TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
 
-    if (trg_prefs_get_profile_id(priv->prefs) < 0)
+    if (trg_prefs_get_profile(priv->prefs) == NULL)
         return;
 
     GList *li;
@@ -377,14 +377,14 @@ static void profile_changed_cb(GtkWidget *w, gpointer data) {
             TRG_PREFERENCES_DIALOG_GET_PRIVATE(data);
 
     GtkTreeIter iter;
-    gint profile_id;
+    JsonObject *profile;
 
     trg_pref_widget_save_all(TRG_PREFERENCES_DIALOG(data));
 
     gint n_children = gtk_tree_model_iter_n_children(model, NULL);
     if (gtk_combo_box_get_active_iter(GTK_COMBO_BOX(w), &iter)) {
-        gtk_tree_model_get(model, &iter, 0, &profile_id, -1);
-        trg_prefs_set_profile(priv->prefs, profile_id);
+        gtk_tree_model_get(model, &iter, 0, &profile, -1);
+        trg_prefs_set_profile(priv->prefs, profile);
         trg_pref_widget_refresh_all(TRG_PREFERENCES_DIALOG(data));
         gtk_widget_set_sensitive(priv->profileDelButton, n_children > 1);
     } else {
@@ -415,10 +415,12 @@ static void trg_prefs_profile_combo_populate(TrgPreferencesDialog *dialog,
             name_value = _(TRG_PROFILE_NAME_DEFAULT);
         }
         GtkTreeIter iter;
-        gtk_list_store_insert_with_values(store, &iter, INT_MAX, 0, i, 1,
+        gtk_list_store_insert_with_values(store, &iter, INT_MAX, 0, profile, 1,
                 name_value, -1);
-        if (i++ == profile_id)
+        if (i == profile_id)
             gtk_combo_box_set_active_iter(combo, &iter);
+
+        i++;
     }
 
     gtk_widget_set_sensitive(priv->profileDelButton, g_list_length(profiles) > 1);
@@ -429,7 +431,7 @@ static void trg_prefs_profile_combo_populate(TrgPreferencesDialog *dialog,
 static GtkWidget *trg_prefs_profile_combo_new(TrgClient *tc) {
     GtkWidget *w;
     GtkCellRenderer *r;
-    GtkListStore *store = gtk_list_store_new(2, G_TYPE_INT, G_TYPE_STRING);
+    GtkListStore *store = gtk_list_store_new(2, G_TYPE_POINTER, G_TYPE_STRING);
 
     w = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
     r = gtk_cell_renderer_text_new();
@@ -462,12 +464,12 @@ static void del_profile_cb(GtkWidget *w, gpointer data) {
     GtkComboBox *combo = GTK_COMBO_BOX(data);
     GtkTreeModel *profileModel = gtk_combo_box_get_model(combo);
     GtkTreeIter iter;
-    gint profile_id;
+    JsonObject *profile;
 
     if (gtk_combo_box_get_active_iter(combo, &iter)) {
-        gtk_tree_model_get(profileModel, &iter, 0, &profile_id, -1);
-        trg_prefs_del_profile(prefs, (guint)profile_id);
-        trg_prefs_set_profile(prefs, -1);
+        gtk_tree_model_get(profileModel, &iter, 0, &profile, -1);
+        trg_prefs_del_profile(prefs, profile);
+        trg_prefs_set_profile(prefs, NULL);
         gtk_list_store_remove(GTK_LIST_STORE(profileModel), &iter);
         gtk_combo_box_set_active(combo, 0);
     }
@@ -480,9 +482,9 @@ static void add_profile_cb(GtkWidget *w, gpointer data) {
     GtkTreeModel *profileModel = gtk_combo_box_get_model(combo);
     GtkTreeIter iter;
 
-    gint new_id = trg_prefs_new_profile(priv->prefs);
+    JsonObject *profile = trg_prefs_new_profile(priv->prefs);
     gtk_list_store_insert_with_values(GTK_LIST_STORE(profileModel), &iter,
-            INT_MAX, 0, new_id, 1, _(TRG_PROFILE_NAME_DEFAULT), -1);
+            INT_MAX, 0, profile, 1, _(TRG_PROFILE_NAME_DEFAULT), -1);
     gtk_combo_box_set_active_iter(combo, &iter);
 }
 

@@ -38,6 +38,7 @@ struct _TrgPrefsPrivate {
     JsonObject *defaultsObj;
     JsonNode *user;
     JsonObject *userObj;
+    JsonObject *profile;
     gchar *file;
 };
 
@@ -146,16 +147,11 @@ gint trg_prefs_get_profile_id(TrgPrefs *p) {
     return (gint)json_object_get_int_member(priv->userObj, TRG_PREFS_KEY_PROFILE_ID);
 }
 
-JsonObject *trg_prefs_get_current_profile(TrgPrefs *p) {
-    JsonArray *profiles = trg_prefs_get_profiles(p);
-    return json_array_get_object_element(profiles, trg_prefs_get_profile_id(p));
-}
-
 JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int flags) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
 
     if ((flags & TRG_PREFS_PROFILE)) {
-        JsonObject *profile = trg_prefs_get_current_profile(p);
+        JsonObject *profile = trg_prefs_get_profile(p);
         if (json_object_has_member(profile, key)) {
             return json_object_get_member(profile, key);
         } else if ((flags & TRG_PREFS_NEWNODE)) {
@@ -224,20 +220,52 @@ void trg_prefs_set_string(TrgPrefs *p, gchar *key, const gchar *value,
     json_node_set_string(node, value);
 }
 
-void trg_prefs_set_profile(TrgPrefs *p, int index) {
-    trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, index, TRG_PREFS_GLOBAL);
+void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile) {
+    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    JsonArray *profiles = trg_prefs_get_profiles(p);
+    priv->profile = profile;
+
+    GList *li;
+    gint i = 0;
+
+    for (li = json_array_get_elements(profiles); li; li = g_list_next(li))
+    {
+            if (json_node_get_object((JsonNode*)li->data) == profile) {
+                trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, i, TRG_PREFS_GLOBAL);
+                break;
+            }
+            i++;
+    }
 }
 
-gint trg_prefs_new_profile(TrgPrefs *p) {
+JsonObject *trg_prefs_new_profile(TrgPrefs *p) {
     JsonArray *profiles = trg_prefs_get_profiles(p);
     JsonObject *newp = trg_prefs_new_profile_object();
     json_array_add_object_element(profiles, newp);
-    return json_array_get_length(profiles) - 1;
+    return newp;
 }
 
-void trg_prefs_del_profile(TrgPrefs *p, guint index) {
+void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile) {
     JsonArray *profiles = trg_prefs_get_profiles(p);
-    json_array_remove_element(profiles, index);
+
+    GList *li;
+    JsonNode *node;
+    int i = 0;
+    for (li = json_array_get_elements(profiles); li; li = g_list_next(li))
+    {
+        node = (JsonNode*)li->data;
+        if (profile == (gpointer)json_node_get_object(node)) {
+            json_array_remove_element(profiles, i);
+            break;
+        }
+        i++;
+    }
+
+}
+
+JsonObject* trg_prefs_get_profile(TrgPrefs *p) {
+    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    return priv->profile;
 }
 
 JsonArray* trg_prefs_get_profiles(TrgPrefs *p) {
@@ -344,12 +372,15 @@ void trg_prefs_load(TrgPrefs *p) {
     n_profiles = json_array_get_length(profiles);
 
     if (n_profiles < 1) {
-        json_array_add_object_element(profiles, trg_prefs_new_profile_object());
+        priv->profile = trg_prefs_new_profile_object();
+        json_array_add_object_element(profiles, priv->profile);
         trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, 0, TRG_PREFS_GLOBAL);
     } else {
         gint profile_id = trg_prefs_get_int(p, TRG_PREFS_KEY_PROFILE_ID,
                 TRG_PREFS_GLOBAL);
         if (profile_id >= n_profiles)
-            trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, 0, TRG_PREFS_GLOBAL);
+            trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, profile_id=0, TRG_PREFS_GLOBAL);
+
+        priv->profile = json_array_get_object_element(profiles, profile_id);
     }
 }
