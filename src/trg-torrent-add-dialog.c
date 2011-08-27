@@ -82,6 +82,7 @@ struct _TrgTorrentAddDialogPrivate {
     GtkWidget *file_list;
     GtkTreeStore *store;
     GtkWidget *paused_check;
+    GtkWidget *delete_check;
 };
 
 static void
@@ -137,11 +138,13 @@ static gpointer add_files_threadfunc(gpointer data)
 {
     struct add_torrent_threadfunc_args *files_thread_data =
         (struct add_torrent_threadfunc_args *) data;
+
     GSList *li;
 
     for (li = files_thread_data->list; li; li = g_slist_next(li)) {
+        gchar *fileName = (gchar *) li->data;
         JsonNode *request =
-            torrent_add((gchar *) li->data, files_thread_data->paused);
+            torrent_add(fileName, files_thread_data->flags);
         JsonObject *args = node_get_arguments(request);
         JsonObject *response;
         gint status;
@@ -214,10 +217,13 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
     TrgTorrentAddDialogPrivate *priv =
         TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(dlg);
 
+    guint flags = 0x00;
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->paused_check)))
+        flags |= TORRENT_ADD_FLAG_PAUSED;
+    if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->delete_check)))
+        flags |= TORRENT_ADD_FLAG_DELETE;
+
     if (res_id == GTK_RESPONSE_ACCEPT) {
-        gboolean paused =
-            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                         (priv->paused_check));
         gint priority =
             gtk_combo_box_get_active(GTK_COMBO_BOX(priv->priority_combo)) -
             1;
@@ -226,7 +232,7 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
 
         if (g_slist_length(priv->filenames) == 1) {
             JsonNode *req =
-                torrent_add((gchar *) priv->filenames->data, paused);
+                torrent_add((gchar *) priv->filenames->data, flags);
             JsonObject *args = node_get_arguments(req);
             gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store),
                                    add_file_indexes_foreachfunc, args);
@@ -242,7 +248,7 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
             args->client = priv->client;
             args->dir = g_strdup(dir);
             args->priority = priority;
-            args->paused = paused;
+            args->flags = flags;
             args->extraArgs = TRUE;
 
             launch_add_thread(args);
@@ -832,10 +838,15 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
 
     priv->file_list = gtr_file_list_new(&priv->store);
     gtk_widget_set_sensitive(priv->file_list, FALSE);
+
     priv->paused_check =
         gtk_check_button_new_with_mnemonic(_("Start _paused"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->paused_check),
                                  trg_prefs_get_bool(prefs, TRG_PREFS_KEY_START_PAUSED, TRG_PREFS_GLOBAL));
+
+    priv->delete_check = gtk_check_button_new_with_mnemonic(_("Delete local .torrent file after adding"));
+    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->delete_check),
+                                 trg_prefs_get_bool(prefs, TRG_PREFS_KEY_DELETE_LOCAL_TORRENT, TRG_PREFS_GLOBAL));
 
     priv->priority_combo = gtr_priority_combo_new();
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->priority_combo), 1);
@@ -892,6 +903,11 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     ++row;
     col = 0;
     gtk_table_attach(GTK_TABLE(t), priv->paused_check, col, col + 2, row,
+                     row + 1, GTK_FILL, 0, 0, 0);
+
+    ++row;
+    col = 0;
+    gtk_table_attach(GTK_TABLE(t), priv->delete_check, col, col + 2, row,
                      row + 1, GTK_FILL, 0, 0, 0);
 
     gtr_dialog_set_content(GTK_DIALOG(obj), t);
@@ -1003,12 +1019,13 @@ void trg_torrent_add_dialog(TrgMainWindow * win, TrgClient * client)
             gtk_widget_show_all(GTK_WIDGET(dialog));
         } else {
             struct add_torrent_threadfunc_args *args =
-                g_new(struct add_torrent_threadfunc_args, 1);
+                g_new0(struct add_torrent_threadfunc_args, 1);
+
             args->list = l;
             args->cb_data = win;
             args->client = client;
-            args->paused = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_START_PAUSED, TRG_PREFS_GLOBAL);
             args->extraArgs = FALSE;
+            args->flags = trg_prefs_get_add_flags(prefs);
 
             launch_add_thread(args);
         }

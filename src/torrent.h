@@ -34,6 +34,9 @@
 #define FILTER_FLAG_TRACKER            (1 << 9) /* 0x512 */
 #define FILTER_FLAG_DIR                (1 << 10) /* 0x1024 */
 
+#define TORRENT_ADD_FLAG_PAUSED        (1 << 0) /* 0x01 */
+#define TORRENT_ADD_FLAG_DELETE        (1 << 1) /* 0x02 */
+
 gint64 torrent_get_size(JsonObject * t);
 const gchar *torrent_get_name(JsonObject * t);
 gint64 torrent_get_rate_down(JsonObject * t);

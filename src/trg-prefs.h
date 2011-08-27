@@ -53,6 +53,7 @@
 #define TRG_PREFS_KEY_ADD_OPTIONS_DIALOG "add-options-dialog"
 #define TRG_PREFS_KEY_START_PAUSED "start-paused"
 #define TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY "update-active-only"
+#define TRG_PREFS_KEY_DELETE_LOCAL_TORRENT "delete-local-torrent"
 
 #define TRG_PREFS_KEY_TREE_VIEWS "tree-views"
 #define TRG_PREFS_KEY_TV_SORT_TYPE "sort-type"
@@ -122,6 +123,8 @@ void trg_prefs_set_bool(TrgPrefs *p, gchar *key, gboolean value, int flags);
 
 gboolean trg_prefs_save(TrgPrefs *p);
 void trg_prefs_load(TrgPrefs *p);
+
+guint trg_prefs_get_add_flags(TrgPrefs *p);
 
 G_END_DECLS
 

@@ -444,12 +444,12 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
         gdk_threads_leave();
     } else {
         struct add_torrent_threadfunc_args *args =
-            g_new(struct add_torrent_threadfunc_args, 1);
+            g_new0(struct add_torrent_threadfunc_args, 1);
         args->list = filesList;
         args->cb_data = win;
         args->client = client;
-        args->paused = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_START_PAUSED, TRG_PREFS_GLOBAL);
         args->extraArgs = FALSE;
+        args->flags = trg_prefs_get_add_flags(prefs);
 
         launch_add_thread(args);
     }

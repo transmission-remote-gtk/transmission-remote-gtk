@@ -55,7 +55,7 @@ struct add_torrent_threadfunc_args {
     GSList *list;
     TrgClient *client;
     gpointer cb_data;
-    gboolean paused;
+    guint flags;
     gchar *dir;
     gint priority;
     gboolean extraArgs;

@@ -19,12 +19,14 @@
 
 #include <stdio.h>
 
+#include <glib/gstdio.h>
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
 
 #include "protocol-constants.h"
 #include "base64.h"
 #include "json.h"
+#include "torrent.h"
 #include "requests.h"
 
 static JsonNode *base_request(gchar * method);
@@ -33,7 +35,7 @@ JsonNode *generic_request(gchar * method, JsonArray * ids)
 {
     JsonNode *root = base_request(method);
 
-    if (ids != NULL)
+    if (ids)
         json_object_set_array_member(node_get_arguments(root),
                                      PARAM_IDS, ids);
 
@@ -174,15 +176,19 @@ JsonNode *torrent_add_url(const gchar * url, gboolean paused)
     return root;
 }
 
-JsonNode *torrent_add(gchar * filename, gboolean paused)
+JsonNode *torrent_add(gchar * filename, gint flags)
 {
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);
     gchar *encodedFile = base64encode(filename);
     if (encodedFile)
         json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
-    json_object_set_boolean_member(args, PARAM_PAUSED, paused);
+    json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED) == TORRENT_ADD_FLAG_PAUSED);
     g_free(encodedFile);
+
+    if ((flags & TORRENT_ADD_FLAG_DELETE))
+        g_unlink(filename);
+
     return root;
 }
 

@@ -24,6 +24,7 @@
 #include <glib/gprintf.h>
 
 #include "util.h"
+#include "torrent.h"
 #include "trg-client.h"
 #include "trg-prefs.h"
 
@@ -382,4 +383,17 @@ void trg_prefs_load(TrgPrefs *p) {
 
         priv->profile = json_array_get_object_element(profiles, profile_id);
     }
+}
+
+guint trg_prefs_get_add_flags(TrgPrefs *p)
+{
+    guint flags = 0x00;
+
+    if (trg_prefs_get_bool(p, TRG_PREFS_KEY_START_PAUSED, TRG_PREFS_GLOBAL))
+        flags |= TORRENT_ADD_FLAG_PAUSED;
+
+    if (trg_prefs_get_bool(p, TRG_PREFS_KEY_DELETE_LOCAL_TORRENT, TRG_PREFS_GLOBAL))
+        flags |= TORRENT_ADD_FLAG_DELETE;
+
+    return flags;
 }

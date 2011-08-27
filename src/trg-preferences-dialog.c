@@ -368,6 +368,10 @@ static GtkWidget *trg_prefs_behaviorPage(TrgPreferencesDialog * dlg) {
             TRG_PREFS_KEY_ADD_OPTIONS_DIALOG, TRG_PREFS_GLOBAL);
     hig_workarea_add_wide_control(t, &row, w);
 
+    w = trgp_check_new(dlg, _("Delete local .torrent file after adding"),
+            TRG_PREFS_KEY_DELETE_LOCAL_TORRENT, TRG_PREFS_GLOBAL);
+    hig_workarea_add_wide_control(t, &row, w);
+
     return t;
 }
 
