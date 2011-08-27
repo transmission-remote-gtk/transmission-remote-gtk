@@ -23,49 +23,38 @@
 #include "tpeer.h"
 #include "protocol-constants.h"
 
-const gchar *peer_get_address(JsonObject * p)
-{
+const gchar *peer_get_address(JsonObject * p) {
     return json_object_get_string_member(p, TPEER_ADDRESS);
 }
 
-const gchar *peer_get_flagstr(JsonObject * p)
-{
+const gchar *peer_get_flagstr(JsonObject * p) {
     return json_object_get_string_member(p, TPEER_FLAGSTR);
 }
 
-const gchar *peer_get_client_name(JsonObject * p)
-{
+const gchar *peer_get_client_name(JsonObject * p) {
     return json_object_get_string_member(p, TPEER_CLIENT_NAME);
 }
 
-gboolean peer_get_is_encrypted(JsonObject * p)
-{
+gboolean peer_get_is_encrypted(JsonObject * p) {
     return json_object_get_boolean_member(p, TPEER_IS_ENCRYPTED);
 }
 
-gboolean peer_get_is_uploading_to(JsonObject * p)
-{
+gboolean peer_get_is_uploading_to(JsonObject * p) {
     return json_object_get_boolean_member(p, TPEER_IS_UPLOADING_TO);
 }
 
-gboolean peer_get_is_downloading_from(JsonObject * p)
-{
+gboolean peer_get_is_downloading_from(JsonObject * p) {
     return json_object_get_boolean_member(p, TPEER_IS_DOWNLOADING_FROM);
 }
 
-gdouble peer_get_progress(JsonObject * p)
-{
+gdouble peer_get_progress(JsonObject * p) {
     return json_object_get_double_member(p, TPEER_PROGRESS) * 100.0;
 }
 
-gint64 peer_get_rate_to_client(JsonObject * p)
-{
-    return (gint64)
-        json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_CLIENT));
+gint64 peer_get_rate_to_client(JsonObject * p) {
+    return json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_CLIENT));
 }
 
-gint64 peer_get_rate_to_peer(JsonObject * p)
-{
-    return (gint64)
-        json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_PEER));
+gint64 peer_get_rate_to_peer(JsonObject * p) {
+    return json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_PEER));
 }

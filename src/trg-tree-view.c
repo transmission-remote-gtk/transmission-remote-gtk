@@ -406,6 +406,8 @@ void trg_tree_view_persist(TrgTreeView * tv)
         json_array_add_int_element(widths, gtk_tree_view_column_get_width(col));
     }
 
+    g_list_free(cols);
+
     gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(model), &sort_column_id, &sort_type);
 
     if (json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_COL))
@@ -471,6 +473,9 @@ void trg_tree_view_setup_columns(TrgTreeView * tv)
         }
         wli = g_list_next(wli);
     }
+
+    g_list_free(columns);
+    g_list_free(widths);
 }
 
 GList *trg_tree_view_get_selected_refs_list(GtkTreeView * tv)

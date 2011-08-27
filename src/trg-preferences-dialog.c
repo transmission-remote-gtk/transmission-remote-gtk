@@ -423,8 +423,8 @@ static void trg_prefs_profile_combo_populate(TrgPreferencesDialog *dialog,
         i++;
     }
 
-    gtk_widget_set_sensitive(priv->profileDelButton, g_list_length(profiles) > 1);
-
+    gtk_widget_set_sensitive(priv->profileDelButton,
+            g_list_length(profiles) > 1);
 
 }
 

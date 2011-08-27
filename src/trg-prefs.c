@@ -91,9 +91,8 @@ static GObject *trg_prefs_constructor(GType type, guint n_construct_properties,
 
     trg_prefs_create_defaults(TRG_PREFS(object));
 
-    priv->file = g_build_filename (g_get_user_config_dir (),
-            g_get_application_name (),
-            TRG_PREFS_FILENAME, NULL);
+    priv->file = g_build_filename(g_get_user_config_dir(),
+            g_get_application_name(), TRG_PREFS_FILENAME, NULL);
 
     return object;
 }
@@ -144,7 +143,8 @@ void trg_prefs_add_default_bool(TrgPrefs *p, gchar *key, gboolean value) {
 
 gint trg_prefs_get_profile_id(TrgPrefs *p) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
-    return (gint)json_object_get_int_member(priv->userObj, TRG_PREFS_KEY_PROFILE_ID);
+    return (gint) json_object_get_int_member(priv->userObj,
+            TRG_PREFS_KEY_PROFILE_ID);
 }
 
 JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int flags) {
@@ -169,8 +169,7 @@ JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int flags) {
         }
     }
 
-    if (priv->defaultsObj && json_object_has_member(priv->defaultsObj,
-            key)) {
+    if (priv->defaultsObj && json_object_has_member(priv->defaultsObj, key)) {
         return json_object_get_member(priv->defaultsObj, key);
     }
 
@@ -211,7 +210,7 @@ gboolean trg_prefs_get_bool(TrgPrefs *p, gchar *key, int flags) {
 
 void trg_prefs_set_int(TrgPrefs *p, gchar *key, int value, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, flags | TRG_PREFS_NEWNODE);
-    json_node_set_int(node, (gint64)value);
+    json_node_set_int(node, (gint64) value);
 }
 
 void trg_prefs_set_string(TrgPrefs *p, gchar *key, const gchar *value,
@@ -228,13 +227,12 @@ void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile) {
     GList *li;
     gint i = 0;
 
-    for (li = json_array_get_elements(profiles); li; li = g_list_next(li))
-    {
-            if (json_node_get_object((JsonNode*)li->data) == profile) {
-                trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, i, TRG_PREFS_GLOBAL);
-                break;
-            }
-            i++;
+    for (li = json_array_get_elements(profiles); li; li = g_list_next(li)) {
+        if (json_node_get_object((JsonNode*) li->data) == profile) {
+            trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, i, TRG_PREFS_GLOBAL);
+            break;
+        }
+        i++;
     }
 }
 
@@ -251,16 +249,15 @@ void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile) {
     GList *li;
     JsonNode *node;
     int i = 0;
-    for (li = json_array_get_elements(profiles); li; li = g_list_next(li))
-    {
-        node = (JsonNode*)li->data;
-        if (profile == (gpointer)json_node_get_object(node)) {
+
+    for (li = json_array_get_elements(profiles); li; li = g_list_next(li)) {
+        node = (JsonNode*) li->data;
+        if (profile == (gpointer) json_node_get_object(node)) {
             json_array_remove_element(profiles, i);
             break;
         }
         i++;
     }
-
 }
 
 JsonObject* trg_prefs_get_profile(TrgPrefs *p) {
@@ -289,9 +286,10 @@ gboolean trg_prefs_save(TrgPrefs *p) {
     gchar *dirName;
     gboolean success = TRUE;
 
-    dirName = g_path_get_dirname (priv->file);
+    dirName = g_path_get_dirname(priv->file);
     if (!g_file_test(dirName, G_FILE_TEST_IS_DIR))
-        success = g_mkdir_with_parents (dirName, TRG_PREFS_DEFAULT_DIR_MODE) == 0;
+        success = g_mkdir_with_parents(dirName, TRG_PREFS_DEFAULT_DIR_MODE)
+                == 0;
     g_free(dirName);
 
     if (!success) {
@@ -379,7 +377,8 @@ void trg_prefs_load(TrgPrefs *p) {
         gint profile_id = trg_prefs_get_int(p, TRG_PREFS_KEY_PROFILE_ID,
                 TRG_PREFS_GLOBAL);
         if (profile_id >= n_profiles)
-            trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, profile_id=0, TRG_PREFS_GLOBAL);
+            trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, profile_id = 0,
+                    TRG_PREFS_GLOBAL);
 
         priv->profile = json_array_get_object_element(profiles, profile_id);
     }
