@@ -439,7 +439,7 @@ gboolean get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
     return found;
 }
 
-void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
+void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
                               JsonObject * response,
                               trg_torrent_model_update_stats * stats,
                               gint mode)
@@ -473,7 +473,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
         if (!result) {
             gtk_list_store_append(GTK_LIST_STORE(model), &iter);
 
-            update_torrent_iter(model, tc->updateSerial, &iter, t, stats);
+            update_torrent_iter(model, trg_client_get_serial(tc), &iter, t, stats);
 
             path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
             rr = gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
@@ -491,7 +491,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
             if (path) {
                 if (gtk_tree_model_get_iter
                     (GTK_TREE_MODEL(model), &iter, path)) {
-                    update_torrent_iter(model, tc->updateSerial, &iter, t,
+                    update_torrent_iter(model, trg_client_get_serial(tc), &iter, t,
                                         stats);
                 }
                 gtk_tree_path_free(path);
@@ -504,7 +504,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
     if (mode == TORRENT_GET_MODE_UPDATE) {
         GList *hitlist =
             trg_torrent_model_find_removed(GTK_TREE_MODEL(model),
-                                           tc->updateSerial);
+                    trg_client_get_serial(tc));
         if (hitlist) {
             for (li = hitlist; li; li = g_list_next(li)) {
                 g_hash_table_remove(priv->ht, li->data);

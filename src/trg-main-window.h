@@ -61,8 +61,8 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
 void on_session_set(JsonObject * response, int status, gpointer data);
 void on_generic_interactive_action(JsonObject * response, int status,
                                    gpointer data);
-void auto_connect_if_required(TrgMainWindow * win, trg_client * tc);
-TrgMainWindow *trg_main_window_new(trg_client * tc);
+void auto_connect_if_required(TrgMainWindow * win, TrgClient * tc);
+TrgMainWindow *trg_main_window_new(TrgClient * tc);
 void trg_main_window_add_status_icon(TrgMainWindow * win);
 void trg_main_window_remove_status_icon(TrgMainWindow * win);
 void trg_main_window_add_graph(TrgMainWindow * win, gboolean show);

@@ -20,6 +20,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include "trg-prefs.h"
 #include "trg-trackers-tree-view.h"
 #include "trg-tree-view.h"
 #include "trg-client.h"
@@ -37,7 +38,7 @@ G_DEFINE_TYPE(TrgTrackersTreeView, trg_trackers_tree_view,
 typedef struct _TrgTrackersTreeViewPrivate TrgTrackersTreeViewPrivate;
 
 struct _TrgTrackersTreeViewPrivate {
-    trg_client *client;
+    TrgClient *client;
     GtkCellRenderer *announceRenderer;
     GtkTreeViewColumn *announceColumn;
     TrgMainWindow *win;
@@ -62,7 +63,7 @@ on_trackers_update(JsonObject * response, int status, gpointer data)
 }
 
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
-                                           trg_client * tc)
+                                           TrgClient * tc)
 {
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(tv);
@@ -177,8 +178,6 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_SCRAPE,
                              _("Scrape URL"), "scrape-url", 0);
-
-    trg_tree_view_setup_columns(ttv);
 }
 
 static void add_tracker(GtkWidget * w, gpointer data)
@@ -338,12 +337,14 @@ static gboolean view_onPopupMenu(GtkWidget * treeview, gpointer userdata)
 }
 
 TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model,
-                                                trg_client * client,
+                                                TrgClient * client,
                                                 TrgMainWindow * win)
 {
     GObject *obj = g_object_new(TRG_TYPE_TRACKERS_TREE_VIEW, NULL);
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(obj);
+
+    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), trg_client_get_prefs(client));
 
     g_signal_connect(obj, "button-press-event",
                      G_CALLBACK(view_onButtonPressed), NULL);
@@ -354,6 +355,7 @@ TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model,
     priv->client = client;
     priv->win = win;
 
+    trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
     //trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
 
     return TRG_TRACKERS_TREE_VIEW(obj);

@@ -53,7 +53,7 @@ typedef struct {
 
 struct add_torrent_threadfunc_args {
     GSList *list;
-    trg_client *client;
+    TrgClient *client;
     gpointer cb_data;
     gboolean paused;
     gchar *dir;
@@ -64,9 +64,9 @@ struct add_torrent_threadfunc_args {
 GType trg_torrent_add_dialog_get_type(void);
 
 TrgTorrentAddDialog *trg_torrent_add_dialog_new(TrgMainWindow * win,
-                                                trg_client * client,
+                                                TrgClient * client,
                                                 GSList * filenames);
-void trg_torrent_add_dialog(TrgMainWindow * win, trg_client * client);
+void trg_torrent_add_dialog(TrgMainWindow * win, TrgClient * client);
 void launch_add_thread(struct add_torrent_threadfunc_args *args);
 
 G_END_DECLS

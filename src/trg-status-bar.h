@@ -53,7 +53,7 @@ TrgStatusBar *trg_status_bar_new();
 G_END_DECLS
     void trg_status_bar_update(TrgStatusBar * sb,
                                trg_torrent_model_update_stats * stats,
-                               trg_client * client);
+                               TrgClient * client);
 void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session);
 void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
                                         const gchar * msg);

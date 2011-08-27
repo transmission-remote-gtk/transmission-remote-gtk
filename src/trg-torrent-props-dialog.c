@@ -25,13 +25,13 @@
 #include "json.h"
 #include "dispatch.h"
 #include "trg-client.h"
+#include "trg-json-widgets.h"
 #include "requests.h"
 #include "protocol-constants.h"
 #include "trg-torrent-model.h"
 #include "trg-torrent-tree-view.h"
 #include "trg-torrent-props-dialog.h"
 #include "trg-main-window.h"
-#include "trg-json-widgets.h"
 #include "hig.h"
 
 G_DEFINE_TYPE(TrgTorrentPropsDialog, trg_torrent_props_dialog,
@@ -50,7 +50,7 @@ typedef struct _TrgTorrentPropsDialogPrivate TrgTorrentPropsDialogPrivate;
 
 struct _TrgTorrentPropsDialogPrivate {
     TrgTorrentTreeView *tv;
-    trg_client *client;
+    TrgClient *client;
     TrgMainWindow *parent;
     JsonArray *targetIds;
 
@@ -274,7 +274,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->tv));
     rowCount = gtk_tree_selection_count_selected_rows(selection);
-    get_torrent_data(priv->client->torrentTable,
+    get_torrent_data(trg_client_get_torrent_table(priv->client),
                      trg_mw_get_selected_torrent_id(priv->parent), &json,
                      NULL);
     priv->targetIds = build_json_id_array(priv->tv);
@@ -382,7 +382,7 @@ trg_torrent_props_dialog_init(TrgTorrentPropsDialog * self G_GNUC_UNUSED)
 TrgTorrentPropsDialog *trg_torrent_props_dialog_new(GtkWindow * window,
                                                     TrgTorrentTreeView *
                                                     treeview,
-                                                    trg_client * client)
+                                                    TrgClient * client)
 {
     return g_object_new(TRG_TYPE_TORRENT_PROPS_DIALOG,
                         "parent-window", window,

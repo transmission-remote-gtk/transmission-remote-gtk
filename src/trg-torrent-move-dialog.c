@@ -39,7 +39,7 @@ typedef struct _TrgTorrentMoveDialogPrivate
  TrgTorrentMoveDialogPrivate;
 
 struct _TrgTorrentMoveDialogPrivate {
-    trg_client *client;
+    TrgClient *client;
     TrgMainWindow *win;
     TrgTorrentTreeView *treeview;
     JsonArray *ids;
@@ -148,7 +148,7 @@ static GObject *trg_torrent_move_dialog_constructor(GType type,
         JsonObject *json;
         const gchar *name;
 
-        get_torrent_data(priv->client->torrentTable,
+        get_torrent_data(trg_client_get_torrent_table(priv->client),
                          trg_mw_get_selected_torrent_id(priv->win), &json,
                          NULL);
         name = torrent_get_name(json);
@@ -263,7 +263,7 @@ static void trg_torrent_move_dialog_init(TrgTorrentMoveDialog * self)
 }
 
 TrgTorrentMoveDialog *trg_torrent_move_dialog_new(TrgMainWindow * win,
-                                                  trg_client * client,
+                                                  TrgClient * client,
                                                   TrgTorrentTreeView * ttv)
 {
     return g_object_new(TRG_TYPE_TORRENT_MOVE_DIALOG,

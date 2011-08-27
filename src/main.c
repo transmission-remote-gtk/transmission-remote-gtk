@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     int returnValue = EXIT_SUCCESS;
     UniqueApp *app = NULL;
     TrgMainWindow *window;
-    trg_client *client;
+    TrgClient *client;
     gboolean withUnique;
 
     g_type_init();
@@ -88,6 +88,7 @@ int main(int argc, char *argv[])
     gdk_threads_init();
     gtk_init(&argc, &argv);
 
+    g_set_application_name (PACKAGE_NAME);
     setlocale(LC_ALL, "");
     bindtextdomain(GETTEXT_PACKAGE, TRGLOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
@@ -126,7 +127,7 @@ int main(int argc, char *argv[])
         if (response != UNIQUE_RESPONSE_OK)
             returnValue = EXIT_FAILURE;
     } else {
-        client = trg_init_client();
+        client = trg_client_new();
 
         curl_global_init(CURL_GLOBAL_ALL);
 

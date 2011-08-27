@@ -1,6 +1,6 @@
 AC_PREREQ(2.63)
 
-AC_INIT(transmission-remote-gtk, 0.5.1, alan@eth0.org.uk)
+AC_INIT(transmission-remote-gtk, 0.5.2, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_INIT_AUTOMAKE([foreign])
@@ -36,7 +36,6 @@ AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
 
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
-PKG_CHECK_MODULES([gconf], [gconf-2.0])
 PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
 PKG_CHECK_MODULES([unique], [unique-1.0])

@@ -45,13 +45,15 @@ enum {
     PROP_CLIENT
 };
 
+#define STATS_UPDATE_INTERVAL 5
+
 G_DEFINE_TYPE(TrgStatsDialog, trg_stats_dialog, GTK_TYPE_DIALOG)
 #define TRG_STATS_DIALOG_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_STATS_DIALOG, TrgStatsDialogPrivate))
 typedef struct _TrgStatsDialogPrivate TrgStatsDialogPrivate;
 
 struct _TrgStatsDialogPrivate {
-    trg_client *client;
+    TrgClient *client;
     TrgMainWindow *parent;
     GtkWidget *tv;
     GtkListStore *model;
@@ -210,8 +212,8 @@ static void on_stats_reply(JsonObject * response, int status,
         update_int_stat(args, priv->rr_session_count, "sessionCount");
         update_time_stat(args, priv->rr_active, "secondsActive");
 
-        if (priv->client->session)
-            g_timeout_add_seconds(5, trg_update_stats_timerfunc, data);
+        if (trg_client_is_connected(priv->client))
+            g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc, data);
     } else {
         trg_error_dialog(GTK_WINDOW(data), status, response);
     }
@@ -351,7 +353,7 @@ static void trg_stats_dialog_init(TrgStatsDialog * self)
 }
 
 TrgStatsDialog *trg_stats_dialog_get_instance(TrgMainWindow * parent,
-                                              trg_client * client)
+                                              TrgClient * client)
 {
     if (instance == NULL) {
         instance = g_object_new(TRG_TYPE_STATS_DIALOG,

@@ -16,48 +16,92 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+/* trg-client.h */
 
-#ifndef TRG_CLIENT_H_
-#define TRG_CLIENT_H_
+#ifndef _TRG_CLIENT_H_
+#define _TRG_CLIENT_H_
 
 #define TRANSMISSION_MIN_SUPPORTED 2.0
+#define TRG_MAX_RETRIES 3
 
 #define TORRENT_GET_MODE_FIRST 0
 #define TORRENT_GET_MODE_ACTIVE 1
 #define TORRENT_GET_MODE_INTERACTION 2
 #define TORRENT_GET_MODE_UPDATE 3
 
-#define TRG_GCONF_SCHEMA_ERROR -1
 #define TRG_NO_HOSTNAME_SET -2
 
 #include <json-glib/json-glib.h>
-#include <gconf/gconf-client.h>
+#include <glib-object.h>
 
+#include "trg-prefs.h"
 #include "session-get.h"
 
+G_BEGIN_DECLS
+
+#define TRG_TYPE_CLIENT trg_client_get_type()
+
+#define TRG_CLIENT(obj) \
+  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_CLIENT, TrgClient))
+
+#define TRG_CLIENT_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_CLIENT, TrgClientClass))
+
+#define TRG_IS_CLIENT(obj) \
+  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_CLIENT))
+
+#define TRG_IS_CLIENT_CLASS(klass) \
+  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_CLIENT))
+
+#define TRG_CLIENT_GET_CLASS(obj) \
+  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_CLIENT, TrgClientClass))
+
 typedef struct {
-    char *session_id;
-    gboolean activeOnlyUpdate;
-    gint failCount;
-    gint interval;
-    gint64 updateSerial;
-    JsonObject *session;
-    gboolean ssl;
-    float version;
-    char *url;
-    char *username;
-    char *password;
-    char *proxy;
-    GHashTable *torrentTable;
-    GThreadPool *pool;
-    GConfClient *gconf;
-    GMutex *updateMutex;
-} trg_client;
+  GObject parent;
+} TrgClient;
 
-trg_client *trg_init_client();
-int trg_client_populate_with_settings(trg_client * tc,
-                                      GConfClient * gconf);
-void trg_client_set_session(trg_client * tc, JsonObject * session);
-gboolean trg_client_supports_tracker_edit(trg_client * tc);
+typedef struct {
+  GObjectClass parent_class;
+  void (*client_profile_changed) (TrgClient * client, gpointer data);
+  void (*client_profile_new) (TrgClient * client, gpointer data);
+} TrgClientClass;
 
-#endif                          /* TRG_CLIENT_H_ */
+GType trg_client_get_type (void);
+
+TrgClient* trg_client_new (void);
+TrgPrefs* trg_client_get_prefs(TrgClient *tc);
+int trg_client_populate_with_settings(TrgClient * tc);
+void trg_client_set_session(TrgClient * tc, JsonObject * session);
+gboolean trg_client_supports_tracker_edit(TrgClient * tc);
+
+gchar *trg_client_get_password(TrgClient *tc);
+gchar *trg_client_get_username(TrgClient *tc);
+gchar *trg_client_get_url(TrgClient *tc);
+gchar *trg_client_get_session_id(TrgClient *tc);
+void trg_client_set_session_id(TrgClient *tc, gchar *session_id);
+gboolean trg_client_get_ssl(TrgClient *tc);
+gchar *trg_client_get_proxy(TrgClient *tc);
+gint64 trg_client_get_serial(TrgClient *tc);
+void trg_client_thread_pool_push(TrgClient *tc, gpointer data, GError **err);
+void trg_client_set_torrent_table(TrgClient *tc, GHashTable *table);
+GHashTable* trg_client_get_torrent_table(TrgClient *tc);
+JsonObject* trg_client_get_session(TrgClient *tc);
+void trg_client_status_change(TrgClient *tc, gboolean connected);
+gboolean trg_client_get_activeonlyupdate(TrgClient *tc);
+gboolean trg_client_is_connected(TrgClient *tc);
+void trg_client_updateunlock(TrgClient *tc);
+void trg_client_updatelock(TrgClient *tc);
+gint trg_client_inc_failcount(TrgClient *tc);
+gint trg_client_get_failcount(TrgClient *tc);
+void trg_client_reset_failcount(TrgClient *tc);
+void trg_client_inc_serial(TrgClient *tc);
+gint trg_client_get_interval(TrgClient *tc);
+void trg_client_set_interval(TrgClient *tc, gint interval);
+void trg_client_set_activeonlyupdate(TrgClient *tc, gboolean activeOnlyUpdate);
+void trg_client_set_connid(TrgClient *tc, gint connid);
+gint trg_client_get_connid(TrgClient *tc);
+gint trg_client_new_profile(TrgClient *tc);
+
+G_END_DECLS
+
+#endif // _TRG_CLIENT_H_

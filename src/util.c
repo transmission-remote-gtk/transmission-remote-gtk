@@ -23,7 +23,6 @@
 #include <math.h>
 #include <string.h>
 
-#include <gconf/gconf-client.h>
 #include <glib/gi18n.h>
 #include <glib-object.h>
 #include <curl/curl.h>
@@ -84,46 +83,6 @@ void trg_error_dialog(GtkWindow * parent, int status,
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
     g_free((gpointer) msg);
-}
-
-gint gconf_client_get_int_or_default(GConfClient * gconf,
-                                     const gchar * key, int deflt,
-                                     GError ** error)
-{
-    GConfValue *value =
-        gconf_client_get_without_default(gconf, key, error);
-    gint ret;
-    if (value) {
-        ret = gconf_value_get_int(value);
-        gconf_value_free(value);
-    } else {
-        ret = deflt;
-    }
-    return ret;
-}
-
-gboolean g_slist_str_set_add(GSList ** list, const gchar * string)
-{
-    GSList *li;
-    for (li = *list; li; li = g_slist_next(li))
-        if (!g_strcmp0((gchar *) li->data, string))
-            return FALSE;
-
-    *list = g_slist_insert_sorted(*list, g_strdup(string), (GCompareFunc)g_strcmp0);
-    return TRUE;
-}
-
-gboolean gconf_client_get_bool_or_true(GConfClient * gconf, gchar * key)
-{
-    GConfValue *value = gconf_client_get_without_default(gconf, key, NULL);
-    gboolean ret = TRUE;
-
-    if (value) {
-        ret = gconf_value_get_bool(value);
-        gconf_value_free(value);
-    }
-
-    return ret;
 }
 
 const gchar *make_error_message(JsonObject * response, int status)

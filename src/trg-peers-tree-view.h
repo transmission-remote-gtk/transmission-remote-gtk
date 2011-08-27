@@ -24,6 +24,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
+#include "trg-prefs.h"
 #include "trg-peers-model.h"
 
 G_BEGIN_DECLS
@@ -48,7 +49,7 @@ typedef struct {
 
 GType trg_peers_tree_view_get_type(void);
 
-TrgPeersTreeView *trg_peers_tree_view_new(TrgPeersModel * model);
+TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs *prefs, TrgPeersModel * model);
 
 G_END_DECLS
 #endif                          /* TRG_PEERS_TREE_VIEW_H_ */

@@ -28,9 +28,9 @@
 #include "json.h"
 
 static void dispatch_async_threadfunc(struct DispatchAsyncData *task,
-                                      trg_client * client);
+                                      TrgClient * client);
 
-JsonObject *dispatch(trg_client * client, JsonNode * req, int *status)
+JsonObject *dispatch(TrgClient * client, JsonNode * req, int *status)
 {
     gchar *serialized;
     struct http_response *response;
@@ -75,7 +75,7 @@ JsonObject *dispatch(trg_client * client, JsonNode * req, int *status)
 }
 
 static void dispatch_async_threadfunc(struct DispatchAsyncData *task,
-                                      trg_client * client)
+                                      TrgClient * client)
 {
     int status;
     JsonObject *result = dispatch(client, task->req, &status);
@@ -84,13 +84,13 @@ static void dispatch_async_threadfunc(struct DispatchAsyncData *task,
     g_free(task);
 }
 
-GThreadPool *dispatch_init_pool(trg_client * client)
+GThreadPool *dispatch_init_pool(TrgClient * client)
 {
     return g_thread_pool_new((GFunc) dispatch_async_threadfunc, client,
                              DISPATCH_POOL_SIZE, FALSE, NULL);
 }
 
-gboolean dispatch_async(trg_client * client, JsonNode * req,
+gboolean dispatch_async(TrgClient * client, JsonNode * req,
                         void (*callback) (JsonObject *, int, gpointer),
                         gpointer data)
 {
@@ -101,7 +101,7 @@ gboolean dispatch_async(trg_client * client, JsonNode * req,
     args->data = data;
     args->req = req;
 
-    g_thread_pool_push(client->pool, args, &error);
+    trg_client_thread_pool_push(client, args, &error);
     if (error) {
         g_printf("thread creation error: %s\n", error->message);
         g_error_free(error);

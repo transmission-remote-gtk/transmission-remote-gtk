@@ -47,7 +47,7 @@ typedef struct {
 
 GType trg_destination_combo_get_type(void);
 
-GtkWidget *trg_destination_combo_new(trg_client * client);
+GtkWidget *trg_destination_combo_new(TrgClient * client);
 
 G_END_DECLS
 #endif                          /* TRG_DESTINATION_COMBO_H_ */

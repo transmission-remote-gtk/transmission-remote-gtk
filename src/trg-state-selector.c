@@ -26,7 +26,7 @@
 #include "trg-state-selector.h"
 #include "trg-torrent-model.h"
 #include "util.h"
-#include "trg-preferences.h"
+#include "trg-prefs.h"
 #include "trg-client.h"
 
 enum {
@@ -47,7 +47,7 @@ struct _TrgStateSelectorPrivate {
     guint flag;
     gboolean showDirs;
     gboolean showTrackers;
-    trg_client *client;
+    TrgClient *client;
     GHashTable *trackers;
     GHashTable *directories;
     GRegex *urlHostRegex;
@@ -263,8 +263,9 @@ void trg_state_selector_update(TrgStateSelector * s)
 {
     TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
-    trg_client *client = priv->client;
-    GList *torrentItemRefs = g_hash_table_get_values(client->torrentTable);
+    TrgClient *client = priv->client;
+    gint64 updateSerial = trg_client_get_serial(client);
+    GList *torrentItemRefs = g_hash_table_get_values(trg_client_get_torrent_table(client));
     GtkTreeIter iter;
     GList *trackersList, *trackerItem, *li;
     GtkTreeRowReference *rr;
@@ -273,7 +274,7 @@ void trg_state_selector_update(TrgStateSelector * s)
     gpointer result;
     struct cruft_remove_args cruft;
 
-    if (!client->session)
+    if (!trg_client_is_connected(client))
         return;
 
     for (li = torrentItemRefs; li; li = g_list_next(li)) {
@@ -315,7 +316,7 @@ void trg_state_selector_update(TrgStateSelector * s)
                                                      (GtkTreeRowReference
                                                       *)
                                                      result,
-                                                     client->updateSerial);
+                                                     updateSerial);
                     g_free(announceHost);
                 } else {
                     trg_state_selector_insert(s, N_CATEGORIES,
@@ -325,7 +326,7 @@ void trg_state_selector_update(TrgStateSelector * s)
                                        GTK_STOCK_NETWORK,
                                        STATE_SELECTOR_NAME, announceHost,
                                        STATE_SELECTOR_SERIAL,
-                                       client->updateSerial,
+                                       updateSerial,
                                        STATE_SELECTOR_BIT,
                                        FILTER_FLAG_TRACKER, -1);
                     g_hash_table_insert(priv->trackers, announceHost,
@@ -342,7 +343,7 @@ void trg_state_selector_update(TrgStateSelector * s)
                 trg_state_selector_update_serial(model,
                                                  (GtkTreeRowReference *)
                                                  result,
-                                                 client->updateSerial);
+                                                 updateSerial);
             } else {
                 trg_state_selector_insert(s, N_CATEGORIES+
                         g_hash_table_size(priv->trackers), -1, dir, &iter);
@@ -351,7 +352,7 @@ void trg_state_selector_update(TrgStateSelector * s)
                                    GTK_STOCK_DIRECTORY,
                                    STATE_SELECTOR_NAME, dir,
                                    STATE_SELECTOR_SERIAL,
-                                   client->updateSerial,
+                                   updateSerial,
                                    STATE_SELECTOR_BIT, FILTER_FLAG_DIR,
                                    -1);
                 g_hash_table_insert(priv->directories, g_strdup(dir),
@@ -362,7 +363,7 @@ void trg_state_selector_update(TrgStateSelector * s)
 
     g_list_free(torrentItemRefs);
 
-    cruft.serial = client->updateSerial;
+    cruft.serial = trg_client_get_serial(client);
 
     if (priv->showTrackers) {
         cruft.table = priv->trackers;
@@ -510,18 +511,19 @@ static void trg_state_selector_init(TrgStateSelector * self)
                                     STATE_SELECTOR_NAME);
 }
 
-TrgStateSelector *trg_state_selector_new(trg_client * client)
+TrgStateSelector *trg_state_selector_new(TrgClient * client)
 {
     GObject *obj = g_object_new(TRG_TYPE_STATE_SELECTOR, NULL);
     TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(obj);
+    TrgPrefs *prefs = trg_client_get_prefs(client);
 
     priv->client = client;
     priv->showDirs =
-        gconf_client_get_bool(client->gconf,
-                              TRG_GCONF_KEY_FILTER_DIRS, NULL);
+        trg_prefs_get_bool(prefs,
+                              TRG_PREFS_KEY_FILTER_DIRS, TRG_PREFS_GLOBAL);
     priv->showTrackers =
-        gconf_client_get_bool_or_true(client->gconf,
-                                      TRG_GCONF_KEY_FILTER_TRACKERS);
+        trg_prefs_get_bool(prefs,
+                                      TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL);
 
     return TRG_STATE_SELECTOR(obj);
 }

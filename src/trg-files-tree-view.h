@@ -50,7 +50,7 @@ GType trg_files_tree_view_get_type(void);
 
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
                                           TrgMainWindow * win,
-                                          trg_client * client);
+                                          TrgClient * client);
 
 G_END_DECLS
 #endif                          /* TRG_FILES_TREE_VIEW_H_ */

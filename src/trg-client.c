@@ -22,113 +22,210 @@
 #endif
 
 #include <string.h>
-#include <glib-object.h>
-#include <gconf/gconf-client.h>
+#include <glib.h>
+#include <glib/gprintf.h>
 
 #ifdef HAVE_LIBPROXY
 #include <proxy.h>
 #endif
 
-#include "trg-client.h"
-#include "trg-preferences.h"
+#include "trg-prefs.h"
 #include "util.h"
 #include "dispatch.h"
+#include "trg-client.h"
 
-gboolean trg_client_supports_tracker_edit(trg_client * tc)
+enum {
+    CLIENT_SIGNAL_PROFILE_CHANGE,
+    CLIENT_SIGNAL_PROFILE_NEW,
+    CLIENT_SIGNAL_COUNT
+};
+
+static guint signals[CLIENT_SIGNAL_COUNT] = { 0 };
+
+G_DEFINE_TYPE (TrgClient, trg_client, G_TYPE_OBJECT)
+
+#define TRG_CLIENT_GET_PRIVATE(o) \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CLIENT, TrgClientPrivate))
+
+typedef struct _TrgClientPrivate TrgClientPrivate;
+
+struct _TrgClientPrivate {
+    char *session_id;
+    gboolean activeOnlyUpdate;
+    gint failCount;
+    gint interval;
+    gint64 updateSerial;
+    JsonObject *session;
+    gboolean ssl;
+    float version;
+    char *url;
+    char *username;
+    char *password;
+    char *proxy;
+    GHashTable *torrentTable;
+    GThreadPool *pool;
+    GMutex *updateMutex;
+    TrgPrefs *prefs;
+};
+
+static void
+trg_client_get_property (GObject *object, guint property_id,
+                              GValue *value, GParamSpec *pspec)
 {
-    return tc->session && tc->version >= 2.10;
+  switch (property_id) {
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+  }
 }
 
-trg_client *trg_init_client()
+static void
+trg_client_set_property (GObject *object, guint property_id,
+                              const GValue *value, GParamSpec *pspec)
 {
-    trg_client *client = g_new0(trg_client, 1);
-
-    client->gconf = gconf_client_get_default();
-    client->updateMutex = g_mutex_new();
-    client->activeOnlyUpdate =
-        gconf_client_get_bool(client->gconf,
-                              TRG_GCONF_KEY_UPDATE_ACTIVE_ONLY, NULL);
-    client->pool = dispatch_init_pool(client);
-
-    return client;
+  switch (property_id) {
+  default:
+    G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+  }
 }
 
-#define check_for_error(error) if (error) { g_error_free(error); return TRG_GCONF_SCHEMA_ERROR; }
-
-void trg_client_set_session(trg_client * tc, JsonObject * session)
+static void
+trg_client_dispose (GObject *object)
 {
-    if (tc->session)
-        json_object_unref(tc->session);
-
-    session_get_version(session, &tc->version);
-
-    tc->session = session;
+  G_OBJECT_CLASS (trg_client_parent_class)->dispose (object);
 }
 
-int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
+static void
+trg_client_class_init (TrgClientClass *klass)
 {
+  GObjectClass *object_class = G_OBJECT_CLASS (klass);
+
+  g_type_class_add_private (klass, sizeof (TrgClientPrivate));
+
+  object_class->get_property = trg_client_get_property;
+  object_class->set_property = trg_client_set_property;
+  object_class->dispose = trg_client_dispose;
+
+  signals[CLIENT_SIGNAL_PROFILE_CHANGE] =
+          gtk_signal_new ("client-profile-changed",
+                      GTK_RUN_LAST,
+                      G_TYPE_FROM_CLASS(object_class),
+                      GTK_SIGNAL_OFFSET (TrgClientClass, client_profile_changed),
+                      gtk_marshal_NONE__NONE,
+                      GTK_TYPE_NONE, 0);
+
+  signals[CLIENT_SIGNAL_PROFILE_NEW] =
+          gtk_signal_new ("client-profile-new",
+                      GTK_RUN_LAST,
+                      G_TYPE_FROM_CLASS(object_class),
+                      GTK_SIGNAL_OFFSET (TrgClientClass, client_profile_new),
+                      gtk_marshal_NONE__NONE,
+                      GTK_TYPE_NONE, 0);
+}
+
+static void
+trg_client_init (TrgClient *self)
+{
+}
+
+TrgClient*
+trg_client_new (void)
+{
+    TrgClient *tc = g_object_new (TRG_TYPE_CLIENT, NULL);
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    TrgPrefs *prefs = priv->prefs = trg_prefs_new();
+
+    trg_prefs_load(prefs);
+
+    priv->updateMutex = g_mutex_new();
+    priv->activeOnlyUpdate =
+        trg_prefs_get_bool(prefs,
+                              TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_PROFILE);
+    priv->pool = dispatch_init_pool(tc);
+
+    return tc;
+}
+
+gboolean trg_client_supports_tracker_edit(TrgClient * tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->session && priv->version >= 2.10;
+}
+
+void trg_client_set_session(TrgClient * tc, JsonObject * session)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+
+    if (priv->session)
+        json_object_unref(priv->session);
+
+    session_get_version(session, &priv->version);
+
+    priv->session = session;
+}
+
+TrgPrefs *trg_client_get_prefs(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->prefs;
+}
+
+int trg_client_populate_with_settings(TrgClient * tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    TrgPrefs *prefs = priv->prefs;
+
     gint port;
     gchar *host;
-    GError *error = NULL;
 #ifdef HAVE_LIBPROXY
     pxProxyFactory *pf = NULL;
 #endif
 
-    g_free(tc->url);
-    tc->url = NULL;
+    g_free(priv->url);
+    priv->url = NULL;
 
-    g_free(tc->username);
-    tc->username = NULL;
+    g_free(priv->username);
+    priv->username = NULL;
 
-    g_free(tc->password);
-    tc->password = NULL;
+    g_free(priv->password);
+    priv->password = NULL;
 
     port =
-        gconf_client_get_int_or_default(gconf, TRG_GCONF_KEY_PORT,
-                                        TRG_PORT_DEFAULT, &error);
-    check_for_error(error);
+        trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_PROFILE);
 
-    host = gconf_client_get_string(gconf, TRG_GCONF_KEY_HOSTNAME, &error);
-    check_for_error(error);
+    host = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
     if (!host || strlen(host) < 1)
         return TRG_NO_HOSTNAME_SET;
 
-    tc->ssl = gconf_client_get_bool(gconf, TRG_GCONF_KEY_SSL, &error);
-    check_for_error(error);
+    priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE);
 
-    tc->url =
+    priv->url =
         g_strdup_printf("%s://%s:%d/transmission/rpc",
-                        tc->ssl ? "https" : "http", host, port);
+                        priv->ssl ? "https" : "http", host, port);
     g_free(host);
 
-    tc->interval =
-        gconf_client_get_int_or_default(gconf,
-                                        TRG_GCONF_KEY_UPDATE_INTERVAL,
-                                        TRG_INTERVAL_DEFAULT, &error);
-    check_for_error(error);
-    if (tc->interval < 1)
-        tc->interval = TRG_INTERVAL_DEFAULT;
+    priv->interval =
+        trg_prefs_get_int(prefs, TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_PREFS_PROFILE);
+    if (priv->interval < 1)
+        priv->interval = TRG_INTERVAL_DEFAULT;
 
-    tc->username =
-        gconf_client_get_string(gconf, TRG_GCONF_KEY_USERNAME, &error);
-    check_for_error(error);
+    priv->username =
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
 
-    tc->password =
-        gconf_client_get_string(gconf, TRG_GCONF_KEY_PASSWORD, &error);
-    check_for_error(error);
+    priv->password =
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD, TRG_PREFS_PROFILE);
 
-    g_free(tc->proxy);
-    tc->proxy = NULL;
+    g_free(priv->proxy);
+    priv->proxy = NULL;
 
 #ifdef HAVE_LIBPROXY
     if ((pf = px_proxy_factory_new())) {
-        char **proxies = px_proxy_factory_get_proxies(pf, tc->url);
+        char **proxies = px_proxy_factory_get_proxies(pf, priv->url);
         int i;
 
         for (i = 0; proxies[i]; i++) {
             if (g_str_has_prefix(proxies[i], "http")) {
-                g_free(tc->proxy);
-                tc->proxy = proxies[i];
+                g_free(priv->proxy);
+                priv->proxy = proxies[i];
             } else {
                 g_free(proxies[i]);
             }
@@ -140,4 +237,151 @@ int trg_client_populate_with_settings(trg_client * tc, GConfClient * gconf)
 #endif
 
     return 0;
+}
+
+gchar *trg_client_get_password(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->password;
+}
+
+gchar *trg_client_get_username(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->username;
+}
+
+gchar *trg_client_get_url(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->url;
+}
+
+gchar *trg_client_get_session_id(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->session_id;
+}
+
+void trg_client_set_session_id(TrgClient *tc, gchar *session_id)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    priv->session_id = session_id;
+}
+
+void trg_client_status_change(TrgClient *tc, gboolean connected)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    if (!connected) {
+        json_object_unref(priv->session);
+        priv->session = NULL;
+    }
+}
+
+JsonObject* trg_client_get_session(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->session;
+}
+
+void trg_client_thread_pool_push(TrgClient *tc, gpointer data, GError **err)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    g_thread_pool_push(priv->pool, data, err);
+}
+
+void trg_client_inc_serial(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    priv->updateSerial++;
+}
+
+gint64 trg_client_get_serial(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->updateSerial;
+}
+
+gboolean trg_client_get_ssl(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->ssl;
+}
+
+gchar *trg_client_get_proxy(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->proxy;
+}
+
+void trg_client_set_torrent_table(TrgClient *tc, GHashTable *table)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    priv->torrentTable = table;
+}
+
+GHashTable* trg_client_get_torrent_table(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->torrentTable;
+}
+
+gboolean trg_client_is_connected(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->session != NULL;
+}
+
+void trg_client_updatelock(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    g_mutex_lock(priv->updateMutex);
+}
+
+gint trg_client_get_failcount(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->failCount;
+}
+
+gint trg_client_inc_failcount(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return ++(priv->failCount);
+}
+
+void trg_client_reset_failcount(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    priv->failCount = 0;
+}
+
+void trg_client_updateunlock(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    g_mutex_unlock(priv->updateMutex);
+}
+
+gboolean trg_client_get_activeonlyupdate(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->activeOnlyUpdate;
+}
+
+void trg_client_set_activeonlyupdate(TrgClient *tc, gboolean activeOnlyUpdate)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    priv->activeOnlyUpdate = activeOnlyUpdate;
+}
+
+gint trg_client_get_interval(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->interval;
+}
+
+void trg_client_set_interval(TrgClient *tc, gint interval)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    priv->interval = interval;
 }

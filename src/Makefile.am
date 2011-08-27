@@ -19,11 +19,8 @@ CLEANFILES = transmission-remote-gtk.desktop
 desktopdir = $(datadir)/applications
 desktop_DATA = transmission-remote-gtk.desktop
 
-schemadir   = @GCONF_SCHEMA_FILE_DIR@
-schema_DATA = transmission-remote-gtk.schemas
-
 bin_PROGRAMS = transmission-remote-gtk
-INCLUDES = --pedantic -Wall -I.. -O2 -DTRGLICENSE=\""$(trglicense)"\" -DTRGLOCALEDIR=\""$(trglocaledir)"\" $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gconf_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
+INCLUDES = --pedantic -Wall -I.. -DTRGLICENSE=\""$(trglicense)"\" -DTRGLOCALEDIR=\""$(trglocaledir)"\" $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
 
 transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \
@@ -57,8 +54,8 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-trackers-tree-view.c \
 	  trg-trackers-model.c \
 	  trg-torrent-props-dialog.c \
-	  trg-json-widgets.c \
 	  trg-torrent-add-url-dialog.c \
+	  trg-json-widgets.c \
 	  trg-cell-renderer-speed.c \
 	  trg-cell-renderer-size.c \
 	  trg-cell-renderer-ratio.c \
@@ -74,14 +71,11 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-torrent-add-dialog.c \
 	  trg-file-parser.c \
 	  bencode.c \
-	  trg-preferences.c \
+	  trg-prefs.c \
 	  trg-destination-combo.c \
 	  $(NULL)
 
-transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gconf_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS)
-
-install-data-local: install-icons update-icon-cache
-	GCONF_CONFIG_SOURCE=$(GCONF_SCHEMA_CONFIG_SOURCE) gconftool-2 --makefile-install-rule $(srcdir)/$(schema_DATA)
+transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS)
 
 gtk_update_icon_cache = gtk-update-icon-cache -f -t
 

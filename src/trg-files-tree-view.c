@@ -39,7 +39,7 @@ G_DEFINE_TYPE(TrgFilesTreeView, trg_files_tree_view, TRG_TYPE_TREE_VIEW)
 typedef struct _TrgFilesTreeViewPrivate TrgFilesTreeViewPrivate;
 
 struct _TrgFilesTreeViewPrivate {
-    trg_client *client;
+    TrgClient *client;
     TrgMainWindow *win;
 };
 
@@ -306,21 +306,21 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
                      G_CALLBACK(view_onButtonPressed), NULL);
     g_signal_connect(self, "popup-menu", G_CALLBACK(view_onPopupMenu),
                      NULL);
-
-    trg_tree_view_setup_columns(ttv);
 }
 
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
                                           TrgMainWindow * win,
-                                          trg_client * client)
+                                          TrgClient * client)
 {
     GObject *obj = g_object_new(TRG_TYPE_FILES_TREE_VIEW, NULL);
     TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(obj);
 
+    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), trg_client_get_prefs(client));
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
     priv->client = client;
     priv->win = win;
 
+    trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
     //trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
 
     return TRG_FILES_TREE_VIEW(obj);

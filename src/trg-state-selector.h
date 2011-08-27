@@ -58,7 +58,7 @@ typedef struct {
 } TrgStateSelectorClass;
 
 GType trg_state_selector_get_type(void);
-TrgStateSelector *trg_state_selector_new(trg_client * client);
+TrgStateSelector *trg_state_selector_new(TrgClient * client);
 
 G_END_DECLS guint32 trg_state_selector_get_flag(TrgStateSelector * s);
 void trg_state_selector_update(TrgStateSelector * s);

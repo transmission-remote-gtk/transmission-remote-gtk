@@ -22,6 +22,8 @@
 
 #include <glib-object.h>
 
+#include "trg-prefs.h"
+
 G_BEGIN_DECLS
 #define TRG_TYPE_TREE_VIEW trg_tree_view_get_type()
 #define TRG_TREE_VIEW(obj) \
@@ -85,6 +87,7 @@ trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
                                                  gchar * header,
                                                  gchar * id, gint flags);
 void trg_tree_view_setup_columns(TrgTreeView * tv);
+void trg_tree_view_set_prefs(TrgTreeView *tv, TrgPrefs *prefs);
 void trg_tree_view_persist(TrgTreeView * tv);
 void trg_tree_view_restore_sort(TrgTreeView * tv);
 

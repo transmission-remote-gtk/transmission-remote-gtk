@@ -36,7 +36,7 @@ typedef struct _TrgTorrentAddUrlDialogPrivate
  TrgTorrentAddUrlDialogPrivate;
 
 struct _TrgTorrentAddUrlDialogPrivate {
-    trg_client *client;
+    TrgClient *client;
     TrgMainWindow *win;
     GtkWidget *urlEntry, *startCheck, *addButton;
 };
@@ -113,7 +113,7 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
 }
 
 TrgTorrentAddUrlDialog *trg_torrent_add_url_dialog_new(TrgMainWindow * win,
-                                                       trg_client * client)
+                                                       TrgClient * client)
 {
     GObject *obj = g_object_new(TRG_TYPE_TORRENT_ADD_URL_DIALOG, NULL);
     TrgTorrentAddUrlDialogPrivate *priv =

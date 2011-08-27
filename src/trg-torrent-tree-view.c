@@ -20,6 +20,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include "trg-prefs.h"
 #include "trg-tree-view.h"
 #include "trg-torrent-model.h"
 #include "trg-torrent-tree-view.h"
@@ -88,8 +89,6 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tttv),
                                     TORRENT_COLUMN_NAME);
-
-    trg_tree_view_setup_columns(ttv);
 }
 
 static void
@@ -118,11 +117,13 @@ JsonArray *build_json_id_array(TrgTorrentTreeView * tv)
     return ids;
 }
 
-TrgTorrentTreeView *trg_torrent_tree_view_new(GtkTreeModel * model)
+TrgTorrentTreeView *trg_torrent_tree_view_new(TrgPrefs *prefs, GtkTreeModel * model)
 {
     GObject *obj = g_object_new(TRG_TYPE_TORRENT_TREE_VIEW, NULL);
 
+    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), prefs);
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), model);
+    trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
 
     return TRG_TORRENT_TREE_VIEW(obj);

@@ -50,7 +50,7 @@ GType trg_remote_prefs_dialog_get_type(void);
 
 TrgRemotePrefsDialog *trg_remote_prefs_dialog_get_instance(TrgMainWindow *
                                                            parent,
-                                                           trg_client *
+                                                           TrgClient *
                                                            client);
 
 G_END_DECLS

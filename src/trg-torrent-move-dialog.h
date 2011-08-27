@@ -49,7 +49,7 @@ typedef struct {
 GType trg_torrent_move_dialog_get_type(void);
 
 TrgTorrentMoveDialog *trg_torrent_move_dialog_new(TrgMainWindow * win,
-                                                  trg_client * client,
+                                                  TrgClient * client,
                                                   TrgTorrentTreeView *
                                                   ttv);
 

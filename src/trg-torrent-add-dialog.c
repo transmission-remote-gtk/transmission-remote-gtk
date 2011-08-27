@@ -26,7 +26,6 @@
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 #include <glib/gprintf.h>
-#include <gconf/gconf-client.h>
 
 #include "hig.h"
 #include "util.h"
@@ -36,7 +35,7 @@
 #include "trg-torrent-add-dialog.h"
 #include "trg-cell-renderer-size.h"
 #include "trg-destination-combo.h"
-#include "trg-preferences.h"
+#include "trg-prefs.h"
 #include "requests.h"
 #include "torrent.h"
 #include "json.h"
@@ -74,7 +73,7 @@ typedef struct _TrgTorrentAddDialogPrivate
  TrgTorrentAddDialogPrivate;
 
 struct _TrgTorrentAddDialogPrivate {
-    trg_client *client;
+    TrgClient *client;
     TrgMainWindow *parent;
     GSList *filenames;
     GtkWidget *source_chooser;
@@ -733,19 +732,18 @@ static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
 }
 
 static void trg_torrent_add_dialog_generic_save_dir(GtkFileChooser * c,
-                                                    GConfClient * gcc)
+                                                    TrgPrefs *prefs)
 {
     gchar *cwd = gtk_file_chooser_get_current_folder(c);
 
     if (cwd) {
-        gconf_client_set_string(gcc, TRG_GCONF_KEY_LAST_TORRENT_DIR, cwd,
-                                NULL);
+        trg_prefs_set_string(prefs, TRG_PREFS_KEY_LAST_TORRENT_DIR, cwd, TRG_PREFS_GLOBAL);
         g_free(cwd);
     }
 }
 
 static GtkWidget *trg_torrent_add_dialog_generic(GtkWindow * parent,
-                                                 GConfClient * gcc)
+                                                 TrgPrefs * prefs)
 {
     GtkWidget *w = gtk_file_chooser_dialog_new(_("Add a Torrent"), parent,
                                                GTK_FILE_CHOOSER_ACTION_OPEN,
@@ -755,7 +753,7 @@ static GtkWidget *trg_torrent_add_dialog_generic(GtkWindow * parent,
                                                GTK_RESPONSE_ACCEPT,
                                                NULL);
     gchar *dir =
-        gconf_client_get_string(gcc, TRG_GCONF_KEY_LAST_TORRENT_DIR, NULL);
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_LAST_TORRENT_DIR, TRG_PREFS_GLOBAL);
     if (dir) {
         gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(w), dir);
         g_free(dir);
@@ -774,7 +772,7 @@ static void trg_torrent_add_dialog_source_click_cb(GtkWidget * w,
     TrgTorrentAddDialogPrivate *priv =
         TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(data);
     GtkWidget *d = trg_torrent_add_dialog_generic(GTK_WINDOW(data),
-                                                  priv->client->gconf);
+                                                  trg_client_get_prefs(priv->client));
 
     if (gtk_dialog_run(GTK_DIALOG(d)) == GTK_RESPONSE_ACCEPT) {
         if (priv->filenames)
@@ -784,7 +782,7 @@ static void trg_torrent_add_dialog_source_click_cb(GtkWidget * w,
             gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(d));
 
         trg_torrent_add_dialog_generic_save_dir(GTK_FILE_CHOOSER(d),
-                                                priv->client->gconf);
+                                                trg_client_get_prefs(priv->client));
         trg_torrent_add_dialog_set_filenames(TRG_TORRENT_ADD_DIALOG(data),
                                              priv->filenames);
     }
@@ -804,6 +802,7 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
                                                            construct_params);
     TrgTorrentAddDialogPrivate *priv =
         TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(obj);
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
 
     GtkWidget *t, *l;
     gint row = 0;
@@ -836,8 +835,7 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     priv->paused_check =
         gtk_check_button_new_with_mnemonic(_("Start _paused"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(priv->paused_check),
-                                 pref_get_start_paused(priv->
-                                                       client->gconf));
+                                 trg_prefs_get_bool(prefs, TRG_PREFS_KEY_START_PAUSED, TRG_PREFS_GLOBAL));
 
     priv->priority_combo = gtr_priority_combo_new();
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->priority_combo), 1);
@@ -967,7 +965,7 @@ static void trg_torrent_add_dialog_init(TrgTorrentAddDialog * self)
 }
 
 TrgTorrentAddDialog *trg_torrent_add_dialog_new(TrgMainWindow * parent,
-                                                trg_client * client,
+                                                TrgClient * client,
                                                 GSList * filenames)
 {
     return g_object_new(TRG_TYPE_TORRENT_ADD_DIALOG,
@@ -975,17 +973,17 @@ TrgTorrentAddDialog *trg_torrent_add_dialog_new(TrgMainWindow * parent,
                         "parent", parent, "client", client, NULL);
 }
 
-void trg_torrent_add_dialog(TrgMainWindow * win, trg_client * client)
+void trg_torrent_add_dialog(TrgMainWindow * win, TrgClient * client)
 {
     GtkWidget *w;
     GtkWidget *c;
+    TrgPrefs *prefs = trg_client_get_prefs(client);
 
-    w = trg_torrent_add_dialog_generic(GTK_WINDOW(win), client->gconf);
+    w = trg_torrent_add_dialog_generic(GTK_WINDOW(win), prefs);
 
     c = gtk_check_button_new_with_mnemonic(_("Show _options dialog"));
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(c),
-                                 pref_get_add_options_dialog
-                                 (client->gconf));
+                                 trg_prefs_get_bool(prefs, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG, TRG_PREFS_GLOBAL));
     gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER(w), c);
 
     if (gtk_dialog_run(GTK_DIALOG(w)) == GTK_RESPONSE_ACCEPT) {
@@ -996,7 +994,7 @@ void trg_torrent_add_dialog(TrgMainWindow * win, trg_client * client)
         GSList *l = gtk_file_chooser_get_filenames(chooser);
 
         trg_torrent_add_dialog_generic_save_dir(GTK_FILE_CHOOSER(w),
-                                                client->gconf);
+                                                prefs);
 
         if (showOptions) {
             TrgTorrentAddDialog *dialog =
@@ -1009,7 +1007,7 @@ void trg_torrent_add_dialog(TrgMainWindow * win, trg_client * client)
             args->list = l;
             args->cb_data = win;
             args->client = client;
-            args->paused = pref_get_start_paused(client->gconf);
+            args->paused = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_START_PAUSED, TRG_PREFS_GLOBAL);
             args->extraArgs = FALSE;
 
             launch_add_thread(args);

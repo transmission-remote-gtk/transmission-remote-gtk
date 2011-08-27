@@ -44,7 +44,7 @@ enum {
 typedef struct _TrgRemotePrefsDialogPrivate TrgRemotePrefsDialogPrivate;
 
 struct _TrgRemotePrefsDialogPrivate {
-    trg_client *client;
+    TrgClient *client;
     TrgMainWindow *parent;
 
     GtkWidget *done_script_entry;
@@ -587,7 +587,7 @@ static GObject *trg_remote_prefs_dialog_constructor(GType type,
                                                             n_construct_properties,
                                                             construct_params);
     priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
-    session = priv->client->session;
+    session = trg_client_get_session(priv->client);
 
     gtk_window_set_title(GTK_WINDOW(object), _("Remote Preferences"));
     gtk_window_set_transient_for(GTK_WINDOW(object),
@@ -679,7 +679,7 @@ trg_remote_prefs_dialog_init(TrgRemotePrefsDialog * self G_GNUC_UNUSED)
 
 TrgRemotePrefsDialog *trg_remote_prefs_dialog_get_instance(TrgMainWindow *
                                                            parent,
-                                                           trg_client *
+                                                           TrgClient *
                                                            client)
 {
     if (instance == NULL) {

@@ -29,6 +29,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include "trg-prefs.h"
 #include "trg-tree-view.h"
 #include "trg-peers-model.h"
 #include "trg-peers-tree-view.h"
@@ -69,15 +70,15 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
                              _("Client"), "client", 0);
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), PEERSCOL_HOST);
-    trg_tree_view_setup_columns(ttv);
 }
 
-TrgPeersTreeView *trg_peers_tree_view_new(TrgPeersModel * model)
+TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs *prefs, TrgPeersModel * model)
 {
     GObject *obj = g_object_new(TRG_TYPE_PEERS_TREE_VIEW, NULL);
-
+    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), prefs);
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
+    trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
 
     return TRG_PEERS_TREE_VIEW(obj);
 }

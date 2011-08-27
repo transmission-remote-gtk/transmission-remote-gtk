@@ -33,7 +33,7 @@
 #include "config.h"
 #endif
 
-static struct http_response *trg_http_perform_inner(trg_client * client,
+static struct http_response *trg_http_perform_inner(TrgClient * client,
                                                     gchar * req,
                                                     gboolean recurse);
 
@@ -51,7 +51,7 @@ void http_response_free(struct http_response *response)
     g_free(response);
 }
 
-static struct http_response *trg_http_perform_inner(trg_client * tc,
+static struct http_response *trg_http_perform_inner(TrgClient * tc,
                                                     gchar * req,
                                                     gboolean recurse)
 {
@@ -59,6 +59,7 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     long httpCode;
     struct http_response *response;
     struct curl_slist *headers = NULL;
+    gchar *proxy, *session_id;
 
     response = g_new(struct http_response, 1);
     response->size = 0;
@@ -68,9 +69,9 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     handle = curl_easy_init();
 
     curl_easy_setopt(handle, CURLOPT_USERAGENT, PACKAGE_NAME);
-    curl_easy_setopt(handle, CURLOPT_PASSWORD, tc->password);
-    curl_easy_setopt(handle, CURLOPT_USERNAME, tc->username);
-    curl_easy_setopt(handle, CURLOPT_URL, tc->url);
+    curl_easy_setopt(handle, CURLOPT_PASSWORD, trg_client_get_password(tc));
+    curl_easy_setopt(handle, CURLOPT_USERNAME, trg_client_get_username(tc));
+    curl_easy_setopt(handle, CURLOPT_URL, trg_client_get_url(tc));
     curl_easy_setopt(handle, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_easy_setopt(handle, CURLOPT_WRITEFUNCTION,
                      &http_receive_callback);
@@ -79,16 +80,19 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     curl_easy_setopt(handle, CURLOPT_WRITEHEADER, (void *) tc);
     curl_easy_setopt(handle, CURLOPT_POSTFIELDS, req);
 
-    if (tc->ssl)
+
+    if (trg_client_get_ssl(tc))
         curl_easy_setopt(handle, CURLOPT_SSL_VERIFYPEER, 0);
 
-    if (tc->proxy) {
+    proxy = trg_client_get_proxy(tc);
+    if (proxy) {
         curl_easy_setopt(handle, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-        curl_easy_setopt(handle, CURLOPT_PROXY, tc->proxy);
+        curl_easy_setopt(handle, CURLOPT_PROXY, proxy);
     }
 
-    if (tc->session_id) {
-        headers = curl_slist_append(headers, tc->session_id);
+    session_id = trg_client_get_session_id(tc);
+    if (session_id) {
+        headers = curl_slist_append(headers, session_id);
         curl_easy_setopt(handle, CURLOPT_HTTPHEADER, headers);
     }
 
@@ -97,7 +101,7 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     curl_easy_getinfo(handle, CURLINFO_RESPONSE_CODE, &httpCode);
     curl_easy_cleanup(handle);
 
-    if (headers != NULL)
+    if (headers)
         curl_slist_free_all(headers);
 
     if (response->status == CURLE_OK) {
@@ -112,7 +116,7 @@ static struct http_response *trg_http_perform_inner(trg_client * tc,
     return response;
 }
 
-struct http_response *trg_http_perform(trg_client * tc, gchar * req)
+struct http_response *trg_http_perform(TrgClient * tc, gchar * req)
 {
     return trg_http_perform_inner(tc, req, TRUE);
 }
@@ -136,18 +140,22 @@ static size_t header_callback(void *ptr, size_t size, size_t nmemb,
                               void *data)
 {
     char *header = (char *) (ptr);
-    trg_client *client = (trg_client *) data;
+    TrgClient *tc = TRG_CLIENT(data);
+    gchar *session_id;
 
     if (g_str_has_prefix(header, "X-Transmission-Session-Id: ")) {
         char *nl;
 
-        if (client->session_id)
-            g_free(client->session_id);
+        session_id = trg_client_get_session_id(tc);
+        if (session_id)
+            g_free(session_id);
 
-        client->session_id = g_strdup(header);
-        nl = strrchr(client->session_id, '\r');
+        session_id = g_strdup(header);
+        nl = strrchr(session_id, '\r');
         if (nl)
             *nl = '\0';
+
+        trg_client_set_session_id(tc, session_id);
     }
 
     return (nmemb * size);

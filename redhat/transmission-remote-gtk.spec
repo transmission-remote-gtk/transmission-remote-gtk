@@ -12,7 +12,6 @@ BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 Requires: gtk2 >= 2.16
 Requires: glib2 >= 2.22
 Requires: unique
-Requires: GConf2
 Requires: libnotify
 Requires: libproxy
 Requires: json-glib >= 0.8
@@ -22,14 +21,10 @@ BuildRequires: gtk2-devel
 BuildRequires: libproxy-devel
 BuildRequires: glib2-devel
 BuildRequires: unique-devel
-BuildRequires: GConf2-devel
 BuildRequires: json-glib-devel
 BuildRequires: libcurl-devel
 BuildRequires: libnotify-devel
 
-Requires(pre): GConf2
-Requires(post): GConf2
-Requires(preun): GConf2
 Requires(post): desktop-file-utils
 Requires(postun): desktop-file-utils
 
@@ -46,41 +41,20 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-export GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL=1
-make install  DESTDIR=$RPM_BUILD_ROOT
-unset GCONF_DISABLE_MAKEFILE_SCHEMA_INSTALL
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%pre
-if [ "$1" -gt 1 ]; then
-    export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-    gconftool-2 --makefile-uninstall-rule \
-      %{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null || :
-fi
-
 %post
-export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-gconftool-2 --makefile-install-rule \
-  %{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null || :
 
 update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 
 %postun
 update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 
-%preun
-if [ "$1" -eq 0 ]; then
-    export GCONF_CONFIG_SOURCE=`gconftool-2 --get-default-source`
-    gconftool-2 --makefile-uninstall-rule \
-      %{_sysconfdir}/gconf/schemas/%{name}.schemas > /dev/null || :
-fi
-
 %files
 %defattr(-,root,root,-)
 %doc README COPYING AUTHORS
-%{_sysconfdir}/gconf/schemas/%{name}.schemas
 %{_bindir}/%{name}
 %{_datadir}/applications/%{name}.desktop
 %{_datadir}/icons/hicolor/scalable/apps/%{name}.svg

@@ -19,9 +19,10 @@
 
 #include <stdlib.h>
 #include <gtk/gtk.h>
-#include <gconf/gconf-client.h>
+#include <json-glib/json-glib.h>
 #include <glib/gi18n.h>
 
+#include "trg-prefs.h"
 #include "trg-tree-view.h"
 #include "trg-cell-renderer-speed.h"
 #include "trg-cell-renderer-size.h"
@@ -32,6 +33,11 @@
 #include "trg-cell-renderer-priority.h"
 #include "trg-cell-renderer-numgtzero.h"
 
+enum {
+    PROP_0,
+    PROP_PREFS
+};
+
 G_DEFINE_TYPE(TrgTreeView, trg_tree_view, GTK_TYPE_TREE_VIEW)
 #define TRG_TREE_VIEW_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_TREE_VIEW, TrgTreeViewPrivate))
@@ -39,11 +45,73 @@ typedef struct _TrgTreeViewPrivate TrgTreeViewPrivate;
 
 struct _TrgTreeViewPrivate {
     GList *columns;
+    TrgPrefs *prefs;
 };
+
+static void
+trg_tree_view_get_property(GObject * object, guint property_id,
+                              GValue * value, GParamSpec * pspec)
+{
+    G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+}
+
+static void
+trg_tree_view_set_property(GObject * object, guint property_id,
+                              const GValue * value, GParamSpec * pspec)
+{
+    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(object);
+    switch (property_id) {
+    case PROP_PREFS:
+        priv->prefs = g_value_get_object(value);
+        break;
+    default:
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+    }
+}
+
+static GObject *trg_tree_view_constructor(GType type,
+                                             guint
+                                             n_construct_properties,
+                                             GObjectConstructParam
+                                             * construct_params)
+{
+    GObject *obj = G_OBJECT_CLASS
+        (trg_tree_view_parent_class)->constructor(type,
+                                                     n_construct_properties,
+                                                     construct_params);
+    //TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(obj);
+
+    return obj;
+}
+
+static JsonObject* trg_prefs_get_tree_view_props(TrgTreeView *tv)
+{
+    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    JsonObject *root = trg_prefs_get_root(priv->prefs);
+    const gchar *className = G_OBJECT_TYPE_NAME(tv);
+    JsonObject *obj;
+    JsonObject *tvProps = NULL;
+
+    if (!json_object_has_member(root, TRG_PREFS_KEY_TREE_VIEWS)) {
+        obj = json_object_new();
+        json_object_set_object_member(root, TRG_PREFS_KEY_TREE_VIEWS, obj);
+    } else {
+        obj = json_object_get_object_member(root, TRG_PREFS_KEY_TREE_VIEWS);
+    }
+
+    if (!json_object_has_member(obj, className)) {
+        tvProps = json_object_new();
+        json_object_set_object_member(obj, className, tvProps);
+    } else {
+        tvProps = json_object_get_object_member(obj, className);
+    }
+
+    return tvProps;
+}
 
 static void trg_tree_view_add_column_after(TrgTreeView * tv,
                                            trg_column_description * desc,
-                                           gchar ** widths, gint i,
+                                           gint64 width,
                                            GtkTreeViewColumn * after_col);
 
 trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
@@ -67,7 +135,7 @@ trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
 }
 
 static trg_column_description *trg_tree_view_find_column(TrgTreeView * tv,
-                                                         gchar * id)
+                                                         const gchar * id)
 {
     TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
     GList *li;
@@ -82,26 +150,6 @@ static trg_column_description *trg_tree_view_find_column(TrgTreeView * tv,
     return NULL;
 }
 
-static gchar **trg_gconf_get_csv(TrgTreeView * tv, gchar * key)
-{
-    gchar **ret = NULL;
-    GConfClient *gcc = gconf_client_get_default();
-    gchar *gconf_key =
-        g_strdup_printf("/apps/transmission-remote-gtk/%s-%s",
-                        G_OBJECT_TYPE_NAME(tv), key);
-    gchar *gconf_value = gconf_client_get_string(gcc, gconf_key, NULL);
-
-    if (gconf_value) {
-        ret = g_strsplit(gconf_value, ",", -1);
-        g_free(gconf_value);
-    }
-
-    g_free(gconf_key);
-    g_object_unref(gcc);
-
-    return ret;
-}
-
 static void trg_tree_view_hide_column(GtkWidget * w,
                                       GtkTreeViewColumn * col)
 {
@@ -114,9 +162,9 @@ static void trg_tree_view_hide_column(GtkWidget * w,
 
 static void trg_tree_view_add_column(TrgTreeView * tv,
                                      trg_column_description * desc,
-                                     gchar ** widths, gint i)
+                                     gint64 width)
 {
-    trg_tree_view_add_column_after(tv, desc, widths, i, NULL);
+    trg_tree_view_add_column_after(tv, desc, width, NULL);
 }
 
 static void trg_tree_view_user_add_column_cb(GtkWidget * w,
@@ -126,7 +174,7 @@ static void trg_tree_view_user_add_column_cb(GtkWidget * w,
     TrgTreeView *tv =
         TRG_TREE_VIEW(gtk_tree_view_column_get_tree_view(col));
 
-    trg_tree_view_add_column_after(tv, desc, NULL, -1, col);
+    trg_tree_view_add_column_after(tv, desc, -1, col);
 }
 
 static void
@@ -182,7 +230,7 @@ col_onButtonPressed(GtkButton * button, GdkEventButton * event,
 
 static void trg_tree_view_add_column_after(TrgTreeView * tv,
                                            trg_column_description * desc,
-                                           gchar ** widths, gint i,
+                                           gint64 width,
                                            GtkTreeViewColumn * after_col)
 {
     GtkCellRenderer *renderer;
@@ -299,16 +347,14 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
     gtk_tree_view_column_set_reorderable(column, TRUE);
     gtk_tree_view_column_set_sort_column_id(column, desc->model_column);
 
-    if (!widths && desc->defaultWidth > 0) {
+    if (width < 0 && desc->defaultWidth > 0) {
         gtk_tree_view_column_set_sizing(column,
                                         GTK_TREE_VIEW_COLUMN_FIXED);
         gtk_tree_view_column_set_fixed_width(column, desc->defaultWidth);
-    } else if (widths && i >= 0) {
-        gchar *ws = widths[i];
-        int w = atoi(ws);
+    } else if (width > 0) {
         gtk_tree_view_column_set_sizing(column,
                                         GTK_TREE_VIEW_COLUMN_FIXED);
-        gtk_tree_view_column_set_fixed_width(column, w);
+        gtk_tree_view_column_set_fixed_width(column, width);
     }
 
     g_object_set_data(G_OBJECT(column), "column-desc", desc);
@@ -330,122 +376,100 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
 
 void trg_tree_view_persist(TrgTreeView * tv)
 {
-    GConfClient *gcc = gconf_client_get_default();
+    JsonObject *props = trg_prefs_get_tree_view_props(tv);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tv));
     GList *cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(tv));
-    gint n_cols = g_list_length(cols);
+
+    GList *li;
     gint sort_column_id;
     GtkSortType sort_type;
-    const gchar *tree_view_name = G_OBJECT_TYPE_NAME(tv);
-    gchar *cols_key =
-        g_strdup_printf("/apps/transmission-remote-gtk/%s-columns",
-                        tree_view_name);
-    gchar *widths_key =
-        g_strdup_printf("/apps/transmission-remote-gtk/%s-widths",
-                        tree_view_name);
-    gchar **cols_v = g_new0(gchar *, n_cols + 1);
-    gchar **widths_v = g_new0(gchar *, n_cols + 1);
-    gchar *widths_js, *cols_js;
-    GList *li;
-    int i = 0;
+
+    JsonArray *widths, *columns;
+    if (json_object_has_member(props, TRG_PREFS_KEY_TV_WIDTHS))
+        json_object_remove_member(props, TRG_PREFS_KEY_TV_WIDTHS);
+
+    widths = json_array_new();
+    json_object_set_array_member(props, TRG_PREFS_KEY_TV_WIDTHS, widths);
+
+    if (json_object_has_member(props, TRG_PREFS_KEY_TV_COLUMNS))
+        json_object_remove_member(props, TRG_PREFS_KEY_TV_COLUMNS);
+
+    columns = json_array_new();
+    json_object_set_array_member(props, TRG_PREFS_KEY_TV_COLUMNS, columns);
 
     for (li = cols; li; li = g_list_next(li)) {
         GtkTreeViewColumn *col = (GtkTreeViewColumn *) li->data;
         trg_column_description *desc =
             g_object_get_data(G_OBJECT(li->data), "column-desc");
-        cols_v[i] = desc->id;
-        widths_v[i] =
-            g_strdup_printf("%d", gtk_tree_view_column_get_width(col));
-        i++;
+
+        json_array_add_string_element(columns, desc->id);
+        json_array_add_int_element(widths, gtk_tree_view_column_get_width(col));
     }
 
-    widths_js = g_strjoinv(",", widths_v);
-    cols_js = g_strjoinv(",", cols_v);
+    gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(model), &sort_column_id, &sort_type);
 
-    if (gtk_tree_sortable_get_sort_column_id
-        (GTK_TREE_SORTABLE(model), &sort_column_id, &sort_type)) {
-        gchar *sort_col_key =
-            g_strdup_printf("/apps/transmission-remote-gtk/%s-sort_col",
-                            tree_view_name);
-        gchar *sort_type_key =
-            g_strdup_printf("/apps/transmission-remote-gtk/%s-sort_type",
-                            tree_view_name);
-        gconf_client_set_int(gcc, sort_col_key, sort_column_id, NULL);
-        gconf_client_set_int(gcc, sort_type_key, (gint) sort_type, NULL);
-        g_free(sort_type_key);
-        g_free(sort_col_key);
-    }
+    if (json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_COL))
+        json_object_remove_member(props, TRG_PREFS_KEY_TV_SORT_COL);
 
-    gconf_client_set_string(gcc, cols_key, cols_js, NULL);
-    gconf_client_set_string(gcc, widths_key, widths_js, NULL);
+    if (json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_TYPE))
+        json_object_remove_member(props, TRG_PREFS_KEY_TV_SORT_TYPE);
 
-    g_free(cols_key);
-    g_free(widths_key);
-    g_free(widths_js);
-    g_free(cols_js);
-    g_free(cols_v);
-    g_strfreev(widths_v);
-    g_list_free(cols);
-    g_object_unref(gcc);
+    json_object_set_int_member(props, TRG_PREFS_KEY_TV_SORT_COL, (gint64)sort_column_id);
+    json_object_set_int_member(props, TRG_PREFS_KEY_TV_SORT_TYPE, (gint64)sort_type);
 }
 
 void trg_tree_view_restore_sort(TrgTreeView * tv)
 {
-    GConfClient *gcc = gconf_client_get_default();
+    JsonObject *props = trg_prefs_get_tree_view_props(tv);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tv));
-    gchar *sort_col_key =
-        g_strdup_printf("/apps/transmission-remote-gtk/%s-sort_col",
-                        G_OBJECT_TYPE_NAME(tv));
-    gchar *sort_type_key =
-        g_strdup_printf("/apps/transmission-remote-gtk/%s-sort_type",
-                        G_OBJECT_TYPE_NAME(tv));
-    GConfValue *sort_col_gv =
-        gconf_client_get_without_default(gcc, sort_col_key, NULL);
-    GConfValue *sort_type_gv =
-        gconf_client_get_without_default(gcc, sort_type_key, NULL);
-    if (sort_col_gv) {
-        gint sort_col_value = gconf_value_get_int(sort_col_gv);
-        GtkSortType sort_type_value = GTK_SORT_ASCENDING;
-        if (sort_type_gv) {
-            sort_type_value =
-                (GtkSortType) gconf_value_get_int(sort_type_gv);
-            gconf_value_free(sort_type_gv);
-        }
-        gconf_value_free(sort_col_gv);
+
+    if (json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_COL) &&
+        json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_TYPE)) {
+        gint64 sort_col = json_object_get_int_member(props, TRG_PREFS_KEY_TV_SORT_COL);
+        gint64 sort_type = json_object_get_int_member(props, TRG_PREFS_KEY_TV_SORT_TYPE);
         gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(model),
-                                             sort_col_value,
-                                             sort_type_value);
+                                             sort_col,
+                                             (GtkSortType)sort_type);
+
     }
-    g_free(sort_col_key);
-    g_free(sort_type_key);
-    g_object_unref(gcc);
+}
+
+void trg_tree_view_set_prefs(TrgTreeView *tv, TrgPrefs *prefs)
+{
+    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    priv->prefs = prefs;
 }
 
 void trg_tree_view_setup_columns(TrgTreeView * tv)
 {
     TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
-    gchar **columns = trg_gconf_get_csv(tv, "columns");
-    GList *li;
-    int i;
-    trg_column_description *desc;
+    JsonObject *props = trg_prefs_get_tree_view_props(tv);
 
-    if (columns) {
-        gchar **widths = trg_gconf_get_csv(tv, "widths");
-        for (i = 0; columns[i]; i++) {
-            trg_column_description *desc =
-                trg_tree_view_find_column(tv, columns[i]);
-            if (desc)
-                trg_tree_view_add_column(tv, desc, widths, i);
-        }
-        g_strfreev(columns);
-        if (widths)
-            g_strfreev(widths);
-    } else {
+    if (!json_object_has_member(props, TRG_PREFS_KEY_TV_COLUMNS) ||
+        !json_object_has_member(props, TRG_PREFS_KEY_TV_WIDTHS)) {
+        GList *li;
         for (li = priv->columns; li; li = g_list_next(li)) {
-            desc = (trg_column_description *) li->data;
+            trg_column_description *desc = (trg_column_description *) li->data;
             if (desc && !(desc->flags & TRG_COLUMN_EXTRA))
-                trg_tree_view_add_column(tv, desc, NULL, -1);
+                trg_tree_view_add_column(tv, desc, -1);
         }
+        return;
+    }
+
+    GList *columns = json_array_get_elements(json_object_get_array_member(props, TRG_PREFS_KEY_TV_COLUMNS));
+    GList *widths = json_array_get_elements(json_object_get_array_member(props, TRG_PREFS_KEY_TV_WIDTHS));
+
+    GList *wli = widths;
+    GList *cli = columns;
+
+    for (; cli; cli = g_list_next(cli)) {
+        trg_column_description *desc =
+            trg_tree_view_find_column(tv, json_node_get_string((JsonNode*)cli->data));
+        if (desc) {
+            gint64 width = json_node_get_int((JsonNode*)wli->data);
+            trg_tree_view_add_column(tv, desc, width);
+        }
+        wli = g_list_next(wli);
     }
 }
 
@@ -469,9 +493,27 @@ GList *trg_tree_view_get_selected_refs_list(GtkTreeView * tv)
 }
 
 static void
-trg_tree_view_class_init(TrgTreeViewClass * klass G_GNUC_UNUSED)
+trg_tree_view_class_init(TrgTreeViewClass * klass)
 {
+    GObjectClass *object_class = G_OBJECT_CLASS(klass);
+
     g_type_class_add_private(klass, sizeof(TrgTreeViewPrivate));
+
+    object_class->get_property = trg_tree_view_get_property;
+    object_class->set_property = trg_tree_view_set_property;
+    object_class->constructor = trg_tree_view_constructor;
+
+    g_object_class_install_property(object_class,
+                                    PROP_PREFS,
+                                    g_param_spec_object
+                                    ("prefs", "Trg Prefs",
+                                     "Trg Prefs",
+                                     TRG_TYPE_PREFS,
+                                     G_PARAM_READWRITE |
+                                     G_PARAM_CONSTRUCT_ONLY |
+                                     G_PARAM_STATIC_NAME |
+                                     G_PARAM_STATIC_NICK |
+                                     G_PARAM_STATIC_BLURB));
 }
 
 static void trg_tree_view_init(TrgTreeView * tv)

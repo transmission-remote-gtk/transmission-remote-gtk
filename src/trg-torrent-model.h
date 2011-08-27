@@ -69,7 +69,7 @@ G_END_DECLS
 find_existing_peer_item(GtkListStore * model, JsonObject * p,
                         GtkTreeIter * iter);
 
-void trg_torrent_model_update(TrgTorrentModel * model, trg_client * tc,
+void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
                               JsonObject * response,
                               trg_torrent_model_update_stats * stats,
                               gint mode);

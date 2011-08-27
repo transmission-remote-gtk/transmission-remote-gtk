@@ -33,10 +33,10 @@ struct DispatchAsyncData {
     void (*callback) (JsonObject *, int, gpointer);
 };
 
-JsonObject *dispatch(trg_client * client, JsonNode * req, int *status);
-gboolean dispatch_async(trg_client * client, JsonNode * req,
+JsonObject *dispatch(TrgClient * client, JsonNode * req, int *status);
+gboolean dispatch_async(TrgClient * client, JsonNode * req,
                         void (*callback) (JsonObject *, int, gpointer),
                         gpointer data);
-GThreadPool *dispatch_init_pool(trg_client * client);
+GThreadPool *dispatch_init_pool(TrgClient * client);
 
 #endif                          /* DISPATCH_H_ */
