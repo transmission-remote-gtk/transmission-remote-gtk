@@ -1,5 +1,5 @@
 Name: transmission-remote-gtk
-Version: 0.5.1
+Version: 0.5.2
 Release: 1%{?dist:%{dist}}
 Summary: Remote control client for Transmission BitTorrent
 
@@ -41,6 +41,7 @@ make %{?_smp_mflags}
 
 %install
 rm -rf $RPM_BUILD_ROOT
+make install DESTDIR=$RPM_BUILD_ROOT
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -67,8 +68,15 @@ update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 %{_datadir}/locale/ko/LC_MESSAGES/%{name}.mo
 %{_datadir}/locale/pl/LC_MESSAGES/%{name}.mo
 %{_datadir}/locale/ru/LC_MESSAGES/%{name}.mo
+%{_datadir}/locale/uk/LC_MESSAGES/%{name}.mo
 
 %changelog
+* Sat Aug 27 2011 Alan Fitton <alan@eth0.org.uk> 0.5.2
+- Profiles support.
+- New JSON based configuration backend.
+- Populate destination combo in move dialog.
+- Ukranian translation from ROR191.
+
 * Fri May 6 2011 Alan Fitton <alan@eth0.org.uk> - 0.5.1
 - Use libproxy pkg-config CFLAGS in build, for older versions.
 - Fix updates inside the GtkNotebook.

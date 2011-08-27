@@ -77,6 +77,8 @@ transmission_remote_gtk_SOURCES = main.c \
 
 transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS)
 
+install-data-local: install-icons update-icon-cache
+
 gtk_update_icon_cache = gtk-update-icon-cache -f -t
 
 update-icon-cache:
