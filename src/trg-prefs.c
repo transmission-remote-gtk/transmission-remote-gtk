@@ -321,10 +321,10 @@ void trg_prefs_empty_init(TrgPrefs *p) {
     priv->userObj = json_object_new();
     json_node_take_object(priv->user, priv->userObj);
 
-    JsonObject *profile = trg_prefs_new_profile_object();
+    priv->profile = trg_prefs_new_profile_object();
 
     JsonArray *profiles = json_array_new();
-    json_array_add_object_element(profiles, profile);
+    json_array_add_object_element(profiles, priv->profile);
     json_object_set_array_member(priv->userObj, TRG_PREFS_KEY_PROFILES,
             profiles);
 
