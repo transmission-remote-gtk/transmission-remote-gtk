@@ -247,13 +247,14 @@ JsonObject *trg_prefs_new_profile(TrgPrefs *p) {
 }
 
 void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile) {
-    GList *profiles = json_array_get_elements(trg_prefs_get_profiles(p));
+    JsonArray *profiles = trg_prefs_get_profiles(p);
+    GList *profilesList = json_array_get_elements(profiles);
 
     GList *li;
     JsonNode *node;
     int i = 0;
 
-    for (li = profiles; li; li = g_list_next(li)) {
+    for (li = profilesList; li; li = g_list_next(li)) {
         node = (JsonNode*) li->data;
         if (profile == (gpointer) json_node_get_object(node)) {
             json_array_remove_element(profiles, i);
@@ -262,7 +263,7 @@ void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile) {
         i++;
     }
 
-    g_list_free(profiles);
+    g_list_free(profilesList);
 }
 
 JsonObject* trg_prefs_get_profile(TrgPrefs *p) {
