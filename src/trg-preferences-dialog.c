@@ -262,6 +262,12 @@ static void interval_changed_cb(GtkWidget * w, gpointer data) {
             gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w)));
 }
 
+static void mininterval_changed_cb(GtkWidget * w, gpointer data) {
+    trg_client_set_minimised_interval(TRG_CLIENT(data),
+            gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w)));
+}
+
+
 static void toggle_filter_trackers(GtkToggleButton * w, gpointer win) {
     TrgStateSelector *selector = trg_main_window_get_state_selector(
             TRG_MAIN_WINDOW(win));
@@ -559,6 +565,12 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
     g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb),
             tc);
     hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
+
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, 240, 1,
+            TRG_PREFS_PROFILE);
+    g_signal_connect(w, "value-changed", G_CALLBACK(mininterval_changed_cb),
+            tc);
+    hig_workarea_add_row(t, &row, _("Minimised update interval:"), w, NULL);
 
     w = trgp_check_new(dlg, _("Automatically connect"),
             TRG_PREFS_KEY_AUTO_CONNECT, TRG_PREFS_PROFILE);

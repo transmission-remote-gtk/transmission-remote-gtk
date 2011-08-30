@@ -70,7 +70,8 @@ static void trg_prefs_create_defaults(TrgPrefs *p) {
     trg_prefs_add_default_string(p, TRG_PREFS_KEY_PROFILE_NAME,
             _(TRG_PROFILE_NAME_DEFAULT));
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_PORT, 9091);
-    trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL, 3);
+    trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_INTERVAL_DEFAULT);
+    trg_prefs_add_default_int(p, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_MININTERVAL_DEFAULT);
 
     trg_prefs_add_default_bool(p, TRG_PREFS_KEY_FILTER_DIRS, TRUE);
     trg_prefs_add_default_bool(p, TRG_PREFS_KEY_FILTER_TRACKERS, TRUE);

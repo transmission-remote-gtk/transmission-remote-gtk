@@ -52,8 +52,9 @@ typedef struct _TrgClientPrivate TrgClientPrivate;
 struct _TrgClientPrivate {
     char *session_id;
     gboolean activeOnlyUpdate;
-    gint failCount;
-    gint interval;
+    guint failCount;
+    guint interval;
+    guint min_interval;
     gint64 updateSerial;
     JsonObject *session;
     gboolean ssl;
@@ -208,6 +209,11 @@ int trg_client_populate_with_settings(TrgClient * tc)
     if (priv->interval < 1)
         priv->interval = TRG_INTERVAL_DEFAULT;
 
+    priv->min_interval =
+        trg_prefs_get_int(prefs, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_PREFS_PROFILE);
+    if (priv->interval < 1)
+        priv->interval = TRG_INTERVAL_DEFAULT;
+
     priv->username =
         trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
 
@@ -338,13 +344,13 @@ void trg_client_updatelock(TrgClient *tc)
     g_mutex_lock(priv->updateMutex);
 }
 
-gint trg_client_get_failcount(TrgClient *tc)
+guint trg_client_get_failcount(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     return priv->failCount;
 }
 
-gint trg_client_inc_failcount(TrgClient *tc)
+guint trg_client_inc_failcount(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     return ++(priv->failCount);
@@ -374,14 +380,26 @@ void trg_client_set_activeonlyupdate(TrgClient *tc, gboolean activeOnlyUpdate)
     priv->activeOnlyUpdate = activeOnlyUpdate;
 }
 
-gint trg_client_get_interval(TrgClient *tc)
+guint trg_client_get_minimised_interval(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return priv->min_interval;
+}
+
+guint trg_client_get_interval(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     return priv->interval;
 }
 
-void trg_client_set_interval(TrgClient *tc, gint interval)
+void trg_client_set_interval(TrgClient *tc, guint interval)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     priv->interval = interval;
+}
+
+void trg_client_set_minimised_interval(TrgClient *tc, guint interval)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    priv->min_interval = interval;
 }

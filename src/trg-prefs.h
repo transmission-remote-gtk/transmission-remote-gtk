@@ -27,6 +27,7 @@
 #define TRG_PREFS_DEFAULT_DIR_MODE  448
 #define TRG_PORT_DEFAULT            9091
 #define TRG_INTERVAL_DEFAULT        3
+#define TRG_MININTERVAL_DEFAULT        4
 #define TRG_PROFILE_NAME_DEFAULT   "Default"
 
 #define TRG_PREFS_KEY_PROFILE_ID    "profile-id"
@@ -34,6 +35,7 @@
 #define TRG_PREFS_KEY_PROFILE_NAME   "profile-name"
 #define TRG_PREFS_KEY_HOSTNAME      "hostname"
 #define TRG_PREFS_KEY_PORT          "port"
+#define TRG_PREFS_KEY_MINUPDATE_INTERVAL "min-update-interval"
 #define TRG_PREFS_KEY_USERNAME      "username"
 #define TRG_PREFS_KEY_PASSWORD      "password"
 #define TRG_PREFS_KEY_AUTO_CONNECT  "auto-connect"
