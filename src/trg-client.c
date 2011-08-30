@@ -146,10 +146,10 @@ trg_client_new (void)
     return tc;
 }
 
-gboolean trg_client_supports_tracker_edit(TrgClient * tc)
+float trg_client_get_version(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    return priv->session && priv->version >= 2.10;
+    return priv->version;
 }
 
 void trg_client_set_session(TrgClient * tc, JsonObject * session)

@@ -61,6 +61,10 @@
 #define SGET_BLOCKLIST_URL                     "blocklist-url"
 #define SGET_BLOCKLIST_ENABLED                 "blocklist-enabled"
 #define SGET_BLOCKLIST_SIZE                    "blocklist-size"
+#define SGET_DOWNLOAD_QUEUE_ENABLED            "download-queue-enabled"
+#define SGET_DOWNLOAD_QUEUE_SIZE            "download-queue-size"
+#define SGET_SEED_QUEUE_ENABLED            "seed-queue-enabled"
+#define SGET_SEED_QUEUE_SIZE            "seed-queue-size"
 
 const gchar *session_get_torrent_done_filename(JsonObject * s);
 gboolean session_get_torrent_done_enabled(JsonObject * s);
@@ -89,5 +93,9 @@ gboolean session_get_speed_limit_up_enabled(JsonObject * s);
 gint64 session_get_speed_limit_up(JsonObject * s);
 gboolean session_get_speed_limit_down_enabled(JsonObject * s);
 gint64 session_get_speed_limit_down(JsonObject * s);
+gboolean session_get_download_queue_enabled(JsonObject * s);
+gint64 session_get_download_queue_size(JsonObject * s);
+gboolean session_get_seed_queue_enabled(JsonObject * s);
+gint64 session_get_seed_queue_size(JsonObject * s);
 
 #endif                          /* SESSION_GET_H_ */

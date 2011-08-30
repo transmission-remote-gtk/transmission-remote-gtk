@@ -105,6 +105,26 @@ gboolean session_get_seed_ratio_limited(JsonObject * s)
     return json_object_get_boolean_member(s, SGET_SEED_RATIO_LIMITED);
 }
 
+gboolean session_get_download_queue_enabled(JsonObject * s)
+{
+    return json_object_get_boolean_member(s, SGET_DOWNLOAD_QUEUE_ENABLED);
+}
+
+gint64 session_get_download_queue_size(JsonObject * s)
+{
+    return json_object_get_int_member(s, SGET_DOWNLOAD_QUEUE_SIZE);
+}
+
+gboolean session_get_seed_queue_enabled(JsonObject * s)
+{
+    return json_object_get_boolean_member(s, SGET_SEED_QUEUE_ENABLED);
+}
+
+gint64 session_get_seed_queue_size(JsonObject * s)
+{
+    return json_object_get_int_member(s, SGET_SEED_QUEUE_SIZE);
+}
+
 const gchar *session_get_torrent_done_filename(JsonObject * s)
 {
     return json_object_get_string_member(s,

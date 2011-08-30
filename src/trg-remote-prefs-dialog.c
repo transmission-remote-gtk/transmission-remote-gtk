@@ -32,13 +32,11 @@
 #include "session-get.h"
 
 G_DEFINE_TYPE(TrgRemotePrefsDialog, trg_remote_prefs_dialog,
-              GTK_TYPE_DIALOG)
+        GTK_TYPE_DIALOG)
 #define TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(o) \
 (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialogPrivate))
 enum {
-    PROP_0,
-    PROP_PARENT,
-    PROP_CLIENT
+    PROP_0, PROP_PARENT, PROP_CLIENT
 };
 
 typedef struct _TrgRemotePrefsDialogPrivate TrgRemotePrefsDialogPrivate;
@@ -76,14 +74,17 @@ struct _TrgRemotePrefsDialogPrivate {
     GtkWidget *port_test_button;
     GtkWidget *blocklist_update_label;
     GtkWidget *blocklist_update_button;
+    GtkWidget *download_queue_enabled;
+    GtkWidget *download_queue_size;
+    GtkWidget *seed_queue_enabled;
+    GtkWidget *seed_queue_size;
 };
 
 static GObject *instance = NULL;
 
-static void update_session(GtkDialog * dlg)
-{
+static void update_session(GtkDialog * dlg) {
     TrgRemotePrefsDialogPrivate *priv =
-        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(dlg);
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(dlg);
     JsonNode *request = session_set();
     JsonObject *args = node_get_arguments(request);
     gchar *encryption;
@@ -93,25 +94,23 @@ static void update_session(GtkDialog * dlg)
     gtk_entry_json_output(GTK_ENTRY(priv->download_dir_entry), args);
     gtk_entry_json_output(GTK_ENTRY(priv->incomplete_dir_entry), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->done_script_enabled_check), args);
+    (priv->done_script_enabled_check), args);
     gtk_entry_json_output(GTK_ENTRY(priv->done_script_entry), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->rename_partial_files_check), args);
+    (priv->rename_partial_files_check), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->incomplete_dir_check), args);
+    (priv->incomplete_dir_check), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->trash_original_torrent_files_check),
-                               args);
+    (priv->trash_original_torrent_files_check), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->start_added_torrent_check), args);
+    (priv->start_added_torrent_check), args);
     if (priv->cache_size_mb_spin != NULL)
         gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-                                     (priv->cache_size_mb_spin), args);
+        (priv->cache_size_mb_spin), args);
 
     /* Connection */
 
-    switch (gtk_combo_box_get_active
-            (GTK_COMBO_BOX(priv->encryption_combo))) {
+    switch (gtk_combo_box_get_active(GTK_COMBO_BOX(priv->encryption_combo))) {
     case 0:
         encryption = "required";
         break;
@@ -125,50 +124,60 @@ static void update_session(GtkDialog * dlg)
 
     json_object_set_string_member(args, SGET_ENCRYPTION, encryption);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->peer_port_random_check), args);
+    (priv->peer_port_random_check), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->peer_port_forwarding_check), args);
+    (priv->peer_port_forwarding_check), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->pex_enabled_check), args);
+    (priv->pex_enabled_check), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->lpd_enabled_check), args);
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON(priv->peer_port_spin),
-                                 args);
+    (priv->lpd_enabled_check), args);
+    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON(priv->peer_port_spin), args);
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->blocklist_check), args);
+    (priv->blocklist_check), args);
     if (priv->blocklist_url_entry)
         gtk_entry_json_output(GTK_ENTRY(priv->blocklist_url_entry), args);
 
     /* Limits */
 
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->seed_ratio_limit_check), args);
+    (priv->seed_ratio_limit_check), args);
     gtk_spin_button_json_double_out(GTK_SPIN_BUTTON
-                                    (priv->seed_ratio_limit_spin), args);
+    (priv->seed_ratio_limit_spin), args);
+
+    if (priv->download_queue_enabled) {
+        gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
+        (priv->download_queue_enabled), args);
+
+        gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
+        (priv->download_queue_size), args);
+
+        gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
+        (priv->seed_queue_enabled), args);
+
+        gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
+        (priv->seed_queue_size), args);
+    }
 
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->speed_limit_down_check), args);
+    (priv->speed_limit_down_check), args);
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-                                 (priv->speed_limit_down_spin), args);
+    (priv->speed_limit_down_spin), args);
 
     gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->speed_limit_up_check), args);
+    (priv->speed_limit_up_check), args);
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-                                 (priv->speed_limit_up_spin), args);
+    (priv->speed_limit_up_spin), args);
 
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-                                 (priv->peer_limit_global_spin), args);
+    (priv->peer_limit_global_spin), args);
     gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-                                 (priv->peer_limit_per_torrent_spin),
-                                 args);
+    (priv->peer_limit_per_torrent_spin), args);
 
     dispatch_async(priv->client, request, on_session_set, priv->parent);
 }
 
-static void
-trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
-                             gpointer data G_GNUC_UNUSED)
-{
+static void trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
+        gpointer data G_GNUC_UNUSED) {
     if (res_id == GTK_RESPONSE_OK)
         update_session(dlg);
 
@@ -176,12 +185,10 @@ trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
     instance = NULL;
 }
 
-static void
-trg_remote_prefs_dialog_get_property(GObject * object, guint property_id,
-                                     GValue * value, GParamSpec * pspec)
-{
+static void trg_remote_prefs_dialog_get_property(GObject * object,
+        guint property_id, GValue * value, GParamSpec * pspec) {
     TrgRemotePrefsDialogPrivate *priv =
-        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
     switch (property_id) {
     case PROP_PARENT:
         g_value_set_object(value, priv->parent);
@@ -194,13 +201,10 @@ trg_remote_prefs_dialog_get_property(GObject * object, guint property_id,
     }
 }
 
-static void
-trg_remote_prefs_dialog_set_property(GObject * object, guint property_id,
-                                     const GValue * value,
-                                     GParamSpec * pspec)
-{
+static void trg_remote_prefs_dialog_set_property(GObject * object,
+        guint property_id, const GValue * value, GParamSpec * pspec) {
     TrgRemotePrefsDialogPrivate *priv =
-        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
     switch (property_id) {
     case PROP_PARENT:
         priv->parent = g_value_get_object(value);
@@ -214,10 +218,9 @@ trg_remote_prefs_dialog_set_property(GObject * object, guint property_id,
 }
 
 static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
-                                        JsonObject * json)
-{
+        JsonObject * json) {
     TrgRemotePrefsDialogPrivate *priv =
-        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
     GtkWidget *w, *tb, *t;
     gint row = 0;
 
@@ -225,107 +228,141 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
 
     hig_workarea_add_section_title(t, &row, _("Bandwidth"));
 
-    tb = priv->speed_limit_down_check = gtk_check_button_new_with_mnemonic
-        (_("Limit download speed (KB/s)"));
+    tb = priv->speed_limit_down_check = gtk_check_button_new_with_mnemonic(
+            _("Limit download speed (KB/s)"));
     widget_set_json_key(tb, SGET_SPEED_LIMIT_DOWN_ENABLED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                                 session_get_speed_limit_down_enabled
-                                 (json));
+            session_get_speed_limit_down_enabled(json));
 
-    w = priv->speed_limit_down_spin =
-        gtk_spin_button_new_with_range(0, INT_MAX, 5);
+    w = priv->speed_limit_down_spin = gtk_spin_button_new_with_range(0,
+            INT_MAX, 5);
     widget_set_json_key(w, SGET_SPEED_LIMIT_DOWN);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              session_get_speed_limit_down(json));
+            session_get_speed_limit_down(json));
     g_signal_connect(G_OBJECT(tb), "toggled",
-                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
-    gtk_widget_set_sensitive(w,
-                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (tb)));
+            G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+    (tb)));
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    tb = priv->speed_limit_up_check = gtk_check_button_new_with_mnemonic
-        (_("Limit upload speed (KB/s)"));
+    tb = priv->speed_limit_up_check = gtk_check_button_new_with_mnemonic(
+            _("Limit upload speed (KB/s)"));
     widget_set_json_key(tb, SGET_SPEED_LIMIT_UP_ENABLED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                                 session_get_speed_limit_up_enabled(json));
+            session_get_speed_limit_up_enabled(json));
 
-    w = priv->speed_limit_up_spin =
-        gtk_spin_button_new_with_range(0, INT_MAX, 5);
+    w = priv->speed_limit_up_spin = gtk_spin_button_new_with_range(0, INT_MAX,
+            5);
     widget_set_json_key(w, SGET_SPEED_LIMIT_UP);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              session_get_speed_limit_up(json));
+            session_get_speed_limit_up(json));
     g_signal_connect(G_OBJECT(tb), "toggled",
-                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
-    gtk_widget_set_sensitive(w,
-                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (tb)));
+            G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+    (tb)));
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     hig_workarea_add_section_title(t, &row, _("Seeding"));
 
-    tb = priv->seed_ratio_limit_check = gtk_check_button_new_with_mnemonic
-        (_("Seed ratio limit"));
+    tb = priv->seed_ratio_limit_check = gtk_check_button_new_with_mnemonic(
+            _("Seed ratio limit"));
     widget_set_json_key(tb, SGET_SEED_RATIO_LIMITED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                                 session_get_seed_ratio_limited(json));
+            session_get_seed_ratio_limited(json));
 
-    w = priv->seed_ratio_limit_spin =
-        gtk_spin_button_new_with_range(0, INT_MAX, 0.1);
+    w = priv->seed_ratio_limit_spin = gtk_spin_button_new_with_range(0,
+            INT_MAX, 0.1);
     widget_set_json_key(w, SGET_SEED_RATIO_LIMIT);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              session_get_seed_ratio_limit(json));
-    gtk_widget_set_sensitive(w,
-                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (tb)));
+            session_get_seed_ratio_limit(json));
+    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+    (tb)));
     g_signal_connect(G_OBJECT(tb), "toggled",
-                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+            G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
+
+    if (json_object_has_member(json, SGET_DOWNLOAD_QUEUE_ENABLED)) {
+        hig_workarea_add_section_title(t, &row, _("Queues"));
+
+        tb = priv->download_queue_enabled = gtk_check_button_new_with_mnemonic(
+                _("Download queue size"));
+        widget_set_json_key(tb, SGET_DOWNLOAD_QUEUE_ENABLED);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
+                session_get_download_queue_enabled(json));
+
+        w = priv->download_queue_size = gtk_spin_button_new_with_range(0,
+                INT_MAX, 1);
+        widget_set_json_key(w, SGET_DOWNLOAD_QUEUE_SIZE);
+        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
+                session_get_download_queue_size(json));
+        gtk_widget_set_sensitive(w,
+                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+                (tb)));
+        g_signal_connect(G_OBJECT(tb), "toggled",
+                G_CALLBACK(toggle_active_arg_is_sensitive), w);
+        hig_workarea_add_row_w(t, &row, tb, w, NULL);
+
+        tb = priv->seed_queue_enabled = gtk_check_button_new_with_mnemonic(
+                _("Seed queue size"));
+        widget_set_json_key(tb, SGET_SEED_QUEUE_ENABLED);
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
+                session_get_seed_queue_enabled(json));
+
+        w = priv->seed_queue_size = gtk_spin_button_new_with_range(0,
+                INT_MAX, 1);
+        widget_set_json_key(w, SGET_SEED_QUEUE_SIZE);
+        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
+                session_get_seed_queue_size(json));
+        gtk_widget_set_sensitive(w,
+                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+                (tb)));
+        g_signal_connect(G_OBJECT(tb), "toggled",
+                G_CALLBACK(toggle_active_arg_is_sensitive), w);
+        hig_workarea_add_row_w(t, &row, tb, w, NULL);
+    }
 
     hig_workarea_add_section_title(t, &row, _("Peers"));
 
-    w = priv->peer_limit_global_spin =
-        gtk_spin_button_new_with_range(0, INT_MAX, 5);
+    w = priv->peer_limit_global_spin = gtk_spin_button_new_with_range(0,
+            INT_MAX, 5);
     widget_set_json_key(GTK_WIDGET(w), SGET_PEER_LIMIT_GLOBAL);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              session_get_peer_limit_global(json));
+            session_get_peer_limit_global(json));
     hig_workarea_add_row(t, &row, _("Global peer limit"), w, w);
 
-    w = priv->peer_limit_per_torrent_spin =
-        gtk_spin_button_new_with_range(0, INT_MAX, 5);
+    w = priv->peer_limit_per_torrent_spin = gtk_spin_button_new_with_range(0,
+            INT_MAX, 5);
     widget_set_json_key(GTK_WIDGET(w), SGET_PEER_LIMIT_PER_TORRENT);
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              session_get_peer_limit_per_torrent(json));
+            session_get_peer_limit_per_torrent(json));
     hig_workarea_add_row(t, &row, _("Per torrent peer limit"), w, w);
 
     return t;
 }
 
-static void on_port_tested(JsonObject * response, int status,
-                           gpointer data)
-{
+static void on_port_tested(JsonObject * response, int status, gpointer data) {
     gdk_threads_enter();
 
     if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
         TrgRemotePrefsDialogPrivate *priv =
-            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+                TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
 
-        gtk_button_set_label(GTK_BUTTON(priv->port_test_button),
-                             _("Retest"));
+        gtk_button_set_label(GTK_BUTTON(priv->port_test_button), _("Retest"));
         gtk_widget_set_sensitive(priv->port_test_button, TRUE);
 
         if (status == CURLE_OK) {
-            gboolean isOpen =
-                json_object_get_boolean_member(get_arguments(response),
-                                               "port-is-open");
+            gboolean isOpen = json_object_get_boolean_member(
+                    get_arguments(response), "port-is-open");
             if (isOpen)
-                gtk_label_set_markup(GTK_LABEL(priv->port_test_label),
-                                     _
-                                     ("Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"));
+                gtk_label_set_markup(
+                        GTK_LABEL(priv->port_test_label),
+                        _
+                        ("Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"));
             else
-                gtk_label_set_markup(GTK_LABEL(priv->port_test_label),
-                                     _
-                                     ("Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"));
+                gtk_label_set_markup(
+                        GTK_LABEL(priv->port_test_label),
+                        _
+                        ("Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"));
         } else {
             trg_error_dialog(GTK_WINDOW(data), status, response);
         }
@@ -335,10 +372,9 @@ static void on_port_tested(JsonObject * response, int status,
     response_unref(response);
 }
 
-static void port_test_cb(GtkButton * b, gpointer data)
-{
+static void port_test_cb(GtkButton * b, gpointer data) {
     TrgRemotePrefsDialogPrivate *priv =
-        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
     JsonNode *req = port_test();
 
     gtk_label_set_text(GTK_LABEL(priv->port_test_label), _("Port test"));
@@ -349,26 +385,22 @@ static void port_test_cb(GtkButton * b, gpointer data)
 }
 
 static void on_blocklist_updated(JsonObject * response, int status,
-                                 gpointer data)
-{
+        gpointer data) {
     gdk_threads_enter();
 
     if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
         TrgRemotePrefsDialogPrivate *priv =
-            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+                TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
 
         gtk_widget_set_sensitive(priv->blocklist_update_button, TRUE);
         gtk_button_set_label(GTK_BUTTON(priv->blocklist_update_button),
-                             "Update");
+                "Update");
 
         if (status == CURLE_OK) {
             JsonObject *args = get_arguments(response);
-            gchar *labelText =
-                g_strdup_printf(_("Blocklist (%ld entries)"),
-                                json_object_get_int_member(args,
-                                                           SGET_BLOCKLIST_SIZE));
-            gtk_button_set_label(GTK_BUTTON(priv->blocklist_check),
-                                 labelText);
+            gchar *labelText = g_strdup_printf(_("Blocklist (%ld entries)"),
+                    json_object_get_int_member(args, SGET_BLOCKLIST_SIZE));
+            gtk_button_set_label(GTK_BUTTON(priv->blocklist_check), labelText);
             g_free(labelText);
         } else {
             trg_error_dialog(GTK_WINDOW(data), status, response);
@@ -380,10 +412,9 @@ static void on_blocklist_updated(JsonObject * response, int status,
     response_unref(response);
 }
 
-static void update_blocklist_cb(GtkButton * b, gpointer data)
-{
+static void update_blocklist_cb(GtkButton * b, gpointer data) {
     TrgRemotePrefsDialogPrivate *priv =
-        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
     JsonNode *req = blocklist_update();
 
     gtk_widget_set_sensitive(GTK_WIDGET(b), FALSE);
@@ -393,10 +424,9 @@ static void update_blocklist_cb(GtkButton * b, gpointer data)
 }
 
 static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
-                                      JsonObject * s)
-{
+        JsonObject * s) {
     TrgRemotePrefsDialogPrivate *priv =
-        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
 
     GtkWidget *w, *tb, *t;
     const gchar *stringValue;
@@ -421,8 +451,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
 
     w = priv->peer_port_spin = gtk_spin_button_new_with_range(0, 65535, 1);
     widget_set_json_key(w, SGET_PEER_PORT);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              session_get_peer_port(s));
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), session_get_peer_port(s));
     hig_workarea_add_row(t, &row, _("Peer port"), w, w);
 
     priv->port_test_label = gtk_label_new(_("Port test"));
@@ -430,45 +459,36 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     g_signal_connect(w, "clicked", G_CALLBACK(port_test_cb), win);
     hig_workarea_add_row_w(t, &row, priv->port_test_label, w, NULL);
 
-    w = priv->peer_port_random_check =
-        hig_workarea_add_wide_checkbutton(t, &row,
-                                          _("Random peer port on start"),
-                                          session_get_peer_port_random(s));
+    w = priv->peer_port_random_check = hig_workarea_add_wide_checkbutton(t,
+            &row, _("Random peer port on start"),
+            session_get_peer_port_random(s));
     widget_set_json_key(w, SGET_PEER_PORT_RANDOM_ON_START);
 
-    w = priv->peer_port_forwarding_check =
-        hig_workarea_add_wide_checkbutton(t, &row,
-                                          _("Peer port forwarding"),
-                                          session_get_port_forwarding_enabled
-                                          (s));
+    w = priv->peer_port_forwarding_check = hig_workarea_add_wide_checkbutton(t,
+            &row, _("Peer port forwarding"),
+            session_get_port_forwarding_enabled(s));
     widget_set_json_key(w, SGET_PORT_FORWARDING_ENABLED);
 
-    w = priv->pex_enabled_check =
-        hig_workarea_add_wide_checkbutton(t, &row,
-                                          _("Peer exchange (PEX)"),
-                                          session_get_pex_enabled(s));
+    w = priv->pex_enabled_check = hig_workarea_add_wide_checkbutton(t, &row,
+            _("Peer exchange (PEX)"), session_get_pex_enabled(s));
     widget_set_json_key(w, SGET_PEX_ENABLED);
 
-    w = priv->lpd_enabled_check =
-        hig_workarea_add_wide_checkbutton(t, &row,
-                                          _("Local peer discovery"),
-                                          session_get_lpd_enabled(s));
+    w = priv->lpd_enabled_check = hig_workarea_add_wide_checkbutton(t, &row,
+            _("Local peer discovery"), session_get_lpd_enabled(s));
     widget_set_json_key(w, SGET_LPD_ENABLED);
 
-    stringValue =
-        g_strdup_printf(_("Blocklist (%ld entries)"),
-                        session_get_blocklist_size(s));
-    tb = priv->blocklist_check =
-        gtk_check_button_new_with_mnemonic(stringValue);
+    stringValue = g_strdup_printf(_("Blocklist (%ld entries)"),
+            session_get_blocklist_size(s));
+    tb = priv->blocklist_check
+            = gtk_check_button_new_with_mnemonic(stringValue);
     g_free((gchar *) stringValue);
     widget_set_json_key(tb, SGET_BLOCKLIST_ENABLED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                                 session_get_blocklist_enabled(s));
+            session_get_blocklist_enabled(s));
 
-    w = priv->blocklist_update_button =
-        gtk_button_new_with_label(_("Update"));
+    w = priv->blocklist_update_button = gtk_button_new_with_label(_("Update"));
     g_signal_connect(G_OBJECT(w), "clicked",
-                     G_CALLBACK(update_blocklist_cb), win);
+            G_CALLBACK(update_blocklist_cb), win);
 
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
@@ -478,10 +498,9 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
         widget_set_json_key(w, SGET_BLOCKLIST_URL);
         gtk_entry_set_text(GTK_ENTRY(w), session_get_blocklist_url(s));
         gtk_widget_set_sensitive(w,
-                                 gtk_toggle_button_get_active
-                                 (GTK_TOGGLE_BUTTON(tb)));
+                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tb)));
         g_signal_connect(G_OBJECT(tb), "toggled",
-                         G_CALLBACK(toggle_active_arg_is_sensitive), w);
+                G_CALLBACK(toggle_active_arg_is_sensitive), w);
         hig_workarea_add_row(t, &row, _("Blocklist URL:"), w, NULL);
     }
 
@@ -489,10 +508,9 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
 }
 
 static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
-                                         JsonObject * s)
-{
+        JsonObject * s) {
     TrgRemotePrefsDialogPrivate *priv =
-        TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
 
     GtkWidget *w, *tb, *t;
     gint row = 0;
@@ -505,141 +523,120 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
     gtk_entry_set_text(GTK_ENTRY(w), session_get_download_dir(s));
     hig_workarea_add_row(t, &row, _("Download directory"), w, NULL);
 
-    tb = priv->incomplete_dir_check =
-        gtk_check_button_new_with_mnemonic(_("Incomplete download dir"));
+    tb = priv->incomplete_dir_check = gtk_check_button_new_with_mnemonic(
+            _("Incomplete download dir"));
     widget_set_json_key(tb, SGET_INCOMPLETE_DIR_ENABLED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                                 session_get_incomplete_dir_enabled(s));
+            session_get_incomplete_dir_enabled(s));
 
     w = priv->incomplete_dir_entry = gtk_entry_new();
     widget_set_json_key(w, SGET_INCOMPLETE_DIR);
     gtk_entry_set_text(GTK_ENTRY(w), session_get_incomplete_dir(s));
-    gtk_widget_set_sensitive(w,
-                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (tb)));
+    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+    (tb)));
     g_signal_connect(G_OBJECT(tb), "toggled",
-                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+            G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    tb = priv->done_script_enabled_check =
-        gtk_check_button_new_with_mnemonic(_("Torrent done script"));
+    tb = priv->done_script_enabled_check = gtk_check_button_new_with_mnemonic(
+            _("Torrent done script"));
     widget_set_json_key(tb, SGET_SCRIPT_TORRENT_DONE_ENABLED);
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                                 session_get_torrent_done_enabled(s));
+            session_get_torrent_done_enabled(s));
 
     w = priv->done_script_entry = gtk_entry_new();
     widget_set_json_key(w, SGET_SCRIPT_TORRENT_DONE_FILENAME);
     gtk_entry_set_text(GTK_ENTRY(w), session_get_torrent_done_filename(s));
-    gtk_widget_set_sensitive(w,
-                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (tb)));
+    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+    (tb)));
     g_signal_connect(G_OBJECT(tb), "toggled",
-                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+            G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     cache_size_mb = session_get_cache_size_mb(s);
     if (cache_size_mb >= 0) {
-        w = priv->cache_size_mb_spin =
-            gtk_spin_button_new_with_range(0, INT_MAX, 1);
+        w = priv->cache_size_mb_spin = gtk_spin_button_new_with_range(0,
+                INT_MAX, 1);
         widget_set_json_key(w, SGET_CACHE_SIZE_MB);
         gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), cache_size_mb);
         hig_workarea_add_row(t, &row, _("Cache size (MB)"), w, w);
     }
 
-    w = priv->rename_partial_files_check =
-        hig_workarea_add_wide_checkbutton(t, &row,
-                                          _("Rename partial files"),
-                                          session_get_rename_partial_files
-                                          (s));
+    w = priv->rename_partial_files_check = hig_workarea_add_wide_checkbutton(t,
+            &row, _("Rename partial files"),
+            session_get_rename_partial_files(s));
     widget_set_json_key(w, SGET_RENAME_PARTIAL_FILES);
 
-    w = priv->trash_original_torrent_files_check =
-        hig_workarea_add_wide_checkbutton(t, &row,
-                                          _
-                                          ("Trash original torrent files"),
-                                          session_get_trash_original_torrent_files
-                                          (s));
+    w = priv->trash_original_torrent_files_check
+            = hig_workarea_add_wide_checkbutton(t, &row, _
+            ("Trash original torrent files"),
+                    session_get_trash_original_torrent_files(s));
     widget_set_json_key(w, SGET_TRASH_ORIGINAL_TORRENT_FILES);
 
-    w = priv->start_added_torrent_check =
-        hig_workarea_add_wide_checkbutton(t, &row,
-                                          _("Start added torrents"),
-                                          session_get_start_added_torrents
-                                          (s));
+    w = priv->start_added_torrent_check = hig_workarea_add_wide_checkbutton(t,
+            &row, _("Start added torrents"),
+            session_get_start_added_torrents(s));
     widget_set_json_key(w, SGET_START_ADDED_TORRENTS);
 
     return t;
 }
 
 static GObject *trg_remote_prefs_dialog_constructor(GType type,
-                                                    guint
-                                                    n_construct_properties,
-                                                    GObjectConstructParam
-                                                    * construct_params)
-{
+        guint n_construct_properties, GObjectConstructParam * construct_params) {
     GObject *object;
     TrgRemotePrefsDialogPrivate *priv;
     JsonObject *session;
     GtkWidget *notebook;
 
     object = G_OBJECT_CLASS
-        (trg_remote_prefs_dialog_parent_class)->constructor(type,
-                                                            n_construct_properties,
-                                                            construct_params);
+    (trg_remote_prefs_dialog_parent_class)->constructor(type,
+            n_construct_properties, construct_params);
     priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
     session = trg_client_get_session(priv->client);
 
     gtk_window_set_title(GTK_WINDOW(object), _("Remote Preferences"));
-    gtk_window_set_transient_for(GTK_WINDOW(object),
-                                 GTK_WINDOW(priv->parent));
+    gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->parent));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
 
     gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
-                          GTK_RESPONSE_CLOSE);
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_OK,
-                          GTK_RESPONSE_OK);
+            GTK_RESPONSE_CLOSE);
+    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_OK, GTK_RESPONSE_OK);
 
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
-    gtk_dialog_set_default_response(GTK_DIALOG(object),
-                                    GTK_RESPONSE_OK);
+    gtk_dialog_set_default_response(GTK_DIALOG(object), GTK_RESPONSE_OK);
 
     gtk_dialog_set_alternative_button_order(GTK_DIALOG(object),
-                                            GTK_RESPONSE_OK,
-                                            GTK_RESPONSE_CLOSE, -1);
+            GTK_RESPONSE_OK, GTK_RESPONSE_CLOSE, -1);
 
     g_signal_connect(G_OBJECT(object),
-                     "response",
-                     G_CALLBACK(trg_remote_prefs_response_cb), NULL);
+            "response",
+            G_CALLBACK(trg_remote_prefs_response_cb), NULL);
 
     notebook = gtk_notebook_new();
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-                             trg_rprefs_generalPage
-                             (TRG_REMOTE_PREFS_DIALOG(object),
-                              session), gtk_label_new(_("General")));
+            trg_rprefs_generalPage(TRG_REMOTE_PREFS_DIALOG(object), session),
+            gtk_label_new(_("General")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-                             trg_rprefs_connPage
-                             (TRG_REMOTE_PREFS_DIALOG(object),
-                              session), gtk_label_new(_("Connections")));
+            trg_rprefs_connPage(TRG_REMOTE_PREFS_DIALOG(object), session),
+            gtk_label_new(_("Connections")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-                             trg_rprefs_limitsPage
-                             (TRG_REMOTE_PREFS_DIALOG(object),
-                              session), gtk_label_new(_("Limits")));
+            trg_rprefs_limitsPage(TRG_REMOTE_PREFS_DIALOG(object), session),
+            gtk_label_new(_("Limits")));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(object)->vbox), notebook,
-                       TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(object)->vbox), notebook, TRUE, TRUE,
+            0);
 
     return object;
 }
 
-static void
-trg_remote_prefs_dialog_class_init(TrgRemotePrefsDialogClass * klass)
-{
+static void trg_remote_prefs_dialog_class_init(
+        TrgRemotePrefsDialogClass * klass) {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
     g_type_class_add_private(klass, sizeof(TrgRemotePrefsDialogPrivate));
@@ -648,44 +645,38 @@ trg_remote_prefs_dialog_class_init(TrgRemotePrefsDialogClass * klass)
     object_class->get_property = trg_remote_prefs_dialog_get_property;
     object_class->set_property = trg_remote_prefs_dialog_set_property;
 
-    g_object_class_install_property(object_class,
-                                    PROP_CLIENT,
-                                    g_param_spec_pointer
-                                    ("trg-client", "TClient",
-                                     "Client",
-                                     G_PARAM_READWRITE |
-                                     G_PARAM_CONSTRUCT_ONLY |
-                                     G_PARAM_STATIC_NAME |
-                                     G_PARAM_STATIC_NICK |
-                                     G_PARAM_STATIC_BLURB));
+    g_object_class_install_property(
+            object_class,
+            PROP_CLIENT,
+            g_param_spec_pointer(
+                    "trg-client",
+                    "TClient",
+                    "Client",
+                    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                            | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
+                            | G_PARAM_STATIC_BLURB));
 
-    g_object_class_install_property(object_class,
-                                    PROP_PARENT,
-                                    g_param_spec_object
-                                    ("parent-window", "Parent window",
-                                     "Parent window",
-                                     TRG_TYPE_MAIN_WINDOW,
-                                     G_PARAM_READWRITE |
-                                     G_PARAM_CONSTRUCT_ONLY |
-                                     G_PARAM_STATIC_NAME |
-                                     G_PARAM_STATIC_NICK |
-                                     G_PARAM_STATIC_BLURB));
+    g_object_class_install_property(
+            object_class,
+            PROP_PARENT,
+            g_param_spec_object(
+                    "parent-window",
+                    "Parent window",
+                    "Parent window",
+                    TRG_TYPE_MAIN_WINDOW,
+                    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                            | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
+                            | G_PARAM_STATIC_BLURB));
 }
 
-static void
-trg_remote_prefs_dialog_init(TrgRemotePrefsDialog * self G_GNUC_UNUSED)
-{
+static void trg_remote_prefs_dialog_init(TrgRemotePrefsDialog * self G_GNUC_UNUSED) {
 }
 
-TrgRemotePrefsDialog *trg_remote_prefs_dialog_get_instance(TrgMainWindow *
-                                                           parent,
-                                                           TrgClient *
-                                                           client)
-{
+TrgRemotePrefsDialog *trg_remote_prefs_dialog_get_instance(
+        TrgMainWindow * parent, TrgClient * client) {
     if (instance == NULL) {
-        instance = g_object_new(TRG_TYPE_REMOTE_PREFS_DIALOG,
-                                "parent-window", parent,
-                                "trg-client", client, NULL);
+        instance = g_object_new(TRG_TYPE_REMOTE_PREFS_DIALOG, "parent-window",
+                parent, "trg-client", client, NULL);
     }
 
     return TRG_REMOTE_PREFS_DIALOG(instance);

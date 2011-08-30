@@ -79,7 +79,8 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
                                             "* Julian Held (German)\n"
                                             "* Youn sok Choi (Korean)\n"
                                             "* Piotr (Polish)\n"
-                                            "* Y3AVD (Russian)");
+                                            "* Y3AVD (Russian)\n"
+                                            "* ROR191 (Ukranian)\n");
 
     g_free(licenseText);
 

@@ -72,8 +72,7 @@ TrgClient* trg_client_new (void);
 TrgPrefs* trg_client_get_prefs(TrgClient *tc);
 int trg_client_populate_with_settings(TrgClient * tc);
 void trg_client_set_session(TrgClient * tc, JsonObject * session);
-gboolean trg_client_supports_tracker_edit(TrgClient * tc);
-
+float trg_client_get_version(TrgClient *tc);
 gchar *trg_client_get_password(TrgClient *tc);
 gchar *trg_client_get_username(TrgClient *tc);
 gchar *trg_client_get_url(TrgClient *tc);

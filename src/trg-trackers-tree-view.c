@@ -50,6 +50,11 @@ trg_trackers_tree_view_class_init(TrgTrackersTreeViewClass * klass)
     g_type_class_add_private(klass, sizeof(TrgTrackersTreeViewPrivate));
 }
 
+static gboolean is_tracker_edit_supported(TrgClient *tc)
+{
+    return trg_client_get_version(tc) >= 2.10;
+}
+
 static void
 on_trackers_update(JsonObject * response, int status, gpointer data)
 {
@@ -67,7 +72,7 @@ void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
 {
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(tv);
-    gboolean editable = trg_client_supports_tracker_edit(tc);
+    gboolean editable = is_tracker_edit_supported(tc);
 
     g_object_set(priv->announceRenderer, "editable", editable, NULL);
     g_object_set(priv->announceRenderer, "mode",
@@ -304,7 +309,7 @@ view_onButtonPressed(GtkWidget * treeview, GdkEventButton * event,
     GtkTreeSelection *selection;
     GtkTreePath *path;
 
-    if (!trg_client_supports_tracker_edit(priv->client))
+    if (!is_tracker_edit_supported(priv->client))
         return FALSE;
 
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {

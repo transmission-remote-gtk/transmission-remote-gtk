@@ -1434,7 +1434,6 @@ static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
 
 static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
         GdkEventButton * event, gpointer data) {
-    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         trg_status_icon_view_menu(icon, event, data);
         return TRUE;
