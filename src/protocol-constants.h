@@ -35,7 +35,8 @@
 #define FIELD_TOTAL_SIZE        "totalSize"
 #define FIELD_DONE_DATE         "doneDate"
 #define FIELD_ADDED_DATE        "addedDate"
-#define FIELD_TRACKERS          "trackers"
+//#define FIELD_TRACKERS          "trackers"
+#define FIELD_TRACKER_STATS          "trackerStats"
 #define FIELD_DOWNLOAD_DIR      "downloadDir"
 #define FIELD_HASH_STRING       "hashString"
 #define FIELD_SWARM_SPEED       "swarmSpeed"
@@ -53,7 +54,6 @@
 #define FIELD_HAVEVALID			"haveValid"
 #define FIELD_HAVEUNCHECKED		"haveUnchecked"
 #define FIELD_PERCENTDONE		"percentDone"
-#define FIELD_TRACKERS          "trackers"
 #define FIELD_PEERS             "peers"
 #define FIELD_FILES             "files"
 #define FIELD_WANTED            "wanted"
@@ -82,9 +82,15 @@
 
 /* trackers */
 
-#define FIELD_TIER              "tier"
-#define FIELD_ANNOUNCE          "announce"
-#define FIELD_SCRAPE            "scrape"
+#define FIELD_TIER                      "tier"
+#define FIELD_ANNOUNCE                  "announce"
+#define FIELD_SCRAPE                    "scrape"
+#define FIELD_LAST_ANNOUNCE_PEER_COUNT  "lastAnnouncePeerCount"
+#define FIELD_LAST_ANNOUNCE_TIME        "lastAnnounceTime"
+#define FIELD_SEEDERCOUNT               "seederCount"
+#define FIELD_LEECHERCOUNT              "leecherCount"
+#define FIELD_HOST                      "host"
+#define FIELD_LAST_ANNOUNCE_RESULT      "lastAnnounceResult"
 
 /* methods */
 

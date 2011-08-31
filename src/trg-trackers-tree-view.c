@@ -183,6 +183,18 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_SCRAPE,
                              _("Scrape URL"), "scrape-url", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO, TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT,
+                             _("Peer Count"), "last-announce-peer-count", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_EPOCH, TRACKERCOL_LAST_ANNOUNCE_TIME,
+                             _("Last Announce"), "last-announce-time", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO, TRACKERCOL_SEEDERCOUNT,
+                             _("Seeder Count"), "seeder-count", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO, TRACKERCOL_LEECHERCOUNT,
+                             _("Leecher Count"), "leecher-count", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_HOST,
+                             _("Host"), "host", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_LAST_ANNOUNCE_RESULT,
+                             _("Last Result"), "last-result", 0);
 }
 
 static void add_tracker(GtkWidget * w, gpointer data)

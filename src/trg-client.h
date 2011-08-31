@@ -62,8 +62,6 @@ typedef struct {
 
 typedef struct {
   GObjectClass parent_class;
-  void (*client_profile_changed) (TrgClient * client, gpointer data);
-  void (*client_profile_new) (TrgClient * client, gpointer data);
 } TrgClientClass;
 
 GType trg_client_get_type (void);

@@ -34,14 +34,6 @@
 #include "dispatch.h"
 #include "trg-client.h"
 
-enum {
-    CLIENT_SIGNAL_PROFILE_CHANGE,
-    CLIENT_SIGNAL_PROFILE_NEW,
-    CLIENT_SIGNAL_COUNT
-};
-
-static guint signals[CLIENT_SIGNAL_COUNT] = { 0 };
-
 G_DEFINE_TYPE (TrgClient, trg_client, G_TYPE_OBJECT)
 
 #define TRG_CLIENT_GET_PRIVATE(o) \
@@ -105,22 +97,6 @@ trg_client_class_init (TrgClientClass *klass)
   object_class->get_property = trg_client_get_property;
   object_class->set_property = trg_client_set_property;
   object_class->dispose = trg_client_dispose;
-
-  signals[CLIENT_SIGNAL_PROFILE_CHANGE] =
-          gtk_signal_new ("client-profile-changed",
-                      GTK_RUN_LAST,
-                      G_TYPE_FROM_CLASS(object_class),
-                      GTK_SIGNAL_OFFSET (TrgClientClass, client_profile_changed),
-                      gtk_marshal_NONE__NONE,
-                      GTK_TYPE_NONE, 0);
-
-  signals[CLIENT_SIGNAL_PROFILE_NEW] =
-          gtk_signal_new ("client-profile-new",
-                      GTK_RUN_LAST,
-                      G_TYPE_FROM_CLASS(object_class),
-                      GTK_SIGNAL_OFFSET (TrgClientClass, client_profile_new),
-                      gtk_marshal_NONE__NONE,
-                      GTK_TYPE_NONE, 0);
 }
 
 static void

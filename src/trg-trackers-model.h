@@ -56,12 +56,40 @@ void trg_trackers_model_set_accept(TrgTrackersModel * model,
 gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model);
 void trg_trackers_model_set_no_selection(TrgTrackersModel * model);
 
+typedef enum
+{
+    /* we won't (announce,scrape) this torrent to this tracker because
+     * the torrent is stopped, or because of an error, or whatever */
+    TR_TRACKER_INACTIVE = 0,
+
+    /* we will (announce,scrape) this torrent to this tracker, and are
+     * waiting for enough time to pass to satisfy the tracker's interval */
+    TR_TRACKER_WAITING = 1,
+
+    /* it's time to (announce,scrape) this torrent, and we're waiting on a
+     * a free slot to open up in the announce manager */
+    TR_TRACKER_QUEUED = 2,
+
+    /* we're (announcing,scraping) this torrent right now */
+    TR_TRACKER_ACTIVE = 3
+}
+tr_tracker_state;
+
 enum {
+    /* trackers */
     TRACKERCOL_ICON,
     TRACKERCOL_TIER,
     TRACKERCOL_ANNOUNCE,
     TRACKERCOL_SCRAPE,
     TRACKERCOL_ID,
+    /* trackerstats */
+    TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT,
+    TRACKERCOL_LAST_ANNOUNCE_TIME,
+    TRACKERCOL_SEEDERCOUNT,
+    TRACKERCOL_LEECHERCOUNT,
+    TRACKERCOL_HOST,
+    TRACKERCOL_LAST_ANNOUNCE_RESULT,
+    /* other */
     TRACKERCOL_UPDATESERIAL,
     TRACKERCOL_COLUMNS
 };

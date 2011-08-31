@@ -52,14 +52,10 @@ gint64 torrent_get_status(JsonObject * t);
 gchar *torrent_get_status_string(gint64 value);
 gchar *torrent_get_status_icon(guint flags);
 JsonArray *torrent_get_peers(JsonObject * t);
-JsonArray *torrent_get_trackers(JsonObject * t);
+JsonArray *torrent_get_tracker_stats(JsonObject * t);
 JsonArray *torrent_get_wanted(JsonObject * t);
 JsonArray *torrent_get_priorities(JsonObject * t);
 gint64 torrent_get_id(JsonObject * t);
-gint64 tracker_get_tier(JsonObject * t);
-gint64 tracker_get_id(JsonObject * t);
-const gchar *tracker_get_announce(JsonObject * t);
-const gchar *tracker_get_scrape(JsonObject * t);
 JsonArray *torrent_get_files(JsonObject * args);
 gdouble torrent_get_percent_done(JsonObject * t);
 gint64 torrent_get_left_until_done(JsonObject * t);
@@ -77,7 +73,22 @@ gint64 torrent_get_seed_ratio_mode(JsonObject * t);
 gint64 torrent_get_peer_limit(JsonObject * t);
 gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search);
 
+/* outer response object */
+
 JsonArray *get_torrents(JsonObject * response);
 JsonArray *get_torrents_removed(JsonObject * response);
+
+/* tracker stats */
+
+const gchar *tracker_stats_get_announce(JsonObject * t);
+const gchar *tracker_stats_get_scrape(JsonObject * t);
+gint64 tracker_stats_get_tier(JsonObject * t);
+gint64 tracker_stats_get_id(JsonObject * t);
+gint64 tracker_stats_get_last_announce_peer_count(JsonObject *t);
+gint64 tracker_stats_get_last_announce_time(JsonObject *t);
+gint64 tracker_stats_get_seeder_count(JsonObject *t);
+gint64 tracker_stats_get_leecher_count(JsonObject *t);
+const gchar *tracker_stats_get_announce_result(JsonObject *t);
+const gchar *tracker_stats_get_host(JsonObject *t);
 
 #endif                          /* TORRENT_H_ */

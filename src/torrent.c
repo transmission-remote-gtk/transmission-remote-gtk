@@ -41,9 +41,9 @@ JsonArray *torrent_get_priorities(JsonObject * t)
     return json_object_get_array_member(t, FIELD_PRIORITIES);
 }
 
-JsonArray *torrent_get_trackers(JsonObject * t)
+JsonArray *torrent_get_tracker_stats(JsonObject * t)
 {
-    return json_object_get_array_member(t, FIELD_TRACKERS);
+    return json_object_get_array_member(t, FIELD_TRACKER_STATS);
 }
 
 gint64 torrent_get_id(JsonObject * t)
@@ -222,13 +222,13 @@ gchar *torrent_get_status_string(gint64 value)
 
 gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
 {
-    GList *trackers = json_array_get_elements(torrent_get_trackers(t));
+    GList *trackers = json_array_get_elements(torrent_get_tracker_stats(t));
     gboolean ret = FALSE;
     GList *li;
 
     for (li = trackers; li; li = g_list_next(li)) {
         JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
-        const gchar *trackerAnnounce = tracker_get_announce(tracker);
+        const gchar *trackerAnnounce = tracker_stats_get_announce(tracker);
         gchar *trackerAnnounceHost =
             trg_gregex_get_first(rx, trackerAnnounce);
         int cmpResult = g_strcmp0(trackerAnnounceHost, search);
@@ -244,27 +244,17 @@ gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
     return ret;
 }
 
-gint64 tracker_get_id(JsonObject * t)
-{
-    return json_object_get_int_member(t, FIELD_ID);
-}
-
-gint64 tracker_get_tier(JsonObject * t)
-{
-    return json_object_get_int_member(t, FIELD_TIER);
-}
-
 gint64 torrent_get_left_until_done(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_LEFTUNTILDONE);
 }
 
-const gchar *tracker_get_announce(JsonObject * t)
+const gchar *tracker_stats_get_announce(JsonObject * t)
 {
     return json_object_get_string_member(t, FIELD_ANNOUNCE);
 }
 
-const gchar *tracker_get_scrape(JsonObject * t)
+const gchar *tracker_stats_get_scrape(JsonObject * t)
 {
     return json_object_get_string_member(t, FIELD_SCRAPE);
 }
@@ -285,4 +275,46 @@ JsonArray *get_torrents(JsonObject * response)
 JsonArray *torrent_get_files(JsonObject * args)
 {
     return json_object_get_array_member(args, FIELD_FILES);
+}
+
+/* tracker stats */
+
+gint64 tracker_stats_get_id(JsonObject * t)
+{
+    return json_object_get_int_member(t, FIELD_ID);
+}
+
+gint64 tracker_stats_get_tier(JsonObject * t)
+{
+    return json_object_get_int_member(t, FIELD_TIER);
+}
+
+gint64 tracker_stats_get_last_announce_peer_count(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_LAST_ANNOUNCE_PEER_COUNT);
+}
+
+gint64 tracker_stats_get_last_announce_time(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_LAST_ANNOUNCE_TIME);
+}
+
+gint64 tracker_stats_get_seeder_count(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_SEEDERCOUNT);
+}
+
+gint64 tracker_stats_get_leecher_count(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_LEECHERCOUNT);
+}
+
+const gchar *tracker_stats_get_announce_result(JsonObject *t)
+{
+    return json_object_get_string_member(t, FIELD_LAST_ANNOUNCE_RESULT);
+}
+
+const gchar *tracker_stats_get_host(JsonObject *t)
+{
+    return json_object_get_string_member(t, FIELD_HOST);
 }

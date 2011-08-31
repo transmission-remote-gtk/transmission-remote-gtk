@@ -69,13 +69,13 @@ void trg_trackers_model_update(TrgTrackersModel * model,
         return;
     }
 
-    trackers = json_array_get_elements(torrent_get_trackers(t));
+    trackers = json_array_get_elements(torrent_get_tracker_stats(t));
 
     for (li = trackers; li; li = g_list_next(li)) {
         tracker = json_node_get_object((JsonNode *) li->data);
-        trackerId = tracker_get_id(tracker);
-        announce = tracker_get_announce(tracker);
-        scrape = tracker_get_scrape(tracker);
+        trackerId = tracker_stats_get_id(tracker);
+        announce = tracker_stats_get_announce(tracker);
+        scrape = tracker_stats_get_scrape(tracker);
 
         if (mode == TORRENT_GET_MODE_FIRST
             || find_existing_model_item(GTK_TREE_MODEL(model),
@@ -87,7 +87,7 @@ void trg_trackers_model_update(TrgTrackersModel * model,
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
                            TRACKERCOL_ICON, GTK_STOCK_NETWORK, -1);
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
-                           TRACKERCOL_TIER, tracker_get_tier(tracker), -1);
+                           TRACKERCOL_TIER, tracker_stats_get_tier(tracker), -1);
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
                            TRACKERCOL_ANNOUNCE, announce, -1);
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
@@ -96,15 +96,33 @@ void trg_trackers_model_update(TrgTrackersModel * model,
                            TRACKERCOL_ID, trackerId, -1);
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
                            TRACKERCOL_UPDATESERIAL, updateSerial, -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                TRACKERCOL_LAST_ANNOUNCE_RESULT, tracker_stats_get_announce_result(tracker), -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                TRACKERCOL_LAST_ANNOUNCE_TIME, tracker_stats_get_last_announce_time(tracker), -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                TRACKERCOL_HOST, tracker_stats_get_host(tracker), -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT, tracker_stats_get_last_announce_peer_count(tracker), -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                TRACKERCOL_LEECHERCOUNT, tracker_stats_get_leecher_count(tracker), -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                TRACKERCOL_SEEDERCOUNT, tracker_stats_get_seeder_count(tracker), -1);
 #else
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
                            TRACKERCOL_ICON, GTK_STOCK_NETWORK,
                            TRACKERCOL_ID, trackerId,
                            TRACKERCOL_UPDATESERIAL, updateSerial,
-                           TRACKERCOL_TIER,
-                           tracker_get_tier(tracker),
-                           TRACKERCOL_ANNOUNCE,
-                           announce, TRACKERCOL_SCRAPE, scrape, -1);
+                           TRACKERCOL_TIER, tracker_stats_get_tier(tracker),
+                           TRACKERCOL_ANNOUNCE, announce,
+                           TRACKERCOL_SCRAPE, scrape,
+                           TRACKERCOL_HOST, tracker_stats_get_host(tracker),
+                           TRACKERCOL_LAST_ANNOUNCE_RESULT, tracker_stats_get_announce_result(tracker),
+                           TRACKERCOL_LAST_ANNOUNCE_TIME, tracker_stats_get_last_announce_time(tracker),
+                           TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT, tracker_stats_get_last_announce_peer_count(tracker),
+                           TRACKERCOL_LEECHERCOUNT, tracker_stats_get_leecher_count(tracker),
+                           TRACKERCOL_SEEDERCOUNT, tracker_stats_get_seeder_count(tracker),
+                           -1);
 #endif
     }
 
@@ -136,6 +154,12 @@ static void trg_trackers_model_init(TrgTrackersModel * self)
     column_types[TRACKERCOL_ANNOUNCE] = G_TYPE_STRING;
     column_types[TRACKERCOL_SCRAPE] = G_TYPE_STRING;
     column_types[TRACKERCOL_ID] = G_TYPE_INT64;
+    column_types[TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT] = G_TYPE_INT64;
+    column_types[TRACKERCOL_LAST_ANNOUNCE_TIME] = G_TYPE_INT64;
+    column_types[TRACKERCOL_SEEDERCOUNT] = G_TYPE_INT64;
+    column_types[TRACKERCOL_LEECHERCOUNT] = G_TYPE_INT64;
+    column_types[TRACKERCOL_HOST] = G_TYPE_STRING;
+    column_types[TRACKERCOL_LAST_ANNOUNCE_RESULT] = G_TYPE_STRING;
     column_types[TRACKERCOL_UPDATESERIAL] = G_TYPE_INT64;
 
     priv->accept = TRUE;
