@@ -128,6 +128,12 @@ float trg_client_get_version(TrgClient *tc)
     return priv->version;
 }
 
+gint64 trg_client_get_rpc_version(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return session_get_rpc_version(priv->session);
+}
+
 void trg_client_set_session(TrgClient * tc, JsonObject * session)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);

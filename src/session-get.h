@@ -52,6 +52,7 @@
 #define SGET_SPEED_LIMIT_UP                     "speed-limit-up"
 #define SGET_SPEED_LIMIT_UP_ENABLED             "speed-limit-up-enabled"
 #define SGET_VERSION                            "version"
+#define SGET_RPC_VERSION                        "rpc-version"
 #define SGET_TRASH_ORIGINAL_TORRENT_FILES       "trash-original-torrent-files"
 #define SGET_START_ADDED_TORRENTS               "start-added-torrents"
 #define SGET_RENAME_PARTIAL_FILES               "rename-partial-files"
@@ -97,5 +98,6 @@ gboolean session_get_download_queue_enabled(JsonObject * s);
 gint64 session_get_download_queue_size(JsonObject * s);
 gboolean session_get_seed_queue_enabled(JsonObject * s);
 gint64 session_get_seed_queue_size(JsonObject * s);
+gint64 session_get_rpc_version(JsonObject * s);
 
 #endif                          /* SESSION_GET_H_ */

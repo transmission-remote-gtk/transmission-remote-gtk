@@ -31,6 +31,11 @@ int session_get_version(JsonObject * s, float *version)
     return sscanf(versionStr, "%g", version);
 }
 
+gint64 session_get_rpc_version(JsonObject * s)
+{
+    return json_object_get_int_member(s, SGET_RPC_VERSION);
+}
+
 gboolean session_get_pex_enabled(JsonObject * s)
 {
     return json_object_get_boolean_member(s, SGET_PEX_ENABLED);
