@@ -176,8 +176,12 @@ int trg_client_populate_with_settings(TrgClient * tc)
         trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_PROFILE);
 
     host = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
-    if (!host || strlen(host) < 1)
+    if (!host) {
         return TRG_NO_HOSTNAME_SET;
+    } else if (strlen(host) < 1) {
+        free(host);
+        return TRG_NO_HOSTNAME_SET;
+    }
 
     priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE);
 

@@ -208,6 +208,8 @@ struct _TrgMainWindowPrivate {
 
     GtkWidget *hpaned, *vpaned;
     GtkWidget *filterEntry, *filterEntryClearButton;
+
+    gint width, height;
 };
 
 enum {
@@ -316,12 +318,10 @@ static gboolean delete_event(GtkWidget * w, GdkEvent * event G_GNUC_UNUSED, gpoi
 static void destroy_window(GtkWidget * w, gpointer data G_GNUC_UNUSED) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(w);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
-    int width, height;
 
-    gtk_window_get_size(GTK_WINDOW(w), &width, &height);
-    trg_prefs_set_int(prefs, TRG_PREFS_KEY_WINDOW_HEIGHT, height,
+    trg_prefs_set_int(prefs, TRG_PREFS_KEY_WINDOW_HEIGHT, priv->height,
             TRG_PREFS_GLOBAL);
-    trg_prefs_set_int(prefs, TRG_PREFS_KEY_WINDOW_WIDTH, width,
+    trg_prefs_set_int(prefs, TRG_PREFS_KEY_WINDOW_WIDTH, priv->width,
             TRG_PREFS_GLOBAL);
     trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTreeView));
     trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTreeView));
@@ -1553,6 +1553,16 @@ TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win) {
     return priv->stateSelector;
 }
 
+static gboolean trg_main_window_config_event(GtkWidget *widget,
+        GdkEvent  *event,
+        gpointer   user_data G_GNUC_UNUSED)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(widget);
+    priv->width = event->configure.width;
+    priv->height = event->configure.height;
+    return FALSE;
+}
+
 static GObject *trg_main_window_constructor(GType type,
         guint n_construct_properties, GObjectConstructParam * construct_params) {
     TrgMainWindow *self;
@@ -1581,7 +1591,6 @@ static GObject *trg_main_window_constructor(GType type,
     if (priv->icon)
         gtk_window_set_default_icon(priv->icon);
 
-    notify_init(PACKAGE_NAME);
     gtk_window_set_title(GTK_WINDOW(self), PACKAGE_NAME);
     gtk_window_set_default_size(GTK_WINDOW(self), 1000, 600);
     g_signal_connect(G_OBJECT(self), "delete-event",
@@ -1590,6 +1599,8 @@ static GObject *trg_main_window_constructor(GType type,
             NULL);
     g_signal_connect(G_OBJECT(self), "window-state-event",
             G_CALLBACK(window_state_event), NULL);
+    g_signal_connect(G_OBJECT(self), "configure-event",
+            G_CALLBACK(trg_main_window_config_event), NULL);
 
     priv->torrentModel = trg_torrent_model_new();
     trg_client_set_torrent_table(priv->client,
