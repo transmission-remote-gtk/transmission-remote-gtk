@@ -343,6 +343,7 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         break;
     }
 
+    gtk_tree_view_column_set_min_width(column, 0);
     gtk_tree_view_column_set_resizable(column, TRUE);
     gtk_tree_view_column_set_reorderable(column, TRUE);
     gtk_tree_view_column_set_sort_column_id(column, desc->model_column);

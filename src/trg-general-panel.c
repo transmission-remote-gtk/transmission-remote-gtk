@@ -22,6 +22,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include "trg-client.h"
 #include "torrent.h"
 #include "util.h"
 #include "trg-general-panel.h"
@@ -61,6 +62,7 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_downloaddir_label;
     GtkLabel *gen_error_label;
     GtkTreeModel *model;
+    TrgClient *tc;
 };
 
 void trg_general_panel_clear(TrgGeneralPanel * panel)
@@ -108,11 +110,12 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gint sizeOfBuf;
     gchar *statusString;
     const gchar *errorStr;
-    gint64 eta, uploaded, downloaded;
+    gint64 eta, uploaded, downloaded, rpcv;
     gint seeders, leechers;
     GtkLabel *keyLabel;
 
     priv = TRG_GENERAL_PANEL_GET_PRIVATE(panel);
+    rpcv = trg_client_get_rpc_version(priv->tc);
 
     sizeOfBuf = sizeof(buf);
 
@@ -140,7 +143,7 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), _("N/A"));
     }
 
-    statusString = torrent_get_status_string(torrent_get_status(t));
+    statusString = torrent_get_status_string(rpcv, torrent_get_status(t));
     gtk_label_set_text(GTK_LABEL(priv->gen_status_label), statusString);
     g_free(statusString);
 
@@ -292,7 +295,7 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
     gtk_widget_set_sensitive(GTK_WIDGET(self), FALSE);
 }
 
-TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model)
+TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model, TrgClient *tc)
 {
     GObject *obj;
     TrgGeneralPanelPrivate *priv;
@@ -301,6 +304,7 @@ TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model)
 
     priv = TRG_GENERAL_PANEL_GET_PRIVATE(obj);
     priv->model = model;
+    priv->tc = tc;
 
     return TRG_GENERAL_PANEL(obj);
 }

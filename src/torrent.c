@@ -22,6 +22,7 @@
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
+#include "trg-client.h"
 #include "torrent.h"
 #include "protocol-constants.h"
 #include "util.h"
@@ -176,7 +177,71 @@ gdouble torrent_get_percent_done(JsonObject * t)
     }
 }
 
-gchar *torrent_get_status_icon(guint flags)
+guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 downRate, gint64 upRate)
+{
+    guint32 flags = 0;
+    if (rpcv >= NEW_STATUS_RPC_VERSION) {
+        switch (status) {
+        case TR_STATUS_STOPPED:
+            flags |= TORRENT_FLAG_PAUSED;
+            break;
+        case TR_STATUS_CHECK_WAIT:
+            flags |= TORRENT_FLAG_WAITING_CHECK;
+            flags |= TORRENT_FLAG_CHECKING;
+            break;
+        case TR_STATUS_CHECK:
+            flags |= TORRENT_FLAG_CHECKING;
+            break;
+        case TR_STATUS_DOWNLOAD_WAIT:
+            flags |= TORRENT_FLAG_DOWNLOADING_WAIT;
+            flags |= TORRENT_FLAG_QUEUED;
+            break;
+        case TR_STATUS_DOWNLOAD:
+            flags |= TORRENT_FLAG_DOWNLOADING;
+            break;
+        case TR_STATUS_SEED_WAIT:
+            flags |= TORRENT_FLAG_SEEDING_WAIT;
+            break;
+        case TR_STATUS_SEED:
+            flags |= TORRENT_FLAG_SEEDING;
+            break;
+        }
+    } else {
+        switch (status) {
+        case OLD_STATUS_DOWNLOADING:
+            flags |= TORRENT_FLAG_DOWNLOADING;
+            break;
+        case OLD_STATUS_PAUSED:
+            flags |= TORRENT_FLAG_PAUSED;
+            break;
+        case OLD_STATUS_SEEDING:
+            flags |= TORRENT_FLAG_SEEDING;
+            break;
+        case OLD_STATUS_CHECKING:
+            flags |= TORRENT_FLAG_CHECKING;
+            break;
+        case OLD_STATUS_WAITING_TO_CHECK:
+            flags |= TORRENT_FLAG_WAITING_CHECK;
+            flags |= TORRENT_FLAG_CHECKING;
+            break;
+        }
+    }
+
+    if (torrent_get_is_finished(t) == TRUE)
+        flags |= TORRENT_FLAG_COMPLETE;
+    else
+        flags |= TORRENT_FLAG_INCOMPLETE;
+
+    if (downRate > 0 || upRate > 0)
+        flags |= TORRENT_FLAG_ACTIVE;
+
+    if (strlen(torrent_get_errorstr(t)) > 0)
+        flags |= TORRENT_FLAG_ERROR;
+
+    return flags;
+}
+
+gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
 {
     if (flags & TORRENT_FLAG_ERROR)
         return g_strdup(GTK_STOCK_DIALOG_WARNING);
@@ -202,22 +267,44 @@ const gchar *torrent_get_errorstr(JsonObject * t)
     return json_object_get_string_member(t, FIELD_ERRORSTR);
 }
 
-gchar *torrent_get_status_string(gint64 value)
+gchar *torrent_get_status_string(gint64 rpcv, gint64 value)
 {
-    switch (value) {
-    case STATUS_DOWNLOADING:
-        return g_strdup(_("Downloading"));
-    case STATUS_PAUSED:
-        return g_strdup(_("Paused"));
-    case STATUS_SEEDING:
-        return g_strdup(_("Seeding"));
-    case STATUS_CHECKING:
-        return g_strdup(_("Checking"));
-    case STATUS_WAITING_TO_CHECK:
-        return g_strdup(_("Waiting To Check"));
-    default:
-        return g_strdup(_("Unknown"));
+    if (rpcv >= NEW_STATUS_RPC_VERSION)
+    {
+        switch (value) {
+        case TR_STATUS_DOWNLOAD:
+            return g_strdup(_("Downloading"));
+        case TR_STATUS_DOWNLOAD_WAIT:
+            return g_strdup(_("Queued download"));
+        case TR_STATUS_CHECK_WAIT:
+            return g_strdup(_("Waiting To Check"));
+        case TR_STATUS_CHECK:
+            return g_strdup(_("Checking"));
+        case TR_STATUS_SEED_WAIT:
+            return g_strdup(_("Queued seed"));
+        case TR_STATUS_SEED:
+            return g_strdup(_("Seeding"));
+        case TR_STATUS_STOPPED:
+            return g_strdup(_("Paused"));
+        }
     }
+    else
+    {
+        switch (value) {
+        case OLD_STATUS_DOWNLOADING:
+            return g_strdup(_("Downloading"));
+        case OLD_STATUS_PAUSED:
+            return g_strdup(_("Paused"));
+        case OLD_STATUS_SEEDING:
+            return g_strdup(_("Seeding"));
+        case OLD_STATUS_CHECKING:
+            return g_strdup(_("Checking"));
+        case OLD_STATUS_WAITING_TO_CHECK:
+            return g_strdup(_("Waiting To Check"));
+        }
+    }
+
+    return g_strdup(_("Unknown"));
 }
 
 gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)

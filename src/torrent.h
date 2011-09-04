@@ -22,17 +22,22 @@
 
 #include <json-glib/json-glib.h>
 
+#include "trg-client.h"
+
 #define TORRENT_FLAG_ERROR             (1 << 0) /* 0x01 */
 #define TORRENT_FLAG_COMPLETE          (1 << 1) /* 0x02 */
 #define TORRENT_FLAG_INCOMPLETE        (1 << 2) /* 0x04 */
 #define TORRENT_FLAG_SEEDING           (1 << 3) /* 0x08 */
-#define TORRENT_FLAG_CHECKING          (1 << 4) /* 0x16 */
-#define TORRENT_FLAG_WAITING_CHECK     (1 << 5) /* 0x32 */
-#define TORRENT_FLAG_DOWNLOADING       (1 << 6) /* 0x64 */
-#define TORRENT_FLAG_PAUSED            (1 << 7) /* 0x128 */
-#define TORRENT_FLAG_ACTIVE            (1 << 8) /* 0x256 */
-#define FILTER_FLAG_TRACKER            (1 << 9) /* 0x512 */
-#define FILTER_FLAG_DIR                (1 << 10) /* 0x1024 */
+#define TORRENT_FLAG_SEEDING_WAIT      (1 << 4) /* 0x16 */
+#define TORRENT_FLAG_CHECKING          (1 << 5) /* 0x32 */
+#define TORRENT_FLAG_WAITING_CHECK     (1 << 6) /* 0x64 */
+#define TORRENT_FLAG_DOWNLOADING       (1 << 7) /* 0x128 */
+#define TORRENT_FLAG_DOWNLOADING_WAIT  (1 << 8) /* 0x256 */
+#define TORRENT_FLAG_PAUSED            (1 << 10) /* 0x512 */
+#define TORRENT_FLAG_QUEUED            (1 << 11) /* 0x1024 */
+#define TORRENT_FLAG_ACTIVE            (1 << 12) /* 0x2048 */
+#define FILTER_FLAG_TRACKER            (1 << 13) /* 0x4096 */
+#define FILTER_FLAG_DIR                (1 << 14) /* 0x8192 */
 
 #define TORRENT_ADD_FLAG_PAUSED        (1 << 0) /* 0x01 */
 #define TORRENT_ADD_FLAG_DELETE        (1 << 1) /* 0x02 */
@@ -49,8 +54,9 @@ const gchar *torrent_get_download_dir(JsonObject * t);
 gint64 torrent_get_have_unchecked(JsonObject * t);
 gint64 torrent_get_have_valid(JsonObject * t);
 gint64 torrent_get_status(JsonObject * t);
-gchar *torrent_get_status_string(gint64 value);
-gchar *torrent_get_status_icon(guint flags);
+gchar *torrent_get_status_string(gint64 rpcv, gint64 value);
+gchar *torrent_get_status_icon(gint64 rpcv, guint flags);
+guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 downRate, gint64 upRate);
 JsonArray *torrent_get_peers(JsonObject * t);
 JsonArray *torrent_get_tracker_stats(JsonObject * t);
 JsonArray *torrent_get_wanted(JsonObject * t);

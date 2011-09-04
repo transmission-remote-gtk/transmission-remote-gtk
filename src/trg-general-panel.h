@@ -25,6 +25,7 @@
 
 #include <glib-object.h>
 
+#include "trg-client.h"
 #include "trg-torrent-model.h"
 
 G_BEGIN_DECLS
@@ -49,7 +50,7 @@ typedef struct {
 
 GType trg_general_panel_get_type(void);
 
-TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model);
+TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model, TrgClient *tc);
 
 G_END_DECLS
     void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,

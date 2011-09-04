@@ -118,13 +118,28 @@
 #define PARAM_PAUSED            "paused"
 #define PARAM_TAG               "tag"
 
-enum {
-    STATUS_WAITING_TO_CHECK = 1,
-    STATUS_CHECKING = 2,
-    STATUS_DOWNLOADING = 4,
-    STATUS_SEEDING = 8,
-    STATUS_PAUSED = 16
-};
+/* The rpc-version >= that the status field of torrent-get changed */
+#define NEW_STATUS_RPC_VERSION  14
+
+typedef enum {
+    OLD_STATUS_WAITING_TO_CHECK = 1,
+    OLD_STATUS_CHECKING = 2,
+    OLD_STATUS_DOWNLOADING = 4,
+    OLD_STATUS_SEEDING = 8,
+    OLD_STATUS_PAUSED = 16
+} trg_old_status;
+
+typedef enum
+{
+    TR_STATUS_STOPPED        = 0, /* Torrent is stopped */
+    TR_STATUS_CHECK_WAIT     = 1, /* Queued to check files */
+    TR_STATUS_CHECK          = 2, /* Checking files */
+    TR_STATUS_DOWNLOAD_WAIT  = 3, /* Queued to download */
+    TR_STATUS_DOWNLOAD       = 4, /* Downloading */
+    TR_STATUS_SEED_WAIT      = 5, /* Queued to seed */
+    TR_STATUS_SEED           = 6  /* Seeding */
+}
+tr_torrent_activity;
 
 enum {
     TR_PRI_LOW = -1,

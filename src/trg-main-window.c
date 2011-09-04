@@ -675,7 +675,7 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win) {
     gtk_widget_set_size_request(notebook, -1, 185);
 
     priv->genDetails
-            = trg_general_panel_new(GTK_TREE_MODEL(priv->torrentModel));
+            = trg_general_panel_new(GTK_TREE_MODEL(priv->torrentModel), priv->client);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             GTK_WIDGET(priv->genDetails), gtk_label_new(_("General")));
 

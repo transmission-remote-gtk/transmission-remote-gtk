@@ -50,8 +50,6 @@ struct _TrgTorrentModelPrivate {
     GHashTable *ht;
 };
 
-static guint32 torrent_get_flags(JsonObject * t, gint64 status, gint64 downRate, gint64 upRate);
-
 static void trg_torrent_model_dispose(GObject * object)
 {
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(object);
@@ -60,7 +58,7 @@ static void trg_torrent_model_dispose(GObject * object)
 }
 
 static void
-update_torrent_iter(TrgTorrentModel * model, gint64 serial,
+update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                     GtkTreeIter * iter, JsonObject * t,
                     trg_torrent_model_update_stats * stats);
 
@@ -198,42 +196,6 @@ gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model)
                         (G_OBJECT(model), PROP_REMOVE_IN_PROGRESS));
 }
 
-static guint32 torrent_get_flags(JsonObject * t, gint64 status, gint64 downRate, gint64 upRate)
-{
-    guint32 flags = 0;
-    switch (status) {
-    case STATUS_DOWNLOADING:
-        flags |= TORRENT_FLAG_DOWNLOADING;
-        break;
-    case STATUS_PAUSED:
-        flags |= TORRENT_FLAG_PAUSED;
-        break;
-    case STATUS_SEEDING:
-        flags |= TORRENT_FLAG_SEEDING;
-        break;
-    case STATUS_CHECKING:
-        flags |= TORRENT_FLAG_CHECKING;
-        break;
-    case STATUS_WAITING_TO_CHECK:
-        flags |= TORRENT_FLAG_WAITING_CHECK;
-        flags |= TORRENT_FLAG_CHECKING;
-        break;
-    }
-
-    if (torrent_get_is_finished(t) == TRUE)
-        flags |= TORRENT_FLAG_COMPLETE;
-    else
-        flags |= TORRENT_FLAG_INCOMPLETE;
-
-    if (downRate > 0 || upRate > 0)
-        flags |= TORRENT_FLAG_ACTIVE;
-
-    if (strlen(torrent_get_errorstr(t)) > 0)
-        flags |= TORRENT_FLAG_ERROR;
-
-    return flags;
-}
-
 static gboolean
 trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
                                          GtkTreePath * path G_GNUC_UNUSED,
@@ -257,7 +219,7 @@ trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
 }
 
 static void
-update_torrent_iter(TrgTorrentModel * model, gint64 serial,
+update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                     GtkTreeIter * iter, JsonObject * t,
                     trg_torrent_model_update_stats * stats)
 {
@@ -279,9 +241,9 @@ update_torrent_iter(TrgTorrentModel * model, gint64 serial,
     id = torrent_get_id(t);
 
     status = torrent_get_status(t);
-    statusString = torrent_get_status_string(status);
-    newFlags = torrent_get_flags(t, status, downRate, upRate);
-    statusIcon = torrent_get_status_icon(newFlags);
+    statusString = torrent_get_status_string(rpcv, status);
+    newFlags = torrent_get_flags(t, rpcv, status, downRate, upRate);
+    statusIcon = torrent_get_status_icon(rpcv, newFlags);
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
                        TORRENT_COLUMN_FLAGS, &lastFlags,
@@ -458,6 +420,8 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
     gpointer *result;
     gboolean addRemove = FALSE;
 
+    gint64 rpcv = trg_client_get_rpc_version(tc);
+
     args = get_arguments(response);
     torrentList = json_array_get_elements(get_torrents(args));
 
@@ -473,7 +437,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
         if (!result) {
             gtk_list_store_append(GTK_LIST_STORE(model), &iter);
 
-            update_torrent_iter(model, trg_client_get_serial(tc), &iter, t, stats);
+            update_torrent_iter(model, rpcv, trg_client_get_serial(tc), &iter, t, stats);
 
             path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
             rr = gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
@@ -491,7 +455,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
             if (path) {
                 if (gtk_tree_model_get_iter
                     (GTK_TREE_MODEL(model), &iter, path)) {
-                    update_torrent_iter(model, trg_client_get_serial(tc), &iter, t,
+                    update_torrent_iter(model, rpcv, trg_client_get_serial(tc), &iter, t,
                                         stats);
                 }
                 gtk_tree_path_free(path);
