@@ -179,7 +179,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
     if (!host) {
         return TRG_NO_HOSTNAME_SET;
     } else if (strlen(host) < 1) {
-        free(host);
+        g_free(host);
         return TRG_NO_HOSTNAME_SET;
     }
 

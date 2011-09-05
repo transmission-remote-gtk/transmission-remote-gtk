@@ -31,6 +31,11 @@ int session_get_version(JsonObject * s, float *version)
     return sscanf(versionStr, "%g", version);
 }
 
+gint64 session_get_download_dir_free_space(JsonObject *s)
+{
+    return json_object_get_int_member(s, SGET_DOWNLOAD_DIR_FREE_SPACE);
+}
+
 gint64 session_get_rpc_version(JsonObject * s)
 {
     return json_object_get_int_member(s, SGET_RPC_VERSION);

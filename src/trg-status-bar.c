@@ -26,14 +26,15 @@
 #include "session-get.h"
 #include "util.h"
 
-G_DEFINE_TYPE(TrgStatusBar, trg_status_bar, GTK_TYPE_STATUSBAR)
+G_DEFINE_TYPE(TrgStatusBar, trg_status_bar, GTK_TYPE_HBOX)
 #define TRG_STATUS_BAR_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_STATUS_BAR, TrgStatusBarPrivate))
 typedef struct _TrgStatusBarPrivate TrgStatusBarPrivate;
 
 struct _TrgStatusBarPrivate {
-    guint connectionCtx;
-    guint countSpeedsCtx;
+    GtkWidget *speed_lbl;
+    GtkWidget *free_lbl;
+    GtkWidget *info_lbl;
 };
 
 static void trg_status_bar_class_init(TrgStatusBarClass * klass)
@@ -41,26 +42,36 @@ static void trg_status_bar_class_init(TrgStatusBarClass * klass)
     g_type_class_add_private(klass, sizeof(TrgStatusBarPrivate));
 }
 
+void trg_status_bar_reset(TrgStatusBar *sb)
+{
+    TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
+
+    gtk_label_set_text(GTK_LABEL(priv->info_lbl), _("Disconnected"));
+    gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
+    gtk_label_set_text(GTK_LABEL(priv->speed_lbl), "");
+}
+
 static void trg_status_bar_init(TrgStatusBar * self)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(self);
+    gtk_container_set_border_width (GTK_CONTAINER(self), 2);
 
-    priv->connectionCtx =
-        gtk_statusbar_get_context_id(GTK_STATUSBAR(self), "connection");
-    priv->countSpeedsCtx =
-        gtk_statusbar_get_context_id(GTK_STATUSBAR(self),
-                                     "counts and speeds");
+    priv->info_lbl = gtk_label_new(_("Disconnected"));
+    gtk_box_pack_start(GTK_BOX(self), priv->info_lbl, FALSE, TRUE, 0);
+
+    priv->speed_lbl = gtk_label_new(NULL);
+    gtk_box_pack_end(GTK_BOX(self), priv->speed_lbl, FALSE, TRUE, 10);
+
+    priv->free_lbl = gtk_label_new(NULL);
+    gtk_box_pack_end(GTK_BOX(self), priv->free_lbl, FALSE, TRUE, 30);
 }
 
 void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
                                         const gchar * msg)
 {
-    TrgStatusBarPrivate *priv;
+    TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
 
-    priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
-
-    gtk_statusbar_pop(GTK_STATUSBAR(sb), priv->connectionCtx);
-    gtk_statusbar_push(GTK_STATUSBAR(sb), priv->connectionCtx, msg);
+    gtk_label_set_text(GTK_LABEL(priv->info_lbl), msg);
 }
 
 void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
@@ -72,7 +83,7 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
     statusMsg =
         g_strdup_printf
         (_("Connected to Transmission %g, getting torrents..."), version);
-    g_printf("%s\n", statusMsg);
+    g_message("%s", statusMsg);
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);
 }
@@ -83,15 +94,15 @@ void trg_status_bar_update(TrgStatusBar * sb,
 {
     TrgStatusBarPrivate *priv;
     JsonObject *session;
-    gchar *statusBarUpdate;
-    gint64 uplimitraw, downlimitraw;
+    gchar *speedText, *infoText;
+    gint64 uplimitraw, downlimitraw, freeSpaceRaw;
     gchar downRateTotalString[32], upRateTotalString[32];
-    gchar uplimit[64], downlimit[64];
+    gchar uplimit[64], downlimit[64], freeSpace[64];
 
     priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     session = trg_client_get_session(client);
 
-    /* The session should always exist otherwise this function wouldn't be called */
+    // The session should always exist otherwise this function wouldn't be called
     downlimitraw =
         json_object_get_boolean_member(session,
                                        SGET_SPEED_LIMIT_DOWN_ENABLED) ?
@@ -122,19 +133,34 @@ void trg_status_bar_update(TrgStatusBar * sb,
                    downlimitstring);
     }
 
-    statusBarUpdate =
+    speedText = g_strdup_printf(_("Down: %s%s, Up: %s%s"), downRateTotalString,
+         downlimitraw >= 0 ? downlimit : "", upRateTotalString,
+         uplimitraw >= 0 ? uplimit : "");
+
+    infoText =
         g_strdup_printf
         (ngettext
-         ("%d torrent ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused",
-          "%d torrents ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused",
-          stats->count), stats->count, downRateTotalString,
-         downlimitraw >= 0 ? downlimit : "", upRateTotalString,
-         uplimitraw >= 0 ? uplimit : "", stats->seeding, stats->down,
+         ("%d torrent:  %d seeding, %d downloading, %d paused",
+          "%d torrents: %d seeding, %d downloading, %d paused",
+          stats->count), stats->count, stats->seeding, stats->down,
          stats->paused);
-    gtk_statusbar_pop(GTK_STATUSBAR(sb), priv->countSpeedsCtx);
-    gtk_statusbar_push(GTK_STATUSBAR(sb),
-                       priv->countSpeedsCtx, statusBarUpdate);
-    g_free(statusBarUpdate);
+
+    gtk_label_set_text(GTK_LABEL(priv->info_lbl), infoText);
+    gtk_label_set_text(GTK_LABEL(priv->speed_lbl), speedText);
+
+    freeSpaceRaw = session_get_download_dir_free_space(session);
+    if (freeSpaceRaw >= 0) {
+        gchar *freeSpaceString;
+        trg_strlsize(freeSpace, freeSpaceRaw);
+        freeSpaceString = g_strdup_printf(_("Free space: %s"), freeSpace);
+        gtk_label_set_text(GTK_LABEL(priv->free_lbl), freeSpaceString);
+        g_free(freeSpaceString);
+    } else {
+        gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
+    }
+
+    g_free(speedText);
+    g_free(infoText);
 }
 
 

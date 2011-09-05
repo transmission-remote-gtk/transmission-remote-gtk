@@ -22,6 +22,7 @@
 
 #include <glib-object.h>
 
+#define SGET_DOWNLOAD_DIR_FREE_SPACE            "download-dir-free-space"
 #define SGET_ALT_SPEED_DOWN                     "alt-speed-down"
 #define SGET_ALT_SPEED_ENABLED                  "alt-speed-enabled"
 #define SGET_ALT_SPEED_TIME_BEGIN               "alt-speed-time-begin"
@@ -99,5 +100,6 @@ gint64 session_get_download_queue_size(JsonObject * s);
 gboolean session_get_seed_queue_enabled(JsonObject * s);
 gint64 session_get_seed_queue_size(JsonObject * s);
 gint64 session_get_rpc_version(JsonObject * s);
+gint64 session_get_download_dir_free_space(JsonObject *s);
 
 #endif                          /* SESSION_GET_H_ */

@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #ifndef TRG_STATUS_BAR_H_
 #define TRG_STATUS_BAR_H_
 
@@ -39,11 +38,11 @@ G_BEGIN_DECLS
 #define TRG_STATUS_BAR_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_STATUS_BAR, TrgStatusBarClass))
     typedef struct {
-    GtkStatusbar parent;
+    GtkHBox parent;
 } TrgStatusBar;
 
 typedef struct {
-    GtkStatusbarClass parent_class;
+    GtkHBoxClass parent_class;
 } TrgStatusBarClass;
 
 GType trg_status_bar_get_type(void);
@@ -57,5 +56,6 @@ G_END_DECLS
 void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session);
 void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
                                         const gchar * msg);
+void trg_status_bar_reset(TrgStatusBar *sb);
 
 #endif                          /* TRG_STATUS_BAR_H_ */

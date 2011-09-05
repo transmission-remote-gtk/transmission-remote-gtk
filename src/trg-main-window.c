@@ -165,8 +165,6 @@ static gboolean torrent_tv_button_pressed_cb(GtkWidget * treeview,
         GdkEventButton * event, gpointer userdata);
 static gboolean torrent_tv_popup_menu_cb(GtkWidget * treeview,
         gpointer userdata);
-static void status_bar_text_pushed(GtkStatusbar * statusbar, guint context_id,
-        gchar * text, gpointer user_data);
 static gboolean window_state_event(GtkWidget * widget,
         GdkEventWindowState * event, gpointer trayIcon);
 
@@ -429,7 +427,7 @@ static void disconnect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
     trg_main_window_conn_changed(TRG_MAIN_WINDOW(data), FALSE);
-    trg_status_bar_push_connection_msg(priv->statusBar, "Disconnected.");
+    trg_status_bar_reset(priv->statusBar);
 }
 
 static void connect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
@@ -1473,14 +1471,6 @@ static gboolean torrent_tv_popup_menu_cb(GtkWidget * treeview,
     return TRUE;
 }
 
-static void status_bar_text_pushed(GtkStatusbar * statusbar, guint context_id,
-        gchar * text, gpointer user_data) {
-    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(user_data);
-
-    if (priv->statusIcon)
-        gtk_status_icon_set_tooltip(priv->statusIcon, text);
-}
-
 static gboolean window_state_event(GtkWidget * widget,
         GdkEventWindowState * event, gpointer trayIcon) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(widget);
@@ -1706,8 +1696,8 @@ static GObject *trg_main_window_constructor(GType type,
         priv->statusIcon = NULL;
 
     priv->statusBar = trg_status_bar_new();
-    g_signal_connect(priv->statusBar, "text-pushed",
-            G_CALLBACK(status_bar_text_pushed), self);
+    /*g_signal_connect(priv->statusBar, "text-pushed",
+            G_CALLBACK(status_bar_text_pushed), self);*/
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(priv->statusBar), FALSE,
             FALSE, 2);
 

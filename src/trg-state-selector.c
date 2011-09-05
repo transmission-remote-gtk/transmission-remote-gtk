@@ -34,7 +34,7 @@ enum {
     SELECTOR_SIGNAL_COUNT
 };
 
-#define N_CATEGORIES 10
+#define N_CATEGORIES 12
 
 static guint signals[SELECTOR_SIGNAL_COUNT] = { 0 };
 
@@ -477,18 +477,20 @@ static void trg_state_selector_init(TrgStateSelector * self)
     trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_DOWN,
                                  _("Downloading"),
                                  TORRENT_FLAG_DOWNLOADING);
+    trg_state_selector_add_state(store, &iter, GTK_STOCK_MEDIA_REWIND, _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT);
+    trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_UP,
+                                 _("Seeding"), TORRENT_FLAG_SEEDING);
+    trg_state_selector_add_state(store, &iter, GTK_STOCK_MEDIA_FORWARD, _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_MEDIA_PAUSE,
                                  _("Paused"), TORRENT_FLAG_PAUSED);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_REFRESH,
-                                 _("Checking"), TORRENT_FLAG_CHECKING);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_APPLY,
                                  _("Complete"), TORRENT_FLAG_COMPLETE);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_SELECT_ALL,
                                  _("Incomplete"), TORRENT_FLAG_INCOMPLETE);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_UP,
-                                 _("Seeding"), TORRENT_FLAG_SEEDING);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_NETWORK,
                                  _("Active"), TORRENT_FLAG_ACTIVE);
+    trg_state_selector_add_state(store, &iter, GTK_STOCK_REFRESH,
+                                 _("Checking"), TORRENT_FLAG_CHECKING);
     trg_state_selector_add_state(store, &iter, GTK_STOCK_DIALOG_WARNING,
                                  _("Error"), TORRENT_FLAG_ERROR);
     trg_state_selector_add_state(store, &iter, NULL, NULL, 0);
