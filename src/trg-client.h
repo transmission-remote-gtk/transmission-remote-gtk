@@ -30,6 +30,7 @@
 #define TORRENT_GET_MODE_UPDATE 3
 
 #define TRG_NO_HOSTNAME_SET -2
+#define SESSION_UPDATE_DIVISOR 10
 
 #include <json-glib/json-glib.h>
 #include <glib-object.h>

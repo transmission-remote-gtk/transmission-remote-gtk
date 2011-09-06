@@ -861,12 +861,16 @@ static gboolean trg_update_torrents_timerfunc(gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     TrgClient *tc = priv->client;
 
-    if (trg_client_is_connected(tc))
+    if (trg_client_is_connected(tc)) {
         dispatch_async(
                 tc,
                 torrent_get(trg_client_get_activeonlyupdate(tc) ? -2 : -1),
                 trg_client_get_activeonlyupdate(tc) ? on_torrent_get_active
                         : on_torrent_get_update, data);
+
+        if (trg_client_get_serial(tc) % SESSION_UPDATE_DIVISOR == 0)
+            dispatch_async(priv->client, session_get(), on_session_get, data);
+    }
 
     return FALSE;
 }

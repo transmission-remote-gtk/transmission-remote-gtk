@@ -87,7 +87,7 @@ trg_cell_renderer_numgtzero_class_init(TrgCellRendererNumgtzeroClass * klass)
                                     g_param_spec_int64("value",
                                                        "Value",
                                                        "Value",
-                                                       0,
+                                                       INT64_MIN,
                                                        INT64_MAX,
                                                        0,
                                                        G_PARAM_READWRITE

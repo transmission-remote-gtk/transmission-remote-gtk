@@ -121,7 +121,8 @@ static be_node *_be_decode(const char **data, gint64 * data_len)
         --(*data_len);
         ++(*data);
 
-        ret->val.l[i] = NULL;
+        if (i > 0)
+            ret->val.l[i] = NULL;
 
         return ret;
     } else if (dc == 'd') {
@@ -143,7 +144,8 @@ static be_node *_be_decode(const char **data, gint64 * data_len)
         --(*data_len);
         ++(*data);
 
-        ret->val.d[i].val = NULL;
+        if (i > 0)
+            ret->val.d[i].val = NULL;
 
         return ret;
     } else if (dc == 'i') {
