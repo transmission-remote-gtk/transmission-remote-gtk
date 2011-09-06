@@ -63,6 +63,8 @@ typedef struct {
 
 typedef struct {
   GObjectClass parent_class;
+  void (*session_updated) (TrgClient *tc, JsonObject * session, gpointer data);
+
 } TrgClientClass;
 
 GType trg_client_get_type (void);

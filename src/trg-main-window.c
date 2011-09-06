@@ -1557,6 +1557,11 @@ static gboolean trg_main_window_config_event(GtkWidget *widget,
     return FALSE;
 }
 
+static void trg_client_session_updated_cb(TrgClient *tc, JsonObject *session, gpointer data)
+{
+    trg_status_bar_session_update(TRG_STATUS_BAR(data), session);
+}
+
 static GObject *trg_main_window_constructor(GType type,
         guint n_construct_properties, GObjectConstructParam * construct_params) {
     TrgMainWindow *self;
@@ -1700,6 +1705,9 @@ static GObject *trg_main_window_constructor(GType type,
         priv->statusIcon = NULL;
 
     priv->statusBar = trg_status_bar_new();
+    g_signal_connect(priv->client, "session-updated",
+            G_CALLBACK(trg_client_session_updated_cb), priv->statusBar);
+
     /*g_signal_connect(priv->statusBar, "text-pushed",
             G_CALLBACK(status_bar_text_pushed), self);*/
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(priv->statusBar), FALSE,

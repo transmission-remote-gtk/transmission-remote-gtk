@@ -88,6 +88,26 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
     g_free(statusMsg);
 }
 
+void trg_status_bar_session_update(TrgStatusBar *sb, JsonObject *session)
+{
+    TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
+    gint64 free = session_get_download_dir_free_space(session);
+    gchar freeSpace[64];
+
+    if (free >= 0) {
+        gchar *freeSpaceString;
+        trg_strlsize(freeSpace, free);
+        freeSpaceString = g_strdup_printf(_("Free space: %s"), freeSpace);
+        gtk_label_set_text(GTK_LABEL(priv->free_lbl), freeSpaceString);
+        g_free(freeSpaceString);
+    } else {
+        gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
+    }
+
+
+
+}
+
 void trg_status_bar_update(TrgStatusBar * sb,
                            trg_torrent_model_update_stats * stats,
                            TrgClient * client)
@@ -95,9 +115,9 @@ void trg_status_bar_update(TrgStatusBar * sb,
     TrgStatusBarPrivate *priv;
     JsonObject *session;
     gchar *speedText, *infoText;
-    gint64 uplimitraw, downlimitraw, freeSpaceRaw;
+    gint64 uplimitraw, downlimitraw;
     gchar downRateTotalString[32], upRateTotalString[32];
-    gchar uplimit[64], downlimit[64], freeSpace[64];
+    gchar uplimit[64], downlimit[64];
 
     priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     session = trg_client_get_session(client);
@@ -148,16 +168,6 @@ void trg_status_bar_update(TrgStatusBar * sb,
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), infoText);
     gtk_label_set_text(GTK_LABEL(priv->speed_lbl), speedText);
 
-    freeSpaceRaw = session_get_download_dir_free_space(session);
-    if (freeSpaceRaw >= 0) {
-        gchar *freeSpaceString;
-        trg_strlsize(freeSpace, freeSpaceRaw);
-        freeSpaceString = g_strdup_printf(_("Free space: %s"), freeSpace);
-        gtk_label_set_text(GTK_LABEL(priv->free_lbl), freeSpaceString);
-        g_free(freeSpaceString);
-    } else {
-        gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
-    }
 
     g_free(speedText);
     g_free(infoText);

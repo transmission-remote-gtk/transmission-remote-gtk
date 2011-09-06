@@ -36,6 +36,13 @@
 
 G_DEFINE_TYPE (TrgClient, trg_client, G_TYPE_OBJECT)
 
+enum {
+    TC_SESSION_UPDATED,
+    TC_SIGNAL_COUNT
+};
+
+static guint signals[TC_SIGNAL_COUNT] = { 0 };
+
 #define TRG_CLIENT_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CLIENT, TrgClientPrivate))
 
@@ -97,6 +104,15 @@ trg_client_class_init (TrgClientClass *klass)
   object_class->get_property = trg_client_get_property;
   object_class->set_property = trg_client_set_property;
   object_class->dispose = trg_client_dispose;
+
+  signals[TC_SESSION_UPDATED] =
+      g_signal_new("session-updated",
+                   G_TYPE_FROM_CLASS(object_class),
+                   G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                   G_STRUCT_OFFSET(TrgClientClass,
+                                   session_updated), NULL,
+                   NULL, g_cclosure_marshal_VOID__POINTER,
+                   G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 static void
@@ -144,6 +160,8 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
     session_get_version(session, &priv->version);
 
     priv->session = session;
+
+    g_signal_emit(tc, signals[TC_SESSION_UPDATED], 0, session);
 }
 
 TrgPrefs *trg_client_get_prefs(TrgClient *tc)
