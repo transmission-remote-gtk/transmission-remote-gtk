@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <stdint.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
@@ -45,39 +46,10 @@ struct _TrgRemotePrefsDialogPrivate {
     TrgClient *client;
     TrgMainWindow *parent;
 
-    GtkWidget *done_script_entry;
-    GtkWidget *done_script_enabled_check;
-    GtkWidget *pex_enabled_check;
-    GtkWidget *lpd_enabled_check;
-    GtkWidget *download_dir_entry;
-    GtkWidget *peer_port_random_check;
-    GtkWidget *peer_port_spin;
-    GtkWidget *peer_limit_global_spin;
-    GtkWidget *peer_limit_per_torrent_spin;
-    GtkWidget *peer_port_forwarding_check;
-    GtkWidget *blocklist_url_entry;
-    GtkWidget *blocklist_check;
-    GtkWidget *rename_partial_files_check;
+    GList *widgets;
     GtkWidget *encryption_combo;
-    GtkWidget *incomplete_dir_entry;
-    GtkWidget *incomplete_dir_check;
-    GtkWidget *seed_ratio_limit_check;
-    GtkWidget *seed_ratio_limit_spin;
-    GtkWidget *cache_size_mb_spin;
-    GtkWidget *start_added_torrent_check;
-    GtkWidget *trash_original_torrent_files_check;
-    GtkWidget *speed_limit_down_check;
-    GtkWidget *speed_limit_down_spin;
-    GtkWidget *speed_limit_up_check;
-    GtkWidget *speed_limit_up_spin;
-    GtkWidget *port_test_label;
-    GtkWidget *port_test_button;
-    GtkWidget *blocklist_update_label;
-    GtkWidget *blocklist_update_button;
-    GtkWidget *download_queue_enabled;
-    GtkWidget *download_queue_size;
-    GtkWidget *seed_queue_enabled;
-    GtkWidget *seed_queue_size;
+    GtkWidget *port_test_label, *port_test_button;
+    GtkWidget *blocklist_update_button, *blocklist_check;
 };
 
 static GObject *instance = NULL;
@@ -85,28 +57,10 @@ static GObject *instance = NULL;
 static void update_session(GtkDialog * dlg) {
     TrgRemotePrefsDialogPrivate *priv =
             TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(dlg);
+
     JsonNode *request = session_set();
     JsonObject *args = node_get_arguments(request);
     gchar *encryption;
-
-    /* General */
-
-    gtk_entry_json_output(GTK_ENTRY(priv->download_dir_entry), args);
-    gtk_entry_json_output(GTK_ENTRY(priv->incomplete_dir_entry), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->done_script_enabled_check), args);
-    gtk_entry_json_output(GTK_ENTRY(priv->done_script_entry), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->rename_partial_files_check), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->incomplete_dir_check), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->trash_original_torrent_files_check), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->start_added_torrent_check), args);
-    if (priv->cache_size_mb_spin != NULL)
-        gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-        (priv->cache_size_mb_spin), args);
 
     /* Connection */
 
@@ -123,63 +77,21 @@ static void update_session(GtkDialog * dlg) {
     }
 
     json_object_set_string_member(args, SGET_ENCRYPTION, encryption);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->peer_port_random_check), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->peer_port_forwarding_check), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->pex_enabled_check), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->lpd_enabled_check), args);
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON(priv->peer_port_spin), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->blocklist_check), args);
-    if (priv->blocklist_url_entry)
-        gtk_entry_json_output(GTK_ENTRY(priv->blocklist_url_entry), args);
 
-    /* Limits */
-
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->seed_ratio_limit_check), args);
-    gtk_spin_button_json_double_out(GTK_SPIN_BUTTON
-    (priv->seed_ratio_limit_spin), args);
-
-    if (priv->download_queue_enabled) {
-        gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-        (priv->download_queue_enabled), args);
-
-        gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-        (priv->download_queue_size), args);
-
-        gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-        (priv->seed_queue_enabled), args);
-
-        gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-        (priv->seed_queue_size), args);
-    }
-
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->speed_limit_down_check), args);
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-    (priv->speed_limit_down_spin), args);
-
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-    (priv->speed_limit_up_check), args);
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-    (priv->speed_limit_up_spin), args);
-
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-    (priv->peer_limit_global_spin), args);
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-    (priv->peer_limit_per_torrent_spin), args);
+    trg_json_widgets_save(priv->widgets, args);
 
     dispatch_async(priv->client, request, on_session_set, priv->parent);
 }
 
 static void trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
         gpointer data G_GNUC_UNUSED) {
+    TrgRemotePrefsDialogPrivate *priv =
+            TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(dlg);
+
     if (res_id == GTK_RESPONSE_OK)
         update_session(dlg);
+
+    trg_json_widget_desc_list_free(priv->widgets);
 
     gtk_widget_destroy(GTK_WIDGET(dlg));
     instance = NULL;
@@ -228,113 +140,47 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
 
     hig_workarea_add_section_title(t, &row, _("Bandwidth"));
 
-    tb = priv->speed_limit_down_check = gtk_check_button_new_with_mnemonic(
-            _("Limit download speed (KB/s)"));
-    widget_set_json_key(tb, SGET_SPEED_LIMIT_DOWN_ENABLED);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-            session_get_speed_limit_down_enabled(json));
-
-    w = priv->speed_limit_down_spin = gtk_spin_button_new_with_range(0,
-            INT_MAX, 5);
-    widget_set_json_key(w, SGET_SPEED_LIMIT_DOWN);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-            session_get_speed_limit_down(json));
-    g_signal_connect(G_OBJECT(tb), "toggled",
-            G_CALLBACK(toggle_active_arg_is_sensitive), w);
-    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-    (tb)));
+    tb = trg_json_widget_check_new(
+            &priv->widgets, json, SGET_SPEED_LIMIT_DOWN_ENABLED, _("Limit download speed (KB/s)"), NULL);
+    w = trg_json_widget_spin_new_int(&priv->widgets, json, SGET_SPEED_LIMIT_DOWN, tb, 0, INT_MAX, 1);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    tb = priv->speed_limit_up_check = gtk_check_button_new_with_mnemonic(
-            _("Limit upload speed (KB/s)"));
-    widget_set_json_key(tb, SGET_SPEED_LIMIT_UP_ENABLED);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-            session_get_speed_limit_up_enabled(json));
-
-    w = priv->speed_limit_up_spin = gtk_spin_button_new_with_range(0, INT_MAX,
-            5);
-    widget_set_json_key(w, SGET_SPEED_LIMIT_UP);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-            session_get_speed_limit_up(json));
-    g_signal_connect(G_OBJECT(tb), "toggled",
-            G_CALLBACK(toggle_active_arg_is_sensitive), w);
-    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-    (tb)));
+    tb = trg_json_widget_check_new(&priv->widgets, json, SGET_SPEED_LIMIT_UP_ENABLED, _("Limit upload speed (KB/s)"), NULL);
+    w = trg_json_widget_spin_new_int(&priv->widgets, json, SGET_SPEED_LIMIT_UP, tb, 0, INT_MAX, 1);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     hig_workarea_add_section_title(t, &row, _("Seeding"));
 
-    tb = priv->seed_ratio_limit_check = gtk_check_button_new_with_mnemonic(
-            _("Seed ratio limit"));
-    widget_set_json_key(tb, SGET_SEED_RATIO_LIMITED);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-            session_get_seed_ratio_limited(json));
-
-    w = priv->seed_ratio_limit_spin = gtk_spin_button_new_with_range(0,
-            INT_MAX, 0.1);
-    widget_set_json_key(w, SGET_SEED_RATIO_LIMIT);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-            session_get_seed_ratio_limit(json));
-    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-    (tb)));
-    g_signal_connect(G_OBJECT(tb), "toggled",
-            G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    tb = trg_json_widget_check_new(
+            &priv->widgets, json, SGET_SEED_RATIO_LIMITED, _("Seed ratio limit"), NULL);
+    w = trg_json_widget_spin_new_double(&priv->widgets, json, SGET_SEED_RATIO_LIMIT, tb, 0, INT_MAX, 0.1);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     if (json_object_has_member(json, SGET_DOWNLOAD_QUEUE_ENABLED)) {
         hig_workarea_add_section_title(t, &row, _("Queues"));
 
-        tb = priv->download_queue_enabled = gtk_check_button_new_with_mnemonic(
-                _("Download queue size"));
-        widget_set_json_key(tb, SGET_DOWNLOAD_QUEUE_ENABLED);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                session_get_download_queue_enabled(json));
-
-        w = priv->download_queue_size = gtk_spin_button_new_with_range(0,
-                INT_MAX, 1);
-        widget_set_json_key(w, SGET_DOWNLOAD_QUEUE_SIZE);
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                session_get_download_queue_size(json));
-        gtk_widget_set_sensitive(w,
-                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                (tb)));
-        g_signal_connect(G_OBJECT(tb), "toggled",
-                G_CALLBACK(toggle_active_arg_is_sensitive), w);
+        tb = trg_json_widget_check_new(
+                &priv->widgets, json, SGET_DOWNLOAD_QUEUE_ENABLED, _("Download queue size"), NULL);
+        w = trg_json_widget_spin_new_int(&priv->widgets, json, SGET_DOWNLOAD_QUEUE_SIZE, tb, 0, INT_MAX, 1);
         hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-        tb = priv->seed_queue_enabled = gtk_check_button_new_with_mnemonic(
-                _("Seed queue size"));
-        widget_set_json_key(tb, SGET_SEED_QUEUE_ENABLED);
-        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                session_get_seed_queue_enabled(json));
+        tb = trg_json_widget_check_new(
+                &priv->widgets, json, SGET_SEED_QUEUE_ENABLED, _("Seed queue size"), NULL);
+        w = trg_json_widget_spin_new_int(&priv->widgets, json, SGET_SEED_QUEUE_SIZE, tb, 0, INT_MAX, 1);
+        hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-        w = priv->seed_queue_size = gtk_spin_button_new_with_range(0,
-                INT_MAX, 1);
-        widget_set_json_key(w, SGET_SEED_QUEUE_SIZE);
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                session_get_seed_queue_size(json));
-        gtk_widget_set_sensitive(w,
-                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                (tb)));
-        g_signal_connect(G_OBJECT(tb), "toggled",
-                G_CALLBACK(toggle_active_arg_is_sensitive), w);
+        tb = trg_json_widget_check_new(
+                &priv->widgets, json, SGET_QUEUE_STALLED_ENABLED, _("Ignore stalled (minutes)"), NULL);
+        w = trg_json_widget_spin_new_int(&priv->widgets, json, SGET_QUEUE_STALLED_MINUTES, tb, 0, INT_MAX, 1);
         hig_workarea_add_row_w(t, &row, tb, w, NULL);
     }
 
     hig_workarea_add_section_title(t, &row, _("Peers"));
 
-    w = priv->peer_limit_global_spin = gtk_spin_button_new_with_range(0,
-            INT_MAX, 5);
-    widget_set_json_key(GTK_WIDGET(w), SGET_PEER_LIMIT_GLOBAL);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-            session_get_peer_limit_global(json));
+    w = trg_json_widget_spin_new_int(&priv->widgets, json, SGET_PEER_LIMIT_GLOBAL, NULL, 0, INT_MAX, 5);
     hig_workarea_add_row(t, &row, _("Global peer limit"), w, w);
 
-    w = priv->peer_limit_per_torrent_spin = gtk_spin_button_new_with_range(0,
-            INT_MAX, 5);
-    widget_set_json_key(GTK_WIDGET(w), SGET_PEER_LIMIT_PER_TORRENT);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-            session_get_peer_limit_per_torrent(json));
+    w = trg_json_widget_spin_new_int(&priv->widgets, json, SGET_PEER_LIMIT_PER_TORRENT, NULL, 0, INT_MAX, 5);
     hig_workarea_add_row(t, &row, _("Per torrent peer limit"), w, w);
 
     return t;
@@ -435,7 +281,6 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     t = hig_workarea_create();
 
     w = priv->encryption_combo = gtk_combo_box_new_text();
-    widget_set_json_key(GTK_WIDGET(w), SGET_ENCRYPTION);
     gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Required"));
     gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Preferred"));
     gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Tolerated"));
@@ -449,58 +294,40 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     }
     hig_workarea_add_row(t, &row, _("Encryption"), w, NULL);
 
-    w = priv->peer_port_spin = gtk_spin_button_new_with_range(0, 65535, 1);
-    widget_set_json_key(w, SGET_PEER_PORT);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), session_get_peer_port(s));
+    w = trg_json_widget_spin_new_int(&priv->widgets, s, SGET_PEER_PORT, NULL, 0, 65535, 1);
     hig_workarea_add_row(t, &row, _("Peer port"), w, w);
 
-    priv->port_test_label = gtk_label_new(_("Port test"));
+    w = priv->port_test_label = gtk_label_new(_("Port test"));
     w = priv->port_test_button = gtk_button_new_with_label(_("Test"));
     g_signal_connect(w, "clicked", G_CALLBACK(port_test_cb), win);
     hig_workarea_add_row_w(t, &row, priv->port_test_label, w, NULL);
 
-    w = priv->peer_port_random_check = hig_workarea_add_wide_checkbutton(t,
-            &row, _("Random peer port on start"),
-            session_get_peer_port_random(s));
-    widget_set_json_key(w, SGET_PEER_PORT_RANDOM_ON_START);
+    w = trg_json_widget_check_new(&priv->widgets, s, SGET_PEER_PORT_RANDOM_ON_START, _("Random peer port on start"), NULL);
+    hig_workarea_add_wide_control(t, &row, w);
 
-    w = priv->peer_port_forwarding_check = hig_workarea_add_wide_checkbutton(t,
-            &row, _("Peer port forwarding"),
-            session_get_port_forwarding_enabled(s));
-    widget_set_json_key(w, SGET_PORT_FORWARDING_ENABLED);
+    w = trg_json_widget_check_new(&priv->widgets, s, SGET_PORT_FORWARDING_ENABLED, _("Peer port forwarding"), NULL);
+    hig_workarea_add_wide_control(t, &row, w);
 
-    w = priv->pex_enabled_check = hig_workarea_add_wide_checkbutton(t, &row,
-            _("Peer exchange (PEX)"), session_get_pex_enabled(s));
-    widget_set_json_key(w, SGET_PEX_ENABLED);
+    w = trg_json_widget_check_new(&priv->widgets, s, SGET_PEX_ENABLED, _("Peer exchange (PEX)"), NULL);
+    hig_workarea_add_wide_control(t, &row, w);
 
-    w = priv->lpd_enabled_check = hig_workarea_add_wide_checkbutton(t, &row,
-            _("Local peer discovery"), session_get_lpd_enabled(s));
-    widget_set_json_key(w, SGET_LPD_ENABLED);
+    w = trg_json_widget_check_new(&priv->widgets, s, SGET_LPD_ENABLED, _("Local peer discovery"), NULL);
+        hig_workarea_add_wide_control(t, &row, w);
 
     stringValue = g_strdup_printf(_("Blocklist (%ld entries)"),
             session_get_blocklist_size(s));
-    tb = priv->blocklist_check
-            = gtk_check_button_new_with_mnemonic(stringValue);
+    tb = priv->blocklist_check = trg_json_widget_check_new(&priv->widgets, s, SGET_BLOCKLIST_ENABLED, stringValue, NULL);
     g_free((gchar *) stringValue);
-    widget_set_json_key(tb, SGET_BLOCKLIST_ENABLED);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-            session_get_blocklist_enabled(s));
 
     w = priv->blocklist_update_button = gtk_button_new_with_label(_("Update"));
     g_signal_connect(G_OBJECT(w), "clicked",
             G_CALLBACK(update_blocklist_cb), win);
-
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
+    //GtkWidget *trg_json_widget_entry_new(GList **wl, JsonObject *obj, gchar *key, GtkWidget *toggleDep);
     stringValue = session_get_blocklist_url(s);
     if (stringValue) {
-        w = priv->blocklist_url_entry = gtk_entry_new();
-        widget_set_json_key(w, SGET_BLOCKLIST_URL);
-        gtk_entry_set_text(GTK_ENTRY(w), session_get_blocklist_url(s));
-        gtk_widget_set_sensitive(w,
-                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tb)));
-        g_signal_connect(G_OBJECT(tb), "toggled",
-                G_CALLBACK(toggle_active_arg_is_sensitive), w);
+        w = trg_json_widget_entry_new(&priv->widgets, s, SGET_BLOCKLIST_URL, NULL);
         hig_workarea_add_row(t, &row, _("Blocklist URL:"), w, NULL);
     }
 
@@ -518,65 +345,34 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
 
     t = hig_workarea_create();
 
-    w = priv->download_dir_entry = gtk_entry_new();
-    widget_set_json_key(w, SGET_DOWNLOAD_DIR);
-    gtk_entry_set_text(GTK_ENTRY(w), session_get_download_dir(s));
+    w = trg_json_widget_entry_new(&priv->widgets, s, SGET_DOWNLOAD_DIR, NULL);
     hig_workarea_add_row(t, &row, _("Download directory"), w, NULL);
 
-    tb = priv->incomplete_dir_check = gtk_check_button_new_with_mnemonic(
-            _("Incomplete download dir"));
-    widget_set_json_key(tb, SGET_INCOMPLETE_DIR_ENABLED);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-            session_get_incomplete_dir_enabled(s));
-
-    w = priv->incomplete_dir_entry = gtk_entry_new();
-    widget_set_json_key(w, SGET_INCOMPLETE_DIR);
-    gtk_entry_set_text(GTK_ENTRY(w), session_get_incomplete_dir(s));
-    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-    (tb)));
-    g_signal_connect(G_OBJECT(tb), "toggled",
-            G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    tb = trg_json_widget_check_new(&priv->widgets, s, SGET_INCOMPLETE_DIR_ENABLED, _("Incomplete download dir"), NULL);
+    w = trg_json_widget_entry_new(&priv->widgets, s, SGET_INCOMPLETE_DIR, tb);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    tb = priv->done_script_enabled_check = gtk_check_button_new_with_mnemonic(
-            _("Torrent done script"));
-    widget_set_json_key(tb, SGET_SCRIPT_TORRENT_DONE_ENABLED);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-            session_get_torrent_done_enabled(s));
-
-    w = priv->done_script_entry = gtk_entry_new();
-    widget_set_json_key(w, SGET_SCRIPT_TORRENT_DONE_FILENAME);
-    gtk_entry_set_text(GTK_ENTRY(w), session_get_torrent_done_filename(s));
-    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-    (tb)));
-    g_signal_connect(G_OBJECT(tb), "toggled",
-            G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    tb = trg_json_widget_check_new(&priv->widgets, s, SGET_SCRIPT_TORRENT_DONE_ENABLED, _("Torrent done script"), NULL);
+    w = trg_json_widget_entry_new(&priv->widgets, s, SGET_SCRIPT_TORRENT_DONE_FILENAME, tb);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     cache_size_mb = session_get_cache_size_mb(s);
     if (cache_size_mb >= 0) {
-        w = priv->cache_size_mb_spin = gtk_spin_button_new_with_range(0,
+        w = trg_json_widget_spin_new_int(&priv->widgets, s, SGET_CACHE_SIZE_MB, NULL, 0,
                 INT_MAX, 1);
-        widget_set_json_key(w, SGET_CACHE_SIZE_MB);
-        gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), cache_size_mb);
         hig_workarea_add_row(t, &row, _("Cache size (MB)"), w, w);
     }
 
-    w = priv->rename_partial_files_check = hig_workarea_add_wide_checkbutton(t,
-            &row, _("Rename partial files"),
-            session_get_rename_partial_files(s));
-    widget_set_json_key(w, SGET_RENAME_PARTIAL_FILES);
+    w = trg_json_widget_check_new(&priv->widgets, s, SGET_RENAME_PARTIAL_FILES, _("Rename partial files"), NULL);
+    hig_workarea_add_wide_control(t, &row, w);
 
-    w = priv->trash_original_torrent_files_check
-            = hig_workarea_add_wide_checkbutton(t, &row, _
-            ("Trash original torrent files"),
-                    session_get_trash_original_torrent_files(s));
-    widget_set_json_key(w, SGET_TRASH_ORIGINAL_TORRENT_FILES);
+    w = trg_json_widget_check_new(&priv->widgets, s, SGET_TRASH_ORIGINAL_TORRENT_FILES, _
+            ("Trash original torrent files"), NULL);
+    hig_workarea_add_wide_control(t, &row, w);
 
-    w = priv->start_added_torrent_check = hig_workarea_add_wide_checkbutton(t,
-            &row, _("Start added torrents"),
-            session_get_start_added_torrents(s));
-    widget_set_json_key(w, SGET_START_ADDED_TORRENTS);
+    w = trg_json_widget_check_new(&priv->widgets, s, SGET_START_ADDED_TORRENTS,
+            _("Start added torrents"), NULL);
+    hig_workarea_add_wide_control(t, &row, w);
 
     return t;
 }

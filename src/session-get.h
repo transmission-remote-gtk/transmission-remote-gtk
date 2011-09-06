@@ -67,6 +67,8 @@
 #define SGET_DOWNLOAD_QUEUE_SIZE            "download-queue-size"
 #define SGET_SEED_QUEUE_ENABLED            "seed-queue-enabled"
 #define SGET_SEED_QUEUE_SIZE            "seed-queue-size"
+#define SGET_QUEUE_STALLED_ENABLED "queue-stalled-enabled"
+#define SGET_QUEUE_STALLED_MINUTES "queue-stalled-minutes"
 
 const gchar *session_get_torrent_done_filename(JsonObject * s);
 gboolean session_get_torrent_done_enabled(JsonObject * s);

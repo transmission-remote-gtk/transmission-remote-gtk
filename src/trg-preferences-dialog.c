@@ -57,8 +57,7 @@ struct _TrgPreferencesDialogPrivate {
 static GObject *instance = NULL;
 
 static void trg_pref_widget_desc_free(trg_pref_widget_desc *wd) {
-    if (wd->key)
-        g_free(wd->key);
+    g_free(wd->key);
     g_free(wd);
 }
 

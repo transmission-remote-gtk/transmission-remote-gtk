@@ -54,12 +54,9 @@ struct _TrgTorrentPropsDialogPrivate {
     TrgMainWindow *parent;
     JsonArray *targetIds;
 
-    GtkWidget *bandwidthPriorityCombo;
-    GtkWidget *down_limited_check, *down_limit_spin;
-    GtkWidget *up_limited_check, *up_limit_spin;
-    GtkWidget *seedRatioMode, *seedRatioLimit;
-    GtkWidget *honor_limits_check;
-    GtkWidget *peer_limit_spin;
+    GList *widgets;
+
+    GtkWidget *bandwidthPriorityCombo, *seedRatioMode;
 };
 
 static void
@@ -125,18 +122,6 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
     request_set_tag_from_ids(request, priv->targetIds);
     args = node_get_arguments(request);
 
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->honor_limits_check), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->down_limited_check), args);
-    gtk_toggle_button_json_out(GTK_TOGGLE_BUTTON
-                               (priv->up_limited_check), args);
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-                                 (priv->down_limit_spin), args);
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON(priv->up_limit_spin),
-                                 args);
-    gtk_spin_button_json_double_out(GTK_SPIN_BUTTON
-                                    (priv->seedRatioLimit), args);
     json_object_set_int_member(args, FIELD_SEED_RATIO_MODE,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
                                                         (priv->
@@ -144,11 +129,10 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
     json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
                                                         (priv->
-                                                         bandwidthPriorityCombo))
-                               - 1);
+                                                         bandwidthPriorityCombo)) - 1);
 
-    gtk_spin_button_json_int_out(GTK_SPIN_BUTTON
-                                 (priv->peer_limit_spin), args);
+    trg_json_widgets_save(priv->widgets, args);
+    trg_json_widget_desc_list_free(priv->widgets);
 
     dispatch_async(priv->client, request,
                    on_generic_interactive_action, priv->parent);
@@ -175,15 +159,11 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
 
     hig_workarea_add_section_title(t, &row, _("Bandwidth"));
 
-    w = priv->honor_limits_check =
-        hig_workarea_add_wide_checkbutton(t, &row,
-                                          _("Honor global limits"),
-                                          torrent_get_honors_session_limits
-                                          (json));
-    widget_set_json_key(w, FIELD_HONORS_SESSION_LIMITS);
+    w = trg_json_widget_check_new(&priv->widgets, json, FIELD_HONORS_SESSION_LIMITS, _("Honor global limits"), NULL);
+    hig_workarea_add_wide_control(t, &row, w);
 
     w = priv->bandwidthPriorityCombo = gtk_combo_box_new_text();
-    widget_set_json_key(w, FIELD_BANDWIDTH_PRIORITY);
+    //widget_set_json_key(w, FIELD_BANDWIDTH_PRIORITY);
     gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Low"));
     gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Normal"));
     gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("High"));
@@ -191,36 +171,18 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
                              torrent_get_bandwidth_priority(json) + 1);
     hig_workarea_add_row(t, &row, _("Torrent priority:"), w, NULL);
 
-    tb = priv->down_limited_check = gtk_check_button_new_with_mnemonic
-        (_("Limit download speed (Kbps)"));
-    widget_set_json_key(tb, FIELD_DOWNLOAD_LIMITED);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                                 torrent_get_download_limited(json));
-
-    w = priv->down_limit_spin =
-        gtk_spin_button_new_with_range(0, INT_MAX, 5);
-    widget_set_json_key(w, FIELD_DOWNLOAD_LIMIT);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              torrent_get_download_limit(json));
+    tb = trg_json_widget_check_new(&priv->widgets, json, FIELD_DOWNLOAD_LIMITED, _("Limit download speed (Kbps)"), NULL);
+    w = trg_json_widget_spin_new_int(&priv->widgets, json, FIELD_DOWNLOAD_LIMIT, tb, 0, INT_MAX, 1);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    tb = priv->up_limited_check = gtk_check_button_new_with_mnemonic
-        (_("Limit upload speed (Kbps)"));
-    widget_set_json_key(tb, FIELD_UPLOAD_LIMITED);
-    gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(tb),
-                                 torrent_get_upload_limited(json));
-
-    w = priv->up_limit_spin =
-        gtk_spin_button_new_with_range(0, INT_MAX, 5);
-    widget_set_json_key(w, FIELD_UPLOAD_LIMIT);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              torrent_get_upload_limit(json));
+    tb = trg_json_widget_check_new(&priv->widgets, json, FIELD_UPLOAD_LIMITED, _("Limit upload speed (Kbps)"), NULL);
+    w = trg_json_widget_spin_new_int(&priv->widgets, json, FIELD_UPLOAD_LIMIT, tb, 0, INT_MAX, 1);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     hig_workarea_add_section_title(t, &row, _("Seeding"));
 
     w = priv->seedRatioMode = gtk_combo_box_new_text();
-    widget_set_json_key(GTK_WIDGET(w), FIELD_SEED_RATIO_MODE);
+    //widget_set_json_key(GTK_WIDGET(w), FIELD_SEED_RATIO_MODE);
     gtk_combo_box_append_text(GTK_COMBO_BOX(w), _("Use global settings"));
     gtk_combo_box_append_text(GTK_COMBO_BOX(w),
                               _("Stop seeding at ratio"));
@@ -230,23 +192,15 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
                              torrent_get_seed_ratio_mode(json));
     hig_workarea_add_row(t, &row, _("Seed ratio mode:"), w, NULL);
 
-    w = priv->seedRatioLimit =
-        gtk_spin_button_new_with_range(0, INT_MAX, 0.2);
-    gtk_widget_set_sensitive(GTK_WIDGET(w), FALSE);
-    widget_set_json_key(GTK_WIDGET(w), FIELD_SEED_RATIO_LIMIT);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              torrent_get_seed_ratio_limit(json));
-    hig_workarea_add_row(t, &row, _("Seed ratio limit:"), w, w);
+    w = trg_json_widget_spin_new_double(&priv->widgets, json, FIELD_SEED_RATIO_LIMIT, NULL, 0, INT_MAX, 0.2);
+    seed_ratio_mode_changed_cb(priv->seedRatioMode, w);
     g_signal_connect(G_OBJECT(priv->seedRatioMode), "changed",
                      G_CALLBACK(seed_ratio_mode_changed_cb), w);
+    hig_workarea_add_row(t, &row, _("Seed ratio limit:"), w, w);
 
     hig_workarea_add_section_title(t, &row, _("Peers"));
 
-    w = priv->peer_limit_spin =
-        gtk_spin_button_new_with_range(0, INT_MAX, 5);
-    widget_set_json_key(GTK_WIDGET(w), FIELD_PEER_LIMIT);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              torrent_get_peer_limit(json));
+    w = trg_json_widget_spin_new_int(&priv->widgets, json, FIELD_PEER_LIMIT, NULL, 0, INT_MAX, 5);
     hig_workarea_add_row(t, &row, _("Peer limit:"), w, w);
 
     return t;

@@ -23,18 +23,33 @@
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
-#define JSON_OBJECT_KEY         "json-object-key"
-#define JSON_OBJECT_VALUE         "json-object-value"
+typedef struct {
+    GtkWidget *widget;
+    gchar *key;
+    void (*saveFunc)(GtkWidget *widget, JsonObject *obj, gchar *key);
+} trg_json_widget_desc;
 
-void widget_set_json_key(GtkWidget * w, gchar * key);
+typedef enum {
+    TRG_JSON_WIDGET_SPIN_INT,
+    TRG_JSON_WIDGET_SPIN_DOUBLE
+} trg_json_widget_spin_type;
 
-void gtk_spin_button_json_int_out(GtkSpinButton * spin, JsonObject * out);
-void gtk_spin_button_json_double_out(GtkSpinButton * spin,
-                                     JsonObject * out);
-gboolean gtk_toggle_button_json_out(GtkToggleButton * button,
-                                    JsonObject * out);
-void gtk_entry_json_output(GtkEntry * e, JsonObject * out);
-void gtk_combo_box_json_string_output(GtkComboBox * c, JsonObject * out);
 void toggle_active_arg_is_sensitive(GtkToggleButton * b, gpointer data);
+
+GtkWidget *trg_json_widget_check_new(GList **wl, JsonObject *obj, const gchar *key, const gchar *label, GtkWidget *toggleDep);
+GtkWidget *trg_json_widget_entry_new(GList **wl, JsonObject *obj, const gchar *key, GtkWidget *toggleDep);
+GtkWidget *trg_json_widget_spin_new_int(GList **wl, JsonObject *obj, const gchar *key, GtkWidget *toggleDep,
+        gint min, gint max, gint step);
+GtkWidget *trg_json_widget_spin_new_double(GList **wl, JsonObject *obj, const gchar *key, GtkWidget *toggleDep,
+        gint min, gint max, gdouble step);
+
+void trg_json_widget_check_save(GtkWidget *widget, JsonObject *obj, gchar *key);
+void trg_json_widget_entry_save(GtkWidget *widget, JsonObject *obj, gchar *key);
+void trg_json_widget_spin_save_int(GtkWidget *widget, JsonObject *obj, gchar *key);
+void trg_json_widget_spin_save_double(GtkWidget *widget, JsonObject *obj, gchar *key);
+
+void trg_json_widget_desc_free(trg_json_widget_desc *wd);
+void trg_json_widget_desc_list_free(GList *list);
+void trg_json_widgets_save(GList *list, JsonObject *out);
 
 #endif                          /* TRG_JSON_WIDGETS_H_ */
