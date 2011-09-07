@@ -52,9 +52,19 @@ gdouble peer_get_progress(JsonObject * p) {
 }
 
 gint64 peer_get_rate_to_client(JsonObject * p) {
-    return json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_CLIENT));
+    return json_object_get_int_member(p, TPEER_RATE_TO_CLIENT);
 }
 
 gint64 peer_get_rate_to_peer(JsonObject * p) {
-    return json_node_get_int(json_object_get_member(p, TPEER_RATE_TO_PEER));
+    return json_object_get_int_member(p, TPEER_RATE_TO_PEER);
+}
+
+gint64 peerfrom_get_pex(JsonObject *pf)
+{
+    return json_object_get_int_member(pf, TPEERFROM_FROMPEX);
+}
+
+gint64 peerfrom_get_dht(JsonObject *pf)
+{
+    return json_object_get_int_member(pf, TPEERFROM_FROMDHT);
 }

@@ -176,6 +176,8 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_DOWNLOADDIR] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_BANDWIDTH_PRIORITY] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_DONE_DATE] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_FROMPEX] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_FROMDHT] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
                                     TORRENT_COLUMN_COLUMNS, column_types);
@@ -225,7 +227,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
 {
     GtkListStore *ls = GTK_LIST_STORE(model);
     guint lastFlags, newFlags;
-    JsonObject *lastJson;
+    JsonObject *lastJson, *pf;
     gchar *statusString, *statusIcon;
     gint64 downRate, upRate, downloaded, uploaded, id, status;
 
@@ -244,6 +246,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     statusString = torrent_get_status_string(rpcv, status);
     newFlags = torrent_get_flags(t, rpcv, status, downRate, upRate);
     statusIcon = torrent_get_status_icon(rpcv, newFlags);
+    pf = torrent_get_peersfrom(t);
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
                        TORRENT_COLUMN_FLAGS, &lastFlags,
@@ -286,6 +289,10 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        torrent_get_bandwidth_priority(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DONE_DATE,
                        torrent_get_done_date(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMPEX,
+                       peerfrom_get_pex(pf), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMDHT,
+                       peerfrom_get_dht(pf), -1);
 #else
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ICON, statusIcon,
@@ -302,6 +309,8 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        TORRENT_COLUMN_ETA, torrent_get_eta(t),
                        TORRENT_COLUMN_UPLOADED, uploaded,
                        TORRENT_COLUMN_DOWNLOADED, downloaded,
+                       TORRENT_COLUMN_FROMPEX, peerfrom_get_pex(pf),
+                       TORRENT_COLUMN_FROMDHT, peerfrom_get_dht(pf),
                        TORRENT_COLUMN_RATIO,
                        uploaded >
                        0

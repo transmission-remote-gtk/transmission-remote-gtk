@@ -55,6 +55,7 @@
 #define FIELD_HAVEUNCHECKED		"haveUnchecked"
 #define FIELD_PERCENTDONE		"percentDone"
 #define FIELD_PEERS             "peers"
+#define FIELD_PEERSFROM         "peersFrom"
 #define FIELD_FILES             "files"
 #define FIELD_WANTED            "wanted"
 #define FIELD_PRIORITIES        "priorities"

@@ -58,6 +58,7 @@ gchar *torrent_get_status_string(gint64 rpcv, gint64 value);
 gchar *torrent_get_status_icon(gint64 rpcv, guint flags);
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 downRate, gint64 upRate);
 JsonArray *torrent_get_peers(JsonObject * t);
+JsonObject *torrent_get_peersfrom(JsonObject * t);
 JsonArray *torrent_get_tracker_stats(JsonObject * t);
 JsonArray *torrent_get_wanted(JsonObject * t);
 JsonArray *torrent_get_priorities(JsonObject * t);

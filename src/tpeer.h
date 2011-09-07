@@ -31,8 +31,10 @@
 #define TPEER_IS_ENCRYPTED      "isEncrypted"
 #define TPEER_IS_DOWNLOADING_FROM "isDownloadingFrom"
 #define TPEER_IS_UPLOADING_TO "isUploadingTo"
-
 #define TPEER_FLAGSTR            "flagStr"
+
+#define TPEERFROM_FROMPEX        "fromPex"
+#define TPEERFROM_FROMDHT        "fromDht"
 
 const gchar *peer_get_address(JsonObject * p);
 const gchar *peer_get_client_name(JsonObject * p);
@@ -43,5 +45,8 @@ gint64 peer_get_rate_to_client(JsonObject * p);
 gint64 peer_get_rate_to_peer(JsonObject * p);
 gboolean peer_get_is_uploading_to(JsonObject * p);
 gboolean peer_get_is_downloading_from(JsonObject * p);
+
+gint64 peerfrom_get_pex(JsonObject *pf);
+gint64 peerfrom_get_dht(JsonObject *pf);
 
 #endif                          /* TPEER_H_ */

@@ -32,6 +32,11 @@ JsonArray *torrent_get_peers(JsonObject * t)
     return json_object_get_array_member(t, FIELD_PEERS);
 }
 
+JsonObject *torrent_get_peersfrom(JsonObject * t)
+{
+    return json_object_get_object_member(t, FIELD_PEERSFROM);
+}
+
 JsonArray *torrent_get_wanted(JsonObject * t)
 {
     return json_object_get_array_member(t, FIELD_WANTED);

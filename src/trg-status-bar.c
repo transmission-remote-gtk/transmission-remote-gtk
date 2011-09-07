@@ -103,9 +103,6 @@ void trg_status_bar_session_update(TrgStatusBar *sb, JsonObject *session)
     } else {
         gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
     }
-
-
-
 }
 
 void trg_status_bar_update(TrgStatusBar * sb,
@@ -167,7 +164,6 @@ void trg_status_bar_update(TrgStatusBar * sb,
 
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), infoText);
     gtk_label_set_text(GTK_LABEL(priv->speed_lbl), speedText);
-
 
     g_free(speedText);
     g_free(infoText);

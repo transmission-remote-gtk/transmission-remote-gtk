@@ -129,6 +129,7 @@ JsonNode *torrent_get(gint64 id)
 
     json_array_add_string_element(fields, FIELD_ETA);
     json_array_add_string_element(fields, FIELD_PEERS);
+    json_array_add_string_element(fields, FIELD_PEERSFROM);
     json_array_add_string_element(fields, FIELD_FILES);
     json_array_add_string_element(fields, FIELD_HAVEVALID);
     json_array_add_string_element(fields, FIELD_HAVEUNCHECKED);
