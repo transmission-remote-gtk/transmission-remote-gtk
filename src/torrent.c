@@ -370,6 +370,21 @@ JsonArray *torrent_get_files(JsonObject * args)
     return json_object_get_array_member(args, FIELD_FILES);
 }
 
+gint64 torrent_get_peers_connected(JsonObject *args)
+{
+    return json_object_get_int_member(args, FIELD_PEERS_CONNECTED);
+}
+
+gint64 torrent_get_peers_sending_to_us(JsonObject *args)
+{
+    return json_object_get_int_member(args, FIELD_PEERS_SENDING_TO_US);
+}
+
+gint64 torrent_get_peers_getting_from_us(JsonObject *args)
+{
+    return json_object_get_int_member(args, FIELD_PEERS_GETTING_FROM_US);
+}
+
 /* tracker stats */
 
 gint64 tracker_stats_get_id(JsonObject * t)

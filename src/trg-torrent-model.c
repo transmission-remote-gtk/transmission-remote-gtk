@@ -100,24 +100,19 @@ static void trg_torrent_model_count_peers(TrgTorrentModel * model,
                                           GtkTreeIter * iter,
                                           JsonObject * t)
 {
-    GList *peersList = json_array_get_elements(torrent_get_peers(t));
-    gint seeders, leechers;
+    GList *trackersList = json_array_get_elements(torrent_get_tracker_stats(t));
+    gint seeders = 0;
+    gint leechers = 0;
     GList *li;
 
-    seeders = 0;
-    leechers = 0;
+    for (li = trackersList; li; li = g_list_next(li)) {
+        JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
 
-    for (li = peersList; li; li = g_list_next(li)) {
-        JsonObject *peer = json_node_get_object((JsonNode *) li->data);
-
-        if (peer_get_is_downloading_from(peer))
-            seeders++;
-
-        if (peer_get_is_uploading_to(peer))
-            leechers++;
+        seeders += tracker_stats_get_seeder_count(tracker);
+        leechers += tracker_stats_get_leecher_count(tracker);
     }
 
-    g_list_free(peersList);
+    g_list_free(trackersList);
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
                        TORRENT_COLUMN_SEEDS, seeders,
@@ -178,6 +173,9 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_DONE_DATE] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_FROMPEX] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_FROMDHT] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_PEERS_CONNECTED] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_PEERS_FROM_US] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_PEERS_TO_US] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
                                     TORRENT_COLUMN_COLUMNS, column_types);
@@ -293,6 +291,12 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        peerfrom_get_pex(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMDHT,
                        peerfrom_get_dht(pf), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_CONNECTED,
+            torrent_get_peers_connected(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_TO_US,
+            torrent_get_peers_sending_to_us(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_FROM_US,
+            torrent_get_peers_getting_from_us(t), -1);
 #else
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ICON, statusIcon,
@@ -311,6 +315,9 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        TORRENT_COLUMN_DOWNLOADED, downloaded,
                        TORRENT_COLUMN_FROMPEX, peerfrom_get_pex(pf),
                        TORRENT_COLUMN_FROMDHT, peerfrom_get_dht(pf),
+                       TORRENT_COLUMN_PEERS_CONNECTED, torrent_get_peers_connected(t),
+                       TORRENT_COLUMN_PEERS_TO_US, torrent_get_peers_sending_to_us(t),
+                       TORRENT_COLUMN_PEERS_FROM_US, torrent_get_peers_getting_from_us(t),
                        TORRENT_COLUMN_RATIO,
                        uploaded >
                        0

@@ -74,6 +74,9 @@
 #define FIELD_PEER_LIMIT         "peer-limit"
 #define FIELD_DOWNLOAD_DIR		"downloadDir"
 #define FIELD_FILE_DOWNLOAD_DIR "download-dir"
+#define FIELD_PEERS_SENDING_TO_US "peersSendingToUs"
+#define FIELD_PEERS_GETTING_FROM_US "peersGettingFromUs"
+#define FIELD_PEERS_CONNECTED "peersConnected"
 
 #define FIELD_FILES_WANTED      "files-wanted"
 #define FIELD_FILES_UNWANTED    "files-unwanted"

@@ -55,8 +55,17 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO, TORRENT_COLUMN_SEEDS,
                              _("Seeds"), "seeds", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
+                             TORRENT_COLUMN_PEERS_TO_US, _("Sending"),
+                             "sending", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_LEECHERS, _("Leechers"),
                              "leechers", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
+                             TORRENT_COLUMN_PEERS_FROM_US, _("Receiving"),
+                             "connected-leechers", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
+            TORRENT_COLUMN_PEERS_CONNECTED, _("Connected"),
+                             "connected-peers", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_FROMPEX, _("PEX Peers"),
                              "from-pex", TRG_COLUMN_EXTRA);
