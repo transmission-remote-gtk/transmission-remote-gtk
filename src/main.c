@@ -30,12 +30,15 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
+#ifdef HAVE_LIBUNIQUE
 #include <unique/unique.h>
+#endif
 
 #include "http.h"
 #include "trg-main-window.h"
 #include "trg-client.h"
 
+#ifdef HAVE_LIBUNIQUE
 enum {
     COMMAND_0,
     COMMAND_ADD
@@ -74,14 +77,17 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 
     return res;
 }
+#endif
 
 int main(int argc, char *argv[])
 {
     int returnValue = EXIT_SUCCESS;
+#ifdef HAVE_LIBUNIQUE
     UniqueApp *app = NULL;
+    gboolean withUnique;
+#endif
     TrgMainWindow *window;
     TrgClient *client;
-    gboolean withUnique;
 
     g_type_init();
     g_thread_init(NULL);
@@ -94,6 +100,7 @@ int main(int argc, char *argv[])
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
 
+#ifdef HAVE_LIBUNIQUE
     if ((withUnique = g_getenv("TRG_NOUNIQUE") == NULL))
         app = unique_app_new_with_commands("uk.org.eth0.trg", NULL,
                                            "add", COMMAND_ADD, NULL);
@@ -127,17 +134,20 @@ int main(int argc, char *argv[])
         if (response != UNIQUE_RESPONSE_OK)
             returnValue = EXIT_FAILURE;
     } else {
+#endif
         client = trg_client_new();
 
         curl_global_init(CURL_GLOBAL_ALL);
 
         window = trg_main_window_new(client);
 
+#ifdef HAVE_LIBUNIQUE
         if (withUnique) {
             unique_app_watch_window(app, GTK_WINDOW(window));
             g_signal_connect(app, "message-received",
                              G_CALLBACK(message_received_cb), window);
         }
+#endif
 
         gtk_widget_show_all(GTK_WIDGET(window));
 
@@ -145,10 +155,12 @@ int main(int argc, char *argv[])
         gtk_main();
 
         curl_global_cleanup();
+#ifdef HAVE_LIBUNIQUE
     }
 
     if (withUnique)
         g_object_unref(app);
+#endif
 
     return returnValue;
 }
