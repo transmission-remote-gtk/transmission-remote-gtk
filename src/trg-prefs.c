@@ -73,12 +73,12 @@ static void trg_prefs_create_defaults(TrgPrefs *p) {
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_MININTERVAL_DEFAULT);
 
-    trg_prefs_add_default_bool(p, TRG_PREFS_KEY_FILTER_DIRS, TRUE);
-    trg_prefs_add_default_bool(p, TRG_PREFS_KEY_FILTER_TRACKERS, TRUE);
-    trg_prefs_add_default_bool(p, TRG_PREFS_KEY_AUTO_CONNECT, FALSE);
-    trg_prefs_add_default_bool(p, TRG_PREFS_KEY_SHOW_GRAPH, TRUE);
-    trg_prefs_add_default_bool(p, TRG_PREFS_KEY_SHOW_GRAPH, TRUE);
-    trg_prefs_add_default_bool(p, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG, TRUE);
+    trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_DIRS);
+    trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_TRACKERS);
+    trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_SHOW_GRAPH);
+    trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG);
+    trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_SHOW_STATE_SELECTOR);
+    trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_SHOW_NOTEBOOK);
 }
 
 static GObject *trg_prefs_constructor(GType type, guint n_construct_properties,
@@ -138,9 +138,10 @@ void trg_prefs_add_default_double(TrgPrefs *p, gchar *key, double value) {
     json_object_set_double_member(priv->defaultsObj, key, value);
 }
 
-void trg_prefs_add_default_bool(TrgPrefs *p, gchar *key, gboolean value) {
+/* Not much point adding a default of FALSE, as that's the fallback */
+void trg_prefs_add_default_bool_true(TrgPrefs *p, gchar *key) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
-    json_object_set_boolean_member(priv->defaultsObj, key, value);
+    json_object_set_boolean_member(priv->defaultsObj, key, TRUE);
 }
 
 gint trg_prefs_get_profile_id(TrgPrefs *p) {
@@ -171,9 +172,8 @@ JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int flags) {
         }
     }
 
-    if (priv->defaultsObj && json_object_has_member(priv->defaultsObj, key)) {
+    if (priv->defaultsObj && json_object_has_member(priv->defaultsObj, key))
         return json_object_get_member(priv->defaultsObj, key);
-    }
 
     return NULL;
 }

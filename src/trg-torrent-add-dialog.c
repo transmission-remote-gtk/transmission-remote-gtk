@@ -174,7 +174,7 @@ void launch_add_thread(struct add_torrent_threadfunc_args *args)
     g_thread_create(add_files_threadfunc, args, FALSE, &error);
 
     if (error) {
-        g_printf("thread creation error: %s\n", error->message);
+        g_error("thread creation error: %s\n", error->message);
         g_error_free(error);
         g_str_slist_free(args->list);
         g_free(args);

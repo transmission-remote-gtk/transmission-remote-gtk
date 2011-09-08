@@ -274,12 +274,6 @@ static void toggle_filter_trackers(GtkToggleButton * w, gpointer win) {
             gtk_toggle_button_get_active(w));
 }
 
-static void toggle_filter_dirs(GtkToggleButton * w, gpointer win) {
-    TrgStateSelector *selector = trg_main_window_get_state_selector(
-            TRG_MAIN_WINDOW(win));
-    trg_state_selector_set_show_dirs(selector, gtk_toggle_button_get_active(w));
-}
-
 static void toggle_graph(GtkToggleButton * w, gpointer win) {
     if (gtk_toggle_button_get_active(w))
         trg_main_window_add_graph(TRG_MAIN_WINDOW(win), TRUE);
@@ -292,6 +286,12 @@ static void toggle_tray_icon(GtkToggleButton * w, gpointer win) {
         trg_main_window_add_status_icon(TRG_MAIN_WINDOW(win));
     else
         trg_main_window_remove_status_icon(TRG_MAIN_WINDOW(win));
+}
+
+static void menu_bar_toggle_filter_dirs(GtkToggleButton * w, gpointer win) {
+    TrgStateSelector *selector = trg_main_window_get_state_selector(
+            TRG_MAIN_WINDOW(win));
+    trg_state_selector_set_show_dirs(selector, gtk_toggle_button_get_active(w));
 }
 
 static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog *dlg) {
@@ -307,7 +307,7 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog *dlg) {
     w = trgp_check_new(dlg, _("Directory filters"), TRG_PREFS_KEY_FILTER_DIRS,
             TRG_PREFS_GLOBAL);
     g_signal_connect(G_OBJECT(w), "toggled",
-            G_CALLBACK(toggle_filter_dirs), priv->win);
+            G_CALLBACK(menu_bar_toggle_filter_dirs), priv->win);
     hig_workarea_add_wide_control(t, &row, w);
 
     w = trgp_check_new(dlg, _("Tracker filters"),

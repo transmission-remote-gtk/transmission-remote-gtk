@@ -480,6 +480,17 @@ static void open_remote_prefs_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
     gtk_widget_show_all(GTK_WIDGET(dlg));
 }
 
+static void main_window_toggle_filter_dirs(GtkCheckMenuItem * w, gpointer win) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    trg_state_selector_set_show_dirs(priv->stateSelector, gtk_check_menu_item_get_active(w));
+}
+
+static void main_window_toggle_filter_trackers(GtkCheckMenuItem * w, gpointer win) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    trg_state_selector_set_show_trackers(priv->stateSelector,
+            gtk_check_menu_item_get_active(w));
+}
+
 static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow * win) {
     GObject *b_connect, *b_disconnect, *b_add, *b_resume, *b_pause;
     GObject *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs;
@@ -503,8 +514,6 @@ static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow * win) {
     g_signal_connect(b_props, "clicked", G_CALLBACK(open_props_cb), win);
     g_signal_connect(b_local_prefs, "clicked",
             G_CALLBACK(open_local_prefs_cb), win);
-    g_signal_connect(b_remote_prefs, "clicked",
-            G_CALLBACK(open_remote_prefs_cb), win);
 
     return toolBar;
 }
@@ -1125,14 +1134,16 @@ static void quit_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
 }
 
 static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+
     GObject *b_connect, *b_disconnect, *b_add, *b_resume, *b_pause, *b_verify,
             *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs,
             *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
             *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
-            *b_resume_all;
+            *b_resume_all, *b_dir_filters, *b_tracker_filters;
     TrgMenuBar *menuBar;
 
-    menuBar = trg_menu_bar_new(win);
+    menuBar = trg_menu_bar_new(trg_client_get_prefs(priv->client));
     g_object_get(menuBar, "connect-button", &b_connect, "disconnect-button",
             &b_disconnect, "add-button", &b_add, "add-url-button", &b_add_url,
             "resume-button", &b_resume, "resume-all-button", &b_resume_all,
@@ -1144,6 +1155,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             &b_local_prefs, "view-notebook-button", &b_view_notebook,
             "view-states-button", &b_view_states, "view-stats-button",
             &b_view_stats, "about-button", &b_about, "quit-button", &b_quit,
+            "dir-filters", &b_dir_filters, "tracker-filters", &b_tracker_filters,
             NULL);
 
     g_signal_connect(b_connect, "activate", G_CALLBACK(connect_cb), win);
@@ -1171,7 +1183,13 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
     g_signal_connect(b_view_notebook, "toggled",
             G_CALLBACK(view_notebook_toggled_cb), win);
     g_signal_connect(b_view_states, "toggled",
+            G_CALLBACK(view_notebook_toggled_cb), win);
+    g_signal_connect(b_view_states, "toggled",
             G_CALLBACK(view_states_toggled_cb), win);
+    g_signal_connect(b_dir_filters, "toggled",
+            G_CALLBACK(main_window_toggle_filter_dirs), win);
+    g_signal_connect(b_tracker_filters, "toggled",
+            G_CALLBACK(main_window_toggle_filter_trackers), win);
     g_signal_connect(b_view_stats, "activate",
             G_CALLBACK(view_stats_toggled_cb), win);
     g_signal_connect(b_props, "activate", G_CALLBACK(open_props_cb), win);
@@ -1708,8 +1726,6 @@ static GObject *trg_main_window_constructor(GType type,
     g_signal_connect(priv->client, "session-updated",
             G_CALLBACK(trg_client_session_updated_cb), priv->statusBar);
 
-    /*g_signal_connect(priv->statusBar, "text-pushed",
-            G_CALLBACK(status_bar_text_pushed), self);*/
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(priv->statusBar), FALSE,
             FALSE, 2);
 
@@ -1720,6 +1736,13 @@ static GObject *trg_main_window_constructor(GType type,
 
     if (width > 0 && height > 0)
         gtk_window_set_default_size(GTK_WINDOW(self), width, height);
+
+    gtk_widget_show_all(GTK_WIDGET(self));
+
+    trg_widget_set_visible(priv->stateSelectorScroller,
+            trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SHOW_STATE_SELECTOR, TRG_PREFS_GLOBAL));
+    trg_widget_set_visible(priv->notebook,
+            trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SHOW_NOTEBOOK, TRG_PREFS_GLOBAL));
 
     return G_OBJECT(self);
 }

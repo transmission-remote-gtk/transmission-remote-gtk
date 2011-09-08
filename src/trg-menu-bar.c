@@ -19,6 +19,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+
 #include "trg-main-window.h"
 #include "trg-menu-bar.h"
 
@@ -44,7 +45,10 @@ enum {
     PROP_VIEW_STATS_BUTTON,
     PROP_VIEW_STATES_BUTTON,
     PROP_VIEW_NOTEBOOK_BUTTON,
-    PROP_QUIT
+    PROP_QUIT,
+    PROP_PREFS,
+    PROP_DIR_FILTERS,
+    PROP_TRACKER_FILTERS
 };
 
 G_DEFINE_TYPE(TrgMenuBar, trg_menu_bar, GTK_TYPE_MENU_BAR)
@@ -74,6 +78,9 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_view_stats;
     GtkWidget *mb_about;
     GtkWidget *mb_quit;
+    GtkWidget *mb_directory_filters;
+    GtkWidget *mb_tracker_filters;
+    TrgPrefs *prefs;
 };
 
 void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
@@ -103,6 +110,17 @@ void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
     gtk_widget_set_sensitive(priv->mb_verify, sensitive);
     gtk_widget_set_sensitive(priv->mb_reannounce, sensitive);
     gtk_widget_set_sensitive(priv->mb_move, sensitive);
+}
+
+static void trg_menu_bar_set_property(GObject * object,
+        guint prop_id, const GValue * value, GParamSpec * pspec G_GNUC_UNUSED) {
+    TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(object);
+
+    switch (prop_id) {
+    case PROP_PREFS:
+        priv->prefs = g_value_get_object(value);
+        break;
+    }
 }
 
 static void
@@ -174,6 +192,15 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
     case PROP_QUIT:
         g_value_set_object(value, priv->mb_quit);
         break;
+    case PROP_PREFS:
+        g_value_set_object(value, priv->prefs);
+        break;
+    case PROP_DIR_FILTERS:
+        g_value_set_object(value, priv->mb_directory_filters);
+        break;
+    case PROP_TRACKER_FILTERS:
+        g_value_set_object(value, priv->mb_tracker_filters);
+        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
@@ -215,29 +242,66 @@ GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, char *text,
     return item;
 }
 
-static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBarPrivate * priv)
+static void view_menu_item_toggled_cb(GtkCheckMenuItem * w, gpointer data)
 {
+    TrgPrefs *p = TRG_PREFS(data);
+    gchar *key = (gchar*)g_object_get_data(G_OBJECT(w), "conf-key");
+    trg_prefs_set_bool(p, key, gtk_check_menu_item_get_active(w), TRG_PREFS_GLOBAL);
+}
+
+static void view_menu_bar_toggled_dependency_cb(GtkCheckMenuItem *w, gpointer data)
+{
+    gtk_widget_set_sensitive(GTK_WIDGET(data), gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w)));
+}
+
+static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs *prefs, gchar *key,
+        gchar *label, GtkWidget *dependency)
+{
+    GtkWidget *w = gtk_check_menu_item_new_with_label(label);
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
+                                   (w), trg_prefs_get_bool(prefs, key, TRG_PREFS_GLOBAL));
+    g_object_set_data_full(G_OBJECT(w), "conf-key", g_strdup(key),
+            g_free);
+
+    if (dependency) {
+        gtk_widget_set_sensitive(w, gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(dependency)));
+        g_signal_connect(dependency, "toggled",
+                G_CALLBACK(view_menu_bar_toggled_dependency_cb), w);
+    }
+
+    g_signal_connect(w, "toggled",
+            G_CALLBACK(view_menu_item_toggled_cb), prefs);
+
+    return w;
+}
+
+static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
+{
+    TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(mb);
+
     GtkWidget *view = gtk_menu_item_new_with_mnemonic(_("_View"));
     GtkWidget *viewMenu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), viewMenu);
 
-    priv->mb_view_states =
-        gtk_check_menu_item_new_with_label(_("State selector"));
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
-                                   (priv->mb_view_states), TRUE);
+    priv->mb_view_states = trg_menu_bar_view_item_new(priv->prefs, TRG_PREFS_KEY_SHOW_STATE_SELECTOR, _("State selector"), NULL);
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_states);
 
-    priv->mb_view_notebook =
-        gtk_check_menu_item_new_with_mnemonic(_("Torrent _details"));
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
-                                   (priv->mb_view_notebook), TRUE);
+    priv->mb_directory_filters = trg_menu_bar_view_item_new(priv->prefs, TRG_PREFS_KEY_FILTER_DIRS, _("Directory filters"), priv->mb_view_states);
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+                          priv->mb_directory_filters);
+
+    priv->mb_tracker_filters = trg_menu_bar_view_item_new(priv->prefs, TRG_PREFS_KEY_FILTER_TRACKERS, _("Tracker filters"), priv->mb_view_states);
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+                          priv->mb_tracker_filters);
+
+    priv->mb_view_notebook = trg_menu_bar_view_item_new(priv->prefs, TRG_PREFS_KEY_SHOW_NOTEBOOK, _("Torrent details"), NULL);
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+                          priv->mb_view_notebook);
+
 
     priv->mb_view_stats =
         gtk_menu_item_new_with_mnemonic(_("_Statistics"));
     gtk_widget_set_sensitive(priv->mb_view_stats, FALSE);
-
-    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_states);
-    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
-                          priv->mb_view_notebook);
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_stats);
 
     return view;
@@ -355,10 +419,35 @@ GtkWidget *trg_menu_bar_help_menu_new(TrgMenuBar * menuBar)
     return helpMenu;
 }
 
+static GObject *trg_menu_bar_constructor(GType type,
+        guint n_construct_properties, GObjectConstructParam * construct_params) {
+    GObject *object;
+    TrgMenuBarPrivate *priv;
+
+    object = G_OBJECT_CLASS
+    (trg_menu_bar_parent_class)->constructor(type,
+            n_construct_properties, construct_params);
+    priv = TRG_MENU_BAR_GET_PRIVATE(object);
+
+    gtk_menu_shell_append(GTK_MENU_SHELL(object),
+                          trg_menu_bar_file_file_menu_new(priv));
+    gtk_menu_shell_append(GTK_MENU_SHELL(object),
+                          trg_menu_bar_torrent_menu_new(priv));
+    gtk_menu_shell_append(GTK_MENU_SHELL(object),
+                          trg_menu_bar_options_menu_new(priv));
+    gtk_menu_shell_append(GTK_MENU_SHELL(object),
+                          trg_menu_bar_view_menu_new(TRG_MENU_BAR(object)));
+    trg_menu_bar_help_menu_new(TRG_MENU_BAR(object));
+
+    return object;
+}
+
 static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
     object_class->get_property = trg_menu_bar_get_property;
+    object_class->set_property = trg_menu_bar_set_property;
+    object_class->constructor = trg_menu_bar_constructor;
 
     g_type_class_add_private(klass, sizeof(TrgMenuBarPrivate));
 
@@ -416,25 +505,32 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "Local Prefs Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_QUIT,
                                      "quit-button", "Quit Button");
+    trg_menu_bar_install_widget_prop(object_class, PROP_DIR_FILTERS,
+                                     "dir-filters", "Dir Filters");
+    trg_menu_bar_install_widget_prop(object_class, PROP_TRACKER_FILTERS,
+                                     "tracker-filters", "Tracker Filters");
+
+
+    g_object_class_install_property(object_class,
+            PROP_PREFS,
+                                    g_param_spec_object("prefs",
+                                                        "prefs",
+                                                        "Prefs",
+                                                        TRG_TYPE_PREFS,
+                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                                        |
+                                                        G_PARAM_STATIC_NAME
+                                                        |
+                                                        G_PARAM_STATIC_NICK
+                                                        |
+                                                        G_PARAM_STATIC_BLURB));
 }
 
 static void trg_menu_bar_init(TrgMenuBar * self)
 {
-    TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(self);
-
-    gtk_menu_shell_append(GTK_MENU_SHELL(self),
-                          trg_menu_bar_file_file_menu_new(priv));
-    gtk_menu_shell_append(GTK_MENU_SHELL(self),
-                          trg_menu_bar_torrent_menu_new(priv));
-    gtk_menu_shell_append(GTK_MENU_SHELL(self),
-                          trg_menu_bar_options_menu_new(priv));
-    gtk_menu_shell_append(GTK_MENU_SHELL(self),
-                          trg_menu_bar_view_menu_new(priv));
-    trg_menu_bar_help_menu_new(TRG_MENU_BAR(self));
 }
 
-TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win G_GNUC_UNUSED)
+TrgMenuBar *trg_menu_bar_new(TrgPrefs *prefs)
 {
-    GObject *obj = g_object_new(TRG_TYPE_MENU_BAR, NULL);
-    return TRG_MENU_BAR(obj);
+    return g_object_new(TRG_TYPE_MENU_BAR, "prefs", prefs, NULL);
 }

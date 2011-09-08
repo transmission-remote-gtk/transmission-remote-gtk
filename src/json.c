@@ -58,7 +58,7 @@ JsonObject *trg_deserialize(struct http_response * response,
         root = json_parser_get_root(parser);
 #ifdef DEBUG
         if (g_getenv("TRG_SHOW_INCOMING") != NULL) {
-            g_printf("incoming JSON data:\n%s\n", response->data);
+            g_debug("<=(incoming)<=:\n%s\n", response->data);
         } else if (g_getenv("TRG_SHOW_INCOMING_PRETTY") != NULL) {
             JsonGenerator *pg;
             gsize len;
@@ -69,7 +69,7 @@ JsonObject *trg_deserialize(struct http_response * response,
             json_generator_set_root(pg, root);
 
             pgdata = json_generator_to_data(pg, &len);
-            g_printf("incoming JSON data:\n%s\n", pgdata);
+            g_debug("<=(incoming)<=:\n%s\n", pgdata);
             g_free(pgdata);
 
             g_object_unref(pg);

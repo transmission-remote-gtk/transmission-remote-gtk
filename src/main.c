@@ -149,8 +149,6 @@ int main(int argc, char *argv[])
         }
 #endif
 
-        gtk_widget_show_all(GTK_WIDGET(window));
-
         auto_connect_if_required(window, client);
         gtk_main();
 

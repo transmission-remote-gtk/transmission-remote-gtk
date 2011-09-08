@@ -42,7 +42,7 @@ JsonObject *dispatch(TrgClient * client, JsonNode * req, int *status)
     json_node_free(req);
 #ifdef DEBUG
     if (g_getenv("TRG_SHOW_OUTGOING"))
-        g_printf("=>(outgoing)=> %s\n", serialized);
+        g_debug("=>(outgoing)=>\n%s\n", serialized);
 #endif
     response = trg_http_perform(client, serialized);
     g_free(serialized);
@@ -103,7 +103,7 @@ gboolean dispatch_async(TrgClient * client, JsonNode * req,
 
     trg_client_thread_pool_push(client, args, &error);
     if (error) {
-        g_printf("thread creation error: %s\n", error->message);
+        g_error("thread creation error: %s\n", error->message);
         g_error_free(error);
         g_free(args);
         return FALSE;

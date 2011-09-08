@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
+#include "trg-prefs.h"
 #include "trg-main-window.h"
 
 G_BEGIN_DECLS
@@ -47,7 +48,7 @@ typedef struct {
 
 GType trg_menu_bar_get_type(void);
 
-TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win);
+TrgMenuBar *trg_menu_bar_new(TrgPrefs * prefs);
 GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, char *text,
                                  char *stock_id, gboolean sensitive);
 

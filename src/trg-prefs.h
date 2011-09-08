@@ -51,6 +51,8 @@
 #define TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE  "system-tray-minimise"
 #define TRG_PREFS_KEY_FILTER_TRACKERS  "filter-trackers"
 #define TRG_PREFS_KEY_FILTER_DIRS  "filter-dirs"
+#define TRG_PREFS_KEY_SHOW_STATE_SELECTOR "show-state-selector"
+#define TRG_PREFS_KEY_SHOW_NOTEBOOK "show-notebook"
 #define TRG_PREFS_KEY_LAST_TORRENT_DIR "last-torrent-dir"
 #define TRG_PREFS_KEY_ADD_OPTIONS_DIALOG "add-options-dialog"
 #define TRG_PREFS_KEY_START_PAUSED "start-paused"
@@ -102,7 +104,7 @@ TrgPrefs* trg_prefs_new (void);
 void trg_prefs_add_default_int(TrgPrefs *p, gchar *key, int value);
 void trg_prefs_add_default_string(TrgPrefs *p, gchar *key, gchar *value);
 void trg_prefs_add_default_double(TrgPrefs *p, gchar *key, double value);
-void trg_prefs_add_default_bool(TrgPrefs *p, gchar *key, gboolean value);
+void trg_prefs_add_default_bool_true(TrgPrefs *p, gchar *key);
 
 JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int flags);
 gchar *trg_prefs_get_string(TrgPrefs *p, gchar *key, int flags);
