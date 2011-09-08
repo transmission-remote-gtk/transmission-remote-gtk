@@ -357,3 +357,13 @@ void rm_trailing_slashes(gchar *str)
             return;
     }
 }
+
+/* gtk_widget_set_sensitive() was introduced in 2.18, we can have a minimum of
+ * 2.16 otherwise. */
+
+void trg_widget_set_visible(GtkWidget * w, gboolean visible) {
+    if (visible)
+        gtk_widget_show(w);
+    else
+        gtk_widget_hide(w);
+}

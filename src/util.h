@@ -66,5 +66,6 @@ double tr_truncd(double x, int decimal_places);
 int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
                      va_list ap);
 void rm_trailing_slashes(gchar *str);
+void trg_widget_set_visible(GtkWidget * w, gboolean visible);
 
 #endif                          /* UTIL_H_ */

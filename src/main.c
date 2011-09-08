@@ -149,7 +149,6 @@ int main(int argc, char *argv[])
 
         curl_global_init(CURL_GLOBAL_ALL);
 
-
         window = trg_main_window_new(client, should_be_minimised(argc, argv));
 
 #ifdef HAVE_LIBUNIQUE
