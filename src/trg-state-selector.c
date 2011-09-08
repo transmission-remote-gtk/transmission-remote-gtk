@@ -237,9 +237,8 @@ void trg_state_selector_update(TrgStateSelector * s) {
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
     TrgClient *client = priv->client;
     gint64 updateSerial = trg_client_get_serial(client);
-    GList *torrentItemRefs = g_hash_table_get_values(
-            trg_client_get_torrent_table(client));
-    GtkTreeIter iter;
+    GList *torrentItemRefs;
+    GtkTreeIter torrentIter, iter;
     GList *trackersList, *trackerItem, *li;
     GtkTreeRowReference *rr;
     GtkTreePath *path;
@@ -250,6 +249,8 @@ void trg_state_selector_update(TrgStateSelector * s) {
     if (!trg_client_is_connected(client))
         return;
 
+    torrentItemRefs = g_hash_table_get_values(trg_client_get_torrent_table(client));
+
     for (li = torrentItemRefs; li; li = g_list_next(li)) {
         JsonObject *t = NULL;
         rr = (GtkTreeRowReference *) li->data;
@@ -257,9 +258,8 @@ void trg_state_selector_update(TrgStateSelector * s) {
         torrentModel = gtk_tree_row_reference_get_model(rr);
 
         if (path) {
-            GtkTreeIter iter;
-            if (gtk_tree_model_get_iter(torrentModel, &iter, path)) {
-                gtk_tree_model_get(torrentModel, &iter, TORRENT_COLUMN_JSON,
+            if (gtk_tree_model_get_iter(torrentModel, &torrentIter, path)) {
+                gtk_tree_model_get(torrentModel, &torrentIter, TORRENT_COLUMN_JSON,
                         &t, -1);
             }
             gtk_tree_path_free(path);
@@ -306,8 +306,9 @@ void trg_state_selector_update(TrgStateSelector * s) {
         }
 
         if (priv->showDirs) {
-            gchar *dir = g_strdup(torrent_get_download_dir(t));
-            rm_trailing_slashes(dir);
+            gchar *dir;
+            gtk_tree_model_get(torrentModel, &torrentIter, TORRENT_COLUMN_DOWNLOADDIR,
+                    &dir, -1);
 
             result = g_hash_table_lookup(priv->directories, dir);
             if (result) {
@@ -325,6 +326,8 @@ void trg_state_selector_update(TrgStateSelector * s) {
                 g_hash_table_insert(priv->directories, g_strdup(dir),
                         quick_tree_ref_new(model, &iter));
             }
+
+            g_free(dir);
         }
     }
 
@@ -369,7 +372,7 @@ static void trg_state_selector_add_state(GtkListStore * model,
     gtk_list_store_set(model, iter, STATE_SELECTOR_ICON, icon,
             STATE_SELECTOR_NAME, name, STATE_SELECTOR_BIT, flag,
             STATE_SELECTOR_INDEX,
-            gtk_tree_model_iter_n_children(GTK_TREE_MODEL(model), NULL)-1, -1);
+            gtk_tree_model_iter_n_children(GTK_TREE_MODEL(model), NULL) - 1, -1);
 }
 
 static void remove_row_ref_and_free(GtkTreeRowReference * rr) {

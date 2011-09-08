@@ -130,11 +130,12 @@ static GObject *trg_destination_combo_constructor(GType type,
             if (gtk_tree_model_get_iter(model, &iter, path)) {
                 gchar *dd;
                 gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &t,
-                                   -1);
-                dd = g_strdup(torrent_get_download_dir(t));
-                rm_trailing_slashes(dd);
+                        TORRENT_COLUMN_DOWNLOADDIR, &dd,
+                                   -1);;
                 if (dd && g_strcmp0(dd, defaultDownDir))
                     g_slist_str_set_add(&dirs, dd, -1);
+                else
+                    g_free(dd);
             }
 
             gtk_tree_path_free(path);
@@ -146,7 +147,7 @@ static GObject *trg_destination_combo_constructor(GType type,
     g_list_free(torrentItemRefs);
     g_slist_str_set_add(&dirs, defaultDownDir, 0);
 
-    for (sli = dirs; sli != NULL; sli = g_slist_next(sli))
+    for (sli = dirs; sli; sli = g_slist_next(sli))
         gtk_list_store_insert_with_values(comboModel, NULL, INT_MAX, 0,
                                           (gchar *) sli->data, -1);
 

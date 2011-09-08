@@ -228,7 +228,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     guint lastFlags, newFlags;
     JsonObject *lastJson, *pf, *firstTracker;
     JsonArray *trackerStats;
-    gchar *statusString, *statusIcon;
+    gchar *statusString, *statusIcon, *downloadDir;
     gint64 downRate, upRate, downloaded, uploaded, id, status;
 
     downRate = torrent_get_rate_down(t);
@@ -240,8 +240,10 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     uploaded = torrent_get_uploaded(t);
     downloaded = torrent_get_downloaded(t);
 
-    id = torrent_get_id(t);
+    downloadDir = torrent_get_download_dir(t);
+    rm_trailing_slashes(downloadDir);
 
+    id = torrent_get_id(t);
     status = torrent_get_status(t);
     statusString = torrent_get_status_string(rpcv, status);
     newFlags = torrent_get_flags(t, rpcv, status, downRate, upRate);
@@ -287,7 +289,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR,
-                       torrent_get_download_dir(t), -1);
+                       downloadDir, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY,
                        torrent_get_bandwidth_priority(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DONE_DATE,
@@ -331,7 +333,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        && downloaded >
                        0 ? (double) uploaded / (double) downloaded : 0,
                        TORRENT_COLUMN_DOWNLOADDIR,
-                       torrent_get_download_dir(t),
+                       downloadDir,
                        TORRENT_COLUMN_BANDWIDTH_PRIORITY,
                        torrent_get_bandwidth_priority(t),
                        TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
