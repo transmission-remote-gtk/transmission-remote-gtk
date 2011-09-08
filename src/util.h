@@ -65,5 +65,6 @@ size_t tr_strlcpy(char *dst, const void *src, size_t siz);
 double tr_truncd(double x, int decimal_places);
 int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
                      va_list ap);
+void rm_trailing_slashes(gchar *str);
 
 #endif                          /* UTIL_H_ */

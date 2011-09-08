@@ -342,3 +342,18 @@ evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
     return r;
 #endif
 }
+
+void rm_trailing_slashes(gchar *str)
+{
+    int i, len;
+    if ((len = strlen(str)) < 1)
+        return;
+
+    for (i = strlen(str)-1; str[i]; i--)
+    {
+        if (str[i] == '/')
+            str[i] = '\0';
+        else
+            return;
+    }
+}

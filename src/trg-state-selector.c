@@ -306,7 +306,9 @@ void trg_state_selector_update(TrgStateSelector * s) {
         }
 
         if (priv->showDirs) {
-            const gchar *dir = torrent_get_download_dir(t);
+            gchar *dir = g_strdup(torrent_get_download_dir(t));
+            rm_trailing_slashes(dir);
+
             result = g_hash_table_lookup(priv->directories, dir);
             if (result) {
                 trg_state_selector_update_serial(model,

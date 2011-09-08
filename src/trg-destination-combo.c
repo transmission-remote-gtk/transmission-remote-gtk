@@ -96,16 +96,10 @@ static GObject *trg_destination_combo_constructor(GType type,
         (trg_destination_combo_parent_class)->constructor(type,
                                                           n_construct_properties,
                                                           construct_params);
-
     TrgDestinationComboPrivate *priv =
         TRG_DESTINATION_COMBO_GET_PRIVATE(object);
+
     TrgClient *client = priv->client;
-
-    const gchar *defaultDownDir =
-        json_object_get_string_member(trg_client_get_session(client), SGET_DOWNLOAD_DIR);
-
-    GtkListStore *comboModel = gtk_list_store_new(1, G_TYPE_STRING);
-
     GSList *dirs = NULL;
     GSList *sli;
     GList *li;
@@ -114,7 +108,14 @@ static GObject *trg_destination_combo_constructor(GType type,
     GtkTreeRowReference *rr;
     GtkTreeModel *model;
     GtkTreePath *path;
+    GtkListStore *comboModel;
     JsonObject *t;
+
+    gchar *defaultDownDir =
+            g_strdup(session_get_download_dir(trg_client_get_session(client)));
+    rm_trailing_slashes(defaultDownDir);
+
+    comboModel = gtk_list_store_new(1, G_TYPE_STRING);
 
     trg_client_updatelock(client);
     torrentItemRefs = g_hash_table_get_values(trg_client_get_torrent_table(client));
@@ -125,17 +126,22 @@ static GObject *trg_destination_combo_constructor(GType type,
 
         if (path) {
             GtkTreeIter iter;
+
             if (gtk_tree_model_get_iter(model, &iter, path)) {
-                const gchar *dd;
+                gchar *dd;
                 gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &t,
                                    -1);
-                dd = torrent_get_download_dir(t);
+                dd = g_strdup(torrent_get_download_dir(t));
+                rm_trailing_slashes(dd);
                 if (dd && g_strcmp0(dd, defaultDownDir))
                     g_slist_str_set_add(&dirs, dd, -1);
             }
+
             gtk_tree_path_free(path);
         }
     }
+
+    trg_client_updateunlock(client);
 
     g_list_free(torrentItemRefs);
     g_slist_str_set_add(&dirs, defaultDownDir, 0);
@@ -144,15 +150,14 @@ static GObject *trg_destination_combo_constructor(GType type,
         gtk_list_store_insert_with_values(comboModel, NULL, INT_MAX, 0,
                                           (gchar *) sli->data, -1);
 
-    trg_client_updateunlock(client);
-    g_slist_free(dirs);
-
     gtk_combo_box_set_model(GTK_COMBO_BOX(object),
                             GTK_TREE_MODEL(comboModel));
 
     gtk_combo_box_entry_set_text_column(GTK_COMBO_BOX_ENTRY(object), 0);
 
     g_object_unref(comboModel);
+    g_slist_foreach(dirs, (GFunc)g_free, NULL);
+    g_slist_free(dirs);
 
     return object;
 }
