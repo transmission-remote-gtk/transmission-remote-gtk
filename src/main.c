@@ -83,7 +83,7 @@ static gboolean should_be_minimised(int argc, char *argv[])
 {
     int i;
     for(i = 1; i < argc; i++)
-        if (!g_strcmp0(argv[i], "-m") || !g_strcmp0(argv[i], "--minimised"))
+        if (!g_strcmp0(argv[i], "-m") || !g_strcmp0(argv[i], "--minimized"))
             return TRUE;
 
     return FALSE;
