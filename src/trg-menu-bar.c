@@ -48,7 +48,8 @@ enum {
     PROP_QUIT,
     PROP_PREFS,
     PROP_DIR_FILTERS,
-    PROP_TRACKER_FILTERS
+    PROP_TRACKER_FILTERS,
+    PROP_VIEW_SHOW_GRAPH
 };
 
 G_DEFINE_TYPE(TrgMenuBar, trg_menu_bar, GTK_TYPE_MENU_BAR)
@@ -80,6 +81,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_quit;
     GtkWidget *mb_directory_filters;
     GtkWidget *mb_tracker_filters;
+    GtkWidget *mb_view_graph;
     TrgPrefs *prefs;
 };
 
@@ -179,6 +181,9 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
         break;
     case PROP_ABOUT_BUTTON:
         g_value_set_object(value, priv->mb_about);
+        break;
+    case PROP_VIEW_SHOW_GRAPH:
+        g_value_set_object(value, priv->mb_view_graph);
         break;
     case PROP_VIEW_STATES_BUTTON:
         g_value_set_object(value, priv->mb_view_states);
@@ -294,10 +299,13 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
                           priv->mb_tracker_filters);
 
-    priv->mb_view_notebook = trg_menu_bar_view_item_new(priv->prefs, TRG_PREFS_KEY_SHOW_NOTEBOOK, _("Torrent details"), NULL);
+    priv->mb_view_notebook = trg_menu_bar_view_item_new(priv->prefs, TRG_PREFS_KEY_SHOW_NOTEBOOK, _("Torrent Details"), NULL);
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
                           priv->mb_view_notebook);
 
+    priv->mb_view_graph = trg_menu_bar_view_item_new(priv->prefs, TRG_PREFS_KEY_SHOW_GRAPH, _("Graph"), priv->mb_view_notebook);
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+                          priv->mb_view_graph);
 
     priv->mb_view_stats =
         gtk_menu_item_new_with_mnemonic(_("_Statistics"));
@@ -509,6 +517,9 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "dir-filters", "Dir Filters");
     trg_menu_bar_install_widget_prop(object_class, PROP_TRACKER_FILTERS,
                                      "tracker-filters", "Tracker Filters");
+
+    trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_SHOW_GRAPH,
+                                     "show-graph", "Show Graph");
 
 
     g_object_class_install_property(object_class,

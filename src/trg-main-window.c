@@ -676,6 +676,19 @@ static void view_notebook_toggled_cb(GtkCheckMenuItem * w, gpointer data) {
     trg_widget_set_visible(priv->notebook, gtk_check_menu_item_get_active(w));
 }
 
+static void trg_main_window_toggle_graph_cb(GtkCheckMenuItem * w, gpointer win) {
+    if (gtk_check_menu_item_get_active(w))
+        trg_main_window_add_graph(TRG_MAIN_WINDOW(win), TRUE);
+    else
+        trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
+}
+
+void trg_main_window_notebook_set_visible(TrgMainWindow *win, gboolean visible)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    trg_widget_set_visible(priv->notebook, visible);
+}
+
 static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
@@ -1149,7 +1162,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs,
             *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
             *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
-            *b_resume_all, *b_dir_filters, *b_tracker_filters;
+            *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_show_graph;
     TrgMenuBar *menuBar;
 
     menuBar = trg_menu_bar_new(trg_client_get_prefs(priv->client));
@@ -1165,6 +1178,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             "view-states-button", &b_view_states, "view-stats-button",
             &b_view_stats, "about-button", &b_about, "quit-button", &b_quit,
             "dir-filters", &b_dir_filters, "tracker-filters", &b_tracker_filters,
+            "show-graph", &b_show_graph,
             NULL);
 
     g_signal_connect(b_connect, "activate", G_CALLBACK(connect_cb), win);
@@ -1191,16 +1205,19 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             G_CALLBACK(open_remote_prefs_cb), win);
     g_signal_connect(b_view_notebook, "toggled",
             G_CALLBACK(view_notebook_toggled_cb), win);
-    g_signal_connect(b_view_states, "toggled",
-            G_CALLBACK(view_notebook_toggled_cb), win);
-    g_signal_connect(b_view_states, "toggled",
-            G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_dir_filters, "toggled",
             G_CALLBACK(main_window_toggle_filter_dirs), win);
     g_signal_connect(b_tracker_filters, "toggled",
             G_CALLBACK(main_window_toggle_filter_trackers), win);
+    g_signal_connect(b_tracker_filters, "toggled",
+            G_CALLBACK(trg_main_window_toggle_graph_cb), win);
+    g_signal_connect(b_view_states, "toggled",
+            G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
             G_CALLBACK(view_stats_toggled_cb), win);
+    g_signal_connect(b_show_graph, "toggled",
+            G_CALLBACK(trg_main_window_toggle_graph_cb), win);
+
     g_signal_connect(b_props, "activate", G_CALLBACK(open_props_cb), win);
     g_signal_connect(b_quit, "activate", G_CALLBACK(quit_cb), win);
 

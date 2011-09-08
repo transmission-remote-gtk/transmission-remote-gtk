@@ -240,7 +240,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     uploaded = torrent_get_uploaded(t);
     downloaded = torrent_get_downloaded(t);
 
-    downloadDir = torrent_get_download_dir(t);
+    downloadDir = (gchar*)torrent_get_download_dir(t);
     rm_trailing_slashes(downloadDir);
 
     id = torrent_get_id(t);
