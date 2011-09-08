@@ -515,6 +515,8 @@ static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow * win) {
     g_signal_connect(b_props, "clicked", G_CALLBACK(open_props_cb), win);
     g_signal_connect(b_local_prefs, "clicked",
             G_CALLBACK(open_local_prefs_cb), win);
+    g_signal_connect(b_remote_prefs, "clicked",
+            G_CALLBACK(open_remote_prefs_cb), win);
 
     return toolBar;
 }
