@@ -34,6 +34,11 @@ enum {
     SELECTOR_SIGNAL_COUNT
 };
 
+enum {
+    PROP_0, PROP_CLIENT
+};
+
+
 #define N_CATEGORIES 12
 
 static guint signals[SELECTOR_SIGNAL_COUNT] = { 0 };
@@ -48,6 +53,7 @@ struct _TrgStateSelectorPrivate {
     gboolean showDirs;
     gboolean showTrackers;
     TrgClient *client;
+    TrgPrefs *prefs;
     GHashTable *trackers;
     GHashTable *directories;
     GRegex *urlHostRegex;
@@ -63,22 +69,6 @@ guint32 trg_state_selector_get_flag(TrgStateSelector * s)
 {
     TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
     return priv->flag;
-}
-
-static void trg_state_selector_class_init(TrgStateSelectorClass * klass)
-{
-    GObjectClass *object_class = G_OBJECT_CLASS(klass);
-
-    signals[SELECTOR_STATE_CHANGED] =
-        g_signal_new("torrent-state-changed",
-                     G_TYPE_FROM_CLASS(object_class),
-                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-                     G_STRUCT_OFFSET(TrgStateSelectorClass,
-                                     torrent_state_changed), NULL,
-                     NULL, g_cclosure_marshal_VOID__UINT, G_TYPE_NONE,
-                     1, G_TYPE_UINT);
-
-    g_type_class_add_private(klass, sizeof(TrgStateSelectorPrivate));
 }
 
 static void state_selection_changed(GtkTreeSelection * selection,
@@ -434,14 +424,30 @@ void trg_state_selector_disconnect(TrgStateSelector * s)
 
 static void trg_state_selector_init(TrgStateSelector * self)
 {
+}
+
+TrgStateSelector *trg_state_selector_new(TrgClient * client)
+{
+    return g_object_new(TRG_TYPE_STATE_SELECTOR, "client", client, NULL);
+}
+
+static GObject *trg_state_selector_constructor(GType type,
+        guint n_construct_properties, GObjectConstructParam * construct_params) {
+    GObject *object;
     TrgStateSelectorPrivate *priv;
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
     GtkListStore *store;
     GtkTreeIter iter;
+    gint index;
     GtkTreeSelection *selection;
 
-    priv = TRG_STATE_SELECTOR_GET_PRIVATE(self);
+    object = G_OBJECT_CLASS
+    (trg_state_selector_parent_class)->constructor(type,
+            n_construct_properties, construct_params);
+
+    priv = TRG_STATE_SELECTOR_GET_PRIVATE(object);
+
     priv->flag = 0;
 
     priv->urlHostRegex = trg_uri_host_regex_new();
@@ -452,7 +458,7 @@ static void trg_state_selector_init(TrgStateSelector * self)
         g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
                               (GDestroyNotify) remove_row_ref_and_free);
 
-    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(self), FALSE);
+    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(object), FALSE);
 
     column = gtk_tree_view_column_new();
 
@@ -466,7 +472,7 @@ static void trg_state_selector_init(TrgStateSelector * self)
     gtk_tree_view_column_pack_start(column, renderer, TRUE);
     gtk_tree_view_column_set_attributes(column, renderer, "text", 1, NULL);
 
-    gtk_tree_view_append_column(GTK_TREE_VIEW(self), column);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(object), column);
 
     store =
         gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING,
@@ -495,37 +501,93 @@ static void trg_state_selector_init(TrgStateSelector * self)
                                  _("Error"), TORRENT_FLAG_ERROR);
     trg_state_selector_add_state(store, &iter, NULL, NULL, 0);
 
-    gtk_tree_view_set_model(GTK_TREE_VIEW(self), GTK_TREE_MODEL(store));
-    gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(self), TRUE);
+    gtk_tree_view_set_model(GTK_TREE_VIEW(object), GTK_TREE_MODEL(store));
+    gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(object), TRUE);
 
-    gtk_widget_set_size_request(GTK_WIDGET(self), 120, -1);
+    gtk_widget_set_size_request(GTK_WIDGET(object), 120, -1);
 
-    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(self));
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(object));
 
     g_signal_connect(G_OBJECT(selection), "changed",
-                     G_CALLBACK(state_selection_changed), self);
-    g_signal_connect(self, "button-press-event",
+                     G_CALLBACK(state_selection_changed), object);
+    g_signal_connect(object, "button-press-event",
                      G_CALLBACK(view_onButtonPressed), NULL);
-    g_signal_connect(self, "popup-menu", G_CALLBACK(view_onPopupMenu),
+    g_signal_connect(object, "popup-menu", G_CALLBACK(view_onPopupMenu),
                      NULL);
 
-    gtk_tree_view_set_search_column(GTK_TREE_VIEW(self),
+    gtk_tree_view_set_search_column(GTK_TREE_VIEW(object),
                                     STATE_SELECTOR_NAME);
-}
 
-TrgStateSelector *trg_state_selector_new(TrgClient * client)
-{
-    GObject *obj = g_object_new(TRG_TYPE_STATE_SELECTOR, NULL);
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(obj);
-    TrgPrefs *prefs = trg_client_get_prefs(client);
+    index = trg_prefs_get_int(priv->prefs, TRG_PREFS_STATE_SELECTOR_LAST, TRG_PREFS_GLOBAL);
+    if (index > 0 && gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(store), &iter, NULL,
+                                                             index)) {
+        GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(object));
+        gtk_tree_selection_select_iter(selection, &iter);
+    }
 
-    priv->client = client;
     priv->showDirs =
-        trg_prefs_get_bool(prefs,
+        trg_prefs_get_bool(priv->prefs,
                               TRG_PREFS_KEY_FILTER_DIRS, TRG_PREFS_GLOBAL);
     priv->showTrackers =
-        trg_prefs_get_bool(prefs,
+        trg_prefs_get_bool(priv->prefs,
                                       TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL);
 
-    return TRG_STATE_SELECTOR(obj);
+    return object;
+}
+
+static void trg_state_selector_get_property(GObject * object,
+        guint property_id, GValue * value, GParamSpec * pspec) {
+    TrgStateSelectorPrivate *priv =
+            TRG_STATE_SELECTOR_GET_PRIVATE(object);
+    switch (property_id) {
+    case PROP_CLIENT:
+        g_value_set_object(value, priv->client);
+        break;
+    default:
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+    }
+}
+
+static void trg_state_selector_set_property(GObject * object,
+        guint prop_id, const GValue * value, GParamSpec * pspec G_GNUC_UNUSED) {
+    TrgStateSelectorPrivate *priv =
+            TRG_STATE_SELECTOR_GET_PRIVATE(object);
+
+    switch (prop_id) {
+    case PROP_CLIENT:
+        priv->client = g_value_get_object(value);
+        priv->prefs = trg_client_get_prefs(priv->client);
+        break;
+    }
+}
+
+static void trg_state_selector_class_init(TrgStateSelectorClass * klass)
+{
+    GObjectClass *object_class = G_OBJECT_CLASS(klass);
+    object_class->constructor = trg_state_selector_constructor;
+    object_class->set_property = trg_state_selector_set_property;
+    object_class->get_property = trg_state_selector_get_property;
+
+    signals[SELECTOR_STATE_CHANGED] =
+        g_signal_new("torrent-state-changed",
+                     G_TYPE_FROM_CLASS(object_class),
+                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                     G_STRUCT_OFFSET(TrgStateSelectorClass,
+                                     torrent_state_changed), NULL,
+                     NULL, g_cclosure_marshal_VOID__UINT, G_TYPE_NONE,
+                     1, G_TYPE_UINT);
+
+    g_object_class_install_property(
+            object_class,
+            PROP_CLIENT,
+            g_param_spec_object(
+                    "client",
+                    "Client",
+                    "Client",
+                    TRG_TYPE_CLIENT,
+                    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                            | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
+                            | G_PARAM_STATIC_BLURB));
+
+    g_type_class_add_private(klass, sizeof(TrgStateSelectorPrivate));
 }

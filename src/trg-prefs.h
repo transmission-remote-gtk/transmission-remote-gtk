@@ -58,6 +58,7 @@
 #define TRG_PREFS_KEY_START_PAUSED "start-paused"
 #define TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY "update-active-only"
 #define TRG_PREFS_KEY_DELETE_LOCAL_TORRENT "delete-local-torrent"
+#define TRG_PREFS_STATE_SELECTOR_LAST "state-selector-last"
 
 #define TRG_PREFS_KEY_TREE_VIEWS "tree-views"
 #define TRG_PREFS_KEY_TV_SORT_TYPE "sort-type"
