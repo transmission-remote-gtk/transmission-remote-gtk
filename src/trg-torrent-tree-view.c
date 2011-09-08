@@ -91,6 +91,9 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_EPOCH, TORRENT_COLUMN_ADDED,
                              _("Added"), "added", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
+                             TORRENT_COLUMN_TRACKERHOST, _("First Tracker"),
+                             "first-tracker", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
                              TORRENT_COLUMN_DOWNLOADDIR, _("Location"),
                              "download-dir", TRG_COLUMN_EXTRA);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TORRENT_COLUMN_ID,

@@ -176,6 +176,7 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_PEERS_CONNECTED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_FROM_US] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_TO_US] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_TRACKERHOST] = G_TYPE_STRING;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
                                     TORRENT_COLUMN_COLUMNS, column_types);
@@ -225,7 +226,8 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
 {
     GtkListStore *ls = GTK_LIST_STORE(model);
     guint lastFlags, newFlags;
-    JsonObject *lastJson, *pf;
+    JsonObject *lastJson, *pf, *firstTracker;
+    JsonArray *trackerStats;
     gchar *statusString, *statusIcon;
     gint64 downRate, upRate, downloaded, uploaded, id, status;
 
@@ -245,6 +247,9 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     newFlags = torrent_get_flags(t, rpcv, status, downRate, upRate);
     statusIcon = torrent_get_status_icon(rpcv, newFlags);
     pf = torrent_get_peersfrom(t);
+    trackerStats = torrent_get_tracker_stats(t);
+    firstTracker = json_array_get_length(trackerStats) > 0 ?
+            json_array_get_object_element(trackerStats, 0) : NULL;
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
                        TORRENT_COLUMN_FLAGS, &lastFlags,
@@ -297,6 +302,8 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
             torrent_get_peers_sending_to_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_FROM_US,
             torrent_get_peers_getting_from_us(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_TRACKERHOST,
+            firstTracker ? tracker_stats_get_host(firstTracker) : "", -1);
 #else
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ICON, statusIcon,
@@ -328,6 +335,8 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        TORRENT_COLUMN_BANDWIDTH_PRIORITY,
                        torrent_get_bandwidth_priority(t),
                        TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
+                       TORRENT_COLUMN_TRACKERHOST,
+                       firstTracker ? tracker_stats_get_host(firstTracker) : "",
                        TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif
 
