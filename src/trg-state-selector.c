@@ -78,6 +78,7 @@ static void state_selection_changed(GtkTreeSelection * selection,
     GtkTreeIter iter;
     GtkTreeView *tv;
     GtkTreeModel *stateModel;
+    guint index;
 
     priv = TRG_STATE_SELECTOR_GET_PRIVATE(data);
 
@@ -86,9 +87,11 @@ static void state_selection_changed(GtkTreeSelection * selection,
 
     if (gtk_tree_selection_get_selected(selection, &stateModel, &iter))
         gtk_tree_model_get(stateModel, &iter, STATE_SELECTOR_BIT,
-                           &(priv->flag), -1);
+                           &priv->flag, STATE_SELECTOR_INDEX, &index, -1);
     else
         priv->flag = 0;
+
+    trg_prefs_set_int(priv->prefs, TRG_PREFS_STATE_SELECTOR_LAST, index, TRG_PREFS_GLOBAL);
 
     g_signal_emit(TRG_STATE_SELECTOR(data),
                   signals[SELECTOR_STATE_CHANGED], 0, priv->flag);
@@ -317,8 +320,9 @@ void trg_state_selector_update(TrgStateSelector * s)
                                        STATE_SELECTOR_NAME, announceHost,
                                        STATE_SELECTOR_SERIAL,
                                        updateSerial,
-                                       STATE_SELECTOR_BIT,
-                                       FILTER_FLAG_TRACKER, -1);
+                                       STATE_SELECTOR_BIT, FILTER_FLAG_TRACKER,
+                                       STATE_SELECTOR_INDEX, 0,
+                                       -1);
                     g_hash_table_insert(priv->trackers, announceHost,
                                         quick_tree_ref_new(model, &iter));
                 }
@@ -344,6 +348,7 @@ void trg_state_selector_update(TrgStateSelector * s)
                                    STATE_SELECTOR_SERIAL,
                                    updateSerial,
                                    STATE_SELECTOR_BIT, FILTER_FLAG_DIR,
+                                   STATE_SELECTOR_INDEX, 0,
                                    -1);
                 g_hash_table_insert(priv->directories, g_strdup(dir),
                                     quick_tree_ref_new(model, &iter));
@@ -399,7 +404,9 @@ static void trg_state_selector_add_state(GtkListStore * model,
     gtk_list_store_set(model, iter,
                        STATE_SELECTOR_ICON, icon,
                        STATE_SELECTOR_NAME, name,
-                       STATE_SELECTOR_BIT, flag, -1);
+                       STATE_SELECTOR_BIT, flag,
+                       STATE_SELECTOR_INDEX, gtk_tree_model_iter_n_children (GTK_TREE_MODEL(model), NULL),
+                       -1);
 }
 
 static void remove_row_ref_and_free(GtkTreeRowReference * rr)
@@ -476,7 +483,7 @@ static GObject *trg_state_selector_constructor(GType type,
 
     store =
         gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING,
-                           G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT64);
+                           G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT64, G_TYPE_UINT);
 
     trg_state_selector_add_state(store, &iter, GTK_STOCK_ABOUT, _("All"),
                                  0);
