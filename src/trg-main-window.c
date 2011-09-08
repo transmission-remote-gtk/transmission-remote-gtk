@@ -208,10 +208,11 @@ struct _TrgMainWindowPrivate {
     GtkWidget *filterEntry, *filterEntryClearButton;
 
     gint width, height;
+    gboolean min_on_start;
 };
 
 enum {
-    PROP_0, PROP_CLIENT
+    PROP_0, PROP_CLIENT, PROP_MINIMISE_ON_START
 };
 
 static void trg_main_window_init(TrgMainWindow * self G_GNUC_UNUSED) {
@@ -1112,6 +1113,9 @@ static void trg_main_window_get_property(GObject * object, guint property_id,
     case PROP_CLIENT:
         g_value_set_pointer(value, priv->client);
         break;
+    case PROP_MINIMISE_ON_START:
+        g_value_set_boolean(value, priv->min_on_start);
+        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
@@ -1123,6 +1127,9 @@ static void trg_main_window_set_property(GObject * object, guint property_id,
     switch (property_id) {
     case PROP_CLIENT:
         priv->client = g_value_get_pointer(value);
+        break;
+    case PROP_MINIMISE_ON_START:
+        priv->min_on_start = g_value_get_boolean(value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -1744,6 +1751,9 @@ static GObject *trg_main_window_constructor(GType type,
     trg_widget_set_visible(priv->notebook,
             trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SHOW_NOTEBOOK, TRG_PREFS_GLOBAL));
 
+    if (tray && priv->min_on_start)
+        gtk_widget_hide(GTK_WIDGET(self));
+
     return G_OBJECT(self);
 }
 
@@ -1766,6 +1776,18 @@ static void trg_main_window_class_init(TrgMainWindowClass * klass) {
                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
                             | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
                             | G_PARAM_STATIC_BLURB));
+
+    g_object_class_install_property(
+            object_class,
+            PROP_MINIMISE_ON_START,
+            g_param_spec_boolean(
+                    "min-on-start",
+                    "Min On Start",
+                    "Min On Start",
+                    FALSE,
+                    G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                            | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
+                            | G_PARAM_STATIC_BLURB));
 }
 
 void auto_connect_if_required(TrgMainWindow * win, TrgClient * tc) {
@@ -1782,6 +1804,6 @@ void auto_connect_if_required(TrgMainWindow * win, TrgClient * tc) {
     }
 }
 
-TrgMainWindow *trg_main_window_new(TrgClient * tc) {
-    return g_object_new(TRG_TYPE_MAIN_WINDOW, "trg-client", tc, NULL);
+TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart) {
+    return g_object_new(TRG_TYPE_MAIN_WINDOW, "trg-client", tc, "min-on-start", minonstart, NULL);
 }

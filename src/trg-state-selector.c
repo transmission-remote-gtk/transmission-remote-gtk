@@ -72,7 +72,7 @@ static void state_selection_changed(GtkTreeSelection * selection, gpointer data)
     GtkTreeIter iter;
     GtkTreeView *tv;
     GtkTreeModel *stateModel;
-    guint index;
+    guint index = 0;
 
     priv = TRG_STATE_SELECTOR_GET_PRIVATE(data);
 
@@ -367,7 +367,7 @@ static void trg_state_selector_add_state(GtkListStore * model,
     gtk_list_store_set(model, iter, STATE_SELECTOR_ICON, icon,
             STATE_SELECTOR_NAME, name, STATE_SELECTOR_BIT, flag,
             STATE_SELECTOR_INDEX,
-            gtk_tree_model_iter_n_children(GTK_TREE_MODEL(model), NULL), -1);
+            gtk_tree_model_iter_n_children(GTK_TREE_MODEL(model), NULL)-1, -1);
 }
 
 static void remove_row_ref_and_free(GtkTreeRowReference * rr) {

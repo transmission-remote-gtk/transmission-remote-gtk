@@ -79,6 +79,16 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 }
 #endif
 
+static gboolean should_be_minimised(int argc, char *argv[])
+{
+    int i;
+    for(i = 1; i < argc; i++)
+        if (!g_strcmp0(argv[i], "-m") || !g_strcmp0(argv[i], "--minimised"))
+            return TRUE;
+
+    return FALSE;
+}
+
 int main(int argc, char *argv[])
 {
     int returnValue = EXIT_SUCCESS;
@@ -139,7 +149,8 @@ int main(int argc, char *argv[])
 
         curl_global_init(CURL_GLOBAL_ALL);
 
-        window = trg_main_window_new(client);
+
+        window = trg_main_window_new(client, should_be_minimised(argc, argv));
 
 #ifdef HAVE_LIBUNIQUE
         if (withUnique) {
