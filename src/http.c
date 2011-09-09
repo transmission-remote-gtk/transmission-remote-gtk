@@ -146,10 +146,6 @@ static size_t header_callback(void *ptr, size_t size, size_t nmemb,
     if (g_str_has_prefix(header, "X-Transmission-Session-Id: ")) {
         char *nl;
 
-        session_id = trg_client_get_session_id(tc);
-        if (session_id)
-            g_free(session_id);
-
         session_id = g_strdup(header);
         nl = strrchr(session_id, '\r');
         if (nl)

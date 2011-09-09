@@ -67,7 +67,7 @@ trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
         if (priv->epoch_value != new_value) {
             if (new_value > 0) {
 #if GLIB_CHECK_VERSION(2, 26, 00)
-                GDateTime *dt = g_date_time_new_from_unix_utc(new_value);
+                GDateTime *dt = g_date_time_new_from_unix_local(new_value);
                 gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
                 g_object_set(object, "text", timestring, NULL);
                 g_free(timestring);

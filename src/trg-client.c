@@ -276,6 +276,10 @@ gchar *trg_client_get_session_id(TrgClient *tc)
 void trg_client_set_session_id(TrgClient *tc, gchar *session_id)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+
+    if (priv->session_id)
+        g_free(priv->session_id);
+
     priv->session_id = session_id;
 }
 
