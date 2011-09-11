@@ -367,3 +367,17 @@ void trg_widget_set_visible(GtkWidget * w, gboolean visible) {
     else
         gtk_widget_hide(w);
 }
+
+gdouble json_int_or_double_to_double(JsonNode *n)
+{
+    GValue a = { 0 };
+    json_node_get_value(n, &a);
+    switch (G_VALUE_TYPE(&a)) {
+    case G_TYPE_INT64:
+        return (gdouble) g_value_get_int64(&a) * 100.0;
+    case G_TYPE_DOUBLE:
+        return g_value_get_double(&a) * 100.0;
+    default:
+        return 0.0;
+    }
+}

@@ -424,8 +424,6 @@ static GObject *trg_state_selector_constructor(GType type,
     selector = TRG_STATE_SELECTOR(object);
     priv = TRG_STATE_SELECTOR_GET_PRIVATE(object);
 
-    priv->flag = 0;
-
     priv->urlHostRegex = trg_uri_host_regex_new();
     priv->trackers = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
             (GDestroyNotify) remove_row_ref_and_free);
@@ -488,7 +486,7 @@ static GObject *trg_state_selector_constructor(GType type,
 
     gtk_list_store_append(store, &iter);
     trg_state_selector_add_state(selector, &iter, GTK_STOCK_REFRESH,
-            _("Checking"), TORRENT_FLAG_CHECKING);
+            _("Checking"), TORRENT_FLAG_CHECKING_ANY);
 
     gtk_list_store_append(store, &iter);
     trg_state_selector_add_state(selector, &iter, GTK_STOCK_DIALOG_WARNING,
@@ -551,7 +549,6 @@ void trg_state_selector_set_queues_enabled(TrgStateSelector *s, gboolean enabled
         gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 
         priv->n_categories -= 2;
-        g_debug("now categories %d", priv->n_categories);
     }
 }
 

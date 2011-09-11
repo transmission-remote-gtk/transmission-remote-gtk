@@ -267,7 +267,9 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
     gtk_list_store_set(ls, iter,
-                       TORRENT_COLUMN_DONE, torrent_get_percent_done(t),
+                       TORRENT_COLUMN_DONE, (newFlags & TORRENT_FLAG_CHECKING) ?
+                               torrent_get_recheck_progress(t)
+                               : torrent_get_percent_done(t),
                        -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_STATUS, statusString, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNSPEED, downRate, -1);
@@ -315,8 +317,9 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t),
                        TORRENT_COLUMN_NAME, torrent_get_name(t),
                        TORRENT_COLUMN_SIZE, torrent_get_size(t),
-                       TORRENT_COLUMN_DONE,
-                       torrent_get_percent_done(t),
+                       TORRENT_COLUMN_DONE, (newFlags & TORRENT_FLAG_CHECKING) ?
+                         torrent_get_recheck_progress(t)
+                       : torrent_get_percent_done(t),
                        TORRENT_COLUMN_STATUS, statusString,
                        TORRENT_COLUMN_DOWNSPEED, downRate,
                        TORRENT_COLUMN_FLAGS, newFlags,

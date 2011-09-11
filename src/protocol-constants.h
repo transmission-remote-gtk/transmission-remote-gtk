@@ -101,6 +101,7 @@
 #define FIELD_LEECHERCOUNT              "leecherCount"
 #define FIELD_HOST                      "host"
 #define FIELD_LAST_ANNOUNCE_RESULT      "lastAnnounceResult"
+#define FIELD_RECHECK_PROGRESS          "recheckProgress"
 
 /* methods */
 

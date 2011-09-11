@@ -169,17 +169,12 @@ gboolean torrent_get_is_finished(JsonObject * t)
 
 gdouble torrent_get_percent_done(JsonObject * t)
 {
-    JsonNode *percentDone = json_object_get_member(t, FIELD_PERCENTDONE);
-    GValue a = { 0 };
-    json_node_get_value(percentDone, &a);
-    switch (G_VALUE_TYPE(&a)) {
-    case G_TYPE_INT64:
-        return (gdouble) g_value_get_int64(&a) * 100.0;
-    case G_TYPE_DOUBLE:
-        return g_value_get_double(&a) * 100.0;
-    default:
-        return 0.0;
-    }
+    return json_int_or_double_to_double(json_object_get_member(t, FIELD_PERCENTDONE));
+}
+
+gdouble torrent_get_recheck_progress(JsonObject * t)
+{
+    return json_int_or_double_to_double(json_object_get_member(t, FIELD_RECHECK_PROGRESS));
 }
 
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 downRate, gint64 upRate)
@@ -192,10 +187,11 @@ guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 dow
             break;
         case TR_STATUS_CHECK_WAIT:
             flags |= TORRENT_FLAG_WAITING_CHECK;
-            flags |= TORRENT_FLAG_CHECKING;
+            flags |= TORRENT_FLAG_CHECKING_ANY;
             break;
         case TR_STATUS_CHECK:
             flags |= TORRENT_FLAG_CHECKING;
+            flags |= TORRENT_FLAG_CHECKING_ANY;
             break;
         case TR_STATUS_DOWNLOAD_WAIT:
             flags |= TORRENT_FLAG_DOWNLOADING_WAIT;
