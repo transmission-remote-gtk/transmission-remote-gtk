@@ -1702,6 +1702,7 @@ static void trg_client_session_updated_cb(TrgClient *tc, JsonObject *session,
 
     if (priv->queuesEnabled != queuesEnabled) {
         trg_menu_bar_set_supports_queues(priv->menuBar, queuesEnabled);
+        trg_state_selector_set_queues_enabled(priv->stateSelector, queuesEnabled);
     }
 
     priv->queuesEnabled = queuesEnabled;

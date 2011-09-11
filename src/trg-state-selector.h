@@ -69,5 +69,6 @@ void trg_state_selector_disconnect(TrgStateSelector * s);
 void trg_state_selector_set_show_trackers(TrgStateSelector * s,
                                           gboolean show);
 void trg_state_selector_set_show_dirs(TrgStateSelector * s, gboolean show);
+void trg_state_selector_set_queues_enabled(TrgStateSelector *s, gboolean enabled);
 
 #endif                          /* TRG_STATE_LIST_H_ */

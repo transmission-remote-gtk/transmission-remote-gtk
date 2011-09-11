@@ -30,14 +30,14 @@
 #include "trg-client.h"
 
 enum {
-    SELECTOR_STATE_CHANGED, SELECTOR_SIGNAL_COUNT
+    SELECTOR_STATE_CHANGED,
+    SELECTOR_SIGNAL_COUNT
 };
 
 enum {
-    PROP_0, PROP_CLIENT
+    PROP_0,
+    PROP_CLIENT
 };
-
-#define N_CATEGORIES 12
 
 static guint signals[SELECTOR_SIGNAL_COUNT] = { 0 };
 
@@ -55,6 +55,7 @@ struct _TrgStateSelectorPrivate {
     GHashTable *trackers;
     GHashTable *directories;
     GRegex *urlHostRegex;
+    gint n_categories;
 };
 
 GRegex *trg_state_selector_get_url_host_regex(TrgStateSelector * s) {
@@ -289,7 +290,7 @@ void trg_state_selector_update(TrgStateSelector * s) {
                             (GtkTreeRowReference *) result, updateSerial);
                     g_free(announceHost);
                 } else {
-                    trg_state_selector_insert(s, N_CATEGORIES,
+                    trg_state_selector_insert(s, priv->n_categories,
                             g_hash_table_size(priv->trackers), announceHost,
                             &iter);
                     gtk_list_store_set(GTK_LIST_STORE(model), &iter,
@@ -316,7 +317,7 @@ void trg_state_selector_update(TrgStateSelector * s) {
                         (GtkTreeRowReference *) result, updateSerial);
             } else {
                 trg_state_selector_insert(s,
-                        N_CATEGORIES + g_hash_table_size(priv->trackers), -1,
+                        priv->n_categories + g_hash_table_size(priv->trackers), -1,
                         dir, &iter);
                 gtk_list_store_set(GTK_LIST_STORE(model), &iter,
                         STATE_SELECTOR_ICON, GTK_STOCK_DIRECTORY,
@@ -366,13 +367,17 @@ void trg_state_selector_set_show_trackers(TrgStateSelector * s, gboolean show) {
         trg_state_selector_update(s);
 }
 
-static void trg_state_selector_add_state(GtkListStore * model,
+static void trg_state_selector_add_state(TrgStateSelector *selector,
         GtkTreeIter * iter, gchar * icon, gchar * name, guint32 flag) {
-    gtk_list_store_append(model, iter);
+    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(selector);
+    GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(selector)));
+
     gtk_list_store_set(model, iter, STATE_SELECTOR_ICON, icon,
             STATE_SELECTOR_NAME, name, STATE_SELECTOR_BIT, flag,
             STATE_SELECTOR_INDEX,
             gtk_tree_model_iter_n_children(GTK_TREE_MODEL(model), NULL) - 1, -1);
+
+    priv->n_categories++;
 }
 
 static void remove_row_ref_and_free(GtkTreeRowReference * rr) {
@@ -403,6 +408,7 @@ TrgStateSelector *trg_state_selector_new(TrgClient * client) {
 static GObject *trg_state_selector_constructor(GType type,
         guint n_construct_properties, GObjectConstructParam * construct_params) {
     GObject *object;
+    TrgStateSelector *selector;
     TrgStateSelectorPrivate *priv;
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
@@ -415,6 +421,7 @@ static GObject *trg_state_selector_constructor(GType type,
     (trg_state_selector_parent_class)->constructor(type,
             n_construct_properties, construct_params);
 
+    selector = TRG_STATE_SELECTOR(object);
     priv = TRG_STATE_SELECTOR_GET_PRIVATE(object);
 
     priv->flag = 0;
@@ -442,31 +449,54 @@ static GObject *trg_state_selector_constructor(GType type,
 
     store = gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING,
             G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT64, G_TYPE_UINT);
-
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_ABOUT, _("All"), 0);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_DOWN,
-            _("Downloading"), TORRENT_FLAG_DOWNLOADING);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_MEDIA_REWIND,
-            _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_GO_UP, _("Seeding"),
-            TORRENT_FLAG_SEEDING);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_MEDIA_FORWARD,
-            _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_MEDIA_PAUSE,
-            _("Paused"), TORRENT_FLAG_PAUSED);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_APPLY, _("Complete"),
-            TORRENT_FLAG_COMPLETE);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_SELECT_ALL,
-            _("Incomplete"), TORRENT_FLAG_INCOMPLETE);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_NETWORK, _("Active"),
-            TORRENT_FLAG_ACTIVE);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_REFRESH,
-            _("Checking"), TORRENT_FLAG_CHECKING);
-    trg_state_selector_add_state(store, &iter, GTK_STOCK_DIALOG_WARNING,
-            _("Error"), TORRENT_FLAG_ERROR);
-    trg_state_selector_add_state(store, &iter, NULL, NULL, 0);
-
     gtk_tree_view_set_model(GTK_TREE_VIEW(object), GTK_TREE_MODEL(store));
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_ABOUT, _("All"), 0);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_GO_DOWN,
+            _("Downloading"), TORRENT_FLAG_DOWNLOADING);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_MEDIA_REWIND,
+            _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_GO_UP, _("Seeding"),
+            TORRENT_FLAG_SEEDING);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_MEDIA_FORWARD,
+            _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_MEDIA_PAUSE,
+            _("Paused"), TORRENT_FLAG_PAUSED);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_APPLY, _("Complete"),
+            TORRENT_FLAG_COMPLETE);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_SELECT_ALL,
+            _("Incomplete"), TORRENT_FLAG_INCOMPLETE);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_NETWORK, _("Active"),
+            TORRENT_FLAG_ACTIVE);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_REFRESH,
+            _("Checking"), TORRENT_FLAG_CHECKING);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, GTK_STOCK_DIALOG_WARNING,
+            _("Error"), TORRENT_FLAG_ERROR);
+
+    gtk_list_store_append(store, &iter);
+    trg_state_selector_add_state(selector, &iter, NULL, NULL, 0);
+
     gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(object), TRUE);
 
     gtk_widget_set_size_request(GTK_WIDGET(object), 120, -1);
@@ -497,6 +527,32 @@ static GObject *trg_state_selector_constructor(GType type,
             TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL);
 
     return object;
+}
+
+void trg_state_selector_set_queues_enabled(TrgStateSelector *s, gboolean enabled)
+{
+    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
+    GtkTreeIter iter;
+
+    if (enabled) {
+        gtk_list_store_insert(GTK_LIST_STORE(model), &iter, 2);
+        trg_state_selector_add_state(s, &iter, GTK_STOCK_MEDIA_REWIND,
+                _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT);
+
+        gtk_list_store_insert(GTK_LIST_STORE(model), &iter, 4);
+        trg_state_selector_add_state(s, &iter, GTK_STOCK_MEDIA_FORWARD,
+                _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT);
+    } else {
+        gtk_tree_model_iter_nth_child(model, &iter, NULL, 4);
+        gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+
+        gtk_tree_model_iter_nth_child(model, &iter, NULL, 2);
+        gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+
+        priv->n_categories -= 2;
+        g_debug("now categories %d", priv->n_categories);
+    }
 }
 
 static void trg_state_selector_get_property(GObject * object,
