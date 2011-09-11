@@ -1050,6 +1050,8 @@ void on_generic_interactive_action(JsonObject * response, int status,
 
         if (status == CURLE_OK) {
             gint64 id;
+            gint updateStatus;
+            JsonObject *updateResponse;
             if (json_object_has_member(response, PARAM_TAG))
                 id = json_object_get_int_member(response, PARAM_TAG);
             else if (trg_client_get_activeonlyupdate(tc))
@@ -1057,8 +1059,8 @@ void on_generic_interactive_action(JsonObject * response, int status,
             else
                 id = -1;
 
-            dispatch_async(priv->client, torrent_get(id),
-                    on_torrent_get_interactive, data);
+            updateResponse = dispatch(tc, torrent_get(id), &updateStatus);
+            on_torrent_get_interactive(updateResponse, updateStatus, data);
         }
     }
 

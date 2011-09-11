@@ -387,6 +387,14 @@ gint64 torrent_get_peers_getting_from_us(JsonObject *args)
     return json_object_get_int_member(args, FIELD_PEERS_GETTING_FROM_US);
 }
 
+gint64 torrent_get_queue_position(JsonObject *args)
+{
+    if (json_object_has_member(args, FIELD_QUEUE_POSITION))
+        return json_object_get_int_member(args, FIELD_QUEUE_POSITION);
+    else
+        return -1;
+}
+
 /* tracker stats */
 
 gint64 tracker_stats_get_id(JsonObject * t)

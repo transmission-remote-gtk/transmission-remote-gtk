@@ -31,7 +31,7 @@
 #include "trg-cell-renderer-epoch.h"
 #include "trg-cell-renderer-wanted.h"
 #include "trg-cell-renderer-priority.h"
-#include "trg-cell-renderer-numgtzero.h"
+#include "trg-cell-renderer-numgteqthan.h"
 
 enum {
     PROP_0,
@@ -333,7 +333,16 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
                                                      NULL);
         break;
     case TRG_COLTYPE_NUMGTZERO:
-        renderer = trg_cell_renderer_numgtzero_new();
+        renderer = trg_cell_renderer_numgteqthan_new(1);
+        column =
+            gtk_tree_view_column_new_with_attributes(desc->header,
+                                                     renderer,
+                                                     "value",
+                                                     desc->model_column,
+                                                     NULL);
+        break;
+    case TRG_COLTYPE_NUMGTEQZERO:
+        renderer = trg_cell_renderer_numgteqthan_new(0);
         column =
             gtk_tree_view_column_new_with_attributes(desc->header,
                                                      renderer,

@@ -62,6 +62,7 @@ enum {
     TRG_COLTYPE_WANT,
     TRG_COLTYPE_PRIO,
     TRG_COLTYPE_NUMGTZERO,
+    TRG_COLTYPE_NUMGTEQZERO
 } TrgColumnType;
 
 typedef struct {

@@ -101,6 +101,9 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PRIO,
                              TORRENT_COLUMN_BANDWIDTH_PRIORITY,
                              _("Priority"), "priority", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTEQZERO,
+                             TORRENT_COLUMN_QUEUE_POSITION,
+                             _("Queue Position"), "queue-position", TRG_COLUMN_EXTRA);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_EPOCH,
                              TORRENT_COLUMN_DONE_DATE, _("Completed"),
                              "done-date", TRG_COLUMN_EXTRA);

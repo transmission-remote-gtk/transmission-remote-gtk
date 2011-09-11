@@ -82,6 +82,7 @@
 #define FIELD_PEERS_SENDING_TO_US "peersSendingToUs"
 #define FIELD_PEERS_GETTING_FROM_US "peersGettingFromUs"
 #define FIELD_PEERS_CONNECTED "peersConnected"
+#define FIELD_QUEUE_POSITION "queuePosition"
 
 #define FIELD_FILES_WANTED      "files-wanted"
 #define FIELD_FILES_UNWANTED    "files-unwanted"

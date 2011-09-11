@@ -177,6 +177,7 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_PEERS_FROM_US] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_TO_US] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_TRACKERHOST] = G_TYPE_STRING;
+    column_types[TORRENT_COLUMN_QUEUE_POSITION] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
                                     TORRENT_COLUMN_COLUMNS, column_types);
@@ -306,6 +307,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
             torrent_get_peers_getting_from_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_TRACKERHOST,
             firstTracker ? tracker_stats_get_host(firstTracker) : "", -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_QUEUE_POSITION, torrent_get_queue_position(t), -1);
 #else
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ICON, statusIcon,
@@ -327,6 +329,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        TORRENT_COLUMN_PEERS_CONNECTED, torrent_get_peers_connected(t),
                        TORRENT_COLUMN_PEERS_TO_US, torrent_get_peers_sending_to_us(t),
                        TORRENT_COLUMN_PEERS_FROM_US, torrent_get_peers_getting_from_us(t),
+                       TORRENT_COLUMN_QUEUE_POSITION, torrent_get_queue_position(t),
                        TORRENT_COLUMN_RATIO,
                        uploaded >
                        0
