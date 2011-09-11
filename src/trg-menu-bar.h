@@ -56,5 +56,6 @@ G_END_DECLS
     void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
                                                 gboolean sensitive);
 void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected);
+void trg_menu_bar_set_supports_queues(TrgMenuBar *mb, gboolean supportsQueues);
 
 #endif                          /* TRG_MENU_BAR_H_ */

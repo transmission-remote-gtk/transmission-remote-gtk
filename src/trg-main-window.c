@@ -207,6 +207,7 @@ struct _TrgMainWindowPrivate {
 
     gint width, height;
     gboolean min_on_start;
+    gboolean queuesEnabled;
 };
 
 enum {
@@ -681,10 +682,14 @@ static void view_notebook_toggled_cb(GtkCheckMenuItem * w, gpointer data) {
 }
 
 static void trg_main_window_toggle_graph_cb(GtkCheckMenuItem * w, gpointer win) {
-    if (gtk_check_menu_item_get_active(w))
-        trg_main_window_add_graph(TRG_MAIN_WINDOW(win), TRUE);
-    else
-        trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    if (gtk_check_menu_item_get_active(w)) {
+        if (priv->graphNotebookIndex < 0)
+            trg_main_window_add_graph(TRG_MAIN_WINDOW(win), TRUE);
+    } else {
+        if (priv->graphNotebookIndex >= 0)
+            trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
+    }
 }
 
 void trg_main_window_notebook_set_visible(TrgMainWindow *win, gboolean visible)
@@ -1627,7 +1632,25 @@ static gboolean trg_main_window_config_event(GtkWidget *widget,
 
 static void trg_client_session_updated_cb(TrgClient *tc, JsonObject *session, gpointer data)
 {
-    trg_status_bar_session_update(TRG_STATUS_BAR(data), session);
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    gboolean queuesEnabled;
+
+    trg_status_bar_session_update(priv->statusBar, session);
+
+    if (json_object_has_member(session, SGET_DOWNLOAD_QUEUE_ENABLED)) {
+        queuesEnabled =
+                json_object_get_boolean_member(session, SGET_DOWNLOAD_QUEUE_ENABLED)
+                || json_object_get_boolean_member(session, SGET_SEED_QUEUE_ENABLED);
+    } else {
+        queuesEnabled = FALSE;
+    }
+
+    if (priv->queuesEnabled != queuesEnabled)
+    {
+        trg_menu_bar_set_supports_queues(priv->menuBar, queuesEnabled);
+    }
+
+    priv->queuesEnabled = queuesEnabled;
 }
 
 static GObject *trg_main_window_constructor(GType type,
@@ -1647,6 +1670,8 @@ static GObject *trg_main_window_constructor(GType type,
             (type, n_construct_properties,
                     construct_params));
     priv = TRG_MAIN_WINDOW_GET_PRIVATE(self);
+
+    priv->queuesEnabled = TRUE;
 
     prefs = trg_client_get_prefs(priv->client);
 
@@ -1774,7 +1799,7 @@ static GObject *trg_main_window_constructor(GType type,
 
     priv->statusBar = trg_status_bar_new();
     g_signal_connect(priv->client, "session-updated",
-            G_CALLBACK(trg_client_session_updated_cb), priv->statusBar);
+            G_CALLBACK(trg_client_session_updated_cb), self);
 
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(priv->statusBar), FALSE,
             FALSE, 2);

@@ -89,6 +89,14 @@ struct _TrgMenuBarPrivate {
     TrgPrefs *prefs;
 };
 
+void trg_menu_bar_set_supports_queues(TrgMenuBar *mb, gboolean supportsQueues)
+{
+    TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(mb);
+
+    gtk_widget_set_visible(priv->mb_down_queue, supportsQueues);
+    gtk_widget_set_visible(priv->mb_up_queue, supportsQueues);
+}
+
 void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(mb);

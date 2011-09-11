@@ -644,8 +644,8 @@ static GObject *trg_preferences_dialog_constructor(GType type,
 
     gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->win));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_APPLY,
-            GTK_RESPONSE_APPLY);
+    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
+            GTK_RESPONSE_CLOSE);
 
     gtk_dialog_set_default_response(GTK_DIALOG(object), GTK_RESPONSE_CLOSE);
 
