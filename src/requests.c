@@ -92,14 +92,29 @@ JsonNode *torrent_verify(JsonArray * array)
     return generic_request(METHOD_TORRENT_VERIFY, array);
 }
 
-JsonNode *torrent_move_up_queue(JsonArray * array)
+JsonNode *torrent_queue_move_up(JsonArray * array)
 {
     return generic_request(METHOD_QUEUE_MOVE_UP, array);
 }
 
-JsonNode *torrent_move_down_queue(JsonArray * array)
+JsonNode *torrent_queue_move_down(JsonArray * array)
 {
     return generic_request(METHOD_QUEUE_MOVE_DOWN, array);
+}
+
+JsonNode *torrent_start_now(JsonArray * array)
+{
+    return generic_request(METHOD_TORRENT_START_NOW, array);
+}
+
+JsonNode *torrent_queue_move_bottom(JsonArray * array)
+{
+    return generic_request(METHOD_QUEUE_MOVE_BOTTOM, array);
+}
+
+JsonNode *torrent_queue_move_top(JsonArray * array)
+{
+    return generic_request(METHOD_QUEUE_MOVE_TOP, array);
 }
 
 JsonNode *session_set(void)

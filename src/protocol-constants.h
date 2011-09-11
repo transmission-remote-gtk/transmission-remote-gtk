@@ -118,8 +118,11 @@
 #define METHOD_PORT_TEST		"port-test"
 #define METHOD_BLOCKLIST_UPDATE	"blocklist-update"
 #define METHOD_SESSION_STATS	"session-stats"
+#define METHOD_QUEUE_MOVE_TOP   "queue-move-top"
 #define METHOD_QUEUE_MOVE_UP    "queue-move-up"
+#define METHOD_QUEUE_MOVE_BOTTOM "queue-move-bottom"
 #define METHOD_QUEUE_MOVE_DOWN  "queue-move-down"
+#define METHOD_TORRENT_START_NOW "torrent-start-now"
 
 #define PARAM_IDS               "ids"
 #define PARAM_DELETE_LOCAL_DATA "delete-local-data"

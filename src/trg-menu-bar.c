@@ -51,7 +51,10 @@ enum {
     PROP_TRACKER_FILTERS,
     PROP_VIEW_SHOW_GRAPH,
     PROP_MOVE_DOWN_QUEUE,
-    PROP_MOVE_UP_QUEUE
+    PROP_MOVE_UP_QUEUE,
+    PROP_MOVE_BOTTOM_QUEUE,
+    PROP_MOVE_TOP_QUEUE,
+    PROP_START_NOW
 };
 
 G_DEFINE_TYPE(TrgMenuBar, trg_menu_bar, GTK_TYPE_MENU_BAR)
@@ -86,6 +89,10 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_view_graph;
     GtkWidget *mb_down_queue;
     GtkWidget *mb_up_queue;
+    GtkWidget *mb_bottom_queue;
+    GtkWidget *mb_top_queue;
+    GtkWidget *mb_start_now;
+    GtkWidget *mb_queues_seperator;
     TrgPrefs *prefs;
 };
 
@@ -95,6 +102,10 @@ void trg_menu_bar_set_supports_queues(TrgMenuBar *mb, gboolean supportsQueues)
 
     gtk_widget_set_visible(priv->mb_down_queue, supportsQueues);
     gtk_widget_set_visible(priv->mb_up_queue, supportsQueues);
+    gtk_widget_set_visible(priv->mb_top_queue, supportsQueues);
+    gtk_widget_set_visible(priv->mb_bottom_queue, supportsQueues);
+    gtk_widget_set_visible(priv->mb_queues_seperator, supportsQueues);
+    gtk_widget_set_visible(priv->mb_start_now, supportsQueues);
 }
 
 void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
@@ -124,8 +135,11 @@ void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
     gtk_widget_set_sensitive(priv->mb_verify, sensitive);
     gtk_widget_set_sensitive(priv->mb_reannounce, sensitive);
     gtk_widget_set_sensitive(priv->mb_move, sensitive);
+    gtk_widget_set_sensitive(priv->mb_start_now, sensitive);
     gtk_widget_set_sensitive(priv->mb_up_queue, sensitive);
     gtk_widget_set_sensitive(priv->mb_down_queue, sensitive);
+    gtk_widget_set_sensitive(priv->mb_top_queue, sensitive);
+    gtk_widget_set_sensitive(priv->mb_bottom_queue, sensitive);
 }
 
 static void trg_menu_bar_set_property(GObject * object,
@@ -168,6 +182,15 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
         break;
     case PROP_MOVE_DOWN_QUEUE:
         g_value_set_object(value, priv->mb_down_queue);
+        break;
+    case PROP_MOVE_TOP_QUEUE:
+        g_value_set_object(value, priv->mb_top_queue);
+        break;
+    case PROP_MOVE_BOTTOM_QUEUE:
+        g_value_set_object(value, priv->mb_bottom_queue);
+        break;
+    case PROP_START_NOW:
+        g_value_set_object(value, priv->mb_start_now);
         break;
     case PROP_MOVE_BUTTON:
         g_value_set_object(value, priv->mb_move);
@@ -424,12 +447,28 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
                               _("Remove and Delete"), GTK_STOCK_DELETE,
                               FALSE);
 
+    priv->mb_queues_seperator = gtk_separator_menu_item_new();
+    gtk_menu_shell_append(GTK_MENU_SHELL(torrentMenu),
+                          priv->mb_queues_seperator);
+
+    priv->mb_start_now = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
+            _("Start Now"), GTK_STOCK_MEDIA_PLAY,
+            FALSE);
+
     priv->mb_up_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
             _("Move Up Queue"), GTK_STOCK_GO_UP,
             FALSE);
 
     priv->mb_down_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
             _("Move Down Queue"), GTK_STOCK_GO_DOWN,
+            FALSE);
+
+    priv->mb_bottom_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
+            _("Bottom Of Queue"), GTK_STOCK_GOTO_BOTTOM,
+            FALSE);
+
+    priv->mb_top_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
+            _("Top Of Queue"), GTK_STOCK_GOTO_TOP,
             FALSE);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(torrentMenu),
@@ -559,7 +598,12 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "down-queue", "Down Queue");
     trg_menu_bar_install_widget_prop(object_class, PROP_MOVE_UP_QUEUE,
                                      "up-queue", "Up Queue");
-
+    trg_menu_bar_install_widget_prop(object_class, PROP_MOVE_BOTTOM_QUEUE,
+                                     "bottom-queue", "Bottom Queue");
+    trg_menu_bar_install_widget_prop(object_class, PROP_MOVE_TOP_QUEUE,
+                                     "top-queue", "Top Queue");
+    trg_menu_bar_install_widget_prop(object_class, PROP_START_NOW,
+                                     "start-now", "Start Now");
 
     g_object_class_install_property(object_class,
             PROP_PREFS,

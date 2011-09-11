@@ -41,8 +41,11 @@ JsonNode *torrent_set_location(JsonArray * array, gchar * location,
 JsonNode *blocklist_update(void);
 JsonNode *port_test(void);
 JsonNode *session_stats(void);
-JsonNode *torrent_move_down_queue(JsonArray * array);
-JsonNode *torrent_move_up_queue(JsonArray * array);
+JsonNode *torrent_queue_move_down(JsonArray * array);
+JsonNode *torrent_queue_move_up(JsonArray * array);
+JsonNode *torrent_queue_move_bottom(JsonArray * array);
+JsonNode *torrent_queue_move_top(JsonArray * array);
+JsonNode *torrent_start_now(JsonArray * array);
 
 void request_set_tag(JsonNode * req, gint64 tag);
 void request_set_tag_from_ids(JsonNode * req, JsonArray * ids);
