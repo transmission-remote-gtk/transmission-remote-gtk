@@ -535,6 +535,22 @@ static void verify_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
             on_generic_interactive_action, data);
 }
 
+static void up_queue_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+
+    dispatch_async(priv->client,
+            torrent_move_up_queue(build_json_id_array(priv->torrentTreeView)),
+            on_generic_interactive_action, data);
+}
+
+static void down_queue_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+
+    dispatch_async(priv->client,
+            torrent_move_down_queue(build_json_id_array(priv->torrentTreeView)),
+            on_generic_interactive_action, data);
+}
+
 static gint confirm_action_dialog(GtkWindow * win,
         GtkTreeSelection * selection, gchar * question_single,
         gchar * question_multi, gchar * action_stock) {
@@ -1167,7 +1183,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs,
             *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
             *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
-            *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_show_graph;
+            *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_show_graph, *b_up_queue, *b_down_queue;
+
     TrgMenuBar *menuBar;
 
     menuBar = trg_menu_bar_new(trg_client_get_prefs(priv->client));
@@ -1183,8 +1200,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             "view-states-button", &b_view_states, "view-stats-button",
             &b_view_stats, "about-button", &b_about, "quit-button", &b_quit,
             "dir-filters", &b_dir_filters, "tracker-filters", &b_tracker_filters,
-            "show-graph", &b_show_graph,
-            NULL);
+            "show-graph", &b_show_graph, "up-queue", &b_up_queue, "down-queue",
+            &b_down_queue, NULL);
 
     g_signal_connect(b_connect, "activate", G_CALLBACK(connect_cb), win);
     g_signal_connect(b_disconnect, "activate",
@@ -1202,6 +1219,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             win);
     g_signal_connect(b_delete, "activate", G_CALLBACK(delete_cb), win);
     g_signal_connect(b_remove, "activate", G_CALLBACK(remove_cb), win);
+    g_signal_connect(b_up_queue, "activate", G_CALLBACK(up_queue_cb), win);
+    g_signal_connect(b_down_queue, "activate", G_CALLBACK(down_queue_cb), win);
     g_signal_connect(b_move, "activate", G_CALLBACK(move_cb), win);
     g_signal_connect(b_about, "activate", G_CALLBACK(open_about_cb), win);
     g_signal_connect(b_local_prefs, "activate",

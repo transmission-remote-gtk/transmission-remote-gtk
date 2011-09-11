@@ -92,6 +92,16 @@ JsonNode *torrent_verify(JsonArray * array)
     return generic_request(METHOD_TORRENT_VERIFY, array);
 }
 
+JsonNode *torrent_move_up_queue(JsonArray * array)
+{
+    return generic_request(METHOD_QUEUE_MOVE_UP, array);
+}
+
+JsonNode *torrent_move_down_queue(JsonArray * array)
+{
+    return generic_request(METHOD_QUEUE_MOVE_DOWN, array);
+}
+
 JsonNode *session_set(void)
 {
     return generic_request(METHOD_SESSION_SET, NULL);

@@ -1,5 +1,5 @@
 Name: transmission-remote-gtk
-Version: 0.5.2
+Version: 0.6
 Release: 1%{?dist:%{dist}}
 Summary: Remote control client for Transmission BitTorrent
 
@@ -70,11 +70,16 @@ update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 %{_datadir}/locale/uk/LC_MESSAGES/%{name}.mo
 
 %changelog
-* Sat Aug 27 2011 Alan Fitton <alan@eth0.org.uk> 0.5.2
+* Sat Aug 27 2011 Alan Fitton <alan@eth0.org.uk> 0.6
 - Profiles support.
 - New JSON based configuration backend.
 - Populate destination combo in move dialog.
 - Ukranian translation from ROR191.
+- Lots of new columns and info.
+- Supports for queues.
+- Improved status bar and add a free space indicator.
+- Persist/restore filter selection, + notebook/selector visibility.
+- Many other fixes.
 
 * Fri May 6 2011 Alan Fitton <alan@eth0.org.uk> - 0.5.1
 - Use libproxy pkg-config CFLAGS in build, for older versions.

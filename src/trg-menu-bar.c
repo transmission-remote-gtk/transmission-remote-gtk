@@ -49,7 +49,9 @@ enum {
     PROP_PREFS,
     PROP_DIR_FILTERS,
     PROP_TRACKER_FILTERS,
-    PROP_VIEW_SHOW_GRAPH
+    PROP_VIEW_SHOW_GRAPH,
+    PROP_MOVE_DOWN_QUEUE,
+    PROP_MOVE_UP_QUEUE
 };
 
 G_DEFINE_TYPE(TrgMenuBar, trg_menu_bar, GTK_TYPE_MENU_BAR)
@@ -82,6 +84,8 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_directory_filters;
     GtkWidget *mb_tracker_filters;
     GtkWidget *mb_view_graph;
+    GtkWidget *mb_down_queue;
+    GtkWidget *mb_up_queue;
     TrgPrefs *prefs;
 };
 
@@ -112,6 +116,8 @@ void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
     gtk_widget_set_sensitive(priv->mb_verify, sensitive);
     gtk_widget_set_sensitive(priv->mb_reannounce, sensitive);
     gtk_widget_set_sensitive(priv->mb_move, sensitive);
+    gtk_widget_set_sensitive(priv->mb_up_queue, sensitive);
+    gtk_widget_set_sensitive(priv->mb_down_queue, sensitive);
 }
 
 static void trg_menu_bar_set_property(GObject * object,
@@ -148,6 +154,12 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
         break;
     case PROP_DELETE_BUTTON:
         g_value_set_object(value, priv->mb_delete);
+        break;
+    case PROP_MOVE_UP_QUEUE:
+        g_value_set_object(value, priv->mb_up_queue);
+        break;
+    case PROP_MOVE_DOWN_QUEUE:
+        g_value_set_object(value, priv->mb_down_queue);
         break;
     case PROP_MOVE_BUTTON:
         g_value_set_object(value, priv->mb_move);
@@ -259,12 +271,18 @@ static void view_menu_bar_toggled_dependency_cb(GtkCheckMenuItem *w, gpointer da
     gtk_widget_set_sensitive(GTK_WIDGET(data), gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w)));
 }
 
+static void trg_menu_bar_view_item_exposed(GtkWidget *w, GdkEvent *event G_GNUC_UNUSED, gpointer data)
+{
+    TrgPrefs *prefs = TRG_PREFS(data);
+    gchar *key = (gchar*)g_object_get_data(G_OBJECT(w), "conf-key");
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
+                                   (w), trg_prefs_get_bool(prefs, key, TRG_PREFS_GLOBAL));
+}
+
 static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs *prefs, gchar *key,
         gchar *label, GtkWidget *dependency)
 {
     GtkWidget *w = gtk_check_menu_item_new_with_label(label);
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
-                                   (w), trg_prefs_get_bool(prefs, key, TRG_PREFS_GLOBAL));
     g_object_set_data_full(G_OBJECT(w), "conf-key", g_strdup(key),
             g_free);
 
@@ -276,6 +294,8 @@ static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs *prefs, gchar *key,
 
     g_signal_connect(w, "toggled",
             G_CALLBACK(view_menu_item_toggled_cb), prefs);
+    g_signal_connect(w, "expose-event",
+            G_CALLBACK(trg_menu_bar_view_item_exposed), prefs);
 
     return w;
 }
@@ -395,6 +415,14 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                               _("Remove and Delete"), GTK_STOCK_DELETE,
                               FALSE);
+
+    priv->mb_up_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
+            _("Move Up Queue"), GTK_STOCK_GO_UP,
+            FALSE);
+
+    priv->mb_down_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
+            _("Move Down Queue"), GTK_STOCK_GO_DOWN,
+            FALSE);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(torrentMenu),
                           gtk_separator_menu_item_new());
@@ -517,9 +545,12 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "dir-filters", "Dir Filters");
     trg_menu_bar_install_widget_prop(object_class, PROP_TRACKER_FILTERS,
                                      "tracker-filters", "Tracker Filters");
-
     trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_SHOW_GRAPH,
                                      "show-graph", "Show Graph");
+    trg_menu_bar_install_widget_prop(object_class, PROP_MOVE_DOWN_QUEUE,
+                                     "down-queue", "Down Queue");
+    trg_menu_bar_install_widget_prop(object_class, PROP_MOVE_UP_QUEUE,
+                                     "up-queue", "Up Queue");
 
 
     g_object_class_install_property(object_class,

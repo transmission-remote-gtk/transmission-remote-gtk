@@ -548,8 +548,11 @@ static trg_http_response *trg_http_perform_inner(TrgClient * tc,
 
     tls->response->size = 0;
     tls->response->status = -1;
-    g_free(tls->response->data);
-    tls->response->data = NULL;
+
+    if (tls->response->data) {
+        g_free(tls->response->data);
+        tls->response->data = NULL;
+    }
 
     curl_easy_setopt(tls->curl, CURLOPT_POSTFIELDS, req);
     tls->response->status = curl_easy_perform(tls->curl);
