@@ -24,8 +24,8 @@
 
 #include "config.h"
 #include "dispatch.h"
-#include "http.h"
 #include "json.h"
+#include "protocol-constants.h"
 
 static void dispatch_async_threadfunc(struct DispatchAsyncData *task,
                                       TrgClient * client);
@@ -33,7 +33,7 @@ static void dispatch_async_threadfunc(struct DispatchAsyncData *task,
 JsonObject *dispatch(TrgClient * client, JsonNode * req, int *status)
 {
     gchar *serialized;
-    struct http_response *response;
+    trg_http_response *response;
     JsonObject *deserialized;
     JsonNode *result;
     GError *decode_error = NULL;
@@ -42,7 +42,7 @@ JsonObject *dispatch(TrgClient * client, JsonNode * req, int *status)
     json_node_free(req);
 #ifdef DEBUG
     if (g_getenv("TRG_SHOW_OUTGOING"))
-        g_debug("=>(outgoing)=>\n%s\n", serialized);
+        g_debug("=>(outgoing)=>\n%s", serialized);
 #endif
     response = trg_http_perform(client, serialized);
     g_free(serialized);
@@ -59,16 +59,16 @@ JsonObject *dispatch(TrgClient * client, JsonNode * req, int *status)
     http_response_free(response);
 
     if (decode_error) {
-        g_printf("JSON decoding error: %s\n", decode_error->message);
+        g_error("JSON decoding error: %s", decode_error->message);
         g_error_free(decode_error);
         if (status)
             *status = FAIL_JSON_DECODE;
         return NULL;
     }
 
-    result = json_object_get_member(deserialized, "result");
+    result = json_object_get_member(deserialized, FIELD_RESULT);
     if (status
-        && (!result || g_strcmp0(json_node_get_string(result), "success")))
+        && (!result || g_strcmp0(json_node_get_string(result), FIELD_SUCCESS)))
         *status = FAIL_RESPONSE_UNSUCCESSFUL;
 
     return deserialized;
@@ -87,7 +87,7 @@ static void dispatch_async_threadfunc(struct DispatchAsyncData *task,
 GThreadPool *dispatch_init_pool(TrgClient * client)
 {
     return g_thread_pool_new((GFunc) dispatch_async_threadfunc, client,
-                             DISPATCH_POOL_SIZE, FALSE, NULL);
+                             DISPATCH_POOL_SIZE, TRUE, NULL);
 }
 
 gboolean dispatch_async(TrgClient * client, JsonNode * req,

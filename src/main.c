@@ -34,7 +34,6 @@
 #include <unique/unique.h>
 #endif
 
-#include "http.h"
 #include "trg-main-window.h"
 #include "trg-client.h"
 

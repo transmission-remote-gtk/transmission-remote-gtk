@@ -73,6 +73,7 @@ void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
 {
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(tv);
+
     gboolean editable = is_tracker_edit_supported(tc);
 
     g_object_set(priv->announceRenderer, "editable", editable, NULL);

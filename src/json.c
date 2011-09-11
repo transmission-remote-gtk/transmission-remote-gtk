@@ -26,7 +26,6 @@
 #include "protocol-constants.h"
 #include "requests.h"
 #include "dispatch.h"
-#include "http.h"
 #include "json.h"
 
 gchar *trg_serialize(JsonNode * req)
@@ -44,7 +43,7 @@ gchar *trg_serialize(JsonNode * req)
     return response;
 }
 
-JsonObject *trg_deserialize(struct http_response * response,
+JsonObject *trg_deserialize(trg_http_response * response,
                             GError ** error)
 {
     JsonParser *parser;
@@ -58,7 +57,7 @@ JsonObject *trg_deserialize(struct http_response * response,
         root = json_parser_get_root(parser);
 #ifdef DEBUG
         if (g_getenv("TRG_SHOW_INCOMING") != NULL) {
-            g_debug("<=(incoming)<=:\n%s\n", response->data);
+            g_debug("<=(incoming)<=:\n%s", response->data);
         } else if (g_getenv("TRG_SHOW_INCOMING_PRETTY") != NULL) {
             JsonGenerator *pg;
             gsize len;

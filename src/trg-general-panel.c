@@ -190,9 +190,9 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
                        TORRENT_COLUMN_SEEDS, &seeders,
                        TORRENT_COLUMN_LEECHERS, &leechers, -1);
 
-    snprintf(buf, sizeof(buf), "%d", seeders);
+    snprintf(buf, sizeof(buf), "%d", seeders >= 0 ? seeders : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_seeders_label), buf);
-    snprintf(buf, sizeof(buf), "%d", leechers);
+    snprintf(buf, sizeof(buf), "%d", leechers >= 0 ? leechers : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_leechers_label), buf);
 }
 

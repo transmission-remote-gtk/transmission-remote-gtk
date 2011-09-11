@@ -36,7 +36,6 @@
 
 #include "dispatch.h"
 #include "trg-client.h"
-#include "http.h"
 #include "json.h"
 #include "util.h"
 #include "requests.h"
@@ -737,6 +736,7 @@ static void on_session_get(JsonObject * response, int status, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     TrgClient *client = priv->client;
     JsonObject *newSession;
+    gboolean isConnected = trg_client_is_connected(client);
 
     gdk_threads_enter();
 
@@ -748,7 +748,7 @@ static void on_session_get(JsonObject * response, int status, gpointer data) {
 
     newSession = get_arguments(response);
 
-    if (!trg_client_is_connected(client)) {
+    if (!isConnected) {
         float version;
         if (session_get_version(newSession, &version)) {
             if (version < TRANSMISSION_MIN_SUPPORTED) {
@@ -765,21 +765,31 @@ static void on_session_get(JsonObject * response, int status, gpointer data) {
                 gtk_dialog_run(GTK_DIALOG(dialog));
                 gtk_widget_destroy(dialog);
                 g_free(msg);
-                goto out;
+                gdk_threads_leave();
+                response_unref(response);
+                return;
             }
         }
 
         trg_status_bar_connect(priv->statusBar, newSession);
         trg_main_window_conn_changed(win, TRUE);
-        dispatch_async(client, torrent_get(-1), on_torrent_get_first, data);
     }
 
     trg_client_set_session(client, newSession);
-    trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
+
+    if (!isConnected)
+        trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
+
+    gdk_threads_leave();
 
     json_object_ref(newSession);
-    out: gdk_threads_leave();
     response_unref(response);
+
+    if (!isConnected) {
+        int firstStatus;
+        JsonObject *firstResponse = dispatch(client, torrent_get(-1), &firstStatus);
+        on_torrent_get_first(firstResponse, firstStatus, data);
+    }
 }
 
 /*
@@ -792,10 +802,7 @@ static void on_torrent_get(JsonObject * response, int mode, int status,
 
     TrgClient *client = priv->client;
     trg_torrent_model_update_stats stats;
-
-    guint interval =
-            gtk_widget_get_visible(GTK_WIDGET(data)) ? trg_client_get_interval(
-                    client) : trg_client_get_minimised_interval(client);
+    guint interval;
 
     /* Disconnected between request and response callback */
     if (!trg_client_is_connected(client)) {
@@ -805,6 +812,9 @@ static void on_torrent_get(JsonObject * response, int mode, int status,
 
     trg_client_updatelock(client);
     gdk_threads_enter();
+
+    interval = gtk_widget_get_visible(GTK_WIDGET(data)) ? trg_client_get_interval(
+                    client) : trg_client_get_minimised_interval(client);
 
     if (status != CURLE_OK) {
         if (trg_client_inc_failcount(client) >= TRG_MAX_RETRIES) {
@@ -923,9 +933,13 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
         } else if (criteria & FILTER_FLAG_DIR) {
             gchar *text = trg_state_selector_get_selected_text(
                     priv->stateSelector);
-            JsonObject *json = NULL;
-            gtk_tree_model_get(model, iter, TORRENT_COLUMN_JSON, &json, -1);
-            if (g_strcmp0(text, torrent_get_download_dir(json)))
+            gchar *dd;
+            int cmp;
+            gtk_tree_model_get(model, iter, TORRENT_COLUMN_DOWNLOADDIR, &dd, -1);
+            cmp = g_strcmp0(text, dd);
+            g_free(dd);
+            g_free(text);
+            if (cmp)
                 return FALSE;
         } else if (!(flags & criteria)) {
             return FALSE;

@@ -26,14 +26,13 @@ transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \
 	  base64.c \
 	  json.c \
-	  http.c \
-	  dispatch.c \
 	  trg-main-window.c \
 	  util.c \
 	  trg-about-window.c \
 	  torrent.c \
 	  tpeer.c \
   	  tfile.c \
+  	  dispatch.c \
 	  session-get.c \
 	  trg-client.c \
 	  trg-preferences-dialog.c \

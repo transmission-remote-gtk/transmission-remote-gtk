@@ -315,9 +315,11 @@ gchar *torrent_get_status_string(gint64 rpcv, gint64 value)
 
 gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
 {
-    GList *trackers = json_array_get_elements(torrent_get_tracker_stats(t));
-    gboolean ret = FALSE;
+    GList *trackers;
     GList *li;
+    gboolean ret = FALSE;
+
+    trackers = json_array_get_elements(torrent_get_tracker_stats(t));
 
     for (li = trackers; li; li = g_list_next(li)) {
         JsonObject *tracker = json_node_get_object((JsonNode *) li->data);

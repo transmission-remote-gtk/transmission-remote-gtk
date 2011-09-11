@@ -23,10 +23,10 @@
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
 
-#include "http.h"
+#include "trg-client.h"
 
 gchar *trg_serialize(JsonNode * req);
-JsonObject *trg_deserialize(struct http_response *response,
+JsonObject *trg_deserialize(trg_http_response *response,
                             GError ** error);
 JsonObject *get_arguments(JsonObject * req);
 JsonObject *node_get_arguments(JsonNode * req);

@@ -25,7 +25,7 @@
 #define FAIL_JSON_DECODE -2
 #define FAIL_RESPONSE_UNSUCCESSFUL -3
 
-#define DISPATCH_POOL_SIZE 4
+#define DISPATCH_POOL_SIZE 3
 
 struct DispatchAsyncData {
     gpointer *data;

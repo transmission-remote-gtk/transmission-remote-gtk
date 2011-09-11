@@ -21,6 +21,7 @@
 #include "config.h"
 #endif
 
+#include <stdlib.h>
 #include <string.h>
 #include <glib.h>
 #include <glib/gprintf.h>
@@ -28,6 +29,9 @@
 #ifdef HAVE_LIBPROXY
 #include <proxy.h>
 #endif
+
+#include <curl/curl.h>
+#include <curl/easy.h>
 
 #include "trg-prefs.h"
 #include "util.h"
@@ -66,6 +70,9 @@ struct _TrgClientPrivate {
     GThreadPool *pool;
     GMutex *updateMutex;
     TrgPrefs *prefs;
+    GPrivate *tlsKey;
+    gint configSerial;
+    GMutex *configMutex;
 };
 
 static void
@@ -130,10 +137,10 @@ trg_client_new (void)
     trg_prefs_load(prefs);
 
     priv->updateMutex = g_mutex_new();
-    priv->activeOnlyUpdate =
-        trg_prefs_get_bool(prefs,
-                              TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_PROFILE);
+    priv->configMutex = g_mutex_new();
+    priv->configSerial = 0;
     priv->pool = dispatch_init_pool(tc);
+    priv->tlsKey = g_private_new(NULL);
 
     return tc;
 }
@@ -181,6 +188,8 @@ int trg_client_populate_with_settings(TrgClient * tc)
     pxProxyFactory *pf = NULL;
 #endif
 
+    g_mutex_lock(priv->configMutex);
+
     g_free(priv->url);
     priv->url = NULL;
 
@@ -227,6 +236,10 @@ int trg_client_populate_with_settings(TrgClient * tc)
     g_free(priv->proxy);
     priv->proxy = NULL;
 
+    priv->activeOnlyUpdate =
+        trg_prefs_get_bool(prefs,
+                              TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_PROFILE);
+
 #ifdef HAVE_LIBPROXY
     if ((pf = px_proxy_factory_new())) {
         char **proxies = px_proxy_factory_get_proxies(pf, priv->url);
@@ -246,6 +259,8 @@ int trg_client_populate_with_settings(TrgClient * tc)
     }
 #endif
 
+    priv->configSerial++;
+    g_mutex_unlock(priv->configMutex);
     return 0;
 }
 
@@ -270,17 +285,21 @@ gchar *trg_client_get_url(TrgClient *tc)
 gchar *trg_client_get_session_id(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    return priv->session_id;
+    return priv->session_id ? g_strdup(priv->session_id) : NULL;
 }
 
 void trg_client_set_session_id(TrgClient *tc, gchar *session_id)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
 
+    g_mutex_lock(priv->configMutex);
+
     if (priv->session_id)
         g_free(priv->session_id);
 
     priv->session_id = session_id;
+
+    g_mutex_unlock(priv->configMutex);
 }
 
 void trg_client_status_change(TrgClient *tc, gboolean connected)
@@ -410,4 +429,149 @@ void trg_client_set_minimised_interval(TrgClient *tc, guint interval)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     priv->min_interval = interval;
+}
+
+/* formerly http.c */
+
+void http_response_free(trg_http_response *response)
+{
+    g_free(response->data);
+    response->data = NULL;
+}
+
+static size_t
+http_receive_callback(void *ptr, size_t size, size_t nmemb, void *data)
+{
+    size_t realsize = size * nmemb;
+    trg_http_response *mem = (trg_http_response *) data;
+
+    mem->data = realloc(mem->data, mem->size + realsize + 1);
+    if (mem->data) {
+        memcpy(&(mem->data[mem->size]), ptr, realsize);
+        mem->size += realsize;
+        mem->data[mem->size] = 0;
+    }
+    return realsize;
+}
+
+static size_t header_callback(void *ptr, size_t size, size_t nmemb,
+                              void *data)
+{
+    char *header = (char *) (ptr);
+    TrgClient *tc = TRG_CLIENT(data);
+    gchar *session_id;
+
+    if (g_str_has_prefix(header, X_TRANSMISSION_SESSION_ID_HEADER_PREFIX)) {
+        char *nl;
+
+        session_id = g_strdup(header);
+        nl = strrchr(session_id, '\r');
+        if (nl)
+            *nl = '\0';
+
+        trg_client_set_session_id(tc, session_id);
+    }
+
+    return (nmemb * size);
+}
+
+static void trg_tls_update(TrgClient *tc, trg_tls *tls, gint serial)
+{
+    gchar *proxy;
+
+    curl_easy_setopt(tls->curl, CURLOPT_PASSWORD, trg_client_get_password(tc));
+    curl_easy_setopt(tls->curl, CURLOPT_USERNAME, trg_client_get_username(tc));
+    curl_easy_setopt(tls->curl, CURLOPT_URL, trg_client_get_url(tc));
+
+    if (trg_client_get_ssl(tc))
+        curl_easy_setopt(tls->curl, CURLOPT_SSL_VERIFYPEER, 0);
+
+    proxy = trg_client_get_proxy(tc);
+    if (proxy) {
+        curl_easy_setopt(tls->curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+        curl_easy_setopt(tls->curl, CURLOPT_PROXY, proxy);
+    }
+
+    tls->serial = serial;
+}
+
+trg_tls *trg_tls_new(TrgClient *tc)
+{
+    trg_tls *tls = g_new0(trg_tls, 1);
+
+    tls->response = g_new0(trg_http_response, 1);
+
+    tls->curl = curl_easy_init();
+    curl_easy_setopt(tls->curl, CURLOPT_USERAGENT, PACKAGE_NAME);
+    curl_easy_setopt(tls->curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_easy_setopt(tls->curl, CURLOPT_WRITEFUNCTION,
+                     &http_receive_callback);
+    curl_easy_setopt(tls->curl, CURLOPT_WRITEDATA, (void *)tls->response);
+    curl_easy_setopt(tls->curl, CURLOPT_HEADERFUNCTION, &header_callback);
+    curl_easy_setopt(tls->curl, CURLOPT_WRITEHEADER, (void *) tc);
+
+    tls->serial = -1;
+
+    return tls;
+}
+
+static trg_http_response *trg_http_perform_inner(TrgClient * tc,
+                                                    gchar * req,
+                                                    gboolean recurse)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    gpointer threadLocalStorage = g_private_get(priv->tlsKey);
+    trg_tls *tls;
+    long httpCode = 0;
+    gchar *session_id;
+    struct curl_slist *headers = NULL;
+
+    if (!threadLocalStorage) {
+        tls = trg_tls_new(tc);
+        g_private_set(priv->tlsKey, tls);
+    } else {
+        tls = (trg_tls*)threadLocalStorage;
+    }
+
+    g_mutex_lock(priv->configMutex);
+
+    if (priv->configSerial > tls->serial)
+        trg_tls_update(tc, tls, priv->configSerial);
+
+    session_id = trg_client_get_session_id(tc);
+    if (session_id) {
+        headers = curl_slist_append(NULL, session_id);
+        curl_easy_setopt(tls->curl, CURLOPT_HTTPHEADER, headers);
+    }
+
+    g_mutex_unlock(priv->configMutex);
+
+    tls->response->size = 0;
+    tls->response->status = -1;
+    g_free(tls->response->data);
+    tls->response->data = NULL;
+
+    curl_easy_setopt(tls->curl, CURLOPT_POSTFIELDS, req);
+    tls->response->status = curl_easy_perform(tls->curl);
+
+    if (session_id) {
+        g_free(session_id);
+        curl_slist_free_all(headers);
+    }
+
+    curl_easy_getinfo(tls->curl, CURLINFO_RESPONSE_CODE, &httpCode);
+
+    if (tls->response->status == CURLE_OK) {
+        if (httpCode == HTTP_CONFLICT && recurse == TRUE)
+            return trg_http_perform_inner(tc, req, FALSE);
+        else if (httpCode != HTTP_OK)
+            tls->response->status = (-httpCode) - 100;
+    }
+
+    return tls->response;
+}
+
+trg_http_response *trg_http_perform(TrgClient * tc, gchar * req)
+{
+    return trg_http_perform_inner(tc, req, TRUE);
 }

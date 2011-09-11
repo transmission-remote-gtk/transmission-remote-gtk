@@ -25,6 +25,11 @@
 #define PARAM_METHOD		"method"
 #define FIELD_ID                "id"
 
+/* top level */
+
+#define FIELD_RESULT        "result"
+#define FIELD_SUCCESS       "success"
+
 /* torrents */
 
 #define FIELD_RECENTLY_ACTIVE     "recently-active"

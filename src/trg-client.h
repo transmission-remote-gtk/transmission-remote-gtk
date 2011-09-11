@@ -16,12 +16,14 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
+
 /* trg-client.h */
 
 #ifndef _TRG_CLIENT_H_
 #define _TRG_CLIENT_H_
 
 #define TRANSMISSION_MIN_SUPPORTED 2.0
+#define X_TRANSMISSION_SESSION_ID_HEADER_PREFIX "X-Transmission-Session-Id: "
 #define TRG_MAX_RETRIES 3
 
 #define TORRENT_GET_MODE_FIRST 0
@@ -32,11 +34,23 @@
 #define TRG_NO_HOSTNAME_SET -2
 #define SESSION_UPDATE_DIVISOR 10
 
+#include <curl/curl.h>
+#include <curl/easy.h>
+
 #include <json-glib/json-glib.h>
 #include <glib-object.h>
 
 #include "trg-prefs.h"
 #include "session-get.h"
+
+#define HTTP_OK 200
+#define HTTP_CONFLICT 409
+
+typedef struct {
+    int status;
+    char *data;
+    int size;
+} trg_http_response;
 
 G_BEGIN_DECLS
 
@@ -66,6 +80,25 @@ typedef struct {
   void (*session_updated) (TrgClient *tc, JsonObject * session, gpointer data);
 
 } TrgClientClass;
+
+/* Thread local storage (TLS).
+ * CURL clients can't be used concurrently.
+ * So create one instance for each thread in the thread pool.
+ */
+typedef struct {
+    /* Use a serial to figure out when there's been a configuration change
+     * by comparing with priv->serial.
+     * We lock updating (and checking for updates) with priv->configMutex
+     */
+    int serial;
+    CURL *curl;
+    trg_http_response *response;
+} trg_tls;
+
+/* stuff that used to be in http.h */
+void http_response_free(trg_http_response *response);
+trg_http_response *trg_http_perform(TrgClient * client, gchar * req);
+/* end http.h*/
 
 GType trg_client_get_type (void);
 
