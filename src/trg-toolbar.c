@@ -244,7 +244,7 @@ static void trg_toolbar_init(TrgToolbar * self)
 
     priv->tb_delete =
         trg_toolbar_item_new(self, _("Remove with data"),
-                             &position, GTK_STOCK_DELETE, FALSE);
+                             &position, GTK_STOCK_CLEAR, FALSE);
 
     /*priv->tb_verify =
        trg_toolbar_item_new(self, "Verify", 11,

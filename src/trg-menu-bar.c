@@ -447,7 +447,7 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
                               GTK_STOCK_REMOVE, FALSE);
     priv->mb_delete =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              _("Remove and Delete"), GTK_STOCK_DELETE,
+                              _("Remove and Delete"), GTK_STOCK_CLEAR,
                               FALSE);
 
     priv->mb_queues_seperator = gtk_separator_menu_item_new();

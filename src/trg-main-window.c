@@ -1476,7 +1476,7 @@ static void trg_torrent_tv_view_menu(GtkWidget * treeview,
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove"), GTK_STOCK_REMOVE,
             TRUE, G_CALLBACK(remove_cb), data);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove & Delete"),
-            GTK_STOCK_DELETE, TRUE, G_CALLBACK(delete_cb), data);
+            GTK_STOCK_CLEAR, TRUE, G_CALLBACK(delete_cb), data);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 
