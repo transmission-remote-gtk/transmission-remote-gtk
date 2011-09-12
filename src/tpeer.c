@@ -22,6 +22,7 @@
 
 #include "tpeer.h"
 #include "protocol-constants.h"
+#include "util.h"
 
 const gchar *peer_get_address(JsonObject * p) {
     return json_object_get_string_member(p, TPEER_ADDRESS);
@@ -48,7 +49,7 @@ gboolean peer_get_is_downloading_from(JsonObject * p) {
 }
 
 gdouble peer_get_progress(JsonObject * p) {
-    return json_object_get_double_member(p, TPEER_PROGRESS) * 100.0;
+    return json_double_to_progress(json_object_get_member(p, TPEER_PROGRESS));
 }
 
 gint64 peer_get_rate_to_client(JsonObject * p) {

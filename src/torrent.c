@@ -169,12 +169,12 @@ gboolean torrent_get_is_finished(JsonObject * t)
 
 gdouble torrent_get_percent_done(JsonObject * t)
 {
-    return json_int_or_double_to_double(json_object_get_member(t, FIELD_PERCENTDONE));
+    return json_double_to_progress(json_object_get_member(t, FIELD_PERCENTDONE));
 }
 
 gdouble torrent_get_recheck_progress(JsonObject * t)
 {
-    return json_int_or_double_to_double(json_object_get_member(t, FIELD_RECHECK_PROGRESS));
+    return json_double_to_progress(json_object_get_member(t, FIELD_RECHECK_PROGRESS));
 }
 
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 downRate, gint64 upRate)

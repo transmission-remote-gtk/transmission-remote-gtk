@@ -67,6 +67,6 @@ int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
                      va_list ap);
 void rm_trailing_slashes(gchar *str);
 void trg_widget_set_visible(GtkWidget * w, gboolean visible);
-gdouble json_int_or_double_to_double(JsonNode *n);
+gdouble json_double_to_progress(JsonNode *n);
 
 #endif                          /* UTIL_H_ */

@@ -368,7 +368,7 @@ void trg_widget_set_visible(GtkWidget * w, gboolean visible) {
         gtk_widget_hide(w);
 }
 
-gdouble json_int_or_double_to_double(JsonNode *n)
+gdouble json_double_to_progress(JsonNode *n)
 {
     GValue a = { 0 };
     json_node_get_value(n, &a);
