@@ -73,13 +73,20 @@ update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 * Sat Aug 27 2011 Alan Fitton <alan@eth0.org.uk> 0.6
 - Profiles support.
 - New JSON based configuration backend.
+- Support new Transmission torrent status values.
 - Populate destination combo in move dialog.
 - Ukranian translation from ROR191.
 - Lots of new columns and info.
+- More options in view menu.
 - Supports for queues.
 - Improved status bar and add a free space indicator.
 - Persist/restore filter selection, + notebook/selector visibility.
-- Many other fixes.
+- Reuse http clients and keep sessions open.
+- Start in tray argument (-m --minimized)
+- Fix timezone display issue.
+- Fix bencoder parser bug (parsing empty lists).
+- Make columns fully shrinkable.
+- Many other fixes/improvements.
 
 * Fri May 6 2011 Alan Fitton <alan@eth0.org.uk> - 0.5.1
 - Use libproxy pkg-config CFLAGS in build, for older versions.
