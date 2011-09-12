@@ -51,6 +51,7 @@ struct _TrgPreferencesDialogPrivate {
     GtkWidget *profileDelButton;
     GtkWidget *profileComboBox;
     GtkWidget *profileNameEntry;
+    GtkWidget *fullUpdateCheck;
     GList *widgets;
 };
 
@@ -206,13 +207,13 @@ static void check_save(TrgPrefs *prefs, void *wdp) {
             wd->flags);
 }
 
-static void trgp_toggle_dependent(GtkToggleButton *b, gpointer data)
-{
+static void trgp_toggle_dependent(GtkToggleButton *b, gpointer data) {
     gtk_widget_set_sensitive(GTK_WIDGET(data), gtk_toggle_button_get_active(b));
 }
 
 static GtkWidget *trgp_check_new(TrgPreferencesDialog *dlg,
-        const char *mnemonic, gchar *key, int flags, GtkToggleButton *dependency) {
+        const char *mnemonic, gchar *key, int flags,
+        GtkToggleButton *dependency) {
     TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
 
     GtkWidget *w = gtk_check_button_new_with_mnemonic(mnemonic);
@@ -222,8 +223,7 @@ static GtkWidget *trgp_check_new(TrgPreferencesDialog *dlg,
     wd->refreshFunc = &check_refresh;
     check_refresh(priv->prefs, wd);
 
-    if (dependency)
-    {
+    if (dependency) {
         g_signal_connect(dependency, "toggled",
                 G_CALLBACK(trgp_toggle_dependent), w);
         gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(dependency));
@@ -250,7 +250,7 @@ static void spin_save(TrgPrefs * prefs, void* wdp) {
 }
 
 static GtkWidget *trgp_spin_new(TrgPreferencesDialog *dlg, gchar * key,
-        int low, int high, int step, int flags) {
+        int low, int high, int step, int flags, GtkToggleButton *dependency) {
     TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
     GtkWidget *w;
 
@@ -261,6 +261,12 @@ static GtkWidget *trgp_spin_new(TrgPreferencesDialog *dlg, gchar * key,
     trg_pref_widget_desc *wd = trg_pref_widget_desc_new(w, key, flags);
     wd->saveFunc = &spin_save;
     wd->refreshFunc = &spin_refresh;
+
+    if (dependency) {
+        g_signal_connect(dependency, "toggled",
+                G_CALLBACK(trgp_toggle_dependent), w);
+        gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(dependency));
+    }
 
     spin_refresh(priv->prefs, wd);
     priv->widgets = g_list_append(priv->widgets, wd);
@@ -277,7 +283,6 @@ static void mininterval_changed_cb(GtkWidget * w, gpointer data) {
     trg_client_set_minimised_interval(TRG_CLIENT(data),
             gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w)));
 }
-
 
 static void toggle_filter_trackers(GtkToggleButton * w, gpointer win) {
     TrgStateSelector *selector = trg_main_window_get_state_selector(
@@ -307,13 +312,16 @@ static void menu_bar_toggle_filter_dirs(GtkToggleButton * w, gpointer win) {
 }
 
 static void view_states_toggled_cb(GtkToggleButton * w, gpointer data) {
-    GtkWidget *scroll = gtk_widget_get_parent(GTK_WIDGET(trg_main_window_get_state_selector(TRG_MAIN_WINDOW(data))));
-    trg_widget_set_visible(scroll,
-            gtk_toggle_button_get_active(w));
+    GtkWidget
+            *scroll =
+                    gtk_widget_get_parent(
+                            GTK_WIDGET(trg_main_window_get_state_selector(TRG_MAIN_WINDOW(data))));
+    trg_widget_set_visible(scroll, gtk_toggle_button_get_active(w));
 }
 
 static void notebook_toggled_cb(GtkToggleButton *b, gpointer data) {
-    trg_main_window_notebook_set_visible(TRG_MAIN_WINDOW(data), gtk_toggle_button_get_active(b));
+    trg_main_window_notebook_set_visible(TRG_MAIN_WINDOW(data),
+            gtk_toggle_button_get_active(b));
 }
 
 static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog *dlg) {
@@ -339,7 +347,8 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog *dlg) {
     hig_workarea_add_wide_control(t, &row, w);
 
     w = trgp_check_new(dlg, _("Tracker filters"),
-            TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL, GTK_TOGGLE_BUTTON(dep));
+            TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL,
+            GTK_TOGGLE_BUTTON(dep));
     g_signal_connect(G_OBJECT(w), "toggled",
             G_CALLBACK(toggle_filter_trackers), priv->win);
     hig_workarea_add_wide_control(t, &row, w);
@@ -532,12 +541,22 @@ static void add_profile_cb(GtkWidget *w, gpointer data) {
     gtk_combo_box_set_active_iter(combo, &iter);
 }
 
+static void trgp_double_special_dependent(GtkWidget *widget, gpointer data) {
+    TrgPreferencesDialogPrivate *priv =
+            TRG_PREFERENCES_DIALOG_GET_PRIVATE(gtk_widget_get_toplevel(widget));
+    gtk_widget_set_sensitive(
+            GTK_WIDGET(data),
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget))
+                    && gtk_widget_get_sensitive(priv->fullUpdateCheck)
+                    && gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->fullUpdateCheck)));
+}
+
 static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
     TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
     TrgClient *tc = priv->client;
     TrgPrefs *prefs = priv->prefs;
 
-    GtkWidget *w, *t, *frame, *frameHbox, *profileLabel;
+    GtkWidget *w, *t, *frame, *frameHbox, *profileLabel, *activeOnly;
     GtkWidget *profileButtonsHbox;
     gint row = 0;
 
@@ -583,7 +602,8 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
     hig_workarea_add_row(t, &row, _("Host:"), w, NULL);
 
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_PORT, 1, 65535, 1, TRG_PREFS_PROFILE);
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_PORT, 1, 65535, 1, TRG_PREFS_PROFILE,
+            NULL);
     hig_workarea_add_row(t, &row, _("Port:"), w, NULL);
 
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
@@ -593,14 +613,14 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
     gtk_entry_set_visibility(GTK_ENTRY(w), FALSE);
     hig_workarea_add_row(t, &row, _("Password:"), w, NULL);
 
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_UPDATE_INTERVAL, 1, 60, 1,
-            TRG_PREFS_PROFILE);
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_UPDATE_INTERVAL, 1, INT_MAX, 1,
+            TRG_PREFS_PROFILE, NULL);
     g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb),
             tc);
     hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
 
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, 240, 1,
-            TRG_PREFS_PROFILE);
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, INT_MAX, 1,
+            TRG_PREFS_PROFILE, NULL);
     g_signal_connect(w, "value-changed", G_CALLBACK(mininterval_changed_cb),
             tc);
     hig_workarea_add_row(t, &row, _("Minimised update interval:"), w, NULL);
@@ -609,14 +629,26 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
             TRG_PREFS_KEY_AUTO_CONNECT, TRG_PREFS_PROFILE, NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = trgp_check_new(dlg, _("SSL"), TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE, NULL);
+    w = trgp_check_new(dlg, _("SSL"), TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE,
+            NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = trgp_check_new(dlg, _("Update active torrents only"),
+    activeOnly = w = trgp_check_new(dlg, _("Update active torrents only"),
             TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_PROFILE, NULL);
     g_signal_connect(w, "toggled", G_CALLBACK(update_activeonly_cb),
             tc);
     hig_workarea_add_wide_control(t, &row, w);
+
+    priv->fullUpdateCheck = trgp_check_new(dlg,
+            _("Full update every (?) updates"),
+            TRG_PREFS_ACTIVEONLY_FULLSYNC_ENABLED, TRG_PREFS_PROFILE,
+            GTK_TOGGLE_BUTTON(activeOnly));
+    w = trgp_spin_new(dlg, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2, INT_MAX, 1,
+            TRG_PREFS_PROFILE, GTK_TOGGLE_BUTTON(priv->fullUpdateCheck));
+    g_signal_connect(activeOnly, "toggled",
+            G_CALLBACK(trgp_double_special_dependent), w);
+
+    hig_workarea_add_row_w(t, &row, priv->fullUpdateCheck, w, NULL);
 
     hig_workarea_add_section_divider(t, &row);
 
@@ -719,10 +751,9 @@ static void trg_preferences_dialog_class_init(TrgPreferencesDialogClass * class)
 
 GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow * win,
         TrgClient * client) {
-    if (instance == NULL) {
+    if (!instance)
         instance = g_object_new(TRG_TYPE_PREFERENCES_DIALOG, "main-window",
                 win, "trg-client", client, NULL);
-    }
 
     return GTK_WIDGET(instance);
 }

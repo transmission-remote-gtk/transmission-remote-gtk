@@ -59,7 +59,8 @@
 #define TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY "update-active-only"
 #define TRG_PREFS_KEY_DELETE_LOCAL_TORRENT "delete-local-torrent"
 #define TRG_PREFS_STATE_SELECTOR_LAST "state-selector-last"
-
+#define TRG_PREFS_ACTIVEONLY_FULLSYNC_ENABLED   "activeonly-fullsync-enabled"
+#define TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY     "activeonly-fullsync-every"
 #define TRG_PREFS_KEY_TREE_VIEWS "tree-views"
 #define TRG_PREFS_KEY_TV_SORT_TYPE "sort-type"
 #define TRG_PREFS_KEY_TV_SORT_COL "sort-col"
@@ -110,7 +111,7 @@ void trg_prefs_add_default_bool_true(TrgPrefs *p, gchar *key);
 
 JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int flags);
 gchar *trg_prefs_get_string(TrgPrefs *p, gchar *key, int flags);
-int trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags);
+gint64 trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags);
 gdouble trg_prefs_get_double(TrgPrefs *p, gchar *key, int flags);
 gboolean trg_prefs_get_bool(TrgPrefs *p, gchar *key, int flags);
 JsonObject* trg_prefs_get_profile(TrgPrefs *p);

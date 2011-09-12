@@ -84,6 +84,7 @@ static void trg_prefs_create_defaults(TrgPrefs *p) {
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_PORT, 9091);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_MININTERVAL_DEFAULT);
+    trg_prefs_add_default_int(p, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2);
 
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_DIRS);
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_TRACKERS);
@@ -207,7 +208,7 @@ gchar *trg_prefs_get_string(TrgPrefs *p, gchar *key, int flags) {
         return NULL;
 }
 
-int trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags) {
+gint64 trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, flags);
     if (node)
         return json_node_get_int(node);

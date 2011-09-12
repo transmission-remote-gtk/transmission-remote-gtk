@@ -557,8 +557,7 @@ static void up_queue_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
 static void top_queue_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
-    dispatch_async(
-            priv->client,
+    dispatch_async(priv->client,
             torrent_queue_move_top(build_json_id_array(priv->torrentTreeView)),
             on_generic_interactive_action, data);
 }
@@ -568,7 +567,8 @@ static void bottom_queue_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
 
     dispatch_async(
             priv->client,
-            torrent_queue_move_bottom(build_json_id_array(priv->torrentTreeView)),
+            torrent_queue_move_bottom(
+                    build_json_id_array(priv->torrentTreeView)),
             on_generic_interactive_action, data);
 }
 
@@ -936,13 +936,19 @@ static void on_torrent_get_update(JsonObject * response, int status,
 static gboolean trg_update_torrents_timerfunc(gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     TrgClient *tc = priv->client;
+    TrgPrefs *prefs = trg_client_get_prefs(tc);
 
     if (trg_client_is_connected(tc)) {
-        dispatch_async(
-                tc,
-                torrent_get(trg_client_get_activeonlyupdate(tc) ? -2 : -1),
-                trg_client_get_activeonlyupdate(tc) ? on_torrent_get_active
-                        : on_torrent_get_update, data);
+        gboolean activeOnly = trg_client_get_activeonlyupdate(tc)
+                && (!trg_prefs_get_bool(prefs,
+                        TRG_PREFS_ACTIVEONLY_FULLSYNC_ENABLED,
+                        TRG_PREFS_PROFILE) || (trg_client_get_serial(tc)
+                        % trg_prefs_get_int(prefs,
+                                TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY,
+                                TRG_PREFS_PROFILE) != 0));
+        dispatch_async(tc, torrent_get(activeOnly ? -2 : -1),
+                activeOnly ? on_torrent_get_active : on_torrent_get_update,
+                data);
 
         if (trg_client_get_serial(tc) % SESSION_UPDATE_DIVISOR == 0)
             dispatch_async(priv->client, session_get(), on_session_get, data);
@@ -1472,8 +1478,7 @@ static void trg_torrent_tv_view_menu(GtkWidget * treeview,
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove & Delete"),
             GTK_STOCK_DELETE, TRUE, G_CALLBACK(delete_cb), data);
 
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu),
-            gtk_separator_menu_item_new());
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 
     if (priv->queuesEnabled) {
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Start Now"),
@@ -1702,7 +1707,8 @@ static void trg_client_session_updated_cb(TrgClient *tc, JsonObject *session,
 
     if (priv->queuesEnabled != queuesEnabled) {
         trg_menu_bar_set_supports_queues(priv->menuBar, queuesEnabled);
-        trg_state_selector_set_queues_enabled(priv->stateSelector, queuesEnabled);
+        trg_state_selector_set_queues_enabled(priv->stateSelector,
+                queuesEnabled);
     }
 
     priv->queuesEnabled = queuesEnabled;
