@@ -57,6 +57,8 @@ enum {
     PROP_START_NOW
 };
 
+#define G_DATAKEY_CONF_KEY "conf-key"
+
 G_DEFINE_TYPE(TrgMenuBar, trg_menu_bar, GTK_TYPE_MENU_BAR)
 #define TRG_MENU_BAR_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_MENU_BAR, TrgMenuBarPrivate))
@@ -293,7 +295,7 @@ GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, char *text,
 static void view_menu_item_toggled_cb(GtkCheckMenuItem * w, gpointer data)
 {
     TrgPrefs *p = TRG_PREFS(data);
-    gchar *key = (gchar*)g_object_get_data(G_OBJECT(w), "conf-key");
+    gchar *key = (gchar*)g_object_get_data(G_OBJECT(w), G_DATAKEY_CONF_KEY);
     trg_prefs_set_bool(p, key, gtk_check_menu_item_get_active(w), TRG_PREFS_GLOBAL);
 }
 
@@ -302,20 +304,21 @@ static void view_menu_bar_toggled_dependency_cb(GtkCheckMenuItem *w, gpointer da
     gtk_widget_set_sensitive(GTK_WIDGET(data), gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w)));
 }
 
-static void trg_menu_bar_view_item_exposed(GtkWidget *w, GdkEvent *event G_GNUC_UNUSED, gpointer data)
+static void trg_menu_bar_view_item_update(TrgPrefs *p, gchar *updatedKey, gpointer data)
 {
-    TrgPrefs *prefs = TRG_PREFS(data);
-    gchar *key = (gchar*)g_object_get_data(G_OBJECT(w), "conf-key");
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM
-                                   (w), trg_prefs_get_bool(prefs, key, TRG_PREFS_GLOBAL));
+    gchar *key = (gchar*)g_object_get_data(G_OBJECT(data), G_DATAKEY_CONF_KEY);
+    if (!g_strcmp0(updatedKey, key))
+        gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(data) , trg_prefs_get_bool(p, key, TRG_PREFS_GLOBAL));
 }
 
 static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs *prefs, gchar *key,
         gchar *label, GtkWidget *dependency)
 {
     GtkWidget *w = gtk_check_menu_item_new_with_label(label);
-    g_object_set_data_full(G_OBJECT(w), "conf-key", g_strdup(key),
+    g_object_set_data_full(G_OBJECT(w), G_DATAKEY_CONF_KEY, g_strdup(key),
             g_free);
+
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(w) , trg_prefs_get_bool(prefs, key, TRG_PREFS_GLOBAL));
 
     if (dependency) {
         gtk_widget_set_sensitive(w, gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(dependency)));
@@ -325,8 +328,8 @@ static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs *prefs, gchar *key,
 
     g_signal_connect(w, "toggled",
             G_CALLBACK(view_menu_item_toggled_cb), prefs);
-    g_signal_connect(w, "expose-event",
-            G_CALLBACK(trg_menu_bar_view_item_exposed), prefs);
+    g_signal_connect(prefs, "pref-changed",
+            G_CALLBACK(trg_menu_bar_view_item_update), w);
 
     return w;
 }

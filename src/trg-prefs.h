@@ -96,6 +96,7 @@ typedef struct {
 
 typedef struct {
   GObjectClass parent_class;
+  void (*pref_changed) (TrgPrefs *tc, gchar *key, gpointer data);
 } TrgPrefsClass;
 
 GType trg_prefs_get_type (void);

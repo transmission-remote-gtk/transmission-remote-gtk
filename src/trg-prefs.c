@@ -43,6 +43,18 @@ struct _TrgPrefsPrivate {
     gchar *file;
 };
 
+enum {
+    PREF_CHANGE,
+    PREFS_SIGNAL_COUNT
+};
+
+static guint signals[PREFS_SIGNAL_COUNT] = { 0 };
+
+static void trg_prefs_changed_emit_signal(TrgPrefs *p, gchar *key)
+{
+    g_signal_emit(p, signals[PREF_CHANGE], 0, key);
+}
+
 static void trg_prefs_get_property(GObject *object, guint property_id,
         GValue *value, GParamSpec *pspec) {
     switch (property_id) {
@@ -108,6 +120,15 @@ static void trg_prefs_class_init(TrgPrefsClass *klass) {
     object_class->set_property = trg_prefs_set_property;
     object_class->dispose = trg_prefs_dispose;
     object_class->constructor = trg_prefs_constructor;
+
+    signals[PREF_CHANGE] =
+        g_signal_new("pref-changed",
+                     G_TYPE_FROM_CLASS(object_class),
+                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                     G_STRUCT_OFFSET(TrgPrefsClass,
+                                     pref_changed), NULL,
+                     NULL, g_cclosure_marshal_VOID__POINTER,
+                     G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 static void trg_prefs_init(TrgPrefs *self) {
@@ -213,12 +234,14 @@ gboolean trg_prefs_get_bool(TrgPrefs *p, gchar *key, int flags) {
 void trg_prefs_set_int(TrgPrefs *p, gchar *key, int value, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, flags | TRG_PREFS_NEWNODE);
     json_node_set_int(node, (gint64) value);
+    trg_prefs_changed_emit_signal(p, key);
 }
 
 void trg_prefs_set_string(TrgPrefs *p, gchar *key, const gchar *value,
         int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, flags | TRG_PREFS_NEWNODE);
     json_node_set_string(node, value);
+    trg_prefs_changed_emit_signal(p, key);
 }
 
 void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile) {
@@ -238,6 +261,8 @@ void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile) {
     }
 
     g_list_free(profiles);
+
+    trg_prefs_changed_emit_signal(p, NULL);
 }
 
 JsonObject *trg_prefs_new_profile(TrgPrefs *p) {
@@ -280,11 +305,13 @@ JsonArray* trg_prefs_get_profiles(TrgPrefs *p) {
 void trg_prefs_set_double(TrgPrefs *p, gchar *key, gdouble value, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, flags | TRG_PREFS_NEWNODE);
     json_node_set_double(node, value);
+    trg_prefs_changed_emit_signal(p, key);
 }
 
 void trg_prefs_set_bool(TrgPrefs *p, gchar *key, gboolean value, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, flags | TRG_PREFS_NEWNODE);
     json_node_set_boolean(node, value);
+    trg_prefs_changed_emit_signal(p, key);
 }
 
 gboolean trg_prefs_save(TrgPrefs *p) {
