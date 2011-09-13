@@ -210,7 +210,11 @@ int trg_client_populate_with_settings(TrgClient * tc)
         return TRG_NO_HOSTNAME_SET;
     }
 
+#ifndef CURL_NO_SSL
     priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE);
+#else
+    priv->ssl = FALSE;
+#endif
 
     priv->url =
         g_strdup_printf("%s://%s:%d/transmission/rpc",
@@ -335,11 +339,13 @@ gint64 trg_client_get_serial(TrgClient *tc)
     return priv->updateSerial;
 }
 
+#ifndef CURL_NO_SSL
 gboolean trg_client_get_ssl(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     return priv->ssl;
 }
+#endif
 
 gchar *trg_client_get_proxy(TrgClient *tc)
 {
@@ -483,8 +489,10 @@ static void trg_tls_update(TrgClient *tc, trg_tls *tls, gint serial)
     curl_easy_setopt(tls->curl, CURLOPT_USERNAME, trg_client_get_username(tc));
     curl_easy_setopt(tls->curl, CURLOPT_URL, trg_client_get_url(tc));
 
+#ifndef CURL_NO_SSL
     if (trg_client_get_ssl(tc))
         curl_easy_setopt(tls->curl, CURLOPT_SSL_VERIFYPEER, 0);
+#endif
 
     proxy = trg_client_get_proxy(tc);
     if (proxy) {

@@ -104,7 +104,6 @@ int main(int argc, char *argv[])
     gtk_init(&argc, &argv);
 
     g_set_application_name (PACKAGE_NAME);
-    setlocale(LC_ALL, "");
     bindtextdomain(GETTEXT_PACKAGE, TRGLOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);

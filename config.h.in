@@ -18,6 +18,9 @@
 /* Define to 1 if you have a functional curl library. */
 #undef HAVE_LIBCURL
 
+/* Define if libnotify is available */
+#undef HAVE_LIBNOTIFY
+
 /* Define if libproxy is available */
 #undef HAVE_LIBPROXY
 

@@ -381,6 +381,7 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog *dlg) {
             G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_wide_control(t, &row, w);
 
+#ifdef HAVE_LIBNOTIFY
     w = trgp_check_new(dlg, _("Torrent added notifications"),
             TRG_PREFS_KEY_ADD_NOTIFY, TRG_PREFS_GLOBAL, NULL);
     gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
@@ -396,6 +397,7 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog *dlg) {
     g_signal_connect(G_OBJECT(tray), "toggled",
             G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_wide_control(t, &row, w);
+#endif
 
     return t;
 }
@@ -629,9 +631,11 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
             TRG_PREFS_KEY_AUTO_CONNECT, TRG_PREFS_PROFILE, NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
+#ifndef CURL_NO_SSL
     w = trgp_check_new(dlg, _("SSL"), TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE,
             NULL);
     hig_workarea_add_wide_control(t, &row, w);
+#endif
 
     activeOnly = w = trgp_check_new(dlg, _("Update active torrents only"),
             TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_PROFILE, NULL);

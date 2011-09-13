@@ -32,7 +32,9 @@
 #include <json-glib/json-glib.h>
 #include <gdk/gdkkeysyms.h>
 #include <curl/curl.h>
+#ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
+#endif
 
 #include "dispatch.h"
 #include "trg-client.h"
@@ -70,9 +72,11 @@
 
 static void update_selected_torrent_notebook(TrgMainWindow * win, gint mode,
         gint64 id);
+#ifdef HAVE_LIBNOTIFY
 static void torrent_event_notification(TrgTorrentModel * model, gchar * icon,
         gchar * desc, gint tmout, gchar * prefKey, GtkTreeIter * iter,
         gpointer data);
+#endif
 static void on_torrent_completed(TrgTorrentModel * model, GtkTreeIter * iter,
         gpointer data);
 static void on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
@@ -254,6 +258,7 @@ static void update_selected_torrent_notebook(TrgMainWindow * win, gint mode,
     priv->selectedTorrentId = id;
 }
 
+#ifdef HAVE_LIBNOTIFY
 static void torrent_event_notification(TrgTorrentModel * model, gchar * icon,
         gchar * desc, gint tmout, gchar * prefKey, GtkTreeIter * iter,
         gpointer data) {
@@ -288,13 +293,16 @@ static void torrent_event_notification(TrgTorrentModel * model, gchar * icon,
 
     notify_notification_show(notify, NULL);
 }
+#endif
 
 static void on_torrent_completed(TrgTorrentModel * model, GtkTreeIter * iter,
         gpointer data) {
+#ifdef HAVE_LIBNOTIFY
     torrent_event_notification(model, GTK_STOCK_APPLY,
             _("This torrent has completed."),
             TORRENT_COMPLETE_NOTIFY_TMOUT, TRG_PREFS_KEY_COMPLETE_NOTIFY, iter,
             data);
+#endif
 }
 
 static void on_torrent_addremove(TrgTorrentModel * model, gpointer data) {
@@ -304,9 +312,11 @@ static void on_torrent_addremove(TrgTorrentModel * model, gpointer data) {
 
 static void on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
         gpointer data) {
+#ifdef HAVE_LIBNOTIFY
     torrent_event_notification(model, GTK_STOCK_ADD,
             _("This torrent has been added."), TORRENT_ADD_NOTIFY_TMOUT,
             TRG_PREFS_KEY_ADD_NOTIFY, iter, data);
+#endif
 }
 
 static gboolean delete_event(GtkWidget * w, GdkEvent * event G_GNUC_UNUSED, gpointer data G_GNUC_UNUSED) {
@@ -1745,7 +1755,9 @@ static GObject *trg_main_window_constructor(GType type,
     priv->icon = gtk_icon_theme_load_icon(theme, PACKAGE_NAME, 48,
             GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
 
+#ifdef HAVE_LIBNOTIFY
     notify_init(PACKAGE_NAME);
+#endif
     if (priv->icon)
         gtk_window_set_default_icon(priv->icon);
 

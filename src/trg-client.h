@@ -34,6 +34,10 @@
 #define TRG_NO_HOSTNAME_SET -2
 #define SESSION_UPDATE_DIVISOR 10
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <curl/curl.h>
 #include <curl/easy.h>
 
@@ -113,7 +117,9 @@ gchar *trg_client_get_username(TrgClient *tc);
 gchar *trg_client_get_url(TrgClient *tc);
 gchar *trg_client_get_session_id(TrgClient *tc);
 void trg_client_set_session_id(TrgClient *tc, gchar *session_id);
+#ifndef CURL_NO_SSL
 gboolean trg_client_get_ssl(TrgClient *tc);
+#endif
 gchar *trg_client_get_proxy(TrgClient *tc);
 gint64 trg_client_get_serial(TrgClient *tc);
 void trg_client_thread_pool_push(TrgClient *tc, gpointer data, GError **err);
