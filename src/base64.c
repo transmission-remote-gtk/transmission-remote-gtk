@@ -17,49 +17,29 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <errno.h>
 
 #include <glib.h>
+#include <glib/gstdio.h>
 
 #include "base64.h"
 
-#define my_print_errno(x) printf("%s: error (%d) %s\n", __func__, errno, x);
-
-char *base64encode(char *filename)
+gchar *base64encode(const gchar *filename)
 {
-    gint fd = open(filename, O_RDONLY);
-    struct stat sb;
-    void *addr;
+    GError *error = NULL;
+    GMappedFile *mf =  g_mapped_file_new(filename, FALSE, &error);
     gchar *b64out = NULL;
 
-    if (fd < 0) {
-        my_print_errno("opening file");
-        return NULL;
+    if (error)
+    {
+        g_error(error->message);
+        g_error_free(error);
+    } else {
+        b64out = g_base64_encode((guchar*)g_mapped_file_get_contents(mf), g_mapped_file_get_length(mf));
     }
 
-    if (fstat(fd, &sb) == -1) {
-        my_print_errno("on fstat");
-        close(fd);
-        return NULL;
-    }
-
-    addr = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    if (addr == MAP_FAILED) {
-        my_print_errno("on mmap");
-        close(fd);
-        return NULL;
-    }
-
-    b64out = g_base64_encode((guchar *) addr, sb.st_size);
-    munmap(addr, sb.st_size);
-    close(fd);
+    g_mapped_file_unref(mf);
 
     return b64out;
 }

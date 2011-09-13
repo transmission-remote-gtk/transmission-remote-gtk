@@ -1,18 +1,11 @@
-#include <sys/mman.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <errno.h>
 
 #include <glib.h>
+#include <glib/gstdio.h>
 
 #include "bencode.h"
 #include "trg-file-parser.h"
-
-#define my_print_errno(x) printf("%s: error (%d) %s\n", __func__, errno, x);
 
 static trg_torrent_file_node
     * trg_torrent_file_node_insert(trg_torrent_file_node * top,
@@ -113,36 +106,22 @@ static trg_torrent_file_node *trg_parse_torrent_file_nodes(be_node *
     return top_node;
 }
 
-trg_torrent_file *trg_parse_torrent_file(char *filename)
+trg_torrent_file *trg_parse_torrent_file(const gchar *filename)
 {
-    int fd;
-    struct stat sb;
-    void *addr;
+    GError *error = NULL;
+    GMappedFile *mf;
     be_node *top_node, *info_node, *name_node;
     trg_torrent_file *ret = NULL;
 
-    fd = open(filename, O_RDONLY);
-    if (fd < 0) {
-        my_print_errno("opening file");
-        return NULL;
-    }
+    mf = g_mapped_file_new(filename, FALSE, &error);
 
-    if (fstat(fd, &sb) == -1) {
-        my_print_errno("on fstat");
-        close(fd);
+    if (error) {
+        g_error(error->message);
+        g_error_free(error);
         return NULL;
+    } else {
+        top_node = be_decoden(g_mapped_file_get_contents(mf), g_mapped_file_get_length(mf));
     }
-
-    addr = mmap(NULL, sb.st_size, PROT_READ, MAP_PRIVATE, fd, 0);
-    if (addr == MAP_FAILED) {
-        my_print_errno("on mmap");
-        close(fd);
-        return NULL;
-    }
-
-    top_node = be_decoden((char *) addr, sb.st_size);
-    munmap(addr, sb.st_size);
-    close(fd);
 
     if (!top_node) {
         return NULL;

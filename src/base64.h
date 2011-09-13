@@ -20,6 +20,6 @@
 #ifndef BASE64_H_
 #define BASE64_H_
 
-char *base64encode(char *filename);
+gchar *base64encode(const gchar *filename);
 
 #endif                          /* BASE64_H_ */
