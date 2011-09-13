@@ -1,5 +1,12 @@
 AC_PREREQ(2.63)
 
+case "${host}" in
+        i[[3456789]]86-mingw32*) WIN32="yes" ;;
+        *cygwin*) WIN32="yes" ;;
+        *) WIN32="no" ;;
+esac
+AM_CONDITIONAL([WIN32], test "$WIN32" = "yes")
+
 AC_INIT(transmission-remote-gtk, 0.6, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)

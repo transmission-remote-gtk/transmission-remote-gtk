@@ -13,6 +13,11 @@ public_icons = \
 	hicolor_apps_32x32_transmission-remote-gtk.png \
         $(NULL)
 
+if WIN32
+AM_CFLAGS = -mms-bitfields
+AM_LDFLAGS = -Wl,-subsystem,windows
+endif
+
 EXTRA_DIST = transmission-remote-gtk.desktop.in
 CLEANFILES = transmission-remote-gtk.desktop
 
