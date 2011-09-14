@@ -5,7 +5,7 @@ case "${host}" in
         *cygwin*) WIN32="yes" ;;
         *) WIN32="no" ;;
 esac
-AM_CONDITIONAL([WIN32], test "$WIN32" = "yes")
+dnl AM_CONDITIONAL([WIN32], test "$WIN32" = "yes")
 
 AC_INIT(transmission-remote-gtk, 0.6, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
