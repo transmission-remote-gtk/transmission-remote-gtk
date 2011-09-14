@@ -18,7 +18,7 @@
  */
 
 #include <glib.h>
-#include <stdio.h>
+#include <glib/gstdio.h>
 #include <json-glib/json-glib.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
@@ -320,11 +320,15 @@ gboolean trg_prefs_save(TrgPrefs *p) {
     JsonGenerator *gen = json_generator_new();
     gchar *dirName;
     gboolean success = TRUE;
+    gboolean isNew = TRUE;
 
     dirName = g_path_get_dirname(priv->file);
-    if (!g_file_test(dirName, G_FILE_TEST_IS_DIR))
+    if (!g_file_test(dirName, G_FILE_TEST_IS_DIR)) {
         success = g_mkdir_with_parents(dirName, TRG_PREFS_DEFAULT_DIR_MODE)
                 == 0;
+    } else if (g_file_test(priv->file, G_FILE_TEST_IS_REGULAR)) {
+        isNew = FALSE;
+    }
     g_free(dirName);
 
     if (!success) {
@@ -336,8 +340,11 @@ gboolean trg_prefs_save(TrgPrefs *p) {
     json_generator_set_root(gen, priv->user);
 
     success = json_generator_to_file(gen, priv->file, NULL);
-    if (!success)
+    if (!success) {
         g_error("Problem writing configuration file (permissions?) to: %s", priv->file);
+    } else if (isNew ) {
+        g_chmod(priv->file, 384);
+    }
 
     g_object_unref(gen);
 
