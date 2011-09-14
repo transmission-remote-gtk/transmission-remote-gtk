@@ -85,7 +85,7 @@ void trg_error_dialog(GtkWindow * parent, int status,
     g_free((gpointer) msg);
 }
 
-const gchar *make_error_message(JsonObject * response, int status)
+gchar *make_error_message(JsonObject * response, int status)
 {
     if (status == FAIL_JSON_DECODE) {
         return g_strdup(_("JSON decoding error."));

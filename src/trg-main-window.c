@@ -883,14 +883,11 @@ static void on_torrent_get(JsonObject * response, int mode, int status,
             trg_main_window_conn_changed(TRG_MAIN_WINDOW(data), FALSE);
             trg_dialog_error_handler(TRG_MAIN_WINDOW(data), response, status);
         } else {
-            const gchar *msg;
-            gchar *statusBarMsg;
-
-            msg = make_error_message(response, status);
-            statusBarMsg = g_strdup_printf(_("Request %d/%d failed: %s"),
+            gchar *msg = make_error_message(response, status);
+            gchar *statusBarMsg = g_strdup_printf(_("Request %d/%d failed: %s"),
                     trg_client_get_failcount(client), TRG_MAX_RETRIES, msg);
             trg_status_bar_push_connection_msg(priv->statusBar, statusBarMsg);
-            g_free((gpointer) msg);
+            g_free(msg);
             g_free(statusBarMsg);
             g_timeout_add_seconds(interval, trg_update_torrents_timerfunc, data);
         }
@@ -1059,6 +1056,7 @@ static gboolean trg_dialog_error_handler(TrgMainWindow * win,
         const gchar *msg;
 
         msg = make_error_message(response, status);
+        trg_status_bar_clear_indicators(priv->statusBar);
         trg_status_bar_push_connection_msg(priv->statusBar, msg);
         dialog = gtk_message_dialog_new(GTK_WINDOW(win), GTK_DIALOG_MODAL,
                 GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "%s", msg);

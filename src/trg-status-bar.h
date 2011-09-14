@@ -58,5 +58,6 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session);
 void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
                                         const gchar * msg);
 void trg_status_bar_reset(TrgStatusBar *sb);
+void trg_status_bar_clear_indicators(TrgStatusBar *sb);
 
 #endif                          /* TRG_STATUS_BAR_H_ */

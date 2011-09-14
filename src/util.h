@@ -44,7 +44,7 @@ void g_str_slist_free(GSList * list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);
 void response_unref(JsonObject * response);
-const gchar *make_error_message(JsonObject * response, int status);
+gchar *make_error_message(JsonObject * response, int status);
 void trg_error_dialog(GtkWindow * parent, int status,
                       JsonObject * response);
 

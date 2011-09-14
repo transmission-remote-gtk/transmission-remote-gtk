@@ -42,13 +42,18 @@ static void trg_status_bar_class_init(TrgStatusBarClass * klass)
     g_type_class_add_private(klass, sizeof(TrgStatusBarPrivate));
 }
 
+void trg_status_bar_clear_indicators(TrgStatusBar *sb)
+{
+    TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
+    gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
+    gtk_label_set_text(GTK_LABEL(priv->speed_lbl), "");
+}
+
 void trg_status_bar_reset(TrgStatusBar *sb)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
-
+    trg_status_bar_clear_indicators(sb);
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), _("Disconnected"));
-    gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
-    gtk_label_set_text(GTK_LABEL(priv->speed_lbl), "");
 }
 
 static void trg_status_bar_init(TrgStatusBar * self)
