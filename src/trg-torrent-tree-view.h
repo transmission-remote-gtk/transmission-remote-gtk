@@ -52,8 +52,6 @@ GType trg_torrent_tree_view_get_type(void);
 
 TrgTorrentTreeView *trg_torrent_tree_view_new(TrgPrefs *prefs, GtkTreeModel * model);
 JsonArray *build_json_id_array(TrgTorrentTreeView * tv);
-gboolean get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
-                          GtkTreeIter * out_iter);
 
 G_END_DECLS
 #endif                          /* _TRG_TORRENT_TREE_VIEW_H_ */
