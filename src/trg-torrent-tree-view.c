@@ -107,6 +107,10 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_EPOCH,
                              TORRENT_COLUMN_DONE_DATE, _("Completed"),
                              "done-date", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_EPOCH,
+                             TORRENT_COLUMN_LASTACTIVE, _("Last Active"),
+                             "last-active", TRG_COLUMN_EXTRA);
+
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(tttv),
                                     TORRENT_COLUMN_NAME);
