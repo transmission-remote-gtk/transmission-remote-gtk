@@ -47,6 +47,8 @@
 #include "trg-prefs.h"
 #include "session-get.h"
 
+#define HTTP_URI_PREFIX "http"
+#define HTTPS_URI_PREFIX "https"
 #define HTTP_OK 200
 #define HTTP_CONFLICT 409
 

@@ -42,7 +42,7 @@ JsonObject *dispatch(TrgClient * client, JsonNode * req, int *status)
     json_node_free(req);
 #ifdef DEBUG
     if (g_getenv("TRG_SHOW_OUTGOING"))
-        g_debug("=>(outgoing)=>\n%s", serialized);
+        g_debug("=>(OUTgoing)=>: %s", serialized);
 #endif
     response = trg_http_perform(client, serialized);
     g_free(serialized);

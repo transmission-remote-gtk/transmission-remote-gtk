@@ -210,6 +210,7 @@ struct _TrgMainWindowPrivate {
     GtkWidget *filterEntry, *filterEntryClearButton;
 
     gint width, height;
+    guint timerId;
     gboolean min_on_start;
     gboolean queuesEnabled;
 };
@@ -889,7 +890,7 @@ static void on_torrent_get(JsonObject * response, int mode, int status,
             trg_status_bar_push_connection_msg(priv->statusBar, statusBarMsg);
             g_free(msg);
             g_free(statusBarMsg);
-            g_timeout_add_seconds(interval, trg_update_torrents_timerfunc, data);
+            priv->timerId = g_timeout_add_seconds(interval, trg_update_torrents_timerfunc, data);
         }
         gdk_threads_leave();
         trg_client_updateunlock(client);
@@ -913,7 +914,7 @@ static void on_torrent_get(JsonObject * response, int mode, int status,
         trg_torrent_graph_set_speed(priv->graph, &stats);
 
     if (mode != TORRENT_GET_MODE_INTERACTION)
-        g_timeout_add_seconds(interval, trg_update_torrents_timerfunc, data);
+        priv->timerId = g_timeout_add_seconds(interval, trg_update_torrents_timerfunc, data);
 
     gdk_threads_leave();
     trg_client_updateunlock(client);
@@ -1188,6 +1189,8 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected) {
             trg_torrent_graph_set_nothing(priv->graph);
 
         trg_torrent_model_remove_all(priv->torrentModel);
+
+        priv->timerId = 0;
     }
 
     trg_client_status_change(tc, connected);
@@ -1307,8 +1310,17 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
 }
 
 static void status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED, gpointer data) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+
     gtk_window_deiconify(GTK_WINDOW(data));
     gtk_window_present(GTK_WINDOW(data));
+
+    if (priv->timerId > 0)
+    {
+        g_source_remove(priv->timerId);
+        dispatch_async(priv->client, torrent_get(-1),
+                on_torrent_get_first, data);
+    }
 }
 
 static void clear_filter_entry_cb(GtkWidget * w, gpointer data G_GNUC_UNUSED) {

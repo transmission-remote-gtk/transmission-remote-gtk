@@ -57,7 +57,7 @@ JsonObject *trg_deserialize(trg_http_response * response,
         root = json_parser_get_root(parser);
 #ifdef DEBUG
         if (g_getenv("TRG_SHOW_INCOMING") != NULL) {
-            g_debug("<=(incoming)<=:\n%s", response->data);
+            g_debug("<=(INcoming)<=: %s", response->data);
         } else if (g_getenv("TRG_SHOW_INCOMING_PRETTY") != NULL) {
             JsonGenerator *pg;
             gsize len;

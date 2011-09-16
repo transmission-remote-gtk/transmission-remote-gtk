@@ -138,7 +138,6 @@ trg_client_new (void)
 
     priv->updateMutex = g_mutex_new();
     priv->configMutex = g_mutex_new();
-    priv->configSerial = 0;
     priv->pool = dispatch_init_pool(tc);
     priv->tlsKey = g_private_new(NULL);
 
@@ -220,7 +219,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     priv->url =
         g_strdup_printf("%s://%s:%d/transmission/rpc",
-                        priv->ssl ? "https" : "http", host, port);
+                        priv->ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX, host, port);
     g_free(host);
 
     priv->interval =
@@ -252,7 +251,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
         int i;
 
         for (i = 0; proxies[i]; i++) {
-            if (g_str_has_prefix(proxies[i], "http")) {
+            if (g_str_has_prefix(proxies[i], HTTP_URI_PREFIX)) {
                 g_free(priv->proxy);
                 priv->proxy = proxies[i];
             } else {
@@ -311,6 +310,7 @@ void trg_client_set_session_id(TrgClient *tc, gchar *session_id)
 void trg_client_status_change(TrgClient *tc, gboolean connected)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+
     if (!connected) {
         json_object_unref(priv->session);
         priv->session = NULL;
