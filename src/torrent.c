@@ -177,6 +177,11 @@ gdouble torrent_get_recheck_progress(JsonObject * t)
     return json_double_to_progress(json_object_get_member(t, FIELD_RECHECK_PROGRESS));
 }
 
+gint64 torrent_get_activity_date(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_ACTIVITY_DATE);
+}
+
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 downRate, gint64 upRate)
 {
     guint32 flags = 0;

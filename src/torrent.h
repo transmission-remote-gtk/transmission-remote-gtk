@@ -85,6 +85,7 @@ gint64 torrent_get_seed_ratio_mode(JsonObject * t);
 gint64 torrent_get_peer_limit(JsonObject * t);
 gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search);
 gint64 torrent_get_queue_position(JsonObject *args);
+gint64 torrent_get_activity_date(JsonObject *t);
 
 /* outer response object */
 
