@@ -73,7 +73,6 @@ struct _TrgClientPrivate {
     GPrivate *tlsKey;
     gint configSerial;
     GMutex *configMutex;
-    GDateTime *updateTime;
 };
 
 static void
@@ -333,18 +332,7 @@ void trg_client_thread_pool_push(TrgClient *tc, gpointer data, GError **err)
 void trg_client_inc_serial(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-
-    if (priv->updateTime)
-        g_date_time_unref(priv->updateTime);
-
-    priv->updateTime = g_date_time_new_now_local ();
     priv->updateSerial++;
-}
-
-gint64 trg_client_get_last_update_unix_time(TrgClient *tc)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    return priv->updateTime ? g_date_time_to_unix(priv->updateTime) : -1;
 }
 
 gint64 trg_client_get_serial(TrgClient *tc)

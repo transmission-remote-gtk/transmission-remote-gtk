@@ -119,7 +119,6 @@ gchar *trg_client_get_username(TrgClient *tc);
 gchar *trg_client_get_url(TrgClient *tc);
 gchar *trg_client_get_session_id(TrgClient *tc);
 void trg_client_set_session_id(TrgClient *tc, gchar *session_id);
-gint64 trg_client_get_last_update_unix_time(TrgClient *tc);
 #ifndef CURL_NO_SSL
 gboolean trg_client_get_ssl(TrgClient *tc);
 #endif
