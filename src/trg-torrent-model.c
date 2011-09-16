@@ -220,6 +220,13 @@ trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
     return FALSE;
 }
 
+void trg_torrent_model_remove_all(TrgTorrentModel *model)
+{
+    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
+    g_hash_table_remove_all(priv->ht);
+    gtk_list_store_clear(GTK_LIST_STORE(model));
+}
+
 static void
 update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                     GtkTreeIter * iter, JsonObject * t,

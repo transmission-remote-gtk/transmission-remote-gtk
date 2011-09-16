@@ -340,11 +340,11 @@ gboolean trg_prefs_save(TrgPrefs *p) {
     json_generator_set_root(gen, priv->user);
 
     success = json_generator_to_file(gen, priv->file, NULL);
-    if (!success) {
+
+    if (!success)
         g_error("Problem writing configuration file (permissions?) to: %s", priv->file);
-    } else if (isNew ) {
+    else if (isNew)
         g_chmod(priv->file, 384);
-    }
 
     g_object_unref(gen);
 

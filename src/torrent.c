@@ -137,6 +137,11 @@ gint64 torrent_get_eta(JsonObject * t)
     return json_object_get_int_member(t, FIELD_ETA);
 }
 
+gint64 torrent_get_downloaded(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_DOWNLOADEDEVER);
+}
+
 gint64 torrent_get_uploaded(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_UPLOADEDEVER);
@@ -150,11 +155,6 @@ gint64 torrent_get_have_valid(JsonObject * t)
 gint64 torrent_get_have_unchecked(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_HAVEUNCHECKED);
-}
-
-gint64 torrent_get_downloaded(JsonObject * t)
-{
-    return torrent_get_have_valid(t) + torrent_get_have_unchecked(t);
 }
 
 gint64 torrent_get_status(JsonObject * t)

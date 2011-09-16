@@ -1181,12 +1181,13 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected) {
     ;
 
     if (!connected) {
-        gtk_list_store_clear(GTK_LIST_STORE(priv->torrentModel));
         trg_main_window_torrent_scrub(win);
         trg_state_selector_disconnect(priv->stateSelector);
 
         if (priv->graphNotebookIndex >= 0)
             trg_torrent_graph_set_nothing(priv->graph);
+
+        trg_torrent_model_remove_all(priv->torrentModel);
     }
 
     trg_client_status_change(tc, connected);

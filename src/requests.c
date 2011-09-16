@@ -159,12 +159,13 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_PEERS_SENDING_TO_US);
     json_array_add_string_element(fields, FIELD_PEERS_GETTING_FROM_US);
     json_array_add_string_element(fields, FIELD_PEERS_CONNECTED);
-    json_array_add_string_element(fields, FIELD_HAVEVALID);
-    json_array_add_string_element(fields, FIELD_HAVEUNCHECKED);
+    /*json_array_add_string_element(fields, FIELD_HAVEVALID);
+    json_array_add_string_element(fields, FIELD_HAVEUNCHECKED);*/
     json_array_add_string_element(fields, FIELD_RATEUPLOAD);
     json_array_add_string_element(fields, FIELD_RATEDOWNLOAD);
     json_array_add_string_element(fields, FIELD_STATUS);
     json_array_add_string_element(fields, FIELD_ADDED_DATE);
+    json_array_add_string_element(fields, FIELD_DOWNLOADEDEVER);
     json_array_add_string_element(fields, FIELD_UPLOADEDEVER);
     json_array_add_string_element(fields, FIELD_SIZEWHENDONE);
     json_array_add_string_element(fields, FIELD_QUEUE_POSITION);
