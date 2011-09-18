@@ -246,8 +246,6 @@ static void update_selected_torrent_notebook(TrgMainWindow * win, gint mode,
                 t, mode);
     } else if (id < 0) {
         trg_main_window_torrent_scrub(win);
-        trg_toolbar_torrent_actions_sensitive(priv->toolBar, FALSE);
-        trg_menu_bar_torrent_actions_sensitive(priv->menuBar, FALSE);
     }
 
     priv->selectedTorrentId = id;
@@ -1125,6 +1123,9 @@ void trg_main_window_torrent_scrub(TrgMainWindow * win) {
     trg_general_panel_clear(priv->genDetails);
     trg_trackers_model_set_no_selection(TRG_TRACKERS_MODEL
     (priv->trackersModel));
+
+    trg_toolbar_torrent_actions_sensitive(priv->toolBar, FALSE);
+    trg_menu_bar_torrent_actions_sensitive(priv->menuBar, FALSE);
 }
 
 static void entry_filter_changed_cb(GtkWidget * w, gpointer data) {

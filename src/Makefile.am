@@ -13,11 +13,6 @@ public_icons = \
 	hicolor_apps_32x32_transmission-remote-gtk.png \
         $(NULL)
 
-#if WIN32
-#AM_CFLAGS = -mms-bitfields
-#AM_LDFLAGS = -Wl,-subsystem,windows
-#endif
-
 EXTRA_DIST = transmission-remote-gtk.desktop.in
 CLEANFILES = transmission-remote-gtk.desktop
 
@@ -26,11 +21,7 @@ desktop_DATA = transmission-remote-gtk.desktop
 
 bin_PROGRAMS = transmission-remote-gtk
 INCLUDES = --pedantic -Wall -I.. -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
-
-if WIN32
-INCLUDES += -mms-bitfields -mwin32
-endif
-
+		
 transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \
 	  json.c \
@@ -82,8 +73,16 @@ transmission_remote_gtk_SOURCES = main.c \
 	  $(NULL)
 
 transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS)
+
 if WIN32
-transmission_remote_gtk_LDFLAGS += -mwindows
+.rc.o:
+	windres $^ -o $@
+%.o : %.rc
+	windres $^ -o $@
+
+AM_CFLAGS = -mms-bitfields -mwin32 -mwindows
+transmission_remote_gtk_LDFLAGS += -Wl,--subsystem,windows
+transmission_remote_gtk_SOURCES += win32.rc
 endif
 
 install-data-local: install-icons update-icon-cache

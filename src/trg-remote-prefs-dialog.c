@@ -109,6 +109,7 @@ static void trg_remote_prefs_dialog_get_property(GObject * object,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
@@ -125,6 +126,7 @@ static void trg_remote_prefs_dialog_set_property(GObject * object,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 

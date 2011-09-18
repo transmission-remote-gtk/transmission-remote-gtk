@@ -38,6 +38,9 @@
 #include "trg-client.h"
 
 #ifdef HAVE_LIBUNIQUE
+
+#define TRG_LIBUNIQUE_DOMAIN "uk.org.eth0.trg"
+
 enum {
     COMMAND_0,
     COMMAND_ADD
@@ -116,7 +119,7 @@ int main(int argc, char *argv[])
 
 #ifdef HAVE_LIBUNIQUE
     if ((withUnique = g_getenv("TRG_NOUNIQUE") == NULL))
-        app = unique_app_new_with_commands("uk.org.eth0.trg", NULL,
+        app = unique_app_new_with_commands(TRG_LIBUNIQUE_DOMAIN, NULL,
                                            "add", COMMAND_ADD, NULL);
 
     if (withUnique && unique_app_is_running(app)) {
