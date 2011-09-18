@@ -87,7 +87,6 @@ static void trg_prefs_create_defaults(TrgPrefs *p) {
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_MININTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2);
-    trg_prefs_add_default_int(p, TRG_PREFS_KEY_NOTEBOOK_PANED_POS, 185);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_STATES_PANED_POS, 120);
 
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_DIRS);
