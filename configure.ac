@@ -1,12 +1,5 @@
 AC_PREREQ(2.63)
 
-case "${host}" in
-        i[[3456789]]86-mingw32*) WIN32="yes" ;;
-        *cygwin*) WIN32="yes" ;;
-        *) WIN32="no" ;;
-esac
-dnl AM_CONDITIONAL([WIN32], test "$WIN32" = "yes")
-
 AC_INIT(transmission-remote-gtk, 0.6, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
@@ -26,29 +19,31 @@ IT_PROG_INTLTOOL([0.35.0])
 AC_CHECK_HEADERS([stdlib.h string.h])
 AC_TYPE_SIZE_T
 
-OSNAME=`uname -s`
-case "$OSNAME" in
-        FreeBSD*)
-                CPPFLAGS="$CPPFLAGS -I/usr/local/include"
-        ;;
+case "${host_os}" in
+        *mingw32*) WIN32="yes" ;;
+        *cygwin*) WIN32="yes" ;;
+        *freebsd*) WIN32="no";
+        	CPPFLAGS="$CPPFLAGS -I/usr/local/include" ;;
+        *) WIN32="no" ;;
 esac
 
-trglocaledir='${prefix}/${DATADIRNAME}/locale'
+AM_CONDITIONAL([WIN32], test "$WIN32" = "yes")
+
 trglicense='${docdir}-$(PACKAGE_VERSION)/COPYING'
-AC_SUBST(trglocaledir)
 AC_SUBST(trglicense)
 GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
+AC_DEFINE_DIR([LOCALEDIR], [datarootdir/locale], [gettext catalogs])
 
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
 PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
+PKG_CHECK_MODULES([libcurl], [libcurl])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
 PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents]))
 PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
 PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
-LIBCURL_CHECK_CONFIG([yes], [7.0], [], [AC_MSG_ERROR(["libcurl not found"])])
 
 AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
 have_libgeoip=no
