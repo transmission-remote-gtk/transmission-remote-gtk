@@ -52,11 +52,25 @@
 #define HTTP_OK 200
 #define HTTP_CONFLICT 409
 
+#define FAIL_JSON_DECODE -2
+#define FAIL_RESPONSE_UNSUCCESSFUL -3
+#define DISPATCH_POOL_SIZE 3
+
+
 typedef struct {
     int status;
-    char *data;
+    char *raw;
     int size;
-} trg_http_response;
+    JsonObject *obj;
+    gpointer cb_data;
+} trg_response;
+
+typedef struct
+{
+	JsonNode *node;
+    GSourceFunc callback;
+    gpointer cb_data;
+} trg_request;
 
 G_BEGIN_DECLS
 
@@ -98,13 +112,19 @@ typedef struct {
      */
     int serial;
     CURL *curl;
-    trg_http_response *response;
 } trg_tls;
 
 /* stuff that used to be in http.h */
-void http_response_free(trg_http_response *response);
-trg_http_response *trg_http_perform(TrgClient * client, gchar * req);
+void trg_response_free(trg_response *response);
+int trg_http_perform(TrgClient * client, gchar * reqstr, trg_response *reqrsp);
 /* end http.h*/
+
+/* stuff that used to be in dispatch.c */
+trg_response *dispatch(TrgClient * client, JsonNode * req);
+gboolean dispatch_async(TrgClient * client, JsonNode * req,
+                        GSourceFunc callback,
+                        gpointer data);
+/* end dispatch.c*/
 
 GType trg_client_get_type (void);
 

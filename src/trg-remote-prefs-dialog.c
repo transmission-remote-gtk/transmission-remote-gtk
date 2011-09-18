@@ -26,7 +26,6 @@
 #include "trg-remote-prefs-dialog.h"
 #include "hig.h"
 #include "util.h"
-#include "dispatch.h"
 #include "requests.h"
 #include "json.h"
 #include "trg-json-widgets.h"
@@ -186,19 +185,18 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
     return t;
 }
 
-static void on_port_tested(JsonObject * response, int status, gpointer data) {
-    gdk_threads_enter();
-
-    if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
+static gboolean on_port_tested(gpointer data) {
+	trg_response *response = (trg_response*)data;
+    if (TRG_IS_REMOTE_PREFS_DIALOG(response->cb_data)) {
         TrgRemotePrefsDialogPrivate *priv =
-                TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+                TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(response->cb_data);
 
         gtk_button_set_label(GTK_BUTTON(priv->port_test_button), _("Retest"));
         gtk_widget_set_sensitive(priv->port_test_button, TRUE);
 
-        if (status == CURLE_OK) {
+        if (response->status == CURLE_OK) {
             gboolean isOpen = json_object_get_boolean_member(
-                    get_arguments(response), "port-is-open");
+                    get_arguments(response->obj), "port-is-open");
             if (isOpen)
                 gtk_label_set_markup(
                         GTK_LABEL(priv->port_test_label),
@@ -210,12 +208,12 @@ static void on_port_tested(JsonObject * response, int status, gpointer data) {
                         _
                         ("Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"));
         } else {
-            trg_error_dialog(GTK_WINDOW(data), status, response);
+            trg_error_dialog(GTK_WINDOW(data), response);
         }
     }
 
-    gdk_threads_leave();
-    response_unref(response);
+    trg_response_free(response);
+    return FALSE;
 }
 
 static void port_test_cb(GtkButton * b, gpointer data) {
@@ -230,35 +228,33 @@ static void port_test_cb(GtkButton * b, gpointer data) {
     dispatch_async(priv->client, req, on_port_tested, data);
 }
 
-static void on_blocklist_updated(JsonObject * response, int status,
-        gpointer data) {
-    gdk_threads_enter();
-
-    if (TRG_IS_REMOTE_PREFS_DIALOG(data)) {
+static gboolean on_blocklist_updated(gpointer data) {
+	trg_response *response = (trg_response*)data;
+    if (TRG_IS_REMOTE_PREFS_DIALOG(response->cb_data)) {
         TrgRemotePrefsDialogPrivate *priv =
-                TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
+                TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(response->cb_data);
 
         gtk_widget_set_sensitive(priv->blocklist_update_button, TRUE);
         gtk_button_set_label(GTK_BUTTON(priv->blocklist_update_button),
                 "Update");
 
-        if (status == CURLE_OK) {
-            JsonObject *args = get_arguments(response);
+        if (response->status == CURLE_OK) {
+            JsonObject *args = get_arguments(response->obj);
             gchar *labelText = g_strdup_printf(_("Blocklist (%ld entries)"),
                     json_object_get_int_member(args, SGET_BLOCKLIST_SIZE));
             gtk_button_set_label(GTK_BUTTON(priv->blocklist_check), labelText);
             g_free(labelText);
         } else {
-            trg_error_dialog(GTK_WINDOW(data), status, response);
+            trg_error_dialog(GTK_WINDOW(response->cb_data), response);
         }
     }
 
-    gdk_threads_leave();
+    trg_response_free(response);
 
-    response_unref(response);
+    return FALSE;
 }
 
-static void update_blocklist_cb(GtkButton * b, gpointer data) {
+static gboolean update_blocklist_cb(GtkButton * b, gpointer data) {
     TrgRemotePrefsDialogPrivate *priv =
             TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(data);
     JsonNode *req = blocklist_update();
@@ -267,6 +263,8 @@ static void update_blocklist_cb(GtkButton * b, gpointer data) {
     gtk_button_set_label(b, _("Updating..."));
 
     dispatch_async(priv->client, req, on_blocklist_updated, data);
+
+    return FALSE;
 }
 
 static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,

@@ -30,7 +30,6 @@
 #include "requests.h"
 #include "util.h"
 #include "json.h"
-#include "dispatch.h"
 #include "protocol-constants.h"
 
 G_DEFINE_TYPE(TrgFilesTreeView, trg_files_tree_view, TRG_TYPE_TREE_VIEW)
@@ -104,15 +103,17 @@ static void send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
         add_file_id_to_array(args, FIELD_FILES_PRIORITY_NORMAL, id);
 }
 
-static void
-on_files_update(JsonObject * response, int status, gpointer data)
+static gboolean
+on_files_update(gpointer data)
 {
-    TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(data);
-    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(data));
+	trg_response *response = (trg_response*)data;
+    TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(response->cb_data);
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(response->cb_data));
 
     trg_files_model_set_accept(TRG_FILES_MODEL(model), TRUE);
 
-    on_generic_interactive_action(response, status, priv->win);
+    response->cb_data = priv->win;
+    return on_generic_interactive_action(data);
 }
 
 static void send_updated_file_prefs(TrgFilesTreeView * tv)

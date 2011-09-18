@@ -29,7 +29,6 @@
 #include "hig.h"
 #include "torrent.h"
 #include "requests.h"
-#include "dispatch.h"
 
 G_DEFINE_TYPE(TrgTorrentMoveDialog, trg_torrent_move_dialog,
               GTK_TYPE_DIALOG)

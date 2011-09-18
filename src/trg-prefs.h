@@ -66,6 +66,8 @@
 #define TRG_PREFS_KEY_TV_SORT_COL "sort-col"
 #define TRG_PREFS_KEY_TV_COLUMNS "columns"
 #define TRG_PREFS_KEY_TV_WIDTHS "widths"
+#define TRG_PREFS_KEY_NOTEBOOK_PANED_POS "notebook-paned-pos"
+#define TRG_PREFS_KEY_STATES_PANED_POS "states-paned-pos"
 
 #define TRG_PREFS_NOFLAGS    (1 << 0) /* 0x00 */
 #define TRG_PREFS_GLOBAL     (1 << 1) /* 0x01 */

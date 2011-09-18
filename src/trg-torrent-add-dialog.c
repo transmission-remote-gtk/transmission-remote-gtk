@@ -39,7 +39,6 @@
 #include "requests.h"
 #include "torrent.h"
 #include "json.h"
-#include "dispatch.h"
 #include "protocol-constants.h"
 
 enum {
@@ -146,16 +145,14 @@ static gpointer add_files_threadfunc(gpointer data)
         JsonNode *request =
             torrent_add(fileName, files_thread_data->flags);
         JsonObject *args = node_get_arguments(request);
-        JsonObject *response;
-        gint status;
+        trg_response *response;
 
         if (files_thread_data->extraArgs)
             add_set_common_args(args, files_thread_data->priority,
                                 files_thread_data->dir);
 
-        response = dispatch(files_thread_data->client, request, &status);
-        on_generic_interactive_action(response, status,
-                                      files_thread_data->cb_data);
+        response = dispatch(files_thread_data->client, request);
+        on_generic_interactive_action(response);
     }
 
     g_str_slist_free(files_thread_data->list);

@@ -25,7 +25,11 @@ desktopdir = $(datadir)/applications
 desktop_DATA = transmission-remote-gtk.desktop
 
 bin_PROGRAMS = transmission-remote-gtk
-INCLUDES = --pedantic -Wall -I.. -DTRGLICENSE=\""$(trglicense)"\" -DTRGLOCALEDIR=\""$(trglocaledir)"\" $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
+INCLUDES = --pedantic -Wall -I.. -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
+
+if WIN32
+INCLUDES += -mms-bitfields -mwin32
+endif
 
 transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \
@@ -37,7 +41,6 @@ transmission_remote_gtk_SOURCES = main.c \
 	  torrent.c \
 	  tpeer.c \
   	  tfile.c \
-  	  dispatch.c \
 	  session-get.c \
 	  trg-client.c \
 	  trg-preferences-dialog.c \
@@ -79,7 +82,10 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-destination-combo.c \
 	  $(NULL)
 
-transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS)
+transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS)
+if WIN32
+transmission_remote_gtk_LDFLAGS += -mwindows
+endif
 
 install-data-local: install-icons update-icon-cache
 

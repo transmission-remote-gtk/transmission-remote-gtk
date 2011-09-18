@@ -26,7 +26,6 @@
 #include "trg-torrent-add-url-dialog.h"
 #include "hig.h"
 #include "requests.h"
-#include "dispatch.h"
 
 G_DEFINE_TYPE(TrgTorrentAddUrlDialog, trg_torrent_add_url_dialog,
               GTK_TYPE_DIALOG)

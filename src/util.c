@@ -32,7 +32,6 @@
 #include <gtk/gtk.h>
 
 #include "util.h"
-#include "dispatch.h"
 
 void add_file_id_to_array(JsonObject * args, gchar * key, gint index)
 {
@@ -70,10 +69,9 @@ gchar *trg_gregex_get_first(GRegex * rx, const gchar * src)
     return dst;
 }
 
-void trg_error_dialog(GtkWindow * parent, int status,
-                      JsonObject * response)
+void trg_error_dialog(GtkWindow * parent, trg_response *response)
 {
-    const gchar *msg = make_error_message(response, status);
+    gchar *msg = make_error_message(response->obj, response->status);
     GtkWidget *dialog = gtk_message_dialog_new(parent,
                                                GTK_DIALOG_MODAL,
                                                GTK_MESSAGE_ERROR,
@@ -82,7 +80,7 @@ void trg_error_dialog(GtkWindow * parent, int status,
     gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
-    g_free((gpointer) msg);
+    g_free(msg);
 }
 
 gchar *make_error_message(JsonObject * response, int status)
@@ -102,12 +100,6 @@ gchar *make_error_message(JsonObject * response, int status)
     } else {
         return g_strdup(curl_easy_strerror(status));
     }
-}
-
-void response_unref(JsonObject * response)
-{
-    if (response != NULL)
-        json_object_unref(response);
 }
 
 char *tr_strlpercent(char *buf, double x, size_t buflen)

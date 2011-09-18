@@ -27,7 +27,6 @@
 #include "trg-client.h"
 #include "trg-menu-bar.h"
 #include "requests.h"
-#include "dispatch.h"
 #include "json.h"
 #include "trg-trackers-model.h"
 #include "trg-main-window.h"
@@ -56,16 +55,18 @@ static gboolean is_tracker_edit_supported(TrgClient *tc)
     return trg_client_get_rpc_version(tc) >= 10;
 }
 
-static void
-on_trackers_update(JsonObject * response, int status, gpointer data)
+static gboolean
+on_trackers_update(gpointer data)
 {
+	trg_response *response = (trg_response*)data;
     TrgTrackersTreeViewPrivate *priv =
-        TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(data);
-    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(data));
+        TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(response->cb_data);
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(response->cb_data));
 
     trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model), TRUE);
 
-    on_generic_interactive_action(response, status, priv->win);
+    response->cb_data = priv->win;
+    return on_generic_interactive_action(data);
 }
 
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,

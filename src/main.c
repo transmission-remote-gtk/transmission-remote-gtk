@@ -100,11 +100,10 @@ int main(int argc, char *argv[])
 
     g_type_init();
     g_thread_init(NULL);
-    gdk_threads_init();
     gtk_init(&argc, &argv);
 
     g_set_application_name (PACKAGE_NAME);
-    bindtextdomain(GETTEXT_PACKAGE, TRGLOCALEDIR);
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
 

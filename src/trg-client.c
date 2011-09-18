@@ -17,9 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <stdlib.h>
 #include <string.h>
@@ -33,9 +31,10 @@
 #include <curl/curl.h>
 #include <curl/easy.h>
 
+#include "json.h"
 #include "trg-prefs.h"
+#include "protocol-constants.h"
 #include "util.h"
-#include "dispatch.h"
 #include "trg-client.h"
 
 G_DEFINE_TYPE (TrgClient, trg_client, G_TYPE_OBJECT)
@@ -75,6 +74,9 @@ struct _TrgClientPrivate {
     GMutex *configMutex;
 };
 
+static void dispatch_async_threadfunc(trg_request *reqrsp,
+                                      TrgClient * client);
+
 static void
 trg_client_get_property (GObject *object, guint property_id,
                               GValue *value, GParamSpec *pspec)
@@ -82,6 +84,7 @@ trg_client_get_property (GObject *object, guint property_id,
   switch (property_id) {
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    break;
   }
 }
 
@@ -92,6 +95,7 @@ trg_client_set_property (GObject *object, guint property_id,
   switch (property_id) {
   default:
     G_OBJECT_WARN_INVALID_PROPERTY_ID (object, property_id, pspec);
+    break;
   }
 }
 
@@ -138,8 +142,10 @@ trg_client_new (void)
 
     priv->updateMutex = g_mutex_new();
     priv->configMutex = g_mutex_new();
-    priv->pool = dispatch_init_pool(tc);
     priv->tlsKey = g_private_new(NULL);
+
+    priv->pool = g_thread_pool_new((GFunc) dispatch_async_threadfunc, tc,
+                                 DISPATCH_POOL_SIZE, TRUE, NULL);
 
     return tc;
 }
@@ -441,24 +447,25 @@ void trg_client_set_minimised_interval(TrgClient *tc, guint interval)
 
 /* formerly http.c */
 
-void http_response_free(trg_http_response *response)
+void trg_response_free(trg_response *response)
 {
-    g_free(response->data);
-    response->data = NULL;
+    json_object_unref(response->obj);
+    g_free(response);
 }
 
 static size_t
 http_receive_callback(void *ptr, size_t size, size_t nmemb, void *data)
 {
     size_t realsize = size * nmemb;
-    trg_http_response *mem = (trg_http_response *) data;
+    trg_response *mem = (trg_response *) data;
 
-    mem->data = realloc(mem->data, mem->size + realsize + 1);
-    if (mem->data) {
-        memcpy(&(mem->data[mem->size]), ptr, realsize);
+    mem->raw = realloc(mem->raw, mem->size + realsize + 1);
+    if (mem->raw) {
+        memcpy(&(mem->raw[mem->size]), ptr, realsize);
         mem->size += realsize;
-        mem->data[mem->size] = 0;
+        mem->raw[mem->size] = 0;
     }
+
     return realsize;
 }
 
@@ -509,14 +516,11 @@ trg_tls *trg_tls_new(TrgClient *tc)
 {
     trg_tls *tls = g_new0(trg_tls, 1);
 
-    tls->response = g_new0(trg_http_response, 1);
-
     tls->curl = curl_easy_init();
     curl_easy_setopt(tls->curl, CURLOPT_USERAGENT, PACKAGE_NAME);
     curl_easy_setopt(tls->curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_easy_setopt(tls->curl, CURLOPT_WRITEFUNCTION,
                      &http_receive_callback);
-    curl_easy_setopt(tls->curl, CURLOPT_WRITEDATA, (void *)tls->response);
     curl_easy_setopt(tls->curl, CURLOPT_HEADERFUNCTION, &header_callback);
     curl_easy_setopt(tls->curl, CURLOPT_WRITEHEADER, (void *) tc);
 
@@ -525,8 +529,9 @@ trg_tls *trg_tls_new(TrgClient *tc)
     return tls;
 }
 
-static trg_http_response *trg_http_perform_inner(TrgClient * tc,
-                                                    gchar * req,
+static int trg_http_perform_inner(TrgClient * tc,
+                                                    gchar * reqstr,
+                                                    trg_response *response,
                                                     gboolean recurse)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
@@ -556,16 +561,12 @@ static trg_http_response *trg_http_perform_inner(TrgClient * tc,
 
     g_mutex_unlock(priv->configMutex);
 
-    tls->response->size = 0;
-    tls->response->status = -1;
+    response->size = 0;
+    response->raw = NULL;
 
-    if (tls->response->data) {
-        g_free(tls->response->data);
-        tls->response->data = NULL;
-    }
-
-    curl_easy_setopt(tls->curl, CURLOPT_POSTFIELDS, req);
-    tls->response->status = curl_easy_perform(tls->curl);
+    curl_easy_setopt(tls->curl, CURLOPT_POSTFIELDS, reqstr);
+    curl_easy_setopt(tls->curl, CURLOPT_WRITEDATA, (void *)response);
+    response->status = curl_easy_perform(tls->curl);
 
     if (session_id) {
         g_free(session_id);
@@ -574,17 +575,88 @@ static trg_http_response *trg_http_perform_inner(TrgClient * tc,
 
     curl_easy_getinfo(tls->curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
-    if (tls->response->status == CURLE_OK) {
+    if (response->status == CURLE_OK) {
         if (httpCode == HTTP_CONFLICT && recurse == TRUE)
-            return trg_http_perform_inner(tc, req, FALSE);
+            return trg_http_perform_inner(tc, reqstr, response, FALSE);
         else if (httpCode != HTTP_OK)
-            tls->response->status = (-httpCode) - 100;
+            response->status = (-httpCode) - 100;
     }
 
-    return tls->response;
+    return response->status;
 }
 
-trg_http_response *trg_http_perform(TrgClient * tc, gchar * req)
+int trg_http_perform(TrgClient * tc, gchar * reqstr, trg_response *reqrsp)
 {
-    return trg_http_perform_inner(tc, req, TRUE);
+    return trg_http_perform_inner(tc, reqstr, reqrsp, TRUE);
+}
+
+/* formerly dispatch.c */
+
+trg_response *dispatch(TrgClient * client, JsonNode * req)
+{
+    trg_response *response = g_new0(trg_response, 1);
+    GError *decode_error = NULL;
+    gchar *serialized;
+    JsonNode *result;
+
+    serialized = trg_serialize(req);
+    json_node_free(req);
+#ifdef DEBUG
+    if (g_getenv("TRG_SHOW_OUTGOING"))
+        g_debug("=>(OUTgoing)=>: %s", serialized);
+#endif
+    trg_http_perform(client, serialized, response);
+    g_free(serialized);
+
+    if (response->status != CURLE_OK)
+    	return response;
+
+    response->obj = trg_deserialize(response, &decode_error);
+    g_free(response->raw);
+    response->raw = NULL;
+
+    if (decode_error) {
+        g_error("JSON decoding error: %s", decode_error->message);
+        g_error_free(decode_error);
+        response->status = FAIL_JSON_DECODE;
+        return response;
+    }
+
+    result = json_object_get_member(response->obj, FIELD_RESULT);
+    if (!result || g_strcmp0(json_node_get_string(result), FIELD_SUCCESS))
+        response->status = FAIL_RESPONSE_UNSUCCESSFUL;
+
+    return response;
+}
+
+static void dispatch_async_threadfunc(trg_request *req,
+                                      TrgClient * client)
+{
+    trg_response *rsp = dispatch(client, req->node);
+    rsp->cb_data = req->cb_data;
+    if (req->callback)
+        g_idle_add(req->callback, rsp);
+    g_free(req);
+}
+
+gboolean dispatch_async(TrgClient * client, JsonNode * req,
+                        GSourceFunc callback,
+                        gpointer data)
+{
+    GError *error = NULL;
+    trg_request *trg_req = g_new(trg_request, 1);
+
+    trg_req->callback = callback;
+    trg_req->cb_data = data;
+    trg_req->node = req;
+
+    trg_client_thread_pool_push(client, trg_req, &error);
+    if (error) {
+        g_error("thread creation error: %s\n", error->message);
+        g_error_free(error);
+        g_free(req);
+        return FALSE;
+    } else {
+        return TRUE;
+    }
 }

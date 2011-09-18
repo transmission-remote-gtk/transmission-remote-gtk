@@ -23,7 +23,6 @@
 
 #include "torrent.h"
 #include "json.h"
-#include "dispatch.h"
 #include "trg-client.h"
 #include "trg-json-widgets.h"
 #include "requests.h"

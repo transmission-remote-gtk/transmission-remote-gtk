@@ -43,10 +43,8 @@ void add_file_id_to_array(JsonObject * args, gchar * key, gint index);
 void g_str_slist_free(GSList * list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);
-void response_unref(JsonObject * response);
 gchar *make_error_message(JsonObject * response, int status);
-void trg_error_dialog(GtkWindow * parent, int status,
-                      JsonObject * response);
+void trg_error_dialog(GtkWindow * parent, trg_response * response);
 
 char *tr_strltime_long(char *buf, long seconds, size_t buflen);
 char *tr_strltime_short(char *buf, long seconds, size_t buflen);

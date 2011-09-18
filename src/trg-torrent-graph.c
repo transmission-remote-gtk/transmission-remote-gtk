@@ -91,6 +91,7 @@ trg_torrent_graph_get_property(GObject * object, guint property_id,
     switch (property_id) {
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
@@ -101,6 +102,7 @@ trg_torrent_graph_set_property(GObject * object, guint property_id,
     switch (property_id) {
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
@@ -517,8 +519,6 @@ static GObject *trg_torrent_graph_constructor(GType type,
     priv->draw = FALSE;
 
     gtk_box_set_homogeneous(GTK_BOX(object), FALSE);
-
-    gtk_widget_set_size_request(GTK_WIDGET(object), -1, GRAPH_MIN_HEIGHT);
 
     priv->disp = gtk_drawing_area_new();
     g_signal_connect(G_OBJECT(priv->disp), "expose_event",

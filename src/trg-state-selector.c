@@ -497,8 +497,6 @@ static GObject *trg_state_selector_constructor(GType type,
 
     gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(object), TRUE);
 
-    gtk_widget_set_size_request(GTK_WIDGET(object), 120, -1);
-
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(object));
 
     g_signal_connect(G_OBJECT(selection), "changed",

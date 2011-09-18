@@ -23,7 +23,6 @@
 #include <curl/curl.h>
 
 #include "hig.h"
-#include "dispatch.h"
 #include "requests.h"
 #include "json.h"
 #include "util.h"
@@ -63,8 +62,7 @@ struct _TrgStatsDialogPrivate {
 
 static GObject *instance = NULL;
 static gboolean trg_update_stats_timerfunc(gpointer data);
-static void on_stats_reply(JsonObject * response, int status,
-                           gpointer data);
+static gboolean on_stats_reply(gpointer data);
 
 static void
 trg_stats_dialog_get_property(GObject * object, guint property_id,
@@ -87,6 +85,7 @@ trg_stats_dialog_set_property(GObject * object, guint property_id,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
@@ -188,23 +187,21 @@ static void update_time_stat(JsonObject * args, GtkTreeRowReference * rr,
     update_statistic(rr, session_val, cumulat_val);
 }
 
-static void on_stats_reply(JsonObject * response, int status,
-                           gpointer data)
+static gboolean on_stats_reply(gpointer data)
 {
+	trg_response *response = (trg_response*)data;
     TrgStatsDialogPrivate *priv;
     JsonObject *args;
 
-    if (!TRG_IS_STATS_DIALOG(data)) {
-        response_unref(response);
-        return;
+    if (!TRG_IS_STATS_DIALOG(response->cb_data)) {
+        trg_response_free(response);
+        return FALSE;
     }
 
-    gdk_threads_enter();
+    priv = TRG_STATS_DIALOG_GET_PRIVATE(response->cb_data);
 
-    priv = TRG_STATS_DIALOG_GET_PRIVATE(data);
-
-    if (status == CURLE_OK) {
-        args = get_arguments(response);
+    if (response->status == CURLE_OK) {
+        args = get_arguments(response->obj);
 
         update_size_stat(args, priv->rr_up, "uploadedBytes");
         update_size_stat(args, priv->rr_down, "downloadedBytes");
@@ -215,12 +212,11 @@ static void on_stats_reply(JsonObject * response, int status,
         if (trg_client_is_connected(priv->client))
             g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc, data);
     } else {
-        trg_error_dialog(GTK_WINDOW(data), status, response);
+        trg_error_dialog(GTK_WINDOW(data), response);
     }
 
-    gdk_threads_leave();
-
-    response_unref(response);
+    trg_response_free(response);
+    return FALSE;
 }
 
 static gboolean trg_update_stats_timerfunc(gpointer data)
