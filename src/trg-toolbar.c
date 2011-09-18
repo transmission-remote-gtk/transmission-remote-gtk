@@ -165,12 +165,13 @@ static void trg_toolbar_class_init(TrgToolbarClass * klass)
 
 static
 GtkWidget *trg_toolbar_item_new(TrgToolbar * toolbar,
-                                gchar * text G_GNUC_UNUSED,
+                                gchar * text,
                                 int *index, gchar * icon,
                                 gboolean sensitive)
 {
     GtkToolItem *w = gtk_tool_button_new_from_stock(icon);
     gtk_widget_set_sensitive(GTK_WIDGET(w), sensitive);
+    gtk_tool_item_set_tooltip_text (w,text);
     gtk_toolbar_insert(GTK_TOOLBAR(toolbar), w, (*index)++);
     return GTK_WIDGET(w);
 }
@@ -260,6 +261,8 @@ static void trg_toolbar_init(TrgToolbar * self)
     priv->tb_remote_prefs =
         trg_toolbar_item_new(self, _("Remote Preferences"),
                              &position, GTK_STOCK_NETWORK, FALSE);
+        
+    gtk_toolbar_set_tooltips(GTK_TOOLBAR(self), TRUE);
 }
 
 TrgToolbar *trg_toolbar_new(void)
