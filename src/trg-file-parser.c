@@ -116,7 +116,7 @@ trg_torrent_file *trg_parse_torrent_file(const gchar *filename)
     mf = g_mapped_file_new(filename, FALSE, &error);
 
     if (error) {
-        g_error(error->message);
+        g_error("%s",error->message);
         g_error_free(error);
         return NULL;
     } else {
