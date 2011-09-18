@@ -124,6 +124,8 @@ trg_torrent_file *trg_parse_torrent_file(const gchar *filename)
         top_node = be_decoden(g_mapped_file_get_contents(mf), g_mapped_file_get_length(mf));
     }
 
+    g_mapped_file_unref(mf);
+
     if (!top_node) {
         return NULL;
     } else if (be_validate_node(top_node, BE_DICT)) {

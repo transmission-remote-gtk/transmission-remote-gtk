@@ -157,7 +157,7 @@ static gpointer add_files_threadfunc(gpointer data)
                                 files_thread_data->dir);
 
         response = dispatch(files_thread_data->client, request);
-        on_generic_interactive_action(response);
+        g_idle_add(on_generic_interactive_action, response);
     }
 
     g_str_slist_free(files_thread_data->list);
