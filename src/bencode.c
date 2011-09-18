@@ -183,7 +183,7 @@ be_node *be_decode(const char *data)
 static inline void _be_free_str(char *str)
 {
     if (str)
-        free(str - sizeof(gint64));
+        g_free(str - sizeof(gint64));
 }
 
 int be_validate_node(be_node * node, int type)
@@ -208,7 +208,7 @@ void be_free(be_node * node)
             unsigned int i;
             for (i = 0; node->val.l[i]; ++i)
                 be_free(node->val.l[i]);
-            free(node->val.l);
+            g_free(node->val.l);
             break;
         }
 
@@ -218,11 +218,11 @@ void be_free(be_node * node)
                 _be_free_str(node->val.d[i].key);
                 be_free(node->val.d[i].val);
             }
-            free(node->val.d);
+            g_free(node->val.d);
             break;
         }
     }
-    free(node);
+    g_free(node);
 }
 
 be_node *be_dict_find(be_node * node, char *key, int type)
