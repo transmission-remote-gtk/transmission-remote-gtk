@@ -34,7 +34,7 @@
 
 static be_node *be_alloc(be_type type)
 {
-    be_node *ret = calloc(1, sizeof(be_node));
+    be_node *ret = g_malloc0(sizeof(be_node));
     if (ret)
         ret->type = type;
     return ret;
@@ -83,7 +83,7 @@ static char *_be_decode_str(const char **data, gint64 * data_len)
     len = slen;
 
     if (**data == ':') {
-        char *_ret = malloc(sizeof(sllen) + len + 1);
+        char *_ret = g_malloc(sizeof(sllen) + len + 1);
         memcpy(_ret, &sllen, sizeof(sllen));
         ret = _ret + sizeof(sllen);
         memcpy(ret, *data + 1, len);
@@ -112,7 +112,7 @@ static be_node *_be_decode(const char **data, gint64 * data_len)
         ++(*data);
         while (**data != 'e') {
             ret->val.l =
-                realloc(ret->val.l, (i + 2) * sizeof(*ret->val.l));
+                g_realloc(ret->val.l, (i + 2) * sizeof(*ret->val.l));
             ret->val.l[i] = _be_decode(data, data_len);
             if (!ret->val.l[i])
                 break;
@@ -134,7 +134,7 @@ static be_node *_be_decode(const char **data, gint64 * data_len)
         ++(*data);
         while (**data != 'e') {
             ret->val.d =
-                realloc(ret->val.d, (i + 2) * sizeof(*ret->val.d));
+                g_realloc(ret->val.d, (i + 2) * sizeof(*ret->val.d));
             ret->val.d[i].key = _be_decode_str(data, data_len);
             ret->val.d[i].val = _be_decode(data, data_len);
             if (!ret->val.l[i])

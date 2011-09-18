@@ -459,7 +459,7 @@ http_receive_callback(void *ptr, size_t size, size_t nmemb, void *data)
     size_t realsize = size * nmemb;
     trg_response *mem = (trg_response *) data;
 
-    mem->raw = realloc(mem->raw, mem->size + realsize + 1);
+    mem->raw = g_realloc(mem->raw, mem->size + realsize + 1);
     if (mem->raw) {
         memcpy(&(mem->raw[mem->size]), ptr, realsize);
         mem->size += realsize;
