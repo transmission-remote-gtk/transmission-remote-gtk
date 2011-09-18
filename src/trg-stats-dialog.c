@@ -210,7 +210,7 @@ static gboolean on_stats_reply(gpointer data)
         update_time_stat(args, priv->rr_active, "secondsActive");
 
         if (trg_client_is_connected(priv->client))
-            g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc, data);
+            g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc, response->cb_data);
     } else {
         trg_error_dialog(GTK_WINDOW(data), response);
     }
@@ -303,7 +303,6 @@ static GObject *trg_stats_dialog_constructor(GType type,
 
     gtk_container_set_border_width(GTK_CONTAINER(tv), GUI_PAD);
     gtk_box_pack_start(GTK_BOX(GTK_DIALOG(obj)->vbox), tv, TRUE, TRUE, 0);
-    gtk_window_set_default_size(GTK_WINDOW(obj), 400, 220);
 
     dispatch_async(priv->client, session_stats(), on_stats_reply, obj);
 
