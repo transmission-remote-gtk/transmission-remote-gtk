@@ -373,3 +373,22 @@ gdouble json_double_to_progress(JsonNode *n)
         return 0.0;
     }
 }
+
+gchar *trg_base64encode(const gchar *filename)
+{
+    GError *error = NULL;
+    GMappedFile *mf =  g_mapped_file_new(filename, FALSE, &error);
+    gchar *b64out = NULL;
+
+    if (error)
+    {
+        g_error("%s",error->message);
+        g_error_free(error);
+    } else {
+        b64out = g_base64_encode((guchar*)g_mapped_file_get_contents(mf), g_mapped_file_get_length(mf));
+    }
+
+    g_mapped_file_unref(mf);
+
+    return b64out;
+}

@@ -66,5 +66,6 @@ int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
 void rm_trailing_slashes(gchar *str);
 void trg_widget_set_visible(GtkWidget * w, gboolean visible);
 gdouble json_double_to_progress(JsonNode *n);
+gchar *trg_base64encode(const gchar *filename);
 
 #endif                          /* UTIL_H_ */

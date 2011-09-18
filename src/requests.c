@@ -24,9 +24,9 @@
 #include <json-glib/json-glib.h>
 
 #include "protocol-constants.h"
-#include "base64.h"
 #include "json.h"
 #include "torrent.h"
+#include "util.h"
 #include "requests.h"
 
 static JsonNode *base_request(gchar * method);
@@ -213,7 +213,7 @@ JsonNode *torrent_add(gchar * filename, gint flags)
 {
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);
-    gchar *encodedFile = base64encode(filename);
+    gchar *encodedFile = trg_base64encode(filename);
     if (encodedFile)
         json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
     json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED) == TORRENT_ADD_FLAG_PAUSED);

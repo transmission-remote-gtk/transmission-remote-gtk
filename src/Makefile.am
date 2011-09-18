@@ -33,7 +33,6 @@ endif
 
 transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \
-	  base64.c \
 	  json.c \
 	  trg-main-window.c \
 	  util.c \
