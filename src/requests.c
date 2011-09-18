@@ -211,11 +211,22 @@ JsonNode *torrent_add_url(const gchar * url, gboolean paused)
 
 JsonNode *torrent_add(gchar * filename, gint flags)
 {
-    JsonNode *root = base_request(METHOD_TORRENT_ADD);
-    JsonObject *args = node_get_arguments(root);
+    JsonNode *root;
+    JsonObject *args;
+
+    if (!g_file_test(filename, G_FILE_TEST_IS_REGULAR))
+    {
+        g_error("file \"%s\" does not exist.", filename);
+        return NULL;
+    }
+
+    root = base_request(METHOD_TORRENT_ADD);
+    args = node_get_arguments(root);
+
     gchar *encodedFile = trg_base64encode(filename);
     if (encodedFile)
         json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
+
     json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED) == TORRENT_ADD_FLAG_PAUSED);
     g_free(encodedFile);
 

@@ -53,7 +53,7 @@ void g_str_slist_free(GSList * list)
 
 GRegex *trg_uri_host_regex_new(void)
 {
-    return g_regex_new("^[^:/?#]+:?//([^/?#]*)", G_REGEX_OPTIMIZE, 0,
+    return g_regex_new("^[^:/?#]+:?//([^/?#:]*)", G_REGEX_OPTIMIZE, 0,
                        NULL);
 }
 

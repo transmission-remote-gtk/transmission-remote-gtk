@@ -144,8 +144,13 @@ static gpointer add_files_threadfunc(gpointer data)
         gchar *fileName = (gchar *) li->data;
         JsonNode *request =
             torrent_add(fileName, files_thread_data->flags);
-        JsonObject *args = node_get_arguments(request);
+        JsonObject *args;
         trg_response *response;
+
+        if (!request)
+            continue;
+
+        args = node_get_arguments(request);
 
         if (files_thread_data->extraArgs)
             add_set_common_args(args, files_thread_data->priority,
@@ -230,12 +235,14 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
         if (g_slist_length(priv->filenames) == 1) {
             JsonNode *req =
                 torrent_add((gchar *) priv->filenames->data, flags);
-            JsonObject *args = node_get_arguments(req);
-            gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store),
-                                   add_file_indexes_foreachfunc, args);
-            add_set_common_args(args, priority, dir);
-            dispatch_async(priv->client, req,
-                           on_generic_interactive_action, priv->parent);
+            if (req) {
+                JsonObject *args = node_get_arguments(req);
+                gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store),
+                                       add_file_indexes_foreachfunc, args);
+                add_set_common_args(args, priority, dir);
+                dispatch_async(priv->client, req,
+                               on_generic_interactive_action, priv->parent);
+            }
             g_str_slist_free(priv->filenames);
         } else {
             struct add_torrent_threadfunc_args *args =

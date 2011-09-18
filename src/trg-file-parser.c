@@ -116,8 +116,9 @@ trg_torrent_file *trg_parse_torrent_file(const gchar *filename)
     mf = g_mapped_file_new(filename, FALSE, &error);
 
     if (error) {
-        g_error("%s",error->message);
+        g_message("%s",error->message);
         g_error_free(error);
+        g_mapped_file_unref(mf);
         return NULL;
     } else {
         top_node = be_decoden(g_mapped_file_get_contents(mf), g_mapped_file_get_length(mf));
