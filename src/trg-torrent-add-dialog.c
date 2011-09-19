@@ -157,6 +157,7 @@ static gpointer add_files_threadfunc(gpointer data)
                                 files_thread_data->dir);
 
         response = dispatch(files_thread_data->client, request);
+        response->cb_data = files_thread_data->cb_data;
         g_idle_add(on_generic_interactive_action, response);
     }
 
@@ -176,7 +177,7 @@ void launch_add_thread(struct add_torrent_threadfunc_args *args)
     g_thread_create(add_files_threadfunc, args, FALSE, &error);
 
     if (error) {
-        g_error("thread creation error: %s\n", error->message);
+        g_error("thread creation error: %s", error->message);
         g_error_free(error);
         g_str_slist_free(args->list);
         g_free(args);
@@ -248,7 +249,7 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
             struct add_torrent_threadfunc_args *args =
                 g_new(struct add_torrent_threadfunc_args, 1);
             args->list = priv->filenames;
-            args->cb_data = data;
+            args->cb_data = priv->parent;
             args->client = priv->client;
             args->dir = g_strdup(dir);
             args->priority = priority;
