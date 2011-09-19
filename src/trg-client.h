@@ -31,6 +31,9 @@
 #define TORRENT_GET_MODE_INTERACTION 2
 #define TORRENT_GET_MODE_UPDATE 3
 
+#define TORRENT_GET_TAG_MODE_FULL -1
+#define TORRENT_GET_TAG_MODE_UPDATE -2
+
 #define TRG_NO_HOSTNAME_SET -2
 #define SESSION_UPDATE_DIVISOR 10
 
@@ -68,6 +71,7 @@ typedef struct {
 typedef struct
 {
 	JsonNode *node;
+	gchar *str;
     GSourceFunc callback;
     gpointer cb_data;
 } trg_request;
@@ -121,6 +125,7 @@ int trg_http_perform(TrgClient * client, gchar * reqstr, trg_response *reqrsp);
 
 /* stuff that used to be in dispatch.c */
 trg_response *dispatch(TrgClient * client, JsonNode * req);
+trg_response *dispatch_str(TrgClient * client, gchar *req);
 gboolean dispatch_async(TrgClient * client, JsonNode * req,
                         GSourceFunc callback,
                         gpointer data);
@@ -133,6 +138,7 @@ TrgPrefs* trg_client_get_prefs(TrgClient *tc);
 int trg_client_populate_with_settings(TrgClient * tc);
 void trg_client_set_session(TrgClient * tc, JsonObject * session);
 float trg_client_get_version(TrgClient *tc);
+const gchar *trg_client_get_version_string(TrgClient *tc);
 gint64 trg_client_get_rpc_version(TrgClient *tc);
 gchar *trg_client_get_password(TrgClient *tc);
 gchar *trg_client_get_username(TrgClient *tc);

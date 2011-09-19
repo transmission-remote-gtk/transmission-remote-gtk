@@ -204,7 +204,7 @@ static gboolean on_stats_reply(gpointer data)
         args = get_arguments(response->obj);
 
         char versionStr[32];
-        g_snprintf(versionStr, sizeof(versionStr), "Transmission %g", trg_client_get_version(priv->client));
+        g_snprintf(versionStr, sizeof(versionStr), "Transmission %s", trg_client_get_version_string(priv->client));
         update_statistic(priv->rr_version, versionStr, "");
 
         update_size_stat(args, priv->rr_up, "uploadedBytes");

@@ -150,6 +150,12 @@ trg_client_new (void)
     return tc;
 }
 
+const gchar *trg_client_get_version_string(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    return session_get_version_string(priv->session);
+}
+
 float trg_client_get_version(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
@@ -595,19 +601,23 @@ int trg_http_perform(TrgClient * tc, gchar * reqstr, trg_response *reqrsp)
 
 trg_response *dispatch(TrgClient * client, JsonNode * req)
 {
-    trg_response *response = g_new0(trg_response, 1);
-    GError *decode_error = NULL;
-    gchar *serialized;
-    JsonNode *result;
-
-    serialized = trg_serialize(req);
+    gchar *serialized = trg_serialize(req);
     json_node_free(req);
 #ifdef DEBUG
     if (g_getenv("TRG_SHOW_OUTGOING"))
         g_debug("=>(OUTgoing)=>: %s", serialized);
 #endif
-    trg_http_perform(client, serialized, response);
-    g_free(serialized);
+    return dispatch_str(client, serialized);
+}
+
+trg_response *dispatch_str(TrgClient * client, gchar *req)
+{
+    trg_response *response = g_new0(trg_response, 1);
+    GError *decode_error = NULL;
+    JsonNode *result;
+
+    trg_http_perform(client, req, response);
+    g_free(req);
 
     if (response->status != CURLE_OK)
     	return response;
@@ -633,31 +643,59 @@ trg_response *dispatch(TrgClient * client, JsonNode * req)
 static void dispatch_async_threadfunc(trg_request *req,
                                       TrgClient * client)
 {
-    trg_response *rsp = dispatch(client, req->node);
+    trg_response *rsp;
+
+    if (req->str)
+        rsp = dispatch_str(client, req->str);
+    else
+        rsp = dispatch(client, req->node);
+
     rsp->cb_data = req->cb_data;
+
     if (req->callback)
         g_idle_add(req->callback, rsp);
+    else
+        trg_response_free(rsp);
+
     g_free(req);
 }
 
-gboolean dispatch_async(TrgClient * client, JsonNode * req,
+static gboolean dispatch_async_common(TrgClient * client, trg_request *trg_req,
                         GSourceFunc callback,
                         gpointer data)
 {
     GError *error = NULL;
-    trg_request *trg_req = g_new(trg_request, 1);
 
     trg_req->callback = callback;
     trg_req->cb_data = data;
-    trg_req->node = req;
 
     trg_client_thread_pool_push(client, trg_req, &error);
     if (error) {
         g_error("thread creation error: %s\n", error->message);
         g_error_free(error);
-        g_free(req);
+        g_free(trg_req);
         return FALSE;
     } else {
         return TRUE;
     }
+}
+
+gboolean dispatch_async(TrgClient * client, JsonNode *req,
+        GSourceFunc callback,
+        gpointer data)
+{
+    trg_request *trg_req = g_new0(trg_request, 1);
+    trg_req->node = req;
+
+    return dispatch_async_common(client, trg_req, callback, data);
+}
+
+gboolean dispatch_async_str(TrgClient * client, gchar *req,
+        GSourceFunc callback,
+        gpointer data)
+{
+    trg_request *trg_req = g_new0(trg_request, 1);
+    trg_req->str = req;
+
+    return dispatch_async_common(client, trg_req, callback, data);
 }

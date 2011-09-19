@@ -42,7 +42,7 @@ gchar *trg_serialize(JsonNode * req)
     return response;
 }
 
-JsonObject *trg_deserialize(trg_response * reqrsp,
+JsonObject *trg_deserialize(trg_response * response,
                             GError ** error)
 {
     JsonParser *parser;
@@ -50,13 +50,13 @@ JsonObject *trg_deserialize(trg_response * reqrsp,
     JsonObject *ret = NULL;
 
     parser = json_parser_new();
-    json_parser_load_from_data(parser, reqrsp->raw, reqrsp->size,
+    json_parser_load_from_data(parser, response->raw, response->size,
                                error);
     if (*error == NULL) {
         root = json_parser_get_root(parser);
 #ifdef DEBUG
         if (g_getenv("TRG_SHOW_INCOMING") != NULL) {
-            g_debug("<=(INcoming)<=: %s", reqrsp->raw);
+            g_debug("<=(INcoming)<=: %s", response->raw);
         } else if (g_getenv("TRG_SHOW_INCOMING_PRETTY") != NULL) {
             JsonGenerator *pg;
             gsize len;

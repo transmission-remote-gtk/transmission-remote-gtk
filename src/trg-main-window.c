@@ -936,7 +936,7 @@ static gboolean trg_update_torrents_timerfunc(gpointer data) {
                         % trg_prefs_get_int(prefs,
                                 TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY,
                                 TRG_PREFS_PROFILE) != 0));
-        dispatch_async(tc, torrent_get(activeOnly ? -2 : -1),
+        dispatch_async(tc, torrent_get(activeOnly ? TORRENT_GET_TAG_MODE_UPDATE : TORRENT_GET_TAG_MODE_FULL),
                 activeOnly ? on_torrent_get_active : on_torrent_get_update,
                 data);
 
@@ -1302,7 +1302,7 @@ static void status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED, gpointer d
     if (priv->timerId > 0)
     {
         g_source_remove(priv->timerId);
-        dispatch_async(priv->client, torrent_get(-1),
+        dispatch_async(priv->client, torrent_get(TORRENT_GET_TAG_MODE_FULL),
                 on_torrent_get_first, data);
     }
 }
