@@ -449,7 +449,8 @@ void trg_client_set_minimised_interval(TrgClient *tc, guint interval)
 
 void trg_response_free(trg_response *response)
 {
-    json_object_unref(response->obj);
+	if (response->obj)
+		json_object_unref(response->obj);
     g_free(response);
 }
 
