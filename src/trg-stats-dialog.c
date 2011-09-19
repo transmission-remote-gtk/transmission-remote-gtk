@@ -57,7 +57,7 @@ struct _TrgStatsDialogPrivate {
     GtkWidget *tv;
     GtkListStore *model;
     GtkTreeRowReference *rr_up, *rr_down, *rr_files_added,
-        *rr_session_count, *rr_active;
+        *rr_session_count, *rr_active, *rr_version;
 };
 
 static GObject *instance = NULL;
@@ -203,6 +203,10 @@ static gboolean on_stats_reply(gpointer data)
     if (response->status == CURLE_OK) {
         args = get_arguments(response->obj);
 
+        char versionStr[32];
+        g_snprintf(versionStr, sizeof(versionStr), "Transmission %g", trg_client_get_version(priv->client));
+        update_statistic(priv->rr_version, versionStr, "");
+
         update_size_stat(args, priv->rr_up, "uploadedBytes");
         update_size_stat(args, priv->rr_down, "downloadedBytes");
         update_int_stat(args, priv->rr_files_added, "filesAdded");
@@ -277,6 +281,8 @@ static GObject *trg_stats_dialog_constructor(GType type,
         gtk_list_store_new(STATCOL_COLUMNS, G_TYPE_STRING, G_TYPE_STRING,
                            G_TYPE_STRING);
 
+    priv->rr_version =
+        stats_dialog_add_statistic(priv->model, _("Version"));
     priv->rr_down =
         stats_dialog_add_statistic(priv->model, _("Download Total"));
     priv->rr_up =
@@ -292,11 +298,11 @@ static GObject *trg_stats_dialog_constructor(GType type,
     gtk_widget_set_sensitive(tv, TRUE);
 
     trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_STAT, _("Statistic"),
-                         170);
+                         200);
     trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_SESSION, _("Session"),
-                         100);
+                         200);
     trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_CUMULAT,
-                         _("Cumulative"), 100);
+                         _("Cumulative"), 200);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(tv),
                             GTK_TREE_MODEL(priv->model));
