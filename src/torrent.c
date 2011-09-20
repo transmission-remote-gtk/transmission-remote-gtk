@@ -310,7 +310,7 @@ gchar *torrent_get_status_string(gint64 rpcv, gint64 value)
         }
     }
 
-    //g_warning("Unknown status: %ld", value);
+    //g_warning("Unknown status: %li", value);
     return g_strdup(_("Unknown"));
 }
 

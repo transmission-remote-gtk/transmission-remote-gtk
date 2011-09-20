@@ -66,7 +66,7 @@ trg_cell_renderer_numgteqthan_set_property(GObject * object, guint property_id,
         priv->value_value = g_value_get_int64(value);
         if (priv->value_value >= priv->minvalue) {
             gchar size_text[32];
-            g_snprintf(size_text, sizeof(size_text), "%ld", priv->value_value);
+            g_snprintf(size_text, sizeof(size_text), "%li", priv->value_value);
             g_object_set(object, "text", size_text, NULL);
         } else {
             g_object_set(object, "text", "", NULL);
