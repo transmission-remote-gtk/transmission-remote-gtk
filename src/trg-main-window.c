@@ -801,24 +801,19 @@ static gboolean on_session_get(gpointer data) {
 
     if (!isConnected) {
         float version;
-        if (session_get_version(newSession, &version)) {
-            if (version < TRANSMISSION_MIN_SUPPORTED) {
-                gchar
-                        *msg =
-                                g_strdup_printf(
-                                        _
-                                        ("This application supports Transmission %.2f and later, you have %.2f."),
-                                        TRANSMISSION_MIN_SUPPORTED, version);
-                GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(win),
-                        GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-                        "%s", msg);
-                gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
-                gtk_dialog_run(GTK_DIALOG(dialog));
-                gtk_widget_destroy(dialog);
-                g_free(msg);
-                trg_response_free(response);
-                return FALSE;
-            }
+        if (session_get_version(newSession, &version)==0 || version < TRANSMISSION_MIN_SUPPORTED) {
+            gchar *msg = g_strdup_printf(
+                                    _("This application supports Transmission %.2f and later, you have %.2f."),
+                                    TRANSMISSION_MIN_SUPPORTED, version);
+            GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(win),
+                    GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+                    "%s", msg);
+            gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+            gtk_dialog_run(GTK_DIALOG(dialog));
+            gtk_widget_destroy(dialog);
+            g_free(msg);
+            trg_response_free(response);
+            return FALSE;
         }
 
         trg_status_bar_connect(priv->statusBar, newSession);
