@@ -143,7 +143,7 @@ JsonNode *torrent_get(gint64 id)
     JsonObject *args = node_get_arguments(root);
     JsonArray *fields = json_array_new();
 
-    if (id == -2) {
+    if (id == TORRENT_GET_TAG_MODE_UPDATE) {
         json_object_set_string_member(args, PARAM_IDS,
                                       FIELD_RECENTLY_ACTIVE);
     } else if (id >= 0) {

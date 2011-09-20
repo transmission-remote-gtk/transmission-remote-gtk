@@ -409,7 +409,7 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris) {
         launch_add_thread(args);
     }
 
-    g_free(uris);
+    g_free(uris);  // launch_add_thread() or trg_torrent_add_dialog() will free the filenames and fileList;
 
     return TRUE;
 }
@@ -1724,6 +1724,41 @@ static void trg_client_session_updated_cb(TrgClient *tc, JsonObject *session,
     priv->queuesEnabled = queuesEnabled;
 }
 
+/* Drag & Drop support */
+static GtkTargetEntry target_list[] = {
+        /* datatype (string), restrictions on DnD (GtkTargetFlags), datatype (int) */
+        { "text/uri-list", GTK_TARGET_OTHER_APP | GTK_TARGET_OTHER_WIDGET, 0 }
+};
+static guint n_targets = G_N_ELEMENTS (target_list);
+
+static void on_dropped_file(
+        GtkWidget *widget, GdkDragContext *context, gint x, gint y, 
+        GtkSelectionData *data, guint info, guint time, gpointer user_data) {
+    TrgMainWindow *win = user_data;
+
+    if ((data->length >= 0) && (data->format == 8))
+    {
+        if (context->action == GDK_ACTION_MOVE) {
+            g_debug ("GDK_ACTION_MOVE");
+            gchar **uri_list = gtk_selection_data_get_uris(data);
+            guint num_files = g_strv_length(uri_list);
+            gchar **file_list = g_new0(gchar *,num_files+1);
+            int i;
+            for (i = 0; i < num_files; i++) {
+                file_list[i] = g_filename_from_uri( uri_list[i], NULL, NULL );
+                g_debug ("to be added: %s",file_list[i]);
+            }
+            g_strfreev(uri_list);
+            gtk_drag_finish (context, TRUE, FALSE, time);
+            trg_add_from_filename(win,file_list);
+            return;
+        }
+    }
+    gtk_drag_finish (context, FALSE, FALSE, time);
+    return;
+}
+
+
 static GObject *trg_main_window_constructor(GType type,
         guint n_construct_properties, GObjectConstructParam * construct_params) {
     TrgMainWindow *self;
@@ -1902,6 +1937,19 @@ static GObject *trg_main_window_constructor(GType type,
     if (tray && priv->min_on_start)
         gtk_widget_hide(GTK_WIDGET(self));
 
+    /* Drag and Drop */
+    gtk_drag_dest_set
+        (
+                GTK_WIDGET (self),      // widget that will accept a drop
+                GTK_DEST_DEFAULT_ALL,   // default actions for dest on DnD
+                target_list,            // lists of target to support
+                n_targets,              // size of list
+                GDK_ACTION_MOVE         // what to do with data after dropped
+                // | GDK_ACTION_COPY ... seems that file managers only need ACTION_MOVE, not ACTION_COPY
+        );
+    //g_signal_connect (priv->torrentTreeView, "drag-motion",G_CALLBACK (drag_motion_handl), NULL);
+    g_signal_connect (self, "drag-data-received",G_CALLBACK (on_dropped_file), self);
+        
     return G_OBJECT(self);
 }
 

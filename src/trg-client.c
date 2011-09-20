@@ -241,8 +241,8 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     priv->min_interval =
         trg_prefs_get_int(prefs, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_PREFS_PROFILE);
-    if (priv->interval < 1)
-        priv->interval = TRG_INTERVAL_DEFAULT;
+    if (priv->min_interval < 1)
+        priv->min_interval = TRG_INTERVAL_DEFAULT;
 
     priv->username =
         trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
