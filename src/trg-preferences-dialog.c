@@ -671,12 +671,14 @@ static GObject *trg_preferences_dialog_constructor(GType type,
         guint n_construct_properties, GObjectConstructParam * construct_params) {
     GObject *object;
     TrgPreferencesDialogPrivate *priv;
-    GtkWidget *notebook;
+    GtkWidget *notebook, *contentvbox;
 
     object = G_OBJECT_CLASS
     (trg_preferences_dialog_parent_class)->constructor(type,
             n_construct_properties, construct_params);
     priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
+
+    contentvbox = gtk_dialog_get_content_area (GTK_DIALOG(object));
 
     gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->win));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
@@ -708,10 +710,10 @@ static GObject *trg_preferences_dialog_constructor(GType type,
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(object)->vbox), notebook, TRUE, TRUE,
+    gtk_box_pack_start(GTK_BOX(contentvbox), notebook, TRUE, TRUE,
             0);
 
-    gtk_widget_show_all(GTK_DIALOG(object)->vbox);
+    //gtk_widget_show_all(GTK_DIALOG(object)->vbox);
 
     return object;
 }

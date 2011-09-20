@@ -221,7 +221,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     JsonObject *json;
     GtkTreeSelection *selection;
     gint rowCount;
-    GtkWidget *notebook;
+    GtkWidget *notebook, *contentvbox;
 
     object = G_OBJECT_CLASS
         (trg_torrent_props_dialog_parent_class)->constructor(type,
@@ -278,7 +278,8 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(object)->vbox), notebook,
+    contentvbox = gtk_dialog_get_content_area(GTK_DIALOG(object));
+    gtk_box_pack_start(GTK_BOX(contentvbox), notebook,
                        TRUE, TRUE, 0);
 
     return object;

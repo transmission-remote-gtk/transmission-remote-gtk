@@ -20,7 +20,7 @@ desktopdir = $(datadir)/applications
 desktop_DATA = transmission-remote-gtk.desktop
 
 bin_PROGRAMS = transmission-remote-gtk
-INCLUDES = --pedantic -Wall -I.. -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
+INCLUDES = --pedantic -Wall -Wno-format -I.. -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
 		
 transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \

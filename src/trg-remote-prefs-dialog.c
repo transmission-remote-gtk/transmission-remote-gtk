@@ -382,13 +382,15 @@ static GObject *trg_remote_prefs_dialog_constructor(GType type,
     GObject *object;
     TrgRemotePrefsDialogPrivate *priv;
     JsonObject *session;
-    GtkWidget *notebook;
+    GtkWidget *notebook, *contentvbox;
 
     object = G_OBJECT_CLASS
     (trg_remote_prefs_dialog_parent_class)->constructor(type,
             n_construct_properties, construct_params);
     priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
     session = trg_client_get_session(priv->client);
+
+    contentvbox = gtk_dialog_get_content_area(GTK_DIALOG(object));
 
     gtk_window_set_title(GTK_WINDOW(object), _("Remote Preferences"));
     gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->parent));
@@ -425,7 +427,7 @@ static GObject *trg_remote_prefs_dialog_constructor(GType type,
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(object)->vbox), notebook, TRUE, TRUE,
+    gtk_box_pack_start(GTK_BOX(contentvbox), notebook, TRUE, TRUE,
             0);
 
     return object;

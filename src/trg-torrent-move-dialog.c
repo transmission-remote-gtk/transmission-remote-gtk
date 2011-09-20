@@ -134,7 +134,7 @@ static GObject *trg_torrent_move_dialog_constructor(GType type,
 
     gtk_container_set_border_width(GTK_CONTAINER(t), GUI_PAD);
 
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(object)->vbox), t, TRUE, TRUE,
+    gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area (GTK_DIALOG(object))), t, TRUE, TRUE,
                        0);
 
     count =

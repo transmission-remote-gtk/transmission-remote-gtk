@@ -375,8 +375,13 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         gtk_tree_view_move_column_after(GTK_TREE_VIEW(tv), column,
                                         after_col);
 
-    g_signal_connect(column->button, "button-press-event",
+#if GTK_CHECK_VERSION( 3,0,0 )
+    g_signal_connect(gtk_tree_view_column_get_button(column), "button-press-event",
                      G_CALLBACK(col_onButtonPressed), column);
+#else
+    g_signal_connect(column->button, "button-press-event",
+                         G_CALLBACK(col_onButtonPressed), column);
+#endif
 
     if (desc->out)
         *(desc->out) = column;

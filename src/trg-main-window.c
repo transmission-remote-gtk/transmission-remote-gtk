@@ -1309,14 +1309,14 @@ static void clear_filter_entry_cb(GtkWidget * w, gpointer data G_GNUC_UNUSED) {
 static gboolean torrent_tv_key_press_event(GtkWidget * w, GdkEventKey * key,
         gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-    if (key->keyval == GDK_Delete) {
+    if (key->keyval == GDK_KEY_Delete) {
         if (key->state & GDK_SHIFT_MASK)
             delete_cb(w, data);
         else
             remove_cb(w, data);
-    } else if (priv->queuesEnabled && (key->state & GDK_MOD1_MASK) && key->keyval == GDK_Up) {
+    } else if (priv->queuesEnabled && (key->state & GDK_MOD1_MASK) && key->keyval == GDK_KEY_Up) {
         up_queue_cb(w, data);
-    } else if (priv->queuesEnabled && (key->state & GDK_MOD1_MASK) && key->keyval == GDK_Down) {
+    } else if (priv->queuesEnabled && (key->state & GDK_MOD1_MASK) && key->keyval == GDK_KEY_Down) {
         down_queue_cb(w, data);
     }
     return FALSE;
@@ -1731,9 +1731,9 @@ static void on_dropped_file(
         GtkSelectionData *data, guint info, guint time, gpointer user_data) {
     TrgMainWindow *win = user_data;
 
-    if ((data->length >= 0) && (data->format == 8))
+    if ((gtk_selection_data_get_length(data) >= 0) && (gtk_selection_data_get_format(data) == 8))
     {
-        if (context->action == GDK_ACTION_MOVE) {
+        if (gdk_drag_context_get_actions(context) == GDK_ACTION_MOVE) {
             g_debug ("GDK_ACTION_MOVE");
             gchar **uri_list = gtk_selection_data_get_uris(data);
             guint num_files = g_strv_length(uri_list);
