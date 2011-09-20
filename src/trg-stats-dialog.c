@@ -145,9 +145,9 @@ static void update_int_stat(JsonObject * args, GtkTreeRowReference * rr,
     gchar session_val[32];
     gchar cumulat_val[32];
 
-    g_snprintf(session_val, sizeof(session_val), "%li",
+    g_snprintf(session_val, sizeof(session_val), "%ld",
                json_object_get_int_member(get_session_arg(args), jsonKey));
-    g_snprintf(cumulat_val, sizeof(cumulat_val), "%li",
+    g_snprintf(cumulat_val, sizeof(cumulat_val), "%ld",
                json_object_get_int_member(get_cumulat_arg(args), jsonKey));
 
     update_statistic(rr, session_val, cumulat_val);

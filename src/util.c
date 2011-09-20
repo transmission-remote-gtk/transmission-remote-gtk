@@ -232,7 +232,7 @@ char *tr_strltime_long(char *buf, long seconds, size_t buflen)
     g_snprintf(m, sizeof(m), ngettext("%d minute", "%d minutes", minutes),
                minutes);
     g_snprintf(s, sizeof(s),
-               ngettext("%li second", "%li seconds", seconds), seconds);
+               ngettext("%ld second", "%ld seconds", seconds), seconds);
 
     if (days) {
         if (days >= 4 || !hours) {

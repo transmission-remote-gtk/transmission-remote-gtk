@@ -242,7 +242,7 @@ static gboolean on_blocklist_updated(gpointer data) {
 
         if (response->status == CURLE_OK) {
             JsonObject *args = get_arguments(response->obj);
-            gchar *labelText = g_strdup_printf(_("Blocklist (%li entries)"),
+            gchar *labelText = g_strdup_printf(_("Blocklist (%ld entries)"),
                     json_object_get_int_member(args, SGET_BLOCKLIST_SIZE));
             gtk_button_set_label(GTK_BUTTON(priv->blocklist_check), labelText);
             g_free(labelText);
@@ -314,7 +314,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     w = trg_json_widget_check_new(&priv->widgets, s, SGET_LPD_ENABLED, _("Local peer discovery"), NULL);
         hig_workarea_add_wide_control(t, &row, w);
 
-    stringValue = g_strdup_printf(_("Blocklist (%li entries)"),
+    stringValue = g_strdup_printf(_("Blocklist (%ld entries)"),
             session_get_blocklist_size(s));
     tb = priv->blocklist_check = trg_json_widget_check_new(&priv->widgets, s, SGET_BLOCKLIST_ENABLED, stringValue, NULL);
     g_free((gchar *) stringValue);
