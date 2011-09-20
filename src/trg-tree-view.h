@@ -91,5 +91,6 @@ void trg_tree_view_setup_columns(TrgTreeView * tv);
 void trg_tree_view_set_prefs(TrgTreeView *tv, TrgPrefs *prefs);
 void trg_tree_view_persist(TrgTreeView * tv);
 void trg_tree_view_restore_sort(TrgTreeView * tv);
+gboolean trg_tree_view_is_column_showing(TrgTreeView *tv, gint index);
 
 #endif                          /* _TRG_TREE_VIEW_H_ */

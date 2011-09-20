@@ -242,7 +242,7 @@ static void update_selected_torrent_notebook(TrgMainWindow * win, gint mode,
                 trg_client_get_serial(client), t, mode);
         trg_files_model_update(priv->filesModel, trg_client_get_serial(client),
                 t, mode);
-        trg_peers_model_update(priv->peersModel, trg_client_get_serial(client),
+        trg_peers_model_update(priv->peersModel, TRG_TREE_VIEW(priv->peersTreeView), trg_client_get_serial(client),
                 t, mode);
     } else if (id < 0) {
         trg_main_window_torrent_scrub(win);

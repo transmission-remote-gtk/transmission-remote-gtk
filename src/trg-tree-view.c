@@ -48,6 +48,25 @@ struct _TrgTreeViewPrivate {
     TrgPrefs *prefs;
 };
 
+gboolean trg_tree_view_is_column_showing(TrgTreeView *tv, gint index)
+{
+    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+
+    GList *li;
+    for (li = priv->columns; li; li = g_list_next(li))
+    {
+        trg_column_description *cd = (trg_column_description*)li->data;
+        if (cd->model_column == index) {
+            if (cd->flags & TRG_COLUMN_SHOWING)
+                return TRUE;
+            else
+                break;
+        }
+    }
+
+    return FALSE;
+}
+
 static void
 trg_tree_view_get_property(GObject * object, guint property_id,
                               GValue * value, GParamSpec * pspec)

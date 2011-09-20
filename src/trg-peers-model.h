@@ -32,6 +32,8 @@
 #endif
 #include <glib-object.h>
 
+#include "trg-tree-view.h"
+
 G_BEGIN_DECLS
 #define TRG_TYPE_PEERS_MODEL trg_peers_model_get_type()
 #define TRG_PEERS_MODEL(obj) \
@@ -78,7 +80,7 @@ enum {
     PEERSCOL_COLUMNS
 };
 
-void trg_peers_model_update(TrgPeersModel * model, gint64 updateSerial,
+void trg_peers_model_update(TrgPeersModel * model, TrgTreeView *tv, gint64 updateSerial,
                             JsonObject * t, gboolean first);
 
 #endif                          /* TRG_PEERS_MODEL_H_ */
