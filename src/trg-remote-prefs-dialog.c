@@ -402,7 +402,8 @@ static GObject *trg_remote_prefs_dialog_constructor(GType type,
 
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
-    gtk_dialog_set_default_response(GTK_DIALOG(object), GTK_RESPONSE_OK);
+    gtk_dialog_set_default_response(GTK_DIALOG(object),
+                                    GTK_RESPONSE_OK);
 
     gtk_dialog_set_alternative_button_order(GTK_DIALOG(object),
             GTK_RESPONSE_OK, GTK_RESPONSE_CLOSE, -1);

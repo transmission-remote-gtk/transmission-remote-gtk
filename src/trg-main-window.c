@@ -778,7 +778,7 @@ gboolean on_session_set(gpointer data) {
     if (response->status == CURLE_OK || response->status == FAIL_RESPONSE_UNSUCCESSFUL)
         dispatch_async(priv->client, session_get(), on_session_get, response->cb_data);
 
-    trg_dialog_error_handler(TRG_MAIN_WINDOW(data), response);
+    trg_dialog_error_handler(TRG_MAIN_WINDOW(response->cb_data), response);
     trg_response_free(response);
 
     return FALSE;

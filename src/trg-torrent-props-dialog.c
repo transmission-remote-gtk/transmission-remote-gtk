@@ -261,10 +261,6 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     gtk_dialog_set_default_response(GTK_DIALOG(object),
                                     GTK_RESPONSE_OK);
 
-    gtk_dialog_set_alternative_button_order(GTK_DIALOG(object),
-                                            GTK_RESPONSE_ACCEPT,
-                                            GTK_RESPONSE_OK, -1);
-
     g_signal_connect(G_OBJECT(object),
                      "response",
                      G_CALLBACK(trg_torrent_props_response_cb), NULL);
