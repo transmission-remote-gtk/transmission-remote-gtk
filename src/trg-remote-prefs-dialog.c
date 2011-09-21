@@ -238,7 +238,7 @@ static gboolean on_blocklist_updated(gpointer data) {
 
         gtk_widget_set_sensitive(priv->blocklist_update_button, TRUE);
         gtk_button_set_label(GTK_BUTTON(priv->blocklist_update_button),
-                "Update");
+                _("Update"));
 
         if (response->status == CURLE_OK) {
             JsonObject *args = get_arguments(response->obj);
