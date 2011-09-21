@@ -100,9 +100,6 @@ int main(int argc, char *argv[])
     UniqueApp *app = NULL;
     gboolean withUnique;
 #endif
-#ifdef WIN32
-    gchar *packagedir, *gtkrcfile;
-#endif
 
 #ifdef DEBUG    
     //GMemVTable gmvt = {malloc,realloc,free,calloc,malloc,realloc};
@@ -113,18 +110,6 @@ int main(int argc, char *argv[])
     
     g_type_init();
     g_thread_init(NULL);
-
-#ifdef WIN32
-    packagedir = g_win32_get_package_installation_directory_of_module(NULL);
-    gtkrcfile = g_build_filename(packagedir, "win32-gtkrc.rc", NULL);
-
-    if (g_file_test(gtkrcfile, G_FILE_TEST_IS_REGULAR))
-    	gtk_rc_add_default_file(gtkrcfile);
-
-	g_free(packagedir);
-	g_free(gtkrcfile);
-#endif
-
     gtk_init(&argc, &argv);
 
     g_set_application_name (PACKAGE_NAME);
