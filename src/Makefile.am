@@ -72,7 +72,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-destination-combo.c \
 	  $(NULL)
 
-transmission_remote_gtk_LDFLAGS = -lm -lcurl $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS)
+transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS)
 
 if WIN32
 .rc.o:

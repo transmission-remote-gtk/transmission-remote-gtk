@@ -713,8 +713,6 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_box_pack_start(GTK_BOX(contentvbox), notebook, TRUE, TRUE,
             0);
 
-    //gtk_widget_show_all(GTK_DIALOG(object)->vbox);
-
     return object;
 }
 

@@ -48,6 +48,7 @@ typedef struct _TrgTorrentModelPrivate TrgTorrentModelPrivate;
 
 struct _TrgTorrentModelPrivate {
     GHashTable *ht;
+    GRegex *urlHostRegex;
 };
 
 static void trg_torrent_model_dispose(GObject * object)
@@ -190,6 +191,8 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
 
     g_object_set_data(G_OBJECT(self), PROP_REMOVE_IN_PROGRESS,
                       GINT_TO_POINTER(FALSE));
+
+    priv->urlHostRegex = trg_uri_host_regex_new();
 }
 
 gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model)
@@ -233,12 +236,14 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                     GtkTreeIter * iter, JsonObject * t,
                     trg_torrent_model_update_stats * stats)
 {
+    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
     GtkListStore *ls = GTK_LIST_STORE(model);
     guint lastFlags, newFlags;
-    JsonObject *lastJson, *pf, *firstTracker;
+    JsonObject *lastJson, *pf;
     JsonArray *trackerStats;
     gchar *statusString, *statusIcon, *downloadDir;
     gint64 downRate, upRate, downloaded, uploaded, id, status;
+    gchar *firstTrackerHost = NULL;
 
     downRate = torrent_get_rate_down(t);
     stats->downRateTotal += downRate;
@@ -259,8 +264,10 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     statusIcon = torrent_get_status_icon(rpcv, newFlags);
     pf = torrent_get_peersfrom(t);
     trackerStats = torrent_get_tracker_stats(t);
-    firstTracker = json_array_get_length(trackerStats) > 0 ?
-            json_array_get_object_element(trackerStats, 0) : NULL;
+    if (json_array_get_length(trackerStats) > 0) {
+            JsonObject *firstTracker = json_array_get_object_element(trackerStats, 0);
+            firstTrackerHost = trg_gregex_get_first(priv->urlHostRegex, tracker_stats_get_host(firstTracker));
+    }
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
                        TORRENT_COLUMN_FLAGS, &lastFlags,
@@ -316,7 +323,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_FROM_US,
             torrent_get_peers_getting_from_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_TRACKERHOST,
-            firstTracker ? tracker_stats_get_host(firstTracker) : "", -1);
+            firstTrackerHost ? firstTrackerHost : "", -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_QUEUE_POSITION, torrent_get_queue_position(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_LASTACTIVE, torrent_get_activity_date(t), -1);
 #else
@@ -354,7 +361,7 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        torrent_get_bandwidth_priority(t),
                        TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
                        TORRENT_COLUMN_TRACKERHOST,
-                       firstTracker ? tracker_stats_get_host(firstTracker) : "",
+                       firstTrackerHost ? firstTrackerHost : "",
                        TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif
 
@@ -366,6 +373,9 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
         g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
 
     trg_torrent_model_count_peers(model, iter, t);
+
+    if (firstTrackerHost)
+        g_free(firstTrackerHost);
 
     g_free(statusString);
     g_free(statusIcon);
