@@ -204,12 +204,15 @@ guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 dow
             break;
         case TR_STATUS_DOWNLOAD:
             flags |= TORRENT_FLAG_DOWNLOADING;
+            flags |= TORRENT_FLAG_ACTIVE;
             break;
         case TR_STATUS_SEED_WAIT:
             flags |= TORRENT_FLAG_SEEDING_WAIT;
             break;
         case TR_STATUS_SEED:
             flags |= TORRENT_FLAG_SEEDING;
+            if (torrent_get_peers_getting_from_us(t))
+                flags |= TORRENT_FLAG_ACTIVE;
             break;
         }
     } else {
@@ -231,15 +234,14 @@ guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 dow
             flags |= TORRENT_FLAG_CHECKING;
             break;
         }
+        if (downRate > 0 || upRate > 0)
+            flags |= TORRENT_FLAG_ACTIVE;
     }
 
     if (torrent_get_is_finished(t) == TRUE)
         flags |= TORRENT_FLAG_COMPLETE;
     else
         flags |= TORRENT_FLAG_INCOMPLETE;
-
-    if (downRate > 0 || upRate > 0)
-        flags |= TORRENT_FLAG_ACTIVE;
 
     if (strlen(torrent_get_errorstr(t)) > 0)
         flags |= TORRENT_FLAG_ERROR;

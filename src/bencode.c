@@ -180,18 +180,18 @@ be_node *be_decode(const char *data)
     return be_decoden(data, strlen(data));
 }
 
-static inline void _be_free_str(char *str)
-{
-    if (str)
-        g_free(str - sizeof(gint64));
-}
-
 int be_validate_node(be_node * node, int type)
 {
     if (!node || node->type != type)
         return 1;
     else
         return 0;
+}
+
+static inline void _be_free_str(char *str)
+{
+    if (str)
+        g_free(str - sizeof(gint64));
 }
 
 void be_free(be_node * node)
@@ -206,9 +206,11 @@ void be_free(be_node * node)
 
     case BE_LIST:{
             unsigned int i;
-            for (i = 0; node->val.l[i]; ++i)
-                be_free(node->val.l[i]);
-            g_free(node->val.l);
+            if (node->val.l) {
+                for (i = 0; node->val.l[i]; ++i)
+                    be_free(node->val.l[i]);
+                g_free(node->val.l);
+            }
             break;
         }
 

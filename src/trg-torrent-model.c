@@ -264,16 +264,17 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     statusIcon = torrent_get_status_icon(rpcv, newFlags);
     pf = torrent_get_peersfrom(t);
     trackerStats = torrent_get_tracker_stats(t);
-    if (json_array_get_length(trackerStats) > 0) {
-            JsonObject *firstTracker = json_array_get_object_element(trackerStats, 0);
-            firstTrackerHost = trg_gregex_get_first(priv->urlHostRegex, tracker_stats_get_host(firstTracker));
-    }
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
                        TORRENT_COLUMN_FLAGS, &lastFlags,
                        TORRENT_COLUMN_JSON, &lastJson, -1);
 
     json_object_ref(t);
+
+    if (json_array_get_length(trackerStats) > 0) {
+            JsonObject *firstTracker = json_array_get_object_element(trackerStats, 0);
+            firstTrackerHost = trg_gregex_get_first(priv->urlHostRegex, tracker_stats_get_host(firstTracker));
+    }
 
 #ifdef DEBUG
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon, -1);
