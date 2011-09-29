@@ -68,11 +68,13 @@
 #define TRG_PREFS_KEY_TV_WIDTHS "widths"
 #define TRG_PREFS_KEY_NOTEBOOK_PANED_POS "notebook-paned-pos"
 #define TRG_PREFS_KEY_STATES_PANED_POS "states-paned-pos"
+#define TRG_PREFS_KEY_EXEC_COMMANDS "exec-commands"
 
 #define TRG_PREFS_NOFLAGS    (1 << 0) /* 0x00 */
 #define TRG_PREFS_GLOBAL     (1 << 1) /* 0x01 */
 #define TRG_PREFS_PROFILE    (1 << 2) /* 0x02 */
 #define TRG_PREFS_NEWNODE    (1 << 3) /* 0x04 */
+#define TRG_PREFS_REPLACENODE (1 << 4) /* 0x08 */
 
 G_BEGIN_DECLS
 
@@ -111,7 +113,7 @@ void trg_prefs_add_default_string(TrgPrefs *p, gchar *key, gchar *value);
 void trg_prefs_add_default_double(TrgPrefs *p, gchar *key, double value);
 void trg_prefs_add_default_bool_true(TrgPrefs *p, gchar *key);
 
-JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int flags);
+JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int type, int flags);
 gchar *trg_prefs_get_string(TrgPrefs *p, gchar *key, int flags);
 gint64 trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags);
 gdouble trg_prefs_get_double(TrgPrefs *p, gchar *key, int flags);
@@ -124,6 +126,7 @@ void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile);
 JsonObject *trg_prefs_new_profile(TrgPrefs *p);
 JsonObject *trg_get_current_profile(TrgPrefs *p);
 JsonObject *trg_prefs_get_root(TrgPrefs *p);
+JsonArray *trg_prefs_get_array(TrgPrefs *p, gchar *key, int flags);
 
 void trg_prefs_set_int(TrgPrefs *p, gchar *key, int value, int flags);
 void trg_prefs_set_string(TrgPrefs *p, gchar *key, const gchar *value, int flags);
@@ -132,7 +135,7 @@ void trg_prefs_set_bool(TrgPrefs *p, gchar *key, gboolean value, int flags);
 
 gboolean trg_prefs_save(TrgPrefs *p);
 void trg_prefs_load(TrgPrefs *p);
-
+void trg_prefs_changed_emit_signal(TrgPrefs *p, gchar *key);
 guint trg_prefs_get_add_flags(TrgPrefs *p);
 
 G_END_DECLS

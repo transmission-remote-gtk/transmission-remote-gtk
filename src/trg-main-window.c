@@ -43,6 +43,7 @@
 #include "session-get.h"
 #include "torrent.h"
 #include "protocol-constants.h"
+#include "remote-exec.h"
 
 #include "trg-main-window.h"
 #include "trg-about-window.h"
@@ -104,7 +105,6 @@ static void open_props_cb(GtkWidget * w, gpointer data);
 static gint confirm_action_dialog(GtkWindow * win,
         GtkTreeSelection * selection, gchar * question_single,
         gchar * question_multi, gchar * action_stock);
-static GtkWidget *my_scrolledwin_new(GtkWidget * child);
 static void view_stats_toggled_cb(GtkWidget * w, gpointer data);
 static void view_states_toggled_cb(GtkCheckMenuItem * w, gpointer data);
 static void view_notebook_toggled_cb(GtkCheckMenuItem * w, gpointer data);
@@ -142,7 +142,7 @@ static void status_icon_activated(GtkStatusIcon * icon, gpointer data);
 static void clear_filter_entry_cb(GtkWidget * w, gpointer data);
 static gboolean torrent_tv_key_press_event(GtkWidget * w, GdkEventKey * key,
         gpointer data);
-static GtkWidget *trg_imagemenuitem_new(GtkMenuShell * shell, char *text,
+static GtkWidget *trg_imagemenuitem_new(GtkMenuShell * shell, const gchar *text,
         char *stock_id, gboolean sensitive, GCallback cb, gpointer cbdata);
 static void set_limit_cb(GtkWidget * w, gpointer data);
 static GtkWidget *limit_item_new(TrgMainWindow * win, GtkWidget * menu,
@@ -686,14 +686,6 @@ static void delete_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
                 on_generic_interactive_action, data);
     else
         json_array_unref(ids);
-}
-
-static GtkWidget *my_scrolledwin_new(GtkWidget * child) {
-    GtkWidget *scrolled_win = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_win),
-            GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    gtk_container_add(GTK_CONTAINER(scrolled_win), child);
-    return scrolled_win;
 }
 
 static void view_stats_toggled_cb(GtkWidget * w, gpointer data) {
@@ -1322,7 +1314,7 @@ static gboolean torrent_tv_key_press_event(GtkWidget * w, GdkEventKey * key,
     return FALSE;
 }
 
-static GtkWidget *trg_imagemenuitem_new(GtkMenuShell * shell, char *text,
+static GtkWidget *trg_imagemenuitem_new(GtkMenuShell * shell, const gchar *text,
         char *stock_id, gboolean sensitive, GCallback cb, gpointer cbdata) {
     GtkWidget *item = gtk_image_menu_item_new_with_label(stock_id);
 
@@ -1457,11 +1449,44 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
     return toplevel;
 }
 
+static void exec_cmd_cb(GtkWidget *w, gpointer data)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    JsonObject *cmd_obj = (JsonObject*)g_object_get_data(G_OBJECT(w), "cmd-object");
+    GtkTreeSelection *selection;
+    gint rowCount;
+
+    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->torrentTreeView));
+    rowCount = gtk_tree_selection_count_selected_rows(selection);
+
+    if (rowCount==1) {
+        JsonObject *json;
+        GError *cmd_error;
+        gchar *cmd_line, **argv;
+        if (!get_torrent_data(trg_client_get_torrent_table(priv->client),
+                        priv->selectedTorrentId, &json,
+                        NULL))
+            return;
+        cmd_line = build_remote_exec_cmd(json, json_object_get_string_member(cmd_obj, "cmd"));
+        g_debug("Exec: %s",cmd_line);
+        //GTK has bug, won't let you pass a string here containing a quoted param, so use parse and then spawn
+        // rather than g_spawn_command_line_async(cmd_line,&cmd_error);
+        g_shell_parse_argv(cmd_line, NULL, &argv, NULL);
+        g_spawn_async( NULL, argv, NULL, G_SPAWN_SEARCH_PATH,
+                                NULL, NULL, NULL, &cmd_error );
+        g_strfreev( argv );
+        g_free( cmd_line );
+    }
+}
+
 static void trg_torrent_tv_view_menu(GtkWidget * treeview,
         GdkEventButton * event, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     GtkWidget *menu;
+    gint n_cmds;
     JsonArray *ids;
+    JsonArray *cmds;
 
     menu = gtk_menu_new();
     ids = build_json_id_array(TRG_TORRENT_TREE_VIEW(treeview));
@@ -1482,6 +1507,40 @@ static void trg_torrent_tv_view_menu(GtkWidget * treeview,
             TRUE, G_CALLBACK(remove_cb), data);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove & Delete"),
             GTK_STOCK_CLEAR, TRUE, G_CALLBACK(delete_cb), data);
+
+    cmds = trg_prefs_get_array(prefs, TRG_PREFS_KEY_EXEC_COMMANDS, TRG_PREFS_PROFILE);
+    n_cmds = json_array_get_length(cmds);
+
+    if (n_cmds > 0) {
+        GList *cmds_list = json_array_get_elements(cmds);
+        GtkMenuShell *cmds_shell;
+        GList *cmds_li;
+
+        if (n_cmds < 3) {
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+            cmds_shell = GTK_MENU_SHELL(menu);
+        } else {
+            GtkImageMenuItem *cmds_menu = GTK_IMAGE_MENU_ITEM(gtk_image_menu_item_new_with_label(GTK_STOCK_EXECUTE));
+            gtk_image_menu_item_set_use_stock(cmds_menu, TRUE);
+            gtk_image_menu_item_set_always_show_image(cmds_menu, TRUE);
+            gtk_menu_item_set_label(GTK_MENU_ITEM(cmds_menu), _("Remote Commands"));
+
+            cmds_shell = GTK_MENU_SHELL(gtk_menu_new());
+            gtk_menu_item_set_submenu(GTK_MENU_ITEM(cmds_menu), GTK_WIDGET(cmds_shell));
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(cmds_menu));
+        }
+
+        for (cmds_li = cmds_list; cmds_li; cmds_li = g_list_next(cmds_li))
+        {
+            JsonObject *cmd_obj = json_node_get_object((JsonNode*)cmds_li->data);
+            const gchar *cmd_label = json_object_get_string_member(cmd_obj, "label");
+            GtkWidget *item = trg_imagemenuitem_new(cmds_shell, cmd_label,
+                    GTK_STOCK_EXECUTE, TRUE, G_CALLBACK(exec_cmd_cb), data);
+            g_object_set_data(G_OBJECT(item), "cmd-object", cmd_obj);
+        }
+
+        g_list_free(cmds_list);
+    }
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 

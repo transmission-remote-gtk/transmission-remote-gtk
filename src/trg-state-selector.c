@@ -71,14 +71,10 @@ guint32 trg_state_selector_get_flag(TrgStateSelector * s) {
 static void state_selection_changed(GtkTreeSelection * selection, gpointer data) {
     TrgStateSelectorPrivate *priv;
     GtkTreeIter iter;
-    GtkTreeView *tv;
     GtkTreeModel *stateModel;
     guint index = 0;
 
     priv = TRG_STATE_SELECTOR_GET_PRIVATE(data);
-
-    tv = gtk_tree_selection_get_tree_view(selection);
-    stateModel = gtk_tree_view_get_model(tv);
 
     if (gtk_tree_selection_get_selected(selection, &stateModel, &iter))
         gtk_tree_model_get(stateModel, &iter, STATE_SELECTOR_BIT, &priv->flag,

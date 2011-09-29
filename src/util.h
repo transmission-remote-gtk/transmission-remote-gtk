@@ -67,5 +67,6 @@ void rm_trailing_slashes(gchar *str);
 void trg_widget_set_visible(GtkWidget * w, gboolean visible);
 gdouble json_double_to_progress(JsonNode *n);
 gchar *trg_base64encode(const gchar *filename);
+GtkWidget *my_scrolledwin_new(GtkWidget * child);
 
 #endif                          /* UTIL_H_ */

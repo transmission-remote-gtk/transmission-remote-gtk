@@ -53,8 +53,16 @@ void g_str_slist_free(GSList * list)
 
 GRegex *trg_uri_host_regex_new(void)
 {
-    return g_regex_new("^[^:/?#]+:?//([^/?#:]*)", G_REGEX_OPTIMIZE, 0,
-                       NULL);
+    return g_regex_new("^[^:/?#]+:?//(?:www\\.|tracker\\.)?([^/?#:]*)",
+            G_REGEX_OPTIMIZE, 0, NULL);
+}
+
+GtkWidget *my_scrolledwin_new(GtkWidget * child) {
+    GtkWidget *scrolled_win = gtk_scrolled_window_new(NULL, NULL);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_win),
+            GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+    gtk_container_add(GTK_CONTAINER(scrolled_win), child);
+    return scrolled_win;
 }
 
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * src)
