@@ -145,7 +145,8 @@ static GObject *trg_destination_combo_constructor(GType type,
     trg_client_updateunlock(client);
 
     g_list_free(torrentItemRefs);
-    g_slist_str_set_add(&dirs, defaultDownDir, 0);
+    if (defaultDownDir)
+        g_slist_str_set_add(&dirs, defaultDownDir, 0);
 
     for (sli = dirs; sli; sli = g_slist_next(sli))
         gtk_list_store_insert_with_values(comboModel, NULL, INT_MAX, 0,

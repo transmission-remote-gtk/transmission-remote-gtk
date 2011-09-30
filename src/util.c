@@ -345,6 +345,9 @@ evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
 
 void rm_trailing_slashes(gchar *str)
 {
+    if (!str)
+        return;
+
     int i, len;
     if ((len = strlen(str)) < 1)
         return;
