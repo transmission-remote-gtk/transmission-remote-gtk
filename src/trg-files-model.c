@@ -79,7 +79,7 @@ trg_files_model_iter_update(TrgFilesModel * model,
         gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
                            FILESCOL_ICON,
                            wanted ? GTK_STOCK_FILE :
-                           GTK_STOCK_STOP, FILESCOL_WANTED, wanted,
+                           GTK_STOCK_CANCEL, FILESCOL_WANTED, wanted,
                            FILESCOL_PRIORITY, priority, -1);
     }
 }
