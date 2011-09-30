@@ -609,8 +609,8 @@ static void trg_prefs_etv_refresh(TrgPrefs *prefs, void *wdp) {
         JsonObject *jobj = json_node_get_object(ja_node);
         gtk_list_store_append(model, &iter);
         gtk_list_store_set(model, &iter, 0,
-                json_object_get_string_member(jobj, "label"), 1,
-                json_object_get_string_member(jobj, "cmd"), -1);
+                json_object_get_string_member(jobj, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_LABEL), 1,
+                json_object_get_string_member(jobj, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD), -1);
     }
 
     g_list_free(ja_list);
@@ -624,8 +624,8 @@ static gboolean trg_prefs_etc_save_foreachfunc(GtkTreeModel *model,
 
     gtk_tree_model_get(model, iter, 0, &label, 1, &cmd, -1);
 
-    json_object_set_string_member(new, "label", label);
-    json_object_set_string_member(new, "cmd", cmd);
+    json_object_set_string_member(new, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_LABEL, label);
+    json_object_set_string_member(new, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD, cmd);
 
     json_array_add_object_element(ja, new);
 

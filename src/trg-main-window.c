@@ -1452,6 +1452,7 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
 static void exec_cmd_cb(GtkWidget *w, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     JsonObject *cmd_obj = (JsonObject*)g_object_get_data(G_OBJECT(w), "cmd-object");
     GtkTreeSelection *selection;
     gint rowCount;
@@ -1461,13 +1462,13 @@ static void exec_cmd_cb(GtkWidget *w, gpointer data)
 
     if (rowCount==1) {
         JsonObject *json;
-        GError *cmd_error;
+        GError *cmd_error = NULL;
         gchar *cmd_line, **argv;
         if (!get_torrent_data(trg_client_get_torrent_table(priv->client),
                         priv->selectedTorrentId, &json,
                         NULL))
             return;
-        cmd_line = build_remote_exec_cmd(json, json_object_get_string_member(cmd_obj, "cmd"));
+        cmd_line = build_remote_exec_cmd(prefs, json, json_object_get_string_member(cmd_obj, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD));
         g_debug("Exec: %s",cmd_line);
         //GTK has bug, won't let you pass a string here containing a quoted param, so use parse and then spawn
         // rather than g_spawn_command_line_async(cmd_line,&cmd_error);
@@ -1476,6 +1477,19 @@ static void exec_cmd_cb(GtkWidget *w, gpointer data)
                                 NULL, NULL, NULL, &cmd_error );
         g_strfreev( argv );
         g_free( cmd_line );
+
+        if (cmd_error)
+        {
+            GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(data),
+                                                       GTK_DIALOG_MODAL,
+                                                       GTK_MESSAGE_ERROR,
+                                                       GTK_BUTTONS_OK, "%s",
+                                                       cmd_error->message);
+            gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+            gtk_dialog_run(GTK_DIALOG(dialog));
+            gtk_widget_destroy(dialog);
+            g_error_free(cmd_error);
+        }
     }
 }
 

@@ -20,6 +20,9 @@
 #include <glib.h>
 #include <json-glib/json-glib.h>
 
+#include "protocol-constants.h"
+#include "torrent.h"
+
 static const char json_exceptions[] = { 0x7f, 0x80, 0x81, 0x82, 0x83, 0x84,
         0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90,
         0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0x9b, 0x9c,
@@ -76,37 +79,52 @@ static gchar *dump_json_value(JsonNode * node) {
     return g_string_free(buffer, FALSE);
 }
 
-gchar *build_remote_exec_cmd(JsonObject * obj, const gchar * input) {
+gchar *build_remote_exec_cmd(TrgPrefs *prefs, JsonObject * torrent,
+        const gchar * input) {
+    JsonObject *profile = trg_prefs_get_profile(prefs);
     gchar *work = g_strdup(input);
     GRegex *regex, *replacerx;
     GMatchInfo *match_info;
     gchar *whole, *id, *tmp, *valuestr;
     JsonNode *replacement;
-    GError *error = NULL;
 
-    regex = g_regex_new("%{(\\w+)}", 0, 0, NULL);
+    regex = g_regex_new("%{([A-Za-z\\-]+)}", 0, 0, NULL);
     g_regex_match_full(regex, input, -1, 0, 0, &match_info, NULL);
 
     if (match_info) {
         while (g_match_info_matches(match_info)) {
             id = g_match_info_fetch(match_info, 1);
+            whole = g_match_info_fetch(match_info, 0);
+            replacerx = g_regex_new(whole, 0, 0, NULL);
+            valuestr = NULL;
 
-            if (json_object_has_member(obj, id)) {
-                replacement = json_object_get_member(obj, id);
-                if (JSON_NODE_HOLDS_VALUE(replacement)) {
-                    whole = g_match_info_fetch(match_info, 0);
-                    replacerx = g_regex_new(whole, 0, 0, &error);
-                    valuestr = dump_json_value(replacement);
-                    tmp = g_regex_replace(replacerx, work, -1, 0, valuestr, 0,
-                            &error);
-                    g_free(work);
-                    work = tmp;
-                    g_free(valuestr);
-                    g_free(whole);
-                    g_free(id);
-                    g_regex_unref(replacerx);
-                }
+            if (json_object_has_member(torrent, id)) {
+                replacement = json_object_get_member(torrent, id);
+            } else if (json_object_has_member(profile, id)) {
+                replacement = json_object_get_member(profile, id);
+            } else {
+                replacement = NULL;
             }
+
+            if (replacement && JSON_NODE_HOLDS_VALUE(replacement)) {
+                valuestr = dump_json_value(replacement);
+            } else if (!g_strcmp0(id, "full-path")) {
+                valuestr = torrent_get_full_path(torrent);
+            }
+
+            if (valuestr)
+            {
+                tmp
+                        = g_regex_replace(replacerx, work, -1, 0, valuestr, 0,
+                                NULL);
+                g_free(work);
+                work = tmp;
+                g_free(valuestr);
+            }
+
+            g_regex_unref(replacerx);
+            g_free(whole);
+            g_free(id);
             g_match_info_next(match_info, NULL);
         }
         g_match_info_free(match_info);

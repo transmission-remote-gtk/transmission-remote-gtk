@@ -20,6 +20,6 @@
 #ifndef REMOTE_EXEC_H_
 #define REMOTE_EXEC_H_
 
-gchar *build_remote_exec_cmd(JsonObject * obj, const gchar * input);
+gchar *build_remote_exec_cmd(TrgPrefs *prefs, JsonObject * torrent, const gchar * input);
 
 #endif /* REMOTE_EXEC_H_ */

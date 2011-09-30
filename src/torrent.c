@@ -439,3 +439,24 @@ const gchar *tracker_stats_get_host(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_HOST);
 }
+
+gchar *torrent_get_full_path(JsonObject * obj) {
+    gchar *containing_path, *name, *delim;
+    const gchar *location;
+    JsonArray *files = torrent_get_files(obj);
+    JsonObject *firstFile;
+
+    location = json_object_get_string_member(obj, FIELD_DOWNLOAD_DIR);
+    firstFile = json_array_get_object_element(files, 0);
+    name = g_strdup(json_object_get_string_member(firstFile, TFILE_NAME));
+
+    if ( (delim = g_strstr_len(name,-1,"/")) ) {
+        *delim = '\0';
+        containing_path = g_strdup_printf("%s/%s",location,name);
+    } else {
+        containing_path = g_strdup(location);
+    }
+
+    g_free(name);
+    return containing_path;
+}
