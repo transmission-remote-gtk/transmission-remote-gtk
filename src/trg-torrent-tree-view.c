@@ -61,6 +61,9 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
                              TORRENT_COLUMN_LEECHERS, _("Leechers"),
                              "leechers", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
+                             TORRENT_COLUMN_DOWNLOADS, _("Downloads"),
+                             "downloads", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_PEERS_FROM_US, _("Receiving"),
                              "connected-leechers", TRG_COLUMN_EXTRA);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
@@ -72,6 +75,20 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_FROMDHT, _("DHT Peers"),
                              "from-dht", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
+                             TORRENT_COLUMN_FROMTRACKERS, _("Tracker Peers"),
+                             "from-trackers", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
+                             TORRENT_COLUMN_FROMLTEP, _("LTEP Peers"),
+                             "from-ltep", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
+                             TORRENT_COLUMN_FROMRESUME, _("Resumed Peers"),
+                             "from-resume", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
+                             TORRENT_COLUMN_FROMINCOMING, _("Incoming Peers"),
+                             "from-incoming", TRG_COLUMN_EXTRA);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TORRENT_COLUMN_PEER_SOURCES,
+                             _("Peers T/I/E/H/X/L/R"), "peer-sources", TRG_COLUMN_EXTRA);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED,
                              TORRENT_COLUMN_DOWNSPEED, _("Down Speed"),
                              "down-speed", 0);

@@ -35,6 +35,11 @@
 
 #define TPEERFROM_FROMPEX        "fromPex"
 #define TPEERFROM_FROMDHT        "fromDht"
+#define TPEERFROM_FROMTRACKERS   "fromTracker"
+#define TPEERFROM_FROMLTEP       "fromLtep"
+#define TPEERFROM_FROMRESUME     "fromCache"
+#define TPEERFROM_FROMINCOMING   "fromIncoming"
+#define TPEERFROM_FROMLPD        "fromLpd"
 
 const gchar *peer_get_address(JsonObject * p);
 const gchar *peer_get_client_name(JsonObject * p);
@@ -48,5 +53,10 @@ gboolean peer_get_is_downloading_from(JsonObject * p);
 
 gint64 peerfrom_get_pex(JsonObject *pf);
 gint64 peerfrom_get_dht(JsonObject *pf);
+gint64 peerfrom_get_trackers(JsonObject *pf);
+gint64 peerfrom_get_ltep(JsonObject *pf);
+gint64 peerfrom_get_resume(JsonObject *pf);
+gint64 peerfrom_get_incoming(JsonObject *pf);
+gint64 peerfrom_get_lpd(JsonObject *pf);
 
 #endif                          /* TPEER_H_ */

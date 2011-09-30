@@ -29,6 +29,7 @@
 
 JsonArray *torrent_get_peers(JsonObject * t)
 {
+    g_assert(json_object_get_array_member(t, FIELD_PEERS));
     return json_object_get_array_member(t, FIELD_PEERS);
 }
 
@@ -39,16 +40,19 @@ JsonObject *torrent_get_peersfrom(JsonObject * t)
 
 JsonArray *torrent_get_wanted(JsonObject * t)
 {
+    g_assert(json_object_get_array_member(t, FIELD_WANTED));
     return json_object_get_array_member(t, FIELD_WANTED);
 }
 
 JsonArray *torrent_get_priorities(JsonObject * t)
 {
+    g_assert(json_object_get_array_member(t, FIELD_PRIORITIES));
     return json_object_get_array_member(t, FIELD_PRIORITIES);
 }
 
 JsonArray *torrent_get_tracker_stats(JsonObject * t)
 {
+    g_assert(json_object_get_array_member(t, FIELD_TRACKER_STATS));
     return json_object_get_array_member(t, FIELD_TRACKER_STATS);
 }
 
@@ -165,6 +169,11 @@ gint64 torrent_get_status(JsonObject * t)
 gboolean torrent_get_is_finished(JsonObject * t)
 {
     return torrent_get_left_until_done(t) <= 0;
+}
+
+gboolean torrent_get_is_private(JsonObject * t)
+{
+    return json_object_get_boolean_member(t, FIELD_ISPRIVATE);
 }
 
 gdouble torrent_get_percent_done(JsonObject * t)
@@ -367,11 +376,13 @@ JsonArray *get_torrents_removed(JsonObject * response)
 
 JsonArray *get_torrents(JsonObject * response)
 {
+    g_assert(json_object_get_array_member(response, FIELD_TORRENTS));
     return json_object_get_array_member(response, FIELD_TORRENTS);
 }
 
 JsonArray *torrent_get_files(JsonObject * args)
 {
+    g_assert(json_object_get_array_member(args, FIELD_FILES));
     return json_object_get_array_member(args, FIELD_FILES);
 }
 
@@ -430,6 +441,11 @@ gint64 tracker_stats_get_leecher_count(JsonObject *t)
     return json_object_get_int_member(t, FIELD_LEECHERCOUNT);
 }
 
+gint64 tracker_stats_get_download_count(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_DOWNLOADCOUNT);
+}
+
 const gchar *tracker_stats_get_announce_result(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_LAST_ANNOUNCE_RESULT);
@@ -460,3 +476,4 @@ gchar *torrent_get_full_path(JsonObject * obj) {
     g_free(name);
     return containing_path;
 }
+

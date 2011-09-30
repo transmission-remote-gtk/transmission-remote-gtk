@@ -20,6 +20,7 @@
 #include <string.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
+#include <glib/gi18n.h>
 
 #include "config.h"
 #include "torrent.h"
@@ -104,6 +105,7 @@ static void trg_torrent_model_count_peers(TrgTorrentModel * model,
     GList *trackersList = json_array_get_elements(torrent_get_tracker_stats(t));
     gint seeders = 0;
     gint leechers = 0;
+    gint downloads = 0;
     GList *li;
 
     for (li = trackersList; li; li = g_list_next(li)) {
@@ -111,13 +113,15 @@ static void trg_torrent_model_count_peers(TrgTorrentModel * model,
 
         seeders += tracker_stats_get_seeder_count(tracker);
         leechers += tracker_stats_get_leecher_count(tracker);
+        downloads += tracker_stats_get_download_count(tracker);
     }
 
     g_list_free(trackersList);
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
                        TORRENT_COLUMN_SEEDS, seeders,
-                       TORRENT_COLUMN_LEECHERS, leechers, -1);
+                       TORRENT_COLUMN_LEECHERS, leechers,
+                       TORRENT_COLUMN_DOWNLOADS, downloads, -1);
 }
 
 static void trg_torrent_model_ref_free(gpointer data)
@@ -158,6 +162,7 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_STATUS] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_SEEDS] = G_TYPE_INT;
     column_types[TORRENT_COLUMN_LEECHERS] = G_TYPE_INT;
+    column_types[TORRENT_COLUMN_DOWNLOADS] = G_TYPE_INT;
     column_types[TORRENT_COLUMN_DOWNSPEED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_ADDED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_UPSPEED] = G_TYPE_INT64;
@@ -174,6 +179,11 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_DONE_DATE] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_FROMPEX] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_FROMDHT] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_FROMTRACKERS] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_FROMLTEP] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_FROMRESUME] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_FROMINCOMING] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_PEER_SOURCES] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_PEERS_CONNECTED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_FROM_US] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_TO_US] = G_TYPE_INT64;
@@ -242,8 +252,9 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     JsonObject *lastJson, *pf;
     JsonArray *trackerStats;
     gchar *statusString, *statusIcon, *downloadDir;
-    gint64 downRate, upRate, downloaded, uploaded, id, status;
+    gint64 downRate, upRate, downloaded, uploaded, id, status, lpd;
     gchar *firstTrackerHost = NULL;
+    gchar *peerSources = NULL;
 
     downRate = torrent_get_rate_down(t);
     stats->downRateTotal += downRate;
@@ -274,6 +285,28 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
     if (json_array_get_length(trackerStats) > 0) {
             JsonObject *firstTracker = json_array_get_object_element(trackerStats, 0);
             firstTrackerHost = trg_gregex_get_first(priv->urlHostRegex, tracker_stats_get_host(firstTracker));
+    }
+
+    lpd = peerfrom_get_lpd(pf);
+    if (newFlags & TORRENT_FLAG_ACTIVE) {
+        if (lpd >= 0) {
+            peerSources = g_strdup_printf("%d / %d / %d / %d / %d / %d / %d",
+                                    peerfrom_get_trackers(pf),
+                                    peerfrom_get_incoming(pf),
+                                    peerfrom_get_ltep(pf),
+                                    peerfrom_get_dht(pf),
+                                    peerfrom_get_pex(pf),
+                                    lpd,
+                                    peerfrom_get_resume(pf));
+        } else {
+            peerSources = g_strdup_printf("%d / %d / %d / %d / %d / N/A / %d",
+                                    peerfrom_get_trackers(pf),
+                                    peerfrom_get_incoming(pf),
+                                    peerfrom_get_ltep(pf),
+                                    peerfrom_get_dht(pf),
+                                    peerfrom_get_pex(pf),
+                                    peerfrom_get_resume(pf));
+        }
     }
 
 #ifdef DEBUG
@@ -317,6 +350,16 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        peerfrom_get_pex(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMDHT,
                        peerfrom_get_dht(pf), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMTRACKERS,
+                       peerfrom_get_trackers(pf), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMLTEP,
+                       peerfrom_get_ltep(pf), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMRESUME,
+                       peerfrom_get_resume(pf), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMINCOMING,
+                       peerfrom_get_incoming(pf), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEER_SOURCES,
+                       peerSources, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_CONNECTED,
             torrent_get_peers_connected(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_TO_US,
@@ -346,6 +389,11 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
                        TORRENT_COLUMN_DOWNLOADED, downloaded,
                        TORRENT_COLUMN_FROMPEX, peerfrom_get_pex(pf),
                        TORRENT_COLUMN_FROMDHT, peerfrom_get_dht(pf),
+                       TORRENT_COLUMN_FROMTRACKERS, peerfrom_get_trackers(pf),
+                       TORRENT_COLUMN_FROMLTEP, peerfrom_get_ltep(pf),
+                       TORRENT_COLUMN_FROMRESUME, peerfrom_get_resume(pf),
+                       TORRENT_COLUMN_FROMINCOMING, peerfrom_get_incoming(pf),
+                       TORRENT_COLUMN_PEER_SOURCES, peerSources,
                        TORRENT_COLUMN_PEERS_CONNECTED, torrent_get_peers_connected(t),
                        TORRENT_COLUMN_PEERS_TO_US, torrent_get_peers_sending_to_us(t),
                        TORRENT_COLUMN_PEERS_FROM_US, torrent_get_peers_getting_from_us(t),
@@ -377,6 +425,8 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
 
     if (firstTrackerHost)
         g_free(firstTrackerHost);
+    if (peerSources)
+        g_free(peerSources);
 
     g_free(statusString);
     g_free(statusIcon);

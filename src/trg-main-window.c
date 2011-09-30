@@ -1835,7 +1835,7 @@ static GObject *trg_main_window_constructor(GType type,
     GtkWidget *outerVbox;
     GtkWidget *toolbarHbox;
     GtkIconTheme *theme;
-    gint width, height;
+    gint width, height, pos;
     gboolean tray;
     TrgPrefs *prefs;
 
@@ -1999,8 +1999,13 @@ static GObject *trg_main_window_constructor(GType type,
             trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SHOW_NOTEBOOK,
                     TRG_PREFS_GLOBAL));
 
-    gtk_paned_set_position(GTK_PANED(priv->vpaned), trg_prefs_get_int(prefs, TRG_PREFS_KEY_NOTEBOOK_PANED_POS, TRG_PREFS_GLOBAL));
-    gtk_paned_set_position(GTK_PANED(priv->hpaned), trg_prefs_get_int(prefs, TRG_PREFS_KEY_STATES_PANED_POS, TRG_PREFS_GLOBAL));
+    pos = trg_prefs_get_int(prefs, TRG_PREFS_KEY_NOTEBOOK_PANED_POS, TRG_PREFS_GLOBAL);
+    if (pos > 0)
+        gtk_paned_set_position(GTK_PANED(priv->vpaned), pos);
+
+    pos = trg_prefs_get_int(prefs, TRG_PREFS_KEY_STATES_PANED_POS, TRG_PREFS_GLOBAL);
+    if (pos > 0)
+        gtk_paned_set_position(GTK_PANED(priv->hpaned), pos);
 
     if (tray && priv->min_on_start)
         gtk_widget_hide(GTK_WIDGET(self));

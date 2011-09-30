@@ -69,3 +69,30 @@ gint64 peerfrom_get_dht(JsonObject *pf)
 {
     return json_object_get_int_member(pf, TPEERFROM_FROMDHT);
 }
+
+gint64 peerfrom_get_trackers(JsonObject *pf)
+{
+    return json_object_get_int_member(pf, TPEERFROM_FROMTRACKERS);
+}
+
+gint64 peerfrom_get_ltep(JsonObject *pf)
+{
+    return json_object_get_int_member(pf, TPEERFROM_FROMLTEP);
+}
+
+gint64 peerfrom_get_resume(JsonObject *pf)
+{
+    return json_object_get_int_member(pf, TPEERFROM_FROMRESUME);
+}
+
+gint64 peerfrom_get_incoming(JsonObject *pf)
+{
+    return json_object_get_int_member(pf, TPEERFROM_FROMINCOMING);
+}
+
+
+gint64 peerfrom_get_lpd(JsonObject *pf)
+{
+    return json_object_has_member(pf, TPEERFROM_FROMLPD) ?
+            json_object_get_int_member(pf, TPEERFROM_FROMLPD) : -1;
+}

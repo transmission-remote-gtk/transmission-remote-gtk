@@ -231,7 +231,7 @@ view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
                      treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
-    menuitem = gtk_image_menu_item_new_with_label(GTK_STOCK_STOP);
+    menuitem = gtk_image_menu_item_new_with_label(GTK_STOCK_CANCEL);
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(menuitem), TRUE);
     gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
                                               (menuitem), TRUE);

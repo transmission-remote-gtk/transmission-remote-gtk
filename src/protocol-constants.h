@@ -84,6 +84,7 @@
 #define FIELD_PEERS_CONNECTED "peersConnected"
 #define FIELD_QUEUE_POSITION "queuePosition"
 #define FIELD_ACTIVITY_DATE "activityDate"
+#define FIELD_ISPRIVATE "isPrivate"
 
 #define FIELD_FILES_WANTED      "files-wanted"
 #define FIELD_FILES_UNWANTED    "files-unwanted"
@@ -100,6 +101,7 @@
 #define FIELD_LAST_ANNOUNCE_TIME        "lastAnnounceTime"
 #define FIELD_SEEDERCOUNT               "seederCount"
 #define FIELD_LEECHERCOUNT              "leecherCount"
+#define FIELD_DOWNLOADCOUNT             "downloadCount"
 #define FIELD_HOST                      "host"
 #define FIELD_LAST_ANNOUNCE_RESULT      "lastAnnounceResult"
 #define FIELD_RECHECK_PROGRESS          "recheckProgress"
