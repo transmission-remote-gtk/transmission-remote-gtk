@@ -153,6 +153,8 @@ Section $(NAME_SecGlibGtkEtc) SecGlibGtkEtc
   File "..\..\gtk-2.24-win32-bin\bin\libpangowin32-1.0-0.dll"
   File "..\..\gtk-2.24-win32-bin\bin\libpng14-14.dll"
   File "..\..\gtk-2.24-win32-bin\bin\zlib1.dll"  
+  File "..\..\gtk-2.24-win32-bin\bin\gspawn-win32-helper-console.exe"
+  File "..\..\gtk-2.24-win32-bin\bin\gspawn-win32-helper.exe"
     
   SetOutPath $INSTDIR\lib\gtk-2.0\2.10.0\engines
 	
@@ -248,7 +250,9 @@ Section "Uninstall"
   Delete "$INSTDIR\bin\libpangoft2-1.0-0.dll"
   Delete "$INSTDIR\bin\libpangowin32-1.0-0.dll"
   Delete "$INSTDIR\bin\libpng14-14.dll"
-  Delete "$INSTDIR\bin\zlib1.dll"  
+  Delete "$INSTDIR\bin\zlib1.dll"
+  Delete "$INSTDIR\bin\gspawn-win32-helper-console.exe"
+  Delete "$INSTDIR\bin\gspawn-win32-helper.exe"
   Delete "$INSTDIR\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
   Delete "$INSTDIR\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
   Delete "$INSTDIR\lib\gtk-2.0\modules\libgail.dll"

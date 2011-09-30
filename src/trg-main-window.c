@@ -1148,7 +1148,6 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected) {
     gtk_widget_set_sensitive(GTK_WIDGET(priv->filesTreeView), connected);
     gtk_widget_set_sensitive(GTK_WIDGET(priv->trackersTreeView), connected);
     gtk_widget_set_sensitive(GTK_WIDGET(priv->genDetails), connected);
-    ;
 
     if (!connected) {
         trg_main_window_torrent_scrub(win);
@@ -1475,6 +1474,7 @@ static void exec_cmd_cb(GtkWidget *w, gpointer data)
         g_shell_parse_argv(cmd_line, NULL, &argv, NULL);
         g_spawn_async( NULL, argv, NULL, G_SPAWN_SEARCH_PATH,
                                 NULL, NULL, NULL, &cmd_error );
+
         g_strfreev( argv );
         g_free( cmd_line );
 
