@@ -311,6 +311,9 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     w = trg_json_widget_check_new(&priv->widgets, s, SGET_PEX_ENABLED, _("Peer exchange (PEX)"), NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
+    w = trg_json_widget_check_new(&priv->widgets, s, SGET_DHT_ENABLED, _("Distributed Hash Table (DHT)"), NULL);
+    hig_workarea_add_wide_control(t, &row, w);
+
     w = trg_json_widget_check_new(&priv->widgets, s, SGET_LPD_ENABLED, _("Local peer discovery"), NULL);
         hig_workarea_add_wide_control(t, &row, w);
 
