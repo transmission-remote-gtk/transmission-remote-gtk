@@ -46,20 +46,47 @@ trg_torrent_add_url_dialog_class_init(TrgTorrentAddUrlDialogClass * klass)
     g_type_class_add_private(klass, sizeof(TrgTorrentAddUrlDialogPrivate));
 }
 
+static gboolean has_dht_support(TrgTorrentAddUrlDialog *dlg)
+{
+    TrgTorrentAddUrlDialogPrivate *priv =
+        TRG_TORRENT_ADD_URL_DIALOG_GET_PRIVATE(dlg);
+    JsonObject *session = trg_client_get_session(priv->client);
+    return session_get_dht_enabled(session);
+}
+
+static void show_dht_not_enabled_warning(TrgTorrentAddUrlDialog *dlg)
+{
+    gchar *msg = _("You are trying to add a magnet torrent, but DHT is disabled. Distributed Hash Table (DHT) should be enabled in remote settings.");
+    GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(dlg),
+            GTK_DIALOG_MODAL, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
+            "%s", msg);
+    gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
 static void
-trg_torrent_add_url_response_cb(GtkDialog * dlg, gint res_id,
+trg_torrent_add_url_response_cb(TrgTorrentAddUrlDialog * dlg, gint res_id,
                                 gpointer data)
 {
     TrgTorrentAddUrlDialogPrivate *priv =
         TRG_TORRENT_ADD_URL_DIALOG_GET_PRIVATE(dlg);
+
     if (res_id == GTK_RESPONSE_ACCEPT) {
-        JsonNode *request =
-            torrent_add_url(gtk_entry_get_text(GTK_ENTRY(priv->urlEntry)),
+        JsonNode *request;
+        const gchar *entryText = gtk_entry_get_text(GTK_ENTRY(priv->urlEntry));
+
+        if (g_str_has_prefix(entryText, "magnet:") && !has_dht_support(dlg))
+            show_dht_not_enabled_warning(dlg);
+
+        request =
+            torrent_add_url(entryText,
                             gtk_toggle_button_get_active
                             (GTK_TOGGLE_BUTTON(priv->startCheck)));
         dispatch_async(priv->client, request,
                        on_generic_interactive_action, data);
     }
+
     gtk_widget_destroy(GTK_WIDGET(dlg));
 }
 

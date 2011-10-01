@@ -104,5 +104,6 @@ gboolean session_get_seed_queue_enabled(JsonObject * s);
 gint64 session_get_seed_queue_size(JsonObject * s);
 gint64 session_get_rpc_version(JsonObject * s);
 gint64 session_get_download_dir_free_space(JsonObject *s);
+gboolean session_get_dht_enabled(JsonObject *s);
 
 #endif                          /* SESSION_GET_H_ */

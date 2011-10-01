@@ -132,6 +132,8 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     GList *filesList, *li;
+    GtkTreeIter filesIter;
+    JsonObject *file;
     gint j = 0;
 
     priv->torrentId = torrent_get_id(t);
@@ -144,8 +146,8 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
         gtk_list_store_clear(GTK_LIST_STORE(model));
         priv->accept = TRUE;
         for (li = filesList; li; li = g_list_next(li)) {
-            JsonObject *file = json_node_get_object((JsonNode *) li->data);
-            GtkTreeIter filesIter;
+            file = json_node_get_object((JsonNode *) li->data);
+
             trg_files_model_iter_new(model, &filesIter, file, j);
             trg_files_model_iter_update(model, &filesIter,
                                         file, priv->wanted,
@@ -153,9 +155,22 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
             j++;
         }
     } else {
+        gint n_existing = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(model), NULL);
+        gint n_updates = g_list_length(filesList);
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),
                                (GtkTreeModelForeachFunc)
                                trg_files_model_update_foreach, filesList);
+        if (n_updates > n_existing) {
+            gint n_new = n_updates - n_existing;
+            for (j = n_updates - n_new; j < n_updates; j++)
+            {
+                file = json_node_get_object(g_list_nth_data(filesList, j));
+                trg_files_model_iter_new(model, &filesIter, file, j);
+                trg_files_model_iter_update(model, &filesIter,
+                                            file, priv->wanted,
+                                            priv->priorities, j);
+            }
+        }
     }
 
     g_list_free(filesList);

@@ -204,3 +204,8 @@ gint64 session_get_speed_limit_down(JsonObject * s)
 {
     return json_object_get_int_member(s, SGET_SPEED_LIMIT_DOWN);
 }
+
+gboolean session_get_dht_enabled(JsonObject *s)
+{
+    return json_object_get_boolean_member(s, SGET_DHT_ENABLED);
+}

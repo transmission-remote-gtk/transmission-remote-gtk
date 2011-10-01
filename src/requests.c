@@ -209,29 +209,40 @@ JsonNode *torrent_add_url(const gchar * url, gboolean paused)
     return root;
 }
 
-JsonNode *torrent_add(gchar * filename, gint flags)
+JsonNode *torrent_add(gchar * target, gint flags)
 {
     JsonNode *root;
     JsonObject *args;
+    gboolean isMagnet = g_str_has_prefix(target, "magnet:");
+    gboolean isUri = isMagnet || g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?", target, 0, 0);
+    gchar *encodedFile;
 
-    if (!g_file_test(filename, G_FILE_TEST_IS_REGULAR))
+    if (!isUri && !g_file_test(target, G_FILE_TEST_IS_REGULAR))
     {
-        g_error("file \"%s\" does not exist.", filename);
+        g_error("file \"%s\" does not exist.", target);
         return NULL;
     }
 
     root = base_request(METHOD_TORRENT_ADD);
     args = node_get_arguments(root);
 
-    gchar *encodedFile = trg_base64encode(filename);
-    if (encodedFile)
-        json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
+    if (isUri) {
+        json_object_set_string_member(args, PARAM_FILENAME, target);
+    } else {
+        encodedFile = trg_base64encode(target);
+        if (encodedFile) {
+            json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
+            g_free(encodedFile);
+        } else {
+            g_error("unable to base64 encode file \"%s\".", target);
+            return NULL;
+        }
+    }
 
-    json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED) == TORRENT_ADD_FLAG_PAUSED);
-    g_free(encodedFile);
+    json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED));
 
     if ((flags & TORRENT_ADD_FLAG_DELETE))
-        g_unlink(filename);
+        g_unlink(target);
 
     return root;
 }
