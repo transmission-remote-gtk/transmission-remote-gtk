@@ -247,6 +247,25 @@ col_onButtonPressed(GtkButton * button, GdkEventButton * event,
     return FALSE;
 }
 
+static GtkTreeViewColumn *trg_tree_view_icontext_column_new(trg_column_description *desc,
+        gchar *renderer_property)
+{
+    GtkTreeViewColumn *column = gtk_tree_view_column_new();
+    GtkCellRenderer *renderer = gtk_cell_renderer_pixbuf_new();
+
+    gtk_tree_view_column_set_title(column, desc->header);
+    gtk_tree_view_column_pack_start(column, renderer, FALSE);
+    gtk_tree_view_column_set_attributes(column, renderer, renderer_property,
+                                        desc->model_column_icon, NULL);
+
+    renderer = gtk_cell_renderer_text_new();
+    gtk_tree_view_column_pack_start(column, renderer, TRUE);
+    gtk_tree_view_column_set_attributes(column, renderer, "text",
+                                        desc->model_column, NULL);
+
+    return column;
+}
+
 static void trg_tree_view_add_column_after(TrgTreeView * tv,
                                            trg_column_description * desc,
                                            gint64 width,
@@ -319,19 +338,11 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
                                                      desc->model_column,
                                                      NULL);
         break;
-    case TRG_COLTYPE_ICONTEXT:
-        column = gtk_tree_view_column_new();
-
-        renderer = gtk_cell_renderer_pixbuf_new();
-        gtk_tree_view_column_set_title(column, desc->header);
-        gtk_tree_view_column_pack_start(column, renderer, FALSE);
-        gtk_tree_view_column_set_attributes(column, renderer, "stock-id",
-                                            desc->model_column_icon, NULL);
-
-        renderer = gtk_cell_renderer_text_new();
-        gtk_tree_view_column_pack_start(column, renderer, TRUE);
-        gtk_tree_view_column_set_attributes(column, renderer, "text",
-                                            desc->model_column, NULL);
+    case TRG_COLTYPE_STOCKICONTEXT:
+        column = trg_tree_view_icontext_column_new(desc, "stock-id");
+        break;
+    case TRG_COLTYPE_PIXBUFICONTEXT:
+        column = trg_tree_view_icontext_column_new(desc, "pixbuf");
         break;
     case TRG_COLTYPE_WANT:
         renderer = trg_cell_renderer_wanted_new();
