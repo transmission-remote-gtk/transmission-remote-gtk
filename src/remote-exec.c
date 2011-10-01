@@ -108,6 +108,8 @@ gchar *build_remote_exec_cmd(TrgPrefs *prefs, JsonObject * torrent,
 
             if (replacement && JSON_NODE_HOLDS_VALUE(replacement)) {
                 valuestr = dump_json_value(replacement);
+            } else if (!g_strcmp0(id, "full-dir")) {
+                valuestr = torrent_get_full_dir(torrent);
             } else if (!g_strcmp0(id, "full-path")) {
                 valuestr = torrent_get_full_path(torrent);
             }

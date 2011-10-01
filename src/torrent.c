@@ -456,7 +456,14 @@ const gchar *tracker_stats_get_host(JsonObject *t)
     return json_object_get_string_member(t, FIELD_HOST);
 }
 
-gchar *torrent_get_full_path(JsonObject * obj) {
+gchar *torrent_get_full_path(JsonObject *obj)
+{
+    const gchar *location = json_object_get_string_member(obj, FIELD_DOWNLOAD_DIR);
+    const gchar *name = json_object_get_string_member(obj, FIELD_NAME);
+    return g_strdup_printf("%s/%s", location, name);
+}
+
+gchar *torrent_get_full_dir(JsonObject * obj) {
     gchar *containing_path, *name, *delim;
     const gchar *location;
     JsonArray *files = torrent_get_files(obj);

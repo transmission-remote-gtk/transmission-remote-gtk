@@ -67,7 +67,7 @@ trg_cell_renderer_size_set_property(GObject * object, guint property_id,
             trg_strlsize(sizeString, priv->size_value);
             g_object_set(object, "text", sizeString, NULL);
         } else {
-            g_object_set(object, "text", "", NULL);
+            g_object_set(object, "text", "0", NULL);
         }
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);

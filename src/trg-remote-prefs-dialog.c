@@ -315,7 +315,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     hig_workarea_add_wide_control(t, &row, w);
 
     w = trg_json_widget_check_new(&priv->widgets, s, SGET_LPD_ENABLED, _("Local peer discovery"), NULL);
-        hig_workarea_add_wide_control(t, &row, w);
+    hig_workarea_add_wide_control(t, &row, w);
 
     stringValue = g_strdup_printf(_("Blocklist (%ld entries)"),
             session_get_blocklist_size(s));
