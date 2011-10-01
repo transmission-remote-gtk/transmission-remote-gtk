@@ -877,10 +877,9 @@ static gboolean on_torrent_get(gpointer data, int mode) {
     trg_client_inc_serial(client);
 
     trg_torrent_model_update(priv->torrentModel, client, response->obj, &stats, mode);
-
+    trg_state_selector_stats_update(priv->stateSelector, &stats);
     update_selected_torrent_notebook(win, mode,
             priv->selectedTorrentId);
-
     trg_status_bar_update(priv->statusBar, &stats, client);
 
     if (priv->graphNotebookIndex >= 0)

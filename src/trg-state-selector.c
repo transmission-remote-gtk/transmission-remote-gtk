@@ -56,6 +56,8 @@ struct _TrgStateSelectorPrivate {
     GHashTable *directories;
     GRegex *urlHostRegex;
     gint n_categories;
+    GtkListStore *store;
+    GtkTreeRowReference *error_rr;
 };
 
 GRegex *trg_state_selector_get_url_host_regex(TrgStateSelector * s) {
@@ -364,9 +366,14 @@ void trg_state_selector_set_show_trackers(TrgStateSelector * s, gboolean show) {
 }
 
 static void trg_state_selector_add_state(TrgStateSelector *selector,
-        GtkTreeIter * iter, gchar * icon, gchar * name, guint32 flag) {
+        GtkTreeIter * iter, gint pos, gchar * icon, gchar * name, guint32 flag) {
     TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(selector);
     GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(selector)));
+
+    if (pos < 0)
+        gtk_list_store_append(priv->store, iter);
+    else
+        gtk_list_store_insert(priv->store, iter, pos);
 
     gtk_list_store_set(model, iter, STATE_SELECTOR_ICON, icon,
             STATE_SELECTOR_NAME, name, STATE_SELECTOR_BIT, flag,
@@ -387,8 +394,29 @@ static void remove_row_ref_and_free(GtkTreeRowReference * rr) {
     gtk_tree_row_reference_free(rr);
 }
 
+void trg_state_selector_stats_update(TrgStateSelector * s, trg_torrent_model_update_stats *stats)
+{
+    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
+    GtkTreeIter iter;
+    if (stats->error > 0 && !priv->error_rr) {
+            trg_state_selector_add_state(s, &iter, priv->n_categories-1, GTK_STOCK_DIALOG_WARNING,
+                    _("Error"), TORRENT_FLAG_ERROR);
+            priv->error_rr = quick_tree_ref_new(GTK_TREE_MODEL(priv->store), &iter);
+    } else if (stats->error < 1 && priv->error_rr) {
+        remove_row_ref_and_free(priv->error_rr);
+        priv->error_rr = NULL;
+        priv->n_categories--;
+    }
+}
+
 void trg_state_selector_disconnect(TrgStateSelector * s) {
     TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
+
+    if (priv->error_rr) {
+        remove_row_ref_and_free(priv->error_rr);
+        priv->error_rr = NULL;
+        priv->n_categories--;
+    }
 
     g_hash_table_remove_all(priv->trackers);
     g_hash_table_remove_all(priv->directories);
@@ -406,9 +434,9 @@ static GObject *trg_state_selector_constructor(GType type,
     GObject *object;
     TrgStateSelector *selector;
     TrgStateSelectorPrivate *priv;
+    GtkListStore *store;
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
-    GtkListStore *store;
     GtkTreeIter iter;
     gint index;
     GtkTreeSelection *selection;
@@ -441,55 +469,30 @@ static GObject *trg_state_selector_constructor(GType type,
 
     gtk_tree_view_append_column(GTK_TREE_VIEW(object), column);
 
-    store = gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING,
+    store = priv->store = gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING,
             G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT64, G_TYPE_UINT);
     gtk_tree_view_set_model(GTK_TREE_VIEW(object), GTK_TREE_MODEL(store));
 
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_ABOUT, _("All"), 0);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_GO_DOWN,
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_ABOUT, _("All"), 0);
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_GO_DOWN,
             _("Downloading"), TORRENT_FLAG_DOWNLOADING);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_MEDIA_REWIND,
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_MEDIA_REWIND,
             _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_GO_UP, _("Seeding"),
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_GO_UP, _("Seeding"),
             TORRENT_FLAG_SEEDING);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_MEDIA_FORWARD,
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_MEDIA_FORWARD,
             _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_MEDIA_PAUSE,
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_MEDIA_PAUSE,
             _("Paused"), TORRENT_FLAG_PAUSED);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_APPLY, _("Complete"),
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_APPLY, _("Complete"),
             TORRENT_FLAG_COMPLETE);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_SELECT_ALL,
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_SELECT_ALL,
             _("Incomplete"), TORRENT_FLAG_INCOMPLETE);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_NETWORK, _("Active"),
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_NETWORK, _("Active"),
             TORRENT_FLAG_ACTIVE);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_REFRESH,
+    trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_REFRESH,
             _("Checking"), TORRENT_FLAG_CHECKING_ANY);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, GTK_STOCK_DIALOG_WARNING,
-            _("Error"), TORRENT_FLAG_ERROR);
-
-    gtk_list_store_append(store, &iter);
-    trg_state_selector_add_state(selector, &iter, NULL, NULL, 0);
+    trg_state_selector_add_state(selector, &iter, -1, NULL, NULL, 0);
 
     gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(object), TRUE);
 
@@ -528,12 +531,9 @@ void trg_state_selector_set_queues_enabled(TrgStateSelector *s, gboolean enabled
     GtkTreeIter iter;
 
     if (enabled) {
-        gtk_list_store_insert(GTK_LIST_STORE(model), &iter, 2);
-        trg_state_selector_add_state(s, &iter, GTK_STOCK_MEDIA_REWIND,
+        trg_state_selector_add_state(s, &iter, 2, GTK_STOCK_MEDIA_REWIND,
                 _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT);
-
-        gtk_list_store_insert(GTK_LIST_STORE(model), &iter, 4);
-        trg_state_selector_add_state(s, &iter, GTK_STOCK_MEDIA_FORWARD,
+        trg_state_selector_add_state(s, &iter, 4, GTK_STOCK_MEDIA_FORWARD,
                 _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT);
     } else {
         gtk_tree_model_iter_nth_child(model, &iter, NULL, 4);

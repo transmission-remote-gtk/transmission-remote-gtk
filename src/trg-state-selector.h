@@ -23,6 +23,7 @@
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
 
+#include "trg-torrent-model.h"
 #include "trg-client.h"
 
 enum {
@@ -70,5 +71,6 @@ void trg_state_selector_set_show_trackers(TrgStateSelector * s,
                                           gboolean show);
 void trg_state_selector_set_show_dirs(TrgStateSelector * s, gboolean show);
 void trg_state_selector_set_queues_enabled(TrgStateSelector *s, gboolean enabled);
+void trg_state_selector_stats_update(TrgStateSelector * s, trg_torrent_model_update_stats *stats);
 
 #endif                          /* TRG_STATE_LIST_H_ */

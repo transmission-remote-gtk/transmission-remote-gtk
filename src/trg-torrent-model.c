@@ -221,13 +221,18 @@ trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
     trg_torrent_model_update_stats *stats =
         (trg_torrent_model_update_stats *) gdata;
     guint flags;
+
     gtk_tree_model_get(model, iter, TORRENT_COLUMN_FLAGS, &flags, -1);
+
     if (flags & TORRENT_FLAG_SEEDING)
         stats->seeding++;
     else if (flags & TORRENT_FLAG_DOWNLOADING)
         stats->down++;
     else if (flags & TORRENT_FLAG_PAUSED)
         stats->paused++;
+
+    if (flags & TORRENT_FLAG_ERROR)
+        stats->error++;
 
     stats->count++;
 

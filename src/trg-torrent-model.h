@@ -58,6 +58,7 @@ typedef struct {
     gint down;
     gint paused;
     gint count;
+    gint error;
 } trg_torrent_model_update_stats;
 
 GType trg_torrent_model_get_type(void);
