@@ -194,6 +194,12 @@ gint64 torrent_get_activity_date(JsonObject *t)
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 downRate, gint64 upRate)
 {
     guint32 flags = 0;
+
+    if (torrent_get_is_finished(t) == TRUE)
+        flags |= TORRENT_FLAG_COMPLETE;
+    else
+        flags |= TORRENT_FLAG_INCOMPLETE;
+
     if (rpcv >= NEW_STATUS_RPC_VERSION) {
         switch (status) {
         case TR_STATUS_STOPPED:
@@ -212,7 +218,8 @@ guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 dow
             flags |= TORRENT_FLAG_QUEUED;
             break;
         case TR_STATUS_DOWNLOAD:
-            flags |= TORRENT_FLAG_DOWNLOADING;
+            if (!(flags & TORRENT_FLAG_COMPLETE))
+                flags |= TORRENT_FLAG_DOWNLOADING;
             flags |= TORRENT_FLAG_ACTIVE;
             break;
         case TR_STATUS_SEED_WAIT:
@@ -246,11 +253,6 @@ guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 dow
         if (downRate > 0 || upRate > 0)
             flags |= TORRENT_FLAG_ACTIVE;
     }
-
-    if (torrent_get_is_finished(t) == TRUE)
-        flags |= TORRENT_FLAG_COMPLETE;
-    else
-        flags |= TORRENT_FLAG_INCOMPLETE;
 
     if (strlen(torrent_get_errorstr(t)) > 0)
         flags |= TORRENT_FLAG_ERROR;
