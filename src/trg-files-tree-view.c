@@ -52,8 +52,8 @@ static void set_unwanted_foreachfunc(GtkTreeModel * model,
                                      GtkTreeIter * iter,
                                      gpointer data G_GNUC_UNUSED)
 {
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED,
-                       FALSE, FILESCOL_ICON, GTK_STOCK_CANCEL, -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED, FALSE,
+                       /* set wanted icon: FILESCOL_WANTED_ICON, GTK_STOCK_CANCEL,*/ -1);
 }
 
 static void set_wanted_foreachfunc(GtkTreeModel * model,
@@ -61,8 +61,8 @@ static void set_wanted_foreachfunc(GtkTreeModel * model,
                                    GtkTreeIter * iter,
                                    gpointer data G_GNUC_UNUSED)
 {
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED,
-                       TRUE, FILESCOL_ICON, GTK_STOCK_FILE, -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED, TRUE,
+                       /* set wanted icon: FILESCOL_WANTED_ICON, GTK_STOCK_APPLY,*/ -1);
 }
 
 static void set_priority_foreachfunc(GtkTreeModel * model,
@@ -222,7 +222,7 @@ view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                           gtk_separator_menu_item_new());
 
-    menuitem = gtk_image_menu_item_new_with_label(GTK_STOCK_FILE);
+    menuitem = gtk_image_menu_item_new_with_label(GTK_STOCK_APPLY);
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(menuitem), TRUE);
     gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
                                               (menuitem), TRUE);
@@ -287,7 +287,7 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
     trg_column_description *desc;
 
     desc =
-        trg_tree_view_reg_column(ttv, TRG_COLTYPE_STOCKICONTEXT, FILESCOL_NAME,
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_PIXBUFICONTEXT, FILESCOL_NAME,
                                  _("Name"), "name", 0);
     desc->model_column_icon = FILESCOL_ICON;
     desc->defaultWidth = 500;

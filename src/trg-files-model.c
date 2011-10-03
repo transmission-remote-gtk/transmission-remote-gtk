@@ -44,12 +44,25 @@ static void trg_files_model_iter_new(TrgFilesModel * model,
                                      GtkTreeIter * iter, JsonObject * file,
                                      int id)
 {
-    gtk_list_store_append(GTK_LIST_STORE(model), iter);
+    gchar *mimetype;
 
+    gtk_list_store_append(GTK_LIST_STORE(model), iter);
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
                        FILESCOL_NAME, file_get_name(file),
                        FILESCOL_SIZE, file_get_length(file),
                        FILESCOL_ID, id, -1);
+
+    mimetype = g_content_type_guess(file_get_name(file), NULL, 0, NULL);
+    if (mimetype) {
+        GIcon *icon = g_content_type_get_icon (mimetype);
+        if (icon) {
+            gtk_list_store_set(GTK_LIST_STORE(model), iter,
+                               FILESCOL_ICON, icon, -1);
+            g_object_unref(icon);
+        }
+    }
+
+    g_free(mimetype);
 }
 
 void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept)
@@ -77,9 +90,9 @@ trg_files_model_iter_update(TrgFilesModel * model,
 
     if (priv->accept) {
         gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
-                           FILESCOL_ICON,
-                           wanted ? GTK_STOCK_FILE :
-                           GTK_STOCK_CANCEL, FILESCOL_WANTED, wanted,
+                           /*  set wanted icon: FILESCOL_WANTED_ICON, 
+                           wanted ? GTK_STOCK_APPLY : GTK_STOCK_CANCEL, */
+                           FILESCOL_WANTED, wanted,
                            FILESCOL_PRIORITY, priority, -1);
     }
 }
@@ -96,12 +109,13 @@ static void trg_files_model_init(TrgFilesModel * self)
 
     priv->accept = TRUE;
 
-    column_types[FILESCOL_ICON] = G_TYPE_STRING;
+    column_types[FILESCOL_ICON] = G_TYPE_ICON;
     column_types[FILESCOL_NAME] = G_TYPE_STRING;
     column_types[FILESCOL_SIZE] = G_TYPE_INT64;
     column_types[FILESCOL_PROGRESS] = G_TYPE_DOUBLE;
     column_types[FILESCOL_ID] = G_TYPE_INT;
     column_types[FILESCOL_WANTED] = G_TYPE_BOOLEAN;
+    //column_types[FILESCOL_WANTED_ICON] = G_TYPE_STRING;
     column_types[FILESCOL_PRIORITY] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),

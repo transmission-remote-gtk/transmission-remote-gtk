@@ -342,7 +342,7 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = trg_tree_view_icontext_column_new(desc, "stock-id");
         break;
     case TRG_COLTYPE_PIXBUFICONTEXT:
-        column = trg_tree_view_icontext_column_new(desc, "pixbuf");
+        column = trg_tree_view_icontext_column_new(desc, "gicon");
         break;
     case TRG_COLTYPE_WANT:
         renderer = trg_cell_renderer_wanted_new();

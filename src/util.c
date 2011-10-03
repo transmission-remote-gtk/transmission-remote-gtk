@@ -33,6 +33,12 @@
 
 #include "util.h"
 
+gboolean is_url(gchar *string)
+{
+    //return g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?", string, 0, 0);
+    return g_regex_match_simple ("^http", string, 0, 0);
+}
+
 void add_file_id_to_array(JsonObject * args, gchar * key, gint index)
 {
     JsonArray *array;

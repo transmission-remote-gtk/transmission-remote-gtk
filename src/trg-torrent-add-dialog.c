@@ -712,23 +712,28 @@ static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
 
     if (nfiles == 1) {
         gchar *file_name = (gchar *) filenames->data;
-        gchar *file_name_base = g_path_get_basename(file_name);
-        trg_torrent_file *tor_data = trg_parse_torrent_file(file_name);
-
-        if (file_name_base) {
-            gtk_button_set_label(chooser, file_name_base);
-            g_free(file_name_base);
-        } else {
+        if (is_url(file_name)) {
             gtk_button_set_label(chooser, file_name);
-        }
-
-        if (!tor_data) {
-            torrent_not_parsed_warning(GTK_WINDOW(priv->parent));
             gtk_widget_set_sensitive(priv->file_list, FALSE);
+            gtk_widget_set_sensitive(priv->delete_check, FALSE);
         } else {
-            store_add_node(priv->store, NULL, tor_data->top_node);
-            trg_torrent_file_free(tor_data);
-            gtk_widget_set_sensitive(priv->file_list, TRUE);
+            gchar *file_name_base = g_path_get_basename(file_name);
+            trg_torrent_file *tor_data = trg_parse_torrent_file(file_name);
+
+            if (file_name_base) {
+                gtk_button_set_label(chooser, file_name_base);
+                g_free(file_name_base);
+            } else {
+                gtk_button_set_label(chooser, file_name);
+            }
+
+            gtk_widget_set_sensitive(priv->file_list, tor_data != NULL);
+            if (!tor_data) {
+                torrent_not_parsed_warning(GTK_WINDOW(priv->parent));
+            } else {
+                store_add_node(priv->store, NULL, tor_data->top_node);
+                trg_torrent_file_free(tor_data);
+            }
         }
     } else {
         gtk_widget_set_sensitive(priv->file_list, FALSE);

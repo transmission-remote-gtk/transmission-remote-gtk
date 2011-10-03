@@ -214,7 +214,7 @@ JsonNode *torrent_add(gchar * target, gint flags)
     JsonNode *root;
     JsonObject *args;
     gboolean isMagnet = g_str_has_prefix(target, "magnet:");
-    gboolean isUri = isMagnet || g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?", target, 0, 0);
+    gboolean isUri = isMagnet || is_url(target);
     gchar *encodedFile;
 
     if (!isUri && !g_file_test(target, G_FILE_TEST_IS_REGULAR))

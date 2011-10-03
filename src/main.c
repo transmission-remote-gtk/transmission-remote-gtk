@@ -101,9 +101,9 @@ int main(int argc, char *argv[])
     gboolean withUnique;
 #endif
 
-#ifdef DEBUG    
-    //GMemVTable gmvt = {malloc,realloc,free,calloc,malloc,realloc};
-    //g_mem_set_vtable(&gmvt);
+#ifdef TRG_MEMPROFILE
+    GMemVTable gmvt = {malloc,realloc,free,calloc,malloc,realloc};
+    g_mem_set_vtable(&gmvt);
     g_mem_set_vtable(glib_mem_profiler_table);
     g_mem_profile();
 #endif
