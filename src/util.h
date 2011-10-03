@@ -69,5 +69,6 @@ gdouble json_double_to_progress(JsonNode *n);
 gchar *trg_base64encode(const gchar *filename);
 GtkWidget *my_scrolledwin_new(GtkWidget * child);
 gboolean is_url(gchar *string);
+gboolean is_magnet(gchar *string);
 
 #endif                          /* UTIL_H_ */

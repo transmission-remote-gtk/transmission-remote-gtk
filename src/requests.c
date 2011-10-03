@@ -213,7 +213,7 @@ JsonNode *torrent_add(gchar * target, gint flags)
 {
     JsonNode *root;
     JsonObject *args;
-    gboolean isMagnet = g_str_has_prefix(target, "magnet:");
+    gboolean isMagnet = is_magnet(target);
     gboolean isUri = isMagnet || is_url(target);
     gchar *encodedFile;
 

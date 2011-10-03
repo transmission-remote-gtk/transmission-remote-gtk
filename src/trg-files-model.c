@@ -90,9 +90,8 @@ trg_files_model_iter_update(TrgFilesModel * model,
 
     if (priv->accept) {
         gtk_list_store_set(GTK_LIST_STORE(model), filesIter,
-                           /*  set wanted icon: FILESCOL_WANTED_ICON, 
-                           wanted ? GTK_STOCK_APPLY : GTK_STOCK_CANCEL, */
-                           FILESCOL_WANTED, wanted,
+                           FILESCOL_WANTED,
+                           wanted ? GTK_STOCK_APPLY : GTK_STOCK_CANCEL,
                            FILESCOL_PRIORITY, priority, -1);
     }
 }
@@ -114,8 +113,7 @@ static void trg_files_model_init(TrgFilesModel * self)
     column_types[FILESCOL_SIZE] = G_TYPE_INT64;
     column_types[FILESCOL_PROGRESS] = G_TYPE_DOUBLE;
     column_types[FILESCOL_ID] = G_TYPE_INT;
-    column_types[FILESCOL_WANTED] = G_TYPE_BOOLEAN;
-    //column_types[FILESCOL_WANTED_ICON] = G_TYPE_STRING;
+    column_types[FILESCOL_WANTED] = G_TYPE_STRING;
     column_types[FILESCOL_PRIORITY] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),

@@ -58,7 +58,6 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-cell-renderer-ratio.c \
 	  trg-cell-renderer-eta.c \
 	  trg-remote-prefs-dialog.c \
-	  trg-cell-renderer-wanted.c \
 	  trg-cell-renderer-priority.c \
 	  trg-cell-renderer-epoch.c \
 	  trg-cell-renderer-numgteqthan.c \

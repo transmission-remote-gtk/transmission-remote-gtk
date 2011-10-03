@@ -33,6 +33,11 @@
 
 #include "util.h"
 
+gboolean is_magnet(gchar *string)
+{
+    return g_str_has_prefix(string, "magnet:");
+}
+
 gboolean is_url(gchar *string)
 {
     //return g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?", string, 0, 0);
@@ -59,7 +64,7 @@ void g_str_slist_free(GSList * list)
 
 GRegex *trg_uri_host_regex_new(void)
 {
-    return g_regex_new("^[^:/?#]+:?//(?:www\\.|tracker\\.|\\d+\\.)?([^/?#:]*)",
+    return g_regex_new("^[^:/?#]+:?//(?:www\\.|torrent\\.|torrents\\.|tracker\\.|\\d+\\.)?([^/?#:]*)",
             G_REGEX_OPTIMIZE, 0, NULL);
 }
 

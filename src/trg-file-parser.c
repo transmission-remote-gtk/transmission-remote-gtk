@@ -113,10 +113,15 @@ trg_torrent_file *trg_parse_torrent_file(const gchar *filename)
     be_node *top_node, *info_node, *name_node;
     trg_torrent_file *ret = NULL;
 
+    if (g_file_test(filename, G_FILE_TEST_IS_REGULAR)) {
+        g_error("%s does not exist", filename);
+        return NULL;
+    }
+
     mf = g_mapped_file_new(filename, FALSE, &error);
 
     if (error) {
-        g_message("%s",error->message);
+        g_error("%s",error->message);
         g_error_free(error);
         g_mapped_file_unref(mf);
         return NULL;

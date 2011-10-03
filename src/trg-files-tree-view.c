@@ -24,8 +24,6 @@
 #include "trg-tree-view.h"
 #include "trg-files-tree-view.h"
 #include "trg-files-model.h"
-#include "trg-cell-renderer-wanted.h"
-#include "trg-cell-renderer-priority.h"
 #include "trg-main-window.h"
 #include "requests.h"
 #include "util.h"
@@ -52,8 +50,7 @@ static void set_unwanted_foreachfunc(GtkTreeModel * model,
                                      GtkTreeIter * iter,
                                      gpointer data G_GNUC_UNUSED)
 {
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED, FALSE,
-                       /* set wanted icon: FILESCOL_WANTED_ICON, GTK_STOCK_CANCEL,*/ -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED, GTK_STOCK_CANCEL, -1);
 }
 
 static void set_wanted_foreachfunc(GtkTreeModel * model,
@@ -61,8 +58,8 @@ static void set_wanted_foreachfunc(GtkTreeModel * model,
                                    GtkTreeIter * iter,
                                    gpointer data G_GNUC_UNUSED)
 {
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED, TRUE,
-                       /* set wanted icon: FILESCOL_WANTED_ICON, GTK_STOCK_APPLY,*/ -1);
+    gtk_list_store_set(GTK_LIST_STORE(model), iter,
+                       FILESCOL_WANTED, GTK_STOCK_APPLY, -1);
 }
 
 static void set_priority_foreachfunc(GtkTreeModel * model,
@@ -85,15 +82,17 @@ static void send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
 {
     JsonObject *args = (JsonObject *) data;
     gint64 priority, id;
-    gboolean wanted;
+    gchar *wanted;
 
     gtk_tree_model_get(model, iter, FILESCOL_WANTED, &wanted,
                        FILESCOL_PRIORITY, &priority, FILESCOL_ID, &id, -1);
 
-    if (wanted == FALSE)
+    if (!g_strcmp0(wanted, GTK_STOCK_CANCEL))
         add_file_id_to_array(args, FIELD_FILES_UNWANTED, id);
     else
         add_file_id_to_array(args, FIELD_FILES_WANTED, id);
+
+    g_free(wanted);
 
     if (priority == TR_PRI_LOW)
         add_file_id_to_array(args, FIELD_FILES_PRIORITY_LOW, id);
@@ -287,7 +286,7 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
     trg_column_description *desc;
 
     desc =
-        trg_tree_view_reg_column(ttv, TRG_COLTYPE_PIXBUFICONTEXT, FILESCOL_NAME,
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_GICONTEXT, FILESCOL_NAME,
                                  _("Name"), "name", 0);
     desc->model_column_icon = FILESCOL_ICON;
     desc->defaultWidth = 500;
@@ -296,7 +295,7 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
                              _("Size"), "size", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PROG, FILESCOL_PROGRESS,
                              _("Progress"), "progress", 0);
-    trg_tree_view_reg_column(ttv, TRG_COLTYPE_WANT, FILESCOL_WANTED,
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_ICON, FILESCOL_WANTED,
                              _("Wanted"), "wanted", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PRIO, FILESCOL_PRIORITY,
                              _("Priority"), "priority", 0);

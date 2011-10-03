@@ -29,7 +29,6 @@
 #include "trg-cell-renderer-ratio.h"
 #include "trg-cell-renderer-eta.h"
 #include "trg-cell-renderer-epoch.h"
-#include "trg-cell-renderer-wanted.h"
 #include "trg-cell-renderer-priority.h"
 #include "trg-cell-renderer-numgteqthan.h"
 
@@ -338,20 +337,20 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
                                                      desc->model_column,
                                                      NULL);
         break;
+    case TRG_COLTYPE_ICON:
+        column = gtk_tree_view_column_new();
+        renderer = gtk_cell_renderer_pixbuf_new();
+        gtk_cell_renderer_set_alignment(GTK_CELL_RENDERER(renderer), 0.5f, 0.0);
+        gtk_tree_view_column_set_title(column, desc->header);
+        gtk_tree_view_column_pack_start(column, renderer, TRUE);
+        gtk_tree_view_column_set_attributes(column, renderer, "stock-id",
+                                            desc->model_column, NULL);
+        break;
     case TRG_COLTYPE_STOCKICONTEXT:
         column = trg_tree_view_icontext_column_new(desc, "stock-id");
         break;
-    case TRG_COLTYPE_PIXBUFICONTEXT:
+    case TRG_COLTYPE_GICONTEXT:
         column = trg_tree_view_icontext_column_new(desc, "gicon");
-        break;
-    case TRG_COLTYPE_WANT:
-        renderer = trg_cell_renderer_wanted_new();
-        column =
-            gtk_tree_view_column_new_with_attributes(desc->header,
-                                                     renderer,
-                                                     "wanted-value",
-                                                     desc->model_column,
-                                                     NULL);
         break;
     case TRG_COLTYPE_PRIO:
         renderer = trg_cell_renderer_priority_new();

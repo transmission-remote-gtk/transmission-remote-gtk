@@ -712,7 +712,7 @@ static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
 
     if (nfiles == 1) {
         gchar *file_name = (gchar *) filenames->data;
-        if (is_url(file_name)) {
+        if (is_url(file_name) || is_magnet(file_name)) {
             gtk_button_set_label(chooser, file_name);
             gtk_widget_set_sensitive(priv->file_list, FALSE);
             gtk_widget_set_sensitive(priv->delete_check, FALSE);
