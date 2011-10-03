@@ -164,6 +164,8 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_RATEUPLOAD);
     json_array_add_string_element(fields, FIELD_RATEDOWNLOAD);
     json_array_add_string_element(fields, FIELD_STATUS);
+    json_array_add_string_element(fields, FIELD_ISFINISHED);
+    json_array_add_string_element(fields, FIELD_ISPRIVATE);
     json_array_add_string_element(fields, FIELD_ADDED_DATE);
     json_array_add_string_element(fields, FIELD_DOWNLOADEDEVER);
     json_array_add_string_element(fields, FIELD_UPLOADEDEVER);

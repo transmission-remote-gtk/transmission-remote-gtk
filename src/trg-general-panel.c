@@ -108,7 +108,7 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     TrgGeneralPanelPrivate *priv;
     gchar buf[32];
     gint sizeOfBuf;
-    gchar *statusString;
+    gchar *statusString, *fullStatusString;
     const gchar *errorStr;
     gint64 eta, uploaded, downloaded, rpcv;
     gint seeders, leechers;
@@ -144,7 +144,10 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     }
 
     statusString = torrent_get_status_string(rpcv, torrent_get_status(t));
-    gtk_label_set_text(GTK_LABEL(priv->gen_status_label), statusString);
+    fullStatusString = g_strdup_printf("%s %s", statusString, 
+                                       torrent_get_is_private(t) ? _("(Private)") : _("(Public)"));
+    gtk_label_set_text(GTK_LABEL(priv->gen_status_label), fullStatusString);
+    g_free(fullStatusString);
     g_free(statusString);
 
     trg_strlpercent(buf, torrent_get_percent_done(t));

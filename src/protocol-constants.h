@@ -67,6 +67,7 @@
 #define FIELD_COMMENT           "comment"
 #define FIELD_LEFTUNTILDONE     "leftUntilDone"
 #define FIELD_ISFINISHED        "isFinished"
+#define FIELD_ISPRIVATE         "isPrivate"
 #define FIELD_ERRORSTR          "errorString"
 #define FIELD_BANDWIDTH_PRIORITY "bandwidthPriority"
 #define FIELD_UPLOAD_LIMIT      "uploadLimit"
