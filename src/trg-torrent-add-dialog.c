@@ -700,6 +700,18 @@ static void torrent_not_parsed_warning(GtkWindow * parent)
     gtk_widget_destroy(dialog);
 }
 
+static void torrent_not_found_error(GtkWindow * parent, gchar *file)
+{
+    GtkWidget *dialog =
+        gtk_message_dialog_new(parent, GTK_DIALOG_DESTROY_WITH_PARENT,
+                               GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
+                               _
+                               ("Unable to find torrent file: %s"), file);
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
 static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
                                                  GSList * filenames)
 {
@@ -717,8 +729,10 @@ static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
             gtk_widget_set_sensitive(priv->file_list, FALSE);
             gtk_widget_set_sensitive(priv->delete_check, FALSE);
         } else {
-            gchar *file_name_base = g_path_get_basename(file_name);
-            trg_torrent_file *tor_data = trg_parse_torrent_file(file_name);
+            gchar *file_name_base;
+            trg_torrent_file *tor_data = NULL;
+
+            file_name_base = g_path_get_basename(file_name);
 
             if (file_name_base) {
                 gtk_button_set_label(chooser, file_name_base);
@@ -727,13 +741,20 @@ static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
                 gtk_button_set_label(chooser, file_name);
             }
 
-            gtk_widget_set_sensitive(priv->file_list, tor_data != NULL);
-            if (!tor_data) {
-                torrent_not_parsed_warning(GTK_WINDOW(priv->parent));
+            if (g_file_test(file_name, G_FILE_TEST_IS_REGULAR))
+            {
+                tor_data = trg_parse_torrent_file(file_name);
+                if (!tor_data) {
+                    torrent_not_parsed_warning(GTK_WINDOW(priv->parent));
+                } else {
+                    store_add_node(priv->store, NULL, tor_data->top_node);
+                    trg_torrent_file_free(tor_data);
+                }
             } else {
-                store_add_node(priv->store, NULL, tor_data->top_node);
-                trg_torrent_file_free(tor_data);
+                torrent_not_found_error(GTK_WINDOW(priv->parent), file_name);
             }
+
+            gtk_widget_set_sensitive(priv->file_list, tor_data != NULL);
         }
     } else {
         gtk_widget_set_sensitive(priv->file_list, FALSE);

@@ -221,7 +221,7 @@ JsonNode *torrent_add(gchar * target, gint flags)
 
     if (!isUri && !g_file_test(target, G_FILE_TEST_IS_REGULAR))
     {
-        g_error("file \"%s\" does not exist.", target);
+        g_message("file \"%s\" does not exist.", target);
         return NULL;
     }
 
