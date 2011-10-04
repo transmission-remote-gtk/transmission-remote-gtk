@@ -60,7 +60,7 @@ GType trg_main_window_get_type(void);
 gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
 gboolean on_session_set(gpointer data);
 gboolean on_generic_interactive_action(gpointer data);
-void auto_connect_if_required(TrgMainWindow * win, TrgClient * tc);
+void auto_connect_if_required(TrgMainWindow * win, gchar **args);
 TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart);
 void trg_main_window_add_status_icon(TrgMainWindow * win);
 void trg_main_window_remove_status_icon(TrgMainWindow * win);

@@ -207,11 +207,22 @@ struct _TrgMainWindowPrivate {
     guint timerId;
     gboolean min_on_start;
     gboolean queuesEnabled;
+
+    gchar **args;
 };
 
 enum {
     PROP_0, PROP_CLIENT, PROP_MINIMISE_ON_START
 };
+
+static void reset_connect_args(TrgMainWindow * win)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    if (priv->args) {
+        g_strfreev(priv->args);
+        priv->args = NULL;
+    }
+}
 
 static void trg_main_window_init(TrgMainWindow * self G_GNUC_UNUSED) {
 }
@@ -410,6 +421,8 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris) {
     }
 
     g_free(uris);  // launch_add_thread() or trg_torrent_add_dialog() will free the filenames and fileList;
+
+    priv->args = NULL;
 
     return TRUE;
 }
@@ -786,6 +799,7 @@ static gboolean on_session_get(gpointer data) {
 
     if (trg_dialog_error_handler(win, response) == TRUE) {
         trg_response_free(response);
+        reset_connect_args(win);
         return FALSE;
     }
 
@@ -805,6 +819,7 @@ static gboolean on_session_get(gpointer data) {
             gtk_widget_destroy(dialog);
             g_free(msg);
             trg_response_free(response);
+            reset_connect_args(win);
             return FALSE;
         }
 
@@ -819,8 +834,11 @@ static gboolean on_session_get(gpointer data) {
 
     json_object_ref(newSession);
 
-    if (!isConnected)
+    if (!isConnected) {
     	dispatch_async(client, torrent_get(-1), on_torrent_get_first, win);
+    	if (priv->args)
+    	    trg_add_from_filename(win, priv->args);
+    }
 
     trg_response_free(response);
 
@@ -2058,8 +2076,9 @@ static void trg_main_window_class_init(TrgMainWindowClass * klass) {
                             | G_PARAM_STATIC_BLURB));
 }
 
-void auto_connect_if_required(TrgMainWindow * win, TrgClient * tc) {
-    TrgPrefs *prefs = trg_client_get_prefs(tc);
+void auto_connect_if_required(TrgMainWindow * win, gchar **args) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     gchar *host = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME,
             TRG_PREFS_PROFILE);
 
@@ -2067,9 +2086,15 @@ void auto_connect_if_required(TrgMainWindow * win, TrgClient * tc) {
         gint len = strlen(host);
         g_free(host);
         if (len > 0 && trg_prefs_get_bool(prefs, TRG_PREFS_KEY_AUTO_CONNECT,
-                TRG_PREFS_PROFILE))
+                TRG_PREFS_PROFILE)) {
+            priv->args = args;
             connect_cb(NULL, win);
+            return;
+        }
     }
+
+    if (args)
+        g_strfreev(args);
 }
 
 TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart) {

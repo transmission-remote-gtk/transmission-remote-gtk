@@ -36,6 +36,7 @@
 
 #include "trg-main-window.h"
 #include "trg-client.h"
+#include "util.h"
 
 #ifdef HAVE_LIBUNIQUE
 
@@ -91,11 +92,35 @@ static gboolean should_be_minimised(int argc, char *argv[])
     return FALSE;
 }
 
+static gchar **convert_args(int argc, char *argv[])
+{
+    gchar *cwd = g_get_current_dir ();
+    gchar **files = NULL;
+    int i;
+    if (argc > 1) {
+        files = g_new0(gchar *, argc);
+        for (i = 1; i < argc; i++) {
+            if (!is_url(argv[i]) && !is_magnet(argv[i])
+                    && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
+                    && !g_path_is_absolute(argv[i])) {
+                files[i - 1] = g_build_path(G_DIR_SEPARATOR_S, cwd, argv[i], NULL);
+            } else {
+                files[i - 1] = g_strdup(argv[i]);
+            }
+        }
+    }
+
+    g_free(cwd);
+
+    return files;
+}
+
 int main(int argc, char *argv[])
 {
     int returnValue = EXIT_SUCCESS;
     TrgMainWindow *window;
     TrgClient *client;
+    gchar **args = convert_args(argc, argv);
 #ifdef HAVE_LIBUNIQUE
     UniqueApp *app = NULL;
     gboolean withUnique;
@@ -127,19 +152,11 @@ int main(int argc, char *argv[])
         UniqueResponse response;
         UniqueMessageData *message;
 
-        if (argc > 1) {
-            /* Turn the arguments into a null terminated array for libunique
-             * exclude the first (executable name).
-             */
-            gchar **files = g_new0(gchar *, argc);
-            int i;
-            for (i = 1; i < argc; i++)
-                files[i - 1] = argv[i];
-
+        if (args) {
             command = COMMAND_ADD;
             message = unique_message_data_new();
-            unique_message_data_set_uris(message, files);
-            g_free(files);
+            unique_message_data_set_uris(message, args);
+            g_strfreev(args);
         } else {
             command = UNIQUE_ACTIVATE;
             message = NULL;
@@ -166,7 +183,7 @@ int main(int argc, char *argv[])
         }
 #endif
 
-        auto_connect_if_required(window, client);
+        auto_connect_if_required(window, args);
         gtk_main();
 
         curl_global_cleanup();

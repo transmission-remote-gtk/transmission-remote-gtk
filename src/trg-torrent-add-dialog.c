@@ -706,7 +706,7 @@ static void torrent_not_found_error(GtkWindow * parent, gchar *file)
         gtk_message_dialog_new(parent, GTK_DIALOG_DESTROY_WITH_PARENT,
                                GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
                                _
-                               ("Unable to find torrent file: %s"), file);
+                               ("Unable to open torrent file: %s"), file);
     gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
