@@ -88,7 +88,6 @@ static void torrent_tv_onRowActivated(GtkTreeView * treeview,
 static void add_url_cb(GtkWidget * w, gpointer data);
 static void add_cb(GtkWidget * w, gpointer data);
 static void disconnect_cb(GtkWidget * w, gpointer data);
-static void connect_cb(GtkWidget * w, gpointer data);
 static void open_local_prefs_cb(GtkWidget * w, gpointer data);
 static void open_remote_prefs_cb(GtkWidget * w, gpointer data);
 static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow * win);
@@ -449,12 +448,24 @@ static void disconnect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
     trg_status_bar_reset(priv->statusBar);
 }
 
-static void connect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
-    TrgMainWindowPrivate *priv;
+void connect_cb(GtkWidget * w, gpointer data) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+    JsonObject *profile = NULL;
+
+    JsonObject *currentProfile = trg_prefs_get_profile(prefs);
+
     GtkWidget *dialog;
     int populate_result;
 
-    priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    if (w)
+        profile = (JsonObject*)g_object_get_data(G_OBJECT(w), "profile");
+
+    disconnect_cb(NULL, data);
+
+    if (profile && currentProfile != profile)
+        trg_prefs_set_profile(prefs, profile);
+
     populate_result = trg_client_populate_with_settings(priv->client);
 
     if (populate_result < 0) {
@@ -474,7 +485,7 @@ static void connect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
                 GTK_BUTTONS_OK, "%s", msg);
         gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
-
+        reset_connect_args(TRG_MAIN_WINDOW(data));
         return;
     }
 
@@ -513,10 +524,14 @@ static void main_window_toggle_filter_trackers(GtkCheckMenuItem * w,
 }
 
 static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow * win) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+
     GObject *b_connect, *b_disconnect, *b_add, *b_resume, *b_pause;
     GObject *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs;
 
-    TrgToolbar *toolBar = trg_toolbar_new();
+    TrgToolbar *toolBar = trg_toolbar_new(win, prefs);
+
     g_object_get(toolBar, "connect-button", &b_connect, "disconnect-button",
             &b_disconnect, "add-button", &b_add, "resume-button", &b_resume,
             "pause-button", &b_pause, "delete-button", &b_delete,
@@ -795,18 +810,20 @@ static gboolean on_session_get(gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(response->cb_data);
     TrgClient *client = priv->client;
     gboolean isConnected = trg_client_is_connected(client);
-    JsonObject *newSession;
+    JsonObject *newSession = NULL;
 
-    if (trg_dialog_error_handler(win, response) == TRUE) {
-        trg_response_free(response);
-        reset_connect_args(win);
-        return FALSE;
-    }
-
-    newSession = get_arguments(response->obj);
+    if (response->obj)
+        newSession = get_arguments(response->obj);
 
     if (!isConnected) {
         float version;
+
+        if (trg_dialog_error_handler(win, response) == TRUE) {
+            trg_response_free(response);
+            reset_connect_args(win);
+            return FALSE;
+        }
+
         if (session_get_version(newSession, &version)==0 || version < TRANSMISSION_MIN_SUPPORTED) {
             gchar *msg = g_strdup_printf(
                                     _("This application supports Transmission %.2f and later, you have %.2f."),
@@ -827,14 +844,13 @@ static gboolean on_session_get(gpointer data) {
         trg_main_window_conn_changed(win, TRUE);
     }
 
-    trg_client_set_session(client, newSession);
-
-    if (!isConnected)
-        trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
-
-    json_object_ref(newSession);
+    if (newSession) {
+        trg_client_set_session(client, newSession);
+        json_object_ref(newSession);
+    }
 
     if (!isConnected) {
+        trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
     	dispatch_async(client, torrent_get(-1), on_torrent_get_first, win);
     	if (priv->args)
     	    trg_add_from_filename(win, priv->args);
@@ -1465,48 +1481,46 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
     return toplevel;
 }
 
-static void exec_cmd_cb(GtkWidget *w, gpointer data)
-{
+static void exec_cmd_cb(GtkWidget *w, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
-    JsonObject *cmd_obj = (JsonObject*)g_object_get_data(G_OBJECT(w), "cmd-object");
-    GtkTreeSelection *selection;
-    gint rowCount;
+    JsonObject *cmd_obj = (JsonObject*) g_object_get_data(G_OBJECT(w),
+            "cmd-object");
+    GtkTreeSelection *selection = gtk_tree_view_get_selection(
+            GTK_TREE_VIEW(priv->torrentTreeView));
+    GtkTreeModel *model;
+    GList *selectedRows = gtk_tree_selection_get_selected_rows(selection, &model);
+    GError *cmd_error = NULL;
+    gchar *cmd_line, **argv;
 
-    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->torrentTreeView));
-    rowCount = gtk_tree_selection_count_selected_rows(selection);
+    cmd_line = build_remote_exec_cmd(
+            prefs,
+            model,
+            selectedRows,
+            json_object_get_string_member(cmd_obj,
+                    TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD));
+    g_debug("Exec: %s",cmd_line);
 
-    if (rowCount==1) {
-        JsonObject *json;
-        GError *cmd_error = NULL;
-        gchar *cmd_line, **argv;
-        if (!get_torrent_data(trg_client_get_torrent_table(priv->client),
-                        priv->selectedTorrentId, &json,
-                        NULL))
-            return;
-        cmd_line = build_remote_exec_cmd(prefs, json, json_object_get_string_member(cmd_obj, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD));
-        g_debug("Exec: %s",cmd_line);
-        //GTK has bug, won't let you pass a string here containing a quoted param, so use parse and then spawn
-        // rather than g_spawn_command_line_async(cmd_line,&cmd_error);
-        g_shell_parse_argv(cmd_line, NULL, &argv, NULL);
-        g_spawn_async( NULL, argv, NULL, G_SPAWN_SEARCH_PATH,
-                                NULL, NULL, NULL, &cmd_error );
+    //GTK has bug, won't let you pass a string here containing a quoted param, so use parse and then spawn
+    // rather than g_spawn_command_line_async(cmd_line,&cmd_error);
 
-        g_strfreev( argv );
-        g_free( cmd_line );
+    g_shell_parse_argv(cmd_line, NULL, &argv, NULL);
+    g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL,
+            &cmd_error);
 
-        if (cmd_error)
-        {
-            GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(data),
-                                                       GTK_DIALOG_MODAL,
-                                                       GTK_MESSAGE_ERROR,
-                                                       GTK_BUTTONS_OK, "%s",
-                                                       cmd_error->message);
-            gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
-            gtk_dialog_run(GTK_DIALOG(dialog));
-            gtk_widget_destroy(dialog);
-            g_error_free(cmd_error);
-        }
+    g_list_foreach (selectedRows, (GFunc) gtk_tree_path_free, NULL);
+    g_list_free(selectedRows);
+    g_strfreev(argv);
+    g_free(cmd_line);
+
+    if (cmd_error) {
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(data),
+                GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "%s",
+                cmd_error->message);
+        gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+        g_error_free(cmd_error);
     }
 }
 
@@ -1840,7 +1854,6 @@ static void on_dropped_file(
         }
     }
     gtk_drag_finish (context, FALSE, FALSE, time);
-    return;
 }
 
 

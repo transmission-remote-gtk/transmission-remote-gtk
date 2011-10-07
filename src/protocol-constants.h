@@ -86,6 +86,7 @@
 #define FIELD_QUEUE_POSITION "queuePosition"
 #define FIELD_ACTIVITY_DATE "activityDate"
 #define FIELD_ISPRIVATE "isPrivate"
+#define FIELD_METADATAPERCENTCOMPLETE "metadataPercentComplete"
 
 #define FIELD_FILES_WANTED      "files-wanted"
 #define FIELD_FILES_UNWANTED    "files-unwanted"
@@ -137,6 +138,26 @@
 #define PARAM_FILENAME          "filename"
 #define PARAM_PAUSED            "paused"
 #define PARAM_TAG               "tag"
+
+/* peers structure */
+
+#define TPEER_ADDRESS           "address"
+#define TPEER_CLIENT_NAME       "clientName"
+#define TPEER_PROGRESS          "progress"
+#define TPEER_RATE_TO_CLIENT    "rateToClient"
+#define TPEER_RATE_TO_PEER      "rateToPeer"
+#define TPEER_IS_ENCRYPTED      "isEncrypted"
+#define TPEER_IS_DOWNLOADING_FROM "isDownloadingFrom"
+#define TPEER_IS_UPLOADING_TO "isUploadingTo"
+#define TPEER_FLAGSTR            "flagStr"
+
+#define TPEERFROM_FROMPEX        "fromPex"
+#define TPEERFROM_FROMDHT        "fromDht"
+#define TPEERFROM_FROMTRACKERS   "fromTracker"
+#define TPEERFROM_FROMLTEP       "fromLtep"
+#define TPEERFROM_FROMRESUME     "fromCache"
+#define TPEERFROM_FROMINCOMING   "fromIncoming"
+#define TPEERFROM_FROMLPD        "fromLpd"
 
 /* The rpc-version >= that the status field of torrent-get changed */
 #define NEW_STATUS_RPC_VERSION  14

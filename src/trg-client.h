@@ -62,14 +62,15 @@
 
 typedef struct {
     int status;
-    char *raw;
     int size;
+    char *raw;
     JsonObject *obj;
     gpointer cb_data;
 } trg_response;
 
 typedef struct
 {
+    int connid;
 	JsonNode *node;
 	gchar *str;
     GSourceFunc callback;

@@ -466,13 +466,15 @@ static void trg_prefs_profile_combo_populate(TrgPreferencesDialog *dialog,
     for (li = profiles; li; li = g_list_next(li)) {
         JsonObject *profile = json_node_get_object((JsonNode*) li->data);
         const gchar *name_value;
+        GtkTreeIter iter;
+
         if (json_object_has_member(profile, TRG_PREFS_KEY_PROFILE_NAME)) {
             name_value = json_object_get_string_member(profile,
                     TRG_PREFS_KEY_PROFILE_NAME);
         } else {
             name_value = _(TRG_PROFILE_NAME_DEFAULT);
         }
-        GtkTreeIter iter;
+
         gtk_list_store_insert_with_values(store, &iter, INT_MAX, 0, profile, 1,
                 name_value, -1);
         if (i == profile_id)

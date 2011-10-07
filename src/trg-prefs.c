@@ -45,10 +45,16 @@ struct _TrgPrefsPrivate {
 
 enum {
     PREF_CHANGE,
+    PREF_PROFILE_CHANGE,
     PREFS_SIGNAL_COUNT
 };
 
 static guint signals[PREFS_SIGNAL_COUNT] = { 0 };
+
+static void trg_prefs_profile_change_emit_signal(TrgPrefs *p)
+{
+    g_signal_emit(p, signals[PREF_PROFILE_CHANGE], 0);
+}
 
 void trg_prefs_changed_emit_signal(TrgPrefs *p, gchar *key)
 {
@@ -133,6 +139,15 @@ static void trg_prefs_class_init(TrgPrefsClass *klass) {
                                      pref_changed), NULL,
                      NULL, g_cclosure_marshal_VOID__POINTER,
                      G_TYPE_NONE, 1, G_TYPE_POINTER);
+
+    signals[PREF_PROFILE_CHANGE] =
+        g_signal_new("pref-profile-changed",
+                     G_TYPE_FROM_CLASS(object_class),
+                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                     G_STRUCT_OFFSET(TrgPrefsClass,
+                                     pref_changed), NULL,
+                     NULL, g_cclosure_marshal_VOID__VOID,
+                     G_TYPE_NONE, 0);
 }
 
 static void trg_prefs_init(TrgPrefs *self) {
@@ -285,6 +300,7 @@ void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile) {
     g_list_free(profiles);
 
     trg_prefs_changed_emit_signal(p, NULL);
+    trg_prefs_profile_change_emit_signal(p);
 }
 
 JsonObject *trg_prefs_new_profile(TrgPrefs *p) {
@@ -312,6 +328,8 @@ void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile) {
     }
 
     g_list_free(profilesList);
+
+    trg_prefs_profile_change_emit_signal(p);
 }
 
 JsonObject* trg_prefs_get_profile(TrgPrefs *p) {

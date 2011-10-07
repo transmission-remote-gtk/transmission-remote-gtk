@@ -110,12 +110,16 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gint sizeOfBuf;
     gchar *statusString, *fullStatusString;
     const gchar *errorStr;
-    gint64 eta, uploaded, downloaded, rpcv;
-    gint seeders, leechers;
+    gint64 eta, uploaded, downloaded;
     GtkLabel *keyLabel;
+    gint64 seeders = 0, leechers = 0;
 
     priv = TRG_GENERAL_PANEL_GET_PRIVATE(panel);
-    rpcv = trg_client_get_rpc_version(priv->tc);
+
+    gtk_tree_model_get(GTK_TREE_MODEL(priv->model), iter,
+                       TORRENT_COLUMN_SEEDS, &seeders,
+                       TORRENT_COLUMN_LEECHERS, &leechers,
+                       TORRENT_COLUMN_STATUS, &statusString, -1);
 
     sizeOfBuf = sizeof(buf);
 
@@ -143,8 +147,7 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), _("N/A"));
     }
 
-    statusString = torrent_get_status_string(rpcv, torrent_get_status(t));
-    fullStatusString = g_strdup_printf("%s %s", statusString, 
+    fullStatusString = g_strdup_printf("%s %s", statusString,
                                        torrent_get_is_private(t) ? _("(Private)") : _("(Public)"));
     gtk_label_set_text(GTK_LABEL(priv->gen_status_label), fullStatusString);
     g_free(fullStatusString);
@@ -186,12 +189,6 @@ void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     } else {
         gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), _("N/A"));
     }
-
-    seeders = 0;
-    leechers = 0;
-    gtk_tree_model_get(GTK_TREE_MODEL(priv->model), iter,
-                       TORRENT_COLUMN_SEEDS, &seeders,
-                       TORRENT_COLUMN_LEECHERS, &leechers, -1);
 
     snprintf(buf, sizeof(buf), "%d", seeders >= 0 ? seeders : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_seeders_label), buf);

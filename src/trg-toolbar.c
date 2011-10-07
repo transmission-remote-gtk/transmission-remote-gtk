@@ -19,7 +19,11 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+
+#include "trg-prefs.h"
+#include "trg-main-window.h"
 #include "trg-toolbar.h"
+#include "trg-menu-bar.h"
 
 enum {
     PROP_0,
@@ -34,7 +38,9 @@ enum {
     /*PROP_VERIFY_BUTTON, */
     PROP_PROPS_BUTTON,
     PROP_REMOTE_PREFS_BUTTON,
-    PROP_LOCAL_PREFS_BUTTON
+    PROP_LOCAL_PREFS_BUTTON,
+    PROP_PREFS,
+    PROP_MAIN_WINDOW
 };
 
 G_DEFINE_TYPE(TrgToolbar, trg_toolbar, GTK_TYPE_TOOLBAR)
@@ -55,7 +61,28 @@ struct _TrgToolbarPrivate {
     GtkWidget *tb_props;
     GtkWidget *tb_remote_prefs;
     GtkWidget *tb_local_prefs;
+    TrgPrefs *prefs;
+    TrgMainWindow *main_window;
 };
+
+static void
+trg_toolbar_set_property(GObject * object,
+                                    guint prop_id,
+                                    const GValue * value,
+                                    GParamSpec * pspec G_GNUC_UNUSED)
+{
+    TrgToolbarPrivate *priv =
+        TRG_TOOLBAR_GET_PRIVATE(object);
+
+    switch (prop_id) {
+    case PROP_PREFS:
+        priv->prefs = g_value_get_pointer(value);
+        break;
+    case PROP_MAIN_WINDOW:
+        priv->main_window = g_value_get_object(value);
+        break;
+    }
+}
 
 static void
 trg_toolbar_get_property(GObject * object, guint property_id,
@@ -124,10 +151,147 @@ trg_toolbar_install_widget_prop(GObjectClass * class, guint propId,
                                                         G_PARAM_STATIC_BLURB));
 }
 
+GtkWidget *trg_toolbar_item_new(TrgToolbar * toolbar,
+                                gchar * text,
+                                int *index, gchar * icon,
+                                gboolean sensitive)
+{
+    GtkToolItem *w = gtk_tool_button_new_from_stock(icon);
+    gtk_widget_set_sensitive(GTK_WIDGET(w), sensitive);
+    gtk_tool_item_set_tooltip_text (w,text);
+    gtk_toolbar_insert(GTK_TOOLBAR(toolbar), w, (*index)++);
+    return GTK_WIDGET(w);
+}
+
+static void trg_toolbar_refresh_menu(GtkWidget *w, gpointer data)
+{
+    TrgToolbarPrivate *priv = TRG_TOOLBAR_GET_PRIVATE(data);
+    GtkWidget *old = gtk_menu_tool_button_get_menu(GTK_MENU_TOOL_BUTTON(priv->tb_connect));
+    GtkWidget *new = trg_menu_bar_file_connect_menu_new(priv->main_window, priv->prefs);
+
+    gtk_widget_destroy(old);
+    gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(priv->tb_connect), new);
+    gtk_widget_show_all(new);
+}
+
+static GObject *trg_toolbar_constructor(GType type,
+                                                   guint
+                                                   n_construct_properties,
+                                                   GObjectConstructParam
+                                                   * construct_params)
+{
+    GObject *obj = G_OBJECT_CLASS
+        (trg_toolbar_parent_class)->constructor(type,
+                                                           n_construct_properties,
+                                                           construct_params);
+    TrgToolbarPrivate *priv = TRG_TOOLBAR_GET_PRIVATE(obj);
+
+    GtkToolItem *separator;
+    GtkWidget *menu;
+    int position = 0;
+
+    gtk_toolbar_set_icon_size(GTK_TOOLBAR(obj),
+                              GTK_ICON_SIZE_LARGE_TOOLBAR);
+    gtk_toolbar_set_style(GTK_TOOLBAR(obj), GTK_TOOLBAR_ICONS);
+
+    //priv->tb_connect =
+        /*trg_toolbar_item_new(self, _("Connect"), &position,
+                             GTK_STOCK_CONNECT, TRUE);*/
+
+    priv->tb_connect = GTK_WIDGET(gtk_menu_tool_button_new_from_stock(GTK_STOCK_CONNECT));
+    gtk_tool_item_set_tooltip_text(GTK_TOOL_ITEM(priv->tb_connect), _("Connect"));
+    menu = trg_menu_bar_file_connect_menu_new(priv->main_window, priv->prefs);
+    gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(priv->tb_connect), menu);
+    gtk_toolbar_insert(GTK_TOOLBAR(obj), GTK_TOOL_ITEM(priv->tb_connect), position++);
+    gtk_widget_show_all(menu);
+
+    priv->tb_disconnect =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Disconnect"), &position,
+                             GTK_STOCK_DISCONNECT, FALSE);
+    priv->tb_add =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Add"), &position, GTK_STOCK_ADD,
+                             FALSE);
+
+    /*priv->tb_add_url =
+       trg_toolbar_item_new(self, "Add URL", 3, GTK_STOCK_ADD, FALSE); */
+
+    separator = gtk_separator_tool_item_new();
+    gtk_toolbar_insert(GTK_TOOLBAR(obj), separator, position++);
+
+    priv->tb_resume =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Resume"), &position,
+                             GTK_STOCK_MEDIA_PLAY, FALSE);
+    priv->tb_pause =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Pause"), &position,
+                             GTK_STOCK_MEDIA_PAUSE, FALSE);
+
+    priv->tb_props =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Properties"), &position,
+                             GTK_STOCK_PROPERTIES, FALSE);
+
+    priv->tb_remove =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Remove"), &position,
+                             GTK_STOCK_REMOVE, FALSE);
+
+    priv->tb_delete =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Remove with data"),
+                             &position, GTK_STOCK_CLEAR, FALSE);
+
+    /*priv->tb_verify =
+       trg_toolbar_item_new(self, "Verify", 11,
+       GTK_STOCK_REFRESH, FALSE); */
+
+    separator = gtk_separator_tool_item_new();
+    gtk_toolbar_insert(GTK_TOOLBAR(obj), separator, position++);
+
+    priv->tb_local_prefs =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Local Preferences"), &position,
+                             GTK_STOCK_PREFERENCES, TRUE);
+
+    priv->tb_remote_prefs =
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Remote Preferences"),
+                             &position, GTK_STOCK_NETWORK, FALSE);
+
+    gtk_toolbar_set_tooltips(GTK_TOOLBAR(obj), TRUE);
+
+    g_signal_connect(G_OBJECT(priv->prefs), "pref-profile-changed", G_CALLBACK(trg_toolbar_refresh_menu), obj);
+
+    return obj;
+}
+
 static void trg_toolbar_class_init(TrgToolbarClass * klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
     object_class->get_property = trg_toolbar_get_property;
+    object_class->set_property = trg_toolbar_set_property;
+    object_class->constructor = trg_toolbar_constructor;
+
+    g_object_class_install_property(object_class,
+                                    PROP_PREFS,
+                                    g_param_spec_pointer("prefs",
+                                                        "Prefs",
+                                                        "Prefs",
+                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT
+                                                        |
+                                                        G_PARAM_STATIC_NAME
+                                                        |
+                                                        G_PARAM_STATIC_NICK
+                                                        |
+                                                        G_PARAM_STATIC_BLURB));
+
+    g_object_class_install_property(object_class,
+            PROP_MAIN_WINDOW,
+                                    g_param_spec_object("mainwindow",
+                                                        "mainwindow",
+                                                        "mainwindow",
+                                                        TRG_TYPE_MAIN_WINDOW,
+                                                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                                        |
+                                                        G_PARAM_STATIC_NAME
+                                                        |
+                                                        G_PARAM_STATIC_NICK
+                                                        |
+                                                        G_PARAM_STATIC_BLURB));
 
     trg_toolbar_install_widget_prop(object_class, PROP_CONNECT_BUTTON,
                                     "connect-button", "Connect Button");
@@ -163,26 +327,13 @@ static void trg_toolbar_class_init(TrgToolbarClass * klass)
     g_type_class_add_private(klass, sizeof(TrgToolbarPrivate));
 }
 
-static
-GtkWidget *trg_toolbar_item_new(TrgToolbar * toolbar,
-                                gchar * text,
-                                int *index, gchar * icon,
-                                gboolean sensitive)
-{
-    GtkToolItem *w = gtk_tool_button_new_from_stock(icon);
-    gtk_widget_set_sensitive(GTK_WIDGET(w), sensitive);
-    gtk_tool_item_set_tooltip_text (w,text);
-    gtk_toolbar_insert(GTK_TOOLBAR(toolbar), w, (*index)++);
-    return GTK_WIDGET(w);
-}
-
 void trg_toolbar_connected_change(TrgToolbar * tb, gboolean connected)
 {
     TrgToolbarPrivate *priv = TRG_TOOLBAR_GET_PRIVATE(tb);
 
     gtk_widget_set_sensitive(priv->tb_add, connected);
     /*gtk_widget_set_sensitive(priv->tb_add_url, connected); */
-    gtk_widget_set_sensitive(priv->tb_connect, !connected);
+    //gtk_widget_set_sensitive(priv->tb_connect, !connected);
     gtk_widget_set_sensitive(priv->tb_disconnect, connected);
     gtk_widget_set_sensitive(priv->tb_remote_prefs, connected);
 }
@@ -202,70 +353,13 @@ void trg_toolbar_torrent_actions_sensitive(TrgToolbar * tb,
 
 static void trg_toolbar_init(TrgToolbar * self)
 {
-    GtkToolItem *separator;
-    TrgToolbarPrivate *priv;
-    int position = 0;
-
-    priv = TRG_TOOLBAR_GET_PRIVATE(self);
-
-    gtk_toolbar_set_icon_size(GTK_TOOLBAR(self),
-                              GTK_ICON_SIZE_LARGE_TOOLBAR);
-    gtk_toolbar_set_style(GTK_TOOLBAR(self), GTK_TOOLBAR_ICONS);
-
-    priv->tb_connect =
-        trg_toolbar_item_new(self, _("Connect"), &position,
-                             GTK_STOCK_CONNECT, TRUE);
-    priv->tb_disconnect =
-        trg_toolbar_item_new(self, _("Disconnect"), &position,
-                             GTK_STOCK_DISCONNECT, FALSE);
-    priv->tb_add =
-        trg_toolbar_item_new(self, _("Add"), &position, GTK_STOCK_ADD,
-                             FALSE);
-
-    /*priv->tb_add_url =
-       trg_toolbar_item_new(self, "Add URL", 3, GTK_STOCK_ADD, FALSE); */
-
-    separator = gtk_separator_tool_item_new();
-    gtk_toolbar_insert(GTK_TOOLBAR(self), separator, position++);
-
-    priv->tb_resume =
-        trg_toolbar_item_new(self, _("Resume"), &position,
-                             GTK_STOCK_MEDIA_PLAY, FALSE);
-    priv->tb_pause =
-        trg_toolbar_item_new(self, _("Pause"), &position,
-                             GTK_STOCK_MEDIA_PAUSE, FALSE);
-
-    priv->tb_props =
-        trg_toolbar_item_new(self, _("Properties"), &position,
-                             GTK_STOCK_PROPERTIES, FALSE);
-
-    priv->tb_remove =
-        trg_toolbar_item_new(self, _("Remove"), &position,
-                             GTK_STOCK_REMOVE, FALSE);
-
-    priv->tb_delete =
-        trg_toolbar_item_new(self, _("Remove with data"),
-                             &position, GTK_STOCK_CLEAR, FALSE);
-
-    /*priv->tb_verify =
-       trg_toolbar_item_new(self, "Verify", 11,
-       GTK_STOCK_REFRESH, FALSE); */
-
-    separator = gtk_separator_tool_item_new();
-    gtk_toolbar_insert(GTK_TOOLBAR(self), separator, position++);
-
-    priv->tb_local_prefs =
-        trg_toolbar_item_new(self, _("Local Preferences"), &position,
-                             GTK_STOCK_PREFERENCES, TRUE);
-
-    priv->tb_remote_prefs =
-        trg_toolbar_item_new(self, _("Remote Preferences"),
-                             &position, GTK_STOCK_NETWORK, FALSE);
-        
-    gtk_toolbar_set_tooltips(GTK_TOOLBAR(self), TRUE);
+    //TrgToolbarPrivate *priv = TRG_TOOLBAR_GET_PRIVATE(self);
 }
 
-TrgToolbar *trg_toolbar_new(void)
+TrgToolbar *trg_toolbar_new(TrgMainWindow *win, TrgPrefs *prefs)
 {
-    return g_object_new(TRG_TYPE_TOOLBAR, NULL);
+    return g_object_new(TRG_TYPE_TOOLBAR,
+            "prefs", prefs,
+            "mainwindow", win,
+            NULL);
 }

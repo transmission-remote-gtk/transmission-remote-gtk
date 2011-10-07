@@ -116,7 +116,7 @@ void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
 
     gtk_widget_set_sensitive(priv->mb_add, connected);
     gtk_widget_set_sensitive(priv->mb_add_url, connected);
-    gtk_widget_set_sensitive(priv->mb_connect, !connected);
+    //gtk_widget_set_sensitive(priv->mb_connect, !connected);
     gtk_widget_set_sensitive(priv->mb_disconnect, connected);
     gtk_widget_set_sensitive(priv->mb_remote_prefs, connected);
     gtk_widget_set_sensitive(priv->mb_view_stats, connected);
@@ -275,8 +275,8 @@ trg_menu_bar_install_widget_prop(GObjectClass * class, guint propId,
                                                         G_PARAM_STATIC_BLURB));
 }
 
-GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, char *text,
-                                 char *stock_id, gboolean sensitive)
+GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, const gchar *text,
+                                 const gchar *stock_id, gboolean sensitive)
 {
     GtkWidget *item = gtk_image_menu_item_new_with_label(stock_id);
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(item), TRUE);
@@ -387,6 +387,39 @@ GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBarPrivate * priv)
                               GTK_STOCK_NETWORK, FALSE);
 
     return opts;
+}
+
+static void trg_menu_bar_file_connect_item_new(TrgMainWindow *win, GtkMenuShell *shell, const gchar *text, const gchar *stock, JsonObject *profile)
+{
+    GtkWidget *item = trg_menu_bar_item_new(shell, text, stock, TRUE);
+    g_object_set_data(G_OBJECT(item), "profile", profile);
+    g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(connect_cb), win);
+}
+
+GtkWidget *trg_menu_bar_file_connect_menu_new(TrgMainWindow *win, TrgPrefs *p)
+{
+    GtkWidget *menu = gtk_menu_new();
+    GList *profiles = json_array_get_elements(trg_prefs_get_profiles(p));
+    JsonObject *currentProfile = trg_prefs_get_profile(p);
+    GList *li;
+
+    for (li = profiles; li; li = g_list_next(li)) {
+        JsonObject *profile = json_node_get_object((JsonNode*) li->data);
+        const gchar *name_value;
+
+        if (json_object_has_member(profile, TRG_PREFS_KEY_PROFILE_NAME)) {
+            name_value = json_object_get_string_member(profile,
+                    TRG_PREFS_KEY_PROFILE_NAME);
+        } else {
+            name_value = _(TRG_PROFILE_NAME_DEFAULT);
+        }
+
+        if (profile != currentProfile)
+            trg_menu_bar_file_connect_item_new(win, GTK_MENU_SHELL(menu), name_value,
+                                      GTK_STOCK_CONNECT, profile);
+    }
+
+    return menu;
 }
 
 static
@@ -629,5 +662,7 @@ static void trg_menu_bar_init(TrgMenuBar * self)
 
 TrgMenuBar *trg_menu_bar_new(TrgPrefs *prefs)
 {
-    return g_object_new(TRG_TYPE_MENU_BAR, "prefs", prefs, NULL);
+    return g_object_new(TRG_TYPE_MENU_BAR,
+
+            "prefs", prefs, NULL);
 }

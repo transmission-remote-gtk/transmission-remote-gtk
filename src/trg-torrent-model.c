@@ -275,8 +275,8 @@ update_torrent_iter(TrgTorrentModel * model, gint64 rpcv, gint64 serial,
 
     id = torrent_get_id(t);
     status = torrent_get_status(t);
-    statusString = torrent_get_status_string(rpcv, status);
     newFlags = torrent_get_flags(t, rpcv, status, downRate, upRate);
+    statusString = torrent_get_status_string(rpcv, status, newFlags);
     statusIcon = torrent_get_status_icon(rpcv, newFlags);
     pf = torrent_get_peersfrom(t);
     trackerStats = torrent_get_tracker_stats(t);

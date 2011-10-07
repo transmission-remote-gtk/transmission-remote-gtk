@@ -53,6 +53,7 @@ typedef struct _TrgClientPrivate TrgClientPrivate;
 
 struct _TrgClientPrivate {
     char *session_id;
+    guint connid;
     gboolean activeOnlyUpdate;
     guint failCount;
     guint interval;
@@ -172,10 +173,12 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
 
-    if (priv->session)
+    if (priv->session) {
         json_object_unref(priv->session);
-
-    session_get_version(session, &priv->version);
+    } else {
+        session_get_version(session, &priv->version);
+        priv->connid++;
+    }
 
     priv->session = session;
 
@@ -323,7 +326,7 @@ void trg_client_status_change(TrgClient *tc, gboolean connected)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
 
-    if (!connected) {
+    if (!connected && priv->session) {
         json_object_unref(priv->session);
         priv->session = NULL;
     }
@@ -643,6 +646,8 @@ trg_response *dispatch_str(TrgClient * client, gchar *req)
 static void dispatch_async_threadfunc(trg_request *req,
                                       TrgClient * client)
 {
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(client);
+
     trg_response *rsp;
 
     if (req->str)
@@ -652,7 +657,7 @@ static void dispatch_async_threadfunc(trg_request *req,
 
     rsp->cb_data = req->cb_data;
 
-    if (req->callback)
+    if (req->callback && req->connid == priv->connid)
         g_idle_add(req->callback, rsp);
     else
         trg_response_free(rsp);
@@ -664,10 +669,12 @@ static gboolean dispatch_async_common(TrgClient * client, trg_request *trg_req,
                         GSourceFunc callback,
                         gpointer data)
 {
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(client);
     GError *error = NULL;
 
     trg_req->callback = callback;
     trg_req->cb_data = data;
+    trg_req->connid = priv->connid;
 
     trg_client_thread_pool_push(client, trg_req, &error);
     if (error) {

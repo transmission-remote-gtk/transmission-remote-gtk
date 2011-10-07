@@ -24,6 +24,9 @@
 #include <gtk/gtk.h>
 #include <glib-object.h>
 
+#include "trg-prefs.h"
+#include "trg-main-window.h"
+
 G_BEGIN_DECLS
 #define TRG_TYPE_TOOLBAR trg_toolbar_get_type()
 #define TRG_TOOLBAR(obj) \
@@ -46,11 +49,11 @@ typedef struct {
 
 GType trg_toolbar_get_type(void);
 
-TrgToolbar *trg_toolbar_new(void);
+TrgToolbar *trg_toolbar_new(TrgMainWindow *win, TrgPrefs *prefs);
 
 G_END_DECLS
     void trg_toolbar_torrent_actions_sensitive(TrgToolbar * mb,
                                                gboolean sensitive);
-void trg_toolbar_connected_change(TrgToolbar * mb, gboolean connected);
+void trg_toolbar_connected_change(TrgToolbar * tb, gboolean connected);
 
 #endif                          /* TRG_TOOLBAR_H_ */

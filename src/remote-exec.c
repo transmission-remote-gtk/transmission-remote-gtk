@@ -18,8 +18,10 @@
  */
 
 #include <glib.h>
+#include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
+#include "trg-torrent-model.h"
 #include "protocol-constants.h"
 #include "torrent.h"
 
@@ -79,39 +81,75 @@ static gchar *dump_json_value(JsonNode * node) {
     return g_string_free(buffer, FALSE);
 }
 
-gchar *build_remote_exec_cmd(TrgPrefs *prefs, JsonObject * torrent,
+gchar *build_remote_exec_cmd(TrgPrefs *prefs, GtkTreeModel *model, GList *selection,
         const gchar * input) {
     JsonObject *profile = trg_prefs_get_profile(prefs);
     gchar *work = g_strdup(input);
     GRegex *regex, *replacerx;
     GMatchInfo *match_info;
-    gchar *whole, *id, *tmp, *valuestr;
+    gchar *whole, *wholeEscaped, *id, *tmp, *valuestr, *repeater;
     JsonNode *replacement;
 
-    regex = g_regex_new("%{([A-Za-z\\-]+)}", 0, 0, NULL);
+    regex = g_regex_new("%{([A-Za-z\\-]+)}(?:\\[(.*)\\])?", 0, 0, NULL);
+
     g_regex_match_full(regex, input, -1, 0, 0, &match_info, NULL);
 
     if (match_info) {
         while (g_match_info_matches(match_info)) {
-            id = g_match_info_fetch(match_info, 1);
             whole = g_match_info_fetch(match_info, 0);
-            replacerx = g_regex_new(whole, 0, 0, NULL);
+            wholeEscaped = g_regex_escape_string(whole, -1);
+            id = g_match_info_fetch(match_info, 1);
+            repeater = g_match_info_fetch(match_info, 2);
+
+            replacerx = g_regex_new(wholeEscaped, 0, 0, NULL);
             valuestr = NULL;
 
-            if (json_object_has_member(torrent, id)) {
-                replacement = json_object_get_member(torrent, id);
-            } else if (json_object_has_member(profile, id)) {
+            if (json_object_has_member(profile, id)) {
                 replacement = json_object_get_member(profile, id);
+                if (JSON_NODE_HOLDS_VALUE(replacement))
+                    valuestr = dump_json_value(replacement);
             } else {
-                replacement = NULL;
-            }
+                GString *gs = g_string_new ("");
+                GList *li;
+                GtkTreeIter iter;
+                JsonObject *json;
+                gchar *piece;
 
-            if (replacement && JSON_NODE_HOLDS_VALUE(replacement)) {
-                valuestr = dump_json_value(replacement);
-            } else if (!g_strcmp0(id, "full-dir")) {
-                valuestr = torrent_get_full_dir(torrent);
-            } else if (!g_strcmp0(id, "full-path")) {
-                valuestr = torrent_get_full_path(torrent);
+                for (li = selection; li; li = g_list_next(li)) {
+                    piece = NULL;
+                    gtk_tree_model_get_iter(model, &iter, (GtkTreePath*)li->data);
+                    gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json, -1);
+                    if (json_object_has_member(json, id)) {
+                        replacement = json_object_get_member(json, id);
+                        if (JSON_NODE_HOLDS_VALUE(replacement)) {
+                            piece = dump_json_value(replacement);
+                        }
+                    }
+
+                    if (!piece) {
+                        if (!g_strcmp0(id, "full-dir")) {
+                            piece = torrent_get_full_dir(json);
+                        } else if (!g_strcmp0(id, "full-path")) {
+                            piece = torrent_get_full_path(json);
+                        }
+                    }
+
+                    if (piece) {
+                        g_string_append(gs, piece);
+                        g_free(piece);
+                    }
+
+                    if (!repeater)
+                        break;
+
+                    if (piece && li != g_list_last(selection))
+                        g_string_append(gs, repeater);
+                }
+
+                if (gs->len > 0)
+                    valuestr = g_string_free (gs, FALSE);
+                else
+                    g_string_free(gs, TRUE);
             }
 
             if (valuestr)
@@ -126,9 +164,12 @@ gchar *build_remote_exec_cmd(TrgPrefs *prefs, JsonObject * torrent,
 
             g_regex_unref(replacerx);
             g_free(whole);
+            g_free(repeater);
+            g_free(wholeEscaped);
             g_free(id);
             g_match_info_next(match_info, NULL);
         }
+
         g_match_info_free(match_info);
     }
 

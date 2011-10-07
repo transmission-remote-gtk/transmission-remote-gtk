@@ -37,8 +37,9 @@
 #define TORRENT_FLAG_PAUSED            (1 << 10)
 #define TORRENT_FLAG_QUEUED            (1 << 11)
 #define TORRENT_FLAG_ACTIVE            (1 << 12)
-#define FILTER_FLAG_TRACKER            (1 << 13)
-#define FILTER_FLAG_DIR                (1 << 14)
+#define TORRENT_FLAG_DOWNLOADING_METADATA (1 << 13)
+#define FILTER_FLAG_TRACKER            (1 << 14)
+#define FILTER_FLAG_DIR                (1 << 15)
 
 #define TORRENT_ADD_FLAG_PAUSED        (1 << 0) /* 0x01 */
 #define TORRENT_ADD_FLAG_DELETE        (1 << 1) /* 0x02 */
@@ -55,7 +56,7 @@ const gchar *torrent_get_download_dir(JsonObject * t);
 gint64 torrent_get_have_unchecked(JsonObject * t);
 gint64 torrent_get_have_valid(JsonObject * t);
 gint64 torrent_get_status(JsonObject * t);
-gchar *torrent_get_status_string(gint64 rpcv, gint64 value);
+gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags);
 gchar *torrent_get_status_icon(gint64 rpcv, guint flags);
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status, gint64 downRate, gint64 upRate);
 JsonArray *torrent_get_peers(JsonObject * t);
@@ -89,6 +90,7 @@ gint64 torrent_get_queue_position(JsonObject *args);
 gint64 torrent_get_activity_date(JsonObject *t);
 gchar *torrent_get_full_dir(JsonObject * obj);
 gchar *torrent_get_full_path(JsonObject *obj);
+gdouble torrent_get_metadata_percent_complete(JsonObject *t);
 
 /* outer response object */
 

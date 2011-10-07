@@ -23,24 +23,6 @@
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
 
-#define TPEER_ADDRESS           "address"
-#define TPEER_CLIENT_NAME       "clientName"
-#define TPEER_PROGRESS          "progress"
-#define TPEER_RATE_TO_CLIENT    "rateToClient"
-#define TPEER_RATE_TO_PEER      "rateToPeer"
-#define TPEER_IS_ENCRYPTED      "isEncrypted"
-#define TPEER_IS_DOWNLOADING_FROM "isDownloadingFrom"
-#define TPEER_IS_UPLOADING_TO "isUploadingTo"
-#define TPEER_FLAGSTR            "flagStr"
-
-#define TPEERFROM_FROMPEX        "fromPex"
-#define TPEERFROM_FROMDHT        "fromDht"
-#define TPEERFROM_FROMTRACKERS   "fromTracker"
-#define TPEERFROM_FROMLTEP       "fromLtep"
-#define TPEERFROM_FROMRESUME     "fromCache"
-#define TPEERFROM_FROMINCOMING   "fromIncoming"
-#define TPEERFROM_FROMLPD        "fromLpd"
-
 const gchar *peer_get_address(JsonObject * p);
 const gchar *peer_get_client_name(JsonObject * p);
 gboolean peer_get_is_encrypted(JsonObject * p);
