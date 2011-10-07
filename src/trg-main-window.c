@@ -461,7 +461,8 @@ void connect_cb(GtkWidget * w, gpointer data) {
     if (w)
         profile = (JsonObject*)g_object_get_data(G_OBJECT(w), "profile");
 
-    disconnect_cb(NULL, data);
+    if (trg_client_is_connected(priv->client))
+    	disconnect_cb(NULL, data);
 
     if (profile && currentProfile != profile)
         trg_prefs_set_profile(prefs, profile);
@@ -490,6 +491,7 @@ void connect_cb(GtkWidget * w, gpointer data) {
     }
 
     trg_status_bar_push_connection_msg(priv->statusBar, _("Connecting..."));
+    trg_client_inc_connid(priv->client);
     dispatch_async(priv->client, session_get(), on_session_get, data);
 }
 

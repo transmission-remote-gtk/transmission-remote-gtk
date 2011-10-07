@@ -169,6 +169,7 @@ guint trg_client_get_minimised_interval(TrgClient *tc);
 void trg_client_set_interval(TrgClient *tc, guint interval);
 void trg_client_set_minimised_interval(TrgClient *tc, guint interval);
 void trg_client_set_activeonlyupdate(TrgClient *tc, gboolean activeOnlyUpdate);
+void trg_client_inc_connid(TrgClient *tc);
 
 G_END_DECLS
 

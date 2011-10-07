@@ -169,6 +169,12 @@ gint64 trg_client_get_rpc_version(TrgClient *tc)
     return session_get_rpc_version(priv->session);
 }
 
+void trg_client_inc_connid(TrgClient *tc)
+{
+	TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+	g_atomic_int_inc(&priv->connid);
+}
+
 void trg_client_set_session(TrgClient * tc, JsonObject * session)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
@@ -177,7 +183,6 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
         json_object_unref(priv->session);
     } else {
         session_get_version(session, &priv->version);
-        g_atomic_int_inc(&priv->connid);
     }
 
     priv->session = session;
