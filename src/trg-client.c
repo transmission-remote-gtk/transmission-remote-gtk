@@ -53,7 +53,7 @@ typedef struct _TrgClientPrivate TrgClientPrivate;
 
 struct _TrgClientPrivate {
     char *session_id;
-    guint connid;
+    gint connid;
     gboolean activeOnlyUpdate;
     guint failCount;
     guint interval;
@@ -177,7 +177,7 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
         json_object_unref(priv->session);
     } else {
         session_get_version(session, &priv->version);
-        priv->connid++;
+        g_atomic_int_inc(&priv->connid);
     }
 
     priv->session = session;
@@ -657,7 +657,7 @@ static void dispatch_async_threadfunc(trg_request *req,
 
     rsp->cb_data = req->cb_data;
 
-    if (req->callback && req->connid == priv->connid)
+    if (req->callback && req->connid == g_atomic_int_get(&priv->connid))
         g_idle_add(req->callback, rsp);
     else
         trg_response_free(rsp);

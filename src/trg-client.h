@@ -70,7 +70,7 @@ typedef struct {
 
 typedef struct
 {
-    int connid;
+    gint connid;
 	JsonNode *node;
 	gchar *str;
     GSourceFunc callback;

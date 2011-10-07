@@ -419,6 +419,8 @@ GtkWidget *trg_menu_bar_file_connect_menu_new(TrgMainWindow *win, TrgPrefs *p)
                                       GTK_STOCK_CONNECT, profile);
     }
 
+    g_list_free(profiles);
+
     return menu;
 }
 
