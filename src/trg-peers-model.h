@@ -86,3 +86,4 @@ void trg_peers_model_update(TrgPeersModel * model, TrgTreeView *tv, gint64 updat
 #endif                          /* TRG_PEERS_MODEL_H_ */
 
 #define TRG_GEOIP_DATABASE "/usr/share/GeoIP/GeoIP.dat"
+#define TRG_GEOIPV6_DATABASE "/usr/share/GeoIP/GeoIPv6.dat"

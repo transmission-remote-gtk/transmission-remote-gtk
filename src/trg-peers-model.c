@@ -46,6 +46,7 @@ typedef struct _TrgPeersModelPrivate TrgPeersModelPrivate;
 
 struct _TrgPeersModelPrivate {
     GeoIP *geoip;
+    GeoIP *geoipv6;
 };
 #endif
 
@@ -145,8 +146,12 @@ void trg_peers_model_update(TrgPeersModel * model, TrgTreeView *tv,
 
             address = peer_get_address(peer);
 #ifdef HAVE_GEOIP
-            if (priv->geoip && doGeoLookup)
-                country = GeoIP_country_name_by_addr(priv->geoip, address);
+            if (address && doGeoLookup) { // just in case address wasn't set
+                if (strchr(address,':') && priv->geoipv6)
+                    country = GeoIP_country_name_by_addr_v6(priv->geoipv6, address);
+                else if (priv->geoip)
+                    country = GeoIP_country_name_by_addr(priv->geoip, address);
+            }
 #endif
             gtk_list_store_set(GTK_LIST_STORE(model), &peerIter, PEERSCOL_ICON,
                     GTK_STOCK_NETWORK, PEERSCOL_IP, address,
@@ -219,6 +224,9 @@ static void trg_peers_model_init(TrgPeersModel * self) {
 #ifdef HAVE_GEOIP
     if (g_file_test(TRG_GEOIP_DATABASE, G_FILE_TEST_EXISTS) == TRUE)
         priv->geoip = GeoIP_open(TRG_GEOIP_DATABASE,
+                GEOIP_STANDARD | GEOIP_CHECK_CACHE);
+    if (g_file_test(TRG_GEOIPV6_DATABASE, G_FILE_TEST_EXISTS) == TRUE)
+        priv->geoipv6 = GeoIP_open(TRG_GEOIPV6_DATABASE,
                 GEOIP_STANDARD | GEOIP_CHECK_CACHE);
 #endif
 }
