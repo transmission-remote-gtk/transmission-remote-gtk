@@ -111,4 +111,30 @@ gint64 tracker_stats_get_download_count(JsonObject *t);
 const gchar *tracker_stats_get_announce_result(JsonObject *t);
 const gchar *tracker_stats_get_host(JsonObject *t);
 
+/* files */
+
+gint64 file_get_length(JsonObject * f);
+gint64 file_get_bytes_completed(JsonObject * f);
+const gchar *file_get_name(JsonObject * f);
+gdouble file_get_progress(JsonObject * f);
+
+/* peers */
+
+const gchar *peer_get_address(JsonObject * p);
+const gchar *peer_get_client_name(JsonObject * p);
+gboolean peer_get_is_encrypted(JsonObject * p);
+gdouble peer_get_progress(JsonObject * p);
+const gchar *peer_get_flagstr(JsonObject * p);
+gint64 peer_get_rate_to_client(JsonObject * p);
+gint64 peer_get_rate_to_peer(JsonObject * p);
+gboolean peer_get_is_uploading_to(JsonObject * p);
+gboolean peer_get_is_downloading_from(JsonObject * p);
+
+gint64 peerfrom_get_pex(JsonObject *pf);
+gint64 peerfrom_get_dht(JsonObject *pf);
+gint64 peerfrom_get_trackers(JsonObject *pf);
+gint64 peerfrom_get_ltep(JsonObject *pf);
+gint64 peerfrom_get_resume(JsonObject *pf);
+gint64 peerfrom_get_incoming(JsonObject *pf);
+gint64 peerfrom_get_lpd(JsonObject *pf);
 #endif                          /* TORRENT_H_ */

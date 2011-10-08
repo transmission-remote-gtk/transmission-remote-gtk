@@ -23,7 +23,6 @@
 #include "trg-files-model.h"
 #include "trg-client.h"
 #include "torrent.h"
-#include "tfile.h"
 #include "util.h"
 
 #include "trg-files-model.h"

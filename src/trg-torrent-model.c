@@ -24,7 +24,6 @@
 
 #include "config.h"
 #include "torrent.h"
-#include "tpeer.h"
 #include "json.h"
 #include "trg-torrent-model.h"
 #include "protocol-constants.h"

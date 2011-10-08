@@ -29,8 +29,6 @@ transmission_remote_gtk_SOURCES = main.c \
 	  util.c \
 	  trg-about-window.c \
 	  torrent.c \
-	  tpeer.c \
-  	  tfile.c \
 	  session-get.c \
 	  trg-client.c \
 	  trg-preferences-dialog.c \

@@ -33,7 +33,6 @@
 #include "trg-tree-view.h"
 #include "torrent.h"
 #include "trg-client.h"
-#include "tpeer.h"
 #include "trg-peers-model.h"
 #include "trg-model.h"
 #include "util.h"
