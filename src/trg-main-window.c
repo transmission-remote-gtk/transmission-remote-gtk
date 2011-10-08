@@ -451,10 +451,8 @@ static void disconnect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
 void connect_cb(GtkWidget * w, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
-    JsonObject *profile = NULL;
-
     JsonObject *currentProfile = trg_prefs_get_profile(prefs);
-
+    JsonObject *profile = NULL;
     GtkWidget *dialog;
     int populate_result;
 
@@ -1238,7 +1236,7 @@ static void quit_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
 static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
-    GObject *b_connect, *b_disconnect, *b_add, *b_resume, *b_pause, *b_verify,
+    GObject *b_disconnect, *b_add, *b_resume, *b_pause, *b_verify,
             *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs,
             *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
             *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
@@ -1248,8 +1246,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
 
     TrgMenuBar *menuBar;
 
-    menuBar = trg_menu_bar_new(trg_client_get_prefs(priv->client));
-    g_object_get(menuBar, "connect-button", &b_connect, "disconnect-button",
+    menuBar = trg_menu_bar_new(win, trg_client_get_prefs(priv->client));
+    g_object_get(menuBar, "disconnect-button",
             &b_disconnect, "add-button", &b_add, "add-url-button", &b_add_url,
             "resume-button", &b_resume, "resume-all-button", &b_resume_all,
             "pause-button", &b_pause, "pause-all-button", &b_pause_all,
@@ -1266,7 +1264,6 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             &b_top_queue, "bottom-queue", &b_bottom_queue, "start-now",
             &b_start_now, NULL);
 
-    g_signal_connect(b_connect, "activate", G_CALLBACK(connect_cb), win);
     g_signal_connect(b_disconnect, "activate",
             G_CALLBACK(disconnect_cb), win);
     g_signal_connect(b_add, "activate", G_CALLBACK(add_cb), win);

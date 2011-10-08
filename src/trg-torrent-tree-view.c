@@ -156,6 +156,7 @@ JsonArray *build_json_id_array(TrgTorrentTreeView * tv)
                                         (GtkTreeSelectionForeachFunc)
                                         trg_torrent_model_get_json_id_array_foreach,
                                         ids);
+
     return ids;
 }
 
