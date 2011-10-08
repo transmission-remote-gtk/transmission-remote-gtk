@@ -1622,15 +1622,20 @@ static void trg_torrent_tv_view_menu(GtkWidget * treeview,
 static void trg_status_icon_view_menu(GtkStatusIcon * icon G_GNUC_UNUSED,
         GdkEventButton * event, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     gboolean connected = trg_client_is_connected(priv->client);
-    GtkWidget *menu;
+    GtkWidget *menu, *connect;
 
     menu = gtk_menu_new();
 
-    if (!connected) {
-        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Connect"),
-                GTK_STOCK_CONNECT, !connected, G_CALLBACK(connect_cb), data);
-    } else {
+    connect = gtk_image_menu_item_new_with_label(GTK_STOCK_CONNECT);
+    gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(connect), TRUE);
+    gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM(connect), TRUE);
+    gtk_menu_item_set_label(GTK_MENU_ITEM(connect), _("Connect"));
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(connect), trg_menu_bar_file_connect_menu_new(TRG_MAIN_WINDOW(data), prefs));
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), connect);
+
+    if (connected) {
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Disconnect"),
                 GTK_STOCK_DISCONNECT, connected, G_CALLBACK(disconnect_cb),
                 data);
