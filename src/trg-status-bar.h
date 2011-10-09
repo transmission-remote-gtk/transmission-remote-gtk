@@ -59,6 +59,6 @@ void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
                                         const gchar * msg);
 void trg_status_bar_reset(TrgStatusBar *sb);
 void trg_status_bar_clear_indicators(TrgStatusBar *sb);
-gchar *trg_status_bar_get_speed_text(TrgStatusBar *s);
+const gchar *trg_status_bar_get_speed_text(TrgStatusBar *s);
 
 #endif                          /* TRG_STATUS_BAR_H_ */

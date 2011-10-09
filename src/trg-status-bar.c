@@ -174,7 +174,7 @@ void trg_status_bar_update(TrgStatusBar * sb,
     g_free(infoText);
 }
 
-gchar *trg_status_bar_get_speed_text(TrgStatusBar *s)
+const gchar *trg_status_bar_get_speed_text(TrgStatusBar *s)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(s);
     return gtk_label_get_text(GTK_LABEL(priv->speed_lbl));
