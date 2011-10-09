@@ -125,7 +125,9 @@ int main(int argc, char *argv[])
     UniqueApp *app = NULL;
     gboolean withUnique;
 #endif
-
+#ifdef WIN32
+    gchar *localedir, *moddir;
+#endif
 #ifdef TRG_MEMPROFILE
     GMemVTable gmvt = {malloc,realloc,free,calloc,malloc,realloc};
     g_mem_set_vtable(&gmvt);
@@ -138,7 +140,15 @@ int main(int argc, char *argv[])
     gtk_init(&argc, &argv);
 
     g_set_application_name (PACKAGE_NAME);
+#ifdef WIN32
+    moddir = g_win32_get_package_installation_directory_of_module(NULL);
+    localedir = g_build_path(G_DIR_SEPARATOR_S, moddir, "share", "locale", NULL);
+    g_free(moddir);
+    bindtextdomain(GETTEXT_PACKAGE, localedir);
+    g_free(localedir);
+#else
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+#endif
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
 

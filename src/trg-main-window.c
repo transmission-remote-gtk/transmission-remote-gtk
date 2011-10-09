@@ -1788,6 +1788,8 @@ void trg_main_window_add_status_icon(TrgMainWindow * win) {
             G_CALLBACK(status_icon_button_press_event), win);
     g_signal_connect(priv->statusIcon, "popup-menu",
             G_CALLBACK(trg_status_icon_popup_menu_cb), win);
+
+    gtk_status_icon_set_visible(priv->statusIcon, TRUE);
 }
 
 TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win) {
@@ -2056,7 +2058,7 @@ static GObject *trg_main_window_constructor(GType type,
         );
     //g_signal_connect (priv->torrentTreeView, "drag-motion",G_CALLBACK (drag_motion_handl), NULL);
     g_signal_connect (self, "drag-data-received",G_CALLBACK (on_dropped_file), self);
-        
+
     return G_OBJECT(self);
 }
 

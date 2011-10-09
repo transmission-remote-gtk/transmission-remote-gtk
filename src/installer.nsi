@@ -153,6 +153,8 @@ Section $(NAME_SecGlibGtkEtc) SecGlibGtkEtc
   File "..\..\gtk-2.24-win32-bin\bin\libpangowin32-1.0-0.dll"
   File "..\..\gtk-2.24-win32-bin\bin\libpng14-14.dll"
   File "..\..\gtk-2.24-win32-bin\bin\zlib1.dll"  
+  File "..\..\gtk-2.24-win32-bin\bin\libintl-8.dll"
+  File "..\..\gtk-2.24-win32-bin\bin\libiconv-2.dll"
   File "..\..\gtk-2.24-win32-bin\bin\gspawn-win32-helper-console.exe"
   File "..\..\gtk-2.24-win32-bin\bin\gspawn-win32-helper.exe"
     
@@ -164,6 +166,13 @@ Section $(NAME_SecGlibGtkEtc) SecGlibGtkEtc
   SetOutPath $INSTDIR\lib\gtk-2.0\modules
   
   File "..\..\gtk-2.24-win32-bin\lib\gtk-2.0\modules\libgail.dll"
+  
+  SetOutPath $INSTDIR\share
+  
+  File /r "..\..\gtk-2.24-win32-bin\share\icons"
+  File /r "..\..\gtk-2.24-win32-bin\share\locale"
+  File /r "C:\MinGW\msys\1.0\lib\locale"
+  
 SectionEnd
 
 ; Optional section (can be disabled by the user)
@@ -250,6 +259,8 @@ Section "Uninstall"
   Delete "$INSTDIR\bin\libpangoft2-1.0-0.dll"
   Delete "$INSTDIR\bin\libpangowin32-1.0-0.dll"
   Delete "$INSTDIR\bin\libpng14-14.dll"
+  Delete "$INSTDIR\bin\libintl-8.dll"
+  Delete "$INSTDIR\bin\libiconv-2.dll"
   Delete "$INSTDIR\bin\zlib1.dll"
   Delete "$INSTDIR\bin\gspawn-win32-helper-console.exe"
   Delete "$INSTDIR\bin\gspawn-win32-helper.exe"
