@@ -679,7 +679,7 @@ static gboolean dispatch_async_common(TrgClient * client, trg_request *trg_req,
 
     trg_req->callback = callback;
     trg_req->cb_data = data;
-    trg_req->connid = priv->connid;
+    trg_req->connid = g_atomic_int_get(&priv->connid);
 
     trg_client_thread_pool_push(client, trg_req, &error);
     if (error) {

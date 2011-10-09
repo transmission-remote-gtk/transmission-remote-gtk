@@ -916,6 +916,13 @@ static gboolean on_torrent_get(gpointer data, int mode) {
             priv->selectedTorrentId);
     trg_status_bar_update(priv->statusBar, &stats, client);
 
+    if (priv->statusIcon)
+    {
+        gchar *iconText = g_strdup_printf("%s: %s", _("Connected"), trg_status_bar_get_speed_text(priv->statusBar));
+        gtk_status_icon_set_tooltip_text(priv->statusIcon, iconText);
+        g_free(iconText);
+    }
+
     if (priv->graphNotebookIndex >= 0)
         trg_torrent_graph_set_speed(priv->graph, &stats);
 
@@ -1193,6 +1200,9 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected) {
 
         priv->timerId = 0;
     }
+
+    if (priv->statusIcon)
+        gtk_status_icon_set_tooltip_text(priv->statusIcon, connected ? _("Connected") : _("Disconnected"));
 
     trg_client_status_change(tc, connected);
 }
@@ -1790,6 +1800,7 @@ void trg_main_window_add_status_icon(TrgMainWindow * win) {
             G_CALLBACK(trg_status_icon_popup_menu_cb), win);
 
     gtk_status_icon_set_visible(priv->statusIcon, TRUE);
+    gtk_status_icon_set_tooltip_text(priv->statusIcon, trg_client_is_connected(priv->client) ? _("Connected") : _("Disconnected"));
 }
 
 TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win) {
