@@ -33,8 +33,17 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     GtkWidget *dialog;
     GdkPixbuf *logo;
     gchar *licenseText = NULL;
-
     const gchar *trgAuthors[] = { "Alan Fitton <alan@eth0.org.uk>", NULL };
+    gchar *licenseFile;
+    gchar *moddir;
+
+#ifdef WIN32
+    moddir = g_win32_get_package_installation_directory_of_module(NULL);
+    licenseFile = g_build_filename(moddir, "..", "COPYING.TXT", NULL);
+    g_free(moddir);
+#else
+    licenseFile = g_strdup(TRGLICENSE);
+#endif
 
     dialog = gtk_about_dialog_new();
     gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
@@ -50,7 +59,7 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
         g_object_unref(logo);
     }
 
-    if (g_file_get_contents(TRGLICENSE, &licenseText, NULL, NULL)) {
+    if (g_file_get_contents(licenseFile, &licenseText, NULL, NULL)) {
         gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog),
                                      licenseText);
     } else {
@@ -81,6 +90,7 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
                                             "* Y3AVD (Russian)\n"
                                             "* ROR191 (Ukranian)\n");
 
+    g_free(licenseFile);
     g_free(licenseText);
 
     return dialog;
