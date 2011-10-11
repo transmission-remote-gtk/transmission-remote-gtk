@@ -10,6 +10,7 @@ Source0: %{name}-%{version}.tar.gz
 BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 
 Requires: gtk2 >= 2.16
+Requires: GeoIP
 Requires: glib2 >= 2.22
 Requires: unique
 Requires: libnotify
@@ -18,6 +19,7 @@ Requires: json-glib >= 0.8
 Requires: libcurl
 
 BuildRequires: gtk2-devel
+BuildRequires: GeoIP-devel
 BuildRequires: libproxy-devel
 BuildRequires: glib2-devel
 BuildRequires: unique-devel
@@ -36,7 +38,7 @@ Transmission BitTorrent client via its RPC interface.
 %setup -q
 
 %build
-%configure --without-libgeoip
+%configure
 make %{?_smp_mflags}
 
 %install
@@ -65,11 +67,31 @@ update-desktop-database %{_datadir}/applications >/dev/null 2>&1
 %{_datadir}/icons/hicolor/48x48/apps/%{name}.png
 %{_datadir}/locale/de/LC_MESSAGES/%{name}.mo
 %{_datadir}/locale/ko/LC_MESSAGES/%{name}.mo
+%{_datadir}/locale/es/LC_MESSAGES/%{name}.mo
 %{_datadir}/locale/pl/LC_MESSAGES/%{name}.mo
 %{_datadir}/locale/ru/LC_MESSAGES/%{name}.mo
 %{_datadir}/locale/uk/LC_MESSAGES/%{name}.mo
 
 %changelog
+* Tue Oct 11 2011 Alan Fitton <alan@eth0.org.uk> 0.7
+- Remote exec.
+- Win32 Support.
+- Connect button menus for profiles.
+- Fix a memory leak on disconnect.
+- Use icon for wanted/unwanted files.
+- Handle URLs and non-existing files in file handler.
+- IPv6 GeoIP support.
+- Upload files on app open.
+- Display public/private tracker status.
+- Show file icons based on MIME types.
+- Shortern tracker filters.
+- Hide state selector if no error torrents.
+- Fix warning caused by zero length files in torrents.
+- Bencoder crash fix.
+- Detect and drop requests from previous connections.
+- Toolbar tooltips.
+- Spanish translation.
+
 * Sat Aug 27 2011 Alan Fitton <alan@eth0.org.uk> 0.6
 - Profiles support.
 - New JSON based configuration backend.
