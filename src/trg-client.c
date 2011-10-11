@@ -222,10 +222,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
         trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_PROFILE);
 
     host = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
-    if (!host) {
-        g_mutex_unlock(priv->configMutex);
-        return TRG_NO_HOSTNAME_SET;
-    } else if (strlen(host) < 1) {
+    if (!host || strlen(host) < 1) {
         g_free(host);
         g_mutex_unlock(priv->configMutex);
         return TRG_NO_HOSTNAME_SET;
