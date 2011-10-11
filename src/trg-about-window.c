@@ -35,10 +35,9 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gchar *licenseText = NULL;
     const gchar *trgAuthors[] = { "Alan Fitton <alan@eth0.org.uk>", NULL };
     gchar *licenseFile;
-    gchar *moddir;
 
 #ifdef WIN32
-    moddir = g_win32_get_package_installation_directory_of_module(NULL);
+    gchar *moddir = g_win32_get_package_installation_directory_of_module(NULL);
     licenseFile = g_build_filename(moddir, "..", "COPYING.TXT", NULL);
     g_free(moddir);
 #else

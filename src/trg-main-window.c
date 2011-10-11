@@ -1342,14 +1342,14 @@ static void clear_filter_entry_cb(GtkWidget * w, gpointer data G_GNUC_UNUSED) {
 static gboolean torrent_tv_key_press_event(GtkWidget * w, GdkEventKey * key,
         gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-    if (key->keyval == GDK_KEY_Delete) {
+    if (key->keyval == GDK_Delete) {
         if (key->state & GDK_SHIFT_MASK)
             delete_cb(w, data);
         else
             remove_cb(w, data);
-    } else if (priv->queuesEnabled && (key->state & GDK_MOD1_MASK) && key->keyval == GDK_KEY_Up) {
+    } else if (priv->queuesEnabled && (key->state & GDK_MOD1_MASK) && key->keyval == GDK_Up) {
         up_queue_cb(w, data);
-    } else if (priv->queuesEnabled && (key->state & GDK_MOD1_MASK) && key->keyval == GDK_KEY_Down) {
+    } else if (priv->queuesEnabled && (key->state & GDK_MOD1_MASK) && key->keyval == GDK_Down) {
         down_queue_cb(w, data);
     }
     return FALSE;

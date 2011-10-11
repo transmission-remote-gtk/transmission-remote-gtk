@@ -72,5 +72,9 @@ GtkTreeModel *trg_main_window_get_torrent_model(TrgMainWindow * win);
 void trg_main_window_notebook_set_visible(TrgMainWindow *win, gboolean visible);
 void connect_cb(GtkWidget * w, gpointer data);
 
+#if !GTK_CHECK_VERSION(2, 21, 1)
+#define gdk_drag_context_get_actions(context) context->actions
+#endif
+
 G_END_DECLS
 #endif                          /* MAIN_WINDOW_H_ */
