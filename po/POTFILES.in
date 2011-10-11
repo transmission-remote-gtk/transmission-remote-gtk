@@ -2,11 +2,10 @@ src/bencode.c
 src/hig.c
 src/json.c
 src/main.c
+src/remote-exec.c
 src/requests.c
 src/session-get.c
-src/tfile.c
 src/torrent.c
-src/tpeer.c
 src/trg-about-window.c
 src/trg-cell-renderer-epoch.c
 src/trg-cell-renderer-eta.c
@@ -15,7 +14,6 @@ src/trg-cell-renderer-priority.c
 src/trg-cell-renderer-ratio.c
 src/trg-cell-renderer-size.c
 src/trg-cell-renderer-speed.c
-src/trg-cell-renderer-wanted.c
 src/trg-client.c
 src/trg-destination-combo.c
 src/trg-file-parser.c
