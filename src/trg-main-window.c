@@ -852,8 +852,6 @@ static gboolean on_session_get(gpointer data) {
     if (!isConnected) {
         trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
     	dispatch_async(client, torrent_get(-1), on_torrent_get_first, win);
-    	if (priv->args)
-    	    trg_add_from_filename(win, priv->args);
     }
 
     trg_response_free(response);
@@ -939,7 +937,16 @@ static gboolean on_torrent_get_active(gpointer data) {
 }
 
 static gboolean on_torrent_get_first(gpointer data) {
-    return on_torrent_get(data, TORRENT_GET_MODE_FIRST);
+    trg_response *response = (trg_response*)data;
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(response->cb_data);
+    TrgMainWindow *win = TRG_MAIN_WINDOW(response->cb_data);
+
+    gboolean result = on_torrent_get(data, TORRENT_GET_MODE_FIRST);
+
+    if (priv->args)
+        trg_add_from_filename(win, priv->args);
+
+    return result;
 }
 
 static gboolean on_torrent_get_interactive(gpointer data) {
