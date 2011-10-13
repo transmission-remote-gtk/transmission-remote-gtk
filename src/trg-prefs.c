@@ -51,7 +51,7 @@ enum {
 
 static guint signals[PREFS_SIGNAL_COUNT] = { 0 };
 
-static void trg_prefs_profile_change_emit_signal(TrgPrefs *p)
+void trg_prefs_profile_change_emit_signal(TrgPrefs *p)
 {
     g_signal_emit(p, signals[PREF_PROFILE_CHANGE], 0);
 }

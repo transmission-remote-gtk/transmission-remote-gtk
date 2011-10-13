@@ -138,6 +138,7 @@ void trg_prefs_set_bool(TrgPrefs *p, gchar *key, gboolean value, int flags);
 gboolean trg_prefs_save(TrgPrefs *p);
 void trg_prefs_load(TrgPrefs *p);
 void trg_prefs_changed_emit_signal(TrgPrefs *p, gchar *key);
+void trg_prefs_profile_change_emit_signal(TrgPrefs *p);
 guint trg_prefs_get_add_flags(TrgPrefs *p);
 
 G_END_DECLS

@@ -464,6 +464,8 @@ void connect_cb(GtkWidget * w, gpointer data) {
 
     if (profile && currentProfile != profile)
         trg_prefs_set_profile(prefs, profile);
+    else
+        trg_prefs_profile_change_emit_signal(prefs);
 
     populate_result = trg_client_populate_with_settings(priv->client);
 
