@@ -255,6 +255,7 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 

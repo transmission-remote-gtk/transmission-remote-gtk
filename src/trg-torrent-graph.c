@@ -624,6 +624,7 @@ unsigned trg_torrent_graph_get_num_bars(TrgTorrentGraph * g)
         break;
     default:
         n = 5;
+        break;
     }
 
     return n;

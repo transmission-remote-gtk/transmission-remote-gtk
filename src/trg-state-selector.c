@@ -555,6 +555,7 @@ static void trg_state_selector_get_property(GObject * object,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
