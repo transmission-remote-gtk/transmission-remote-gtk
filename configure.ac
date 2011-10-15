@@ -1,6 +1,6 @@
 AC_PREREQ(2.63)
 
-AC_INIT(transmission-remote-gtk, 0.7, alan@eth0.org.uk)
+AC_INIT(transmission-remote-gtk, 0.7.1, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_INIT_AUTOMAKE([foreign])
@@ -41,7 +41,7 @@ PKG_CHECK_MODULES([gthread], [gthread-2.0])
 PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
 PKG_CHECK_MODULES([libcurl], [libcurl])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
-PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents]))
+PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents on non-win32]))
 PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
 PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
 
