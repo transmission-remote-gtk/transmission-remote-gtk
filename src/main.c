@@ -84,41 +84,9 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 
     return res;
 }
-#endif
 
-static gboolean should_be_minimised(int argc, char *argv[]) {
-    int i;
-    for (i = 1; i < argc; i++)
-        if (!g_strcmp0(argv[i], "-m") || !g_strcmp0(argv[i], "--minimized"))
-            return TRUE;
+#elif WIN32
 
-    return FALSE;
-}
-
-static gchar **convert_args(int argc, char *argv[]) {
-    gchar *cwd = g_get_current_dir();
-    gchar **files = NULL;
-    int i;
-    if (argc > 1) {
-        files = g_new0(gchar *, argc);
-        for (i = 1; i < argc; i++) {
-            if (!is_url(argv[i]) && !is_magnet(argv[i])
-                    && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
-                    && !g_path_is_absolute(argv[i])) {
-                files[i - 1] = g_build_path(G_DIR_SEPARATOR_S, cwd, argv[i],
-                        NULL);
-            } else {
-                files[i - 1] = g_strdup(argv[i]);
-            }
-        }
-    }
-
-    g_free(cwd);
-
-    return files;
-}
-
-#ifdef WIN32
 struct trg_mailslot_recv_args {
     TrgMainWindow *win;
     gchar **uris;
@@ -136,6 +104,7 @@ static gboolean mailslot_recv_args(gpointer data) {
 
     gtk_window_deiconify(GTK_WINDOW(args->win));
     gtk_window_present(GTK_WINDOW(args->win));
+    gtk_window_activate_focus(GTK_WINDOW(args->win));
 
     g_free(args);
 
@@ -247,6 +216,38 @@ static int winunique_send_message(HANDLE h, gchar **args) {
 
 #endif
 
+static gboolean should_be_minimised(int argc, char *argv[]) {
+    int i;
+    for (i = 1; i < argc; i++)
+        if (!g_strcmp0(argv[i], "-m") || !g_strcmp0(argv[i], "--minimized"))
+            return TRUE;
+
+    return FALSE;
+}
+
+static gchar **convert_args(int argc, char *argv[]) {
+    gchar *cwd = g_get_current_dir();
+    gchar **files = NULL;
+    int i;
+    if (argc > 1) {
+        files = g_new0(gchar *, argc);
+        for (i = 1; i < argc; i++) {
+            if (!is_url(argv[i]) && !is_magnet(argv[i])
+                    && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
+                    && !g_path_is_absolute(argv[i])) {
+                files[i - 1] = g_build_path(G_DIR_SEPARATOR_S, cwd, argv[i],
+                        NULL);
+            } else {
+                files[i - 1] = g_strdup(argv[i]);
+            }
+        }
+    }
+
+    g_free(cwd);
+
+    return files;
+}
+
 int main(int argc, char *argv[]) {
     int returnValue = EXIT_SUCCESS;
     TrgMainWindow *window;
@@ -311,7 +312,7 @@ int main(int argc, char *argv[]) {
         unique_message_data_free(message);
 
         if (response != UNIQUE_RESPONSE_OK)
-        returnValue = EXIT_FAILURE;
+            returnValue = EXIT_FAILURE;
     } else {
 #elif WIN32
     hMailSlot = CreateFile(TRG_MAILSLOT_NAME, // mailslot name
