@@ -384,13 +384,19 @@ void trg_widget_set_visible(GtkWidget * w, gboolean visible) {
 
 gdouble json_double_to_progress(JsonNode *n)
 {
+    return json_node_really_get_double(n)*100.0;
+}
+
+gdouble json_node_really_get_double(JsonNode *node)
+{
     GValue a = { 0 };
-    json_node_get_value(n, &a);
+
+    json_node_get_value(node, &a);
     switch (G_VALUE_TYPE(&a)) {
     case G_TYPE_INT64:
-        return (gdouble) g_value_get_int64(&a) * 100.0;
+        return (gdouble) g_value_get_int64(&a);
     case G_TYPE_DOUBLE:
-        return g_value_get_double(&a) * 100.0;
+        return g_value_get_double(&a);
     default:
         return 0.0;
     }

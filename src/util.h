@@ -70,5 +70,6 @@ gchar *trg_base64encode(const gchar *filename);
 GtkWidget *my_scrolledwin_new(GtkWidget * child);
 gboolean is_url(gchar *string);
 gboolean is_magnet(gchar *string);
+gdouble json_node_really_get_double(JsonNode *node);
 
 #endif                          /* UTIL_H_ */

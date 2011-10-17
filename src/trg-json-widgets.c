@@ -21,6 +21,7 @@
 #include <json-glib/json-glib.h>
 
 #include "trg-json-widgets.h"
+#include "util.h"
 
 void trg_json_widgets_save(GList *list, JsonObject *out)
 {
@@ -103,6 +104,7 @@ static GtkWidget *trg_json_widget_spin_common_new(GList **wl, JsonObject *obj,
 {
     GtkWidget *w = gtk_spin_button_new_with_range(min, max, step);
     trg_json_widget_desc *wd = g_new0(trg_json_widget_desc, 1);
+    JsonNode *node = json_object_get_member(obj, key);
 
     if (type == TRG_JSON_WIDGET_SPIN_DOUBLE)
         wd->saveFunc = trg_json_widget_spin_save_double;
@@ -118,6 +120,8 @@ static GtkWidget *trg_json_widget_spin_common_new(GList **wl, JsonObject *obj,
                 G_CALLBACK(toggle_active_arg_is_sensitive), w);
     }
 
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), json_node_really_get_double(node));
+
     *wl = g_list_append(*wl, wd);
 
     return w;
@@ -126,17 +130,13 @@ static GtkWidget *trg_json_widget_spin_common_new(GList **wl, JsonObject *obj,
 GtkWidget *trg_json_widget_spin_new_int(GList **wl, JsonObject *obj, const gchar *key, GtkWidget *toggleDep,
         gint min, gint max, gint step)
 {
-    GtkWidget *w = trg_json_widget_spin_common_new(wl, obj, key, toggleDep, TRG_JSON_WIDGET_SPIN_INT, min, max, (gdouble)step);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), (gdouble)json_object_get_int_member(obj, key));
-    return w;
+    return trg_json_widget_spin_common_new(wl, obj, key, toggleDep, TRG_JSON_WIDGET_SPIN_INT, min, max, (gdouble)step);
 }
 
 GtkWidget *trg_json_widget_spin_new_double(GList **wl, JsonObject *obj, const gchar *key, GtkWidget *toggleDep,
         gint min, gint max, gdouble step)
 {
-    GtkWidget *w = trg_json_widget_spin_common_new(wl, obj, key, toggleDep, TRG_JSON_WIDGET_SPIN_DOUBLE, min, max, step);
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(w), json_object_get_double_member(obj, key));
-    return w;
+    return trg_json_widget_spin_common_new(wl, obj, key, toggleDep, TRG_JSON_WIDGET_SPIN_DOUBLE, min, max, step);
 }
 
 void trg_json_widget_check_save(GtkWidget *widget, JsonObject *obj, gchar *key)
