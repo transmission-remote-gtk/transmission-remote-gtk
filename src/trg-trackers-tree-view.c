@@ -196,6 +196,8 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
                              _("Last Result"), "last-result", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_SCRAPE,
                              _("Scrape URL"), "scrape-url", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_EPOCH, TRACKERCOL_LAST_SCRAPE_TIME,
+                             _("Last Scrape"), "last-scrape-time", TRG_COLUMN_EXTRA);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_HOST,
                              _("Host"), "host", TRG_COLUMN_EXTRA);
 }

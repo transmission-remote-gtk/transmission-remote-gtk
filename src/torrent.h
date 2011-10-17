@@ -110,6 +110,7 @@ gint64 tracker_stats_get_leecher_count(JsonObject *t);
 gint64 tracker_stats_get_download_count(JsonObject *t);
 const gchar *tracker_stats_get_announce_result(JsonObject *t);
 const gchar *tracker_stats_get_host(JsonObject *t);
+gint64 tracker_stats_get_last_scrape_time(JsonObject *t);
 
 /* files */
 

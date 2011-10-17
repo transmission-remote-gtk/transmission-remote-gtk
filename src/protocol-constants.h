@@ -101,6 +101,7 @@
 #define FIELD_SCRAPE                    "scrape"
 #define FIELD_LAST_ANNOUNCE_PEER_COUNT  "lastAnnouncePeerCount"
 #define FIELD_LAST_ANNOUNCE_TIME        "lastAnnounceTime"
+#define FIELD_LAST_SCRAPE_TIME          "lastScrapeTime"
 #define FIELD_SEEDERCOUNT               "seederCount"
 #define FIELD_LEECHERCOUNT              "leecherCount"
 #define FIELD_DOWNLOADCOUNT             "downloadCount"

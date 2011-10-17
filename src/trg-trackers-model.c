@@ -101,6 +101,8 @@ void trg_trackers_model_update(TrgTrackersModel * model,
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
                 TRACKERCOL_LAST_ANNOUNCE_TIME, tracker_stats_get_last_announce_time(tracker), -1);
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
+                TRACKERCOL_LAST_SCRAPE_TIME, tracker_stats_get_last_scrape_time(tracker), -1);
+        gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
                 TRACKERCOL_HOST, tracker_stats_get_host(tracker), -1);
         gtk_list_store_set(GTK_LIST_STORE(model), &trackIter,
                 TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT, tracker_stats_get_last_announce_peer_count(tracker), -1);
@@ -119,6 +121,7 @@ void trg_trackers_model_update(TrgTrackersModel * model,
                            TRACKERCOL_HOST, tracker_stats_get_host(tracker),
                            TRACKERCOL_LAST_ANNOUNCE_RESULT, tracker_stats_get_announce_result(tracker),
                            TRACKERCOL_LAST_ANNOUNCE_TIME, tracker_stats_get_last_announce_time(tracker),
+                           TRACKERCOL_LAST_SCRAPE_TIME, tracker_stats_get_last_scrape_time(tracker),
                            TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT, tracker_stats_get_last_announce_peer_count(tracker),
                            TRACKERCOL_LEECHERCOUNT, tracker_stats_get_leecher_count(tracker),
                            TRACKERCOL_SEEDERCOUNT, tracker_stats_get_seeder_count(tracker),
@@ -156,6 +159,7 @@ static void trg_trackers_model_init(TrgTrackersModel * self)
     column_types[TRACKERCOL_ID] = G_TYPE_INT64;
     column_types[TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT] = G_TYPE_INT64;
     column_types[TRACKERCOL_LAST_ANNOUNCE_TIME] = G_TYPE_INT64;
+    column_types[TRACKERCOL_LAST_SCRAPE_TIME] = G_TYPE_INT64;
     column_types[TRACKERCOL_SEEDERCOUNT] = G_TYPE_INT64;
     column_types[TRACKERCOL_LEECHERCOUNT] = G_TYPE_INT64;
     column_types[TRACKERCOL_HOST] = G_TYPE_STRING;

@@ -454,6 +454,11 @@ gint64 tracker_stats_get_last_announce_time(JsonObject *t)
     return json_object_get_int_member(t, FIELD_LAST_ANNOUNCE_TIME);
 }
 
+gint64 tracker_stats_get_last_scrape_time(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_LAST_SCRAPE_TIME);
+}
+
 gint64 tracker_stats_get_seeder_count(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_SEEDERCOUNT);
