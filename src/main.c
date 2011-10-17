@@ -274,7 +274,7 @@ static gchar **convert_args(int argc, char *argv[]) {
             }
             g_slist_free(list);
         }
-b    }
+    }
 
     g_free(cwd);
 
