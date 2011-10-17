@@ -98,13 +98,13 @@ struct trg_mailslot_recv_args {
 static gboolean mailslot_recv_args(gpointer data) {
     struct trg_mailslot_recv_args *args = (struct trg_mailslot_recv_args*) data;
 
-    if (args->uris)
-        trg_add_from_filename(args->win, args->uris);
-
     if (args->present) {
         gtk_window_deiconify(GTK_WINDOW(args->win));
         gtk_window_present(GTK_WINDOW(args->win));
     }
+
+    if (args->uris)
+        trg_add_from_filename(args->win, args->uris);
 
     g_free(args);
 
@@ -154,8 +154,9 @@ static gpointer mailslot_recv_thread(gpointer data) {
             args->win = win;
 
             if (json_object_has_member(obj, "args")) {
-                JsonArray *array = json_node_get_array(node);
+                JsonArray *array = json_object_get_array_member(obj, "args");
                 GList *arrayList = json_array_get_elements(array);
+
                 if (arrayList) {
                     guint arrayLength = g_list_length(arrayList);
                     int i = 0;
