@@ -1,5 +1,5 @@
 Name: transmission-remote-gtk
-Version: 0.7.1
+Version: 0.7.2
 Release: 1%{?dist:%{dist}}
 Summary: Remote control client for Transmission BitTorrent
 

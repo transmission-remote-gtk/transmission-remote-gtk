@@ -42,7 +42,7 @@
 
 #define TRG_LIBUNIQUE_DOMAIN "uk.org.eth0.trg"
 #define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"  //Name given to the Mailslot
-#define MAILSLOT_BUFFER_SIZE 1024*64
+#define MAILSLOT_BUFFER_SIZE 1024*32
 
 #ifdef HAVE_LIBUNIQUE
 
@@ -90,6 +90,7 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
 struct trg_mailslot_recv_args {
     TrgMainWindow *win;
     gchar **uris;
+    gboolean present;
 };
 
 /* to be queued into the glib main loop with g_idle_add() */
@@ -97,14 +98,13 @@ struct trg_mailslot_recv_args {
 static gboolean mailslot_recv_args(gpointer data) {
     struct trg_mailslot_recv_args *args = (struct trg_mailslot_recv_args*) data;
 
-    if (args->uris[0])
+    if (args->uris)
         trg_add_from_filename(args->win, args->uris);
-    else
-        g_free(args->uris);
 
-    gtk_window_deiconify(GTK_WINDOW(args->win));
-    gtk_window_present(GTK_WINDOW(args->win));
-    gtk_window_activate_focus(GTK_WINDOW(args->win));
+    if (args->present) {
+        gtk_window_deiconify(GTK_WINDOW(args->win));
+        gtk_window_present(GTK_WINDOW(args->win));
+    }
 
     g_free(args);
 
@@ -139,35 +139,40 @@ static gpointer mailslot_recv_thread(gpointer data) {
 
         if ((!bResult) || (0 == cbBytes)) {
             g_error("Mailslot error from client: %d", GetLastError());
-            CloseHandle(hMailslot);
-            return NULL; //Error
+            break;
         }
 
         parser = json_parser_new();
 
         if (json_parser_load_from_data(parser, szBuffer, cbBytes, NULL)) {
             JsonNode *node = json_parser_get_root(parser);
-            JsonArray *array = json_node_get_array(node);
-            GList *arrayList = json_array_get_elements(array);
+            JsonObject *obj = json_node_get_object(node);
             struct trg_mailslot_recv_args *args =
-                    g_new(struct trg_mailslot_recv_args, 1);
-            guint arrayLength = arrayList ? g_list_length(arrayList) : 0;
-            int i = 0;
-            GList *li;
+                    g_new0(struct trg_mailslot_recv_args, 1);
 
-            args->uris = g_new0(gchar*, arrayLength+1);
+            args->present = json_object_has_member(obj, "present") && json_object_get_boolean_member(obj, "present");
+            args->win = win;
 
-            for (li = arrayList; li; li = g_list_next(li)) {
-                const gchar *liStr = json_node_get_string((JsonNode*) li->data);
-                args->uris[i++] = g_strdup(liStr);
+            if (json_object_has_member(obj, "args")) {
+                JsonArray *array = json_node_get_array(node);
+                GList *arrayList = json_array_get_elements(array);
+                if (arrayList) {
+                    guint arrayLength = g_list_length(arrayList);
+                    int i = 0;
+                    GList *li;
+
+                    args->uris = g_new0(gchar*, arrayLength+1);
+
+                    for (li = arrayList; li; li = g_list_next(li)) {
+                        const gchar *liStr = json_node_get_string((JsonNode*) li->data);
+                        args->uris[i++] = g_strdup(liStr);
+                    }
+
+                    g_list_free(arrayList);
+                }
             }
 
-            if (arrayList)
-                g_list_free(arrayList);
-
             json_node_free(node);
-
-            args->win = win;
 
             g_idle_add(mailslot_recv_args, args);
         }
@@ -181,7 +186,8 @@ static gpointer mailslot_recv_thread(gpointer data) {
 
 static int winunique_send_message(HANDLE h, gchar **args) {
     DWORD cbBytes;
-    JsonNode *node = json_node_new(JSON_NODE_ARRAY);
+    JsonNode *node = json_node_new(JSON_NODE_OBJECT);
+    JsonObject *obj = json_object_new();
     JsonArray *array = json_array_new();
     JsonGenerator *generator;
     gchar *msg;
@@ -190,10 +196,15 @@ static int winunique_send_message(HANDLE h, gchar **args) {
     if (args) {
         for (i = 0; args[i]; i++)
             json_array_add_string_element(array, args[i]);
+
+        json_object_set_array_member(obj, "args", array);
+
         g_strfreev(args);
     }
 
-    json_node_take_array(node, array);
+    json_object_set_boolean_member(obj, "present", TRUE);
+
+    json_node_take_object(node, obj);
 
     generator = json_generator_new();
     json_generator_set_root(generator, node);
@@ -219,7 +230,9 @@ static int winunique_send_message(HANDLE h, gchar **args) {
 static gboolean should_be_minimised(int argc, char *argv[]) {
     int i;
     for (i = 1; i < argc; i++)
-        if (!g_strcmp0(argv[i], "-m") || !g_strcmp0(argv[i], "--minimized"))
+        if (!g_strcmp0(argv[i], "-m")
+                || !g_strcmp0(argv[i], "--minimized")
+                || !g_strcmp0(argv[i], "/m"))
             return TRUE;
 
     return FALSE;
