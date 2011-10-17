@@ -228,12 +228,17 @@ static int winunique_send_message(HANDLE h, gchar **args) {
 
 #endif
 
+static gboolean is_minimised_arg(gchar *arg)
+{
+    return !g_strcmp0(arg, "-m")
+            || !g_strcmp0(arg, "--minimized")
+            || !g_strcmp0(arg, "/m");
+}
+
 static gboolean should_be_minimised(int argc, char *argv[]) {
     int i;
     for (i = 1; i < argc; i++)
-        if (!g_strcmp0(argv[i], "-m")
-                || !g_strcmp0(argv[i], "--minimized")
-                || !g_strcmp0(argv[i], "/m"))
+        if (is_minimised_arg(argv[i]))
             return TRUE;
 
     return FALSE;
@@ -242,20 +247,34 @@ static gboolean should_be_minimised(int argc, char *argv[]) {
 static gchar **convert_args(int argc, char *argv[]) {
     gchar *cwd = g_get_current_dir();
     gchar **files = NULL;
-    int i;
+
     if (argc > 1) {
-        files = g_new0(gchar *, argc);
+        GSList *list = NULL;
+        int i;
+
         for (i = 1; i < argc; i++) {
-            if (!is_url(argv[i]) && !is_magnet(argv[i])
+            if (is_minimised_arg(argv[i])) {
+                continue;
+            } else if (!is_url(argv[i]) && !is_magnet(argv[i])
                     && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
                     && !g_path_is_absolute(argv[i])) {
-                files[i - 1] = g_build_path(G_DIR_SEPARATOR_S, cwd, argv[i],
-                        NULL);
+                list = g_slist_append(list,
+                        g_build_path(G_DIR_SEPARATOR_S, cwd, argv[i], NULL));
             } else {
-                files[i - 1] = g_strdup(argv[i]);
+                list = g_slist_append(list, g_strdup(argv[i]));
             }
         }
-    }
+
+        if (list) {
+            GSList *li;
+            files = g_new0(gchar*, g_slist_length(list)+1);
+            i = 0;
+            for (li = list; li; li = g_slist_next(li)) {
+                files[i++] = li->data;
+            }
+            g_slist_free(list);
+        }
+b    }
 
     g_free(cwd);
 
