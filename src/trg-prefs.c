@@ -39,6 +39,7 @@ struct _TrgPrefsPrivate {
     JsonObject *defaultsObj;
     JsonNode *user;
     JsonObject *userObj;
+    JsonObject *connectionObj;
     JsonObject *profile;
     gchar *file;
 };
@@ -213,8 +214,10 @@ JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int type, int flags) {
     JsonNode *res;
 
     if ((flags & TRG_PREFS_PROFILE)) {
-        JsonObject *profile = trg_prefs_get_profile(p);
-        if ((res = trg_prefs_get_value_inner(profile, key, type, flags)))
+        if ((res = trg_prefs_get_value_inner(trg_prefs_get_profile(p), key, type, flags)))
+            return res;
+    } else if ((flags & TRG_PREFS_CONNECTION)) {
+        if ((res = trg_prefs_get_value_inner(priv->connectionObj, key, type, flags)))
             return res;
     } else {
         if ((res = trg_prefs_get_value_inner(priv->userObj, key, type, flags)))
@@ -225,6 +228,19 @@ JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int type, int flags) {
         return json_object_get_member(priv->defaultsObj, key);
 
     return NULL;
+}
+
+void trg_prefs_set_connection(TrgPrefs *p, JsonObject *profile)
+{
+    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+
+    if (priv->connectionObj)
+        json_object_unref(priv->connectionObj);
+
+    if (profile)
+        json_object_ref(profile);
+
+    priv->connectionObj = profile;
 }
 
 gchar *trg_prefs_get_string(TrgPrefs *p, gchar *key, int flags) {
@@ -335,6 +351,11 @@ void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile) {
 JsonObject* trg_prefs_get_profile(TrgPrefs *p) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
     return priv->profile;
+}
+
+JsonObject* trg_prefs_get_connection(TrgPrefs *p) {
+    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    return priv->connectionObj;
 }
 
 JsonArray* trg_prefs_get_profiles(TrgPrefs *p) {

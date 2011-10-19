@@ -1501,6 +1501,7 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
 
 static void exec_cmd_cb(GtkWidget *w, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     JsonObject *cmd_obj = (JsonObject*) g_object_get_data(G_OBJECT(w),
             "cmd-object");
     GtkTreeSelection *selection = gtk_tree_view_get_selection(
@@ -1511,7 +1512,7 @@ static void exec_cmd_cb(GtkWidget *w, gpointer data) {
     gchar *cmd_line, **argv;
 
     cmd_line = build_remote_exec_cmd(
-            priv->client,
+            prefs,
             model,
             selectedRows,
             json_object_get_string_member(cmd_obj,
@@ -1574,7 +1575,7 @@ static void trg_torrent_tv_view_menu(GtkWidget * treeview,
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove & Delete"),
             GTK_STOCK_CLEAR, TRUE, G_CALLBACK(delete_cb), data);
 
-    cmds = trg_prefs_get_array(prefs, TRG_PREFS_KEY_EXEC_COMMANDS, TRG_PREFS_PROFILE);
+    cmds = trg_prefs_get_array(prefs, TRG_PREFS_KEY_EXEC_COMMANDS, TRG_PREFS_CONNECTION);
     n_cmds = json_array_get_length(cmds);
 
     if (n_cmds > 0) {

@@ -529,7 +529,7 @@ static void del_profile_cb(GtkWidget *w, gpointer data) {
 
     if (gtk_combo_box_get_active_iter(combo, &iter)) {
         gtk_tree_model_get(profileModel, &iter, 0, &profile, -1);
-        trg_client_del_profile(priv->client, profile);
+        trg_prefs_del_profile(prefs, profile);
         trg_prefs_set_profile(prefs, NULL);
         gtk_list_store_remove(GTK_LIST_STORE(profileModel), &iter);
         gtk_combo_box_set_active(combo, 0);

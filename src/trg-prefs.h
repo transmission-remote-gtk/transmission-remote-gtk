@@ -75,8 +75,9 @@
 #define TRG_PREFS_NOFLAGS    (1 << 0) /* 0x00 */
 #define TRG_PREFS_GLOBAL     (1 << 1) /* 0x01 */
 #define TRG_PREFS_PROFILE    (1 << 2) /* 0x02 */
-#define TRG_PREFS_NEWNODE    (1 << 3) /* 0x04 */
-#define TRG_PREFS_REPLACENODE (1 << 4) /* 0x08 */
+#define TRG_PREFS_CONNECTION (1 << 3) /* 0x04 */
+#define TRG_PREFS_NEWNODE    (1 << 4) /* 0x08 */
+#define TRG_PREFS_REPLACENODE (1 << 5) /* 0x16 */
 
 G_BEGIN_DECLS
 
@@ -121,7 +122,9 @@ gint64 trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags);
 gdouble trg_prefs_get_double(TrgPrefs *p, gchar *key, int flags);
 gboolean trg_prefs_get_bool(TrgPrefs *p, gchar *key, int flags);
 JsonObject* trg_prefs_get_profile(TrgPrefs *p);
+JsonObject* trg_prefs_get_connection(TrgPrefs *p);
 JsonArray* trg_prefs_get_profiles(TrgPrefs *p);
+void trg_prefs_set_connection(TrgPrefs *p, JsonObject *profile);
 gint trg_prefs_get_profile_id(TrgPrefs *p);
 void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile);
 void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile);

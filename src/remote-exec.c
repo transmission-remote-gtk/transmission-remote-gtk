@@ -83,9 +83,9 @@ static gchar *dump_json_value(JsonNode * node) {
     return g_string_free(buffer, FALSE);
 }
 
-gchar *build_remote_exec_cmd(TrgClient *tc, GtkTreeModel *model, GList *selection,
+gchar *build_remote_exec_cmd(TrgPrefs *prefs, GtkTreeModel *model, GList *selection,
         const gchar * input) {
-    JsonObject *profile = trg_client_get_current_profile(tc);
+    JsonObject *profile = trg_prefs_get_connection(prefs);
     gchar *work;
     GRegex *regex, *replacerx;
     GMatchInfo *match_info;

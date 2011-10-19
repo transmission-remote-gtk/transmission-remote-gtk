@@ -60,7 +60,6 @@ struct _TrgClientPrivate {
     guint min_interval;
     gint64 updateSerial;
     JsonObject *session;
-    JsonObject *currentProfile;
     gboolean ssl;
     float version;
     char *url;
@@ -197,12 +196,6 @@ TrgPrefs *trg_client_get_prefs(TrgClient *tc)
     return priv->prefs;
 }
 
-JsonObject *trg_client_get_current_profile(TrgClient *tc)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    return priv->currentProfile;
-}
-
 int trg_client_populate_with_settings(TrgClient * tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
@@ -215,6 +208,8 @@ int trg_client_populate_with_settings(TrgClient * tc)
 #endif
 
     g_mutex_lock(priv->configMutex);
+
+    trg_prefs_set_connection(prefs, trg_prefs_get_profile(prefs));
 
     g_free(priv->url);
     priv->url = NULL;
@@ -268,8 +263,6 @@ int trg_client_populate_with_settings(TrgClient * tc)
     priv->activeOnlyUpdate =
         trg_prefs_get_bool(prefs,
                               TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_PROFILE);
-
-    priv->currentProfile = trg_prefs_get_profile(prefs);
 
 #ifdef HAVE_LIBPROXY
     if ((pf = px_proxy_factory_new())) {
@@ -342,7 +335,8 @@ void trg_client_status_change(TrgClient *tc, gboolean connected)
             json_object_unref(priv->session);
             priv->session = NULL;
         }
-        priv->currentProfile = NULL;
+
+        trg_prefs_set_connection(priv->prefs, NULL);
     }
 }
 
@@ -350,16 +344,6 @@ JsonObject* trg_client_get_session(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     return priv->session;
-}
-
-void trg_client_del_profile(TrgClient *tc, JsonObject *profile)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-
-    if (profile == priv->currentProfile)
-        priv->currentProfile = NULL;
-
-    trg_prefs_del_profile(priv->prefs, profile);
 }
 
 void trg_client_thread_pool_push(TrgClient *tc, gpointer data, GError **err)
