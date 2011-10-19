@@ -869,8 +869,8 @@ static gboolean on_torrent_get(gpointer data, int mode) {
 	trg_response *response = (trg_response*)data;
 	TrgMainWindow *win = TRG_MAIN_WINDOW(response->cb_data);
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(response->cb_data);
-
     TrgClient *client = priv->client;
+    TrgPrefs *prefs = trg_client_get_prefs(client);
     trg_torrent_model_update_stats stats;
     guint interval;
 
@@ -883,9 +883,12 @@ static gboolean on_torrent_get(gpointer data, int mode) {
     trg_client_updatelock(client);
 
     interval
-            = gtk_widget_get_visible(GTK_WIDGET(win)) ? trg_client_get_interval(
-                    client)
-                    : trg_client_get_minimised_interval(client);
+            = gtk_widget_get_visible(GTK_WIDGET(win)) ? trg_prefs_get_int(prefs,
+                    TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_PREFS_CONNECTION)
+                    : trg_prefs_get_int(prefs,
+                            TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_PREFS_CONNECTION);
+    if (interval < 1)
+        interval = TRG_INTERVAL_DEFAULT;
 
     if (response->status != CURLE_OK) {
         if (trg_client_inc_failcount(client) >= TRG_MAX_RETRIES) {
@@ -965,13 +968,13 @@ static gboolean trg_update_torrents_timerfunc(gpointer data) {
     TrgPrefs *prefs = trg_client_get_prefs(tc);
 
     if (trg_client_is_connected(tc)) {
-        gboolean activeOnly = trg_client_get_activeonlyupdate(tc)
+        gboolean activeOnly = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_CONNECTION)
                 && (!trg_prefs_get_bool(prefs,
                         TRG_PREFS_ACTIVEONLY_FULLSYNC_ENABLED,
-                        TRG_PREFS_PROFILE) || (trg_client_get_serial(tc)
+                        TRG_PREFS_CONNECTION) || (trg_client_get_serial(tc)
                         % trg_prefs_get_int(prefs,
                                 TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY,
-                                TRG_PREFS_PROFILE) != 0));
+                                TRG_PREFS_CONNECTION) != 0));
         dispatch_async(tc, torrent_get(activeOnly ? TORRENT_GET_TAG_MODE_UPDATE : TORRENT_GET_TAG_MODE_FULL),
                 activeOnly ? on_torrent_get_active : on_torrent_get_update,
                 data);
@@ -1128,6 +1131,7 @@ gboolean on_generic_interactive_action(gpointer data) {
 	TrgMainWindow *win = TRG_MAIN_WINDOW(response->cb_data);
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(response->cb_data);
     TrgClient *tc = priv->client;
+    TrgPrefs *prefs = trg_client_get_prefs(tc);
 
     if (trg_client_is_connected(tc)) {
         trg_dialog_error_handler(win, response);
@@ -1136,7 +1140,7 @@ gboolean on_generic_interactive_action(gpointer data) {
             gint64 id;
             if (json_object_has_member(response->obj, PARAM_TAG))
                 id = json_object_get_int_member(response->obj, PARAM_TAG);
-            else if (trg_client_get_activeonlyupdate(tc))
+            else if (trg_prefs_get_bool(prefs, TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_CONNECTION))
                 id = -2;
             else
                 id = -1;

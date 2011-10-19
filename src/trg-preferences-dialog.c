@@ -158,11 +158,6 @@ static void trg_preferences_dialog_get_property(GObject * object,
     }
 }
 
-static void update_activeonly_cb(GtkToggleButton * w, gpointer data) {
-    trg_client_set_activeonlyupdate(TRG_CLIENT(data),
-            gtk_toggle_button_get_active(w));
-}
-
 static void entry_refresh(TrgPrefs *prefs, void *wdp) {
     trg_pref_widget_desc *wd = (trg_pref_widget_desc*) wdp;
     gchar *value = trg_prefs_get_string(prefs, wd->key, wd->flags);
@@ -276,16 +271,6 @@ static GtkWidget *trgp_spin_new(TrgPreferencesDialog *dlg, gchar * key,
     priv->widgets = g_list_append(priv->widgets, wd);
 
     return w;
-}
-
-static void interval_changed_cb(GtkWidget * w, gpointer data) {
-    trg_client_set_interval(TRG_CLIENT(data),
-            gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w)));
-}
-
-static void mininterval_changed_cb(GtkWidget * w, gpointer data) {
-    trg_client_set_minimised_interval(TRG_CLIENT(data),
-            gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(w)));
 }
 
 static void toggle_filter_trackers(GtkToggleButton * w, gpointer win) {
@@ -759,7 +744,6 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog *dlg) {
 
 static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
     TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
-    TrgClient *tc = priv->client;
     TrgPrefs *prefs = priv->prefs;
 
     GtkWidget *w, *t, *frame, *frameHbox, *profileLabel, *activeOnly;
@@ -821,14 +805,10 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
 
     w = trgp_spin_new(dlg, TRG_PREFS_KEY_UPDATE_INTERVAL, 1, INT_MAX, 1,
             TRG_PREFS_PROFILE, NULL);
-    g_signal_connect(w, "value-changed", G_CALLBACK(interval_changed_cb),
-            tc);
     hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
 
     w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, INT_MAX, 1,
             TRG_PREFS_PROFILE, NULL);
-    g_signal_connect(w, "value-changed", G_CALLBACK(mininterval_changed_cb),
-            tc);
     hig_workarea_add_row(t, &row, _("Minimised update interval:"), w, NULL);
 
     w = trgp_check_new(dlg, _("Automatically connect"),
@@ -843,8 +823,6 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog *dlg) {
 
     activeOnly = w = trgp_check_new(dlg, _("Update active torrents only"),
             TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_PROFILE, NULL);
-    g_signal_connect(w, "toggled", G_CALLBACK(update_activeonly_cb),
-            tc);
     hig_workarea_add_wide_control(t, &row, w);
 
     priv->fullUpdateCheck = trgp_check_new(dlg,

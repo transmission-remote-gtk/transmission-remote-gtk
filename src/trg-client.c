@@ -54,10 +54,7 @@ typedef struct _TrgClientPrivate TrgClientPrivate;
 struct _TrgClientPrivate {
     char *session_id;
     gint connid;
-    gboolean activeOnlyUpdate;
     guint failCount;
-    guint interval;
-    guint min_interval;
     gint64 updateSerial;
     JsonObject *session;
     gboolean ssl;
@@ -221,9 +218,9 @@ int trg_client_populate_with_settings(TrgClient * tc)
     priv->password = NULL;
 
     port =
-        trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_PROFILE);
+        trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_CONNECTION);
 
-    host = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
+    host = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_CONNECTION);
     if (!host || strlen(host) < 1) {
         g_free(host);
         g_mutex_unlock(priv->configMutex);
@@ -231,7 +228,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
     }
 
 #ifndef CURL_NO_SSL
-    priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE);
+    priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_CONNECTION);
 #else
     priv->ssl = FALSE;
 #endif
@@ -241,28 +238,14 @@ int trg_client_populate_with_settings(TrgClient * tc)
                         priv->ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX, host, port);
     g_free(host);
 
-    priv->interval =
-        trg_prefs_get_int(prefs, TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_PREFS_PROFILE);
-    if (priv->interval < 1)
-        priv->interval = TRG_INTERVAL_DEFAULT;
-
-    priv->min_interval =
-        trg_prefs_get_int(prefs, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_PREFS_PROFILE);
-    if (priv->min_interval < 1)
-        priv->min_interval = TRG_INTERVAL_DEFAULT;
-
     priv->username =
-        trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_CONNECTION);
 
     priv->password =
-        trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD, TRG_PREFS_PROFILE);
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD, TRG_PREFS_CONNECTION);
 
     g_free(priv->proxy);
     priv->proxy = NULL;
-
-    priv->activeOnlyUpdate =
-        trg_prefs_get_bool(prefs,
-                              TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY, TRG_PREFS_PROFILE);
 
 #ifdef HAVE_LIBPROXY
     if ((pf = px_proxy_factory_new())) {
@@ -335,8 +318,9 @@ void trg_client_status_change(TrgClient *tc, gboolean connected)
             json_object_unref(priv->session);
             priv->session = NULL;
         }
-
+        g_mutex_lock(priv->configMutex);
         trg_prefs_set_connection(priv->prefs, NULL);
+        g_mutex_unlock(priv->configMutex);
     }
 }
 
@@ -424,42 +408,6 @@ void trg_client_updateunlock(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     g_mutex_unlock(priv->updateMutex);
-}
-
-gboolean trg_client_get_activeonlyupdate(TrgClient *tc)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    return priv->activeOnlyUpdate;
-}
-
-void trg_client_set_activeonlyupdate(TrgClient *tc, gboolean activeOnlyUpdate)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    priv->activeOnlyUpdate = activeOnlyUpdate;
-}
-
-guint trg_client_get_minimised_interval(TrgClient *tc)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    return priv->min_interval;
-}
-
-guint trg_client_get_interval(TrgClient *tc)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    return priv->interval;
-}
-
-void trg_client_set_interval(TrgClient *tc, guint interval)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    priv->interval = interval;
-}
-
-void trg_client_set_minimised_interval(TrgClient *tc, guint interval)
-{
-    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
-    priv->min_interval = interval;
 }
 
 /* formerly http.c */

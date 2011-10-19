@@ -92,7 +92,7 @@ static void trg_prefs_create_defaults(TrgPrefs *p) {
             _(TRG_PROFILE_NAME_DEFAULT));
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_PORT, 9091);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_INTERVAL_DEFAULT);
-    trg_prefs_add_default_int(p, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_MININTERVAL_DEFAULT);
+    trg_prefs_add_default_int(p, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_STATES_PANED_POS, 120);
 
@@ -213,10 +213,10 @@ JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int type, int flags) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
     JsonNode *res;
 
-    if ((flags & TRG_PREFS_PROFILE)) {
-        if ((res = trg_prefs_get_value_inner(trg_prefs_get_profile(p), key, type, flags)))
+    if (priv->profile && (flags & TRG_PREFS_PROFILE)) {
+        if ((res = trg_prefs_get_value_inner(priv->profile, key, type, flags)))
             return res;
-    } else if ((flags & TRG_PREFS_CONNECTION)) {
+    } else if (priv->connectionObj && (flags & TRG_PREFS_CONNECTION)) {
         if ((res = trg_prefs_get_value_inner(priv->connectionObj, key, type, flags)))
             return res;
     } else {

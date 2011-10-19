@@ -156,7 +156,6 @@ void trg_client_set_torrent_table(TrgClient *tc, GHashTable *table);
 GHashTable* trg_client_get_torrent_table(TrgClient *tc);
 JsonObject* trg_client_get_session(TrgClient *tc);
 void trg_client_status_change(TrgClient *tc, gboolean connected);
-gboolean trg_client_get_activeonlyupdate(TrgClient *tc);
 gboolean trg_client_is_connected(TrgClient *tc);
 void trg_client_updateunlock(TrgClient *tc);
 void trg_client_updatelock(TrgClient *tc);
@@ -164,11 +163,6 @@ guint trg_client_inc_failcount(TrgClient *tc);
 guint trg_client_get_failcount(TrgClient *tc);
 void trg_client_reset_failcount(TrgClient *tc);
 void trg_client_inc_serial(TrgClient *tc);
-guint trg_client_get_interval(TrgClient *tc);
-guint trg_client_get_minimised_interval(TrgClient *tc);
-void trg_client_set_interval(TrgClient *tc, guint interval);
-void trg_client_set_minimised_interval(TrgClient *tc, guint interval);
-void trg_client_set_activeonlyupdate(TrgClient *tc, gboolean activeOnlyUpdate);
 void trg_client_inc_connid(TrgClient *tc);
 
 G_END_DECLS
