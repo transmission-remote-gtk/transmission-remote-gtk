@@ -22,6 +22,8 @@
 #include <json-glib/json-glib.h>
 
 #include "trg-torrent-model.h"
+#include "trg-client.h"
+#include "trg-prefs.h"
 #include "protocol-constants.h"
 #include "torrent.h"
 
@@ -81,15 +83,19 @@ static gchar *dump_json_value(JsonNode * node) {
     return g_string_free(buffer, FALSE);
 }
 
-gchar *build_remote_exec_cmd(TrgPrefs *prefs, GtkTreeModel *model, GList *selection,
+gchar *build_remote_exec_cmd(TrgClient *tc, GtkTreeModel *model, GList *selection,
         const gchar * input) {
-    JsonObject *profile = trg_prefs_get_profile(prefs);
-    gchar *work = g_strdup(input);
+    JsonObject *profile = trg_client_get_current_profile(tc);
+    gchar *work;
     GRegex *regex, *replacerx;
     GMatchInfo *match_info;
     gchar *whole, *wholeEscaped, *id, *tmp, *valuestr, *repeater;
     JsonNode *replacement;
 
+    if (!profile)
+        return NULL;
+
+    work = g_strdup(input);
     regex = g_regex_new("%{([A-Za-z\\-]+)}(?:\\[(.*)\\])?", 0, 0, NULL);
 
     g_regex_match_full(regex, input, -1, 0, 0, &match_info, NULL);

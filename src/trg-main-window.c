@@ -1501,7 +1501,6 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
 
 static void exec_cmd_cb(GtkWidget *w, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     JsonObject *cmd_obj = (JsonObject*) g_object_get_data(G_OBJECT(w),
             "cmd-object");
     GtkTreeSelection *selection = gtk_tree_view_get_selection(
@@ -1512,12 +1511,16 @@ static void exec_cmd_cb(GtkWidget *w, gpointer data) {
     gchar *cmd_line, **argv;
 
     cmd_line = build_remote_exec_cmd(
-            prefs,
+            priv->client,
             model,
             selectedRows,
             json_object_get_string_member(cmd_obj,
                     TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD));
+
     g_debug("Exec: %s",cmd_line);
+
+    if (!cmd_line)
+        return;
 
     //GTK has bug, won't let you pass a string here containing a quoted param, so use parse and then spawn
     // rather than g_spawn_command_line_async(cmd_line,&cmd_error);
