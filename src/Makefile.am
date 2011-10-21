@@ -39,6 +39,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-peers-model.c \
 	  trg-peers-tree-view.c \
 	  trg-model.c \
+	  trg-persistent-tree-view.c \
 	  trg-files-model.c \
 	  trg-files-tree-view.c \
 	  trg-state-selector.c \

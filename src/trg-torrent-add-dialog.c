@@ -231,7 +231,7 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
             gtk_combo_box_get_active(GTK_COMBO_BOX(priv->priority_combo)) -
             1;
         gchar *dir =
-            gtk_combo_box_get_active_text(GTK_COMBO_BOX(priv->dest_combo));
+                trg_destination_combo_get_dir(TRG_DESTINATION_COMBO(priv->dest_combo));
 
         if (g_slist_length(priv->filenames) == 1) {
             JsonNode *req =
@@ -258,6 +258,8 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
 
             launch_add_thread(args);
         }
+
+        g_free(dir);
     } else {
         g_str_slist_free(priv->filenames);
     }

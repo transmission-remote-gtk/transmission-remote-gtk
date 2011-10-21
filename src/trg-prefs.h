@@ -67,9 +67,12 @@
 #define TRG_PREFS_KEY_TV_WIDTHS "widths"
 #define TRG_PREFS_KEY_NOTEBOOK_PANED_POS "notebook-paned-pos"
 #define TRG_PREFS_KEY_STATES_PANED_POS "states-paned-pos"
+#define TRG_PREFS_SUBKEY_LABEL "label"
 #define TRG_PREFS_KEY_EXEC_COMMANDS "exec-commands"
 #define TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD "cmd"
-#define TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_LABEL "label"
+#define TRG_PREFS_KEY_DESTINATIONS "destinations"
+#define TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR "dir"
+
 
 #define TRG_PREFS_NOFLAGS    (1 << 0) /* 0x00 */
 #define TRG_PREFS_GLOBAL     (1 << 1) /* 0x01 */

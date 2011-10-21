@@ -386,6 +386,12 @@ void trg_client_updatelock(TrgClient *tc)
     g_mutex_lock(priv->updateMutex);
 }
 
+void trg_client_configlock(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    g_mutex_lock(priv->configMutex);
+}
+
 guint trg_client_get_failcount(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
@@ -408,6 +414,12 @@ void trg_client_updateunlock(TrgClient *tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     g_mutex_unlock(priv->updateMutex);
+}
+
+void trg_client_configunlock(TrgClient *tc)
+{
+    TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    g_mutex_unlock(priv->configMutex);
 }
 
 /* formerly http.c */

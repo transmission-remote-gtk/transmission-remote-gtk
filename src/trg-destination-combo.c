@@ -26,7 +26,7 @@
 #include "util.h"
 
 G_DEFINE_TYPE(TrgDestinationCombo, trg_destination_combo,
-              GTK_TYPE_COMBO_BOX_ENTRY)
+              GTK_TYPE_COMBO_BOX)
 #define TRG_DESTINATION_COMBO_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_DESTINATION_COMBO, TrgDestinationComboPrivate))
 typedef struct _TrgDestinationComboPrivate TrgDestinationComboPrivate;
@@ -104,7 +104,7 @@ static GObject *trg_destination_combo_constructor(GType type,
     GSList *sli;
     GList *li;
     GList *torrentItemRefs;
-
+    GtkCellRenderer *renderer;
     GtkTreeRowReference *rr;
     GtkTreeModel *model;
     GtkTreePath *path;
@@ -115,7 +115,7 @@ static GObject *trg_destination_combo_constructor(GType type,
             g_strdup(session_get_download_dir(trg_client_get_session(client)));
     rm_trailing_slashes(defaultDownDir);
 
-    comboModel = gtk_list_store_new(1, G_TYPE_STRING);
+    comboModel = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 
     trg_client_updatelock(client);
     torrentItemRefs = g_hash_table_get_values(trg_client_get_torrent_table(client));
@@ -150,18 +150,30 @@ static GObject *trg_destination_combo_constructor(GType type,
 
     for (sli = dirs; sli; sli = g_slist_next(sli))
         gtk_list_store_insert_with_values(comboModel, NULL, INT_MAX, 0,
-                                          (gchar *) sli->data, -1);
+                                          (gchar *) sli->data,
+                                          1, (gchar *) sli->data, -1);
 
     gtk_combo_box_set_model(GTK_COMBO_BOX(object),
                             GTK_TREE_MODEL(comboModel));
 
-    gtk_combo_box_entry_set_text_column(GTK_COMBO_BOX_ENTRY(object), 0);
+    renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(object), renderer, TRUE);
+    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(object), renderer, "text", 0, NULL);
 
     g_object_unref(comboModel);
     g_slist_foreach(dirs, (GFunc)g_free, NULL);
     g_slist_free(dirs);
 
     return object;
+}
+
+gchar *trg_destination_combo_get_dir(TrgDestinationCombo *combo)
+{
+    GtkTreeIter iter;
+    gchar *value;
+    gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combo), &iter);
+    gtk_tree_model_get(gtk_combo_box_get_model(GTK_COMBO_BOX(combo)), &iter, 1, &value, -1);
+    return value;
 }
 
 static void

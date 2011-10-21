@@ -60,14 +60,14 @@ trg_torrent_move_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
 
     if (res_id == GTK_RESPONSE_ACCEPT) {
         gchar *location =
-            gtk_combo_box_get_active_text(GTK_COMBO_BOX
+                trg_destination_combo_get_dir(TRG_DESTINATION_COMBO
                                           (priv->location_combo));
         JsonNode *request = torrent_set_location(priv->ids, location,
                                                  gtk_toggle_button_get_active
                                                  (GTK_TOGGLE_BUTTON
                                                   (priv->move_check)));
-        request_set_tag_from_ids(request, priv->ids);
         g_free(location);
+        request_set_tag_from_ids(request, priv->ids);
         dispatch_async(priv->client, request,
                        on_generic_interactive_action, data);
     } else {

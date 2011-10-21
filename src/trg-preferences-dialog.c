@@ -30,6 +30,7 @@
 #include "hig.h"
 #include "trg-json-widgets.h"
 #include "trg-preferences-dialog.h"
+#include "trg-persistent-tree-view.h"
 #include "trg-main-window.h"
 #include "trg-prefs.h"
 #include "util.h"
@@ -52,9 +53,6 @@ struct _TrgPreferencesDialogPrivate {
     GtkWidget *profileComboBox;
     GtkWidget *profileNameEntry;
     GtkWidget *fullUpdateCheck;
-    GtkWidget *execDelButton;
-    GtkWidget *etv;
-    GtkTreeViewColumn *etvLabelColumn;
     GList *widgets;
 };
 
@@ -65,7 +63,7 @@ static void trg_pref_widget_desc_free(trg_pref_widget_desc *wd) {
     g_free(wd);
 }
 
-static trg_pref_widget_desc* trg_pref_widget_desc_new(GtkWidget *w, gchar *key,
+trg_pref_widget_desc* trg_pref_widget_desc_new(GtkWidget *w, gchar *key,
         int flags) {
     trg_pref_widget_desc *desc = g_new0(trg_pref_widget_desc, 1);
     desc->widget = w;
@@ -98,15 +96,17 @@ static void trg_pref_widget_save(TrgPreferencesDialog *dlg,
 
 static void trg_pref_widget_save_all(TrgPreferencesDialog *dlg) {
     TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
+    GList *li;
 
     if (trg_prefs_get_profile(priv->prefs) == NULL)
         return;
 
-    GList *li;
+    trg_client_configlock(priv->client);
     for (li = priv->widgets; li; li = g_list_next(li)) {
         trg_pref_widget_desc* wd = (trg_pref_widget_desc*) li->data;
         trg_pref_widget_save(dlg, wd);
     }
+    trg_client_configunlock(priv->client);
 }
 
 static void trg_preferences_dialog_set_property(GObject * object,
@@ -545,199 +545,63 @@ static void trgp_double_special_dependent(GtkWidget *widget, gpointer data) {
                             GTK_TOGGLE_BUTTON(priv->fullUpdateCheck)));
 }
 
-static void exec_selection_changed(GtkTreeSelection *selection, gpointer data) {
-    TrgPreferencesDialogPrivate *priv =
-            TRG_PREFERENCES_DIALOG_GET_PRIVATE(data);
-
-    if (gtk_tree_selection_get_selected(selection, NULL, NULL))
-        gtk_widget_set_sensitive(priv->execDelButton, TRUE);
-    else
-        gtk_widget_set_sensitive(priv->execDelButton, FALSE);
-}
-
-static void trg_etc_edited(GtkCellRendererText * renderer, gchar * path,
-        gchar * new_text, gint model_column, gpointer user_data) {
-    GtkTreeModel *model = GTK_TREE_MODEL(user_data);
-    GtkTreeIter iter;
-
-    gtk_tree_model_get_iter_from_string(model, &iter, path);
-    gtk_list_store_set(GTK_LIST_STORE(model), &iter, model_column, new_text, -1);
-}
-
-static void trg_etv_label_edited(GtkCellRendererText * renderer, gchar * path,
-        gchar * new_text, gpointer user_data) {
-    trg_etc_edited(renderer, path, new_text, 0, user_data);
-}
-
-static void trg_etv_cmd_edited(GtkCellRendererText * renderer, gchar * path,
-        gchar * new_text, gpointer user_data) {
-    trg_etc_edited(renderer, path, new_text, 1, user_data);
-}
-
-static void trg_prefs_etv_refresh(TrgPrefs *prefs, void *wdp) {
-    trg_pref_widget_desc *wd = (trg_pref_widget_desc*) wdp;
-    GtkListStore *model =
-            GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(wd->widget)));
-    GtkTreeIter iter;
-    JsonArray *ja;
-    GList *ja_list, *li;
-
-    ja = trg_prefs_get_array(prefs, wd->key, wd->flags);
-
-    gtk_list_store_clear(model);
-
-    if (!ja)
-        return;
-
-    ja_list = json_array_get_elements(ja);
-
-    for (li = ja_list; li; li = g_list_next(li)) {
-        JsonNode *ja_node = (JsonNode*) li->data;
-        JsonObject *jobj = json_node_get_object(ja_node);
-        gtk_list_store_append(model, &iter);
-        gtk_list_store_set(model, &iter, 0,
-                json_object_get_string_member(jobj, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_LABEL), 1,
-                json_object_get_string_member(jobj, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD), -1);
-    }
-
-    g_list_free(ja_list);
-}
-
-static gboolean trg_prefs_etc_save_foreachfunc(GtkTreeModel *model,
-        GtkTreePath *path, GtkTreeIter *iter, gpointer data) {
-    gchar *label, *cmd;
-    JsonArray *ja = (JsonArray*) data;
-    JsonObject *new = json_object_new();
-
-    gtk_tree_model_get(model, iter, 0, &label, 1, &cmd, -1);
-
-    json_object_set_string_member(new, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_LABEL, label);
-    json_object_set_string_member(new, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD, cmd);
-
-    json_array_add_object_element(ja, new);
-
-    g_free(label);
-    g_free(cmd);
-
-    return FALSE;
-}
-
-static void trg_prefs_etv_save(TrgPrefs *prefs, void *wdp) {
-    trg_pref_widget_desc *wd = (trg_pref_widget_desc*) wdp;
-    JsonNode *node = trg_prefs_get_value(prefs, wd->key, JSON_NODE_ARRAY,
-            wd->flags | TRG_PREFS_REPLACENODE);
-    JsonArray *ja = json_array_new();
-    GtkTreeView *tv = GTK_TREE_VIEW(wd->widget);
-    GtkTreeModel *model = gtk_tree_view_get_model(tv);
-
-    gtk_tree_model_foreach(model, trg_prefs_etc_save_foreachfunc, ja);
-    json_node_take_array(node, ja);
-    trg_prefs_changed_emit_signal(prefs, wd->key);
-}
-
-static GtkWidget *trg_prefs_execTreeView(TrgPreferencesDialog *dlg) {
-    TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
-    GtkListStore *model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
-    GtkWidget *tv = gtk_tree_view_new_with_model(GTK_TREE_MODEL(model));
-    GtkTreeViewColumn *column;
-    GtkCellRenderer *renderer;
-    GtkTreeSelection *selection;
-    trg_pref_widget_desc *wd;
-
-    g_object_unref(G_OBJECT(model));
-
-    gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(tv), TRUE);
-    //gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tv), FALSE);
-
-    renderer = gtk_cell_renderer_text_new();
-    g_object_set(G_OBJECT(renderer), "editable", TRUE, NULL);
-    g_signal_connect(renderer, "edited",
-            G_CALLBACK(trg_etv_label_edited), model);
-    column = priv->etvLabelColumn = gtk_tree_view_column_new_with_attributes(
-            _("Label"), renderer, "text", 0, NULL);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
-
-    renderer = gtk_cell_renderer_text_new();
-    g_object_set(G_OBJECT(renderer), "editable", TRUE, NULL);
-    g_signal_connect(renderer, "edited",
-            G_CALLBACK(trg_etv_cmd_edited), model);
-    column = gtk_tree_view_column_new_with_attributes(_("Command"), renderer,
-            "text", 1, NULL);
-    gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
-
-    selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tv));
-
-    g_signal_connect(G_OBJECT(selection), "changed",
-            G_CALLBACK(exec_selection_changed), dlg);
-
-    wd = trg_pref_widget_desc_new(tv, TRG_PREFS_KEY_EXEC_COMMANDS,
-            TRG_PREFS_PROFILE);
-    wd->saveFunc = &trg_prefs_etv_save;
-    wd->refreshFunc = &trg_prefs_etv_refresh;
-    priv->widgets = g_list_append(priv->widgets, wd);
-
-    trg_prefs_etv_refresh(priv->prefs, wd);
-
-    return tv;
-}
-
-static void trg_prefs_add_exec_cb(GtkWidget *w, gpointer data) {
-    TrgPreferencesDialogPrivate *priv =
-            TRG_PREFERENCES_DIALOG_GET_PRIVATE(data);
-    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->etv));
-    GtkTreeIter iter;
-    GtkTreePath *path;
-
-    gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-    path = gtk_tree_model_get_path(model, &iter);
-    gtk_tree_view_set_cursor(GTK_TREE_VIEW(priv->etv), path,
-            priv->etvLabelColumn, TRUE);
-    gtk_tree_path_free(path);
-}
-
-static void trg_prefs_del_exec_cb(GtkWidget *w, gpointer data) {
-    GtkTreeView *tv = GTK_TREE_VIEW(data);
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(tv);
-    GtkTreeModel *model;
-    GtkTreeIter iter;
-
-    if (gtk_tree_selection_get_selected(selection, &model, &iter))
-        gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
-}
 
 static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog *dlg) {
     TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
-    GtkWidget *t, *hbox, *w;
+    GtkWidget *t;
+    TrgPersistentTreeView *ptv;
+    GtkListStore *model;
+    trg_pref_widget_desc *wd;
     gint row = 0;
 
     t = hig_workarea_create();
 
-    //frame = gtk_frame_new("Profile name...");
-
     hig_workarea_add_section_title(t, &row, _("Remote Commands"));
 
-    priv->etv = trg_prefs_execTreeView(dlg);
+    model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 
-    gtk_table_attach(GTK_TABLE(t), my_scrolledwin_new(priv->etv), 1, 2, row,
+    ptv = trg_persistent_tree_view_new(priv->prefs, model, TRG_PREFS_KEY_EXEC_COMMANDS);
+    trg_persistent_tree_view_set_add_select(ptv,
+            trg_persistent_tree_view_add_column(ptv, 0, TRG_PREFS_SUBKEY_LABEL, _("Label")));
+    trg_persistent_tree_view_add_column(ptv, 1, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD, _("Command"));
+    wd = trg_persistent_tree_view_get_widget_desc(ptv);
+    trg_persistent_tree_view_build(ptv);
+    trg_pref_widget_refresh(dlg, wd);
+    priv->widgets = g_list_append(priv->widgets, wd);
+
+    gtk_table_attach(GTK_TABLE(t), GTK_WIDGET(ptv), 1, 2, row,
             row + 1, GTK_EXPAND | GTK_SHRINK | GTK_FILL,
             GTK_FILL | GTK_EXPAND | GTK_SHRINK, 0, 0);
 
-    row++;
+    return t;
+}
 
-    hbox = gtk_hbox_new(FALSE, 0);
-    w = gtk_button_new_from_stock(GTK_STOCK_ADD);
-    g_signal_connect(w, "clicked", G_CALLBACK(trg_prefs_add_exec_cb), dlg);
-    gtk_box_pack_start(GTK_BOX(hbox), w, FALSE, FALSE, 4);
+static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog *dlg) {
+    TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
+    GtkWidget *t;
+    TrgPersistentTreeView *ptv;
+    GtkListStore *model;
+    trg_pref_widget_desc *wd;
+    gint row = 0;
 
-    w = priv->execDelButton = gtk_button_new_from_stock(GTK_STOCK_DELETE);
-    gtk_widget_set_sensitive(w, FALSE);
-    g_signal_connect(w, "clicked", G_CALLBACK(trg_prefs_del_exec_cb), priv->etv);
-    gtk_box_pack_start(GTK_BOX(hbox), w, FALSE, FALSE, 4);
+    t = hig_workarea_create();
 
-    hig_workarea_add_wide_control(t, &row, hbox);
+    hig_workarea_add_section_title(t, &row, _("Destinations"));
 
-    //gtk_container_add(GTK_CONTAINER(frame), t);
-    //return frame;
+    model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+
+    ptv = trg_persistent_tree_view_new(priv->prefs, model, TRG_PREFS_KEY_DESTINATIONS);
+    trg_persistent_tree_view_set_add_select(ptv,
+            trg_persistent_tree_view_add_column(ptv, 0, TRG_PREFS_SUBKEY_LABEL, _("Label")));
+    trg_persistent_tree_view_add_column(ptv, 1, TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR, _("Directory"));
+    wd = trg_persistent_tree_view_get_widget_desc(ptv);
+    trg_persistent_tree_view_build(ptv);
+    trg_pref_widget_refresh(dlg, wd);
+    priv->widgets = g_list_append(priv->widgets, wd);
+
+    gtk_table_attach(GTK_TABLE(t), GTK_WIDGET(ptv), 1, 2, row,
+            row + 1, GTK_EXPAND | GTK_SHRINK | GTK_FILL,
+            GTK_FILL | GTK_EXPAND | GTK_SHRINK, 0, 0);
 
     return t;
 }
@@ -886,6 +750,10 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             trg_prefs_openExecPage(TRG_PREFERENCES_DIALOG(object)),
             gtk_label_new(_("Remote Execute")));
+
+    /*gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+            trg_prefs_dirsPage(TRG_PREFERENCES_DIALOG(object)),
+            gtk_label_new(_("Directories")));*/
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             trg_prefs_desktopPage(TRG_PREFERENCES_DIALOG(object)),

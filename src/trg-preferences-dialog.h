@@ -58,5 +58,8 @@ GType trg_preferences_dialog_get_type(void);
 
 GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow * win,
                                                TrgClient * client);
+trg_pref_widget_desc* trg_pref_widget_desc_new(GtkWidget *w, gchar *key,
+        int flags);
+
 G_END_DECLS
 #endif                          /* TRG_PREFERENCES_WINDOW_H_ */
