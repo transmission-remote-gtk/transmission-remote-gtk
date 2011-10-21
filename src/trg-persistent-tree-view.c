@@ -138,35 +138,26 @@ static void trg_persistent_tree_view_save(TrgPrefs *prefs, void *wdp) {
     trg_prefs_changed_emit_signal(prefs, wd->key);
 }
 
-void trg_persistent_tree_view_build(TrgPersistentTreeView *ptv) {
-    TrgPersistentTreeViewPrivate *priv = GET_PRIVATE(ptv);
-    GSList *li;
-    GtkCellRenderer *renderer;
-
-    for (li = priv->columns; li; li = g_slist_next(li)) {
-        trg_persistent_tree_view_column *cd =
-                (trg_persistent_tree_view_column*) li->data;
-        renderer = gtk_cell_renderer_text_new();
-        g_object_set(G_OBJECT(renderer), "editable", TRUE, NULL);
-        g_signal_connect(renderer, "edited",
-                G_CALLBACK(trg_persistent_tree_view_edit), cd);
-        cd->column = gtk_tree_view_column_new_with_attributes(cd->label,
-                renderer, "text", cd->index, NULL);
-        gtk_tree_view_append_column(GTK_TREE_VIEW(priv->tv), cd->column);
-    }
-}
-
 trg_persistent_tree_view_column *trg_persistent_tree_view_add_column(
         TrgPersistentTreeView *ptv, gint index, const gchar *key,
         const gchar *label) {
     TrgPersistentTreeViewPrivate *priv = GET_PRIVATE(ptv);
     trg_persistent_tree_view_column *cd =
             g_new0(trg_persistent_tree_view_column, 1);
+    GtkCellRenderer *renderer;
 
     cd->key = g_strdup(key);
     cd->label = g_strdup(label);
     cd->index = index;
     cd->tv = ptv;
+
+    renderer = gtk_cell_renderer_text_new();
+    g_object_set(G_OBJECT(renderer), "editable", TRUE, NULL);
+    g_signal_connect(renderer, "edited",
+            G_CALLBACK(trg_persistent_tree_view_edit), cd);
+    cd->column = gtk_tree_view_column_new_with_attributes(cd->label,
+            renderer, "text", cd->index, NULL);
+    gtk_tree_view_append_column(GTK_TREE_VIEW(priv->tv), cd->column);
 
     priv->columns = g_slist_append(priv->columns, cd);
 
@@ -181,7 +172,6 @@ static GtkTreeView *trg_persistent_tree_view_tree_view_new(
     g_object_unref(G_OBJECT(model));
 
     gtk_tree_view_set_rubber_banding(tv, TRUE);
-    //gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tv), FALSE);
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(tv));
 

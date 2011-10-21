@@ -565,7 +565,6 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog *dlg) {
             trg_persistent_tree_view_add_column(ptv, 0, TRG_PREFS_SUBKEY_LABEL, _("Label")));
     trg_persistent_tree_view_add_column(ptv, 1, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD, _("Command"));
     wd = trg_persistent_tree_view_get_widget_desc(ptv);
-    trg_persistent_tree_view_build(ptv);
     trg_pref_widget_refresh(dlg, wd);
     priv->widgets = g_list_append(priv->widgets, wd);
 
@@ -595,7 +594,6 @@ static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog *dlg) {
             trg_persistent_tree_view_add_column(ptv, 0, TRG_PREFS_SUBKEY_LABEL, _("Label")));
     trg_persistent_tree_view_add_column(ptv, 1, TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR, _("Directory"));
     wd = trg_persistent_tree_view_get_widget_desc(ptv);
-    trg_persistent_tree_view_build(ptv);
     trg_pref_widget_refresh(dlg, wd);
     priv->widgets = g_list_append(priv->widgets, wd);
 

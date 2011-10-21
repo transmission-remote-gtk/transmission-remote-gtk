@@ -64,13 +64,15 @@ typedef struct {
 
 TrgPersistentTreeView*
 trg_persistent_tree_view_new (TrgPrefs *prefs, GtkListStore *model, const gchar *key);
+
 trg_pref_widget_desc* trg_persistent_tree_view_get_widget_desc(TrgPersistentTreeView* ptv);
+
 void trg_persistent_tree_view_set_add_select(TrgPersistentTreeView *ptv, trg_persistent_tree_view_column *cd);
+
 trg_persistent_tree_view_column *trg_persistent_tree_view_add_column(TrgPersistentTreeView *ptv,
         gint index,
         const gchar *key,
         const gchar *label);
-void trg_persistent_tree_view_build(TrgPersistentTreeView *ptv);
 
 G_END_DECLS
 
