@@ -749,9 +749,9 @@ static GObject *trg_preferences_dialog_constructor(GType type,
             trg_prefs_openExecPage(TRG_PREFERENCES_DIALOG(object)),
             gtk_label_new(_("Remote Execute")));
 
-    /*gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             trg_prefs_dirsPage(TRG_PREFERENCES_DIALOG(object)),
-            gtk_label_new(_("Directories")));*/
+            gtk_label_new(_("Directories")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             trg_prefs_desktopPage(TRG_PREFERENCES_DIALOG(object)),
