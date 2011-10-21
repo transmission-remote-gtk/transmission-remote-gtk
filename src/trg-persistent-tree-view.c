@@ -157,6 +157,7 @@ trg_persistent_tree_view_column *trg_persistent_tree_view_add_column(
             G_CALLBACK(trg_persistent_tree_view_edit), cd);
     cd->column = gtk_tree_view_column_new_with_attributes(cd->label,
             renderer, "text", cd->index, NULL);
+    gtk_tree_view_column_set_resizable(cd->column, TRUE);
     gtk_tree_view_append_column(GTK_TREE_VIEW(priv->tv), cd->column);
 
     priv->columns = g_slist_append(priv->columns, cd);
@@ -292,8 +293,6 @@ static GObject *trg_persistent_tree_view_constructor(GType type,
     priv->wd->widget = GTK_WIDGET(object);
     priv->wd->saveFunc = &trg_persistent_tree_view_save;
     priv->wd->refreshFunc = &trg_persistent_tree_view_refresh;
-
-    //trg_persistent_tree_view_refresh(priv->prefs, wd);
 
     return object;
 }
