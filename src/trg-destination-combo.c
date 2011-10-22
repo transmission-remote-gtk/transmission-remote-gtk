@@ -17,6 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "trg-client.h"
@@ -49,6 +50,7 @@ static void trg_destination_combo_get_property(GObject * object,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
@@ -62,21 +64,18 @@ static void trg_destination_combo_set_property(GObject * object,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
-static gboolean g_slist_str_set_add(GSList ** list, const gchar * string,
-        gint pos) {
+static gboolean g_slist_str_set_add(GSList ** list, const gchar * string) {
     GSList *li;
     for (li = *list; li; li = g_slist_next(li))
         if (!g_strcmp0((gchar *) li->data, string))
             return FALSE;
 
-    if (pos < 0)
-        *list = g_slist_insert_sorted(*list, (gpointer) string,
-                (GCompareFunc) g_strcmp0);
-    else
-        *list = g_slist_insert(*list, (gpointer) string, pos);
+    *list = g_slist_insert_sorted(*list, (gpointer) string,
+            (GCompareFunc) g_strcmp0);
 
     return TRUE;
 }
@@ -102,13 +101,17 @@ static GObject *trg_destination_combo_constructor(GType type,
     GtkListStore *comboModel;
     JsonArray *saved_destinations;
     JsonObject *t;
-    gchar *defaultDownDir;
+    gchar *defaultDir;
+    gchar *defaultLabel;
 
     comboModel = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 
-    defaultDownDir = g_strdup(
+    defaultDir = g_strdup(
             session_get_download_dir(trg_client_get_session(client)));
-    rm_trailing_slashes(defaultDownDir);
+    rm_trailing_slashes(defaultDir);
+    defaultLabel = g_strdup_printf(_("Default - %s"), defaultDir);
+    gtk_list_store_insert_with_values(comboModel, NULL, INT_MAX, 0,
+            defaultLabel, 1, defaultDir, -1);
 
     saved_destinations = trg_prefs_get_array(prefs, TRG_PREFS_KEY_DESTINATIONS,
             TRG_PREFS_CONNECTION);
@@ -144,11 +147,12 @@ static GObject *trg_destination_combo_constructor(GType type,
 
             if (gtk_tree_model_get_iter(model, &iter, path)) {
                 gchar *dd;
+
                 gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &t,
                         TORRENT_COLUMN_DOWNLOADDIR, &dd, -1);
-                ;
-                if (dd && g_strcmp0(dd, defaultDownDir))
-                    g_slist_str_set_add(&dirs, dd, -1);
+
+                if (dd && g_strcmp0(dd, defaultDir))
+                    g_slist_str_set_add(&dirs, dd);
                 else
                     g_free(dd);
             }
@@ -160,8 +164,6 @@ static GObject *trg_destination_combo_constructor(GType type,
     trg_client_updateunlock(client);
 
     g_list_free(list);
-    if (defaultDownDir)
-        g_slist_str_set_add(&dirs, defaultDownDir, 0);
 
     for (sli = dirs; sli; sli = g_slist_next(sli))
         gtk_list_store_insert_with_values(comboModel, NULL, INT_MAX, 0,
@@ -177,6 +179,9 @@ static GObject *trg_destination_combo_constructor(GType type,
     g_object_unref(comboModel);
     g_slist_foreach(dirs, (GFunc) g_free, NULL);
     g_slist_free(dirs);
+
+    g_free(defaultDir);
+    g_free(defaultLabel);
 
     return object;
 }
