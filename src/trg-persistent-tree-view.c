@@ -245,6 +245,7 @@ static void trg_persistent_tree_view_finalize(GObject *object) {
         g_free(cd);
     }
     g_slist_free(priv->columns);
+    g_free(priv->key);
     G_OBJECT_CLASS (trg_persistent_tree_view_parent_class)->finalize(object);
 }
 
@@ -351,7 +352,7 @@ TrgPersistentTreeView*
 trg_persistent_tree_view_new(TrgPrefs *prefs, GtkListStore *model,
         const gchar *key) {
     GObject *obj = g_object_new(TRG_TYPE_PERSISTENT_TREE_VIEW, "prefs", prefs,
-            "conf-key", key, "persistent-model", model, NULL);
+            "conf-key", g_strdup(key), "persistent-model", model, NULL);
 
     return TRG_PERSISTENT_TREE_VIEW(obj);
 }

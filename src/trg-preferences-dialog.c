@@ -585,7 +585,7 @@ static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog *dlg) {
 
     t = hig_workarea_create();
 
-    hig_workarea_add_section_title(t, &row, _("Destinations"));
+    hig_workarea_add_section_title(t, &row, _("Remote Download Directories"));
 
     model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 

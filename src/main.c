@@ -159,7 +159,7 @@ static gpointer mailslot_recv_thread(gpointer data) {
 
                 if (arrayList) {
                     guint arrayLength = g_list_length(arrayList);
-                    int i = 0;
+                    guint i = 0;
                     GList *li;
 
                     args->uris = g_new0(gchar*, arrayLength+1);

@@ -27,9 +27,6 @@ BuildRequires: json-glib-devel
 BuildRequires: libcurl-devel
 BuildRequires: libnotify-devel
 
-Requires(post): desktop-file-utils
-Requires(postun): desktop-file-utils
-
 %description
 transmission-remote-gtk is a GTK application for remote management of the
 Transmission BitTorrent client via its RPC interface. 
@@ -49,10 +46,16 @@ make install DESTDIR=$RPM_BUILD_ROOT
 rm -rf $RPM_BUILD_ROOT
 
 %post
-update-desktop-database %{_datadir}/applications >/dev/null 2>&1
+/bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null || :
 
 %postun
-update-desktop-database %{_datadir}/applications >/dev/null 2>&1
+if [ $1 -eq 0 ] ; then
+    /bin/touch --no-create %{_datadir}/icons/hicolor &>/dev/null
+    /usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
+fi
+
+%postrans
+/usr/bin/gtk-update-icon-cache %{_datadir}/icons/hicolor &>/dev/null || :
 
 %files
 %defattr(-,root,root,-)
