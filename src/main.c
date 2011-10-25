@@ -185,7 +185,7 @@ static gpointer mailslot_recv_thread(gpointer data) {
     return NULL; //Success
 }
 
-static int winunique_send_message(HANDLE h, gchar **args) {
+static int mailslot_send_message(HANDLE h, gchar **args) {
     DWORD cbBytes;
     JsonNode *node = json_node_new(JSON_NODE_OBJECT);
     JsonObject *obj = json_object_new();
@@ -357,7 +357,7 @@ int main(int argc, char *argv[]) {
             NULL); // no template file
 
     if (INVALID_HANDLE_VALUE != hMailSlot) {
-        returnValue = winunique_send_message(hMailSlot, args);
+        returnValue = mailslot_send_message(hMailSlot, args);
     } else {
 #endif
         client = trg_client_new();
@@ -384,7 +384,7 @@ int main(int argc, char *argv[]) {
     }
 
     if (withUnique)
-    g_object_unref(app);
+        g_object_unref(app);
 #elif WIN32
     }
 #endif

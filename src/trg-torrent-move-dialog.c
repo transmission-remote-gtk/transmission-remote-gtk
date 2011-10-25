@@ -80,10 +80,7 @@ static void location_changed(GtkWidget * w, gpointer data)
 {
     TrgTorrentMoveDialogPrivate *priv =
         TRG_TORRENT_MOVE_DIALOG_GET_PRIVATE(data);
-    gchar *location =
-        gtk_combo_box_get_active_text(GTK_COMBO_BOX(priv->location_combo));
-    gtk_widget_set_sensitive(priv->move_button, strlen(location) > 0);
-    g_free(location);
+    gtk_widget_set_sensitive(priv->move_button, trg_destination_combo_has_text(TRG_DESTINATION_COMBO(priv->location_combo)));
 }
 
 static GObject *trg_torrent_move_dialog_constructor(GType type,
@@ -108,7 +105,7 @@ static GObject *trg_torrent_move_dialog_constructor(GType type,
     t = hig_workarea_create();
 
     w = priv->location_combo = trg_destination_combo_new(priv->client);
-    g_signal_connect(w, "changed", G_CALLBACK(location_changed), object);
+    g_signal_connect(trg_destination_combo_get_entry(TRG_DESTINATION_COMBO(w)), "changed", G_CALLBACK(location_changed), object);
     hig_workarea_add_row(t, &row, _("Location:"), w, NULL);
 
     priv->move_check =

@@ -49,6 +49,8 @@ GType trg_destination_combo_get_type(void);
 
 GtkWidget *trg_destination_combo_new(TrgClient * client);
 gchar *trg_destination_combo_get_dir(TrgDestinationCombo *combo);
+gboolean trg_destination_combo_has_text(TrgDestinationCombo *combo);
+GtkEntry *trg_destination_combo_get_entry(TrgDestinationCombo *combo);
 
 G_END_DECLS
 #endif                          /* TRG_DESTINATION_COMBO_H_ */
