@@ -293,7 +293,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     t = hig_workarea_create();
 
     w = priv->encryption_combo = gtr_combo_box_new_enum(_("Required"), 0,
-            _("Preferred"), 1, _("Tolerated"), 2);
+            _("Preferred"), 1, _("Tolerated"), 2, NULL);
     stringValue = session_get_encryption(s);
     if (g_strcmp0(stringValue, "required") == 0) {
         gtk_combo_box_set_active(GTK_COMBO_BOX(w), 0);

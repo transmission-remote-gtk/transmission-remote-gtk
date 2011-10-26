@@ -162,7 +162,7 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
     w = trg_json_widget_check_new(&priv->widgets, json, FIELD_HONORS_SESSION_LIMITS, _("Honor global limits"), NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = priv->bandwidthPriorityCombo = gtr_combo_box_new_enum(_("Low"), 0, _("Normal"), 1, _("High"), 2);
+    w = priv->bandwidthPriorityCombo = gtr_combo_box_new_enum(_("Low"), 0, _("Normal"), 1, _("High"), 2, NULL);
     gtk_combo_box_set_active(GTK_COMBO_BOX(w),
                              torrent_get_bandwidth_priority(json) + 1);
 
@@ -183,7 +183,7 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
 
     hig_workarea_add_section_title(t, &row, _("Seeding"));
 
-    w = priv->seedRatioMode = gtr_combo_box_new_enum(_("Use global settings"), 0, _("Stop seeding at ratio"), 1, _("Seed regardless of ratio"), 2);
+    w = priv->seedRatioMode = gtr_combo_box_new_enum(_("Use global settings"), 0, _("Stop seeding at ratio"), 1, _("Seed regardless of ratio"), 2, NULL);
     gtk_combo_box_set_active(GTK_COMBO_BOX(w),
                              torrent_get_seed_ratio_mode(json));
     hig_workarea_add_row(t, &row, _("Seed ratio mode:"), w, NULL);
