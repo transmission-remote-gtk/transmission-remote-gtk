@@ -38,11 +38,11 @@ G_BEGIN_DECLS
 #define TRG_DESTINATION_COMBO_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_DESTINATION_COMBO, TrgDestinationComboClass))
     typedef struct {
-    GtkComboBoxEntry parent;
+    GtkComboBox parent;
 } TrgDestinationCombo;
 
 typedef struct {
-    GtkComboBoxEntryClass parent_class;
+    GtkComboBoxClass parent_class;
 } TrgDestinationComboClass;
 
 GType trg_destination_combo_get_type(void);

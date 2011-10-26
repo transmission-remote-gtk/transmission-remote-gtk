@@ -65,7 +65,7 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
         gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog), "GPL2");
     }
 
-    gtk_about_dialog_set_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
+    gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),
                                  PACKAGE_VERSION);
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),

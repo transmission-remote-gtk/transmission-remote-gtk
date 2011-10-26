@@ -612,37 +612,6 @@ static void gtr_dialog_set_content(GtkDialog * dialog, GtkWidget * content)
     gtk_widget_show_all(content);
 }
 
-GtkWidget *gtr_combo_box_new_enum(const char *text_1, ...)
-{
-    GtkWidget *w;
-    GtkCellRenderer *r;
-    GtkListStore *store;
-    va_list vl;
-    const char *text;
-    va_start(vl, text_1);
-
-    store = gtk_list_store_new(2, G_TYPE_INT, G_TYPE_STRING);
-
-    text = text_1;
-    if (text != NULL)
-        do {
-            const int val = va_arg(vl, int);
-            gtk_list_store_insert_with_values(store, NULL, INT_MAX, 0, val,
-                                              1, text, -1);
-            text = va_arg(vl, const char *);
-        }
-        while (text != NULL);
-
-    w = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
-    r = gtk_cell_renderer_text_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(w), r, TRUE);
-    gtk_cell_layout_set_attributes(GTK_CELL_LAYOUT(w), r, "text", 1, NULL);
-
-    /* cleanup */
-    g_object_unref(store);
-    return w;
-}
-
 GtkWidget *gtr_priority_combo_new(void)
 {
     return gtr_combo_box_new_enum(_("Low"), TR_PRI_LOW,

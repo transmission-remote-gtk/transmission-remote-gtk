@@ -128,9 +128,13 @@ static void gtk_combo_box_entry_active_changed(GtkComboBox *combo_box,
         }
     }
 
+#if GTK_CHECK_VERSION( 3, 0, 0 )
+    gtk_editable_set_editable(GTK_EDITABLE(trg_destination_combo_get_entry(TRG_DESTINATION_COMBO(combo_box))), editableEntry);
+#else
     gtk_entry_set_editable(
             trg_destination_combo_get_entry(TRG_DESTINATION_COMBO(combo_box)),
             editableEntry);
+#endif
 }
 
 gboolean trg_destination_combo_has_text(TrgDestinationCombo *combo) {

@@ -31,6 +31,9 @@
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 #include <gdk/gdkkeysyms.h>
+#if GTK_CHECK_VERSION( 3,0, 0 )
+#include <gdk/gdkkeysyms-compat.h>
+#endif
 #include <curl/curl.h>
 #ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
@@ -58,7 +61,9 @@
 #include "trg-trackers-tree-view.h"
 #include "trg-trackers-model.h"
 #include "trg-state-selector.h"
+#ifndef TRG_NO_GRAPH
 #include "trg-torrent-graph.h"
+#endif
 #include "trg-torrent-move-dialog.h"
 #include "trg-torrent-props-dialog.h"
 #include "trg-torrent-add-url-dialog.h"
@@ -199,7 +204,9 @@ struct _TrgMainWindowPrivate {
     TrgPeersModel *peersModel;
     TrgPeersTreeView *peersTreeView;
 
+#ifndef TRG_NO_GRAPH
     TrgTorrentGraph *graph;
+#endif
     gint graphNotebookIndex;
 
     GtkWidget *hpaned, *vpaned;
@@ -741,6 +748,7 @@ static void view_notebook_toggled_cb(GtkCheckMenuItem * w, gpointer data) {
     trg_widget_set_visible(priv->notebook, gtk_check_menu_item_get_active(w));
 }
 
+#ifndef TRG_NO_GRAPH
 static void trg_main_window_toggle_graph_cb(GtkCheckMenuItem * w, gpointer win) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     if (gtk_check_menu_item_get_active(w)) {
@@ -751,6 +759,7 @@ static void trg_main_window_toggle_graph_cb(GtkCheckMenuItem * w, gpointer win) 
             trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
     }
 }
+#endif
 
 void trg_main_window_notebook_set_visible(TrgMainWindow *win, gboolean visible) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
@@ -788,10 +797,12 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win) {
             my_scrolledwin_new(GTK_WIDGET
             (priv->peersTreeView)), gtk_label_new(_("Peers")));
 
+#ifndef TRG_NO_GRAPH
     if (trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SHOW_GRAPH, TRG_PREFS_GLOBAL))
         trg_main_window_add_graph(win, FALSE);
     else
         priv->graphNotebookIndex = -1;
+#endif
 
     return notebook;
 }
@@ -929,8 +940,10 @@ static gboolean on_torrent_get(gpointer data, int mode) {
         g_free(iconText);
     }
 
+#ifndef TRG_NO_GRAPH
     if (priv->graphNotebookIndex >= 0)
         trg_torrent_graph_set_speed(priv->graph, &stats);
+#endif
 
     if (mode != TORRENT_GET_MODE_INTERACTION)
         priv->timerId = g_timeout_add_seconds(interval, trg_update_torrents_timerfunc, win);
@@ -1205,8 +1218,10 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected) {
         trg_main_window_torrent_scrub(win);
         trg_state_selector_disconnect(priv->stateSelector);
 
+#ifndef TRG_NO_GRAPH
         if (priv->graphNotebookIndex >= 0)
             trg_torrent_graph_set_nothing(priv->graph);
+#endif
 
         trg_torrent_model_remove_all(priv->torrentModel);
 
@@ -1262,8 +1277,11 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs,
             *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
             *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
-            *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_show_graph,
+            *b_resume_all, *b_dir_filters, *b_tracker_filters,
             *b_up_queue, *b_down_queue, *b_top_queue, *b_bottom_queue,
+#ifndef TRG_NO_GRAPH
+	    *b_show_graph,
+#endif
             *b_start_now;
 
     TrgMenuBar *menuBar;
@@ -1281,8 +1299,11 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             "view-states-button", &b_view_states, "view-stats-button",
             &b_view_stats, "about-button", &b_about, "quit-button", &b_quit,
             "dir-filters", &b_dir_filters, "tracker-filters",
-            &b_tracker_filters, "show-graph", &b_show_graph, "up-queue",
-            &b_up_queue, "down-queue", &b_down_queue, "top-queue",
+            &b_tracker_filters,
+#ifndef TRG_NO_GRAPH
+	    "show-graph", &b_show_graph,
+#endif
+	    "up-queue", &b_up_queue, "down-queue", &b_down_queue, "top-queue",
             &b_top_queue, "bottom-queue", &b_bottom_queue, "start-now",
             &b_start_now, NULL);
 
@@ -1318,15 +1339,18 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
             G_CALLBACK(main_window_toggle_filter_dirs), win);
     g_signal_connect(b_tracker_filters, "toggled",
             G_CALLBACK(main_window_toggle_filter_trackers), win);
+#ifndef TRG_NO_GRAPH
     g_signal_connect(b_tracker_filters, "toggled",
             G_CALLBACK(trg_main_window_toggle_graph_cb), win);
+#endif
     g_signal_connect(b_view_states, "toggled",
             G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
             G_CALLBACK(view_stats_toggled_cb), win);
+#ifndef TRG_NO_GRAPH
     g_signal_connect(b_show_graph, "toggled",
             G_CALLBACK(trg_main_window_toggle_graph_cb), win);
-
+#endif
     g_signal_connect(b_props, "activate", G_CALLBACK(open_props_cb), win);
     g_signal_connect(b_quit, "activate", G_CALLBACK(quit_cb), win);
 
@@ -1779,6 +1803,7 @@ void trg_main_window_remove_status_icon(TrgMainWindow * win) {
     priv->statusIcon = NULL;
 }
 
+#ifndef TRG_NO_GRAPH
 void trg_main_window_add_graph(TrgMainWindow * win, gboolean show) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
@@ -1802,6 +1827,7 @@ void trg_main_window_remove_graph(TrgMainWindow * win) {
         priv->graphNotebookIndex = -1;
     }
 }
+#endif
 
 void trg_main_window_add_status_icon(TrgMainWindow * win) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);

@@ -71,5 +71,6 @@ GtkWidget *my_scrolledwin_new(GtkWidget * child);
 gboolean is_url(gchar *string);
 gboolean is_magnet(gchar *string);
 gdouble json_node_really_get_double(JsonNode *node);
+GtkWidget *gtr_combo_box_new_enum(const char *text_1, ...);
 
 #endif                          /* UTIL_H_ */

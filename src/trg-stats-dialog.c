@@ -308,7 +308,7 @@ static GObject *trg_stats_dialog_constructor(GType type,
                             GTK_TREE_MODEL(priv->model));
 
     gtk_container_set_border_width(GTK_CONTAINER(tv), GUI_PAD);
-    gtk_box_pack_start(GTK_BOX(GTK_DIALOG(obj)->vbox), tv, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(gtk_bin_get_child(GTK_BIN(obj))), tv, TRUE, TRUE, 0);
 
     dispatch_async(priv->client, session_stats(), on_stats_reply, obj);
 
