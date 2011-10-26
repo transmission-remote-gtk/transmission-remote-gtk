@@ -74,6 +74,7 @@ fi
 %{_datadir}/locale/pl/LC_MESSAGES/%{name}.mo
 %{_datadir}/locale/ru/LC_MESSAGES/%{name}.mo
 %{_datadir}/locale/uk/LC_MESSAGES/%{name}.mo
+%{_datadir}/man/man1/transmission-remote-gtk.1
 
 %changelog
 * Tue Oct 11 2011 Alan Fitton <alan@eth0.org.uk> 0.7
