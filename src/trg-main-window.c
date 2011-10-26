@@ -138,7 +138,10 @@ static void trg_main_window_set_property(GObject * object, guint property_id,
 static void quit_cb(GtkWidget * w, gpointer data);
 static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win);
 static void status_icon_activated(GtkStatusIcon * icon, gpointer data);
-static void clear_filter_entry_cb(GtkWidget * w, gpointer data);
+static void clear_filter_entry_cb(GtkEntry *entry,
+        GtkEntryIconPosition icon_pos,
+        GdkEvent            *event,
+        gpointer             user_data);
 static gboolean torrent_tv_key_press_event(GtkWidget * w, GdkEventKey * key,
         gpointer data);
 static GtkWidget *trg_imagemenuitem_new(GtkMenuShell * shell, const gchar *text,
@@ -200,7 +203,7 @@ struct _TrgMainWindowPrivate {
     gint graphNotebookIndex;
 
     GtkWidget *hpaned, *vpaned;
-    GtkWidget *filterEntry, *filterEntryClearButton;
+    GtkWidget *filterEntry;
 
     gint width, height;
     guint timerId;
@@ -1175,12 +1178,8 @@ static void entry_filter_changed_cb(GtkWidget * w, gpointer data) {
     gtk_tree_model_filter_refilter(GTK_TREE_MODEL_FILTER
     (priv->filteredTorrentModel));
 
-#if GTK_CHECK_VERSION( 2,16,0 )
-    g_object_set(priv->filterEntryClearButton, "secondary-icon-sensitive",
+    g_object_set(priv->filterEntry, "secondary-icon-sensitive",
             clearSensitive, NULL);
-#else
-    gtk_widget_set_sensitive(priv->filterEntryClearButton, clearSensitive);
-#endif
 }
 
 static void torrent_state_selection_changed(TrgStateSelector * selector G_GNUC_UNUSED,
@@ -1348,8 +1347,12 @@ static void status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED, gpointer d
     }
 }
 
-static void clear_filter_entry_cb(GtkWidget * w, gpointer data G_GNUC_UNUSED) {
-    gtk_entry_set_text(GTK_ENTRY(w), "");
+static void clear_filter_entry_cb(GtkEntry *entry,
+        GtkEntryIconPosition icon_pos,
+        GdkEvent            *event,
+        gpointer             user_data)
+{
+    gtk_entry_set_text(entry, "");
 }
 
 static gboolean torrent_tv_key_press_event(GtkWidget * w, GdkEventKey * key,
@@ -1978,30 +1981,14 @@ static GObject *trg_main_window_constructor(GType type,
     gtk_box_pack_start(GTK_BOX(toolbarHbox), GTK_WIDGET(priv->toolBar), TRUE,
             TRUE, 0);
 
-#if GTK_CHECK_VERSION( 2,16,0 )
     w = gtk_entry_new();
     gtk_entry_set_icon_from_stock(GTK_ENTRY(w), GTK_ENTRY_ICON_SECONDARY,
             GTK_STOCK_CLEAR);
     g_signal_connect(w, "icon-release",
-            G_CALLBACK(clear_filter_entry_cb), w);
+            G_CALLBACK(clear_filter_entry_cb), NULL);
     gtk_box_pack_start(GTK_BOX(toolbarHbox), w, FALSE, FALSE, 0);
     g_object_set(w, "secondary-icon-sensitive", FALSE, NULL);
-    priv->filterEntryClearButton = priv->filterEntry = w;
-#else
-    priv->filterEntry = gtk_entry_new();
-    gtk_box_pack_start(GTK_BOX(toolbarHbox), priv->filterEntry, FALSE,
-            FALSE, 0);
-    w = gtk_button_new();
-    gtk_button_set_relief(GTK_BUTTON(w), GTK_RELIEF_NONE);
-    gtk_button_set_image(GTK_BUTTON(w),
-            gtk_image_new_from_stock(GTK_STOCK_CLEAR,
-                    GTK_ICON_SIZE_MENU));
-    gtk_box_pack_start(GTK_BOX(toolbarHbox), w, FALSE, FALSE, 0);
-    g_signal_connect_swapped(w, "clicked",
-            G_CALLBACK(clear_filter_entry_cb),
-            priv->filterEntry);
-    priv->filterEntryClearButton = w;
-#endif
+    priv->filterEntry = w;
 
     g_signal_connect(G_OBJECT(priv->filterEntry), "changed",
             G_CALLBACK(entry_filter_changed_cb), self);

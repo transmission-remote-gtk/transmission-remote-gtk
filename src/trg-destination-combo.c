@@ -41,7 +41,7 @@ enum {
 };
 
 enum {
-    DEST_DEFAULT, DEST_LABEL, DEST_EXISTING
+    DEST_DEFAULT, DEST_LABEL, DEST_EXISTING, DEST_USERADD
 };
 
 enum {
@@ -143,6 +143,22 @@ GtkEntry *trg_destination_combo_get_entry(TrgDestinationCombo *combo) {
     return GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo)));
 }
 
+static void add_entry_cb(GtkEntry *entry,
+        GtkEntryIconPosition icon_pos,
+        GdkEvent            *event,
+        gpointer             user_data)
+{
+    GtkComboBox *combo = GTK_COMBO_BOX(user_data);
+    GtkTreeModel *model = gtk_combo_box_get_model(combo);
+    GtkTreeIter iter;
+
+    gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, INT_MAX,
+            DEST_COLUMN_LABEL, "",
+            DEST_COLUMN_DIR, "",
+            DEST_COLUMN_TYPE, DEST_USERADD, -1);
+    gtk_combo_box_set_active_iter(combo, &iter);
+}
+
 static GObject *trg_destination_combo_constructor(GType type,
         guint n_construct_properties, GObjectConstructParam * construct_params) {
     GObject *object = G_OBJECT_CLASS
@@ -153,6 +169,8 @@ static GObject *trg_destination_combo_constructor(GType type,
 
     TrgClient *client = priv->client;
     TrgPrefs *prefs = trg_client_get_prefs(client);
+    GtkEntry *entry = trg_destination_combo_get_entry(TRG_DESTINATION_COMBO(object));
+
     GSList *dirs = NULL, *sli;
     GList *li, *list;
     GtkTreeRowReference *rr;
@@ -243,6 +261,12 @@ static GObject *trg_destination_combo_constructor(GType type,
 
     g_signal_connect (object, "changed",
             G_CALLBACK (gtk_combo_box_entry_active_changed), NULL);
+
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY,
+            GTK_STOCK_CLEAR);
+
+    g_signal_connect(entry, "icon-release",
+            G_CALLBACK(add_entry_cb), object);
 
     return object;
 }
