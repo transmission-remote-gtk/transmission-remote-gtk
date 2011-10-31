@@ -203,7 +203,7 @@ static int mailslot_send_message(HANDLE h, gchar **args) {
         g_strfreev(args);
     }
 
-    json_object_set_boolean_member(obj, "present", TRUE);
+    //json_object_set_boolean_member(obj, "present", TRUE);
 
     json_node_take_object(node, obj);
 
@@ -368,7 +368,6 @@ int main(int argc, char *argv[]) {
 
 #ifdef HAVE_LIBUNIQUE
         if (withUnique) {
-            unique_app_watch_window(app, GTK_WINDOW(window));
             g_signal_connect(app, "message-received",
                     G_CALLBACK(message_received_cb), window);
         }

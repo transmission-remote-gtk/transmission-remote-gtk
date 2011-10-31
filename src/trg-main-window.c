@@ -1129,7 +1129,7 @@ static gboolean torrent_selection_changed(GtkTreeSelection * selection,
         GtkTreeIter iter;
         if (gtk_tree_model_get_iter(priv->sortedTorrentModel, &iter,
                 (GtkTreePath *) firstNode->data)) {
-            gtk_tree_model_get(GTK_TREE_MODEL(priv->sortedTorrentModel), &iter,
+            gtk_tree_model_get(priv->sortedTorrentModel, &iter,
                     TORRENT_COLUMN_ID, &id, -1);
         }
     }
