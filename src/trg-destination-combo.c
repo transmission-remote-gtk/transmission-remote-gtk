@@ -34,6 +34,8 @@ typedef struct _TrgDestinationComboPrivate TrgDestinationComboPrivate;
 
 struct _TrgDestinationComboPrivate {
     TrgClient *client;
+    GtkWidget *entry;
+    GtkCellRenderer *text_renderer;
 };
 
 enum {
@@ -144,7 +146,8 @@ gboolean trg_destination_combo_has_text(TrgDestinationCombo *combo) {
 }
 
 GtkEntry *trg_destination_combo_get_entry(TrgDestinationCombo *combo) {
-    return GTK_ENTRY (gtk_bin_get_child (GTK_BIN (combo)));
+    TrgDestinationComboPrivate *priv = TRG_DESTINATION_COMBO_GET_PRIVATE(combo);
+    return GTK_ENTRY (priv->entry);
 }
 
 static void add_entry_cb(GtkEntry *entry,
@@ -173,7 +176,6 @@ static GObject *trg_destination_combo_constructor(GType type,
 
     TrgClient *client = priv->client;
     TrgPrefs *prefs = trg_client_get_prefs(client);
-    GtkEntry *entry = trg_destination_combo_get_entry(TRG_DESTINATION_COMBO(object));
 
     GSList *dirs = NULL, *sli;
     GList *li, *list;
@@ -253,9 +255,20 @@ static GObject *trg_destination_combo_constructor(GType type,
                 DEST_COLUMN_LABEL, (gchar *) sli->data, DEST_COLUMN_DIR,
                 (gchar *) sli->data, DEST_COLUMN_TYPE, DEST_EXISTING, -1);
 
+    priv->entry = gtk_entry_new ();
+    //gtk_widget_show (entry);
+    gtk_container_add (GTK_CONTAINER (object), priv->entry);
+
+    priv->text_renderer = gtk_cell_renderer_text_new ();
+    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (object),
+                                priv->text_renderer, TRUE);
+
     gtk_combo_box_set_model(GTK_COMBO_BOX(object), GTK_TREE_MODEL(comboModel));
 
-    gtk_combo_box_set_entry_text_column(GTK_COMBO_BOX(object), 0);
+    gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (object),
+                                    priv->text_renderer,
+                                    "text", 0,
+                                    NULL);
 
     g_object_unref(comboModel);
     g_slist_foreach(dirs, (GFunc) g_free, NULL);
@@ -266,10 +279,10 @@ static GObject *trg_destination_combo_constructor(GType type,
     g_signal_connect (object, "changed",
             G_CALLBACK (gtk_combo_box_entry_active_changed), NULL);
 
-    gtk_entry_set_icon_from_stock(GTK_ENTRY(entry), GTK_ENTRY_ICON_SECONDARY,
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(priv->entry), GTK_ENTRY_ICON_SECONDARY,
             GTK_STOCK_CLEAR);
 
-    g_signal_connect(entry, "icon-release",
+    g_signal_connect(priv->entry, "icon-release",
             G_CALLBACK(add_entry_cb), object);
 
     return object;
@@ -320,5 +333,5 @@ static void trg_destination_combo_init(TrgDestinationCombo * self) {
 
 GtkWidget *trg_destination_combo_new(TrgClient * client) {
     return GTK_WIDGET(g_object_new(TRG_TYPE_DESTINATION_COMBO,
-                    "trg-client", client, "has-entry", TRUE, NULL));
+                    "trg-client", client, NULL));
 }
