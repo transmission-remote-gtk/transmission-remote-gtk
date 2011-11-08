@@ -560,7 +560,7 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog *dlg) {
 
     t = hig_workarea_create();
 
-    hig_workarea_add_section_title(t, &row, _("Remote Commands"));
+    hig_workarea_add_section_title(t, &row, _("Commands"));
 
     model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 
@@ -751,7 +751,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             trg_prefs_openExecPage(TRG_PREFERENCES_DIALOG(object)),
-            gtk_label_new(_("Remote Execute")));
+            gtk_label_new(_("Actions")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             trg_prefs_dirsPage(TRG_PREFERENCES_DIALOG(object)),

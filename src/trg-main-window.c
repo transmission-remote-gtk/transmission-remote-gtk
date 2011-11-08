@@ -1621,7 +1621,7 @@ static void trg_torrent_tv_view_menu(GtkWidget * treeview,
             GtkImageMenuItem *cmds_menu = GTK_IMAGE_MENU_ITEM(gtk_image_menu_item_new_with_label(GTK_STOCK_EXECUTE));
             gtk_image_menu_item_set_use_stock(cmds_menu, TRUE);
             gtk_image_menu_item_set_always_show_image(cmds_menu, TRUE);
-            gtk_menu_item_set_label(GTK_MENU_ITEM(cmds_menu), _("Remote Commands"));
+            gtk_menu_item_set_label(GTK_MENU_ITEM(cmds_menu), _("Actions"));
 
             cmds_shell = GTK_MENU_SHELL(gtk_menu_new());
             gtk_menu_item_set_submenu(GTK_MENU_ITEM(cmds_menu), GTK_WIDGET(cmds_shell));
