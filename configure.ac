@@ -41,9 +41,6 @@ PKG_CHECK_MODULES([gthread], [gthread-2.0])
 PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
 PKG_CHECK_MODULES([libcurl], [libcurl])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
-PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents on non-win32]))
-PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
-PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
 
 AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
 have_libgeoip=no
@@ -56,6 +53,24 @@ if test "x$have_geoip" = "xyes"; then
   AC_SUBST([GEOIP_LIBS])
 fi
 AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
+
+AC_ARG_WITH([libunique], AC_HELP_STRING([--without-libunique], [disable libunique]))
+have_libunique=no
+if test x$with_libunique != xno; then
+  PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents on non-win32]))
+fi
+
+AC_ARG_WITH([libnotify], AC_HELP_STRING([--without-libnotify], [disable libnotify]))
+have_libnotify=no
+if test x$with_libnotify != xno; then
+  PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
+fi
+
+AC_ARG_WITH([libproxy], AC_HELP_STRING([--without-libproxy], [disable libproxy]))
+have_libproxy=no
+if test x$with_libproxy != xno; then
+  PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
+fi
 
 AC_ARG_ENABLE(debug, [AS_HELP_STRING(--enable-debug,
                                      [enable debugging])])
