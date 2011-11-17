@@ -201,9 +201,9 @@ static int mailslot_send_message(HANDLE h, gchar **args) {
         json_object_set_array_member(obj, "args", array);
 
         g_strfreev(args);
+    } else {
+        json_object_set_boolean_member(obj, "present", TRUE);
     }
-
-    //json_object_set_boolean_member(obj, "present", TRUE);
 
     json_node_take_object(node, obj);
 
@@ -323,7 +323,7 @@ int main(int argc, char *argv[]) {
 
 #ifdef HAVE_LIBUNIQUE
     if (withUnique)
-    app = unique_app_new_with_commands(TRG_LIBUNIQUE_DOMAIN, NULL,
+        app = unique_app_new_with_commands(TRG_LIBUNIQUE_DOMAIN, NULL,
             "add", COMMAND_ADD, NULL);
 
     if (withUnique && unique_app_is_running(app)) {

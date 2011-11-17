@@ -184,7 +184,6 @@ static GObject *trg_destination_combo_constructor(GType type,
     GtkTreePath *path;
     GtkListStore *comboModel;
     JsonArray *saved_destinations;
-    JsonObject *t;
     gchar *defaultDir;
 
     comboModel = gtk_list_store_new(N_DEST_COLUMNS, G_TYPE_STRING,
@@ -233,7 +232,7 @@ static GObject *trg_destination_combo_constructor(GType type,
             if (gtk_tree_model_get_iter(model, &iter, path)) {
                 gchar *dd;
 
-                gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &t,
+                gtk_tree_model_get(model, &iter,
                         TORRENT_COLUMN_DOWNLOADDIR, &dd, -1);
 
                 if (dd && g_strcmp0(dd, defaultDir))

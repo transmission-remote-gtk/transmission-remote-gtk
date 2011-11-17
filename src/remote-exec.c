@@ -83,8 +83,10 @@ static gchar *dump_json_value(JsonNode * node) {
     return g_string_free(buffer, FALSE);
 }
 
-gchar *build_remote_exec_cmd(TrgPrefs *prefs, GtkTreeModel *model, GList *selection,
+gchar *build_remote_exec_cmd(TrgClient *tc, GtkTreeModel *model, GList *selection,
         const gchar * input) {
+    TrgPrefs *prefs = trg_client_get_prefs(tc);
+    JsonObject *session = trg_client_get_session(tc);
     JsonObject *profile = trg_prefs_get_connection(prefs);
     gchar *work;
     GRegex *regex, *replacerx;
@@ -110,8 +112,12 @@ gchar *build_remote_exec_cmd(TrgPrefs *prefs, GtkTreeModel *model, GList *select
             replacerx = g_regex_new(wholeEscaped, 0, 0, NULL);
             valuestr = NULL;
 
-            if (json_object_has_member(profile, id)) {
+            if (profile && json_object_has_member(profile, id)) {
                 replacement = json_object_get_member(profile, id);
+                if (JSON_NODE_HOLDS_VALUE(replacement))
+                    valuestr = dump_json_value(replacement);
+            } else if (session && json_object_has_member(session, id)) {
+                replacement = json_object_get_member(session, id);
                 if (JSON_NODE_HOLDS_VALUE(replacement))
                     valuestr = dump_json_value(replacement);
             } else {
