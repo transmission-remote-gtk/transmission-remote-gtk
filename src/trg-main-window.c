@@ -1070,6 +1070,13 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
     return visible;
 }
 
+void trg_main_window_reload_dir_alises(TrgMainWindow *win)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    trg_torrent_model_reload_dir_alises(priv->client, GTK_TREE_MODEL(priv->torrentModel));
+    trg_state_selector_update(priv->stateSelector);
+}
+
 static TrgTorrentTreeView *trg_main_window_torrent_tree_view_new(
         TrgMainWindow * win, GtkTreeModel * model) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);

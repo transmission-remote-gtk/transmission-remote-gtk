@@ -84,6 +84,9 @@ gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model);
 gboolean get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
                           GtkTreeIter * out_iter);
 
+gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir);
+void trg_torrent_model_reload_dir_alises(TrgClient *tc, GtkTreeModel *model);
+
 enum {
     TORRENT_COLUMN_ICON,
     TORRENT_COLUMN_NAME,
