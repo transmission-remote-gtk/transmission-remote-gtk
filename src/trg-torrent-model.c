@@ -204,7 +204,6 @@ static gboolean trg_torrent_model_reload_dir_alises_foreachfunc(
             -1);
 
     shortDownloadDir = shorten_download_dir((TrgClient*) gdata, downloadDir);
-    g_message("%s", shortDownloadDir);
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
             TORRENT_COLUMN_DOWNLOADDIR_SHORT, shortDownloadDir, -1);
@@ -293,7 +292,7 @@ gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir) {
             if (*(downloadDir + offset) == '/')
                 offset++;
 
-            if (offset + 1 < strlen(downloadDir))
+            if (offset < strlen(downloadDir))
                 return g_strdup(downloadDir + offset);
         }
     }
