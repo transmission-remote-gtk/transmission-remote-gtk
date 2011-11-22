@@ -1038,7 +1038,7 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
                     priv->stateSelector);
             gchar *dd;
             int cmp;
-            gtk_tree_model_get(model, iter, TORRENT_COLUMN_DOWNLOADDIR, &dd, -1);
+            gtk_tree_model_get(model, iter, TORRENT_COLUMN_DOWNLOADDIR_SHORT, &dd, -1);
             cmp = g_strcmp0(text, dd);
             g_free(dd);
             g_free(text);

@@ -306,7 +306,7 @@ void trg_state_selector_update(TrgStateSelector * s) {
 
         if (priv->showDirs) {
             gchar *dir;
-            gtk_tree_model_get(torrentModel, &torrentIter, TORRENT_COLUMN_DOWNLOADDIR,
+            gtk_tree_model_get(torrentModel, &torrentIter, TORRENT_COLUMN_DOWNLOADDIR_SHORT,
                     &dir, -1);
 
             result = g_hash_table_lookup(priv->directories, dir);
