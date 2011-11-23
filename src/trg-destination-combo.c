@@ -34,12 +34,13 @@ typedef struct _TrgDestinationComboPrivate TrgDestinationComboPrivate;
 
 struct _TrgDestinationComboPrivate {
     TrgClient *client;
+    const gchar *last_selection;
     GtkWidget *entry;
     GtkCellRenderer *text_renderer;
 };
 
 enum {
-    PROP_0, PROP_CLIENT
+    PROP_0, PROP_CLIENT, PROP_LAST_SELECTION
 };
 
 enum {
@@ -50,6 +51,12 @@ enum {
     DEST_COLUMN_LABEL, DEST_COLUMN_DIR, DEST_COLUMN_TYPE, N_DEST_COLUMNS
 };
 
+static void trg_destination_combo_finalize(GObject *object) {
+    TrgDestinationComboPrivate *priv =
+            TRG_DESTINATION_COMBO_GET_PRIVATE(object);
+    g_free((gpointer)priv->last_selection);
+}
+
 static void trg_destination_combo_get_property(GObject * object,
         guint property_id, GValue * value, GParamSpec * pspec) {
     TrgDestinationComboPrivate *priv =
@@ -57,6 +64,9 @@ static void trg_destination_combo_get_property(GObject * object,
     switch (property_id) {
     case PROP_CLIENT:
         g_value_set_pointer(value, priv->client);
+        break;
+    case PROP_LAST_SELECTION:
+        g_value_set_string(value, priv->last_selection);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -71,6 +81,9 @@ static void trg_destination_combo_set_property(GObject * object,
     switch (property_id) {
     case PROP_CLIENT:
         priv->client = g_value_get_pointer(value);
+        break;
+    case PROP_LAST_SELECTION:
+        priv->last_selection = g_value_get_string(value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -88,6 +101,22 @@ static gboolean g_slist_str_set_add(GSList ** list, const gchar * string) {
             (GCompareFunc) g_strcmp0);
 
     return TRUE;
+}
+
+void trg_destination_combo_save_selection(TrgDestinationCombo *combo_box)
+{
+    TrgDestinationComboPrivate *priv = TRG_DESTINATION_COMBO_GET_PRIVATE(combo_box);
+    GtkTreeIter iter;
+
+    if (priv->last_selection && gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combo_box), &iter)) {
+        GtkTreeModel *model = gtk_combo_box_get_model(GTK_COMBO_BOX(combo_box));
+        TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+        gchar *text;
+
+        gtk_tree_model_get(model, &iter, DEST_COLUMN_LABEL, &text, -1);
+        trg_prefs_set_string(prefs, priv->last_selection, text, TRG_PREFS_CONNECTION);
+        g_free(text);
+    }
 }
 
 /*static void trg_destination_combo_entry_changed(GtkEntry *entry,
@@ -166,6 +195,20 @@ static void add_entry_cb(GtkEntry *entry,
     gtk_combo_box_set_active_iter(combo, &iter);
 }
 
+static void trg_destination_combo_insert(GtkComboBox *box, const gchar *label,
+        const gchar *dir, guint type, const gchar *lastDestination)
+{
+    GtkListStore *store = GTK_LIST_STORE(gtk_combo_box_get_model(box));
+    GtkTreeIter iter;
+
+    gtk_list_store_insert_with_values(store, &iter, INT_MAX,
+            DEST_COLUMN_LABEL, label, DEST_COLUMN_DIR, dir,
+            DEST_COLUMN_TYPE, type, -1);
+
+    if (lastDestination && !g_strcmp0(lastDestination, label))
+        gtk_combo_box_set_active_iter(box, &iter);
+}
+
 static GObject *trg_destination_combo_constructor(GType type,
         guint n_construct_properties, GObjectConstructParam * construct_params) {
     GObject *object = G_OBJECT_CLASS
@@ -183,37 +226,66 @@ static GObject *trg_destination_combo_constructor(GType type,
     GtkTreeModel *model;
     GtkTreePath *path;
     GtkListStore *comboModel;
-    JsonArray *saved_destinations;
+    JsonArray *savedDestinations;
     gchar *defaultDir;
+    const gchar *lastDestination = NULL;
 
     comboModel = gtk_list_store_new(N_DEST_COLUMNS, G_TYPE_STRING,
             G_TYPE_STRING, G_TYPE_UINT);
+    gtk_combo_box_set_model(GTK_COMBO_BOX(object), GTK_TREE_MODEL(comboModel));
+    g_object_unref(comboModel);
+
+    g_signal_connect (object, "changed",
+            G_CALLBACK (gtk_combo_box_entry_active_changed), NULL);
+
+    priv->entry = gtk_entry_new ();
+    gtk_container_add (GTK_CONTAINER (object), priv->entry);
+
+    priv->text_renderer = gtk_cell_renderer_text_new ();
+    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (object),
+                                priv->text_renderer, TRUE);
+
+    gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (object),
+                                    priv->text_renderer,
+                                    "text", 0,
+                                    NULL);
+
+    g_slist_foreach(dirs, (GFunc) g_free, NULL);
+    g_slist_free(dirs);
+
+    gtk_entry_set_icon_from_stock(GTK_ENTRY(priv->entry), GTK_ENTRY_ICON_SECONDARY,
+            GTK_STOCK_CLEAR);
+
+    g_signal_connect(priv->entry, "icon-release",
+            G_CALLBACK(add_entry_cb), object);
 
     defaultDir = g_strdup(
             session_get_download_dir(trg_client_get_session(client)));
     rm_trailing_slashes(defaultDir);
-    gtk_list_store_insert_with_values(comboModel, NULL, INT_MAX,
-            DEST_COLUMN_LABEL, defaultDir, DEST_COLUMN_DIR, defaultDir,
-            DEST_COLUMN_TYPE, DEST_DEFAULT, -1);
 
-    saved_destinations = trg_prefs_get_array(prefs, TRG_PREFS_KEY_DESTINATIONS,
+    savedDestinations = trg_prefs_get_array(prefs, TRG_PREFS_KEY_DESTINATIONS,
             TRG_PREFS_CONNECTION);
-    if (saved_destinations) {
-        list = json_array_get_elements(saved_destinations);
+
+    if (priv->last_selection)
+        lastDestination = trg_prefs_get_string(prefs, priv->last_selection,
+                TRG_PREFS_CONNECTION);
+
+    trg_destination_combo_insert(GTK_COMBO_BOX(object),
+            defaultDir,
+            defaultDir,
+            DEST_DEFAULT, lastDestination);
+
+    g_free(defaultDir);
+
+    if (savedDestinations) {
+        list = json_array_get_elements(savedDestinations);
         if (list) {
             for (li = list; li; li = g_list_next(li)) {
                 JsonObject *obj = json_node_get_object((JsonNode*) li->data);
-                gtk_list_store_insert_with_values(
-                        comboModel,
-                        NULL,
-                        INT_MAX,
-                        DEST_COLUMN_LABEL,
-                        json_object_get_string_member(obj,
-                                TRG_PREFS_SUBKEY_LABEL),
-                        DEST_COLUMN_DIR,
-                        json_object_get_string_member(obj,
-                                TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR),
-                        DEST_COLUMN_TYPE, DEST_LABEL, -1);
+                trg_destination_combo_insert(GTK_COMBO_BOX(object),
+                        json_object_get_string_member(obj, TRG_PREFS_SUBKEY_LABEL),
+                        json_object_get_string_member(obj, TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR),
+                        DEST_LABEL, lastDestination);
             }
             g_list_free(list);
         }
@@ -250,39 +322,10 @@ static GObject *trg_destination_combo_constructor(GType type,
     g_list_free(list);
 
     for (sli = dirs; sli; sli = g_slist_next(sli))
-        gtk_list_store_insert_with_values(comboModel, NULL, INT_MAX,
-                DEST_COLUMN_LABEL, (gchar *) sli->data, DEST_COLUMN_DIR,
-                (gchar *) sli->data, DEST_COLUMN_TYPE, DEST_EXISTING, -1);
-
-    priv->entry = gtk_entry_new ();
-    //gtk_widget_show (entry);
-    gtk_container_add (GTK_CONTAINER (object), priv->entry);
-
-    priv->text_renderer = gtk_cell_renderer_text_new ();
-    gtk_cell_layout_pack_start (GTK_CELL_LAYOUT (object),
-                                priv->text_renderer, TRUE);
-
-    gtk_combo_box_set_model(GTK_COMBO_BOX(object), GTK_TREE_MODEL(comboModel));
-
-    gtk_cell_layout_set_attributes (GTK_CELL_LAYOUT (object),
-                                    priv->text_renderer,
-                                    "text", 0,
-                                    NULL);
-
-    g_object_unref(comboModel);
-    g_slist_foreach(dirs, (GFunc) g_free, NULL);
-    g_slist_free(dirs);
-
-    g_free(defaultDir);
-
-    g_signal_connect (object, "changed",
-            G_CALLBACK (gtk_combo_box_entry_active_changed), NULL);
-
-    gtk_entry_set_icon_from_stock(GTK_ENTRY(priv->entry), GTK_ENTRY_ICON_SECONDARY,
-            GTK_STOCK_CLEAR);
-
-    g_signal_connect(priv->entry, "icon-release",
-            G_CALLBACK(add_entry_cb), object);
+        trg_destination_combo_insert(GTK_COMBO_BOX(object),
+                (gchar *) sli->data,
+                (gchar *) sli->data,
+                DEST_EXISTING, lastDestination);
 
     return object;
 }
@@ -313,6 +356,7 @@ static void trg_destination_combo_class_init(TrgDestinationComboClass * klass) {
 
     object_class->get_property = trg_destination_combo_get_property;
     object_class->set_property = trg_destination_combo_set_property;
+    object_class->finalize = trg_destination_combo_finalize;
     object_class->constructor = trg_destination_combo_constructor;
 
     g_object_class_install_property(
@@ -325,12 +369,25 @@ static void trg_destination_combo_class_init(TrgDestinationComboClass * klass) {
                     G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
                             | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
                             | G_PARAM_STATIC_BLURB));
+
+    g_object_class_install_property(
+                object_class,
+                PROP_LAST_SELECTION,
+                g_param_spec_string(
+                        "last-selection-key",
+                        "LastSelectionKey",
+                        "LastSelectionKey",
+                        NULL,
+                        G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
+                                | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
+                                | G_PARAM_STATIC_BLURB));
 }
 
 static void trg_destination_combo_init(TrgDestinationCombo * self) {
 }
 
-GtkWidget *trg_destination_combo_new(TrgClient * client) {
+GtkWidget *trg_destination_combo_new(TrgClient * client, const gchar *lastSelectionKey) {
     return GTK_WIDGET(g_object_new(TRG_TYPE_DESTINATION_COMBO,
-                    "trg-client", client, NULL));
+                    "trg-client", client,
+                    "last-selection-key", lastSelectionKey, NULL));
 }

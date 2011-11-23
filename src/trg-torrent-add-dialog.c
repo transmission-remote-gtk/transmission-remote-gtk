@@ -879,7 +879,7 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
                      0, 0, 0);
     ++col;
 
-    priv->dest_combo = trg_destination_combo_new(priv->client);
+    priv->dest_combo = trg_destination_combo_new(priv->client, NULL);
     gtk_combo_box_set_active(GTK_COMBO_BOX(priv->dest_combo), 0);
     gtk_table_attach(GTK_TABLE(t), priv->dest_combo, col, col + 1, row,
                      row + 1, ~0, 0, 0, 0);

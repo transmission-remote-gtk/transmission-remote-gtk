@@ -134,7 +134,7 @@ static void trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
         trg_prefs_save(priv->prefs);
     }
 
-    trg_main_window_reload_dir_alises(priv->win);
+    trg_main_window_reload_dir_aliases(priv->win);
 
     GList *li;
     for (li = priv->widgets; li; li = g_list_next(li))

@@ -195,7 +195,7 @@ gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model) {
             (G_OBJECT(model), PROP_REMOVE_IN_PROGRESS));
 }
 
-static gboolean trg_torrent_model_reload_dir_alises_foreachfunc(
+static gboolean trg_torrent_model_reload_dir_aliases_foreachfunc(
         GtkTreeModel * model, GtkTreePath * path G_GNUC_UNUSED,
         GtkTreeIter * iter, gpointer gdata) {
     gchar *downloadDir, *shortDownloadDir;
@@ -214,10 +214,10 @@ static gboolean trg_torrent_model_reload_dir_alises_foreachfunc(
     return FALSE;
 }
 
-void trg_torrent_model_reload_dir_alises(TrgClient *tc, GtkTreeModel *model)
+void trg_torrent_model_reload_dir_aliases(TrgClient *tc, GtkTreeModel *model)
 {
     gtk_tree_model_foreach(model,
-            trg_torrent_model_reload_dir_alises_foreachfunc, tc);
+            trg_torrent_model_reload_dir_aliases_foreachfunc, tc);
 }
 
 static gboolean trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
@@ -300,7 +300,7 @@ gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir) {
     return g_strdup(downloadDir);
 }
 
-static void update_torrent_iter(TrgTorrentModel * model, TrgClient *tc,
+static inline void update_torrent_iter(TrgTorrentModel * model, TrgClient *tc,
         gint64 rpcv, gint64 serial, GtkTreeIter * iter, JsonObject * t,
         trg_torrent_model_update_stats * stats) {
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);

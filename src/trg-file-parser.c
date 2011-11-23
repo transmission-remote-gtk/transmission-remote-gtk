@@ -77,6 +77,8 @@ static trg_torrent_file_node
             return target_node;
         }
     }
+
+    return NULL;
 }
 
 static void trg_torrent_file_node_free(trg_torrent_file_node * node)

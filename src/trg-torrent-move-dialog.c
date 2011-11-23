@@ -68,6 +68,7 @@ trg_torrent_move_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
                                                   (priv->move_check)));
         g_free(location);
         request_set_tag_from_ids(request, priv->ids);
+        trg_destination_combo_save_selection(TRG_DESTINATION_COMBO(priv->location_combo));
         dispatch_async(priv->client, request,
                        on_generic_interactive_action, data);
     } else {
@@ -104,7 +105,7 @@ static GObject *trg_torrent_move_dialog_constructor(GType type,
 
     t = hig_workarea_create();
 
-    w = priv->location_combo = trg_destination_combo_new(priv->client);
+    w = priv->location_combo = trg_destination_combo_new(priv->client, TRG_PREFS_KEY_LAST_MOVE_DESTINATION);
     g_signal_connect(trg_destination_combo_get_entry(TRG_DESTINATION_COMBO(w)), "changed", G_CALLBACK(location_changed), object);
     hig_workarea_add_row(t, &row, _("Location:"), w, NULL);
 
@@ -182,6 +183,7 @@ trg_torrent_move_dialog_get_property(GObject * object, guint property_id,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
@@ -204,6 +206,7 @@ trg_torrent_move_dialog_set_property(GObject * object, guint property_id,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 

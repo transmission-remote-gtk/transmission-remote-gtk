@@ -47,10 +47,11 @@ typedef struct {
 
 GType trg_destination_combo_get_type(void);
 
-GtkWidget *trg_destination_combo_new(TrgClient * client);
+GtkWidget *trg_destination_combo_new(TrgClient * client, const gchar *lastSelectionKey);
 gchar *trg_destination_combo_get_dir(TrgDestinationCombo *combo);
 gboolean trg_destination_combo_has_text(TrgDestinationCombo *combo);
 GtkEntry *trg_destination_combo_get_entry(TrgDestinationCombo *combo);
+void trg_destination_combo_save_selection(TrgDestinationCombo *combo_box);
 
 G_END_DECLS
 #endif                          /* TRG_DESTINATION_COMBO_H_ */

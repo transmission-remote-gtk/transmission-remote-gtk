@@ -57,7 +57,7 @@ void trg_prefs_profile_change_emit_signal(TrgPrefs *p)
     g_signal_emit(p, signals[PREF_PROFILE_CHANGE], 0);
 }
 
-void trg_prefs_changed_emit_signal(TrgPrefs *p, gchar *key)
+void trg_prefs_changed_emit_signal(TrgPrefs *p, const gchar *key)
 {
     g_signal_emit(p, signals[PREF_CHANGE], 0, key);
 }
@@ -164,23 +164,23 @@ static JsonObject *trg_prefs_new_profile_object() {
     return obj;
 }
 
-void trg_prefs_add_default_int(TrgPrefs *p, gchar *key, int value) {
+void trg_prefs_add_default_int(TrgPrefs *p, const gchar *key, int value) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
     json_object_set_int_member(priv->defaultsObj, key, value);
 }
 
-void trg_prefs_add_default_string(TrgPrefs *p, gchar *key, gchar *value) {
+void trg_prefs_add_default_string(TrgPrefs *p, const gchar *key, gchar *value) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
     json_object_set_string_member(priv->defaultsObj, key, value);
 }
 
-void trg_prefs_add_default_double(TrgPrefs *p, gchar *key, double value) {
+void trg_prefs_add_default_double(TrgPrefs *p, const gchar *key, double value) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
     json_object_set_double_member(priv->defaultsObj, key, value);
 }
 
 /* Not much point adding a default of FALSE, as that's the fallback */
-void trg_prefs_add_default_bool_true(TrgPrefs *p, gchar *key) {
+void trg_prefs_add_default_bool_true(TrgPrefs *p, const gchar *key) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
     json_object_set_boolean_member(priv->defaultsObj, key, TRUE);
 }
@@ -191,7 +191,7 @@ gint trg_prefs_get_profile_id(TrgPrefs *p) {
             TRG_PREFS_KEY_PROFILE_ID);
 }
 
-static JsonNode *trg_prefs_get_value_inner(JsonObject *obj, gchar *key, int type, int flags)
+static JsonNode *trg_prefs_get_value_inner(JsonObject *obj, const gchar *key, int type, int flags)
 {
     if (json_object_has_member(obj, key)) {
         if ((flags & TRG_PREFS_REPLACENODE))
@@ -209,7 +209,7 @@ static JsonNode *trg_prefs_get_value_inner(JsonObject *obj, gchar *key, int type
     return NULL;
 }
 
-JsonNode *trg_prefs_get_value(TrgPrefs *p, gchar *key, int type, int flags) {
+JsonNode *trg_prefs_get_value(TrgPrefs *p, const gchar *key, int type, int flags) {
     TrgPrefsPrivate *priv = GET_PRIVATE(p);
     JsonNode *res;
 
@@ -243,7 +243,7 @@ void trg_prefs_set_connection(TrgPrefs *p, JsonObject *profile)
     priv->connectionObj = profile;
 }
 
-gchar *trg_prefs_get_string(TrgPrefs *p, gchar *key, int flags) {
+gchar *trg_prefs_get_string(TrgPrefs *p, const gchar *key, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags);
     if (node)
         return g_strdup(json_node_get_string(node));
@@ -251,7 +251,7 @@ gchar *trg_prefs_get_string(TrgPrefs *p, gchar *key, int flags) {
         return NULL;
 }
 
-JsonArray *trg_prefs_get_array(TrgPrefs *p, gchar *key, int flags)
+JsonArray *trg_prefs_get_array(TrgPrefs *p, const gchar *key, int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_ARRAY, flags);
     if (node)
@@ -260,7 +260,7 @@ JsonArray *trg_prefs_get_array(TrgPrefs *p, gchar *key, int flags)
         return NULL;
 }
 
-gint64 trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags) {
+gint64 trg_prefs_get_int(TrgPrefs *p, const gchar *key, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags);
     if (node)
         return json_node_get_int(node);
@@ -268,7 +268,7 @@ gint64 trg_prefs_get_int(TrgPrefs *p, gchar *key, int flags) {
         return 0;
 }
 
-gdouble trg_prefs_get_double(TrgPrefs *p, gchar *key, int flags) {
+gdouble trg_prefs_get_double(TrgPrefs *p, const gchar *key, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags);
     if (node)
         return json_node_get_double(node);
@@ -276,7 +276,7 @@ gdouble trg_prefs_get_double(TrgPrefs *p, gchar *key, int flags) {
         return 0.0;
 }
 
-gboolean trg_prefs_get_bool(TrgPrefs *p, gchar *key, int flags) {
+gboolean trg_prefs_get_bool(TrgPrefs *p, const gchar *key, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags);
     if (node)
         return json_node_get_boolean(node);
@@ -284,13 +284,13 @@ gboolean trg_prefs_get_bool(TrgPrefs *p, gchar *key, int flags) {
         return FALSE;
 }
 
-void trg_prefs_set_int(TrgPrefs *p, gchar *key, int value, int flags) {
+void trg_prefs_set_int(TrgPrefs *p, const gchar *key, int value, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags | TRG_PREFS_NEWNODE);
     json_node_set_int(node, (gint64) value);
     trg_prefs_changed_emit_signal(p, key);
 }
 
-void trg_prefs_set_string(TrgPrefs *p, gchar *key, const gchar *value,
+void trg_prefs_set_string(TrgPrefs *p, const gchar *key, const gchar *value,
         int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags | TRG_PREFS_NEWNODE);
     json_node_set_string(node, value);
@@ -363,13 +363,13 @@ JsonArray* trg_prefs_get_profiles(TrgPrefs *p) {
     return json_object_get_array_member(priv->userObj, TRG_PREFS_KEY_PROFILES);
 }
 
-void trg_prefs_set_double(TrgPrefs *p, gchar *key, gdouble value, int flags) {
+void trg_prefs_set_double(TrgPrefs *p, const gchar *key, gdouble value, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags | TRG_PREFS_NEWNODE);
     json_node_set_double(node, value);
     trg_prefs_changed_emit_signal(p, key);
 }
 
-void trg_prefs_set_bool(TrgPrefs *p, gchar *key, gboolean value, int flags) {
+void trg_prefs_set_bool(TrgPrefs *p, const gchar *key, gboolean value, int flags) {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags | TRG_PREFS_NEWNODE);
     json_node_set_boolean(node, value);
     trg_prefs_changed_emit_signal(p, key);
