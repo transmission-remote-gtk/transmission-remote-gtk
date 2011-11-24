@@ -261,9 +261,6 @@ gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir) {
     const gchar *defaultDownloadDir = session_get_download_dir(session);
     gchar *shortDownloadDir = NULL;
 
-    if (!g_strcmp0(defaultDownloadDir, downloadDir))
-        return g_strdup(_("Default"));
-
     if (labels) {
         GList *labelsList = json_array_get_elements(labels);
         if (labelsList) {
@@ -287,6 +284,9 @@ gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir) {
     if (shortDownloadDir) {
         return shortDownloadDir;
     } else {
+        if (!g_strcmp0(defaultDownloadDir, downloadDir))
+            return g_strdup(_("Default"));
+
         if (g_str_has_prefix(downloadDir, defaultDownloadDir)) {
             int offset = strlen(defaultDownloadDir);
             if (*(downloadDir + offset) == '/')
