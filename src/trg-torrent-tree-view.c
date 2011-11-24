@@ -167,7 +167,8 @@ TrgTorrentTreeView *trg_torrent_tree_view_new(TrgPrefs *prefs, GtkTreeModel * mo
     trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), prefs);
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), model);
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
-    trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
+
+    trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), TRUE);
 
     return TRG_TORRENT_TREE_VIEW(obj);
 }

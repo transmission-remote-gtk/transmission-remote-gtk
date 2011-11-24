@@ -349,10 +349,10 @@ static void destroy_window(GtkWidget * w, gpointer data G_GNUC_UNUSED) {
     trg_prefs_set_int(prefs, TRG_PREFS_KEY_STATES_PANED_POS, gtk_paned_get_position(GTK_PANED(priv->hpaned)),
             TRG_PREFS_GLOBAL);
 
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTreeView));
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTreeView));
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->torrentTreeView));
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTreeView));
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTreeView), FALSE);
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTreeView), FALSE);
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->torrentTreeView), TRUE);
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTreeView), FALSE);
     trg_prefs_save(prefs);
 
     gtk_main_quit();
@@ -649,9 +649,9 @@ static gint confirm_action_dialog(GtkWindow * win,
         firstNode = g_list_first(list);
 
         gtk_tree_model_get_iter(GTK_TREE_MODEL
-        (priv->sortedTorrentModel), &firstIter, firstNode->data);
+        (priv->filteredTorrentModel), &firstIter, firstNode->data);
         gtk_tree_model_get(GTK_TREE_MODEL
-        (priv->sortedTorrentModel), &firstIter, TORRENT_COLUMN_NAME,
+        (priv->filteredTorrentModel), &firstIter, TORRENT_COLUMN_NAME,
                 &name, -1);
         g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
         g_list_free(list);
@@ -1134,9 +1134,9 @@ static gboolean torrent_selection_changed(GtkTreeSelection * selection,
 
     if (firstNode) {
         GtkTreeIter iter;
-        if (gtk_tree_model_get_iter(priv->sortedTorrentModel, &iter,
+        if (gtk_tree_model_get_iter(priv->filteredTorrentModel, &iter,
                 (GtkTreePath *) firstNode->data)) {
-            gtk_tree_model_get(priv->sortedTorrentModel, &iter,
+            gtk_tree_model_get(priv->filteredTorrentModel, &iter,
                     TORRENT_COLUMN_ID, &id, -1);
         }
     }
@@ -1981,17 +1981,17 @@ static GObject *trg_main_window_constructor(GType type,
     g_signal_connect(priv->torrentModel, "torrent-addremove",
             G_CALLBACK(on_torrent_addremove), self);
 
+    priv->sortedTorrentModel = gtk_tree_model_sort_new_with_model(
+            GTK_TREE_MODEL(priv->torrentModel));
+
     priv->filteredTorrentModel = gtk_tree_model_filter_new(
-            GTK_TREE_MODEL(priv->torrentModel), NULL);
+            GTK_TREE_MODEL(priv->sortedTorrentModel), NULL);
     gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER
     (priv->filteredTorrentModel), trg_torrent_tree_view_visible_func,
             self, NULL);
 
-    priv->sortedTorrentModel = gtk_tree_model_sort_new_with_model(
-            priv->filteredTorrentModel);
-
     priv->torrentTreeView = trg_main_window_torrent_tree_view_new(self,
-            priv->sortedTorrentModel);
+            priv->filteredTorrentModel);
     g_signal_connect(priv->torrentTreeView, "key-press-event",
             G_CALLBACK(torrent_tv_key_press_event), self);
     g_signal_connect(priv->torrentTreeView, "popup-menu",
