@@ -119,7 +119,8 @@ static GObject *trg_torrent_move_dialog_constructor(GType type,
     priv->move_button =
         gtk_dialog_add_button(GTK_DIALOG(object), _("Move"),
                               GTK_RESPONSE_ACCEPT);
-    gtk_widget_set_sensitive(priv->move_button, FALSE);
+
+    gtk_widget_set_sensitive(priv->move_button, trg_destination_combo_has_text(TRG_DESTINATION_COMBO(priv->location_combo)));
 
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
