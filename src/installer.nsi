@@ -10,7 +10,7 @@ Name "Transmission Remote GTK"
 
 ; The file to write
 !ifndef REV
-OutFile "transmission-remote-gtk-0.7.2-installer.exe"
+OutFile "transmission-remote-gtk-0.7.3-installer.exe"
 !else
 OutFile "transmission-remote-gtk-${REV}-installer.exe"
 !endif
@@ -18,7 +18,7 @@ OutFile "transmission-remote-gtk-${REV}-installer.exe"
 ; The default installation directory
 !define ProgramFilesDir "Transmission Remote GTK"
 
-RequestExecutionLevel user
+RequestExecutionLevel admin
 
 ;--------------------------------
 

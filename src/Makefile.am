@@ -13,6 +13,7 @@ public_icons = \
 	hicolor_apps_32x32_transmission-remote-gtk.png \
         $(NULL)
 
+if !WIN32
 EXTRA_DIST = transmission-remote-gtk.desktop.in transmission-remote-gtk.pod
 CLEANFILES = transmission-remote-gtk.desktop transmission-remote-gtk.1
 
@@ -20,6 +21,7 @@ man_MANS = transmission-remote-gtk.1
 
 desktopdir = $(datadir)/applications
 desktop_DATA = transmission-remote-gtk.desktop
+endif
 
 bin_PROGRAMS = transmission-remote-gtk
 INCLUDES = --pedantic -Wall -Wno-format -Wno-overflow -I.. -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
@@ -84,10 +86,11 @@ if WIN32
 AM_CFLAGS = -mms-bitfields -mwin32 -mwindows
 transmission_remote_gtk_LDFLAGS += -Wl,--subsystem,windows
 transmission_remote_gtk_SOURCES += win32.rc
-endif
+INCLUDES += -O2
 
 %.1: %.pod
 	        pod2man --release="" --center="Transmission Remote GTK" $< > $@
+endif
 
 install-data-local: install-icons update-icon-cache
 
