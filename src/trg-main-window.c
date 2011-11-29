@@ -52,6 +52,7 @@
 #include "trg-about-window.h"
 #include "trg-tree-view.h"
 #include "trg-prefs.h"
+#include "trg-sortable-filtered-model.h"
 #include "trg-torrent-model.h"
 #include "trg-torrent-tree-view.h"
 #include "trg-peers-model.h"
@@ -1984,8 +1985,8 @@ static GObject *trg_main_window_constructor(GType type,
     priv->sortedTorrentModel = gtk_tree_model_sort_new_with_model(
             GTK_TREE_MODEL(priv->torrentModel));
 
-    priv->filteredTorrentModel = gtk_tree_model_filter_new(
-            GTK_TREE_MODEL(priv->sortedTorrentModel), NULL);
+    priv->filteredTorrentModel = trg_sortable_filtered_model_new(
+            GTK_TREE_SORTABLE(priv->sortedTorrentModel), NULL);
     gtk_tree_model_filter_set_visible_func(GTK_TREE_MODEL_FILTER
     (priv->filteredTorrentModel), trg_torrent_tree_view_visible_func,
             self, NULL);

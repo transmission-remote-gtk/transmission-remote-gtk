@@ -21,6 +21,7 @@ man_MANS = transmission-remote-gtk.1
 
 desktopdir = $(datadir)/applications
 desktop_DATA = transmission-remote-gtk.desktop
+
 endif
 
 bin_PROGRAMS = transmission-remote-gtk
@@ -40,6 +41,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-torrent-tree-view.c \
 	  trg-tree-view.c \
 	  trg-torrent-model.c \
+	  trg-sortable-filtered-model.c \
 	  trg-peers-model.c \
 	  trg-peers-tree-view.c \
 	  trg-model.c \
@@ -87,7 +89,7 @@ AM_CFLAGS = -mms-bitfields -mwin32 -mwindows
 transmission_remote_gtk_LDFLAGS += -Wl,--subsystem,windows
 transmission_remote_gtk_SOURCES += win32.rc
 INCLUDES += -O2
-
+else
 %.1: %.pod
 	        pod2man --release="" --center="Transmission Remote GTK" $< > $@
 endif
