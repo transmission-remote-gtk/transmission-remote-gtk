@@ -64,6 +64,12 @@ static void trg_sortable_filtered_model_tree_sortable_init(
             trg_sortable_filtered_model_sort_has_default_sort_func;
 }
 
+static void trg_sortable_filtered_model_sort_column_changed(GtkTreeSortable *realSortable,
+        GtkTreeSortable *fakeSortable)
+{
+    g_signal_emit_by_name (fakeSortable, "sort-column-changed");
+}
+
 GtkTreeModel *
 trg_sortable_filtered_model_new (GtkTreeSortable *child_model,
                            GtkTreePath  *root)
@@ -71,10 +77,16 @@ trg_sortable_filtered_model_new (GtkTreeSortable *child_model,
   g_return_val_if_fail (GTK_IS_TREE_MODEL (child_model), NULL);
   g_return_val_if_fail (GTK_IS_TREE_SORTABLE (child_model), NULL);
 
-  return g_object_new (TRG_TYPE_SORTABLE_FILTERED_MODEL,
+  GObject *obj = g_object_new (TRG_TYPE_SORTABLE_FILTERED_MODEL,
                          "child-model", GTK_TREE_MODEL(child_model),
                          "virtual-root", root,
                          NULL);
+
+  g_signal_connect (child_model, "sort-column-changed",
+                    G_CALLBACK (trg_sortable_filtered_model_sort_column_changed),
+                    obj);
+
+  return GTK_TREE_MODEL(obj);
 }
 
 static gboolean trg_sortable_filtered_model_sort_get_sort_column_id(
