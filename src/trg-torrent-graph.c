@@ -21,6 +21,10 @@
  * This graph drawing code was taken from gnome-system-monitor (load-graph.cpp)
  * Converted the class from C++ to GObject, substituted out some STL (C++)
  * functions, and removed the unecessary parts for memory/cpu.
+ *
+ * Would be nice if it supported configurable timespans. This could possibly
+ * be replaced with ubergraph, which is a graphing widget for GTK (C) also based
+ * on this widget but with some improvements I didn't do.
  */
 
 #include <math.h>

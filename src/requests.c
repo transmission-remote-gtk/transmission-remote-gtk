@@ -29,6 +29,10 @@
 #include "util.h"
 #include "requests.h"
 
+/* A bunch of functions for creating the various requests, in the form of a
+ * JsonNode ready for dispatch.
+ */
+
 static JsonNode *base_request(gchar * method);
 
 JsonNode *generic_request(gchar * method, JsonArray * ids)

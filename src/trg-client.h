@@ -22,6 +22,19 @@
 #ifndef _TRG_CLIENT_H_
 #define _TRG_CLIENT_H_
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
+#include <curl/curl.h>
+#include <curl/easy.h>
+
+#include <json-glib/json-glib.h>
+#include <glib-object.h>
+
+#include "trg-prefs.h"
+#include "session-get.h"
+
 #define TRANSMISSION_MIN_SUPPORTED 2.0
 #define X_TRANSMISSION_SESSION_ID_HEADER_PREFIX "X-Transmission-Session-Id: "
 #define TRG_MAX_RETRIES 3
@@ -37,19 +50,6 @@
 #define TRG_NO_HOSTNAME_SET -2
 #define SESSION_UPDATE_DIVISOR 10
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
-#include <curl/curl.h>
-#include <curl/easy.h>
-
-#include <json-glib/json-glib.h>
-#include <glib-object.h>
-
-#include "trg-prefs.h"
-#include "session-get.h"
-
 #define HTTP_URI_PREFIX "http"
 #define HTTPS_URI_PREFIX "https"
 #define HTTP_OK 200
@@ -58,7 +58,6 @@
 #define FAIL_JSON_DECODE -2
 #define FAIL_RESPONSE_UNSUCCESSFUL -3
 #define DISPATCH_POOL_SIZE 3
-
 
 typedef struct {
     int status;

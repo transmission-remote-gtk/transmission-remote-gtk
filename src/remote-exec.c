@@ -27,6 +27,16 @@
 #include "protocol-constants.h"
 #include "torrent.h"
 
+/* A few functions used to build local commands, otherwise known as actions.
+ *
+ * The functionality from a user perspective is documented in the wiki.
+ * The code below really just uses GRegex to replace variable identifier
+ * with the values inside the connected profile, the session, or the first selected
+ * torrent (in that order of precedence). A field seperator I call a repeater
+ * can be appended to a variable in square brackets, like %{id}[,] to
+ * cause it to be repeated for each selection.
+ */
+
 static const char json_exceptions[] = { 0x7f, 0x80, 0x81, 0x82, 0x83, 0x84,
         0x85, 0x86, 0x87, 0x88, 0x89, 0x8a, 0x8b, 0x8c, 0x8d, 0x8e, 0x8f, 0x90,
         0x91, 0x92, 0x93, 0x94, 0x95, 0x96, 0x97, 0x98, 0x99, 0x9a, 0x9b, 0x9c,

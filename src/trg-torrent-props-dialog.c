@@ -34,6 +34,18 @@
 #include "trg-main-window.h"
 #include "hig.h"
 
+/* Pretty similar to remote preferences, also using the widget creation functions
+ * in trg-json-widgets.c. The torrent tree view is passed into here, which this
+ * gets the selection from. If there are multiple selections, use the first to
+ * populate the fields.
+ *
+ * Build the JSON array of torrent IDs when the dialog is created, in case the
+ * selection changes before clicking OK.
+ *
+ * When the user clicks OK, use trg-json-widgets to populate an object with the
+ * values and then send it with the IDs.
+ */
+
 G_DEFINE_TYPE(TrgTorrentPropsDialog, trg_torrent_props_dialog,
               GTK_TYPE_DIALOG)
 
@@ -115,6 +127,7 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
 
     if (res_id != GTK_RESPONSE_OK) {
         gtk_widget_destroy(GTK_WIDGET(dlg));
+        json_array_unref(priv->targetIds);
         return;
     }
 

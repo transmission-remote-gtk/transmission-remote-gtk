@@ -40,6 +40,15 @@
 #include "trg-client.h"
 #include "util.h"
 
+/* The file with the main() function. It converts arguments into a NULL terminated
+ * array, with relative paths converted to absolute paths.
+ *
+ * Much of the code here is to optionally handle passing torrent files/URLs to
+ * a first instance. UNIX can use libunique (should alternatively use
+ * GApplication for GNOME3). Windows uses the mailslot feature in the
+ * native Win32 API, so there is no dependency on dbus etc.
+ */
+
 #define TRG_LIBUNIQUE_DOMAIN "uk.org.eth0.trg"
 #define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"  //Name given to the Mailslot
 #define MAILSLOT_BUFFER_SIZE 1024*32

@@ -30,6 +30,27 @@
 #include "trg-model.h"
 #include "util.h"
 
+/* An extension of TrgModel (which is an extension of GtkListStore) which
+ * updates from a JSON torrent-get response. It handles a number of different
+ * update modes.
+ *   1) The first update.
+ *   2) A full update.
+ *   3) An active-only update.
+ *   4) Individual torrent updates.
+ *
+ * Other stuff it does.
+ *   1) Populates a stats struct with speeds/state counts as it works through the
+ *      response.
+ *   2) Emits signals if something is added or removed. This is used by the state
+ *      selector so it doesn't have to refresh itself on every update.
+ *   3) Added or completed signals, for libnotify notifications.
+ *   4) Maintains the torrent hash table (by ID).
+ *      (and provide a lookup function which outputs an iter and/or JSON object.)
+ *   5) If the download directory is new/changed, create a short version if there
+ *      is one (duplicate it not) for the state selector to filter/populate against.
+ *   6) Shorten the tracker announce URL.
+ */
+
 enum {
     TMODEL_TORRENT_COMPLETED,
     TMODEL_TORRENT_ADDED,
@@ -486,6 +507,7 @@ static inline void update_torrent_iter(TrgTorrentModel * model, TrgClient *tc,
 
     if (firstTrackerHost)
         g_free(firstTrackerHost);
+
     if (peerSources)
         g_free(peerSources);
 
@@ -512,8 +534,10 @@ gboolean trg_model_find_removed_foreachfunc(GtkTreeModel * model,
         GtkTreePath * path G_GNUC_UNUSED, GtkTreeIter * iter, gpointer gdata) {
     struct TrgModelRemoveData *args = (struct TrgModelRemoveData *) gdata;
     gint64 rowSerial;
+
     gtk_tree_model_get(model, iter, TORRENT_COLUMN_UPDATESERIAL, &rowSerial,
             -1);
+
     if (rowSerial != args->currentSerial) {
         gint64 *id = g_new(gint64, 1);
         gtk_tree_model_get(model, iter, TORRENT_COLUMN_ID, id, -1);
@@ -526,9 +550,9 @@ gboolean trg_model_find_removed_foreachfunc(GtkTreeModel * model,
 GList *trg_torrent_model_find_removed(GtkTreeModel * model,
         gint64 currentSerial) {
     struct TrgModelRemoveData args;
-
     args.toRemove = NULL;
     args.currentSerial = currentSerial;
+
     gtk_tree_model_foreach(GTK_TREE_MODEL(model),
             trg_model_find_removed_foreachfunc, &args);
 

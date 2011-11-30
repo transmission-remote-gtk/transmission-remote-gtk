@@ -27,6 +27,8 @@
 #include "requests.h"
 #include "json.h"
 
+/* JSON helper functions */
+
 gchar *trg_serialize(JsonNode * req)
 {
     JsonGenerator *generator;

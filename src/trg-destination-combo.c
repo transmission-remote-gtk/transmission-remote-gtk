@@ -119,19 +119,6 @@ void trg_destination_combo_save_selection(TrgDestinationCombo *combo_box)
     }
 }
 
-/*static void trg_destination_combo_entry_changed(GtkEntry *entry,
- gpointer user_data) {
- GtkComboBox *combo = GTK_COMBO_BOX(user_data);
- GtkTreeIter iter;
-
- if (gtk_combo_box_get_active_iter(combo, &iter)) {
- GtkTreeModel *model = gtk_combo_box_get_model(combo);
- const gchar *text = gtk_entry_get_text(entry);
- gtk_list_store_set(GTK_LIST_STORE(model), &iter, DEST_COLUMN_DIR, text,
- DEST_COLUMN_LABEL, text, -1);
- }
- }*/
-
 static void gtk_combo_box_entry_active_changed(GtkComboBox *combo_box,
         gpointer user_data) {
     GtkTreeModel *model;

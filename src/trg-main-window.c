@@ -76,6 +76,8 @@
 #include "trg-remote-prefs-dialog.h"
 #include "trg-preferences-dialog.h"
 
+/* The rather large main window class, which glues everything together. */
+
 static void update_selected_torrent_notebook(TrgMainWindow * win, gint mode,
         gint64 id);
 #ifdef HAVE_LIBNOTIFY

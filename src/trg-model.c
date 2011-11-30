@@ -21,6 +21,11 @@
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
+/* An extension of GtkListStore which provides some functions for looking up
+ * an entry by ID. Also for removing entries which have an old update serial,
+ * which means it needs removing.
+ */
+
 struct trg_model_remove_removed_foreachfunc_args {
     gint64 currentSerial;
     gint serial_column;

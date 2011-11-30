@@ -35,6 +35,13 @@
 #include "trg-prefs.h"
 #include "util.h"
 
+/* UI frontend to modify configurables stored in TrgConf.
+ * To avoid lots of repetitive code, use our own functions for creating widgets
+ * which also create a trg_pref_widget_desc structure and add it to a list.
+ * This contains details of the config key, config flags etc, and a function
+ * pointer for a save/display function. These are all called on save/load.
+ */
+
 #define TRG_PREFERENCES_DIALOG_GET_PRIVATE(object) \
         (G_TYPE_INSTANCE_GET_PRIVATE ((object), TRG_TYPE_PREFERENCES_DIALOG, TrgPreferencesDialogPrivate))
 

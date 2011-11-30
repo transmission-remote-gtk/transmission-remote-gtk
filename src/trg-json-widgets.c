@@ -23,6 +23,14 @@
 #include "trg-json-widgets.h"
 #include "util.h"
 
+/* Functions for creating widgets that load/save their state from/to a JSON
+ * object. This is used by the torrent properties and remote settings dialogs.
+ * The pattern here is farily similar to that used in local configuration,
+ * the widget creation functions take a list as an argument, which gets a
+ * trg_json_widget_desc appended to it. This contains the key, and the function
+ * pointers for load/save.
+ */
+
 void trg_json_widgets_save(GList *list, JsonObject *out)
 {
     GList *li;

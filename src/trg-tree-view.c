@@ -32,6 +32,17 @@
 #include "trg-cell-renderer-priority.h"
 #include "trg-cell-renderer-numgteqthan.h"
 
+/* A subclass of GtkTreeView which allows the user to change column visibility
+ * by right clicking on any column for a menu to hide the clicked column, or
+ * insert any hidden column after.
+ *
+ * This class persists these choices to TrgConf, and restores them when it is
+ * initialised. Column widths are also saved/restored.
+ *
+ * All the columns must be preregistered so it knows what model column,
+ * renderers etc to use if it should be created, and what columns are available.
+ */
+
 enum {
     PROP_0, PROP_PREFS
 };

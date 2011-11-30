@@ -26,6 +26,17 @@
 #include "session-get.h"
 #include "util.h"
 
+/* A subclass of GtkHBox which contains a status label on the left.
+ * Free space indicator on left-right.
+ * Speed (including limits if in use) label on right-right.
+ *
+ * Status and speed labels should be updated on every torrent-get using
+ * trg_status_bar_update. Free space is updated with trg_status_bar_session_update.
+ *
+ * There's a signal in TrgClient for session updates, connected into the
+ * main window, which calls this. Session updates happen every 10 torrent-get updates.
+ */
+
 G_DEFINE_TYPE(TrgStatusBar, trg_status_bar, GTK_TYPE_HBOX)
 #define TRG_STATUS_BAR_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_STATUS_BAR, TrgStatusBarPrivate))

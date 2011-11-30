@@ -21,10 +21,17 @@
 
 #include "trg-sortable-filtered-model.h"
 
+/* This class extends GtkTreeModelFilter, so it can implement the
+ * GtkTreeSortable interface. All of the sortable functions are passed on to
+ * a child GtkTreeModelSort. Also proxy the sort-column-changed signal
+ * so that a TreeViewColumn can track changes for indicators.
+ */
+
 static void
 trg_sortable_filtered_model_tree_sortable_init(GtkTreeSortableIface *iface);
 
 /* TreeSortable interface */
+static GtkTreeSortable *trg_sortable_filtered_model_get_real_sortable(GtkTreeSortable *sortable);
 static gboolean trg_sortable_filtered_model_sort_get_sort_column_id(
         GtkTreeSortable *sortable, gint *sort_column_id, GtkSortType *order);
 static void trg_sortable_filtered_model_sort_set_sort_column_id(
@@ -37,6 +44,8 @@ static void trg_sortable_filtered_model_sort_set_default_sort_func(
         GDestroyNotify destroy);
 static gboolean trg_sortable_filtered_model_sort_has_default_sort_func(
         GtkTreeSortable *sortable);
+static void trg_sortable_filtered_model_sort_column_changed(GtkTreeSortable *realSortable,
+        GtkTreeSortable *fakeSortable);
 
 G_DEFINE_TYPE_WITH_CODE(
         TrgSortableFilteredModel,
@@ -64,7 +73,7 @@ static void trg_sortable_filtered_model_tree_sortable_init(
             trg_sortable_filtered_model_sort_has_default_sort_func;
 }
 
-static void trg_sortable_filtered_model_sort_column_changed(GtkTreeSortable *realSortable,
+static void trg_sortable_filtered_model_sort_column_changed(GtkTreeSortable *realSortable G_GNUC_UNUSED,
         GtkTreeSortable *fakeSortable)
 {
     g_signal_emit_by_name (fakeSortable, "sort-column-changed");
@@ -89,16 +98,21 @@ trg_sortable_filtered_model_new (GtkTreeSortable *child_model,
   return GTK_TREE_MODEL(obj);
 }
 
+static GtkTreeSortable *trg_sortable_filtered_model_get_real_sortable(GtkTreeSortable *sortable)
+{
+    return GTK_TREE_SORTABLE(gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(sortable)));
+}
+
 static gboolean trg_sortable_filtered_model_sort_get_sort_column_id(
         GtkTreeSortable *sortable, gint *sort_column_id, GtkSortType *order) {
-    GtkTreeSortable *realSortable = GTK_TREE_SORTABLE(gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(sortable)));
+    GtkTreeSortable *realSortable = trg_sortable_filtered_model_get_real_sortable(sortable);
     return gtk_tree_sortable_get_sort_column_id(realSortable, sort_column_id, order);
 }
 
 static void trg_sortable_filtered_model_sort_set_sort_column_id(
         GtkTreeSortable *sortable, gint sort_column_id, GtkSortType order)
 {
-    GtkTreeSortable *realSortable = GTK_TREE_SORTABLE(gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(sortable)));
+    GtkTreeSortable *realSortable = trg_sortable_filtered_model_get_real_sortable(sortable);
     gtk_tree_sortable_set_sort_column_id(realSortable, sort_column_id, order);
 }
 
@@ -106,7 +120,7 @@ static void trg_sortable_filtered_model_sort_set_sort_func(
         GtkTreeSortable *sortable, gint sort_column_id,
         GtkTreeIterCompareFunc func, gpointer data, GDestroyNotify destroy)
 {
-    GtkTreeSortable *realSortable = GTK_TREE_SORTABLE(gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(sortable)));
+    GtkTreeSortable *realSortable = trg_sortable_filtered_model_get_real_sortable(sortable);
     gtk_tree_sortable_set_sort_func(realSortable, sort_column_id, func, data, destroy);
 }
 
@@ -114,13 +128,13 @@ static void trg_sortable_filtered_model_sort_set_default_sort_func(
         GtkTreeSortable *sortable, GtkTreeIterCompareFunc func, gpointer data,
         GDestroyNotify destroy)
 {
-    GtkTreeSortable *realSortable = GTK_TREE_SORTABLE(gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(sortable)));
+    GtkTreeSortable *realSortable = trg_sortable_filtered_model_get_real_sortable(sortable);
     gtk_tree_sortable_set_default_sort_func(realSortable, func, data, destroy);
 }
 
 static gboolean trg_sortable_filtered_model_sort_has_default_sort_func(
         GtkTreeSortable *sortable)
 {
-    GtkTreeSortable *realSortable = GTK_TREE_SORTABLE(gtk_tree_model_filter_get_model(GTK_TREE_MODEL_FILTER(sortable)));
+    GtkTreeSortable *realSortable = trg_sortable_filtered_model_get_real_sortable(sortable);
     return gtk_tree_sortable_has_default_sort_func(realSortable);
 }

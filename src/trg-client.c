@@ -37,6 +37,21 @@
 #include "util.h"
 #include "trg-client.h"
 
+/* This class manages/does quite a few things, and is passed around a lot. It:
+ *
+ * 1) Holds/inits the single TrgPrefs object for managing configuration.
+ * 2) Manages a thread pool for making requests
+ *    (each thread has its own CURL client in thread local storage)
+ * 3) Holds current connection details needed by CURL clients.
+ *    (session ID, username, password, URL, ssl, proxy)
+ * 4) Holds a hash table for looking up a torrent by its ID.
+ * 5) Dispatches synchronous/asyncrhonous requests and tracks failures.
+ * 6) Holds connection state, an update serial, and provides signals for
+ *    connect/disconnect.
+ * 7) Provides a mutex for locking updates.
+ * 8) Holds the latest session object sent in a session-get response.
+ */
+
 G_DEFINE_TYPE (TrgClient, trg_client, G_TYPE_OBJECT)
 
 enum {
@@ -497,6 +512,7 @@ trg_tls *trg_tls_new(TrgClient *tc)
     tls->curl = curl_easy_init();
     curl_easy_setopt(tls->curl, CURLOPT_USERAGENT, PACKAGE_NAME);
     curl_easy_setopt(tls->curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+    curl_easy_setopt(tls->curl, CURLOPT_TIMEOUT, 20);
     curl_easy_setopt(tls->curl, CURLOPT_WRITEFUNCTION,
                      &http_receive_callback);
     curl_easy_setopt(tls->curl, CURLOPT_HEADERFUNCTION, &header_callback);

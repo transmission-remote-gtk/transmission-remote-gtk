@@ -31,6 +31,15 @@
 #include "trg-json-widgets.h"
 #include "session-get.h"
 
+/* Using the widget creation functions in trg-json-widgets.c, load remote
+ * preferences from the latest session object held by TrgClient.
+ * If the user clicks OK, use trg-json-widgets to build up a request object
+ * and send that in a session-set request.
+ *
+ * The on_session_set callback should cause that session object to be refreshed
+ * as soon as the set is complete.
+ */
+
 G_DEFINE_TYPE(TrgRemotePrefsDialog, trg_remote_prefs_dialog,
         GTK_TYPE_DIALOG)
 #define TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(o) \

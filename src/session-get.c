@@ -24,6 +24,8 @@
 #include "protocol-constants.h"
 #include "session-get.h"
 
+/* Just some functions to get fields out of a session-get response. */
+
 const gchar *session_get_version_string(JsonObject *s)
 {
     return json_object_get_string_member(s, SGET_VERSION);

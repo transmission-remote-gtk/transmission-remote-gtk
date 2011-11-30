@@ -27,6 +27,8 @@
 #include "protocol-constants.h"
 #include "util.h"
 
+/* Just some functions to get fields out of the torrent object. */
+
 JsonArray *torrent_get_peers(JsonObject * t)
 {
     g_assert(json_object_get_array_member(t, FIELD_PEERS));

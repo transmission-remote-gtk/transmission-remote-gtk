@@ -28,6 +28,14 @@
 #include "trg-client.h"
 #include "trg-prefs.h"
 
+/* I replaced GConf with this custom configuration backend for a few reasons.
+ * 1) Better windows support. No dependency on DBus.
+ * 2) We're including a JSON parser/writer anyway.
+ * 3) The GConf API is pretty verbose sometimes, working with lists is awkward.
+ * 4) Easily switch between profiles, and scope config to either profiles or global.
+ * 5) Transparently use configurables from the current connection, not current profile.
+ */
+
 G_DEFINE_TYPE (TrgPrefs, trg_prefs, G_TYPE_OBJECT)
 
 #define GET_PRIVATE(o) \
