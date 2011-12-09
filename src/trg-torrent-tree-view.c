@@ -44,7 +44,6 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
                                  TORRENT_COLUMN_NAME, _("Name"), "name",
                                  0);
     desc->model_column_icon = TORRENT_COLUMN_ICON;
-    desc->defaultWidth = 250;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, TORRENT_COLUMN_SIZE,
                              _("Size"), "size", 0);

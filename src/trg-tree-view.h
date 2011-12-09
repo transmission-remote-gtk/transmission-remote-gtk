@@ -72,7 +72,6 @@ typedef struct {
     gchar *header;
     gchar *id;
     gint flags;
-    gint defaultWidth;
     gint type;
     GtkCellRenderer *customRenderer;
     GtkTreeViewColumn **out;
