@@ -321,7 +321,7 @@ static void on_torrent_completed(TrgTorrentModel * model, GtkTreeIter * iter,
 #endif
 }
 
-static void on_torrent_addremove(TrgTorrentModel * model, gpointer data) {
+static void on_update_filters(TrgTorrentModel * model, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
     trg_state_selector_update(priv->stateSelector);
 }
@@ -1981,8 +1981,8 @@ static GObject *trg_main_window_constructor(GType type,
             G_CALLBACK(on_torrent_completed), self);
     g_signal_connect(priv->torrentModel, "torrent-added",
             G_CALLBACK(on_torrent_added), self);
-    g_signal_connect(priv->torrentModel, "torrent-addremove",
-            G_CALLBACK(on_torrent_addremove), self);
+    g_signal_connect(priv->torrentModel, "update-filters",
+            G_CALLBACK(on_update_filters), self);
 
     priv->sortedTorrentModel = gtk_tree_model_sort_new_with_model(
             GTK_TREE_MODEL(priv->torrentModel));

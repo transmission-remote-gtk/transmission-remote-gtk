@@ -54,7 +54,7 @@
 enum {
     TMODEL_TORRENT_COMPLETED,
     TMODEL_TORRENT_ADDED,
-    TMODEL_TORRENT_ADDREMOVE,
+    TMODEL_UPDATE_FILTERS,
     TMODEL_SIGNAL_COUNT
 };
 
@@ -81,7 +81,7 @@ static void trg_torrent_model_dispose(GObject * object) {
 static void
 update_torrent_iter(TrgTorrentModel * model, TrgClient *tc, gint64 rpcv,
         gint64 serial, GtkTreeIter * iter, JsonObject * t,
-        trg_torrent_model_update_stats * stats);
+        trg_torrent_model_update_stats * stats, gboolean *updateFilters);
 
 static void trg_torrent_model_class_init(TrgTorrentModelClass * klass) {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
@@ -103,7 +103,7 @@ static void trg_torrent_model_class_init(TrgTorrentModelClass * klass) {
                     torrent_added), NULL, NULL,
             g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
-    signals[TMODEL_TORRENT_ADDREMOVE] = g_signal_new("torrent-addremove",
+    signals[TMODEL_UPDATE_FILTERS] = g_signal_new("update-filters",
             G_TYPE_FROM_CLASS(object_class),
             G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
             G_STRUCT_OFFSET(TrgTorrentModelClass,
@@ -323,7 +323,7 @@ gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir) {
 
 static inline void update_torrent_iter(TrgTorrentModel * model, TrgClient *tc,
         gint64 rpcv, gint64 serial, GtkTreeIter * iter, JsonObject * t,
-        trg_torrent_model_update_stats * stats) {
+        trg_torrent_model_update_stats * stats, gboolean *updateFilters) {
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
     GtkListStore *ls = GTK_LIST_STORE(model);
     guint lastFlags, newFlags;
@@ -494,6 +494,7 @@ static inline void update_torrent_iter(TrgTorrentModel * model, TrgClient *tc,
         gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR_SHORT,
                 shortDownloadDir, -1);
         g_free(shortDownloadDir);
+        *updateFilters = TRUE;
     }
 
     if (lastJson)
@@ -598,7 +599,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
     GtkTreePath *path;
     GtkTreeRowReference *rr;
     gpointer *result;
-    gboolean addRemove = FALSE;
+    gboolean updateFilters = FALSE;
 
     gint64 rpcv = trg_client_get_rpc_version(tc);
 
@@ -617,7 +618,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
             gtk_list_store_append(GTK_LIST_STORE(model), &iter);
 
             update_torrent_iter(model, tc, rpcv, trg_client_get_serial(tc),
-                    &iter, t, stats);
+                    &iter, t, stats, &updateFilters);
 
             path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
             rr = gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
@@ -625,9 +626,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
             *idCopy = id;
             g_hash_table_insert(priv->ht, idCopy, rr);
             gtk_tree_path_free(path);
-            addRemove = TRUE;
-            if (mode != TORRENT_GET_MODE_FIRST
-                )
+            if (mode != TORRENT_GET_MODE_FIRST)
                 g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0, &iter);
         } else {
             path = gtk_tree_row_reference_get_path(
@@ -636,7 +635,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
                 if (gtk_tree_model_get_iter(GTK_TREE_MODEL(model), &iter,
                         path)) {
                     update_torrent_iter(model, tc, rpcv,
-                            trg_client_get_serial(tc), &iter, t, stats);
+                            trg_client_get_serial(tc), &iter, t, stats, &updateFilters);
                 }
                 gtk_tree_path_free(path);
             }
@@ -653,7 +652,7 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
                 g_hash_table_remove(priv->ht, li->data);
                 g_free(li->data);
             }
-            addRemove = TRUE;
+            updateFilters = TRUE;
             g_list_free(hitlist);
         }
     } else if (mode > TORRENT_GET_MODE_FIRST) {
@@ -663,14 +662,14 @@ void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
             for (li = hitlist; li; li = g_list_next(li)) {
                 id = json_node_get_int((JsonNode *) li->data);
                 g_hash_table_remove(priv->ht, &id);
-                addRemove = TRUE;
+                updateFilters = TRUE;
             }
             g_list_free(hitlist);
         }
     }
 
-    if (addRemove)
-        g_signal_emit(model, signals[TMODEL_TORRENT_ADDREMOVE], 0);
+    if (updateFilters)
+        g_signal_emit(model, signals[TMODEL_UPDATE_FILTERS], 0);
 
     gtk_tree_model_foreach(GTK_TREE_MODEL(model),
             trg_torrent_model_stats_scan_foreachfunc, stats);
