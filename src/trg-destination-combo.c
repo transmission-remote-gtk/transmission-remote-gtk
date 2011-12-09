@@ -83,7 +83,7 @@ static void trg_destination_combo_set_property(GObject * object,
         priv->client = g_value_get_pointer(value);
         break;
     case PROP_LAST_SELECTION:
-        priv->last_selection = g_value_get_string(value);
+        priv->last_selection = g_strdup(g_value_get_string(value));
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -182,18 +182,52 @@ static void add_entry_cb(GtkEntry *entry,
     gtk_combo_box_set_active_iter(combo, &iter);
 }
 
+struct findDupeArg
+{
+    const gchar *dir;
+    gboolean isDupe;
+};
+
+gboolean
+trg_destination_combo_insert_check_dupe_foreach(GtkTreeModel * model,
+                               GtkTreePath * path G_GNUC_UNUSED,
+                               GtkTreeIter * iter, struct findDupeArg *args)
+{
+    gchar *existing;
+    gtk_tree_model_get(model, iter, DEST_COLUMN_DIR, &existing, -1);
+    args->isDupe = g_strcmp0(existing, args->dir) == 0;
+    g_free(existing);
+    return args->isDupe;
+}
+
 static void trg_destination_combo_insert(GtkComboBox *box, const gchar *label,
         const gchar *dir, guint type, const gchar *lastDestination)
 {
-    GtkListStore *store = GTK_LIST_STORE(gtk_combo_box_get_model(box));
+    GtkTreeModel *model = gtk_combo_box_get_model(box);
+    gchar *comboLabel;
     GtkTreeIter iter;
 
-    gtk_list_store_insert_with_values(store, &iter, INT_MAX,
-            DEST_COLUMN_LABEL, label, DEST_COLUMN_DIR, dir,
+    if (type == DEST_EXISTING)
+    {
+        struct findDupeArg args;
+        args.isDupe = FALSE;
+        args.dir = dir;
+        gtk_tree_model_foreach(GTK_TREE_MODEL(model),
+                (GtkTreeModelForeachFunc)trg_destination_combo_insert_check_dupe_foreach, &args);
+        if (args.isDupe)
+            return;
+    }
+
+    comboLabel = label ? g_strdup_printf("%s (%s)", label, dir) : g_strdup(dir);
+
+    gtk_list_store_insert_with_values(GTK_LIST_STORE(model), &iter, INT_MAX,
+            DEST_COLUMN_LABEL, comboLabel, DEST_COLUMN_DIR, dir,
             DEST_COLUMN_TYPE, type, -1);
 
-    if (lastDestination && !g_strcmp0(lastDestination, label))
+    if (lastDestination && !g_strcmp0(lastDestination, comboLabel))
         gtk_combo_box_set_active_iter(box, &iter);
+
+    g_free(comboLabel);
 }
 
 static GObject *trg_destination_combo_constructor(GType type,
@@ -258,7 +292,7 @@ static GObject *trg_destination_combo_constructor(GType type,
                 TRG_PREFS_CONNECTION);
 
     trg_destination_combo_insert(GTK_COMBO_BOX(object),
-            defaultDir,
+            NULL,
             defaultDir,
             DEST_DEFAULT, lastDestination);
 
@@ -310,7 +344,7 @@ static GObject *trg_destination_combo_constructor(GType type,
 
     for (sli = dirs; sli; sli = g_slist_next(sli))
         trg_destination_combo_insert(GTK_COMBO_BOX(object),
-                (gchar *) sli->data,
+                NULL,
                 (gchar *) sli->data,
                 DEST_EXISTING, lastDestination);
 

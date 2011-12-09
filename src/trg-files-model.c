@@ -167,7 +167,7 @@ trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
         }
     } else {
         gint n_existing = gtk_tree_model_iter_n_children(GTK_TREE_MODEL(model), NULL);
-        gint n_updates = g_list_length(filesList);
+        guint n_updates = g_list_length(filesList);
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),
                                (GtkTreeModelForeachFunc)
                                trg_files_model_update_foreach, filesList);

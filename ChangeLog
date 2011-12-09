@@ -1,0 +1,93 @@
+* Tue Oct 11 2011 0.7
+- Remote exec.
+- Win32 Support.
+- Connect button menus for profiles.
+- Fix a memory leak on disconnect.
+- Use icon for wanted/unwanted files.
+- Handle URLs and non-existing files in file handler.
+- IPv6 GeoIP support.
+- Upload files on app open.
+- Display public/private tracker status.
+- Show file icons based on MIME types.
+- Shortern tracker filters.
+- Hide state selector if no error torrents.
+- Fix warning caused by zero length files in torrents.
+- Bencoder crash fix.
+- Detect and drop requests from previous connections.
+- Toolbar tooltips.
+- Spanish translation.
+  
+* Sat Aug 27 2011 0.6
+- Profiles support.
+- New JSON based configuration backend.
+- Support new Transmission torrent status values.
+- Populate destination combo in move dialog.
+- Ukranian translation from ROR191.
+- Lots of new columns and info.
+- More options in view menu.
+- Supports for queues.
+- Improved status bar and add a free space indicator.
+- Persist/restore filter selection, + notebook/selector visibility.
+- Reuse http clients and keep sessions open.
+- Start in tray argument (-m --minimized)
+- Fix timezone display issue.
+- Fix bencoder parser bug (parsing empty lists).
+- Make columns fully shrinkable.
+- Many other fixes/improvements.
+   
+* Fri May 6 2011 - 0.5.1
+- Use libproxy pkg-config CFLAGS in build, for older versions.
+- Fix updates inside the GtkNotebook.
+- Fix crash reported by atommixz.
+ 
+* Fri Apr 22 2011 - 0.5
+- Fix a few of small memory leaks.
+- Sync single torrent when file/trackers are changed.
+- Update efficiency improvement.
+- Customisable columns, new optional columns.
+
+* Tue Apr 12 2011 - 0.4
+- Torrent add dialog.
+- Support for active only updates.
+- Other update performance improvements.
+- Pause/Resume all.
+- Polish and Russian translation.
+- Torrent added date/time column.
+- Fix gconf ints defaulting to one in prefs dialog.
+- Fix crash disconnecting with graph disabled.
+- Fix crash disabling tracker/dir filters while disconnected.
+
+* Sat Mar 11 2011 - 0.3
+- Case insensitive text filtering.
+- Speed graph.
+- i18n support (currently German and Korean).
+- Use table layout instead of fixed for general panel.
+- libproxy support.
+- Fix torrent bandwidth priority setting.
+- Better suspending of tracker/files update until ack.
+- Put versions in some spec/configure deps.
+- Include libcurl.m4.
+- Better (easier) FreeBSD compilation.
+- Remove 5px window border (much better on some dark themes).
+- Fix hardcoded path to Transmission icon in about dialog.
+- Fix a leak from gtk_tree_selection_get_selected_rows().
+- TRG_NOUNIQUE env variable to start multiple instances.
+
+* Mon Feb 21 2011 - 0.2.1
+- Fix crash in update-blocklist/port-test callbacks.
+- Menu bar mnemonics.
+
+* Sat Feb 19 2011 - 0.2
+- SSL support.
+- Statistics dialog.
+- Fix for setting low priority files.
+- Port testing.
+- Blocklist settings and updates.
+- Torrent reannounce.
+- Tracker add/edit/delete.
+
+* Mon Feb 07 2011 - 0.1.1
+- Fix some major first release bugs.
+
+* Sun Jan 30 2011 - 0.1.0
+- Hello world.
