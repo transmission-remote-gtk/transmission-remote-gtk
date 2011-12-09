@@ -296,8 +296,6 @@ static GObject *trg_destination_combo_constructor(GType type,
             defaultDir,
             DEST_DEFAULT, lastDestination);
 
-    g_free(defaultDir);
-
     if (savedDestinations) {
         list = json_array_get_elements(savedDestinations);
         if (list) {
@@ -340,13 +338,14 @@ static GObject *trg_destination_combo_constructor(GType type,
 
     trg_client_updateunlock(client);
 
-    g_list_free(list);
-
     for (sli = dirs; sli; sli = g_slist_next(sli))
         trg_destination_combo_insert(GTK_COMBO_BOX(object),
                 NULL,
                 (gchar *) sli->data,
                 DEST_EXISTING, lastDestination);
+
+    g_list_free(list);
+    g_free(defaultDir);
 
     return object;
 }
