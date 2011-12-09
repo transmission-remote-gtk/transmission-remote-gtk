@@ -27,9 +27,9 @@ the Transmission BitTorrent client, using its HTTP RPC protocol.
 
 %prep
 %setup -q
-sed -i "s|\r||g" README
-sed -i "s|\r||g" COPYING
-
+for i in README COPYING AUTHORS ChangeLog; do
+  sed -i "s|\r||g" "$i";
+done
 
 %build
 %configure
@@ -63,7 +63,10 @@ fi
 %{_bindir}/%{name}
 %{_datadir}/applications/*.desktop
 %{_datadir}/icons/*
-%doc README COPYING AUTHORS
+
+
+%doc README COPYING AUTHORS ChangeLog
+%_mandir/man1/transmission-remote-gtk.1.gz
 
 
 %changelog

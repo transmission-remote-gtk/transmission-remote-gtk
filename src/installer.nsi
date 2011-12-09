@@ -86,6 +86,8 @@ Section $(NAME_SecTransmissionRemoteGTK) SecTransmissionRemoteGTK
   
   File /oname=README.TXT "..\README"
   File /oname=COPYING.TXT "..\COPYING"
+  File /oname=ChangeLog.TXT "..\ChangeLog"
+  File /oname=AUTHORS.TXT "..\AUTHORS"
 
   ; Set output path to the installation directory.
   SetOutPath $INSTDIR\bin
