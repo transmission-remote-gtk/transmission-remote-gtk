@@ -87,7 +87,8 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
                                             "* Youn sok Choi (Korean)\n"
                                             "* Piotr (Polish)\n"
                                             "* Y3AVD (Russian)\n"
-                                            "* ROR191 (Ukranian)\n");
+                                            "* ROR191 (Ukranian)\n"
+					    "* aspidzent (Spanish)");
 
     g_free(licenseFile);
     g_free(licenseText);

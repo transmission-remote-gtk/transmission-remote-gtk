@@ -1,4 +1,4 @@
-transmission-remote-gtk (0.8-1) unstable; urgency=low
+transmission-remote-gtk (0.8-1) stable; urgency=low
 
   * New upstream release 0.8
 
@@ -12,21 +12,18 @@ transmission-remote-gtk (0.7-1) unstable; urgency=low
 
 transmission-remote-gtk (0.5.1-1) unstable; urgency=low
 
-  * Use libproxy pkg-config CFLAGS in build, for older versions.
-  * Fix updates inside the GtkNotebook.
-  * Fix crash reported by atommixz.
+  * New upstream release 0.5.1
 
  -- Alan Fitton <alan@eth0.org.uk> Fri, 23 Apr 2011 23:45:30 +0100
 
 transmission-remote-gtk (0.5-1) unstable; urgency=low
 
-  * Fixes.
-  * Customisable columns.
+  * New upstream release 0.5
 
  -- Alan Fitton <alan@eth0.org.uk>  Fri, 22 Apr 2011 23:45:30 +0100
 
 transmission-remote-gtk (0.4-1) unstable; urgency=low
 
-  * Initial release
+  * Initial debian/ubuntu package
 
  -- Alan Fitton <alan@eth0.org.uk>  Sun, 10 Apr 2011 23:45:30 +0100

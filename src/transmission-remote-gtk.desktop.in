@@ -2,7 +2,7 @@
 Name=transmission-remote-gtk
 GenericName=Transmission Remote
 X-GNOME-FullName=Transmission Remote
-Comment=Remotely control Transmission BitTorrent client
+Comment=Remotely manage Transmission BitTorrent client
 Exec=@bindir@/transmission-remote-gtk %F
 Icon=transmission-remote-gtk
 Terminal=false
