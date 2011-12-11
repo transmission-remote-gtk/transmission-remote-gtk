@@ -213,11 +213,12 @@ struct _TrgMainWindowPrivate {
     TrgMenuBar *menuBar;
 
     TrgStatusBar *statusBar;
+    GtkWidget *iconStatusItem, *iconDownloadingItem,
+        *iconSeedingItem, *iconSepItem;
 #ifdef HAVE_LIBAPPINDICATOR
     AppIndicator *appIndicator;
-    GtkWidget *appIndicatorStatusItem, *appIndicatorDownloadingItem,
-        *appIndicatorSeedingItem, *appIndicatorSepItem;
 #else
+    GtkMenu *iconMenu;
     GtkStatusIcon *statusIcon;
 #endif
     GdkPixbuf *icon;
@@ -437,8 +438,7 @@ static void add_url_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
     TrgTorrentAddUrlDialog *dlg = trg_torrent_add_url_dialog_new(win,
-                                                                 priv->
-                                                                 client);
+                                                                 priv->client);
     gtk_widget_show_all(GTK_WIDGET(dlg));
 }
 
@@ -1024,12 +1024,17 @@ static void connchange_whatever_statusicon(TrgMainWindow * win,
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     const gchar *display = connected ? _("Connected") : _("Disconnected");
+    GtkMenu *menu = trg_status_icon_view_menu(win, display);
 
 #ifdef HAVE_LIBAPPINDICATOR
     if (priv->appIndicator)
-        app_indicator_set_menu(priv->appIndicator,
-                               trg_status_icon_view_menu(win, display));
+        app_indicator_set_menu(priv->appIndicator, menu);
 #else
+    if (priv->iconMenu)
+        gtk_widget_destroy(GTK_WIDGET(priv->iconMenu));
+
+    priv->iconMenu = menu;
+
     if (priv->statusIcon)
         gtk_status_icon_set_tooltip_text(priv->statusIcon, display);
 #endif
@@ -1042,11 +1047,9 @@ static void update_whatever_statusicon(TrgMainWindow * win,
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
-#ifdef HAVE_LIBAPPINDICATOR
-    gtk_widget_set_visible(priv->appIndicatorSeedingItem, stats != NULL);
-    gtk_widget_set_visible(priv->appIndicatorDownloadingItem,
-                           stats != NULL);
-    gtk_widget_set_visible(priv->appIndicatorSepItem, stats != NULL);
+    gtk_widget_set_visible(priv->iconSeedingItem, stats != NULL);
+    gtk_widget_set_visible(priv->iconDownloadingItem, stats != NULL);
+    gtk_widget_set_visible(priv->iconSepItem, stats != NULL);
 
     if (stats) {
         gchar *downloadingLabel =
@@ -1054,20 +1057,19 @@ static void update_whatever_statusicon(TrgMainWindow * win,
         gchar *seedingLabel =
             g_strdup_printf(_("Seeding  %d"), stats->seeding);
         gtk_menu_item_set_label(GTK_MENU_ITEM
-                                (priv->appIndicatorSeedingItem),
-                                seedingLabel);
+                                (priv->iconSeedingItem), seedingLabel);
         gtk_menu_item_set_label(GTK_MENU_ITEM
-                                (priv->appIndicatorDownloadingItem),
+                                (priv->iconDownloadingItem),
                                 downloadingLabel);
         g_free(downloadingLabel);
         g_free(seedingLabel);
     }
 
-    if (priv->appIndicatorStatusItem)
+    if (priv->iconStatusItem)
         gtk_menu_item_set_label(GTK_MENU_ITEM
-                                (priv->appIndicatorStatusItem),
-                                speedLabel);
-#else
+                                (priv->iconStatusItem), speedLabel);
+
+#ifndef HAVE_LIBAPPINDICATOR
     if (priv->statusIcon)
         gtk_status_icon_set_tooltip_text(priv->statusIcon, speedLabel);
 #endif
@@ -1637,10 +1639,9 @@ static void status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED,
 static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
                                               gpointer userdata)
 {
-    GtkMenu *menu =
-        trg_status_icon_view_menu(TRG_MAIN_WINDOW(userdata), NULL);
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(userdata);
 
-    gtk_menu_popup(menu, NULL, NULL, NULL, NULL, 0, 0);
+    gtk_menu_popup(priv->iconMenu, NULL, NULL, NULL, NULL, 0, 0);
 
     return TRUE;
 }
@@ -1650,9 +1651,8 @@ static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
                                                gpointer data)
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        GtkMenu *menu =
-            trg_status_icon_view_menu(TRG_MAIN_WINDOW(data), NULL);
-        gtk_menu_popup(menu, NULL, NULL, NULL, NULL,
+        TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+        gtk_menu_popup(priv->iconMenu, NULL, NULL, NULL, NULL,
                        (event != NULL) ? event->button : 0,
                        gdk_event_get_time((GdkEvent *) event));
         return TRUE;
@@ -2020,35 +2020,27 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
 
     menu = gtk_menu_new();
 
-#ifdef HAVE_LIBAPPINDICATOR
-    if (msg) {
-        priv->appIndicatorStatusItem = gtk_menu_item_new_with_label(msg);
-        gtk_widget_set_sensitive(priv->appIndicatorStatusItem, FALSE);
+    priv->iconStatusItem = gtk_menu_item_new_with_label(msg);
+    gtk_widget_set_sensitive(priv->iconStatusItem, FALSE);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), priv->iconStatusItem);
+
+    if (connected) {
+        priv->iconDownloadingItem = gtk_menu_item_new_with_label(_("Updating..."));
+        gtk_widget_set_visible(priv->iconDownloadingItem, FALSE);
+        gtk_widget_set_sensitive(priv->iconDownloadingItem, FALSE);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),
-                              priv->appIndicatorStatusItem);
+                              priv->iconDownloadingItem);
 
-        if (connected) {
-            priv->appIndicatorDownloadingItem = gtk_menu_item_new();
-            gtk_widget_set_visible(priv->appIndicatorDownloadingItem,
-                                   FALSE);
-            gtk_widget_set_sensitive(priv->appIndicatorDownloadingItem,
-                                     FALSE);
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu),
-                                  priv->appIndicatorDownloadingItem);
-
-            priv->appIndicatorSeedingItem = gtk_menu_item_new();
-            gtk_widget_set_visible(priv->appIndicatorSeedingItem, FALSE);
-            gtk_widget_set_sensitive(priv->appIndicatorSeedingItem, FALSE);
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu),
-                                  priv->appIndicatorSeedingItem);
-        }
-
-        priv->appIndicatorSepItem = gtk_separator_menu_item_new();
-        gtk_widget_set_sensitive(priv->appIndicatorSepItem, FALSE);
+        priv->iconSeedingItem = gtk_menu_item_new_with_label(_("Updating..."));
+        gtk_widget_set_visible(priv->iconSeedingItem, FALSE);
+        gtk_widget_set_sensitive(priv->iconSeedingItem, FALSE);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),
-                              priv->appIndicatorSepItem);
+                              priv->iconSeedingItem);
     }
-#endif
+
+    priv->iconSepItem = gtk_separator_menu_item_new();
+    gtk_widget_set_sensitive(priv->iconSepItem, FALSE);
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu), priv->iconSepItem);
 
     connect = gtk_image_menu_item_new_with_label(GTK_STOCK_CONNECT);
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(connect), TRUE);
@@ -2073,6 +2065,14 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
                               GTK_STOCK_ADD, connected,
                               G_CALLBACK(add_url_cb), win);
 
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Resume All"),
+                              GTK_STOCK_MEDIA_PLAY, connected,
+                              G_CALLBACK(resume_all_cb), win);
+
+        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Pause All"),
+                              GTK_STOCK_MEDIA_PAUSE, connected,
+                              G_CALLBACK(pause_all_cb), win);
+
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                               limit_menu_new(win, _("Down Limit"),
                                              SGET_SPEED_LIMIT_DOWN_ENABLED,
@@ -2081,14 +2081,6 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
                               limit_menu_new(win, _("Up Limit"),
                                              SGET_SPEED_LIMIT_UP_ENABLED,
                                              SGET_SPEED_LIMIT_UP, NULL));
-
-        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Resume All"),
-                              GTK_STOCK_MEDIA_PLAY, connected,
-                              G_CALLBACK(resume_all_cb), win);
-
-        trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Pause All"),
-                              GTK_STOCK_MEDIA_PAUSE, connected,
-                              G_CALLBACK(pause_all_cb), win);
     }
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
@@ -2393,8 +2385,7 @@ static GObject *trg_main_window_constructor(GType type,
                                            self, NULL);
 
     priv->torrentTreeView = trg_main_window_torrent_tree_view_new(self,
-                                                                  priv->
-                                                                  filteredTorrentModel);
+                                                                  priv->filteredTorrentModel);
     g_signal_connect(priv->torrentTreeView, "key-press-event",
                      G_CALLBACK(torrent_tv_key_press_event), self);
     g_signal_connect(priv->torrentTreeView, "popup-menu",
@@ -2443,8 +2434,7 @@ static GObject *trg_main_window_constructor(GType type,
                     FALSE, FALSE);
 
     gtk_paned_pack2(GTK_PANED(priv->hpaned), my_scrolledwin_new(GTK_WIDGET
-                                                                (priv->
-                                                                 torrentTreeView)),
+                                                                (priv->torrentTreeView)),
                     TRUE, TRUE);
 
     g_signal_connect(G_OBJECT(priv->stateSelector),
