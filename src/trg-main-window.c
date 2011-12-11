@@ -1731,6 +1731,7 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow *win, const gchar *msg) 
 
     if (msg) {
       GtkWidget *statusItem = gtk_menu_item_new_with_label(msg);
+      gtk_widget_set_sensitive(statusItem, FALSE);
       gtk_menu_shell_append(GTK_MENU_SHELL(menu), statusItem);
     }
     
@@ -1837,6 +1838,8 @@ void trg_main_window_remove_status_icon(TrgMainWindow * win) {
 #ifdef HAVE_LIBAPPINDICATOR
     if (priv->appIndicator)
         g_object_unref(G_OBJECT(priv->appIndicator));
+
+    priv->appIndicator = NULL;
 #else
 
     if (priv->statusIcon)
