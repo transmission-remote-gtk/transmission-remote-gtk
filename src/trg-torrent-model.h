@@ -71,10 +71,10 @@ G_END_DECLS
 find_existing_peer_item(GtkListStore * model, JsonObject * p,
                         GtkTreeIter * iter);
 
-void trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
+trg_torrent_model_update_stats* trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
                               JsonObject * response,
-                              trg_torrent_model_update_stats * stats,
                               gint mode);
+trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel * model);
 
 GHashTable *get_torrent_table(TrgTorrentModel * model);
 void trg_torrent_model_remove_all(TrgTorrentModel *model);

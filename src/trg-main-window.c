@@ -38,6 +38,9 @@
 #ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
 #endif
+#ifdef HAVE_LIBAPPINDICATOR
+#include <libappindicator/app-indicator.h>
+#endif
 
 #include "trg-client.h"
 #include "json.h"
@@ -85,6 +88,7 @@ static void torrent_event_notification(TrgTorrentModel * model, gchar * icon,
         gchar * desc, gint tmout, gchar * prefKey, GtkTreeIter * iter,
         gpointer data);
 #endif
+static void update_whatever_statusicon(TrgMainWindow *win, gboolean connected, const gchar *msg);
 static void on_torrent_completed(TrgTorrentModel * model, GtkTreeIter * iter,
         gpointer data);
 static void on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
@@ -145,7 +149,13 @@ static void trg_main_window_set_property(GObject * object, guint property_id,
         const GValue * value, GParamSpec * pspec);
 static void quit_cb(GtkWidget * w, gpointer data);
 static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win);
+#ifndef HAVE_LIBAPPINDICATOR
 static void status_icon_activated(GtkStatusIcon * icon, gpointer data);
+static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
+        gpointer userdata);
+static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
+        GdkEventButton * event, gpointer data);
+#endif
 static void clear_filter_entry_cb(GtkEntry *entry,
         GtkEntryIconPosition icon_pos,
         GdkEvent            *event,
@@ -161,12 +171,7 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
         gchar * enabledKey, gchar * speedKey, JsonArray * ids);
 static void trg_torrent_tv_view_menu(GtkWidget * treeview,
         GdkEventButton * event, gpointer data);
-static void trg_status_icon_view_menu(GtkStatusIcon * icon,
-        GdkEventButton * event, gpointer data);
-static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
-        gpointer userdata);
-static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
-        GdkEventButton * event, gpointer data);
+static GtkMenu *trg_status_icon_view_menu(TrgMainWindow *win, const gchar *msg);
 static gboolean torrent_tv_button_pressed_cb(GtkWidget * treeview,
         GdkEventButton * event, gpointer userdata);
 static gboolean torrent_tv_popup_menu_cb(GtkWidget * treeview,
@@ -185,7 +190,11 @@ struct _TrgMainWindowPrivate {
     TrgMenuBar *menuBar;
 
     TrgStatusBar *statusBar;
+#ifdef HAVE_LIBAPPINDICATOR
+    AppIndicator *appIndicator;
+#else
     GtkStatusIcon *statusIcon;
+#endif
     GdkPixbuf *icon;
     TrgStateSelector *stateSelector;
     GtkWidget *stateSelectorScroller;
@@ -283,9 +292,6 @@ static void torrent_event_notification(TrgTorrentModel * model, gchar * icon,
     gchar *name;
     NotifyNotification *notify;
 
-    if (!priv->statusIcon || !gtk_status_icon_is_embedded(priv->statusIcon))
-        return;
-
     if (!trg_prefs_get_bool(prefs, prefKey, TRG_PREFS_NOFLAGS))
         return;
 
@@ -298,8 +304,11 @@ static void torrent_event_notification(TrgTorrentModel * model, gchar * icon,
 #endif
             );
 
+#ifndef HAVE_LIBAPPINDICATOR
 #if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7)
+if (priv->statusIcon && gtk_status_icon_is_embedded(priv->statusIcon))
     notify_notification_attach_to_status_icon(notify, priv->statusIcon);
+#endif
 #endif
 
     notify_notification_set_urgency(notify, NOTIFY_URGENCY_LOW);
@@ -878,6 +887,21 @@ static gboolean on_session_get(gpointer data) {
     return FALSE;
 }
 
+static void update_whatever_statusicon(TrgMainWindow *win, gboolean connected, const gchar *msg)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+#ifdef HAVE_LIBAPPINDICATOR
+    if (priv->appIndicator) {
+      app_indicator_set_menu(priv->appIndicator, trg_status_icon_view_menu(win, msg));
+    }
+#else
+    if (priv->statusIcon) {
+      const gchar *display = msg ? msg : (connected ? _("Connected") : _("Disconnected"));
+      gtk_status_icon_set_tooltip_text(priv->statusIcon, display); 
+    }
+#endif
+}
+
 /*
  * The callback for a torrent-get response.
  */
@@ -888,7 +912,8 @@ static gboolean on_torrent_get(gpointer data, int mode) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(response->cb_data);
     TrgClient *client = priv->client;
     TrgPrefs *prefs = trg_client_get_prefs(client);
-    trg_torrent_model_update_stats stats;
+    trg_torrent_model_update_stats *stats;
+    gchar *iconText;
     guint interval;
 
     /* Disconnected between request and response callback */
@@ -926,26 +951,20 @@ static gboolean on_torrent_get(gpointer data, int mode) {
     }
 
     trg_client_reset_failcount(client);
-    memset(&stats, 0, sizeof(trg_torrent_model_update_stats));
-
     trg_client_inc_serial(client);
 
-    trg_torrent_model_update(priv->torrentModel, client, response->obj, &stats, mode);
-    trg_state_selector_stats_update(priv->stateSelector, &stats);
+    stats = trg_torrent_model_update(priv->torrentModel, client, response->obj, mode);
+    trg_state_selector_stats_update(priv->stateSelector, stats);
     update_selected_torrent_notebook(win, mode,
             priv->selectedTorrentId);
-    trg_status_bar_update(priv->statusBar, &stats, client);
-
-    if (priv->statusIcon)
-    {
-        gchar *iconText = g_strdup_printf("%s: %s", _("Connected"), trg_status_bar_get_speed_text(priv->statusBar));
-        gtk_status_icon_set_tooltip_text(priv->statusIcon, iconText);
-        g_free(iconText);
-    }
+    trg_status_bar_update(priv->statusBar, stats, client);
+    iconText = g_strdup_printf("%s: %s", _("Connected"), trg_status_bar_get_speed_text(priv->statusBar)); 
+    update_whatever_statusicon(win, TRUE, iconText);
+    g_free(iconText);
 
 #ifndef TRG_NO_GRAPH
     if (priv->graphNotebookIndex >= 0)
-        trg_torrent_graph_set_speed(priv->graph, &stats);
+        trg_torrent_graph_set_speed(priv->graph, stats);
 #endif
 
     if (mode != TORRENT_GET_MODE_INTERACTION)
@@ -1238,10 +1257,8 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected) {
         priv->timerId = 0;
     }
 
-    if (priv->statusIcon)
-        gtk_status_icon_set_tooltip_text(priv->statusIcon, connected ? _("Connected") : _("Disconnected"));
-
     trg_client_status_change(tc, connected);
+    update_whatever_statusicon(win, connected, NULL);
 }
 
 static void trg_main_window_get_property(GObject * object, guint property_id,
@@ -1367,6 +1384,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win) {
     return menuBar;
 }
 
+#ifndef HAVE_LIBAPPINDICATOR
 static void status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED, gpointer data) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
@@ -1380,6 +1398,27 @@ static void status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED, gpointer d
                 on_torrent_get_first, data);
     }
 }
+
+static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
+        gpointer userdata) {
+    GtkMenu *menu = trg_status_icon_view_menu(TRG_MAIN_WINDOW(userdata), NULL);
+
+    gtk_menu_popup(menu, NULL, NULL, NULL, NULL, 0, 0);
+
+    return TRUE;
+}
+
+static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
+        GdkEventButton * event, gpointer data) {
+    if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
+        GtkMenu *menu = trg_status_icon_view_menu(TRG_MAIN_WINDOW(data), NULL);
+        gtk_menu_popup(menu, NULL, NULL, NULL, NULL, (event != NULL) ? event->button : 0, gdk_event_get_time((GdkEvent *) event));
+        return TRUE;
+    } else {
+        return FALSE;
+    }
+}
+#endif
 
 static void clear_filter_entry_cb(GtkEntry *entry,
         GtkEntryIconPosition icon_pos,
@@ -1682,77 +1721,63 @@ static void trg_torrent_tv_view_menu(GtkWidget * treeview,
             gdk_event_get_time((GdkEvent *) event));
 }
 
-static void trg_status_icon_view_menu(GtkStatusIcon * icon G_GNUC_UNUSED,
-        GdkEventButton * event, gpointer data) {
-    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
+static GtkMenu *trg_status_icon_view_menu(TrgMainWindow *win, const gchar *msg) {
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     gboolean connected = trg_client_is_connected(priv->client);
     GtkWidget *menu, *connect;
-
+    
     menu = gtk_menu_new();
 
+    if (msg) {
+      GtkWidget *statusItem = gtk_menu_item_new_with_label(msg);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), statusItem);
+    }
+    
     connect = gtk_image_menu_item_new_with_label(GTK_STOCK_CONNECT);
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(connect), TRUE);
     gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM(connect), TRUE);
     gtk_menu_item_set_label(GTK_MENU_ITEM(connect), _("Connect"));
-    gtk_menu_item_set_submenu(GTK_MENU_ITEM(connect), trg_menu_bar_file_connect_menu_new(TRG_MAIN_WINDOW(data), prefs));
+    gtk_menu_item_set_submenu(GTK_MENU_ITEM(connect), trg_menu_bar_file_connect_menu_new(win, prefs));
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), connect);
 
     if (connected) {
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Disconnect"),
                 GTK_STOCK_DISCONNECT, connected, G_CALLBACK(disconnect_cb),
-                data);
+                win);
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add"), GTK_STOCK_ADD,
-                connected, G_CALLBACK(add_cb), data);
+                connected, G_CALLBACK(add_cb), win);
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add from URL"),
-                GTK_STOCK_ADD, connected, G_CALLBACK(add_url_cb), data);
+                GTK_STOCK_ADD, connected, G_CALLBACK(add_url_cb), win);
 
         gtk_menu_shell_append(
                 GTK_MENU_SHELL(menu),
-                limit_menu_new(TRG_MAIN_WINDOW(data), _("Down Limit"),
+                limit_menu_new(win, _("Down Limit"),
                         SGET_SPEED_LIMIT_DOWN_ENABLED, SGET_SPEED_LIMIT_DOWN,
                         NULL));
         gtk_menu_shell_append(
                 GTK_MENU_SHELL(menu),
-                limit_menu_new(TRG_MAIN_WINDOW(data), _("Up Limit"),
+                limit_menu_new(win, _("Up Limit"),
                         SGET_SPEED_LIMIT_UP_ENABLED, SGET_SPEED_LIMIT_UP, NULL));
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Resume All"),
                 GTK_STOCK_MEDIA_PLAY, connected, G_CALLBACK(resume_all_cb),
-                data);
+                win);
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Pause All"),
                 GTK_STOCK_MEDIA_PAUSE, connected, G_CALLBACK(pause_all_cb),
-                data);
+                win);
     }
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Quit"), GTK_STOCK_QUIT,
-            TRUE, G_CALLBACK(quit_cb), data);
+            TRUE, G_CALLBACK(quit_cb), win);
 
     gtk_widget_show_all(menu);
 
-    gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
-            (event != NULL) ? event->button : 0,
-            gdk_event_get_time((GdkEvent *) event));
-}
-
-static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
-        gpointer userdata) {
-    trg_status_icon_view_menu(icon, NULL, userdata);
-    return TRUE;
-}
-
-static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
-        GdkEventButton * event, gpointer data) {
-    if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-        trg_status_icon_view_menu(icon, event, data);
-        return TRUE;
-    } else {
-        return FALSE;
-    }
+    return GTK_MENU(menu);
 }
 
 static gboolean torrent_tv_button_pressed_cb(GtkWidget * treeview,
@@ -1788,6 +1813,7 @@ static gboolean torrent_tv_popup_menu_cb(GtkWidget * treeview,
 
 static gboolean window_state_event(GtkWidget * widget,
         GdkEventWindowState * event, gpointer trayIcon) {
+#ifndef HAVE_LIBAPPINDICATOR
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(widget);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
 
@@ -1801,15 +1827,23 @@ static gboolean window_state_event(GtkWidget * widget,
     }
 
     return TRUE;
+#else
+    return FALSE;
+#endif
 }
 
 void trg_main_window_remove_status_icon(TrgMainWindow * win) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+#ifdef HAVE_LIBAPPINDICATOR
+    if (priv->appIndicator)
+        g_object_unref(G_OBJECT(priv->appIndicator));
+#else
 
     if (priv->statusIcon)
         g_object_unref(G_OBJECT(priv->statusIcon));
 
     priv->statusIcon = NULL;
+#endif
 }
 
 #ifndef TRG_NO_GRAPH
@@ -1840,7 +1874,11 @@ void trg_main_window_remove_graph(TrgMainWindow * win) {
 
 void trg_main_window_add_status_icon(TrgMainWindow * win) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
-
+#ifdef HAVE_LIBAPPINDICATOR
+    priv->appIndicator = app_indicator_new(PACKAGE_NAME, PACKAGE_NAME, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+    app_indicator_set_status(priv->appIndicator, APP_INDICATOR_STATUS_ACTIVE);
+    app_indicator_set_menu(priv->appIndicator, trg_status_icon_view_menu(win, NULL));
+#else
     if (!priv->icon)
         return;
 
@@ -1855,7 +1893,9 @@ void trg_main_window_add_status_icon(TrgMainWindow * win) {
             G_CALLBACK(trg_status_icon_popup_menu_cb), win);
 
     gtk_status_icon_set_visible(priv->statusIcon, TRUE);
-    gtk_status_icon_set_tooltip_text(priv->statusIcon, trg_client_is_connected(priv->client) ? _("Connected") : _("Disconnected"));
+#endif
+
+    update_whatever_statusicon(win, trg_client_is_connected(priv->client), NULL);
 }
 
 TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win) {
@@ -2058,7 +2098,7 @@ static GObject *trg_main_window_constructor(GType type,
     if (tray)
         trg_main_window_add_status_icon(self);
     else
-        priv->statusIcon = NULL;
+        trg_main_window_remove_status_icon(self);
 
     priv->statusBar = trg_status_bar_new();
     g_signal_connect(priv->client, "session-updated",

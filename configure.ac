@@ -72,6 +72,12 @@ if test x$with_libproxy != xno; then
   PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
 fi
 
+AC_ARG_WITH([libappindicator], AC_HELP_STRING([--without-libappindicator], [disable libappindicator]))
+have_libappindicator=no
+if test x$with_libappindicator != xno; then
+  PKG_CHECK_MODULES([libappindicator], [appindicator-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
+fi
+
 AC_ARG_ENABLE(debug, [AS_HELP_STRING(--enable-debug,
                                      [enable debugging])])
 if test x$enable_debug = xyes; then

@@ -15,6 +15,9 @@
 /* Define to 1 if you have the <inttypes.h> header file. */
 #undef HAVE_INTTYPES_H
 
+/* Define if libappindicator is available */
+#undef HAVE_LIBAPPINDICATOR
+
 /* Define if libnotify is available */
 #undef HAVE_LIBNOTIFY
 

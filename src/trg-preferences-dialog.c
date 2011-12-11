@@ -365,7 +365,15 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog *dlg) {
     hig_workarea_add_wide_control(t, &row, w);
 #endif
 
-    hig_workarea_add_section_title(t, &row, _("System Tray"));
+#ifdef HAVE_LIBNOTIFY
+    w = trgp_check_new(dlg, _("Torrent added notifications"),
+            TRG_PREFS_KEY_ADD_NOTIFY, TRG_PREFS_GLOBAL, NULL);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = trgp_check_new(dlg, _("Torrent complete notifications"),
+            TRG_PREFS_KEY_COMPLETE_NOTIFY, TRG_PREFS_GLOBAL, NULL);
+    hig_workarea_add_wide_control(t, &row, w);
+#endif
 
     tray = trgp_check_new(dlg, _("Show in system tray"),
             TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL, NULL);
@@ -373,25 +381,9 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog *dlg) {
             priv->win);
     hig_workarea_add_wide_control(t, &row, tray);
 
+#ifndef HAVE_LIBAPPINDICATOR
     w = trgp_check_new(dlg, _("Minimise to system tray"),
             TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE, TRG_PREFS_GLOBAL, NULL);
-    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-    (tray)));
-    g_signal_connect(G_OBJECT(tray), "toggled",
-            G_CALLBACK(toggle_active_arg_is_sensitive), w);
-    hig_workarea_add_wide_control(t, &row, w);
-
-#ifdef HAVE_LIBNOTIFY
-    w = trgp_check_new(dlg, _("Torrent added notifications"),
-            TRG_PREFS_KEY_ADD_NOTIFY, TRG_PREFS_GLOBAL, NULL);
-    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-    (tray)));
-    g_signal_connect(G_OBJECT(tray), "toggled",
-            G_CALLBACK(toggle_active_arg_is_sensitive), w);
-    hig_workarea_add_wide_control(t, &row, w);
-
-    w = trgp_check_new(dlg, _("Torrent complete notifications"),
-            TRG_PREFS_KEY_COMPLETE_NOTIFY, TRG_PREFS_GLOBAL, NULL);
     gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
     (tray)));
     g_signal_connect(G_OBJECT(tray), "toggled",

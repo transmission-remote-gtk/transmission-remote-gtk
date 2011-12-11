@@ -25,7 +25,7 @@ desktop_DATA = transmission-remote-gtk.desktop
 endif
 
 bin_PROGRAMS = transmission-remote-gtk
-INCLUDES = --pedantic -Wall -Wno-format -Wno-overflow -I.. -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) -std=gnu99
+INCLUDES = --pedantic -Wall -Wno-format -Wno-overflow -I.. -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS) -std=gnu99
 		
 transmission_remote_gtk_SOURCES = main.c \
 	  requests.c \
@@ -77,7 +77,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  remote-exec.c \
 	  $(NULL)
 
-transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS)
+transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS) $(libappindicator_LIBS)
 
 if WIN32
 .rc.o:
