@@ -1,3 +1,22 @@
+dnl
+dnl transmission-remote-gtk - A GTK RPC client to Transmission
+dnl Copyright (C) 2011  Alan Fitton
+
+dnl This program is free software; you can redistribute it and/or modify
+dnl it under the terms of the GNU General Public License as published by
+dnl the Free Software Foundation; either version 2 of the License, or
+dnl (at your option) any later version.
+
+dnl This program is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+dnl GNU General Public License for more details.
+
+dnl You should have received a copy of the GNU General Public License along
+dnl with this program; if not, write to the Free Software Foundation, Inc.,
+dnl 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+dnl
+
 AC_PREREQ(2.63)
 
 AC_INIT(transmission-remote-gtk, 0.8, alan@eth0.org.uk)
