@@ -88,7 +88,8 @@ static void torrent_event_notification(TrgTorrentModel * model, gchar * icon,
         gchar * desc, gint tmout, gchar * prefKey, GtkTreeIter * iter,
         gpointer data);
 #endif
-static void update_whatever_statusicon(TrgMainWindow *win, gboolean connected, const gchar *msg);
+static void connchange_whatever_statusicon(TrgMainWindow *win, gboolean connected);
+static void update_whatever_statusicon(TrgMainWindow *win, const gchar *speedLabel, trg_torrent_model_update_stats *stats);
 static void on_torrent_completed(TrgTorrentModel * model, GtkTreeIter * iter,
         gpointer data);
 static void on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
@@ -192,6 +193,7 @@ struct _TrgMainWindowPrivate {
     TrgStatusBar *statusBar;
 #ifdef HAVE_LIBAPPINDICATOR
     AppIndicator *appIndicator;
+    GtkWidget *appIndicatorStatusItem;
 #else
     GtkStatusIcon *statusIcon;
 #endif
@@ -869,7 +871,6 @@ static gboolean on_session_get(gpointer data) {
         }
 
         trg_status_bar_connect(priv->statusBar, newSession);
-        trg_main_window_conn_changed(win, TRUE);
     }
 
     if (newSession) {
@@ -878,6 +879,7 @@ static gboolean on_session_get(gpointer data) {
     }
 
     if (!isConnected) {
+        trg_main_window_conn_changed(win, TRUE);
         trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
     	dispatch_async(client, torrent_get(-1), on_torrent_get_first, win);
     }
@@ -887,19 +889,34 @@ static gboolean on_session_get(gpointer data) {
     return FALSE;
 }
 
-static void update_whatever_statusicon(TrgMainWindow *win, gboolean connected, const gchar *msg)
+static void connchange_whatever_statusicon(TrgMainWindow *win, gboolean connected)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    const gchar *display = connected ? _("Connected") : _("Disconnected");
+
 #ifdef HAVE_LIBAPPINDICATOR
-    if (priv->appIndicator) {
-      app_indicator_set_menu(priv->appIndicator, trg_status_icon_view_menu(win, msg));
-    }
+    if (priv->appIndicator)
+      app_indicator_set_menu(priv->appIndicator, trg_status_icon_view_menu(win, display));
 #else
-    if (priv->statusIcon) {
-      const gchar *display = msg ? msg : (connected ? _("Connected") : _("Disconnected"));
-      gtk_status_icon_set_tooltip_text(priv->statusIcon, display); 
-    }
+    if (priv->statusIcon)
+      gtk_status_icon_set_tooltip_text(priv->statusIcon, display);
 #endif
+}
+
+static void update_whatever_statusicon(TrgMainWindow *win, const gchar *speedLabel, trg_torrent_model_update_stats *stats)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    gchar *display = g_strdup_printf("%s: %s", _("Connected"), speedLabel);
+
+#ifdef HAVE_LIBAPPINDICATOR
+    if (priv->appIndicatorStatusItem)
+      gtk_menu_item_set_label(GTK_MENU_ITEM(priv->appIndicatorStatusItem), display);
+#else
+    if (priv->statusIcon)
+      gtk_status_icon_set_tooltip_text(priv->statusIcon, display); 
+#endif
+
+    g_free(display);
 }
 
 /*
@@ -913,7 +930,6 @@ static gboolean on_torrent_get(gpointer data, int mode) {
     TrgClient *client = priv->client;
     TrgPrefs *prefs = trg_client_get_prefs(client);
     trg_torrent_model_update_stats *stats;
-    gchar *iconText;
     guint interval;
 
     /* Disconnected between request and response callback */
@@ -955,12 +971,9 @@ static gboolean on_torrent_get(gpointer data, int mode) {
 
     stats = trg_torrent_model_update(priv->torrentModel, client, response->obj, mode);
     trg_state_selector_stats_update(priv->stateSelector, stats);
-    update_selected_torrent_notebook(win, mode,
-            priv->selectedTorrentId);
+    update_selected_torrent_notebook(win, mode, priv->selectedTorrentId);
     trg_status_bar_update(priv->statusBar, stats, client);
-    iconText = g_strdup_printf("%s: %s", _("Connected"), trg_status_bar_get_speed_text(priv->statusBar)); 
-    update_whatever_statusicon(win, TRUE, iconText);
-    g_free(iconText);
+    update_whatever_statusicon(win, trg_status_bar_get_speed_text(priv->statusBar), stats);
 
 #ifndef TRG_NO_GRAPH
     if (priv->graphNotebookIndex >= 0)
@@ -1258,7 +1271,7 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected) {
     }
 
     trg_client_status_change(tc, connected);
-    update_whatever_statusicon(win, connected, NULL);
+    connchange_whatever_statusicon(win, connected);
 }
 
 static void trg_main_window_get_property(GObject * object, guint property_id,
@@ -1729,11 +1742,13 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow *win, const gchar *msg) 
     
     menu = gtk_menu_new();
 
+#ifdef HAVE_LIBAPPINDICATOR
     if (msg) {
-      GtkWidget *statusItem = gtk_menu_item_new_with_label(msg);
-      gtk_widget_set_sensitive(statusItem, FALSE);
-      gtk_menu_shell_append(GTK_MENU_SHELL(menu), statusItem);
+      priv->appIndicatorStatusItem = gtk_menu_item_new_with_label(msg);
+      gtk_widget_set_sensitive(priv->appIndicatorStatusItem, FALSE);
+      gtk_menu_shell_append(GTK_MENU_SHELL(menu), priv->appIndicatorStatusItem);
     }
+#endif
     
     connect = gtk_image_menu_item_new_with_label(GTK_STOCK_CONNECT);
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(connect), TRUE);
@@ -1878,9 +1893,10 @@ void trg_main_window_remove_graph(TrgMainWindow * win) {
 void trg_main_window_add_status_icon(TrgMainWindow * win) {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 #ifdef HAVE_LIBAPPINDICATOR
-    priv->appIndicator = app_indicator_new(PACKAGE_NAME, PACKAGE_NAME, APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
-    app_indicator_set_status(priv->appIndicator, APP_INDICATOR_STATUS_ACTIVE);
-    app_indicator_set_menu(priv->appIndicator, trg_status_icon_view_menu(win, NULL));
+    if (priv->appIndicator = app_indicator_new(PACKAGE_NAME, PACKAGE_NAME, APP_INDICATOR_CATEGORY_APPLICATION_STATUS)) {
+      app_indicator_set_status(priv->appIndicator, APP_INDICATOR_STATUS_ACTIVE);
+      app_indicator_set_menu(priv->appIndicator, trg_status_icon_view_menu(win, NULL));
+    }
 #else
     if (!priv->icon)
         return;
@@ -1898,7 +1914,7 @@ void trg_main_window_add_status_icon(TrgMainWindow * win) {
     gtk_status_icon_set_visible(priv->statusIcon, TRUE);
 #endif
 
-    update_whatever_statusicon(win, trg_client_is_connected(priv->client), NULL);
+    connchange_whatever_statusicon(win, trg_client_is_connected(priv->client));
 }
 
 TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win) {
