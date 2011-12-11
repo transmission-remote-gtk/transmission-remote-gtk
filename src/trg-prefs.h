@@ -76,12 +76,12 @@
 #define TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR "dir"
 
 
-#define TRG_PREFS_NOFLAGS    (1 << 0)	/* 0x00 */
-#define TRG_PREFS_GLOBAL     (1 << 1)	/* 0x01 */
-#define TRG_PREFS_PROFILE    (1 << 2)	/* 0x02 */
-#define TRG_PREFS_CONNECTION (1 << 3)	/* 0x04 */
-#define TRG_PREFS_NEWNODE    (1 << 4)	/* 0x08 */
-#define TRG_PREFS_REPLACENODE (1 << 5)	/* 0x16 */
+#define TRG_PREFS_NOFLAGS    (1 << 0)   /* 0x00 */
+#define TRG_PREFS_GLOBAL     (1 << 1)   /* 0x01 */
+#define TRG_PREFS_PROFILE    (1 << 2)   /* 0x02 */
+#define TRG_PREFS_CONNECTION (1 << 3)   /* 0x04 */
+#define TRG_PREFS_NEWNODE    (1 << 4)   /* 0x08 */
+#define TRG_PREFS_REPLACENODE (1 << 5)  /* 0x16 */
 
 G_BEGIN_DECLS
 #define TRG_TYPE_PREFS trg_prefs_get_type()
@@ -110,13 +110,13 @@ TrgPrefs *trg_prefs_new(void);
 
 void trg_prefs_add_default_int(TrgPrefs * p, const gchar * key, int value);
 void trg_prefs_add_default_string(TrgPrefs * p, const gchar * key,
-				  gchar * value);
+                                  gchar * value);
 void trg_prefs_add_default_double(TrgPrefs * p, const gchar * key,
-				  double value);
+                                  double value);
 void trg_prefs_add_default_bool_true(TrgPrefs * p, const gchar * key);
 
 JsonNode *trg_prefs_get_value(TrgPrefs * p, const gchar * key, int type,
-			      int flags);
+                              int flags);
 gchar *trg_prefs_get_string(TrgPrefs * p, const gchar * key, int flags);
 gint64 trg_prefs_get_int(TrgPrefs * p, const gchar * key, int flags);
 gdouble trg_prefs_get_double(TrgPrefs * p, const gchar * key, int flags);
@@ -134,13 +134,13 @@ JsonObject *trg_prefs_get_root(TrgPrefs * p);
 JsonArray *trg_prefs_get_array(TrgPrefs * p, const gchar * key, int flags);
 
 void trg_prefs_set_int(TrgPrefs * p, const gchar * key, int value,
-		       int flags);
+                       int flags);
 void trg_prefs_set_string(TrgPrefs * p, const gchar * key,
-			  const gchar * value, int flags);
+                          const gchar * value, int flags);
 void trg_prefs_set_double(TrgPrefs * p, const gchar * key, double value,
-			  int flags);
+                          int flags);
 void trg_prefs_set_bool(TrgPrefs * p, const gchar * key, gboolean value,
-			int flags);
+                        int flags);
 
 gboolean trg_prefs_save(TrgPrefs * p);
 void trg_prefs_load(TrgPrefs * p);
@@ -149,4 +149,4 @@ void trg_prefs_profile_change_emit_signal(TrgPrefs * p);
 guint trg_prefs_get_add_flags(TrgPrefs * p);
 
 G_END_DECLS
-#endif				/* _TRG_PREFS_H_ */
+#endif                          /* _TRG_PREFS_H_ */

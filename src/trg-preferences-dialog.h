@@ -57,9 +57,9 @@ struct _TrgPreferencesDialogClass {
 GType trg_preferences_dialog_get_type(void);
 
 GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow * win,
-					       TrgClient * client);
+                                               TrgClient * client);
 trg_pref_widget_desc *trg_pref_widget_desc_new(GtkWidget * w, gchar * key,
-					       int flags);
+                                               int flags);
 
 G_END_DECLS
-#endif				/* TRG_PREFERENCES_WINDOW_H_ */
+#endif                          /* TRG_PREFERENCES_WINDOW_H_ */

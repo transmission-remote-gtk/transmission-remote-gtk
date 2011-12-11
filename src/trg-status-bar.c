@@ -83,7 +83,7 @@ static void trg_status_bar_init(TrgStatusBar * self)
 }
 
 void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
-					const gchar * msg)
+                                        const gchar * msg)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
 
@@ -97,8 +97,8 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
 
     session_get_version(session, &version);
     statusMsg =
-	g_strdup_printf
-	(_("Connected to Transmission %g, getting torrents..."), version);
+        g_strdup_printf
+        (_("Connected to Transmission %g, getting torrents..."), version);
     g_message("%s", statusMsg);
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);
@@ -111,19 +111,19 @@ void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session)
     gchar freeSpace[64];
 
     if (free >= 0) {
-	gchar *freeSpaceString;
-	trg_strlsize(freeSpace, free);
-	freeSpaceString = g_strdup_printf(_("Free space: %s"), freeSpace);
-	gtk_label_set_text(GTK_LABEL(priv->free_lbl), freeSpaceString);
-	g_free(freeSpaceString);
+        gchar *freeSpaceString;
+        trg_strlsize(freeSpace, free);
+        freeSpaceString = g_strdup_printf(_("Free space: %s"), freeSpace);
+        gtk_label_set_text(GTK_LABEL(priv->free_lbl), freeSpaceString);
+        g_free(freeSpaceString);
     } else {
-	gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
+        gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
     }
 }
 
 void trg_status_bar_update(TrgStatusBar * sb,
-			   trg_torrent_model_update_stats * stats,
-			   TrgClient * client)
+                           trg_torrent_model_update_stats * stats,
+                           TrgClient * client)
 {
     TrgStatusBarPrivate *priv;
     JsonObject *session;
@@ -137,45 +137,45 @@ void trg_status_bar_update(TrgStatusBar * sb,
 
     // The session should always exist otherwise this function wouldn't be called
     downlimitraw =
-	json_object_get_boolean_member(session,
-				       SGET_SPEED_LIMIT_DOWN_ENABLED) ?
-	json_object_get_int_member(session, SGET_SPEED_LIMIT_DOWN) : -1;
+        json_object_get_boolean_member(session,
+                                       SGET_SPEED_LIMIT_DOWN_ENABLED) ?
+        json_object_get_int_member(session, SGET_SPEED_LIMIT_DOWN) : -1;
 
     uplimitraw =
-	json_object_get_boolean_member(session,
-				       SGET_SPEED_LIMIT_UP_ENABLED) ?
-	json_object_get_int_member(session, SGET_SPEED_LIMIT_UP) : -1;
+        json_object_get_boolean_member(session,
+                                       SGET_SPEED_LIMIT_UP_ENABLED) ?
+        json_object_get_int_member(session, SGET_SPEED_LIMIT_UP) : -1;
 
     trg_strlspeed(downRateTotalString,
-		  stats->downRateTotal / KILOBYTE_FACTOR);
+                  stats->downRateTotal / KILOBYTE_FACTOR);
     trg_strlspeed(upRateTotalString, stats->upRateTotal / KILOBYTE_FACTOR);
 
     if (uplimitraw >= 0) {
-	gchar uplimitstring[32];
-	trg_strlspeed(uplimitstring, uplimitraw);
-	g_snprintf(uplimit, sizeof(uplimit), _(" (Limit: %s)"),
-		   uplimitstring);
+        gchar uplimitstring[32];
+        trg_strlspeed(uplimitstring, uplimitraw);
+        g_snprintf(uplimit, sizeof(uplimit), _(" (Limit: %s)"),
+                   uplimitstring);
     }
 
     if (downlimitraw >= 0) {
-	gchar downlimitstring[32];
-	trg_strlspeed(downlimitstring, downlimitraw);
-	g_snprintf(downlimit, sizeof(downlimit), _(" (Limit: %s)"),
-		   downlimitstring);
+        gchar downlimitstring[32];
+        trg_strlspeed(downlimitstring, downlimitraw);
+        g_snprintf(downlimit, sizeof(downlimit), _(" (Limit: %s)"),
+                   downlimitstring);
     }
 
     speedText =
-	g_strdup_printf(_("Down: %s%s, Up: %s%s"), downRateTotalString,
-			downlimitraw >= 0 ? downlimit : "",
-			upRateTotalString, uplimitraw >= 0 ? uplimit : "");
+        g_strdup_printf(_("Down: %s%s, Up: %s%s"), downRateTotalString,
+                        downlimitraw >= 0 ? downlimit : "",
+                        upRateTotalString, uplimitraw >= 0 ? uplimit : "");
 
     infoText =
-	g_strdup_printf
-	(ngettext
-	 ("%d torrent:  %d seeding, %d downloading, %d paused",
-	  "%d torrents: %d seeding, %d downloading, %d paused",
-	  stats->count), stats->count, stats->seeding, stats->down,
-	 stats->paused);
+        g_strdup_printf
+        (ngettext
+         ("%d torrent:  %d seeding, %d downloading, %d paused",
+          "%d torrents: %d seeding, %d downloading, %d paused",
+          stats->count), stats->count, stats->seeding, stats->down,
+         stats->paused);
 
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), infoText);
     gtk_label_set_text(GTK_LABEL(priv->speed_lbl), speedText);

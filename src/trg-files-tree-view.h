@@ -49,8 +49,8 @@ typedef struct {
 GType trg_files_tree_view_get_type(void);
 
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
-					  TrgMainWindow * win,
-					  TrgClient * client);
+                                          TrgMainWindow * win,
+                                          TrgClient * client);
 
 G_END_DECLS
-#endif				/* TRG_FILES_TREE_VIEW_H_ */
+#endif                          /* TRG_FILES_TREE_VIEW_H_ */

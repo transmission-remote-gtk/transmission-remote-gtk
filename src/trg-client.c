@@ -88,27 +88,27 @@ struct _TrgClientPrivate {
 };
 
 static void dispatch_async_threadfunc(trg_request * reqrsp,
-				      TrgClient * client);
+                                      TrgClient * client);
 
 static void
 trg_client_get_property(GObject * object, guint property_id,
-			GValue * value, GParamSpec * pspec)
+                        GValue * value, GParamSpec * pspec)
 {
     switch (property_id) {
     default:
-	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
-	break;
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
 static void
 trg_client_set_property(GObject * object, guint property_id,
-			const GValue * value, GParamSpec * pspec)
+                        const GValue * value, GParamSpec * pspec)
 {
     switch (property_id) {
     default:
-	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
-	break;
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
@@ -128,13 +128,13 @@ static void trg_client_class_init(TrgClientClass * klass)
     object_class->dispose = trg_client_dispose;
 
     signals[TC_SESSION_UPDATED] =
-	g_signal_new("session-updated",
-		     G_TYPE_FROM_CLASS(object_class),
-		     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-		     G_STRUCT_OFFSET(TrgClientClass,
-				     session_updated), NULL,
-		     NULL, g_cclosure_marshal_VOID__POINTER,
-		     G_TYPE_NONE, 1, G_TYPE_POINTER);
+        g_signal_new("session-updated",
+                     G_TYPE_FROM_CLASS(object_class),
+                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                     G_STRUCT_OFFSET(TrgClientClass,
+                                     session_updated), NULL,
+                     NULL, g_cclosure_marshal_VOID__POINTER,
+                     G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 static void trg_client_init(TrgClient * self)
@@ -154,7 +154,7 @@ TrgClient *trg_client_new(void)
     priv->tlsKey = g_private_new(NULL);
 
     priv->pool = g_thread_pool_new((GFunc) dispatch_async_threadfunc, tc,
-				   DISPATCH_POOL_SIZE, TRUE, NULL);
+                                   DISPATCH_POOL_SIZE, TRUE, NULL);
 
     return tc;
 }
@@ -188,9 +188,9 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
 
     if (priv->session) {
-	json_object_unref(priv->session);
+        json_object_unref(priv->session);
     } else {
-	session_get_version(session, &priv->version);
+        session_get_version(session, &priv->version);
     }
 
     priv->session = session;
@@ -229,56 +229,56 @@ int trg_client_populate_with_settings(TrgClient * tc)
     priv->password = NULL;
 
     port =
-	trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_CONNECTION);
+        trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_CONNECTION);
 
     host =
-	trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME,
-			     TRG_PREFS_CONNECTION);
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME,
+                             TRG_PREFS_CONNECTION);
     if (!host || strlen(host) < 1) {
-	g_free(host);
-	g_mutex_unlock(priv->configMutex);
-	return TRG_NO_HOSTNAME_SET;
+        g_free(host);
+        g_mutex_unlock(priv->configMutex);
+        return TRG_NO_HOSTNAME_SET;
     }
 #ifndef CURL_NO_SSL
     priv->ssl =
-	trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_CONNECTION);
+        trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_CONNECTION);
 #else
     priv->ssl = FALSE;
 #endif
 
     priv->url =
-	g_strdup_printf("%s://%s:%d/transmission/rpc",
-			priv->ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX,
-			host, port);
+        g_strdup_printf("%s://%s:%d/transmission/rpc",
+                        priv->ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX,
+                        host, port);
     g_free(host);
 
     priv->username =
-	trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME,
-			     TRG_PREFS_CONNECTION);
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME,
+                             TRG_PREFS_CONNECTION);
 
     priv->password =
-	trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD,
-			     TRG_PREFS_CONNECTION);
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD,
+                             TRG_PREFS_CONNECTION);
 
     g_free(priv->proxy);
     priv->proxy = NULL;
 
 #ifdef HAVE_LIBPROXY
     if ((pf = px_proxy_factory_new())) {
-	char **proxies = px_proxy_factory_get_proxies(pf, priv->url);
-	int i;
+        char **proxies = px_proxy_factory_get_proxies(pf, priv->url);
+        int i;
 
-	for (i = 0; proxies[i]; i++) {
-	    if (g_str_has_prefix(proxies[i], HTTP_URI_PREFIX)) {
-		g_free(priv->proxy);
-		priv->proxy = proxies[i];
-	    } else {
-		g_free(proxies[i]);
-	    }
-	}
+        for (i = 0; proxies[i]; i++) {
+            if (g_str_has_prefix(proxies[i], HTTP_URI_PREFIX)) {
+                g_free(priv->proxy);
+                priv->proxy = proxies[i];
+            } else {
+                g_free(proxies[i]);
+            }
+        }
 
-	g_free(proxies);
-	px_proxy_factory_free(pf);
+        g_free(proxies);
+        px_proxy_factory_free(pf);
     }
 #endif
 
@@ -318,7 +318,7 @@ void trg_client_set_session_id(TrgClient * tc, gchar * session_id)
     g_mutex_lock(priv->configMutex);
 
     if (priv->session_id)
-	g_free(priv->session_id);
+        g_free(priv->session_id);
 
     priv->session_id = session_id;
 
@@ -330,13 +330,13 @@ void trg_client_status_change(TrgClient * tc, gboolean connected)
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
 
     if (!connected) {
-	if (priv->session) {
-	    json_object_unref(priv->session);
-	    priv->session = NULL;
-	}
-	g_mutex_lock(priv->configMutex);
-	trg_prefs_set_connection(priv->prefs, NULL);
-	g_mutex_unlock(priv->configMutex);
+        if (priv->session) {
+            json_object_unref(priv->session);
+            priv->session = NULL;
+        }
+        g_mutex_lock(priv->configMutex);
+        trg_prefs_set_connection(priv->prefs, NULL);
+        g_mutex_unlock(priv->configMutex);
     }
 }
 
@@ -347,7 +347,7 @@ JsonObject *trg_client_get_session(TrgClient * tc)
 }
 
 void trg_client_thread_pool_push(TrgClient * tc, gpointer data,
-				 GError ** err)
+                                 GError ** err)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     g_thread_pool_push(priv->pool, data, err);
@@ -444,7 +444,7 @@ void trg_client_configunlock(TrgClient * tc)
 void trg_response_free(trg_response * response)
 {
     if (response->obj)
-	json_object_unref(response->obj);
+        json_object_unref(response->obj);
     g_free(response);
 }
 
@@ -456,30 +456,30 @@ http_receive_callback(void *ptr, size_t size, size_t nmemb, void *data)
 
     mem->raw = g_realloc(mem->raw, mem->size + realsize + 1);
     if (mem->raw) {
-	memcpy(&(mem->raw[mem->size]), ptr, realsize);
-	mem->size += realsize;
-	mem->raw[mem->size] = 0;
+        memcpy(&(mem->raw[mem->size]), ptr, realsize);
+        mem->size += realsize;
+        mem->raw[mem->size] = 0;
     }
 
     return realsize;
 }
 
 static size_t header_callback(void *ptr, size_t size, size_t nmemb,
-			      void *data)
+                              void *data)
 {
     char *header = (char *) (ptr);
     TrgClient *tc = TRG_CLIENT(data);
     gchar *session_id;
 
     if (g_str_has_prefix(header, X_TRANSMISSION_SESSION_ID_HEADER_PREFIX)) {
-	char *nl;
+        char *nl;
 
-	session_id = g_strdup(header);
-	nl = strrchr(session_id, '\r');
-	if (nl)
-	    *nl = '\0';
+        session_id = g_strdup(header);
+        nl = strrchr(session_id, '\r');
+        if (nl)
+            *nl = '\0';
 
-	trg_client_set_session_id(tc, session_id);
+        trg_client_set_session_id(tc, session_id);
     }
 
     return (nmemb * size);
@@ -490,20 +490,20 @@ static void trg_tls_update(TrgClient * tc, trg_tls * tls, gint serial)
     gchar *proxy;
 
     curl_easy_setopt(tls->curl, CURLOPT_PASSWORD,
-		     trg_client_get_password(tc));
+                     trg_client_get_password(tc));
     curl_easy_setopt(tls->curl, CURLOPT_USERNAME,
-		     trg_client_get_username(tc));
+                     trg_client_get_username(tc));
     curl_easy_setopt(tls->curl, CURLOPT_URL, trg_client_get_url(tc));
 
 #ifndef CURL_NO_SSL
     if (trg_client_get_ssl(tc))
-	curl_easy_setopt(tls->curl, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_easy_setopt(tls->curl, CURLOPT_SSL_VERIFYPEER, 0);
 #endif
 
     proxy = trg_client_get_proxy(tc);
     if (proxy) {
-	curl_easy_setopt(tls->curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-	curl_easy_setopt(tls->curl, CURLOPT_PROXY, proxy);
+        curl_easy_setopt(tls->curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+        curl_easy_setopt(tls->curl, CURLOPT_PROXY, proxy);
     }
 
     tls->serial = serial;
@@ -518,7 +518,7 @@ trg_tls *trg_tls_new(TrgClient * tc)
     curl_easy_setopt(tls->curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
     curl_easy_setopt(tls->curl, CURLOPT_TIMEOUT, 20);
     curl_easy_setopt(tls->curl, CURLOPT_WRITEFUNCTION,
-		     &http_receive_callback);
+                     &http_receive_callback);
     curl_easy_setopt(tls->curl, CURLOPT_HEADERFUNCTION, &header_callback);
     curl_easy_setopt(tls->curl, CURLOPT_WRITEHEADER, (void *) tc);
 
@@ -528,9 +528,9 @@ trg_tls *trg_tls_new(TrgClient * tc)
 }
 
 static int trg_http_perform_inner(TrgClient * tc,
-				  gchar * reqstr,
-				  trg_response * response,
-				  gboolean recurse)
+                                  gchar * reqstr,
+                                  trg_response * response,
+                                  gboolean recurse)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     gpointer threadLocalStorage = g_private_get(priv->tlsKey);
@@ -540,21 +540,21 @@ static int trg_http_perform_inner(TrgClient * tc,
     struct curl_slist *headers = NULL;
 
     if (!threadLocalStorage) {
-	tls = trg_tls_new(tc);
-	g_private_set(priv->tlsKey, tls);
+        tls = trg_tls_new(tc);
+        g_private_set(priv->tlsKey, tls);
     } else {
-	tls = (trg_tls *) threadLocalStorage;
+        tls = (trg_tls *) threadLocalStorage;
     }
 
     g_mutex_lock(priv->configMutex);
 
     if (priv->configSerial > tls->serial)
-	trg_tls_update(tc, tls, priv->configSerial);
+        trg_tls_update(tc, tls, priv->configSerial);
 
     session_id = trg_client_get_session_id(tc);
     if (session_id) {
-	headers = curl_slist_append(NULL, session_id);
-	curl_easy_setopt(tls->curl, CURLOPT_HTTPHEADER, headers);
+        headers = curl_slist_append(NULL, session_id);
+        curl_easy_setopt(tls->curl, CURLOPT_HTTPHEADER, headers);
     }
 
     g_mutex_unlock(priv->configMutex);
@@ -567,17 +567,17 @@ static int trg_http_perform_inner(TrgClient * tc,
     response->status = curl_easy_perform(tls->curl);
 
     if (session_id) {
-	g_free(session_id);
-	curl_slist_free_all(headers);
+        g_free(session_id);
+        curl_slist_free_all(headers);
     }
 
     curl_easy_getinfo(tls->curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
     if (response->status == CURLE_OK) {
-	if (httpCode == HTTP_CONFLICT && recurse == TRUE)
-	    return trg_http_perform_inner(tc, reqstr, response, FALSE);
-	else if (httpCode != HTTP_OK)
-	    response->status = (-httpCode) - 100;
+        if (httpCode == HTTP_CONFLICT && recurse == TRUE)
+            return trg_http_perform_inner(tc, reqstr, response, FALSE);
+        else if (httpCode != HTTP_OK)
+            response->status = (-httpCode) - 100;
     }
 
     return response->status;
@@ -596,7 +596,7 @@ trg_response *dispatch(TrgClient * client, JsonNode * req)
     json_node_free(req);
 #ifdef DEBUG
     if (g_getenv("TRG_SHOW_OUTGOING"))
-	g_debug("=>(OUTgoing)=>: %s", serialized);
+        g_debug("=>(OUTgoing)=>: %s", serialized);
 #endif
     return dispatch_str(client, serialized);
 }
@@ -611,51 +611,51 @@ trg_response *dispatch_str(TrgClient * client, gchar * req)
     g_free(req);
 
     if (response->status != CURLE_OK)
-	return response;
+        return response;
 
     response->obj = trg_deserialize(response, &decode_error);
     g_free(response->raw);
     response->raw = NULL;
 
     if (decode_error) {
-	g_error("JSON decoding error: %s", decode_error->message);
-	g_error_free(decode_error);
-	response->status = FAIL_JSON_DECODE;
-	return response;
+        g_error("JSON decoding error: %s", decode_error->message);
+        g_error_free(decode_error);
+        response->status = FAIL_JSON_DECODE;
+        return response;
     }
 
     result = json_object_get_member(response->obj, FIELD_RESULT);
     if (!result || g_strcmp0(json_node_get_string(result), FIELD_SUCCESS))
-	response->status = FAIL_RESPONSE_UNSUCCESSFUL;
+        response->status = FAIL_RESPONSE_UNSUCCESSFUL;
 
     return response;
 }
 
 static void dispatch_async_threadfunc(trg_request * req,
-				      TrgClient * client)
+                                      TrgClient * client)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(client);
 
     trg_response *rsp;
 
     if (req->str)
-	rsp = dispatch_str(client, req->str);
+        rsp = dispatch_str(client, req->str);
     else
-	rsp = dispatch(client, req->node);
+        rsp = dispatch(client, req->node);
 
     rsp->cb_data = req->cb_data;
 
     if (req->callback && req->connid == g_atomic_int_get(&priv->connid))
-	g_idle_add(req->callback, rsp);
+        g_idle_add(req->callback, rsp);
     else
-	trg_response_free(rsp);
+        trg_response_free(rsp);
 
     g_free(req);
 }
 
 static gboolean dispatch_async_common(TrgClient * client,
-				      trg_request * trg_req,
-				      GSourceFunc callback, gpointer data)
+                                      trg_request * trg_req,
+                                      GSourceFunc callback, gpointer data)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(client);
     GError *error = NULL;
@@ -666,17 +666,17 @@ static gboolean dispatch_async_common(TrgClient * client,
 
     trg_client_thread_pool_push(client, trg_req, &error);
     if (error) {
-	g_error("thread creation error: %s\n", error->message);
-	g_error_free(error);
-	g_free(trg_req);
-	return FALSE;
+        g_error("thread creation error: %s\n", error->message);
+        g_error_free(error);
+        g_free(trg_req);
+        return FALSE;
     } else {
-	return TRUE;
+        return TRUE;
     }
 }
 
 gboolean dispatch_async(TrgClient * client, JsonNode * req,
-			GSourceFunc callback, gpointer data)
+                        GSourceFunc callback, gpointer data)
 {
     trg_request *trg_req = g_new0(trg_request, 1);
     trg_req->node = req;
@@ -685,7 +685,7 @@ gboolean dispatch_async(TrgClient * client, JsonNode * req,
 }
 
 gboolean dispatch_async_str(TrgClient * client, gchar * req,
-			    GSourceFunc callback, gpointer data)
+                            GSourceFunc callback, gpointer data)
 {
     trg_request *trg_req = g_new0(trg_request, 1);
     trg_req->str = req;

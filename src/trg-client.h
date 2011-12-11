@@ -94,7 +94,7 @@ G_BEGIN_DECLS
 typedef struct {
     GObjectClass parent_class;
     void (*session_updated) (TrgClient * tc, JsonObject * session,
-			     gpointer data);
+                             gpointer data);
 
 } TrgClientClass;
 
@@ -114,14 +114,14 @@ typedef struct {
 /* stuff that used to be in http.h */
 void trg_response_free(trg_response * response);
 int trg_http_perform(TrgClient * client, gchar * reqstr,
-		     trg_response * reqrsp);
+                     trg_response * reqrsp);
 /* end http.h*/
 
 /* stuff that used to be in dispatch.c */
 trg_response *dispatch(TrgClient * client, JsonNode * req);
 trg_response *dispatch_str(TrgClient * client, gchar * req);
 gboolean dispatch_async(TrgClient * client, JsonNode * req,
-			GSourceFunc callback, gpointer data);
+                        GSourceFunc callback, gpointer data);
 /* end dispatch.c*/
 
 GType trg_client_get_type(void);
@@ -144,7 +144,7 @@ gboolean trg_client_get_ssl(TrgClient * tc);
 gchar *trg_client_get_proxy(TrgClient * tc);
 gint64 trg_client_get_serial(TrgClient * tc);
 void trg_client_thread_pool_push(TrgClient * tc, gpointer data,
-				 GError ** err);
+                                 GError ** err);
 void trg_client_set_torrent_table(TrgClient * tc, GHashTable * table);
 GHashTable *trg_client_get_torrent_table(TrgClient * tc);
 JsonObject *trg_client_get_session(TrgClient * tc);
@@ -161,4 +161,4 @@ void trg_client_inc_serial(TrgClient * tc);
 void trg_client_inc_connid(TrgClient * tc);
 
 G_END_DECLS
-#endif				// _TRG_CLIENT_H_
+#endif                          // _TRG_CLIENT_H_

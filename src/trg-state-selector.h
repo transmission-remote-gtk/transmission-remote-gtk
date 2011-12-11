@@ -55,7 +55,7 @@ typedef struct {
     GtkTreeViewClass parent_class;
 
     void (*torrent_state_changed) (TrgStateSelector * selector,
-				   guint flag, gpointer data);
+                                   guint flag, gpointer data);
 
 } TrgStateSelectorClass;
 
@@ -68,12 +68,12 @@ gchar *trg_state_selector_get_selected_text(TrgStateSelector * s);
 GRegex *trg_state_selector_get_url_host_regex(TrgStateSelector * s);
 void trg_state_selector_disconnect(TrgStateSelector * s);
 void trg_state_selector_set_show_trackers(TrgStateSelector * s,
-					  gboolean show);
+                                          gboolean show);
 void trg_state_selector_set_show_dirs(TrgStateSelector * s, gboolean show);
 void trg_state_selector_set_queues_enabled(TrgStateSelector * s,
-					   gboolean enabled);
+                                           gboolean enabled);
 void trg_state_selector_stats_update(TrgStateSelector * s,
-				     trg_torrent_model_update_stats *
-				     stats);
+                                     trg_torrent_model_update_stats *
+                                     stats);
 
-#endif				/* TRG_STATE_LIST_H_ */
+#endif                          /* TRG_STATE_LIST_H_ */

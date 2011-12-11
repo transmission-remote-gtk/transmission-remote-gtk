@@ -48,7 +48,7 @@ static const char json_exceptions[] = { 0x7f, 0x80, 0x81, 0x82, 0x83, 0x84,
     0xd9, 0xda, 0xdb, 0xdc, 0xdd, 0xde, 0xdf, 0xe0, 0xe1, 0xe2, 0xe3, 0xe4,
     0xe5, 0xe6, 0xe7, 0xe8, 0xe9, 0xea, 0xeb, 0xec, 0xed, 0xee, 0xef, 0xf0,
     0xf1, 0xf2, 0xf3, 0xf4, 0xf5, 0xf6, 0xf7, 0xf8, 0xf9, 0xfa, 0xfb, 0xfc,
-    0xfd, 0xfe, 0xff, '\0'	/* g_strescape() expects a NUL-terminated string */
+    0xfd, 0xfe, 0xff, '\0'      /* g_strescape() expects a NUL-terminated string */
 };
 
 static gchar *dump_json_value(JsonNode * node)
@@ -62,33 +62,33 @@ static gchar *dump_json_value(JsonNode * node)
 
     switch (G_VALUE_TYPE(&value)) {
     case G_TYPE_INT64:
-	g_string_append_printf(buffer, "%" G_GINT64_FORMAT,
-			       g_value_get_int64(&value));
-	break;
+        g_string_append_printf(buffer, "%" G_GINT64_FORMAT,
+                               g_value_get_int64(&value));
+        break;
     case G_TYPE_STRING:{
-	    gchar *tmp;
+            gchar *tmp;
 
-	    tmp = g_strescape(g_value_get_string(&value), json_exceptions);
-	    g_string_append(buffer, tmp);
+            tmp = g_strescape(g_value_get_string(&value), json_exceptions);
+            g_string_append(buffer, tmp);
 
-	    g_free(tmp);
-	}
-	break;
+            g_free(tmp);
+        }
+        break;
     case G_TYPE_DOUBLE:{
-	    gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
+            gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
 
-	    g_string_append(buffer,
-			    g_ascii_dtostr(buf, sizeof(buf),
-					   g_value_get_double(&value)));
-	}
-	break;
+            g_string_append(buffer,
+                            g_ascii_dtostr(buf, sizeof(buf),
+                                           g_value_get_double(&value)));
+        }
+        break;
     case G_TYPE_BOOLEAN:
-	g_string_append_printf(buffer, "%s",
-			       g_value_get_boolean(&value) ? "true" :
-			       "false");
-	break;
+        g_string_append_printf(buffer, "%s",
+                               g_value_get_boolean(&value) ? "true" :
+                               "false");
+        break;
     default:
-	break;
+        break;
     }
 
     g_value_unset(&value);
@@ -97,7 +97,7 @@ static gchar *dump_json_value(JsonNode * node)
 }
 
 gchar *build_remote_exec_cmd(TrgClient * tc, GtkTreeModel * model,
-			     GList * selection, const gchar * input)
+                             GList * selection, const gchar * input)
 {
     TrgPrefs *prefs = trg_client_get_prefs(tc);
     JsonObject *session = trg_client_get_session(tc);
@@ -109,7 +109,7 @@ gchar *build_remote_exec_cmd(TrgClient * tc, GtkTreeModel * model,
     JsonNode *replacement;
 
     if (!profile)
-	return NULL;
+        return NULL;
 
     work = g_strdup(input);
     regex = g_regex_new("%{([A-Za-z\\-]+)}(?:\\[(.*)\\])?", 0, 0, NULL);
@@ -117,86 +117,86 @@ gchar *build_remote_exec_cmd(TrgClient * tc, GtkTreeModel * model,
     g_regex_match_full(regex, input, -1, 0, 0, &match_info, NULL);
 
     if (match_info) {
-	while (g_match_info_matches(match_info)) {
-	    whole = g_match_info_fetch(match_info, 0);
-	    wholeEscaped = g_regex_escape_string(whole, -1);
-	    id = g_match_info_fetch(match_info, 1);
-	    repeater = g_match_info_fetch(match_info, 2);
+        while (g_match_info_matches(match_info)) {
+            whole = g_match_info_fetch(match_info, 0);
+            wholeEscaped = g_regex_escape_string(whole, -1);
+            id = g_match_info_fetch(match_info, 1);
+            repeater = g_match_info_fetch(match_info, 2);
 
-	    replacerx = g_regex_new(wholeEscaped, 0, 0, NULL);
-	    valuestr = NULL;
+            replacerx = g_regex_new(wholeEscaped, 0, 0, NULL);
+            valuestr = NULL;
 
-	    if (profile && json_object_has_member(profile, id)) {
-		replacement = json_object_get_member(profile, id);
-		if (JSON_NODE_HOLDS_VALUE(replacement))
-		    valuestr = dump_json_value(replacement);
-	    } else if (session && json_object_has_member(session, id)) {
-		replacement = json_object_get_member(session, id);
-		if (JSON_NODE_HOLDS_VALUE(replacement))
-		    valuestr = dump_json_value(replacement);
-	    } else {
-		GString *gs = g_string_new("");
-		GList *li;
-		GtkTreeIter iter;
-		JsonObject *json;
-		gchar *piece;
+            if (profile && json_object_has_member(profile, id)) {
+                replacement = json_object_get_member(profile, id);
+                if (JSON_NODE_HOLDS_VALUE(replacement))
+                    valuestr = dump_json_value(replacement);
+            } else if (session && json_object_has_member(session, id)) {
+                replacement = json_object_get_member(session, id);
+                if (JSON_NODE_HOLDS_VALUE(replacement))
+                    valuestr = dump_json_value(replacement);
+            } else {
+                GString *gs = g_string_new("");
+                GList *li;
+                GtkTreeIter iter;
+                JsonObject *json;
+                gchar *piece;
 
-		for (li = selection; li; li = g_list_next(li)) {
-		    piece = NULL;
-		    gtk_tree_model_get_iter(model, &iter,
-					    (GtkTreePath *) li->data);
-		    gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON,
-				       &json, -1);
-		    if (json_object_has_member(json, id)) {
-			replacement = json_object_get_member(json, id);
-			if (JSON_NODE_HOLDS_VALUE(replacement)) {
-			    piece = dump_json_value(replacement);
-			}
-		    }
+                for (li = selection; li; li = g_list_next(li)) {
+                    piece = NULL;
+                    gtk_tree_model_get_iter(model, &iter,
+                                            (GtkTreePath *) li->data);
+                    gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON,
+                                       &json, -1);
+                    if (json_object_has_member(json, id)) {
+                        replacement = json_object_get_member(json, id);
+                        if (JSON_NODE_HOLDS_VALUE(replacement)) {
+                            piece = dump_json_value(replacement);
+                        }
+                    }
 
-		    if (!piece) {
-			if (!g_strcmp0(id, "full-dir")) {
-			    piece = torrent_get_full_dir(json);
-			} else if (!g_strcmp0(id, "full-path")) {
-			    piece = torrent_get_full_path(json);
-			}
-		    }
+                    if (!piece) {
+                        if (!g_strcmp0(id, "full-dir")) {
+                            piece = torrent_get_full_dir(json);
+                        } else if (!g_strcmp0(id, "full-path")) {
+                            piece = torrent_get_full_path(json);
+                        }
+                    }
 
-		    if (piece) {
-			g_string_append(gs, piece);
-			g_free(piece);
-		    }
+                    if (piece) {
+                        g_string_append(gs, piece);
+                        g_free(piece);
+                    }
 
-		    if (!repeater)
-			break;
+                    if (!repeater)
+                        break;
 
-		    if (piece && li != g_list_last(selection))
-			g_string_append(gs, repeater);
-		}
+                    if (piece && li != g_list_last(selection))
+                        g_string_append(gs, repeater);
+                }
 
-		if (gs->len > 0)
-		    valuestr = g_string_free(gs, FALSE);
-		else
-		    g_string_free(gs, TRUE);
-	    }
+                if (gs->len > 0)
+                    valuestr = g_string_free(gs, FALSE);
+                else
+                    g_string_free(gs, TRUE);
+            }
 
-	    if (valuestr) {
-		tmp = g_regex_replace(replacerx, work, -1, 0, valuestr, 0,
-				      NULL);
-		g_free(work);
-		work = tmp;
-		g_free(valuestr);
-	    }
+            if (valuestr) {
+                tmp = g_regex_replace(replacerx, work, -1, 0, valuestr, 0,
+                                      NULL);
+                g_free(work);
+                work = tmp;
+                g_free(valuestr);
+            }
 
-	    g_regex_unref(replacerx);
-	    g_free(whole);
-	    g_free(repeater);
-	    g_free(wholeEscaped);
-	    g_free(id);
-	    g_match_info_next(match_info, NULL);
-	}
+            g_regex_unref(replacerx);
+            g_free(whole);
+            g_free(repeater);
+            g_free(wholeEscaped);
+            g_free(id);
+            g_match_info_next(match_info, NULL);
+        }
 
-	g_match_info_free(match_info);
+        g_match_info_free(match_info);
     }
 
     g_regex_unref(regex);

@@ -21,6 +21,6 @@
 #define REMOTE_EXEC_H_
 
 gchar *build_remote_exec_cmd(TrgClient * tc, GtkTreeModel * model,
-			     GList * selection, const gchar * input);
+                             GList * selection, const gchar * input);
 
-#endif				/* REMOTE_EXEC_H_ */
+#endif                          /* REMOTE_EXEC_H_ */

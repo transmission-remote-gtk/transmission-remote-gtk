@@ -62,8 +62,8 @@ G_END_DECLS enum {
 
 void
 trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
-		       JsonObject * t, gint mode);
+                       JsonObject * t, gint mode);
 gint64 trg_files_model_get_torrent_id(TrgFilesModel * model);
 void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept);
 
-#endif				/* TRG_FILES_MODEL_H_ */
+#endif                          /* TRG_FILES_MODEL_H_ */

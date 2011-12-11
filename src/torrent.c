@@ -71,11 +71,11 @@ const gchar *torrent_get_download_dir(JsonObject * t)
 gdouble torrent_get_metadata_percent_complete(JsonObject * t)
 {
     JsonNode *node =
-	json_object_get_member(t, FIELD_METADATAPERCENTCOMPLETE);
+        json_object_get_member(t, FIELD_METADATAPERCENTCOMPLETE);
     if (node)
-	return json_double_to_progress(node);
+        return json_double_to_progress(node);
     else
-	return 100.0;
+        return 100.0;
 }
 
 const gchar *torrent_get_name(JsonObject * t)
@@ -191,15 +191,15 @@ gboolean torrent_get_is_private(JsonObject * t)
 gdouble torrent_get_percent_done(JsonObject * t)
 {
     return
-	json_double_to_progress(json_object_get_member
-				(t, FIELD_PERCENTDONE));
+        json_double_to_progress(json_object_get_member
+                                (t, FIELD_PERCENTDONE));
 }
 
 gdouble torrent_get_recheck_progress(JsonObject * t)
 {
     return
-	json_double_to_progress(json_object_get_member
-				(t, FIELD_RECHECK_PROGRESS));
+        json_double_to_progress(json_object_get_member
+                                (t, FIELD_RECHECK_PROGRESS));
 }
 
 gint64 torrent_get_activity_date(JsonObject * t)
@@ -208,75 +208,75 @@ gint64 torrent_get_activity_date(JsonObject * t)
 }
 
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
-			  gint64 downRate, gint64 upRate)
+                          gint64 downRate, gint64 upRate)
 {
     guint32 flags = 0;
 
     if (torrent_get_is_finished(t) == TRUE)
-	flags |= TORRENT_FLAG_COMPLETE;
+        flags |= TORRENT_FLAG_COMPLETE;
     else
-	flags |= TORRENT_FLAG_INCOMPLETE;
+        flags |= TORRENT_FLAG_INCOMPLETE;
 
     if (rpcv >= NEW_STATUS_RPC_VERSION) {
-	switch (status) {
-	case TR_STATUS_STOPPED:
-	    flags |= TORRENT_FLAG_PAUSED;
-	    break;
-	case TR_STATUS_CHECK_WAIT:
-	    flags |= TORRENT_FLAG_WAITING_CHECK;
-	    flags |= TORRENT_FLAG_CHECKING_ANY;
-	    break;
-	case TR_STATUS_CHECK:
-	    flags |= TORRENT_FLAG_CHECKING;
-	    flags |= TORRENT_FLAG_CHECKING_ANY;
-	    break;
-	case TR_STATUS_DOWNLOAD_WAIT:
-	    flags |= TORRENT_FLAG_DOWNLOADING_WAIT;
-	    flags |= TORRENT_FLAG_QUEUED;
-	    break;
-	case TR_STATUS_DOWNLOAD:
-	    if (!(flags & TORRENT_FLAG_COMPLETE))
-		flags |= TORRENT_FLAG_DOWNLOADING;
+        switch (status) {
+        case TR_STATUS_STOPPED:
+            flags |= TORRENT_FLAG_PAUSED;
+            break;
+        case TR_STATUS_CHECK_WAIT:
+            flags |= TORRENT_FLAG_WAITING_CHECK;
+            flags |= TORRENT_FLAG_CHECKING_ANY;
+            break;
+        case TR_STATUS_CHECK:
+            flags |= TORRENT_FLAG_CHECKING;
+            flags |= TORRENT_FLAG_CHECKING_ANY;
+            break;
+        case TR_STATUS_DOWNLOAD_WAIT:
+            flags |= TORRENT_FLAG_DOWNLOADING_WAIT;
+            flags |= TORRENT_FLAG_QUEUED;
+            break;
+        case TR_STATUS_DOWNLOAD:
+            if (!(flags & TORRENT_FLAG_COMPLETE))
+                flags |= TORRENT_FLAG_DOWNLOADING;
 
-	    //if (torrent_get_metadata_percent_complete(t) < 100)
-	    //    flags |= TORRENT_FLAG_DOWNLOADING_METADATA;
+            //if (torrent_get_metadata_percent_complete(t) < 100)
+            //    flags |= TORRENT_FLAG_DOWNLOADING_METADATA;
 
-	    flags |= TORRENT_FLAG_ACTIVE;
-	    break;
-	case TR_STATUS_SEED_WAIT:
-	    flags |= TORRENT_FLAG_SEEDING_WAIT;
-	    break;
-	case TR_STATUS_SEED:
-	    flags |= TORRENT_FLAG_SEEDING;
-	    if (torrent_get_peers_getting_from_us(t))
-		flags |= TORRENT_FLAG_ACTIVE;
-	    break;
-	}
+            flags |= TORRENT_FLAG_ACTIVE;
+            break;
+        case TR_STATUS_SEED_WAIT:
+            flags |= TORRENT_FLAG_SEEDING_WAIT;
+            break;
+        case TR_STATUS_SEED:
+            flags |= TORRENT_FLAG_SEEDING;
+            if (torrent_get_peers_getting_from_us(t))
+                flags |= TORRENT_FLAG_ACTIVE;
+            break;
+        }
     } else {
-	switch (status) {
-	case OLD_STATUS_DOWNLOADING:
-	    flags |= TORRENT_FLAG_DOWNLOADING;
-	    break;
-	case OLD_STATUS_PAUSED:
-	    flags |= TORRENT_FLAG_PAUSED;
-	    break;
-	case OLD_STATUS_SEEDING:
-	    flags |= TORRENT_FLAG_SEEDING;
-	    break;
-	case OLD_STATUS_CHECKING:
-	    flags |= TORRENT_FLAG_CHECKING;
-	    break;
-	case OLD_STATUS_WAITING_TO_CHECK:
-	    flags |= TORRENT_FLAG_WAITING_CHECK;
-	    flags |= TORRENT_FLAG_CHECKING;
-	    break;
-	}
-	if (downRate > 0 || upRate > 0)
-	    flags |= TORRENT_FLAG_ACTIVE;
+        switch (status) {
+        case OLD_STATUS_DOWNLOADING:
+            flags |= TORRENT_FLAG_DOWNLOADING;
+            break;
+        case OLD_STATUS_PAUSED:
+            flags |= TORRENT_FLAG_PAUSED;
+            break;
+        case OLD_STATUS_SEEDING:
+            flags |= TORRENT_FLAG_SEEDING;
+            break;
+        case OLD_STATUS_CHECKING:
+            flags |= TORRENT_FLAG_CHECKING;
+            break;
+        case OLD_STATUS_WAITING_TO_CHECK:
+            flags |= TORRENT_FLAG_WAITING_CHECK;
+            flags |= TORRENT_FLAG_CHECKING;
+            break;
+        }
+        if (downRate > 0 || upRate > 0)
+            flags |= TORRENT_FLAG_ACTIVE;
     }
 
     if (strlen(torrent_get_errorstr(t)) > 0)
-	flags |= TORRENT_FLAG_ERROR;
+        flags |= TORRENT_FLAG_ERROR;
 
     return flags;
 }
@@ -284,19 +284,19 @@ guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
 gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
 {
     if (flags & TORRENT_FLAG_ERROR)
-	return g_strdup(GTK_STOCK_DIALOG_WARNING);
+        return g_strdup(GTK_STOCK_DIALOG_WARNING);
     //else if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
     //    return g_strdup(GTK_STOCK_FIND);
     else if (flags & TORRENT_FLAG_DOWNLOADING)
-	return g_strdup(GTK_STOCK_GO_DOWN);
+        return g_strdup(GTK_STOCK_GO_DOWN);
     else if (flags & TORRENT_FLAG_PAUSED)
-	return g_strdup(GTK_STOCK_MEDIA_PAUSE);
+        return g_strdup(GTK_STOCK_MEDIA_PAUSE);
     else if (flags & TORRENT_FLAG_SEEDING)
-	return g_strdup(GTK_STOCK_GO_UP);
+        return g_strdup(GTK_STOCK_GO_UP);
     else if (flags & TORRENT_FLAG_CHECKING)
-	return g_strdup(GTK_STOCK_REFRESH);
+        return g_strdup(GTK_STOCK_REFRESH);
     else
-	return g_strdup(GTK_STOCK_DIALOG_QUESTION);
+        return g_strdup(GTK_STOCK_DIALOG_QUESTION);
 }
 
 gint64 torrent_get_done_date(JsonObject * t)
@@ -312,41 +312,41 @@ const gchar *torrent_get_errorstr(JsonObject * t)
 gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags)
 {
     if (rpcv >= NEW_STATUS_RPC_VERSION) {
-	switch (value) {
-	case TR_STATUS_DOWNLOAD:
-	    /*if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
-	       return g_strdup(_("Metadata Downloading"));
-	       else */
-	    return g_strdup(_("Downloading"));
-	case TR_STATUS_DOWNLOAD_WAIT:
-	    return g_strdup(_("Queued download"));
-	case TR_STATUS_CHECK_WAIT:
-	    return g_strdup(_("Waiting To Check"));
-	case TR_STATUS_CHECK:
-	    return g_strdup(_("Checking"));
-	case TR_STATUS_SEED_WAIT:
-	    return g_strdup(_("Queued seed"));
-	case TR_STATUS_SEED:
-	    return g_strdup(_("Seeding"));
-	case TR_STATUS_STOPPED:
-	    return g_strdup(_("Paused"));
-	}
+        switch (value) {
+        case TR_STATUS_DOWNLOAD:
+            /*if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
+               return g_strdup(_("Metadata Downloading"));
+               else */
+            return g_strdup(_("Downloading"));
+        case TR_STATUS_DOWNLOAD_WAIT:
+            return g_strdup(_("Queued download"));
+        case TR_STATUS_CHECK_WAIT:
+            return g_strdup(_("Waiting To Check"));
+        case TR_STATUS_CHECK:
+            return g_strdup(_("Checking"));
+        case TR_STATUS_SEED_WAIT:
+            return g_strdup(_("Queued seed"));
+        case TR_STATUS_SEED:
+            return g_strdup(_("Seeding"));
+        case TR_STATUS_STOPPED:
+            return g_strdup(_("Paused"));
+        }
     } else {
-	switch (value) {
-	case OLD_STATUS_DOWNLOADING:
-	    /*if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
-	       return g_strdup(_("Metadata Downloading"));
-	       else */
-	    return g_strdup(_("Downloading"));
-	case OLD_STATUS_PAUSED:
-	    return g_strdup(_("Paused"));
-	case OLD_STATUS_SEEDING:
-	    return g_strdup(_("Seeding"));
-	case OLD_STATUS_CHECKING:
-	    return g_strdup(_("Checking"));
-	case OLD_STATUS_WAITING_TO_CHECK:
-	    return g_strdup(_("Waiting To Check"));
-	}
+        switch (value) {
+        case OLD_STATUS_DOWNLOADING:
+            /*if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
+               return g_strdup(_("Metadata Downloading"));
+               else */
+            return g_strdup(_("Downloading"));
+        case OLD_STATUS_PAUSED:
+            return g_strdup(_("Paused"));
+        case OLD_STATUS_SEEDING:
+            return g_strdup(_("Seeding"));
+        case OLD_STATUS_CHECKING:
+            return g_strdup(_("Checking"));
+        case OLD_STATUS_WAITING_TO_CHECK:
+            return g_strdup(_("Waiting To Check"));
+        }
     }
 
     //g_warning("Unknown status: %ld", value);
@@ -362,16 +362,16 @@ gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
     trackers = json_array_get_elements(torrent_get_tracker_stats(t));
 
     for (li = trackers; li; li = g_list_next(li)) {
-	JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
-	const gchar *trackerAnnounce = tracker_stats_get_announce(tracker);
-	gchar *trackerAnnounceHost =
-	    trg_gregex_get_first(rx, trackerAnnounce);
-	int cmpResult = g_strcmp0(trackerAnnounceHost, search);
-	g_free(trackerAnnounceHost);
-	if (!cmpResult) {
-	    ret = TRUE;
-	    break;
-	}
+        JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
+        const gchar *trackerAnnounce = tracker_stats_get_announce(tracker);
+        gchar *trackerAnnounceHost =
+            trg_gregex_get_first(rx, trackerAnnounce);
+        int cmpResult = g_strcmp0(trackerAnnounceHost, search);
+        g_free(trackerAnnounceHost);
+        if (!cmpResult) {
+            ret = TRUE;
+            break;
+        }
     }
 
     g_list_free(trackers);
@@ -397,9 +397,9 @@ const gchar *tracker_stats_get_scrape(JsonObject * t)
 JsonArray *get_torrents_removed(JsonObject * response)
 {
     if (G_UNLIKELY(json_object_has_member(response, FIELD_REMOVED)))
-	return json_object_get_array_member(response, FIELD_REMOVED);
+        return json_object_get_array_member(response, FIELD_REMOVED);
     else
-	return NULL;
+        return NULL;
 }
 
 JsonArray *get_torrents(JsonObject * response)
@@ -432,9 +432,9 @@ gint64 torrent_get_peers_getting_from_us(JsonObject * args)
 gint64 torrent_get_queue_position(JsonObject * args)
 {
     if (json_object_has_member(args, FIELD_QUEUE_POSITION))
-	return json_object_get_int_member(args, FIELD_QUEUE_POSITION);
+        return json_object_get_int_member(args, FIELD_QUEUE_POSITION);
     else
-	return -1;
+        return -1;
 }
 
 /* tracker stats */
@@ -492,7 +492,7 @@ const gchar *tracker_stats_get_host(JsonObject * t)
 gchar *torrent_get_full_path(JsonObject * obj)
 {
     const gchar *location =
-	json_object_get_string_member(obj, FIELD_DOWNLOAD_DIR);
+        json_object_get_string_member(obj, FIELD_DOWNLOAD_DIR);
     const gchar *name = json_object_get_string_member(obj, FIELD_NAME);
     return g_strdup_printf("%s/%s", location, name);
 }
@@ -509,10 +509,10 @@ gchar *torrent_get_full_dir(JsonObject * obj)
     name = g_strdup(json_object_get_string_member(firstFile, TFILE_NAME));
 
     if ((delim = g_strstr_len(name, -1, "/"))) {
-	*delim = '\0';
-	containing_path = g_strdup_printf("%s/%s", location, name);
+        *delim = '\0';
+        containing_path = g_strdup_printf("%s/%s", location, name);
     } else {
-	containing_path = g_strdup(location);
+        containing_path = g_strdup(location);
     }
 
     g_free(name);
@@ -554,7 +554,7 @@ gboolean peer_get_is_downloading_from(JsonObject * p)
 gdouble peer_get_progress(JsonObject * p)
 {
     return
-	json_double_to_progress(json_object_get_member(p, TPEER_PROGRESS));
+        json_double_to_progress(json_object_get_member(p, TPEER_PROGRESS));
 }
 
 gint64 peer_get_rate_to_client(JsonObject * p)
@@ -601,7 +601,7 @@ gint64 peerfrom_get_incoming(JsonObject * pf)
 gint64 peerfrom_get_lpd(JsonObject * pf)
 {
     return json_object_has_member(pf, TPEERFROM_FROMLPD) ?
-	json_object_get_int_member(pf, TPEERFROM_FROMLPD) : -1;
+        json_object_get_int_member(pf, TPEERFROM_FROMLPD) : -1;
 }
 
 /* files */
@@ -610,10 +610,10 @@ gdouble file_get_progress(JsonObject * f)
 {
     gint64 length = file_get_length(f);
     if (length > 0) {
-	return ((gdouble) file_get_bytes_completed(f) /
-		(gdouble) length) * 100.0;
+        return ((gdouble) file_get_bytes_completed(f) /
+                (gdouble) length) * 100.0;
     } else {
-	return 0.0;
+        return 0.0;
     }
 }
 

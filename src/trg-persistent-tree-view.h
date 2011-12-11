@@ -56,20 +56,21 @@ typedef struct {
 } trg_persistent_tree_view_column;
 
 TrgPersistentTreeView *trg_persistent_tree_view_new(TrgPrefs * prefs,
-						    GtkListStore * model,
-						    const gchar * key);
+                                                    GtkListStore * model,
+                                                    const gchar * key);
 
 trg_pref_widget_desc
-    *trg_persistent_tree_view_get_widget_desc(TrgPersistentTreeView * ptv);
+    * trg_persistent_tree_view_get_widget_desc(TrgPersistentTreeView *
+                                               ptv);
 
 void trg_persistent_tree_view_set_add_select(TrgPersistentTreeView * ptv,
-					     trg_persistent_tree_view_column
-					     * cd);
+                                             trg_persistent_tree_view_column
+                                             * cd);
 
 trg_persistent_tree_view_column
-    *trg_persistent_tree_view_add_column(TrgPersistentTreeView * ptv,
-					 gint index, const gchar * key,
-					 const gchar * label);
+    * trg_persistent_tree_view_add_column(TrgPersistentTreeView * ptv,
+                                          gint index, const gchar * key,
+                                          const gchar * label);
 
 G_END_DECLS
-#endif				/* _TRG_PERSISTENT_TREE_VIEW */
+#endif                          /* _TRG_PERSISTENT_TREE_VIEW */

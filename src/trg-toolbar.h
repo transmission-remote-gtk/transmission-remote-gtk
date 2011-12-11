@@ -53,7 +53,7 @@ TrgToolbar *trg_toolbar_new(TrgMainWindow * win, TrgPrefs * prefs);
 
 G_END_DECLS
     void trg_toolbar_torrent_actions_sensitive(TrgToolbar * mb,
-					       gboolean sensitive);
+                                               gboolean sensitive);
 void trg_toolbar_connected_change(TrgToolbar * tb, gboolean connected);
 
-#endif				/* TRG_TOOLBAR_H_ */
+#endif                          /* TRG_TOOLBAR_H_ */

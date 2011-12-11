@@ -50,7 +50,7 @@ typedef struct {
 GType trg_stats_dialog_get_type(void);
 
 TrgStatsDialog *trg_stats_dialog_get_instance(TrgMainWindow * parent,
-					      TrgClient * client);
+                                              TrgClient * client);
 
 G_END_DECLS
-#endif				/* TRG_STATS_DIALOG_H_ */
+#endif                          /* TRG_STATS_DIALOG_H_ */

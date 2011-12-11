@@ -48,4 +48,4 @@ GType trg_cell_renderer_ratio_get_type(void);
 GtkCellRenderer *trg_cell_renderer_ratio_new(void);
 
 G_END_DECLS
-#endif				/* TRG_CELL_RENDERER_RATIO_H_ */
+#endif                          /* TRG_CELL_RENDERER_RATIO_H_ */

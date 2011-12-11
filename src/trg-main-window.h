@@ -70,7 +70,7 @@ TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win);
 gint trg_mw_get_selected_torrent_id(TrgMainWindow * win);
 GtkTreeModel *trg_main_window_get_torrent_model(TrgMainWindow * win);
 void trg_main_window_notebook_set_visible(TrgMainWindow * win,
-					  gboolean visible);
+                                          gboolean visible);
 void connect_cb(GtkWidget * w, gpointer data);
 void trg_main_window_reload_dir_aliases(TrgMainWindow * win);
 
@@ -79,4 +79,4 @@ void trg_main_window_reload_dir_aliases(TrgMainWindow * win);
 #endif
 
 G_END_DECLS
-#endif				/* MAIN_WINDOW_H_ */
+#endif                          /* MAIN_WINDOW_H_ */

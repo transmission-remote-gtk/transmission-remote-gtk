@@ -30,7 +30,7 @@ enum {
 };
 
 G_DEFINE_TYPE(TrgCellRendererEpoch, trg_cell_renderer_epoch,
-	      GTK_TYPE_CELL_RENDERER_TEXT)
+              GTK_TYPE_CELL_RENDERER_TEXT)
 #define TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CELL_RENDERER_EPOCH, TrgCellRendererEpochPrivate))
 typedef struct _TrgCellRendererEpochPrivate TrgCellRendererEpochPrivate;
@@ -41,52 +41,52 @@ struct _TrgCellRendererEpochPrivate {
 
 static void
 trg_cell_renderer_epoch_get_property(GObject * object, guint property_id,
-				     GValue * value, GParamSpec * pspec)
+                                     GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererEpochPrivate *priv =
-	TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
+        TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
     switch (property_id) {
     case PROP_EPOCH_VALUE:
-	g_value_set_int64(value, priv->epoch_value);
-	break;
+        g_value_set_int64(value, priv->epoch_value);
+        break;
     default:
-	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
-	break;
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
 static void
 trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
-				     const GValue * value,
-				     GParamSpec * pspec)
+                                     const GValue * value,
+                                     GParamSpec * pspec)
 {
     TrgCellRendererEpochPrivate *priv =
-	TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
+        TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
 
     if (property_id == PROP_EPOCH_VALUE) {
-	gint64 new_value = g_value_get_int64(value);
-	if (priv->epoch_value != new_value) {
-	    if (new_value > 0) {
+        gint64 new_value = g_value_get_int64(value);
+        if (priv->epoch_value != new_value) {
+            if (new_value > 0) {
 #if GLIB_CHECK_VERSION(2, 26, 00)
-		GDateTime *dt = g_date_time_new_from_unix_local(new_value);
-		gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
-		g_object_set(object, "text", timestring, NULL);
-		g_free(timestring);
-		g_date_time_unref(dt);
+                GDateTime *dt = g_date_time_new_from_unix_local(new_value);
+                gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
+                g_object_set(object, "text", timestring, NULL);
+                g_free(timestring);
+                g_date_time_unref(dt);
 #else
-		time_t time_val = new_value;
-		char buf[64];
-		struct tm *ts = localtime(&time_val);
-		strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ts);
-		g_object_set(object, "text", buf, NULL);
+                time_t time_val = new_value;
+                char buf[64];
+                struct tm *ts = localtime(&time_val);
+                strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ts);
+                g_object_set(object, "text", buf, NULL);
 #endif
-	    } else {
-		g_object_set(object, "text", "", NULL);
-	    }
-	    priv->epoch_value = new_value;
-	}
+            } else {
+                g_object_set(object, "text", "", NULL);
+            }
+            priv->epoch_value = new_value;
+        }
     } else {
-	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
 }
 
@@ -99,20 +99,20 @@ trg_cell_renderer_epoch_class_init(TrgCellRendererEpochClass * klass)
     object_class->set_property = trg_cell_renderer_epoch_set_property;
 
     g_object_class_install_property(object_class,
-				    PROP_EPOCH_VALUE,
-				    g_param_spec_int64("epoch-value",
-						       "Epoch Value",
-						       "Epoch Value",
-						       INT64_MIN,
-						       INT64_MAX,
-						       0,
-						       G_PARAM_READWRITE
-						       |
-						       G_PARAM_STATIC_NAME
-						       |
-						       G_PARAM_STATIC_NICK
-						       |
-						       G_PARAM_STATIC_BLURB));
+                                    PROP_EPOCH_VALUE,
+                                    g_param_spec_int64("epoch-value",
+                                                       "Epoch Value",
+                                                       "Epoch Value",
+                                                       INT64_MIN,
+                                                       INT64_MAX,
+                                                       0,
+                                                       G_PARAM_READWRITE
+                                                       |
+                                                       G_PARAM_STATIC_NAME
+                                                       |
+                                                       G_PARAM_STATIC_NICK
+                                                       |
+                                                       G_PARAM_STATIC_BLURB));
 
     g_type_class_add_private(klass, sizeof(TrgCellRendererEpochPrivate));
 }
@@ -125,6 +125,6 @@ trg_cell_renderer_epoch_init(TrgCellRendererEpoch * self G_GNUC_UNUSED)
 GtkCellRenderer *trg_cell_renderer_epoch_new(void)
 {
     return
-	GTK_CELL_RENDERER(g_object_new
-			  (TRG_TYPE_CELL_RENDERER_EPOCH, NULL));
+        GTK_CELL_RENDERER(g_object_new
+                          (TRG_TYPE_CELL_RENDERER_EPOCH, NULL));
 }

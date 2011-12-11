@@ -48,4 +48,4 @@ GType trg_cell_renderer_numgteqthan_get_type(void);
 GtkCellRenderer *trg_cell_renderer_numgteqthan_new(gint64 minvalue);
 
 G_END_DECLS
-#endif				/* TRG_CELL_RENDERER_NUMGTEQTHAN_H_ */
+#endif                          /* TRG_CELL_RENDERER_NUMGTEQTHAN_H_ */

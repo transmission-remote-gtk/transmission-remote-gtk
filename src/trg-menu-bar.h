@@ -50,16 +50,16 @@ GType trg_menu_bar_get_type(void);
 
 TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win, TrgPrefs * prefs);
 GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, const gchar * text,
-				 const gchar * stock_id,
-				 gboolean sensitive);
+                                 const gchar * stock_id,
+                                 gboolean sensitive);
 
 G_END_DECLS
     void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
-						gboolean sensitive);
+                                                gboolean sensitive);
 void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected);
 void trg_menu_bar_set_supports_queues(TrgMenuBar * mb,
-				      gboolean supportsQueues);
+                                      gboolean supportsQueues);
 GtkWidget *trg_menu_bar_file_connect_menu_new(TrgMainWindow * win,
-					      TrgPrefs * p);
+                                              TrgPrefs * p);
 
-#endif				/* TRG_MENU_BAR_H_ */
+#endif                          /* TRG_MENU_BAR_H_ */

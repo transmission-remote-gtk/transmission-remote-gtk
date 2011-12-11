@@ -41,8 +41,8 @@
 #define FILTER_FLAG_TRACKER            (1 << 14)
 #define FILTER_FLAG_DIR                (1 << 15)
 
-#define TORRENT_ADD_FLAG_PAUSED        (1 << 0)	/* 0x01 */
-#define TORRENT_ADD_FLAG_DELETE        (1 << 1)	/* 0x02 */
+#define TORRENT_ADD_FLAG_PAUSED        (1 << 0) /* 0x01 */
+#define TORRENT_ADD_FLAG_DELETE        (1 << 1) /* 0x02 */
 
 gint64 torrent_get_size(JsonObject * t);
 const gchar *torrent_get_name(JsonObject * t);
@@ -59,7 +59,7 @@ gint64 torrent_get_status(JsonObject * t);
 gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags);
 gchar *torrent_get_status_icon(gint64 rpcv, guint flags);
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
-			  gint64 downRate, gint64 upRate);
+                          gint64 downRate, gint64 upRate);
 JsonArray *torrent_get_peers(JsonObject * t);
 JsonObject *torrent_get_peersfrom(JsonObject * t);
 JsonArray *torrent_get_tracker_stats(JsonObject * t);
@@ -139,4 +139,4 @@ gint64 peerfrom_get_ltep(JsonObject * pf);
 gint64 peerfrom_get_resume(JsonObject * pf);
 gint64 peerfrom_get_incoming(JsonObject * pf);
 gint64 peerfrom_get_lpd(JsonObject * pf);
-#endif				/* TORRENT_H_ */
+#endif                          /* TORRENT_H_ */
