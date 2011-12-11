@@ -1,14 +1,23 @@
-* Fri Dec 09 2011 0.8
+* Sun Dec 11 2011 0.8
 - Define labels for directories.
 - Use labels in filters.
 - Use labels in destination combo box (add/move).
 - Shorten filters relative to the default download directory.
 - Fix a crash when filtering with selections in the torrent treeview.
-- Allow remote session variables to be used in actions.
+- Speed up filtering.
+- Allow remote preferences variables to be used in actions.
 - Update filters if torrent is moved.
 - Add a man page.
-- A preferences scope for current connection (as well as selected profile).
 - Rename "remote commands" feature to "actions".
+- Notifications without a system tray icon.
+- libappindicator support for Ubuntu.
+- Status info in status icon for consistency with libappindicator icon.
+- Builds/runs on GTK3 (without graph/libunique for now).
+- Remember last move destination.
+- Use Win32 mailslots as alternative to libunique.
+- Working debian packaging.
+- Handle URLs/files in first instance.
+- Last scrape time trackers column.
 
 * Tue Oct 11 2011 0.7
 - Remote exec.

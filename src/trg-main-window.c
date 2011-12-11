@@ -525,7 +525,8 @@ static void resume_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 static void disconnect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-
+    
+    trg_client_inc_connid(priv->client);
     trg_main_window_conn_changed(TRG_MAIN_WINDOW(data), FALSE);
     trg_status_bar_reset(priv->statusBar);
 }
@@ -1024,12 +1025,15 @@ static void connchange_whatever_statusicon(TrgMainWindow * win,
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     const gchar *display = connected ? _("Connected") : _("Disconnected");
-    GtkMenu *menu = trg_status_icon_view_menu(win, display);
 
 #ifdef HAVE_LIBAPPINDICATOR
-    if (priv->appIndicator)
+    if (priv->appIndicator) {
+        GtkMenu *menu = trg_status_icon_view_menu(win, display);
         app_indicator_set_menu(priv->appIndicator, menu);
+    }
 #else
+    GtkMenu *menu = trg_status_icon_view_menu(win, display);
+
     if (priv->iconMenu)
         gtk_widget_destroy(GTK_WIDGET(priv->iconMenu));
 
@@ -2025,17 +2029,18 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), priv->iconStatusItem);
 
     if (connected) {
-        priv->iconDownloadingItem = gtk_menu_item_new_with_label(_("Updating..."));
+        priv->iconDownloadingItem =
+            gtk_menu_item_new_with_label(_("Updating..."));
         gtk_widget_set_visible(priv->iconDownloadingItem, FALSE);
         gtk_widget_set_sensitive(priv->iconDownloadingItem, FALSE);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                               priv->iconDownloadingItem);
 
-        priv->iconSeedingItem = gtk_menu_item_new_with_label(_("Updating..."));
+        priv->iconSeedingItem =
+            gtk_menu_item_new_with_label(_("Updating..."));
         gtk_widget_set_visible(priv->iconSeedingItem, FALSE);
         gtk_widget_set_sensitive(priv->iconSeedingItem, FALSE);
-        gtk_menu_shell_append(GTK_MENU_SHELL(menu),
-                              priv->iconSeedingItem);
+        gtk_menu_shell_append(GTK_MENU_SHELL(menu), priv->iconSeedingItem);
     }
 
     priv->iconSepItem = gtk_separator_menu_item_new();
