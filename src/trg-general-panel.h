@@ -50,11 +50,12 @@ typedef struct {
 
 GType trg_general_panel_get_type(void);
 
-TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model, TrgClient *tc);
+TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model,
+				       TrgClient * tc);
 
 G_END_DECLS
     void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
-                                  GtkTreeIter * iter);
+				  GtkTreeIter * iter);
 void trg_general_panel_clear(TrgGeneralPanel * panel);
 
-#endif                          /* TRG_GENERAL_PANEL_H_ */
+#endif				/* TRG_GENERAL_PANEL_H_ */

@@ -47,32 +47,33 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
     trg_column_description *desc;
 
     desc =
-        trg_tree_view_reg_column(ttv, TRG_COLTYPE_STOCKICONTEXT, PEERSCOL_IP,
-                                 _("IP"), "ip", 0);
+	trg_tree_view_reg_column(ttv, TRG_COLTYPE_STOCKICONTEXT,
+				 PEERSCOL_IP, _("IP"), "ip", 0);
     desc->model_column_icon = PEERSCOL_ICON;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_HOST,
-                             _("Host"), "host", 0);
+			     _("Host"), "host", 0);
 
 #ifdef HAVE_GEOIP
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_COUNTRY,
-                             _("Country"), "country", 0);
+			     _("Country"), "country", 0);
 #endif
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_DOWNSPEED,
-                             _("Down Speed"), "down-speed", 0);
+			     _("Down Speed"), "down-speed", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_UPSPEED,
-                             _("Up Speed"), "up-speed", 0);
+			     _("Up Speed"), "up-speed", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PROG, PEERSCOL_PROGRESS,
-                             _("Progress"), "progress", 0);
+			     _("Progress"), "progress", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_FLAGS,
-                             _("Flags"), "flags", 0);
+			     _("Flags"), "flags", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_CLIENT,
-                             _("Client"), "client", 0);
+			     _("Client"), "client", 0);
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), PEERSCOL_HOST);
 }
 
-TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs *prefs, TrgPeersModel * model)
+TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs * prefs,
+					  TrgPeersModel * model)
 {
     GObject *obj = g_object_new(TRG_TYPE_PEERS_TREE_VIEW, NULL);
     trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), prefs);

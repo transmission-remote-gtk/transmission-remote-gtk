@@ -40,8 +40,8 @@ JsonNode *generic_request(gchar * method, JsonArray * ids)
     JsonNode *root = base_request(method);
 
     if (ids)
-        json_object_set_array_member(node_get_arguments(root),
-                                     PARAM_IDS, ids);
+	json_object_set_array_member(node_get_arguments(root),
+				     PARAM_IDS, ids);
 
     return root;
 }
@@ -67,7 +67,7 @@ JsonNode *session_get(void)
 }
 
 JsonNode *torrent_set_location(JsonArray * array, gchar * location,
-                               gboolean move)
+			       gboolean move)
 {
     JsonNode *req = generic_request(METHOD_TORRENT_SET_LOCATION, array);
     JsonObject *args = node_get_arguments(req);
@@ -137,7 +137,7 @@ JsonNode *torrent_remove(JsonArray * array, gboolean removeData)
     JsonObject *args = node_get_arguments(root);
     json_object_set_array_member(args, PARAM_IDS, array);
     json_object_set_boolean_member(args, PARAM_DELETE_LOCAL_DATA,
-                                   removeData);
+				   removeData);
     return root;
 }
 
@@ -148,12 +148,12 @@ JsonNode *torrent_get(gint64 id)
     JsonArray *fields = json_array_new();
 
     if (id == TORRENT_GET_TAG_MODE_UPDATE) {
-        json_object_set_string_member(args, PARAM_IDS,
-                                      FIELD_RECENTLY_ACTIVE);
+	json_object_set_string_member(args, PARAM_IDS,
+				      FIELD_RECENTLY_ACTIVE);
     } else if (id >= 0) {
-        JsonArray *ids = json_array_new();
-        json_array_add_int_element(ids, id);
-        json_object_set_array_member(args, PARAM_IDS, ids);
+	JsonArray *ids = json_array_new();
+	json_array_add_int_element(ids, id);
+	json_object_set_array_member(args, PARAM_IDS, ids);
     }
 
     json_array_add_string_element(fields, FIELD_ETA);
@@ -164,7 +164,7 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_PEERS_GETTING_FROM_US);
     json_array_add_string_element(fields, FIELD_PEERS_CONNECTED);
     /*json_array_add_string_element(fields, FIELD_HAVEVALID);
-    json_array_add_string_element(fields, FIELD_HAVEUNCHECKED);*/
+       json_array_add_string_element(fields, FIELD_HAVEUNCHECKED); */
     json_array_add_string_element(fields, FIELD_RATEUPLOAD);
     json_array_add_string_element(fields, FIELD_RATEDOWNLOAD);
     json_array_add_string_element(fields, FIELD_STATUS);
@@ -223,32 +223,33 @@ JsonNode *torrent_add(gchar * target, gint flags)
     gboolean isUri = isMagnet || is_url(target);
     gchar *encodedFile;
 
-    if (!isUri && !g_file_test(target, G_FILE_TEST_IS_REGULAR))
-    {
-        g_message("file \"%s\" does not exist.", target);
-        return NULL;
+    if (!isUri && !g_file_test(target, G_FILE_TEST_IS_REGULAR)) {
+	g_message("file \"%s\" does not exist.", target);
+	return NULL;
     }
 
     root = base_request(METHOD_TORRENT_ADD);
     args = node_get_arguments(root);
 
     if (isUri) {
-        json_object_set_string_member(args, PARAM_FILENAME, target);
+	json_object_set_string_member(args, PARAM_FILENAME, target);
     } else {
-        encodedFile = trg_base64encode(target);
-        if (encodedFile) {
-            json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
-            g_free(encodedFile);
-        } else {
-            g_error("unable to base64 encode file \"%s\".", target);
-            return NULL;
-        }
+	encodedFile = trg_base64encode(target);
+	if (encodedFile) {
+	    json_object_set_string_member(args, PARAM_METAINFO,
+					  encodedFile);
+	    g_free(encodedFile);
+	} else {
+	    g_error("unable to base64 encode file \"%s\".", target);
+	    return NULL;
+	}
     }
 
-    json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED));
+    json_object_set_boolean_member(args, PARAM_PAUSED,
+				   (flags & TORRENT_ADD_FLAG_PAUSED));
 
     if ((flags & TORRENT_ADD_FLAG_DELETE))
-        g_unlink(target);
+	g_unlink(target);
 
     return root;
 }
@@ -272,8 +273,8 @@ void request_set_tag(JsonNode * req, gint64 tag)
 void request_set_tag_from_ids(JsonNode * req, JsonArray * ids)
 {
     gint64 id =
-        json_array_get_length(ids) == 1 ? json_array_get_int_element(ids,
-                                                                     0) :
-        -1;
+	json_array_get_length(ids) == 1 ? json_array_get_int_element(ids,
+								     0) :
+	-1;
     request_set_tag(req, id);
 }

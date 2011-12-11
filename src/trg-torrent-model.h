@@ -44,9 +44,9 @@ G_BEGIN_DECLS
 typedef struct {
     GtkListStoreClass parent_class;
     void (*torrent_completed) (TrgTorrentModel * model,
-                               GtkTreeIter * iter, gpointer data);
+			       GtkTreeIter * iter, gpointer data);
     void (*torrent_added) (TrgTorrentModel * model,
-                           GtkTreeIter * iter, gpointer data);
+			   GtkTreeIter * iter, gpointer data);
 
     void (*torrent_removed) (TrgTorrentModel * model, gpointer data);
 } TrgTorrentModelClass;
@@ -66,26 +66,30 @@ GType trg_torrent_model_get_type(void);
 TrgTorrentModel *trg_torrent_model_new();
 
 G_END_DECLS
-
     gboolean
 find_existing_peer_item(GtkListStore * model, JsonObject * p,
-                        GtkTreeIter * iter);
+			GtkTreeIter * iter);
 
-trg_torrent_model_update_stats* trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
-                              JsonObject * response,
-                              gint mode);
-trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel * model);
+trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *
+							 model,
+							 TrgClient * tc,
+							 JsonObject *
+							 response,
+							 gint mode);
+trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel
+							    * model);
 
 GHashTable *get_torrent_table(TrgTorrentModel * model);
-void trg_torrent_model_remove_all(TrgTorrentModel *model);
+void trg_torrent_model_remove_all(TrgTorrentModel * model);
 
 gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model);
 
 gboolean get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
-                          GtkTreeIter * out_iter);
+			  GtkTreeIter * out_iter);
 
-gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir);
-void trg_torrent_model_reload_dir_aliases(TrgClient *tc, GtkTreeModel *model);
+gchar *shorten_download_dir(TrgClient * tc, const gchar * downloadDir);
+void trg_torrent_model_reload_dir_aliases(TrgClient * tc,
+					  GtkTreeModel * model);
 
 enum {
     TORRENT_COLUMN_ICON,
@@ -127,4 +131,4 @@ enum {
     TORRENT_COLUMN_COLUMNS
 };
 
-#endif                          /* TRG_TORRENT_MODEL_H_ */
+#endif				/* TRG_TORRENT_MODEL_H_ */

@@ -24,10 +24,10 @@ extern "C" {
 #endif
 
     typedef enum {
-        BE_STR,
-        BE_INT,
-        BE_LIST,
-        BE_DICT
+	BE_STR,
+	BE_INT,
+	BE_LIST,
+	BE_DICT
     } be_type;
 
     struct be_dict;
@@ -38,18 +38,18 @@ extern "C" {
  */
 
     typedef struct be_dict {
-        char *key;
-        struct be_node *val;
+	char *key;
+	struct be_node *val;
     } be_dict;
 
     typedef struct be_node {
-        be_type type;
-        union {
-            char *s;
-            gint64 i;
-            struct be_node **l;
-            struct be_dict *d;
-        } val;
+	be_type type;
+	union {
+	    char *s;
+	    gint64 i;
+	    struct be_node **l;
+	    struct be_dict *d;
+	} val;
     } be_node;
 
     extern gint64 be_str_len(be_node * node);

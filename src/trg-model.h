@@ -23,10 +23,10 @@
 #include <gtk/gtk.h>
 
 guint trg_model_remove_removed(GtkListStore * model, gint serial_column,
-                               gint64 currentSerial);
+			       gint64 currentSerial);
 
 gboolean
 find_existing_model_item(GtkTreeModel * model, gint search_column,
-                         gint64 id, GtkTreeIter * iter);
+			 gint64 id, GtkTreeIter * iter);
 
-#endif                          /* TRG_MODEL_H_ */
+#endif				/* TRG_MODEL_H_ */

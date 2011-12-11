@@ -60,7 +60,7 @@ GType trg_main_window_get_type(void);
 gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
 gboolean on_session_set(gpointer data);
 gboolean on_generic_interactive_action(gpointer data);
-void auto_connect_if_required(TrgMainWindow * win, gchar **args);
+void auto_connect_if_required(TrgMainWindow * win, gchar ** args);
 TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart);
 void trg_main_window_add_status_icon(TrgMainWindow * win);
 void trg_main_window_remove_status_icon(TrgMainWindow * win);
@@ -69,13 +69,14 @@ void trg_main_window_remove_graph(TrgMainWindow * win);
 TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win);
 gint trg_mw_get_selected_torrent_id(TrgMainWindow * win);
 GtkTreeModel *trg_main_window_get_torrent_model(TrgMainWindow * win);
-void trg_main_window_notebook_set_visible(TrgMainWindow *win, gboolean visible);
+void trg_main_window_notebook_set_visible(TrgMainWindow * win,
+					  gboolean visible);
 void connect_cb(GtkWidget * w, gpointer data);
-void trg_main_window_reload_dir_aliases(TrgMainWindow *win);
+void trg_main_window_reload_dir_aliases(TrgMainWindow * win);
 
 #if !GTK_CHECK_VERSION(2, 21, 1)
 #define gdk_drag_context_get_actions(context) context->actions
 #endif
 
 G_END_DECLS
-#endif                          /* MAIN_WINDOW_H_ */
+#endif				/* MAIN_WINDOW_H_ */

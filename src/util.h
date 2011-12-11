@@ -51,7 +51,7 @@ char *tr_strltime_short(char *buf, long seconds, size_t buflen);
 char *tr_strpercent(char *buf, double x, size_t buflen);
 char *tr_strlpercent(char *buf, double x, size_t buflen);
 char *tr_strratio(char *buf, size_t buflen, double ratio,
-                  const char *infinity);
+		  const char *infinity);
 char *tr_strlratio(char *buf, double ratio, size_t buflen);
 char *tr_strlspeed(char *buf, double kb_sec, size_t buflen);
 char *tr_strlsize(char *buf, guint64 size, size_t buflen);
@@ -62,15 +62,15 @@ int tr_snprintf(char *buf, size_t buflen, const char *fmt, ...);
 size_t tr_strlcpy(char *dst, const void *src, size_t siz);
 double tr_truncd(double x, int decimal_places);
 int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
-                     va_list ap);
-void rm_trailing_slashes(gchar *str);
+		     va_list ap);
+void rm_trailing_slashes(gchar * str);
 void trg_widget_set_visible(GtkWidget * w, gboolean visible);
-gdouble json_double_to_progress(JsonNode *n);
-gchar *trg_base64encode(const gchar *filename);
+gdouble json_double_to_progress(JsonNode * n);
+gchar *trg_base64encode(const gchar * filename);
 GtkWidget *my_scrolledwin_new(GtkWidget * child);
-gboolean is_url(gchar *string);
-gboolean is_magnet(gchar *string);
-gdouble json_node_really_get_double(JsonNode *node);
+gboolean is_url(gchar * string);
+gboolean is_magnet(gchar * string);
+gdouble json_node_really_get_double(JsonNode * node);
 GtkWidget *gtr_combo_box_new_enum(const char *text_1, ...);
 
-#endif                          /* UTIL_H_ */
+#endif				/* UTIL_H_ */

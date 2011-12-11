@@ -73,8 +73,8 @@
 const gchar *session_get_torrent_done_filename(JsonObject * s);
 gboolean session_get_torrent_done_enabled(JsonObject * s);
 gint64 session_get_cache_size_mb(JsonObject * s);
-const gchar *session_get_version_string(JsonObject *s);
-int session_get_version(JsonObject *s, float *version);
+const gchar *session_get_version_string(JsonObject * s);
+int session_get_version(JsonObject * s, float *version);
 gboolean session_get_pex_enabled(JsonObject * s);
 gboolean session_get_lpd_enabled(JsonObject * s);
 const gchar *session_get_download_dir(JsonObject * s);
@@ -103,7 +103,7 @@ gint64 session_get_download_queue_size(JsonObject * s);
 gboolean session_get_seed_queue_enabled(JsonObject * s);
 gint64 session_get_seed_queue_size(JsonObject * s);
 gint64 session_get_rpc_version(JsonObject * s);
-gint64 session_get_download_dir_free_space(JsonObject *s);
-gboolean session_get_dht_enabled(JsonObject *s);
+gint64 session_get_download_dir_free_space(JsonObject * s);
+gboolean session_get_dht_enabled(JsonObject * s);
 
-#endif                          /* SESSION_GET_H_ */
+#endif				/* SESSION_GET_H_ */

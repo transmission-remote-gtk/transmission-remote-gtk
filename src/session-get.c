@@ -26,17 +26,17 @@
 
 /* Just some functions to get fields out of a session-get response. */
 
-const gchar *session_get_version_string(JsonObject *s)
+const gchar *session_get_version_string(JsonObject * s)
 {
     return json_object_get_string_member(s, SGET_VERSION);
 }
 
-int session_get_version(JsonObject *s, float *version)
+int session_get_version(JsonObject * s, float *version)
 {
     return sscanf(session_get_version_string(s), "%g", version);
 }
 
-gint64 session_get_download_dir_free_space(JsonObject *s)
+gint64 session_get_download_dir_free_space(JsonObject * s)
 {
     return json_object_get_int_member(s, SGET_DOWNLOAD_DIR_FREE_SPACE);
 }
@@ -64,7 +64,7 @@ const gchar *session_get_download_dir(JsonObject * s)
 gboolean session_get_peer_port_random(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
-                                          SGET_PEER_PORT_RANDOM_ON_START);
+					  SGET_PEER_PORT_RANDOM_ON_START);
 }
 
 gint64 session_get_peer_port(JsonObject * s)
@@ -80,9 +80,9 @@ gboolean session_get_port_forwarding_enabled(JsonObject * s)
 const gchar *session_get_blocklist_url(JsonObject * s)
 {
     if (json_object_has_member(s, SGET_BLOCKLIST_URL))
-        return json_object_get_string_member(s, SGET_BLOCKLIST_URL);
+	return json_object_get_string_member(s, SGET_BLOCKLIST_URL);
     else
-        return NULL;
+	return NULL;
 }
 
 gint64 session_get_blocklist_size(JsonObject * s)
@@ -143,21 +143,21 @@ gint64 session_get_seed_queue_size(JsonObject * s)
 const gchar *session_get_torrent_done_filename(JsonObject * s)
 {
     return json_object_get_string_member(s,
-                                         SGET_SCRIPT_TORRENT_DONE_FILENAME);
+					 SGET_SCRIPT_TORRENT_DONE_FILENAME);
 }
 
 gboolean session_get_torrent_done_enabled(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
-                                          SGET_SCRIPT_TORRENT_DONE_ENABLED);
+					  SGET_SCRIPT_TORRENT_DONE_ENABLED);
 }
 
 gint64 session_get_cache_size_mb(JsonObject * s)
 {
     if (json_object_has_member(s, SGET_CACHE_SIZE_MB))
-        return json_object_get_int_member(s, SGET_CACHE_SIZE_MB);
+	return json_object_get_int_member(s, SGET_CACHE_SIZE_MB);
     else
-        return -1;
+	return -1;
 }
 
 gdouble session_get_seed_ratio_limit(JsonObject * s)
@@ -173,7 +173,7 @@ gboolean session_get_start_added_torrents(JsonObject * s)
 gboolean session_get_trash_original_torrent_files(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
-                                          SGET_TRASH_ORIGINAL_TORRENT_FILES);
+					  SGET_TRASH_ORIGINAL_TORRENT_FILES);
 }
 
 gboolean session_get_speed_limit_up_enabled(JsonObject * s)
@@ -199,7 +199,7 @@ gint64 session_get_speed_limit_up(JsonObject * s)
 gboolean session_get_speed_limit_down_enabled(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
-                                          SGET_SPEED_LIMIT_DOWN_ENABLED);
+					  SGET_SPEED_LIMIT_DOWN_ENABLED);
 }
 
 gint64 session_get_speed_limit_down(JsonObject * s)
@@ -207,7 +207,7 @@ gint64 session_get_speed_limit_down(JsonObject * s)
     return json_object_get_int_member(s, SGET_SPEED_LIMIT_DOWN);
 }
 
-gboolean session_get_dht_enabled(JsonObject *s)
+gboolean session_get_dht_enabled(JsonObject * s)
 {
     return json_object_get_boolean_member(s, SGET_DHT_ENABLED);
 }

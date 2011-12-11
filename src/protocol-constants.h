@@ -33,7 +33,7 @@
 /* torrents */
 
 #define FIELD_RECENTLY_ACTIVE     "recently-active"
-#define FIELD_TORRENTS          "torrents"      /* parent node */
+#define FIELD_TORRENTS          "torrents"	/* parent node */
 #define FIELD_REMOVED           "removed"
 #define FIELD_ANNOUNCE_URL      "announceUrl"
 #define FIELD_LEFT_UNTIL_DONE   "leftUntilDone"
@@ -171,21 +171,19 @@ typedef enum {
     OLD_STATUS_PAUSED = 16
 } trg_old_status;
 
-typedef enum
-{
-    TR_STATUS_STOPPED        = 0, /* Torrent is stopped */
-    TR_STATUS_CHECK_WAIT     = 1, /* Queued to check files */
-    TR_STATUS_CHECK          = 2, /* Checking files */
-    TR_STATUS_DOWNLOAD_WAIT  = 3, /* Queued to download */
-    TR_STATUS_DOWNLOAD       = 4, /* Downloading */
-    TR_STATUS_SEED_WAIT      = 5, /* Queued to seed */
-    TR_STATUS_SEED           = 6  /* Seeding */
-}
-tr_torrent_activity;
+typedef enum {
+    TR_STATUS_STOPPED = 0,	/* Torrent is stopped */
+    TR_STATUS_CHECK_WAIT = 1,	/* Queued to check files */
+    TR_STATUS_CHECK = 2,	/* Checking files */
+    TR_STATUS_DOWNLOAD_WAIT = 3,	/* Queued to download */
+    TR_STATUS_DOWNLOAD = 4,	/* Downloading */
+    TR_STATUS_SEED_WAIT = 5,	/* Queued to seed */
+    TR_STATUS_SEED = 6		/* Seeding */
+} tr_torrent_activity;
 
 enum {
     TR_PRI_LOW = -1,
-    TR_PRI_NORMAL = 0,          /* since NORMAL is 0, memset initializes nicely */
+    TR_PRI_NORMAL = 0,		/* since NORMAL is 0, memset initializes nicely */
     TR_PRI_HIGH = 1
 };
 
@@ -193,4 +191,4 @@ enum {
 #define TFILE_BYTES_COMPLETED                   "bytesCompleted"
 #define TFILE_NAME                              "name"
 
-#endif                          /* PROTOCOL_CONSTANTS_H_ */
+#endif				/* PROTOCOL_CONSTANTS_H_ */

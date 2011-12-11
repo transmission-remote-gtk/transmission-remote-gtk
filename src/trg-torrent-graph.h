@@ -45,8 +45,8 @@ void trg_torrent_graph_stop(TrgTorrentGraph * g);
 void trg_torrent_graph_change_speed(TrgTorrentGraph * g, guint new_speed);
 
 void trg_torrent_graph_set_speed(TrgTorrentGraph * g,
-                                 trg_torrent_model_update_stats * stats);
+				 trg_torrent_model_update_stats * stats);
 void trg_torrent_graph_set_nothing(TrgTorrentGraph * g);
 
 G_END_DECLS
-#endif                          /* _TRG_TORRENT_GRAPH */
+#endif				/* _TRG_TORRENT_GRAPH */

@@ -76,78 +76,77 @@
 #define TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR "dir"
 
 
-#define TRG_PREFS_NOFLAGS    (1 << 0) /* 0x00 */
-#define TRG_PREFS_GLOBAL     (1 << 1) /* 0x01 */
-#define TRG_PREFS_PROFILE    (1 << 2) /* 0x02 */
-#define TRG_PREFS_CONNECTION (1 << 3) /* 0x04 */
-#define TRG_PREFS_NEWNODE    (1 << 4) /* 0x08 */
-#define TRG_PREFS_REPLACENODE (1 << 5) /* 0x16 */
+#define TRG_PREFS_NOFLAGS    (1 << 0)	/* 0x00 */
+#define TRG_PREFS_GLOBAL     (1 << 1)	/* 0x01 */
+#define TRG_PREFS_PROFILE    (1 << 2)	/* 0x02 */
+#define TRG_PREFS_CONNECTION (1 << 3)	/* 0x04 */
+#define TRG_PREFS_NEWNODE    (1 << 4)	/* 0x08 */
+#define TRG_PREFS_REPLACENODE (1 << 5)	/* 0x16 */
 
 G_BEGIN_DECLS
-
 #define TRG_TYPE_PREFS trg_prefs_get_type()
-
 #define TRG_PREFS(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_PREFS, TrgPrefs))
-
 #define TRG_PREFS_CLASS(klass) \
   (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_PREFS, TrgPrefsClass))
-
 #define TRG_IS_PREFS(obj) \
   (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_PREFS))
-
 #define TRG_IS_PREFS_CLASS(klass) \
   (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_PREFS))
-
 #define TRG_PREFS_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_PREFS, TrgPrefsClass))
-
-typedef struct {
-  GObject parent;
+    typedef struct {
+    GObject parent;
 } TrgPrefs;
 
 typedef struct {
-  GObjectClass parent_class;
-  void (*pref_changed) (TrgPrefs *tc, const gchar *key, gpointer data);
+    GObjectClass parent_class;
+    void (*pref_changed) (TrgPrefs * tc, const gchar * key, gpointer data);
 } TrgPrefsClass;
 
-GType trg_prefs_get_type (void);
+GType trg_prefs_get_type(void);
 
-TrgPrefs* trg_prefs_new (void);
+TrgPrefs *trg_prefs_new(void);
 
-void trg_prefs_add_default_int(TrgPrefs *p, const gchar *key, int value);
-void trg_prefs_add_default_string(TrgPrefs *p, const gchar *key, gchar *value);
-void trg_prefs_add_default_double(TrgPrefs *p, const gchar *key, double value);
-void trg_prefs_add_default_bool_true(TrgPrefs *p, const gchar *key);
+void trg_prefs_add_default_int(TrgPrefs * p, const gchar * key, int value);
+void trg_prefs_add_default_string(TrgPrefs * p, const gchar * key,
+				  gchar * value);
+void trg_prefs_add_default_double(TrgPrefs * p, const gchar * key,
+				  double value);
+void trg_prefs_add_default_bool_true(TrgPrefs * p, const gchar * key);
 
-JsonNode *trg_prefs_get_value(TrgPrefs *p, const gchar *key, int type, int flags);
-gchar *trg_prefs_get_string(TrgPrefs *p, const gchar *key, int flags);
-gint64 trg_prefs_get_int(TrgPrefs *p, const gchar *key, int flags);
-gdouble trg_prefs_get_double(TrgPrefs *p, const gchar *key, int flags);
-gboolean trg_prefs_get_bool(TrgPrefs *p, const gchar *key, int flags);
-JsonObject* trg_prefs_get_profile(TrgPrefs *p);
-JsonObject* trg_prefs_get_connection(TrgPrefs *p);
-JsonArray* trg_prefs_get_profiles(TrgPrefs *p);
-void trg_prefs_set_connection(TrgPrefs *p, JsonObject *profile);
-gint trg_prefs_get_profile_id(TrgPrefs *p);
-void trg_prefs_del_profile(TrgPrefs *p, JsonObject *profile);
-void trg_prefs_set_profile(TrgPrefs *p, JsonObject *profile);
-JsonObject *trg_prefs_new_profile(TrgPrefs *p);
-JsonObject *trg_get_current_profile(TrgPrefs *p);
-JsonObject *trg_prefs_get_root(TrgPrefs *p);
-JsonArray *trg_prefs_get_array(TrgPrefs *p, const gchar *key, int flags);
+JsonNode *trg_prefs_get_value(TrgPrefs * p, const gchar * key, int type,
+			      int flags);
+gchar *trg_prefs_get_string(TrgPrefs * p, const gchar * key, int flags);
+gint64 trg_prefs_get_int(TrgPrefs * p, const gchar * key, int flags);
+gdouble trg_prefs_get_double(TrgPrefs * p, const gchar * key, int flags);
+gboolean trg_prefs_get_bool(TrgPrefs * p, const gchar * key, int flags);
+JsonObject *trg_prefs_get_profile(TrgPrefs * p);
+JsonObject *trg_prefs_get_connection(TrgPrefs * p);
+JsonArray *trg_prefs_get_profiles(TrgPrefs * p);
+void trg_prefs_set_connection(TrgPrefs * p, JsonObject * profile);
+gint trg_prefs_get_profile_id(TrgPrefs * p);
+void trg_prefs_del_profile(TrgPrefs * p, JsonObject * profile);
+void trg_prefs_set_profile(TrgPrefs * p, JsonObject * profile);
+JsonObject *trg_prefs_new_profile(TrgPrefs * p);
+JsonObject *trg_get_current_profile(TrgPrefs * p);
+JsonObject *trg_prefs_get_root(TrgPrefs * p);
+JsonArray *trg_prefs_get_array(TrgPrefs * p, const gchar * key, int flags);
 
-void trg_prefs_set_int(TrgPrefs *p, const gchar *key, int value, int flags);
-void trg_prefs_set_string(TrgPrefs *p, const gchar *key, const gchar *value, int flags);
-void trg_prefs_set_double(TrgPrefs *p, const gchar *key, double value, int flags);
-void trg_prefs_set_bool(TrgPrefs *p, const gchar *key, gboolean value, int flags);
+void trg_prefs_set_int(TrgPrefs * p, const gchar * key, int value,
+		       int flags);
+void trg_prefs_set_string(TrgPrefs * p, const gchar * key,
+			  const gchar * value, int flags);
+void trg_prefs_set_double(TrgPrefs * p, const gchar * key, double value,
+			  int flags);
+void trg_prefs_set_bool(TrgPrefs * p, const gchar * key, gboolean value,
+			int flags);
 
-gboolean trg_prefs_save(TrgPrefs *p);
-void trg_prefs_load(TrgPrefs *p);
-void trg_prefs_changed_emit_signal(TrgPrefs *p, const gchar *key);
-void trg_prefs_profile_change_emit_signal(TrgPrefs *p);
-guint trg_prefs_get_add_flags(TrgPrefs *p);
+gboolean trg_prefs_save(TrgPrefs * p);
+void trg_prefs_load(TrgPrefs * p);
+void trg_prefs_changed_emit_signal(TrgPrefs * p, const gchar * key);
+void trg_prefs_profile_change_emit_signal(TrgPrefs * p);
+guint trg_prefs_get_add_flags(TrgPrefs * p);
 
 G_END_DECLS
-
-#endif /* _TRG_PREFS_H_ */
+#endif				/* _TRG_PREFS_H_ */

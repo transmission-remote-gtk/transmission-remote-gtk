@@ -49,9 +49,9 @@ typedef struct {
 GType trg_torrent_move_dialog_get_type(void);
 
 TrgTorrentMoveDialog *trg_torrent_move_dialog_new(TrgMainWindow * win,
-                                                  TrgClient * client,
-                                                  TrgTorrentTreeView *
-                                                  ttv);
+						  TrgClient * client,
+						  TrgTorrentTreeView *
+						  ttv);
 
 G_END_DECLS
-#endif                          /* TRG_TORRENT_MOVE_DIALOG_H_ */
+#endif				/* TRG_TORRENT_MOVE_DIALOG_H_ */

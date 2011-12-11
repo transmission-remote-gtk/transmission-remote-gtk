@@ -80,10 +80,11 @@ enum {
     PEERSCOL_COLUMNS
 };
 
-void trg_peers_model_update(TrgPeersModel * model, TrgTreeView *tv, gint64 updateSerial,
-                            JsonObject * t, gboolean first);
+void trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
+			    gint64 updateSerial, JsonObject * t,
+			    gboolean first);
 
-#endif                          /* TRG_PEERS_MODEL_H_ */
+#endif				/* TRG_PEERS_MODEL_H_ */
 
 #define TRG_GEOIP_DATABASE "/usr/share/GeoIP/GeoIP.dat"
 #define TRG_GEOIPV6_DATABASE "/usr/share/GeoIP/GeoIPv6.dat"

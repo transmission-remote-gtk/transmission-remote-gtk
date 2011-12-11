@@ -64,10 +64,10 @@ struct add_torrent_threadfunc_args {
 GType trg_torrent_add_dialog_get_type(void);
 
 TrgTorrentAddDialog *trg_torrent_add_dialog_new(TrgMainWindow * win,
-                                                TrgClient * client,
-                                                GSList * filenames);
+						TrgClient * client,
+						GSList * filenames);
 void trg_torrent_add_dialog(TrgMainWindow * win, TrgClient * client);
 void launch_add_thread(struct add_torrent_threadfunc_args *args);
 
 G_END_DECLS
-#endif                          /* TRG_TORRENT_ADD_DIALOG_H_ */
+#endif				/* TRG_TORRENT_ADD_DIALOG_H_ */

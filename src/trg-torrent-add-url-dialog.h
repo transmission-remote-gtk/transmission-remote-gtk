@@ -49,8 +49,7 @@ typedef struct {
 GType trg_torrent_add_url_dialog_get_type(void);
 
 TrgTorrentAddUrlDialog *trg_torrent_add_url_dialog_new(TrgMainWindow * win,
-                                                       TrgClient *
-                                                       client);
+						       TrgClient * client);
 
 G_END_DECLS
-#endif                          /* TRG_TORRENT_ADD_URL_DIALOG_H_ */
+#endif				/* TRG_TORRENT_ADD_URL_DIALOG_H_ */

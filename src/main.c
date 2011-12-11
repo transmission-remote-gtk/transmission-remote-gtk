@@ -50,7 +50,7 @@
  */
 
 #define TRG_LIBUNIQUE_DOMAIN "uk.org.eth0.trg"
-#define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"  //Name given to the Mailslot
+#define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"	//Name given to the Mailslot
 #define MAILSLOT_BUFFER_SIZE 1024*32
 
 #ifdef HAVE_LIBUNIQUE
@@ -62,9 +62,9 @@ enum {
 
 static UniqueResponse
 message_received_cb(UniqueApp * app G_GNUC_UNUSED,
-        gint command,
-        UniqueMessageData * message,
-        guint time_, gpointer user_data)
+		    gint command,
+		    UniqueMessageData * message,
+		    guint time_, gpointer user_data)
 {
     TrgMainWindow *win;
     UniqueResponse res;
@@ -73,22 +73,22 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
     win = TRG_MAIN_WINDOW(user_data);
 
     switch (command) {
-        case UNIQUE_ACTIVATE:
-        gtk_window_set_screen(GTK_WINDOW(user_data),
-                unique_message_data_get_screen(message));
-        gtk_window_present_with_time(GTK_WINDOW(user_data), time_);
-        res = UNIQUE_RESPONSE_OK;
-        break;
-        case COMMAND_ADD:
-        uris = unique_message_data_get_uris(message);
-        res =
-        trg_add_from_filename(win,
-                uris) ? UNIQUE_RESPONSE_OK :
-        UNIQUE_RESPONSE_FAIL;
-        break;
-        default:
-        res = UNIQUE_RESPONSE_OK;
-        break;
+    case UNIQUE_ACTIVATE:
+	gtk_window_set_screen(GTK_WINDOW(user_data),
+			      unique_message_data_get_screen(message));
+	gtk_window_present_with_time(GTK_WINDOW(user_data), time_);
+	res = UNIQUE_RESPONSE_OK;
+	break;
+    case COMMAND_ADD:
+	uris = unique_message_data_get_uris(message);
+	res =
+	    trg_add_from_filename(win,
+				  uris) ? UNIQUE_RESPONSE_OK :
+	    UNIQUE_RESPONSE_FAIL;
+	break;
+    default:
+	res = UNIQUE_RESPONSE_OK;
+	break;
     }
 
     return res;
@@ -104,23 +104,26 @@ struct trg_mailslot_recv_args {
 
 /* to be queued into the glib main loop with g_idle_add() */
 
-static gboolean mailslot_recv_args(gpointer data) {
-    struct trg_mailslot_recv_args *args = (struct trg_mailslot_recv_args*) data;
+static gboolean mailslot_recv_args(gpointer data)
+{
+    struct trg_mailslot_recv_args *args =
+	(struct trg_mailslot_recv_args *) data;
 
     if (args->present) {
-        gtk_window_deiconify(GTK_WINDOW(args->win));
-        gtk_window_present(GTK_WINDOW(args->win));
+	gtk_window_deiconify(GTK_WINDOW(args->win));
+	gtk_window_present(GTK_WINDOW(args->win));
     }
 
     if (args->uris)
-        trg_add_from_filename(args->win, args->uris);
+	trg_add_from_filename(args->win, args->uris);
 
     g_free(args);
 
     return FALSE;
 }
 
-static gpointer mailslot_recv_thread(gpointer data) {
+static gpointer mailslot_recv_thread(gpointer data)
+{
     TrgMainWindow *win = TRG_MAIN_WINDOW(data);
     JsonParser *parser;
     char szBuffer[MAILSLOT_BUFFER_SIZE];
@@ -128,73 +131,77 @@ static gpointer mailslot_recv_thread(gpointer data) {
     DWORD cbBytes;
     BOOL bResult;
 
-    hMailslot = CreateMailslot(TRG_MAILSLOT_NAME, // mailslot name
-            MAILSLOT_BUFFER_SIZE, // input buffer size
-            MAILSLOT_WAIT_FOREVER, // no timeout
-            NULL); // default security attribute
+    hMailslot = CreateMailslot(TRG_MAILSLOT_NAME,	// mailslot name
+			       MAILSLOT_BUFFER_SIZE,	// input buffer size
+			       MAILSLOT_WAIT_FOREVER,	// no timeout
+			       NULL);	// default security attribute
 
     if (INVALID_HANDLE_VALUE == hMailslot) {
-        g_error(
-                "\nError occurred while creating the mailslot: %d", GetLastError());
-        return NULL; //Error
+	g_error("\nError occurred while creating the mailslot: %d",
+		GetLastError());
+	return NULL;		//Error
     }
 
     while (1) {
-        bResult = ReadFile(hMailslot, // handle to mailslot
-                szBuffer, // buffer to receive data
-                sizeof(szBuffer), // size of buffer
-                &cbBytes, // number of bytes read
-                NULL); // not overlapped I/O
+	bResult = ReadFile(hMailslot,	// handle to mailslot
+			   szBuffer,	// buffer to receive data
+			   sizeof(szBuffer),	// size of buffer
+			   &cbBytes,	// number of bytes read
+			   NULL);	// not overlapped I/O
 
-        if ((!bResult) || (0 == cbBytes)) {
-            g_error("Mailslot error from client: %d", GetLastError());
-            break;
-        }
+	if ((!bResult) || (0 == cbBytes)) {
+	    g_error("Mailslot error from client: %d", GetLastError());
+	    break;
+	}
 
-        parser = json_parser_new();
+	parser = json_parser_new();
 
-        if (json_parser_load_from_data(parser, szBuffer, cbBytes, NULL)) {
-            JsonNode *node = json_parser_get_root(parser);
-            JsonObject *obj = json_node_get_object(node);
-            struct trg_mailslot_recv_args *args =
-                    g_new0(struct trg_mailslot_recv_args, 1);
+	if (json_parser_load_from_data(parser, szBuffer, cbBytes, NULL)) {
+	    JsonNode *node = json_parser_get_root(parser);
+	    JsonObject *obj = json_node_get_object(node);
+	    struct trg_mailslot_recv_args *args =
+		g_new0(struct trg_mailslot_recv_args, 1);
 
-            args->present = json_object_has_member(obj, "present") && json_object_get_boolean_member(obj, "present");
-            args->win = win;
+	    args->present = json_object_has_member(obj, "present")
+		&& json_object_get_boolean_member(obj, "present");
+	    args->win = win;
 
-            if (json_object_has_member(obj, "args")) {
-                JsonArray *array = json_object_get_array_member(obj, "args");
-                GList *arrayList = json_array_get_elements(array);
+	    if (json_object_has_member(obj, "args")) {
+		JsonArray *array =
+		    json_object_get_array_member(obj, "args");
+		GList *arrayList = json_array_get_elements(array);
 
-                if (arrayList) {
-                    guint arrayLength = g_list_length(arrayList);
-                    guint i = 0;
-                    GList *li;
+		if (arrayList) {
+		    guint arrayLength = g_list_length(arrayList);
+		    guint i = 0;
+		    GList *li;
 
-                    args->uris = g_new0(gchar*, arrayLength+1);
+		    args->uris = g_new0(gchar *, arrayLength + 1);
 
-                    for (li = arrayList; li; li = g_list_next(li)) {
-                        const gchar *liStr = json_node_get_string((JsonNode*) li->data);
-                        args->uris[i++] = g_strdup(liStr);
-                    }
+		    for (li = arrayList; li; li = g_list_next(li)) {
+			const gchar *liStr =
+			    json_node_get_string((JsonNode *) li->data);
+			args->uris[i++] = g_strdup(liStr);
+		    }
 
-                    g_list_free(arrayList);
-                }
-            }
+		    g_list_free(arrayList);
+		}
+	    }
 
-            json_node_free(node);
+	    json_node_free(node);
 
-            g_idle_add(mailslot_recv_args, args);
-        }
+	    g_idle_add(mailslot_recv_args, args);
+	}
 
-        g_object_unref(parser);
+	g_object_unref(parser);
     }
 
     CloseHandle(hMailslot);
-    return NULL; //Success
+    return NULL;		//Success
 }
 
-static int mailslot_send_message(HANDLE h, gchar **args) {
+static int mailslot_send_message(HANDLE h, gchar ** args)
+{
     DWORD cbBytes;
     JsonNode *node = json_node_new(JSON_NODE_OBJECT);
     JsonObject *obj = json_object_new();
@@ -204,14 +211,14 @@ static int mailslot_send_message(HANDLE h, gchar **args) {
     int i;
 
     if (args) {
-        for (i = 0; args[i]; i++)
-            json_array_add_string_element(array, args[i]);
+	for (i = 0; args[i]; i++)
+	    json_array_add_string_element(array, args[i]);
 
-        json_object_set_array_member(obj, "args", array);
+	json_object_set_array_member(obj, "args", array);
 
-        g_strfreev(args);
+	g_strfreev(args);
     } else {
-        json_object_set_boolean_member(obj, "present", TRUE);
+	json_object_set_boolean_member(obj, "present", TRUE);
     }
 
     json_node_take_object(node, obj);
@@ -223,11 +230,11 @@ static int mailslot_send_message(HANDLE h, gchar **args) {
     json_node_free(node);
     g_object_unref(generator);
 
-    WriteFile(h, // handle to mailslot
-            msg, // buffer to write from
-            strlen(msg) + 1, // number of bytes to write, include the NULL
-            &cbBytes, // number of bytes written
-            NULL);
+    WriteFile(h,		// handle to mailslot
+	      msg,		// buffer to write from
+	      strlen(msg) + 1,	// number of bytes to write, include the NULL
+	      &cbBytes,		// number of bytes written
+	      NULL);
 
     CloseHandle(h);
     g_free(msg);
@@ -237,52 +244,55 @@ static int mailslot_send_message(HANDLE h, gchar **args) {
 
 #endif
 
-static gboolean is_minimised_arg(gchar *arg)
+static gboolean is_minimised_arg(gchar * arg)
 {
     return !g_strcmp0(arg, "-m")
-            || !g_strcmp0(arg, "--minimized")
-            || !g_strcmp0(arg, "/m");
+	|| !g_strcmp0(arg, "--minimized")
+	|| !g_strcmp0(arg, "/m");
 }
 
-static gboolean should_be_minimised(int argc, char *argv[]) {
+static gboolean should_be_minimised(int argc, char *argv[])
+{
     int i;
     for (i = 1; i < argc; i++)
-        if (is_minimised_arg(argv[i]))
-            return TRUE;
+	if (is_minimised_arg(argv[i]))
+	    return TRUE;
 
     return FALSE;
 }
 
-static gchar **convert_args(int argc, char *argv[]) {
+static gchar **convert_args(int argc, char *argv[])
+{
     gchar *cwd = g_get_current_dir();
     gchar **files = NULL;
 
     if (argc > 1) {
-        GSList *list = NULL;
-        int i;
+	GSList *list = NULL;
+	int i;
 
-        for (i = 1; i < argc; i++) {
-            if (is_minimised_arg(argv[i])) {
-                continue;
-            } else if (!is_url(argv[i]) && !is_magnet(argv[i])
-                    && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
-                    && !g_path_is_absolute(argv[i])) {
-                list = g_slist_append(list,
-                        g_build_path(G_DIR_SEPARATOR_S, cwd, argv[i], NULL));
-            } else {
-                list = g_slist_append(list, g_strdup(argv[i]));
-            }
-        }
+	for (i = 1; i < argc; i++) {
+	    if (is_minimised_arg(argv[i])) {
+		continue;
+	    } else if (!is_url(argv[i]) && !is_magnet(argv[i])
+		       && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
+		       && !g_path_is_absolute(argv[i])) {
+		list = g_slist_append(list,
+				      g_build_path(G_DIR_SEPARATOR_S, cwd,
+						   argv[i], NULL));
+	    } else {
+		list = g_slist_append(list, g_strdup(argv[i]));
+	    }
+	}
 
-        if (list) {
-            GSList *li;
-            files = g_new0(gchar*, g_slist_length(list)+1);
-            i = 0;
-            for (li = list; li; li = g_slist_next(li)) {
-                files[i++] = li->data;
-            }
-            g_slist_free(list);
-        }
+	if (list) {
+	    GSList *li;
+	    files = g_new0(gchar *, g_slist_length(list) + 1);
+	    i = 0;
+	    for (li = list; li; li = g_slist_next(li)) {
+		files[i++] = li->data;
+	    }
+	    g_slist_free(list);
+	}
     }
 
     g_free(cwd);
@@ -290,7 +300,8 @@ static gchar **convert_args(int argc, char *argv[]) {
     return files;
 }
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[])
+{
     int returnValue = EXIT_SUCCESS;
     TrgMainWindow *window;
     TrgClient *client;
@@ -304,7 +315,7 @@ int main(int argc, char *argv[]) {
     HANDLE hMailSlot;
 #endif
 #ifdef TRG_MEMPROFILE
-    GMemVTable gmvt = {malloc,realloc,free,calloc,malloc,realloc};
+    GMemVTable gmvt = { malloc, realloc, free, calloc, malloc, realloc };
     g_mem_set_vtable(&gmvt);
     g_mem_set_vtable(glib_mem_profiler_table);
     g_mem_profile();
@@ -318,7 +329,7 @@ int main(int argc, char *argv[]) {
 #ifdef WIN32
     moddir = g_win32_get_package_installation_directory_of_module(NULL);
     localedir = g_build_path(G_DIR_SEPARATOR_S, moddir, "share", "locale",
-            NULL);
+			     NULL);
     g_free(moddir);
     bindtextdomain(GETTEXT_PACKAGE, localedir);
     g_free(localedir);
@@ -332,67 +343,68 @@ int main(int argc, char *argv[]) {
 
 #ifdef HAVE_LIBUNIQUE
     if (withUnique)
-        app = unique_app_new_with_commands(TRG_LIBUNIQUE_DOMAIN, NULL,
-            "add", COMMAND_ADD, NULL);
+	app = unique_app_new_with_commands(TRG_LIBUNIQUE_DOMAIN, NULL,
+					   "add", COMMAND_ADD, NULL);
 
     if (withUnique && unique_app_is_running(app)) {
-        UniqueCommand command;
-        UniqueResponse response;
-        UniqueMessageData *message;
+	UniqueCommand command;
+	UniqueResponse response;
+	UniqueMessageData *message;
 
-        if (args) {
-            command = COMMAND_ADD;
-            message = unique_message_data_new();
-            unique_message_data_set_uris(message, args);
-            g_strfreev(args);
-        } else {
-            command = UNIQUE_ACTIVATE;
-            message = NULL;
-        }
+	if (args) {
+	    command = COMMAND_ADD;
+	    message = unique_message_data_new();
+	    unique_message_data_set_uris(message, args);
+	    g_strfreev(args);
+	} else {
+	    command = UNIQUE_ACTIVATE;
+	    message = NULL;
+	}
 
-        response = unique_app_send_message(app, command, message);
-        unique_message_data_free(message);
+	response = unique_app_send_message(app, command, message);
+	unique_message_data_free(message);
 
-        if (response != UNIQUE_RESPONSE_OK)
-            returnValue = EXIT_FAILURE;
+	if (response != UNIQUE_RESPONSE_OK)
+	    returnValue = EXIT_FAILURE;
     } else {
 #elif WIN32
-    hMailSlot = CreateFile(TRG_MAILSLOT_NAME, // mailslot name
-            GENERIC_WRITE, // mailslot write only
-            FILE_SHARE_READ, // required for mailslots
-            NULL, // default security attributes
-            OPEN_EXISTING, // opens existing mailslot
-            FILE_ATTRIBUTE_NORMAL, // normal attributes
-            NULL); // no template file
+    hMailSlot = CreateFile(TRG_MAILSLOT_NAME,	// mailslot name
+			   GENERIC_WRITE,	// mailslot write only
+			   FILE_SHARE_READ,	// required for mailslots
+			   NULL,	// default security attributes
+			   OPEN_EXISTING,	// opens existing mailslot
+			   FILE_ATTRIBUTE_NORMAL,	// normal attributes
+			   NULL);	// no template file
 
     if (INVALID_HANDLE_VALUE != hMailSlot) {
-        returnValue = mailslot_send_message(hMailSlot, args);
+	returnValue = mailslot_send_message(hMailSlot, args);
     } else {
 #endif
-        client = trg_client_new();
+	client = trg_client_new();
 
-        curl_global_init(CURL_GLOBAL_ALL);
+	curl_global_init(CURL_GLOBAL_ALL);
 
-        window = trg_main_window_new(client, should_be_minimised(argc, argv));
+	window =
+	    trg_main_window_new(client, should_be_minimised(argc, argv));
 
 #ifdef HAVE_LIBUNIQUE
-        if (withUnique) {
-            g_signal_connect(app, "message-received",
-                    G_CALLBACK(message_received_cb), window);
-        }
+	if (withUnique) {
+	    g_signal_connect(app, "message-received",
+			     G_CALLBACK(message_received_cb), window);
+	}
 #elif WIN32
-        g_thread_create(mailslot_recv_thread, window, FALSE, NULL);
+	g_thread_create(mailslot_recv_thread, window, FALSE, NULL);
 #endif
 
-        auto_connect_if_required(window, args);
-        gtk_main();
+	auto_connect_if_required(window, args);
+	gtk_main();
 
-        curl_global_cleanup();
+	curl_global_cleanup();
 #ifdef HAVE_LIBUNIQUE
     }
 
     if (withUnique)
-        g_object_unref(app);
+	g_object_unref(app);
 #elif WIN32
     }
 #endif

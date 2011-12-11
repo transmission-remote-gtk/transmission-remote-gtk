@@ -51,10 +51,10 @@ typedef struct {
 GType trg_trackers_tree_view_get_type(void);
 
 TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model,
-                                                TrgClient * client,
-                                                TrgMainWindow * win);
+						TrgClient * client,
+						TrgMainWindow * win);
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
-                                           TrgClient * tc);
+					   TrgClient * tc);
 
 G_END_DECLS
-#endif                          /* TRG_TRACKERS_TREE_VIEW_H_ */
+#endif				/* TRG_TRACKERS_TREE_VIEW_H_ */

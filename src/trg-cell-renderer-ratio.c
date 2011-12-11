@@ -29,7 +29,7 @@ enum {
 };
 
 G_DEFINE_TYPE(TrgCellRendererRatio, trg_cell_renderer_ratio,
-              GTK_TYPE_CELL_RENDERER_TEXT)
+	      GTK_TYPE_CELL_RENDERER_TEXT)
 #define TRG_CELL_RENDERER_RATIO_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CELL_RENDERER_RATIO, TrgCellRendererRatioPrivate))
 typedef struct _TrgCellRendererRatioPrivate TrgCellRendererRatioPrivate;
@@ -40,37 +40,37 @@ struct _TrgCellRendererRatioPrivate {
 
 static void
 trg_cell_renderer_ratio_get_property(GObject * object, guint property_id,
-                                     GValue * value, GParamSpec * pspec)
+				     GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererRatioPrivate *priv =
-        TRG_CELL_RENDERER_RATIO_GET_PRIVATE(object);
+	TRG_CELL_RENDERER_RATIO_GET_PRIVATE(object);
     switch (property_id) {
     case PROP_RATIO_VALUE:
-        g_value_set_double(value, priv->ratio_value);
-        break;
+	g_value_set_double(value, priv->ratio_value);
+	break;
     default:
-        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
 }
 
 static void
 trg_cell_renderer_ratio_set_property(GObject * object, guint property_id,
-                                     const GValue * value,
-                                     GParamSpec * pspec)
+				     const GValue * value,
+				     GParamSpec * pspec)
 {
     TrgCellRendererRatioPrivate *priv =
-        TRG_CELL_RENDERER_RATIO_GET_PRIVATE(object);
+	TRG_CELL_RENDERER_RATIO_GET_PRIVATE(object);
     if (property_id == PROP_RATIO_VALUE) {
-        priv->ratio_value = g_value_get_double(value);
-        if (priv->ratio_value > 0) {
-            char ratioString[32];
-            trg_strlratio(ratioString, priv->ratio_value);
-            g_object_set(object, "text", ratioString, NULL);
-        } else {
-            g_object_set(object, "text", "", NULL);
-        }
+	priv->ratio_value = g_value_get_double(value);
+	if (priv->ratio_value > 0) {
+	    char ratioString[32];
+	    trg_strlratio(ratioString, priv->ratio_value);
+	    g_object_set(object, "text", ratioString, NULL);
+	} else {
+	    g_object_set(object, "text", "", NULL);
+	}
     } else {
-        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+	G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
 }
 
@@ -83,20 +83,20 @@ trg_cell_renderer_ratio_class_init(TrgCellRendererRatioClass * klass)
     object_class->set_property = trg_cell_renderer_ratio_set_property;
 
     g_object_class_install_property(object_class,
-                                    PROP_RATIO_VALUE,
-                                    g_param_spec_double("ratio-value",
-                                                        "Ratio Value",
-                                                        "Ratio Value",
-                                                        0,
-                                                        DBL_MAX,
-                                                        0,
-                                                        G_PARAM_READWRITE
-                                                        |
-                                                        G_PARAM_STATIC_NAME
-                                                        |
-                                                        G_PARAM_STATIC_NICK
-                                                        |
-                                                        G_PARAM_STATIC_BLURB));
+				    PROP_RATIO_VALUE,
+				    g_param_spec_double("ratio-value",
+							"Ratio Value",
+							"Ratio Value",
+							0,
+							DBL_MAX,
+							0,
+							G_PARAM_READWRITE
+							|
+							G_PARAM_STATIC_NAME
+							|
+							G_PARAM_STATIC_NICK
+							|
+							G_PARAM_STATIC_BLURB));
 
     g_type_class_add_private(klass, sizeof(TrgCellRendererRatioPrivate));
 }
@@ -109,6 +109,6 @@ static void trg_cell_renderer_ratio_init(TrgCellRendererRatio * self)
 GtkCellRenderer *trg_cell_renderer_ratio_new(void)
 {
     return
-        GTK_CELL_RENDERER(g_object_new
-                          (TRG_TYPE_CELL_RENDERER_RATIO, NULL));
+	GTK_CELL_RENDERER(g_object_new
+			  (TRG_TYPE_CELL_RENDERER_RATIO, NULL));
 }

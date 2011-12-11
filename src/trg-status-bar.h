@@ -51,14 +51,15 @@ TrgStatusBar *trg_status_bar_new();
 
 G_END_DECLS
     void trg_status_bar_update(TrgStatusBar * sb,
-                               trg_torrent_model_update_stats * stats,
-                               TrgClient * client);
-void trg_status_bar_session_update(TrgStatusBar *sb, JsonObject *session);
+			       trg_torrent_model_update_stats * stats,
+			       TrgClient * client);
+void trg_status_bar_session_update(TrgStatusBar * sb,
+				   JsonObject * session);
 void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session);
 void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
-                                        const gchar * msg);
-void trg_status_bar_reset(TrgStatusBar *sb);
-void trg_status_bar_clear_indicators(TrgStatusBar *sb);
-const gchar *trg_status_bar_get_speed_text(TrgStatusBar *s);
+					const gchar * msg);
+void trg_status_bar_reset(TrgStatusBar * sb);
+void trg_status_bar_clear_indicators(TrgStatusBar * sb);
+const gchar *trg_status_bar_get_speed_text(TrgStatusBar * s);
 
-#endif                          /* TRG_STATUS_BAR_H_ */
+#endif				/* TRG_STATUS_BAR_H_ */

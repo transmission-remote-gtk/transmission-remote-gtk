@@ -49,15 +49,14 @@ TrgTrackersModel *trg_trackers_model_new(void);
 
 G_END_DECLS
     void trg_trackers_model_update(TrgTrackersModel * model,
-                                   gint64 updateSerial, JsonObject * t,
-                                   gint mode);
+				   gint64 updateSerial, JsonObject * t,
+				   gint mode);
 void trg_trackers_model_set_accept(TrgTrackersModel * model,
-                                   gboolean accept);
+				   gboolean accept);
 gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model);
 void trg_trackers_model_set_no_selection(TrgTrackersModel * model);
 
-typedef enum
-{
+typedef enum {
     /* we won't (announce,scrape) this torrent to this tracker because
      * the torrent is stopped, or because of an error, or whatever */
     TR_TRACKER_INACTIVE = 0,
@@ -72,8 +71,7 @@ typedef enum
 
     /* we're (announcing,scraping) this torrent right now */
     TR_TRACKER_ACTIVE = 3
-}
-tr_tracker_state;
+} tr_tracker_state;
 
 enum {
     /* trackers */
@@ -95,4 +93,4 @@ enum {
     TRACKERCOL_COLUMNS
 };
 
-#endif                          /* TRG_TRACKERS_MODEL_H_ */
+#endif				/* TRG_TRACKERS_MODEL_H_ */

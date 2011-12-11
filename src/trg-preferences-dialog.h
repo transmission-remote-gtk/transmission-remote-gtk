@@ -41,8 +41,8 @@ typedef struct {
     GtkWidget *widget;
     int flags;
     gchar *key;
-    void (*saveFunc)(TrgPrefs*,void*);
-    void (*refreshFunc)(TrgPrefs*,void*);
+    void (*saveFunc) (TrgPrefs *, void *);
+    void (*refreshFunc) (TrgPrefs *, void *);
 } trg_pref_widget_desc;
 
 struct _TrgPreferencesDialog {
@@ -57,9 +57,9 @@ struct _TrgPreferencesDialogClass {
 GType trg_preferences_dialog_get_type(void);
 
 GtkWidget *trg_preferences_dialog_get_instance(TrgMainWindow * win,
-                                               TrgClient * client);
-trg_pref_widget_desc* trg_pref_widget_desc_new(GtkWidget *w, gchar *key,
-        int flags);
+					       TrgClient * client);
+trg_pref_widget_desc *trg_pref_widget_desc_new(GtkWidget * w, gchar * key,
+					       int flags);
 
 G_END_DECLS
-#endif                          /* TRG_PREFERENCES_WINDOW_H_ */
+#endif				/* TRG_PREFERENCES_WINDOW_H_ */

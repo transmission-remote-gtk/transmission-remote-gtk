@@ -37,7 +37,8 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gchar *licenseFile;
 
 #ifdef WIN32
-    gchar *moddir = g_win32_get_package_installation_directory_of_module(NULL);
+    gchar *moddir =
+	g_win32_get_package_installation_directory_of_module(NULL);
     licenseFile = g_build_filename(moddir, "COPYING.TXT", NULL);
     g_free(moddir);
 #else
@@ -49,45 +50,46 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gtk_window_set_destroy_with_parent(GTK_WINDOW(dialog), TRUE);
 
     logo =
-        gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
-                                 PACKAGE_NAME, 48,
-                                 GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
+	gtk_icon_theme_load_icon(gtk_icon_theme_get_default(),
+				 PACKAGE_NAME, 48,
+				 GTK_ICON_LOOKUP_USE_BUILTIN, NULL);
 
     if (logo != NULL) {
-        gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), logo);
-        g_object_unref(logo);
+	gtk_about_dialog_set_logo(GTK_ABOUT_DIALOG(dialog), logo);
+	g_object_unref(logo);
     }
 
     if (g_file_get_contents(licenseFile, &licenseText, NULL, NULL)) {
-        gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog),
-                                     licenseText);
+	gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog),
+				     licenseText);
     } else {
-        gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog), "GPL2");
+	gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog), "GPL2");
     }
 
-    gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog), PACKAGE_NAME);
+    gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog),
+				      PACKAGE_NAME);
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),
-                                 PACKAGE_VERSION);
+				 PACKAGE_VERSION);
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
-                                   "(C) 2011 Alan Fitton");
+				   "(C) 2011 Alan Fitton");
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
-                                  _
-                                  ("A remote client to transmission-daemon."));
+				  _
+				  ("A remote client to transmission-daemon."));
 
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog),
-                                 "http://code.google.com/p/transmission-remote-gtk/");
+				 "http://code.google.com/p/transmission-remote-gtk/");
     gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog),
-                                       "http://code.google.com/p/transmission-remote-gtk/");
+				       "http://code.google.com/p/transmission-remote-gtk/");
 
     gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(dialog), trgAuthors);
     /*gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(dialog), documenters); */
     gtk_about_dialog_set_translator_credits(GTK_ABOUT_DIALOG(dialog),
-                                            "translations kindly contributed by\n\n"
-                                            "* Julian Held (German)\n"
-                                            "* Youn sok Choi (Korean)\n"
-                                            "* Piotr (Polish)\n"
-                                            "* Y3AVD (Russian)\n"
-                                            "* ROR191 (Ukranian)\n"
+					    "translations kindly contributed by\n\n"
+					    "* Julian Held (German)\n"
+					    "* Youn sok Choi (Korean)\n"
+					    "* Piotr (Polish)\n"
+					    "* Y3AVD (Russian)\n"
+					    "* ROR191 (Ukranian)\n"
 					    "* aspidzent (Spanish)");
 
     g_free(licenseFile);

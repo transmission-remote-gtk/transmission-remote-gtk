@@ -24,8 +24,8 @@
  * into the public domain as well).
  */
 
-#include <stdlib.h>             /* malloc() realloc() free() strtoll() */
-#include <string.h>             /* memset() */
+#include <stdlib.h>		/* malloc() realloc() free() strtoll() */
+#include <string.h>		/* memset() */
 #include <ctype.h>
 
 #include <glib.h>
@@ -36,7 +36,7 @@ static be_node *be_alloc(be_type type)
 {
     be_node *ret = g_malloc0(sizeof(be_node));
     if (ret)
-        ret->type = type;
+	ret->type = type;
     return ret;
 }
 
@@ -53,7 +53,7 @@ gint64 be_str_len(be_node * node)
 {
     gint64 ret = 0;
     if (node->val.s)
-        memcpy(&ret, node->val.s - sizeof(ret), sizeof(ret));
+	memcpy(&ret, node->val.s - sizeof(ret), sizeof(ret));
     return ret;
 }
 
@@ -66,30 +66,30 @@ static char *_be_decode_str(const char **data, gint64 * data_len)
 
     /* slen is signed, so negative values get rejected */
     if (sllen < 0)
-        return ret;
+	return ret;
 
     /* reject attempts to allocate large values that overflow the
      * size_t type which is used with malloc()
      */
     if (sizeof(gint64) != sizeof(long))
-        if (sllen != slen)
-            return ret;
+	if (sllen != slen)
+	    return ret;
 
     /* make sure we have enough data left */
     if (sllen > *data_len - 1)
-        return ret;
+	return ret;
 
     /* switch from signed to unsigned so we don't overflow below */
     len = slen;
 
     if (**data == ':') {
-        char *_ret = g_malloc(sizeof(sllen) + len + 1);
-        memcpy(_ret, &sllen, sizeof(sllen));
-        ret = _ret + sizeof(sllen);
-        memcpy(ret, *data + 1, len);
-        ret[len] = '\0';
-        *data += len + 1;
-        *data_len -= len + 1;
+	char *_ret = g_malloc(sizeof(sllen) + len + 1);
+	memcpy(_ret, &sllen, sizeof(sllen));
+	ret = _ret + sizeof(sllen);
+	memcpy(ret, *data + 1, len);
+	ret[len] = '\0';
+	*data += len + 1;
+	*data_len -= len + 1;
     }
     return ret;
 }
@@ -100,71 +100,71 @@ static be_node *_be_decode(const char **data, gint64 * data_len)
     char dc;
 
     if (!*data_len)
-        return ret;
+	return ret;
 
     dc = **data;
     if (dc == 'l') {
-        unsigned int i = 0;
+	unsigned int i = 0;
 
-        ret = be_alloc(BE_LIST);
+	ret = be_alloc(BE_LIST);
 
-        --(*data_len);
-        ++(*data);
-        while (**data != 'e') {
-            ret->val.l =
-                g_realloc(ret->val.l, (i + 2) * sizeof(*ret->val.l));
-            ret->val.l[i] = _be_decode(data, data_len);
-            if (!ret->val.l[i])
-                break;
-            ++i;
-        }
-        --(*data_len);
-        ++(*data);
+	--(*data_len);
+	++(*data);
+	while (**data != 'e') {
+	    ret->val.l =
+		g_realloc(ret->val.l, (i + 2) * sizeof(*ret->val.l));
+	    ret->val.l[i] = _be_decode(data, data_len);
+	    if (!ret->val.l[i])
+		break;
+	    ++i;
+	}
+	--(*data_len);
+	++(*data);
 
-        if (i > 0)
-            ret->val.l[i] = NULL;
+	if (i > 0)
+	    ret->val.l[i] = NULL;
 
-        return ret;
+	return ret;
     } else if (dc == 'd') {
-        unsigned int i = 0;
+	unsigned int i = 0;
 
-        ret = be_alloc(BE_DICT);
+	ret = be_alloc(BE_DICT);
 
-        --(*data_len);
-        ++(*data);
-        while (**data != 'e') {
-            ret->val.d =
-                g_realloc(ret->val.d, (i + 2) * sizeof(*ret->val.d));
-            ret->val.d[i].key = _be_decode_str(data, data_len);
-            ret->val.d[i].val = _be_decode(data, data_len);
-            if (!ret->val.l[i])
-                break;
-            ++i;
-        }
-        --(*data_len);
-        ++(*data);
+	--(*data_len);
+	++(*data);
+	while (**data != 'e') {
+	    ret->val.d =
+		g_realloc(ret->val.d, (i + 2) * sizeof(*ret->val.d));
+	    ret->val.d[i].key = _be_decode_str(data, data_len);
+	    ret->val.d[i].val = _be_decode(data, data_len);
+	    if (!ret->val.l[i])
+		break;
+	    ++i;
+	}
+	--(*data_len);
+	++(*data);
 
-        if (i > 0)
-            ret->val.d[i].val = NULL;
+	if (i > 0)
+	    ret->val.d[i].val = NULL;
 
-        return ret;
+	return ret;
     } else if (dc == 'i') {
-        ret = be_alloc(BE_INT);
+	ret = be_alloc(BE_INT);
 
-        --(*data_len);
-        ++(*data);
-        ret->val.i = _be_decode_int(data, data_len);
-        if (**data != 'e')
-            return NULL;
-        --(*data_len);
-        ++(*data);
+	--(*data_len);
+	++(*data);
+	ret->val.i = _be_decode_int(data, data_len);
+	if (**data != 'e')
+	    return NULL;
+	--(*data_len);
+	++(*data);
 
-        return ret;
+	return ret;
     } else if (isdigit(dc)) {
-        ret = be_alloc(BE_STR);
+	ret = be_alloc(BE_STR);
 
-        ret->val.s = _be_decode_str(data, data_len);
-        return ret;
+	ret->val.s = _be_decode_str(data, data_len);
+	return ret;
     }
 
     return ret;
@@ -183,46 +183,46 @@ be_node *be_decode(const char *data)
 int be_validate_node(be_node * node, int type)
 {
     if (!node || node->type != type)
-        return 1;
+	return 1;
     else
-        return 0;
+	return 0;
 }
 
 static inline void _be_free_str(char *str)
 {
     if (str)
-        g_free(str - sizeof(gint64));
+	g_free(str - sizeof(gint64));
 }
 
 void be_free(be_node * node)
 {
     switch (node->type) {
     case BE_STR:
-        _be_free_str(node->val.s);
-        break;
+	_be_free_str(node->val.s);
+	break;
 
     case BE_INT:
-        break;
+	break;
 
     case BE_LIST:{
-            unsigned int i;
-            if (node->val.l) {
-                for (i = 0; node->val.l[i]; ++i)
-                    be_free(node->val.l[i]);
-                g_free(node->val.l);
-            }
-            break;
-        }
+	    unsigned int i;
+	    if (node->val.l) {
+		for (i = 0; node->val.l[i]; ++i)
+		    be_free(node->val.l[i]);
+		g_free(node->val.l);
+	    }
+	    break;
+	}
 
     case BE_DICT:{
-            unsigned int i;
-            for (i = 0; node->val.d[i].val; ++i) {
-                _be_free_str(node->val.d[i].key);
-                be_free(node->val.d[i].val);
-            }
-            g_free(node->val.d);
-            break;
-        }
+	    unsigned int i;
+	    for (i = 0; node->val.d[i].val; ++i) {
+		_be_free_str(node->val.d[i].key);
+		be_free(node->val.d[i].val);
+	    }
+	    g_free(node->val.d);
+	    break;
+	}
     }
     g_free(node);
 }
@@ -231,11 +231,11 @@ be_node *be_dict_find(be_node * node, char *key, int type)
 {
     int i;
     for (i = 0; node->val.d[i].val; ++i) {
-        if (!strcmp(node->val.d[i].key, key)) {
-            be_node *cn = node->val.d[i].val;
-            if (type < 0 || cn->type == type)
-                return node->val.d[i].val;
-        }
+	if (!strcmp(node->val.d[i].key, key)) {
+	    be_node *cn = node->val.d[i].val;
+	    if (type < 0 || cn->type == type)
+		return node->val.d[i].val;
+	}
     }
     return NULL;
 }
@@ -247,7 +247,7 @@ be_node *be_dict_find(be_node * node, char *key, int type)
 static void _be_dump_indent(ssize_t indent)
 {
     while (indent-- > 0)
-        printf("    ");
+	printf("    ");
 }
 
 static void _be_dump(be_node * node, ssize_t indent)
@@ -259,35 +259,35 @@ static void _be_dump(be_node * node, ssize_t indent)
 
     switch (node->type) {
     case BE_STR:
-        printf("str = %s (len = %lli)\n", node->val.s, be_str_len(node));
-        break;
+	printf("str = %s (len = %lli)\n", node->val.s, be_str_len(node));
+	break;
 
     case BE_INT:
-        printf("int = %lli\n", node->val.i);
-        break;
+	printf("int = %lli\n", node->val.i);
+	break;
 
     case BE_LIST:
-        puts("list [");
+	puts("list [");
 
-        for (i = 0; node->val.l[i]; ++i)
-            _be_dump(node->val.l[i], indent + 1);
+	for (i = 0; node->val.l[i]; ++i)
+	    _be_dump(node->val.l[i], indent + 1);
 
-        _be_dump_indent(indent);
-        puts("]");
-        break;
+	_be_dump_indent(indent);
+	puts("]");
+	break;
 
     case BE_DICT:
-        puts("dict {");
+	puts("dict {");
 
-        for (i = 0; node->val.d[i].val; ++i) {
-            _be_dump_indent(indent + 1);
-            printf("%s => ", node->val.d[i].key);
-            _be_dump(node->val.d[i].val, -(indent + 1));
-        }
+	for (i = 0; node->val.d[i].val; ++i) {
+	    _be_dump_indent(indent + 1);
+	    printf("%s => ", node->val.d[i].key);
+	    _be_dump(node->val.d[i].val, -(indent + 1));
+	}
 
-        _be_dump_indent(indent);
-        puts("}");
-        break;
+	_be_dump_indent(indent);
+	puts("}");
+	break;
     }
 }
 

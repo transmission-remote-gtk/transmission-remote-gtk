@@ -26,8 +26,8 @@
 #include "trg-client.h"
 
 gchar *trg_serialize(JsonNode * req);
-JsonObject *trg_deserialize(trg_response *response, GError ** error);
+JsonObject *trg_deserialize(trg_response * response, GError ** error);
 JsonObject *get_arguments(JsonObject * req);
 JsonObject *node_get_arguments(JsonNode * req);
 
-#endif                          /* JSON_H_ */
+#endif				/* JSON_H_ */

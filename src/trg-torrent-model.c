@@ -73,98 +73,125 @@ struct _TrgTorrentModelPrivate {
     trg_torrent_model_update_stats stats;
 };
 
-static void trg_torrent_model_dispose(GObject * object) {
+static void trg_torrent_model_dispose(GObject * object)
+{
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(object);
     g_hash_table_destroy(priv->ht);
     G_OBJECT_CLASS(trg_torrent_model_parent_class)->dispose(object);
 }
 
 static void
-update_torrent_iter(TrgTorrentModel * model, TrgClient *tc, gint64 rpcv,
-        gint64 serial, GtkTreeIter * iter, JsonObject * t,
-        trg_torrent_model_update_stats * stats, gboolean *updateFilters);
+update_torrent_iter(TrgTorrentModel * model, TrgClient * tc, gint64 rpcv,
+		    gint64 serial, GtkTreeIter * iter, JsonObject * t,
+		    trg_torrent_model_update_stats * stats,
+		    gboolean * updateFilters);
 
-static void trg_torrent_model_class_init(TrgTorrentModelClass * klass) {
+static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
+{
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
     g_type_class_add_private(klass, sizeof(TrgTorrentModelPrivate));
     object_class->dispose = trg_torrent_model_dispose;
 
     signals[TMODEL_TORRENT_COMPLETED] = g_signal_new("torrent-completed",
-            G_TYPE_FROM_CLASS(object_class),
-            G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-            G_STRUCT_OFFSET(TrgTorrentModelClass,
-                    torrent_completed), NULL, NULL,
-            g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+						     G_TYPE_FROM_CLASS
+						     (object_class),
+						     G_SIGNAL_RUN_LAST |
+						     G_SIGNAL_ACTION,
+						     G_STRUCT_OFFSET
+						     (TrgTorrentModelClass,
+						      torrent_completed),
+						     NULL, NULL,
+						     g_cclosure_marshal_VOID__POINTER,
+						     G_TYPE_NONE, 1,
+						     G_TYPE_POINTER);
 
     signals[TMODEL_TORRENT_ADDED] = g_signal_new("torrent-added",
-            G_TYPE_FROM_CLASS(object_class),
-            G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-            G_STRUCT_OFFSET(TrgTorrentModelClass,
-                    torrent_added), NULL, NULL,
-            g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+						 G_TYPE_FROM_CLASS
+						 (object_class),
+						 G_SIGNAL_RUN_LAST |
+						 G_SIGNAL_ACTION,
+						 G_STRUCT_OFFSET
+						 (TrgTorrentModelClass,
+						  torrent_added), NULL,
+						 NULL,
+						 g_cclosure_marshal_VOID__POINTER,
+						 G_TYPE_NONE, 1,
+						 G_TYPE_POINTER);
 
     signals[TMODEL_UPDATE_FILTERS] = g_signal_new("update-filters",
-            G_TYPE_FROM_CLASS(object_class),
-            G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-            G_STRUCT_OFFSET(TrgTorrentModelClass,
-                    torrent_removed), NULL, NULL, g_cclosure_marshal_VOID__VOID,
-            G_TYPE_NONE, 0);
+						  G_TYPE_FROM_CLASS
+						  (object_class),
+						  G_SIGNAL_RUN_LAST |
+						  G_SIGNAL_ACTION,
+						  G_STRUCT_OFFSET
+						  (TrgTorrentModelClass,
+						   torrent_removed), NULL,
+						  NULL,
+						  g_cclosure_marshal_VOID__VOID,
+						  G_TYPE_NONE, 0);
 }
 
-trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel * model)
+trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel
+							    * model)
 {
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
     return &(priv->stats);
 }
 
 static void trg_torrent_model_count_peers(TrgTorrentModel * model,
-        GtkTreeIter * iter, JsonObject * t) {
-    GList *trackersList = json_array_get_elements(torrent_get_tracker_stats(t));
+					  GtkTreeIter * iter,
+					  JsonObject * t)
+{
+    GList *trackersList =
+	json_array_get_elements(torrent_get_tracker_stats(t));
     gint seeders = 0;
     gint leechers = 0;
     gint downloads = 0;
     GList *li;
 
     for (li = trackersList; li; li = g_list_next(li)) {
-        JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
+	JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
 
-        seeders += tracker_stats_get_seeder_count(tracker);
-        leechers += tracker_stats_get_leecher_count(tracker);
-        downloads += tracker_stats_get_download_count(tracker);
+	seeders += tracker_stats_get_seeder_count(tracker);
+	leechers += tracker_stats_get_leecher_count(tracker);
+	downloads += tracker_stats_get_download_count(tracker);
     }
 
     g_list_free(trackersList);
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter, TORRENT_COLUMN_SEEDS,
-            seeders, TORRENT_COLUMN_LEECHERS, leechers,
-            TORRENT_COLUMN_DOWNLOADS, downloads, -1);
+		       seeders, TORRENT_COLUMN_LEECHERS, leechers,
+		       TORRENT_COLUMN_DOWNLOADS, downloads, -1);
 }
 
-static void trg_torrent_model_ref_free(gpointer data) {
+static void trg_torrent_model_ref_free(gpointer data)
+{
     GtkTreeRowReference *rr = (GtkTreeRowReference *) data;
     GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
     GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
     if (path) {
-        GtkTreeIter iter;
-        JsonObject *json;
-        if (gtk_tree_model_get_iter(model, &iter, path)) {
-            gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json, -1);
-            json_object_unref(json);
-            g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
-                    GINT_TO_POINTER(TRUE));
-            gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
-            g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
-                    GINT_TO_POINTER(FALSE));
-        }
+	GtkTreeIter iter;
+	JsonObject *json;
+	if (gtk_tree_model_get_iter(model, &iter, path)) {
+	    gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json,
+			       -1);
+	    json_object_unref(json);
+	    g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
+			      GINT_TO_POINTER(TRUE));
+	    gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
+	    g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
+			      GINT_TO_POINTER(FALSE));
+	}
 
-        gtk_tree_path_free(path);
+	gtk_tree_path_free(path);
     }
 
     gtk_tree_row_reference_free(rr);
 }
 
-static void trg_torrent_model_init(TrgTorrentModel * self) {
+static void trg_torrent_model_init(TrgTorrentModel * self)
+{
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(self);
 
     GType column_types[TORRENT_COLUMN_COLUMNS];
@@ -207,34 +234,43 @@ static void trg_torrent_model_init(TrgTorrentModel * self) {
     column_types[TORRENT_COLUMN_LASTACTIVE] = G_TYPE_INT64;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self),
-            TORRENT_COLUMN_COLUMNS, column_types);
+				    TORRENT_COLUMN_COLUMNS, column_types);
 
     priv->ht = g_hash_table_new_full(g_int64_hash, g_int64_equal,
-            (GDestroyNotify) g_free, trg_torrent_model_ref_free);
+				     (GDestroyNotify) g_free,
+				     trg_torrent_model_ref_free);
 
     g_object_set_data(G_OBJECT(self), PROP_REMOVE_IN_PROGRESS,
-            GINT_TO_POINTER(FALSE));
+		      GINT_TO_POINTER(FALSE));
 
     priv->urlHostRegex = trg_uri_host_regex_new();
 }
 
-gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model) {
+gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model)
+{
     return (gboolean) GPOINTER_TO_INT(g_object_get_data
-            (G_OBJECT(model), PROP_REMOVE_IN_PROGRESS));
+				      (G_OBJECT(model),
+				       PROP_REMOVE_IN_PROGRESS));
 }
 
-static gboolean trg_torrent_model_reload_dir_aliases_foreachfunc(
-        GtkTreeModel * model, GtkTreePath * path G_GNUC_UNUSED,
-        GtkTreeIter * iter, gpointer gdata) {
+static gboolean
+trg_torrent_model_reload_dir_aliases_foreachfunc(GtkTreeModel * model,
+						 GtkTreePath *
+						 path G_GNUC_UNUSED,
+						 GtkTreeIter * iter,
+						 gpointer gdata)
+{
     gchar *downloadDir, *shortDownloadDir;
 
-    gtk_tree_model_get(model, iter, TORRENT_COLUMN_DOWNLOADDIR, &downloadDir,
-            -1);
+    gtk_tree_model_get(model, iter, TORRENT_COLUMN_DOWNLOADDIR,
+		       &downloadDir, -1);
 
-    shortDownloadDir = shorten_download_dir((TrgClient*) gdata, downloadDir);
+    shortDownloadDir =
+	shorten_download_dir((TrgClient *) gdata, downloadDir);
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-            TORRENT_COLUMN_DOWNLOADDIR_SHORT, shortDownloadDir, -1);
+		       TORRENT_COLUMN_DOWNLOADDIR_SHORT, shortDownloadDir,
+		       -1);
 
     g_free(downloadDir);
     g_free(shortDownloadDir);
@@ -242,95 +278,109 @@ static gboolean trg_torrent_model_reload_dir_aliases_foreachfunc(
     return FALSE;
 }
 
-void trg_torrent_model_reload_dir_aliases(TrgClient *tc, GtkTreeModel *model)
+void trg_torrent_model_reload_dir_aliases(TrgClient * tc,
+					  GtkTreeModel * model)
 {
     gtk_tree_model_foreach(model,
-            trg_torrent_model_reload_dir_aliases_foreachfunc, tc);
+			   trg_torrent_model_reload_dir_aliases_foreachfunc,
+			   tc);
 }
 
-static gboolean trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
-        GtkTreePath * path G_GNUC_UNUSED, GtkTreeIter * iter, gpointer gdata) {
+static gboolean trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel *
+							 model,
+							 GtkTreePath *
+							 path
+							 G_GNUC_UNUSED,
+							 GtkTreeIter *
+							 iter,
+							 gpointer gdata)
+{
     trg_torrent_model_update_stats *stats =
-            (trg_torrent_model_update_stats *) gdata;
+	(trg_torrent_model_update_stats *) gdata;
     guint flags;
 
     gtk_tree_model_get(model, iter, TORRENT_COLUMN_FLAGS, &flags, -1);
 
-    if (flags & TORRENT_FLAG_SEEDING
-        )
-        stats->seeding++;
-    else if (flags & TORRENT_FLAG_DOWNLOADING
-        )
-        stats->down++;
-    else if (flags & TORRENT_FLAG_PAUSED
-        )
-        stats->paused++;
+    if (flags & TORRENT_FLAG_SEEDING)
+	stats->seeding++;
+    else if (flags & TORRENT_FLAG_DOWNLOADING)
+	stats->down++;
+    else if (flags & TORRENT_FLAG_PAUSED)
+	stats->paused++;
 
-    if (flags & TORRENT_FLAG_ERROR
-        )
-        stats->error++;
+    if (flags & TORRENT_FLAG_ERROR)
+	stats->error++;
 
     stats->count++;
 
     return FALSE;
 }
 
-void trg_torrent_model_remove_all(TrgTorrentModel *model) {
+void trg_torrent_model_remove_all(TrgTorrentModel * model)
+{
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
     g_hash_table_remove_all(priv->ht);
     gtk_list_store_clear(GTK_LIST_STORE(model));
 }
 
-gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir) {
+gchar *shorten_download_dir(TrgClient * tc, const gchar * downloadDir)
+{
     TrgPrefs *prefs = trg_client_get_prefs(tc);
-    JsonArray *labels = trg_prefs_get_array(prefs, TRG_PREFS_KEY_DESTINATIONS,
-            TRG_PREFS_CONNECTION);
+    JsonArray *labels =
+	trg_prefs_get_array(prefs, TRG_PREFS_KEY_DESTINATIONS,
+			    TRG_PREFS_CONNECTION);
     JsonObject *session = trg_client_get_session(tc);
     const gchar *defaultDownloadDir = session_get_download_dir(session);
     gchar *shortDownloadDir = NULL;
 
     if (labels) {
-        GList *labelsList = json_array_get_elements(labels);
-        if (labelsList) {
-            GList *li;
-            for (li = labelsList; li; li = g_list_next(li)) {
-                JsonObject *labelObj = json_node_get_object(
-                        (JsonNode*) li->data);
-                const gchar *labelDir = json_object_get_string_member(labelObj,
-                        TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR);
-                if (!g_strcmp0(downloadDir, labelDir)) {
-                    const gchar *labelLabel = json_object_get_string_member(
-                            labelObj, TRG_PREFS_SUBKEY_LABEL);
-                    shortDownloadDir = g_strdup(labelLabel);
-                    break;
-                }
-            }
-            g_list_free(labelsList);
-        }
+	GList *labelsList = json_array_get_elements(labels);
+	if (labelsList) {
+	    GList *li;
+	    for (li = labelsList; li; li = g_list_next(li)) {
+		JsonObject *labelObj = json_node_get_object((JsonNode *)
+							    li->data);
+		const gchar *labelDir =
+		    json_object_get_string_member(labelObj,
+						  TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR);
+		if (!g_strcmp0(downloadDir, labelDir)) {
+		    const gchar *labelLabel =
+			json_object_get_string_member(labelObj,
+						      TRG_PREFS_SUBKEY_LABEL);
+		    shortDownloadDir = g_strdup(labelLabel);
+		    break;
+		}
+	    }
+	    g_list_free(labelsList);
+	}
     }
 
     if (shortDownloadDir) {
-        return shortDownloadDir;
+	return shortDownloadDir;
     } else {
-        if (!g_strcmp0(defaultDownloadDir, downloadDir))
-            return g_strdup(_("Default"));
+	if (!g_strcmp0(defaultDownloadDir, downloadDir))
+	    return g_strdup(_("Default"));
 
-        if (g_str_has_prefix(downloadDir, defaultDownloadDir)) {
-            int offset = strlen(defaultDownloadDir);
-            if (*(downloadDir + offset) == '/')
-                offset++;
+	if (g_str_has_prefix(downloadDir, defaultDownloadDir)) {
+	    int offset = strlen(defaultDownloadDir);
+	    if (*(downloadDir + offset) == '/')
+		offset++;
 
-            if (offset < strlen(downloadDir))
-                return g_strdup(downloadDir + offset);
-        }
+	    if (offset < strlen(downloadDir))
+		return g_strdup(downloadDir + offset);
+	}
     }
 
     return g_strdup(downloadDir);
 }
 
-static inline void update_torrent_iter(TrgTorrentModel * model, TrgClient *tc,
-        gint64 rpcv, gint64 serial, GtkTreeIter * iter, JsonObject * t,
-        trg_torrent_model_update_stats * stats, gboolean *updateFilters) {
+static inline void update_torrent_iter(TrgTorrentModel * model,
+				       TrgClient * tc, gint64 rpcv,
+				       gint64 serial, GtkTreeIter * iter,
+				       JsonObject * t,
+				       trg_torrent_model_update_stats *
+				       stats, gboolean * updateFilters)
+{
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
     GtkListStore *ls = GTK_LIST_STORE(model);
     guint lastFlags, newFlags;
@@ -351,7 +401,7 @@ static inline void update_torrent_iter(TrgTorrentModel * model, TrgClient *tc,
     uploaded = torrent_get_uploaded(t);
     downloaded = torrent_get_downloaded(t);
 
-    downloadDir = (gchar*) torrent_get_download_dir(t);
+    downloadDir = (gchar *) torrent_get_download_dir(t);
     rm_trailing_slashes(downloadDir);
 
     id = torrent_get_id(t);
@@ -363,168 +413,180 @@ static inline void update_torrent_iter(TrgTorrentModel * model, TrgClient *tc,
     trackerStats = torrent_get_tracker_stats(t);
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter, TORRENT_COLUMN_FLAGS,
-            &lastFlags, TORRENT_COLUMN_JSON, &lastJson,
-            TORRENT_COLUMN_DOWNLOADDIR, &lastDownloadDir, -1);
+		       &lastFlags, TORRENT_COLUMN_JSON, &lastJson,
+		       TORRENT_COLUMN_DOWNLOADDIR, &lastDownloadDir, -1);
 
     json_object_ref(t);
 
     if (json_array_get_length(trackerStats) > 0) {
-        JsonObject *firstTracker = json_array_get_object_element(trackerStats,
-                0);
-        firstTrackerHost = trg_gregex_get_first(priv->urlHostRegex,
-                tracker_stats_get_host(firstTracker));
+	JsonObject *firstTracker =
+	    json_array_get_object_element(trackerStats,
+					  0);
+	firstTrackerHost = trg_gregex_get_first(priv->urlHostRegex,
+						tracker_stats_get_host
+						(firstTracker));
     }
 
     lpd = peerfrom_get_lpd(pf);
     if (newFlags & TORRENT_FLAG_ACTIVE) {
-        if (lpd >= 0) {
-            peerSources = g_strdup_printf(
-                    "%ld / %ld / %ld / %ld / %ld / %ld / %ld",
-                    peerfrom_get_trackers(pf), peerfrom_get_incoming(pf),
-                    peerfrom_get_ltep(pf), peerfrom_get_dht(pf),
-                    peerfrom_get_pex(pf), lpd, peerfrom_get_resume(pf));
-        } else {
-            peerSources = g_strdup_printf(
-                    "%ld / %ld / %ld / %ld / %ld / N/A / %ld",
-                    peerfrom_get_trackers(pf), peerfrom_get_incoming(pf),
-                    peerfrom_get_ltep(pf), peerfrom_get_dht(pf),
-                    peerfrom_get_pex(pf), peerfrom_get_resume(pf));
-        }
+	if (lpd >= 0) {
+	    peerSources =
+		g_strdup_printf("%ld / %ld / %ld / %ld / %ld / %ld / %ld",
+				peerfrom_get_trackers(pf),
+				peerfrom_get_incoming(pf),
+				peerfrom_get_ltep(pf),
+				peerfrom_get_dht(pf), peerfrom_get_pex(pf),
+				lpd, peerfrom_get_resume(pf));
+	} else {
+	    peerSources =
+		g_strdup_printf("%ld / %ld / %ld / %ld / %ld / N/A / %ld",
+				peerfrom_get_trackers(pf),
+				peerfrom_get_incoming(pf),
+				peerfrom_get_ltep(pf),
+				peerfrom_get_dht(pf), peerfrom_get_pex(pf),
+				peerfrom_get_resume(pf));
+	}
     }
-
 #ifdef DEBUG
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon, -1);
     gtk_list_store_set(ls, iter,
-            TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
+		       TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
     gtk_list_store_set(ls, iter,
-            TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
+		       TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
     gtk_list_store_set(ls, iter,
-            TORRENT_COLUMN_DONE, (newFlags & TORRENT_FLAG_CHECKING) ?
-            torrent_get_recheck_progress(t)
-            : torrent_get_percent_done(t),
-            -1);
+		       TORRENT_COLUMN_DONE,
+		       (newFlags & TORRENT_FLAG_CHECKING) ?
+		       torrent_get_recheck_progress(t)
+		       : torrent_get_percent_done(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_STATUS, statusString, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNSPEED, downRate, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FLAGS, newFlags, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPSPEED, upRate, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ETA,
-            torrent_get_eta(t), -1);
+		       torrent_get_eta(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPLOADED, uploaded, -1);
     gtk_list_store_set(ls, iter,
-            TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
+		       TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_RATIO,
-            uploaded > 0
-            && downloaded >
-            0 ? (double) uploaded / (double) downloaded : 0,
-            -1);
+		       uploaded > 0
+		       && downloaded >
+		       0 ? (double) uploaded / (double) downloaded : 0,
+		       -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ID, id, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_JSON, t, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPDATESERIAL, serial, -1);
     gtk_list_store_set(ls, iter,
-            TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
-            -1);
+		       TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
+		       -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR,
-            downloadDir, -1);
+		       downloadDir, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY,
-            torrent_get_bandwidth_priority(t), -1);
+		       torrent_get_bandwidth_priority(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DONE_DATE,
-            torrent_get_done_date(t), -1);
+		       torrent_get_done_date(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMPEX,
-            peerfrom_get_pex(pf), -1);
+		       peerfrom_get_pex(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMDHT,
-            peerfrom_get_dht(pf), -1);
+		       peerfrom_get_dht(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMTRACKERS,
-            peerfrom_get_trackers(pf), -1);
+		       peerfrom_get_trackers(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMLTEP,
-            peerfrom_get_ltep(pf), -1);
+		       peerfrom_get_ltep(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMRESUME,
-            peerfrom_get_resume(pf), -1);
+		       peerfrom_get_resume(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMINCOMING,
-            peerfrom_get_incoming(pf), -1);
+		       peerfrom_get_incoming(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEER_SOURCES,
-            peerSources, -1);
+		       peerSources, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_CONNECTED,
-            torrent_get_peers_connected(t), -1);
+		       torrent_get_peers_connected(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_TO_US,
-            torrent_get_peers_sending_to_us(t), -1);
+		       torrent_get_peers_sending_to_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_FROM_US,
-            torrent_get_peers_getting_from_us(t), -1);
+		       torrent_get_peers_getting_from_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_TRACKERHOST,
-            firstTrackerHost ? firstTrackerHost : "", -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_QUEUE_POSITION, torrent_get_queue_position(t), -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_LASTACTIVE, torrent_get_activity_date(t), -1);
+		       firstTrackerHost ? firstTrackerHost : "", -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_QUEUE_POSITION,
+		       torrent_get_queue_position(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_LASTACTIVE,
+		       torrent_get_activity_date(t), -1);
 #else
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon,
-            TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
-            TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t),
-            TORRENT_COLUMN_NAME, torrent_get_name(t), TORRENT_COLUMN_SIZE,
-            torrent_get_size(t), TORRENT_COLUMN_DONE,
-            (newFlags & TORRENT_FLAG_CHECKING) ?
-            torrent_get_recheck_progress(t)
-            : torrent_get_percent_done(t),
-            TORRENT_COLUMN_STATUS, statusString,
-            TORRENT_COLUMN_DOWNSPEED, downRate,
-            TORRENT_COLUMN_FLAGS, newFlags,
-            TORRENT_COLUMN_UPSPEED, upRate,
-            TORRENT_COLUMN_ETA, torrent_get_eta(t),
-            TORRENT_COLUMN_UPLOADED, uploaded,
-            TORRENT_COLUMN_DOWNLOADED, downloaded,
-            TORRENT_COLUMN_FROMPEX, peerfrom_get_pex(pf),
-            TORRENT_COLUMN_FROMDHT, peerfrom_get_dht(pf),
-            TORRENT_COLUMN_FROMTRACKERS, peerfrom_get_trackers(pf),
-            TORRENT_COLUMN_FROMLTEP, peerfrom_get_ltep(pf),
-            TORRENT_COLUMN_FROMRESUME, peerfrom_get_resume(pf),
-            TORRENT_COLUMN_FROMINCOMING, peerfrom_get_incoming(pf),
-            TORRENT_COLUMN_PEER_SOURCES, peerSources,
-            TORRENT_COLUMN_PEERS_CONNECTED, torrent_get_peers_connected(t),
-            TORRENT_COLUMN_PEERS_TO_US, torrent_get_peers_sending_to_us(t),
-            TORRENT_COLUMN_PEERS_FROM_US, torrent_get_peers_getting_from_us(t),
-            TORRENT_COLUMN_QUEUE_POSITION, torrent_get_queue_position(t),
-            TORRENT_COLUMN_LASTACTIVE, torrent_get_activity_date(t),
-            TORRENT_COLUMN_RATIO,
-            uploaded >
-            0
-            && downloaded >
-            0 ? (double) uploaded / (double) downloaded : 0,
-            TORRENT_COLUMN_DOWNLOADDIR,
-            downloadDir,
-            TORRENT_COLUMN_BANDWIDTH_PRIORITY,
-            torrent_get_bandwidth_priority(t),
-            TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
-            TORRENT_COLUMN_TRACKERHOST,
-            firstTrackerHost ? firstTrackerHost : "",
-            TORRENT_COLUMN_UPDATESERIAL, serial, -1);
+		       TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
+		       TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t),
+		       TORRENT_COLUMN_NAME, torrent_get_name(t),
+		       TORRENT_COLUMN_SIZE, torrent_get_size(t),
+		       TORRENT_COLUMN_DONE,
+		       (newFlags & TORRENT_FLAG_CHECKING) ?
+		       torrent_get_recheck_progress(t)
+		       : torrent_get_percent_done(t),
+		       TORRENT_COLUMN_STATUS, statusString,
+		       TORRENT_COLUMN_DOWNSPEED, downRate,
+		       TORRENT_COLUMN_FLAGS, newFlags,
+		       TORRENT_COLUMN_UPSPEED, upRate, TORRENT_COLUMN_ETA,
+		       torrent_get_eta(t), TORRENT_COLUMN_UPLOADED,
+		       uploaded, TORRENT_COLUMN_DOWNLOADED, downloaded,
+		       TORRENT_COLUMN_FROMPEX, peerfrom_get_pex(pf),
+		       TORRENT_COLUMN_FROMDHT, peerfrom_get_dht(pf),
+		       TORRENT_COLUMN_FROMTRACKERS,
+		       peerfrom_get_trackers(pf), TORRENT_COLUMN_FROMLTEP,
+		       peerfrom_get_ltep(pf), TORRENT_COLUMN_FROMRESUME,
+		       peerfrom_get_resume(pf),
+		       TORRENT_COLUMN_FROMINCOMING,
+		       peerfrom_get_incoming(pf),
+		       TORRENT_COLUMN_PEER_SOURCES, peerSources,
+		       TORRENT_COLUMN_PEERS_CONNECTED,
+		       torrent_get_peers_connected(t),
+		       TORRENT_COLUMN_PEERS_TO_US,
+		       torrent_get_peers_sending_to_us(t),
+		       TORRENT_COLUMN_PEERS_FROM_US,
+		       torrent_get_peers_getting_from_us(t),
+		       TORRENT_COLUMN_QUEUE_POSITION,
+		       torrent_get_queue_position(t),
+		       TORRENT_COLUMN_LASTACTIVE,
+		       torrent_get_activity_date(t), TORRENT_COLUMN_RATIO,
+		       uploaded > 0
+		       && downloaded >
+		       0 ? (double) uploaded / (double) downloaded : 0,
+		       TORRENT_COLUMN_DOWNLOADDIR, downloadDir,
+		       TORRENT_COLUMN_BANDWIDTH_PRIORITY,
+		       torrent_get_bandwidth_priority(t),
+		       TORRENT_COLUMN_ID, id, TORRENT_COLUMN_JSON, t,
+		       TORRENT_COLUMN_TRACKERHOST,
+		       firstTrackerHost ? firstTrackerHost : "",
+		       TORRENT_COLUMN_UPDATESERIAL, serial, -1);
 #endif
 
     if (!lastDownloadDir || g_strcmp0(downloadDir, lastDownloadDir)) {
-        gchar *shortDownloadDir = shorten_download_dir(tc, downloadDir);
-        gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR_SHORT,
-                shortDownloadDir, -1);
-        g_free(shortDownloadDir);
-        *updateFilters = TRUE;
+	gchar *shortDownloadDir = shorten_download_dir(tc, downloadDir);
+	gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR_SHORT,
+			   shortDownloadDir, -1);
+	g_free(shortDownloadDir);
+	*updateFilters = TRUE;
     }
 
     if (lastJson)
-        json_object_unref(lastJson);
+	json_object_unref(lastJson);
 
     if ((lastFlags & TORRENT_FLAG_DOWNLOADING)
-            && (newFlags & TORRENT_FLAG_COMPLETE))
-        g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
+	&& (newFlags & TORRENT_FLAG_COMPLETE))
+	g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
 
     trg_torrent_model_count_peers(model, iter, t);
 
     if (firstTrackerHost)
-        g_free(firstTrackerHost);
+	g_free(firstTrackerHost);
 
     if (peerSources)
-        g_free(peerSources);
+	g_free(peerSources);
 
     g_free(lastDownloadDir);
     g_free(statusString);
     g_free(statusIcon);
 }
 
-TrgTorrentModel *trg_torrent_model_new(void) {
+TrgTorrentModel *trg_torrent_model_new(void)
+{
     return g_object_new(TRG_TYPE_TORRENT_MODEL, NULL);
 }
 
@@ -533,67 +595,79 @@ struct TrgModelRemoveData {
     gint64 currentSerial;
 };
 
-GHashTable *get_torrent_table(TrgTorrentModel * model) {
+GHashTable *get_torrent_table(TrgTorrentModel * model)
+{
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
     return priv->ht;
 }
 
 gboolean trg_model_find_removed_foreachfunc(GtkTreeModel * model,
-        GtkTreePath * path G_GNUC_UNUSED, GtkTreeIter * iter, gpointer gdata) {
+					    GtkTreePath *
+					    path G_GNUC_UNUSED,
+					    GtkTreeIter * iter,
+					    gpointer gdata)
+{
     struct TrgModelRemoveData *args = (struct TrgModelRemoveData *) gdata;
     gint64 rowSerial;
 
-    gtk_tree_model_get(model, iter, TORRENT_COLUMN_UPDATESERIAL, &rowSerial,
-            -1);
+    gtk_tree_model_get(model, iter, TORRENT_COLUMN_UPDATESERIAL,
+		       &rowSerial, -1);
 
     if (rowSerial != args->currentSerial) {
-        gint64 *id = g_new(gint64, 1);
-        gtk_tree_model_get(model, iter, TORRENT_COLUMN_ID, id, -1);
-        args->toRemove = g_list_append(args->toRemove, id);
+	gint64 *id = g_new(gint64, 1);
+	gtk_tree_model_get(model, iter, TORRENT_COLUMN_ID, id, -1);
+	args->toRemove = g_list_append(args->toRemove, id);
     }
 
     return FALSE;
 }
 
 GList *trg_torrent_model_find_removed(GtkTreeModel * model,
-        gint64 currentSerial) {
+				      gint64 currentSerial)
+{
     struct TrgModelRemoveData args;
     args.toRemove = NULL;
     args.currentSerial = currentSerial;
 
     gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-            trg_model_find_removed_foreachfunc, &args);
+			   trg_model_find_removed_foreachfunc, &args);
 
     return args.toRemove;
 }
 
 gboolean get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
-        GtkTreeIter * out_iter) {
+			  GtkTreeIter * out_iter)
+{
     gpointer result = g_hash_table_lookup(table, &id);
     gboolean found = FALSE;
 
     if (result) {
-        GtkTreeRowReference *rr = (GtkTreeRowReference *) result;
-        GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
-        GtkTreeIter iter;
-        if (path) {
-            GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
-            gtk_tree_model_get_iter(model, &iter, path);
-            if (out_iter)
-                *out_iter = iter;
-            if (t)
-                gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, t, -1);
-            found = TRUE;
-            gtk_tree_path_free(path);
-        }
+	GtkTreeRowReference *rr = (GtkTreeRowReference *) result;
+	GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+	GtkTreeIter iter;
+	if (path) {
+	    GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
+	    gtk_tree_model_get_iter(model, &iter, path);
+	    if (out_iter)
+		*out_iter = iter;
+	    if (t)
+		gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, t,
+				   -1);
+	    found = TRUE;
+	    gtk_tree_path_free(path);
+	}
     }
 
     return found;
 }
 
-trg_torrent_model_update_stats* trg_torrent_model_update(TrgTorrentModel * model, TrgClient * tc,
-        JsonObject * response,
-        gint mode) {
+trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *
+							 model,
+							 TrgClient * tc,
+							 JsonObject *
+							 response,
+							 gint mode)
+{
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
 
     GList *torrentList;
@@ -616,73 +690,76 @@ trg_torrent_model_update_stats* trg_torrent_model_update(TrgTorrentModel * model
     memset(&(priv->stats), 0, sizeof(trg_torrent_model_update_stats));
 
     for (li = torrentList; li; li = g_list_next(li)) {
-        t = json_node_get_object((JsonNode *) li->data);
-        id = torrent_get_id(t);
+	t = json_node_get_object((JsonNode *) li->data);
+	id = torrent_get_id(t);
 
-        result =
-                mode == TORRENT_GET_MODE_FIRST ? NULL :
-                        g_hash_table_lookup(priv->ht, &id);
+	result =
+	    mode == TORRENT_GET_MODE_FIRST ? NULL :
+	    g_hash_table_lookup(priv->ht, &id);
 
-        if (!result) {
-            gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+	if (!result) {
+	    gtk_list_store_append(GTK_LIST_STORE(model), &iter);
 
-            update_torrent_iter(model, tc, rpcv, trg_client_get_serial(tc),
-                    &iter, t, &(priv->stats), &updateFilters);
+	    update_torrent_iter(model, tc, rpcv, trg_client_get_serial(tc),
+				&iter, t, &(priv->stats), &updateFilters);
 
-            path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
-            rr = gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
-            idCopy = g_new(gint64, 1);
-            *idCopy = id;
-            g_hash_table_insert(priv->ht, idCopy, rr);
-            gtk_tree_path_free(path);
-            if (mode != TORRENT_GET_MODE_FIRST)
-                g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0, &iter);
-        } else {
-            path = gtk_tree_row_reference_get_path(
-                    (GtkTreeRowReference *) result);
-            if (path) {
-                if (gtk_tree_model_get_iter(GTK_TREE_MODEL(model), &iter,
-                        path)) {
-                    update_torrent_iter(model, tc, rpcv,
-                            trg_client_get_serial(tc), &iter, t, &(priv->stats), &updateFilters);
-                }
-                gtk_tree_path_free(path);
-            }
-        }
+	    path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
+	    rr = gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
+	    idCopy = g_new(gint64, 1);
+	    *idCopy = id;
+	    g_hash_table_insert(priv->ht, idCopy, rr);
+	    gtk_tree_path_free(path);
+	    if (mode != TORRENT_GET_MODE_FIRST)
+		g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0,
+			      &iter);
+	} else {
+	    path = gtk_tree_row_reference_get_path((GtkTreeRowReference *)
+						   result);
+	    if (path) {
+		if (gtk_tree_model_get_iter(GTK_TREE_MODEL(model), &iter,
+					    path)) {
+		    update_torrent_iter(model, tc, rpcv,
+					trg_client_get_serial(tc), &iter,
+					t, &(priv->stats), &updateFilters);
+		}
+		gtk_tree_path_free(path);
+	    }
+	}
     }
 
     g_list_free(torrentList);
 
     if (mode == TORRENT_GET_MODE_UPDATE) {
-        GList *hitlist = trg_torrent_model_find_removed(GTK_TREE_MODEL(model),
-                trg_client_get_serial(tc));
-        if (hitlist) {
-            for (li = hitlist; li; li = g_list_next(li)) {
-                g_hash_table_remove(priv->ht, li->data);
-                g_free(li->data);
-            }
-            updateFilters = TRUE;
-            g_list_free(hitlist);
-        }
+	GList *hitlist =
+	    trg_torrent_model_find_removed(GTK_TREE_MODEL(model),
+					   trg_client_get_serial(tc));
+	if (hitlist) {
+	    for (li = hitlist; li; li = g_list_next(li)) {
+		g_hash_table_remove(priv->ht, li->data);
+		g_free(li->data);
+	    }
+	    updateFilters = TRUE;
+	    g_list_free(hitlist);
+	}
     } else if (mode > TORRENT_GET_MODE_FIRST) {
-        removedTorrents = get_torrents_removed(args);
-        if (removedTorrents) {
-            GList *hitlist = json_array_get_elements(removedTorrents);
-            for (li = hitlist; li; li = g_list_next(li)) {
-                id = json_node_get_int((JsonNode *) li->data);
-                g_hash_table_remove(priv->ht, &id);
-                updateFilters = TRUE;
-            }
-            g_list_free(hitlist);
-        }
+	removedTorrents = get_torrents_removed(args);
+	if (removedTorrents) {
+	    GList *hitlist = json_array_get_elements(removedTorrents);
+	    for (li = hitlist; li; li = g_list_next(li)) {
+		id = json_node_get_int((JsonNode *) li->data);
+		g_hash_table_remove(priv->ht, &id);
+		updateFilters = TRUE;
+	    }
+	    g_list_free(hitlist);
+	}
     }
 
     if (updateFilters)
-        g_signal_emit(model, signals[TMODEL_UPDATE_FILTERS], 0);
+	g_signal_emit(model, signals[TMODEL_UPDATE_FILTERS], 0);
 
     gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-            trg_torrent_model_stats_scan_foreachfunc, &(priv->stats));
+			   trg_torrent_model_stats_scan_foreachfunc,
+			   &(priv->stats));
 
     return &(priv->stats);
 }
-

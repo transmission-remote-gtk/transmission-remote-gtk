@@ -24,39 +24,31 @@
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
-
 #define TRG_TYPE_SORTABLE_FILTERED_MODEL trg_sortable_filtered_model_get_type()
-
 #define TRG_SORTABLE_FILTERED_MODEL(obj) \
   (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_SORTABLE_FILTERED_MODEL, TrgSortableFilteredModel))
-
 #define TRG_SORTABLE_FILTERED_MODEL_CLASS(klass) \
   (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_SORTABLE_FILTERED_MODEL, TrgSortableFilteredModelClass))
-
 #define TRG_IS_SORTABLE_FILTERED_MODEL(obj) \
   (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_SORTABLE_FILTERED_MODEL))
-
 #define TRG_IS_SORTABLE_FILTERED_MODEL_CLASS(klass) \
   (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_SORTABLE_FILTERED_MODEL))
-
 #define TRG_SORTABLE_FILTERED_MODEL_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_SORTABLE_FILTERED_MODEL, TrgSortableFilteredModelClass))
-
-typedef struct {
-  GtkTreeModelFilter parent;
+    typedef struct {
+    GtkTreeModelFilter parent;
 } TrgSortableFilteredModel;
 
 typedef struct {
-  GtkTreeModelFilterClass parent_class;
+    GtkTreeModelFilterClass parent_class;
 } TrgSortableFilteredModelClass;
 
-GType trg_sortable_filtered_model_get_type (void);
+GType trg_sortable_filtered_model_get_type(void);
 
-GtkTreeModel *
-trg_sortable_filtered_model_new (GtkTreeSortable *child_model,
-                           GtkTreePath  *root);
+GtkTreeModel *trg_sortable_filtered_model_new(GtkTreeSortable *
+					      child_model,
+					      GtkTreePath * root);
 
 
 G_END_DECLS
-
-#endif /* _TRG_SORTABLE_FILTERED_MODEL */
+#endif				/* _TRG_SORTABLE_FILTERED_MODEL */
