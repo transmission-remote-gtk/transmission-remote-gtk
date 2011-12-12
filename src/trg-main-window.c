@@ -1252,13 +1252,15 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
         if (criteria & FILTER_FLAG_TRACKER) {
             gchar *text =
                 trg_state_selector_get_selected_text(priv->stateSelector);
-            JsonObject *json;
+            JsonObject *json = NULL;
+            gboolean matchesTracker;
             gtk_tree_model_get(model, iter, TORRENT_COLUMN_JSON, &json,
                                -1);
-
-            if (!json || !torrent_has_tracker(json,
+            matchesTracker =  (!json || !torrent_has_tracker(json,
                                               trg_state_selector_get_url_host_regex
-                                              (priv->stateSelector), text))
+                                              (priv->stateSelector), text));
+            g_free(text);
+            if (matchesTracker)
                 return FALSE;
         } else if (criteria & FILTER_FLAG_DIR) {
             gchar *text =
