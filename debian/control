@@ -14,6 +14,6 @@ Vcs-Browser: http://code.google.com/p/transmission-remote-gtk/source/browse/
 Package: transmission-remote-gtk
 Architecture: any
 Depends: ${shlibs:Depends}, ${misc:Depends}
-Description: Remotely manage Transmission BitTorrent client
- transmission-remote-gtk is a cross-platform GTK tool for remote management
- of the Transmission BitTorrent client using its RPC interface. 
+Description: Remotely manage the Transmission BitTorrent client
+  transmission-remote-gtk is a GTK client for remote management of
+  the Transmission BitTorrent client using its HTTP RPC protocol.

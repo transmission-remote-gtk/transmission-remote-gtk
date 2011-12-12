@@ -1,7 +1,7 @@
 Name:           transmission-remote-gtk
 Version:        0.8
 Release:        1%{?dist}
-Summary:        GTK remote control for the Transmission BitTorrent client
+Summary:        Remotely manage the Transmission BitTorrent client
 
 License:        GPLv2+
 URL:            http://code.google.com/p/%{name}
@@ -23,7 +23,7 @@ Requires(preun): info
 
 %description
 transmission-remote-gtk is a GTK client for remote management of
-the Transmission BitTorrent client, using its HTTP RPC protocol.
+the Transmission BitTorrent client using its HTTP RPC protocol.
 
 %prep
 %setup -q
