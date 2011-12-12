@@ -1656,9 +1656,9 @@ static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
 {
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
-        gtk_menu_popup(priv->iconMenu, NULL, NULL, NULL, NULL,
-                       (event != NULL) ? event->button : 0,
-                       gdk_event_get_time((GdkEvent *) event));
+        gtk_menu_popup(priv->iconMenu, NULL, NULL,
+                gtk_status_icon_position_menu, priv->statusIcon, event->button,
+                gdk_event_get_time((GdkEvent *) event));
         return TRUE;
     } else {
         return FALSE;
