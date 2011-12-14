@@ -1394,7 +1394,7 @@ gboolean on_generic_interactive_action(gpointer data)
     TrgMainWindowPrivate *priv =
         TRG_MAIN_WINDOW_GET_PRIVATE(response->cb_data);
     TrgClient *tc = priv->client;
-    //TrgPrefs *prefs = trg_client_get_prefs(tc);
+    TrgPrefs *prefs = trg_client_get_prefs(tc);
 
     if (trg_client_is_connected(tc)) {
         trg_dialog_error_handler(win, response);
