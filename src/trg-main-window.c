@@ -1241,7 +1241,6 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
 
     guint flags;
     gboolean visible;
-    gchar *name;
     const gchar *filterText;
 
     guint32 criteria = trg_state_selector_get_flag(priv->stateSelector);
@@ -1283,6 +1282,7 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
 
     filterText = gtk_entry_get_text(GTK_ENTRY(priv->filterEntry));
     if (strlen(filterText) > 0) {
+        gchar *name = NULL;
         gtk_tree_model_get(model, iter, TORRENT_COLUMN_NAME, &name, -1);
         if (name) {
             gchar *filterCmp = g_utf8_casefold(filterText, -1);
@@ -1394,7 +1394,7 @@ gboolean on_generic_interactive_action(gpointer data)
     TrgMainWindowPrivate *priv =
         TRG_MAIN_WINDOW_GET_PRIVATE(response->cb_data);
     TrgClient *tc = priv->client;
-    TrgPrefs *prefs = trg_client_get_prefs(tc);
+    //TrgPrefs *prefs = trg_client_get_prefs(tc);
 
     if (trg_client_is_connected(tc)) {
         trg_dialog_error_handler(win, response);
@@ -1647,7 +1647,8 @@ static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(userdata);
 
-    gtk_menu_popup(priv->iconMenu, NULL, NULL, NULL, NULL, 0, 0);
+    gtk_menu_popup(priv->iconMenu, NULL, NULL, gtk_status_icon_position_menu,
+            priv->statusIcon, 0, gtk_get_current_event_time());
 
     return TRUE;
 }

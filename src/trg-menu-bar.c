@@ -434,6 +434,7 @@ static void trg_menu_bar_file_connect_item_new(TrgMainWindow * win,
     GtkWidget *item = gtk_check_menu_item_new_with_label(text);
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), checked);
     g_object_set_data(G_OBJECT(item), "profile", profile);
+    gtk_check_menu_item_set_draw_as_radio(GTK_CHECK_MENU_ITEM(item), TRUE);
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(connect_cb),
                      win);
     gtk_menu_shell_append(shell, item);
