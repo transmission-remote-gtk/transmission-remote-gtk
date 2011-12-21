@@ -76,6 +76,8 @@ trg_cell_renderer_priority_set_property(GObject * object,
             g_object_set(object, "text", _("High"), NULL);
         } else if (priv->priority_value == TR_PRI_NORMAL){
             g_object_set(object, "text", _("Normal"), NULL);
+        } else if (priv->priority_value == TR_PRI_MIXED){
+            g_object_set(object, "text", _("Mixed"), NULL);
         } else {
             g_object_set(object, "text", "", NULL);
         }
@@ -97,7 +99,7 @@ trg_cell_renderer_priority_class_init(TrgCellRendererPriorityClass * klass)
                                     g_param_spec_int
                                     ("priority-value",
                                      "Priority Value",
-                                     "Priority Value", -2,
+                                     "Priority Value", TR_PRI_UNSET,
                                      TR_PRI_HIGH, TR_PRI_NORMAL,
                                      G_PARAM_READWRITE |
                                      G_PARAM_STATIC_NAME |

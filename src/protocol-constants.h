@@ -182,6 +182,8 @@ typedef enum {
 } tr_torrent_activity;
 
 enum {
+    TR_PRI_UNSET = -3,
+    TR_PRI_MIXED = -2,
     TR_PRI_LOW = -1,
     TR_PRI_NORMAL = 0,          /* since NORMAL is 0, memset initializes nicely */
     TR_PRI_HIGH = 1

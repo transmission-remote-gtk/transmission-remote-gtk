@@ -105,6 +105,13 @@ trg_cell_renderer_file_icon_set_property(GObject * object, guint property_id,
     }
 }
 
+static void trg_cell_renderer_file_icon_dispose(GObject * object)
+{
+    TrgCellRendererFileIconPrivate *priv = TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(object);
+    g_free(priv->text);
+    G_OBJECT_CLASS(trg_cell_renderer_file_icon_parent_class)->dispose(object);
+}
+
 static void
 trg_cell_renderer_file_icon_class_init(TrgCellRendererFileIconClass * klass)
 {
@@ -112,6 +119,7 @@ trg_cell_renderer_file_icon_class_init(TrgCellRendererFileIconClass * klass)
 
     object_class->get_property = trg_cell_renderer_file_icon_get_property;
     object_class->set_property = trg_cell_renderer_file_icon_set_property;
+    object_class->dispose = trg_cell_renderer_file_icon_dispose;
 
     g_object_class_install_property(object_class,
                                     PROP_FILE_ID,
