@@ -176,31 +176,11 @@ char *tr_strlsize(char *buf, guint64 size, size_t buflen)
 {
     if (!size)
         g_strlcpy(buf, _("None"), buflen);
-#if GLIB_CHECK_VERSION( 2, 16, 0 )
     else {
         char *tmp = g_format_size_for_display(size);
         g_strlcpy(buf, tmp, buflen);
         g_free(tmp);
     }
-#else
-    else if (size < (guint64) KILOBYTE_FACTOR)
-        g_snprintf(buf, buflen,
-                   ngettext("%'u byte", "%'u bytes", (guint) size),
-                   (guint) size);
-    else {
-        gdouble displayed_size;
-        if (size < (guint64) MEGABYTE_FACTOR) {
-            displayed_size = (gdouble) size / KILOBYTE_FACTOR;
-            g_snprintf(buf, buflen, _("%'.1f KB"), displayed_size);
-        } else if (size < (guint64) GIGABYTE_FACTOR) {
-            displayed_size = (gdouble) size / MEGABYTE_FACTOR;
-            g_snprintf(buf, buflen, _("%'.1f MB"), displayed_size);
-        } else {
-            displayed_size = (gdouble) size / GIGABYTE_FACTOR;
-            g_snprintf(buf, buflen, _("%'.1f GB"), displayed_size);
-        }
-    }
-#endif
     return buf;
 }
 

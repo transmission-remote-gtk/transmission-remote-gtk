@@ -45,34 +45,36 @@ static void trg_files_tree_view_class_init(TrgFilesTreeViewClass * klass)
     g_type_class_add_private(klass, sizeof(TrgFilesTreeViewPrivate));
 }
 
-static void set_unwanted_foreachfunc(GtkTreeModel * model,
+static void set_wanted_foreachfunc(GtkTreeModel * model,
                                      GtkTreePath * path G_GNUC_UNUSED,
                                      GtkTreeIter * iter,
-                                     gpointer data G_GNUC_UNUSED)
+                                     gpointer data)
 {
-    gtk_list_store_set(GTK_LIST_STORE(model), iter, FILESCOL_WANTED,
-                       GTK_STOCK_CANCEL, -1);
-}
+    gint id;
+    gtk_tree_model_get(model, iter, FILESCOL_ID, &id, -1);
 
-static void set_wanted_foreachfunc(GtkTreeModel * model,
-                                   GtkTreePath * path G_GNUC_UNUSED,
-                                   GtkTreeIter * iter,
-                                   gpointer data G_GNUC_UNUSED)
-{
-    gtk_list_store_set(GTK_LIST_STORE(model), iter,
-                       FILESCOL_WANTED, GTK_STOCK_APPLY, -1);
+    if (id >= 0) {
+        gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_WANTED,
+                           (gchar*)data, -1);
+    }
 }
 
 static void set_priority_foreachfunc(GtkTreeModel * model,
                                      GtkTreePath * path G_GNUC_UNUSED,
                                      GtkTreeIter * iter, gpointer data)
 {
+    gint id;
     GValue value = { 0 };
-    g_value_init(&value, G_TYPE_INT64);
-    g_value_set_int64(&value, (gint64) GPOINTER_TO_INT(data));
 
-    gtk_list_store_set_value(GTK_LIST_STORE(model), iter,
-                             FILESCOL_PRIORITY, &value);
+    gtk_tree_model_get(model, iter, FILESCOL_ID, &id, -1);
+
+    if(id >= 0) {
+        g_value_init(&value, G_TYPE_INT64);
+        g_value_set_int64(&value, (gint64) GPOINTER_TO_INT(data));
+
+        gtk_tree_store_set_value(GTK_TREE_STORE(model), iter,
+                                 FILESCOL_PRIORITY, &value);
+    }
 }
 
 static void send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
@@ -82,11 +84,17 @@ static void send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
                                                 gpointer data)
 {
     JsonObject *args = (JsonObject *) data;
-    gint64 priority, id;
+    gint64 priority;
+    gint id;
     gchar *wanted;
 
+    gtk_tree_model_get(model, iter, FILESCOL_ID, &id, -1);
+
+    if (id < 0)
+        return;
+
     gtk_tree_model_get(model, iter, FILESCOL_WANTED, &wanted,
-                       FILESCOL_PRIORITY, &priority, FILESCOL_ID, &id, -1);
+                       FILESCOL_PRIORITY, &priority, -1);
 
     if (!g_strcmp0(wanted, GTK_STOCK_CANCEL))
         add_file_id_to_array(args, FIELD_FILES_UNWANTED, id);
@@ -185,7 +193,7 @@ static void set_unwanted(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     GtkTreeSelection *selection =
         gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
     gtk_tree_selection_selected_foreach(selection,
-                                        set_unwanted_foreachfunc, NULL);
+                                        set_wanted_foreachfunc, GTK_STOCK_CANCEL);
     send_updated_file_prefs(tv);
 }
 
@@ -195,7 +203,7 @@ static void set_wanted(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     GtkTreeSelection *selection =
         gtk_tree_view_get_selection(GTK_TREE_VIEW(data));
     gtk_tree_selection_selected_foreach(selection,
-                                        set_wanted_foreachfunc, NULL);
+                                        set_wanted_foreachfunc, GTK_STOCK_APPLY);
     send_updated_file_prefs(tv);
 }
 
@@ -288,9 +296,9 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
     trg_column_description *desc;
 
     desc =
-        trg_tree_view_reg_column(ttv, TRG_COLTYPE_GICONTEXT, FILESCOL_NAME,
+        trg_tree_view_reg_column(ttv, TRG_COLTYPE_FILEICONTEXT, FILESCOL_NAME,
                                  _("Name"), "name", 0);
-    desc->model_column_icon = FILESCOL_ICON;
+    desc->model_column_extra = FILESCOL_ID;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, FILESCOL_SIZE,
                              _("Size"), "size", 0);

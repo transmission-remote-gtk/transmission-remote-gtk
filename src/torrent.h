@@ -118,7 +118,7 @@ gint64 tracker_stats_get_last_scrape_time(JsonObject * t);
 gint64 file_get_length(JsonObject * f);
 gint64 file_get_bytes_completed(JsonObject * f);
 const gchar *file_get_name(JsonObject * f);
-gdouble file_get_progress(JsonObject * f);
+gdouble file_get_progress(gint64 length, gint64 completed);
 
 /* peers */
 

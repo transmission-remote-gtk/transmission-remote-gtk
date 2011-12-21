@@ -52,7 +52,7 @@ G_END_DECLS GList *trg_tree_view_get_selected_refs_list(GtkTreeView * tv);
 
 enum {
     TRG_COLTYPE_STOCKICONTEXT,
-    TRG_COLTYPE_GICONTEXT,
+    TRG_COLTYPE_FILEICONTEXT,
     TRG_COLTYPE_ICON,
     TRG_COLTYPE_TEXT,
     TRG_COLTYPE_SIZE,
@@ -68,7 +68,7 @@ enum {
 
 typedef struct {
     gint model_column;
-    gint model_column_icon;
+    gint model_column_extra;
     gchar *header;
     gchar *id;
     gint flags;

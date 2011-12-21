@@ -38,11 +38,11 @@ G_BEGIN_DECLS
 #define TRG_FILES_MODEL_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_FILES_MODEL, TrgFilesModelClass))
     typedef struct {
-    GtkListStore parent;
+    GtkTreeStore parent;
 } TrgFilesModel;
 
 typedef struct {
-    GtkListStoreClass parent_class;
+    GtkTreeStoreClass parent_class;
 } TrgFilesModelClass;
 
 GType trg_files_model_get_type(void);
@@ -50,13 +50,13 @@ GType trg_files_model_get_type(void);
 TrgFilesModel *trg_files_model_new(void);
 
 G_END_DECLS enum {
-    FILESCOL_ICON,
     FILESCOL_NAME,
     FILESCOL_SIZE,
     FILESCOL_PROGRESS,
     FILESCOL_ID,
     FILESCOL_WANTED,
     FILESCOL_PRIORITY,
+    FILESCOL_BYTESCOMPLETED,
     FILESCOL_COLUMNS
 };
 

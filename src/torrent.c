@@ -606,11 +606,10 @@ gint64 peerfrom_get_lpd(JsonObject * pf)
 
 /* files */
 
-gdouble file_get_progress(JsonObject * f)
+gdouble file_get_progress(gint64 length, gint64 completed)
 {
-    gint64 length = file_get_length(f);
     if (length > 0) {
-        return ((gdouble) file_get_bytes_completed(f) /
+        return ((gdouble) completed /
                 (gdouble) length) * 100.0;
     } else {
         return 0.0;

@@ -43,7 +43,7 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_STOCKICONTEXT,
                                  TORRENT_COLUMN_NAME, _("Name"), "name",
                                  0);
-    desc->model_column_icon = TORRENT_COLUMN_ICON;
+    desc->model_column_extra = TORRENT_COLUMN_ICON;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, TORRENT_COLUMN_SIZE,
                              _("Size"), "size", 0);

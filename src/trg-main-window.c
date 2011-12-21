@@ -275,12 +275,6 @@ static void trg_main_window_init(TrgMainWindow * self G_GNUC_UNUSED)
 {
 }
 
-GtkTreeModel *trg_main_window_get_torrent_model(TrgMainWindow * win)
-{
-    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
-    return GTK_TREE_MODEL(priv->torrentModel);
-}
-
 gint trg_mw_get_selected_torrent_id(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
@@ -308,6 +302,10 @@ static void update_selected_torrent_notebook(TrgMainWindow * win,
         trg_peers_model_update(priv->peersModel,
                                TRG_TREE_VIEW(priv->peersTreeView),
                                trg_client_get_serial(client), t, mode);
+
+        if (mode == TORRENT_GET_MODE_FIRST)
+            gtk_tree_view_expand_all(GTK_TREE_VIEW(priv->filesTreeView));
+
     } else if (id < 0) {
         trg_main_window_torrent_scrub(win);
     }
@@ -1079,9 +1077,9 @@ static void update_whatever_statusicon(TrgMainWindow * win,
 #endif
 }
 
-        /*
-         * The callback for a torrent-get response.
-         */
+/*
+ * The callback for a torrent-get response.
+ */
 
 static gboolean on_torrent_get(gpointer data, int mode)
 {
@@ -1424,7 +1422,7 @@ void trg_main_window_torrent_scrub(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
 
-    gtk_list_store_clear(GTK_LIST_STORE(priv->filesModel));
+    gtk_tree_store_clear(GTK_TREE_STORE(priv->filesModel));
     gtk_list_store_clear(GTK_LIST_STORE(priv->trackersModel));
     gtk_list_store_clear(GTK_LIST_STORE(priv->peersModel));
     trg_general_panel_clear(priv->genDetails);

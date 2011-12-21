@@ -55,6 +55,7 @@ trg_cell_renderer_priority_get_property(GObject * object,
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
+        break;
     }
 }
 
@@ -68,13 +69,15 @@ trg_cell_renderer_priority_set_property(GObject * object,
         TRG_CELL_RENDERER_PRIORITY_GET_PRIVATE(object);
 
     if (property_id == PROP_PRIORITY_VALUE) {
-        priv->priority_value = g_value_get_int64(value);
+        priv->priority_value = g_value_get_int(value);
         if (priv->priority_value == TR_PRI_LOW) {
             g_object_set(object, "text", _("Low"), NULL);
         } else if (priv->priority_value == TR_PRI_HIGH) {
             g_object_set(object, "text", _("High"), NULL);
-        } else {
+        } else if (priv->priority_value == TR_PRI_NORMAL){
             g_object_set(object, "text", _("Normal"), NULL);
+        } else {
+            g_object_set(object, "text", "", NULL);
         }
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -91,10 +94,10 @@ trg_cell_renderer_priority_class_init(TrgCellRendererPriorityClass * klass)
 
     g_object_class_install_property(object_class,
                                     PROP_PRIORITY_VALUE,
-                                    g_param_spec_int64
+                                    g_param_spec_int
                                     ("priority-value",
                                      "Priority Value",
-                                     "Priority Value", TR_PRI_LOW,
+                                     "Priority Value", -2,
                                      TR_PRI_HIGH, TR_PRI_NORMAL,
                                      G_PARAM_READWRITE |
                                      G_PARAM_STATIC_NAME |

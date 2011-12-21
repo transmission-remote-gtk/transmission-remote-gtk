@@ -166,7 +166,7 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView * self)
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_STOCKICONTEXT,
                                  TRACKERCOL_TIER, _("Tier"), "tier",
                                  TRG_COLUMN_UNREMOVABLE);
-    desc->model_column_icon = TRACKERCOL_ICON;
+    desc->model_column_extra = TRACKERCOL_ICON;
 
     desc =
         trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
