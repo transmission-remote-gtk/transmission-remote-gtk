@@ -89,7 +89,7 @@ static gboolean trg_files_update_all_parents(GtkTreeModel *model,
     GtkTreePath *descendentPath = gtk_tree_model_get_path(model,
             args->descendentIter);
 
-    if (gtk_tree_path_is_ancestor(path, descendentPath)) {
+    if (args->increment > 0 && gtk_tree_path_is_ancestor(path, descendentPath)) {
         gint64 lastCompleted, newCompleted, length;
         gtk_tree_model_get(model, iter, FILESCOL_BYTESCOMPLETED, &lastCompleted,
                 FILESCOL_SIZE, &length, -1);
@@ -159,17 +159,19 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
         }
 
         if (!found) {
-            GValue idValue = { 0 };
+            GValue gvalue = { 0 };
 
             gtk_tree_store_append(GTK_TREE_STORE(model), iter,
                     parentRowRef ? &parentIter : NULL);
             gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_NAME, elements[i], -1);
 
-            g_value_init(&idValue, G_TYPE_INT);
-            g_value_set_int(&idValue, -1);
-            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_ID, &idValue);
-            g_value_set_int(&idValue, -2);
-            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_PRIORITY, &idValue);
+            g_value_init(&gvalue, G_TYPE_INT);
+            g_value_set_int(&gvalue, -1);
+            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_ID, &gvalue);
+            memset(&gvalue, 0, sizeof(GValue));
+            g_value_init(&gvalue, G_TYPE_INT64);
+            g_value_set_int64(&gvalue, -2);
+            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_PRIORITY, &gvalue);
 
             iter_to_row_reference(GTK_TREE_MODEL(model), iter, &parentRowRef);
         }
