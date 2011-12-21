@@ -1,5 +1,5 @@
 /*
- * transmission-remote-gtk - Transmission RPC client for GTK
+ * transmission-remote-gtk - A GTK RPC client to Transmission
  * Copyright (C) 2011  Alan Fitton
 
  * This program is free software; you can redistribute it and/or modify

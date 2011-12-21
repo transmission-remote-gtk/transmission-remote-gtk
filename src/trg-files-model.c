@@ -159,10 +159,18 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
         }
 
         if (!found) {
+            GValue idValue = { 0 };
+
             gtk_tree_store_append(GTK_TREE_STORE(model), iter,
                     parentRowRef ? &parentIter : NULL);
-            gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_PRIORITY,
-                    -2, FILESCOL_ID, -1, FILESCOL_NAME, elements[i], -1);
+            gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_NAME, elements[i], -1);
+
+            g_value_init(&idValue, G_TYPE_INT);
+            g_value_set_int(&idValue, -1);
+            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_ID, &idValue);
+            g_value_set_int(&idValue, -2);
+            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_PRIORITY, &idValue);
+
             iter_to_row_reference(GTK_TREE_MODEL(model), iter, &parentRowRef);
         }
     }
