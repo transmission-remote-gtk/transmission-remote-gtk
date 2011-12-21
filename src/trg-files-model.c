@@ -216,7 +216,7 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
     args.descendentIter = filesIter;
 
     if (isFirst) {
-        args.increment = fileLength;
+        args.increment = fileCompleted;
     } else {
         gint64 lastCompleted;
         gtk_tree_model_get(GTK_TREE_MODEL(model), filesIter,
