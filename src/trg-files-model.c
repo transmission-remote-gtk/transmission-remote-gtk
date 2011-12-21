@@ -89,25 +89,23 @@ static gboolean trg_files_update_all_parents(GtkTreeModel *model,
         GtkTreePath *path, GtkTreeIter *iter, gpointer data) {
     struct updateAllArgs *args = (struct updateAllArgs*) data;
 
-    if (args->increment > 0) {
-        GtkTreePath *descendentPath = gtk_tree_model_get_path(model,
-                args->descendentIter);
+    GtkTreePath *descendentPath = gtk_tree_model_get_path(model,
+            args->descendentIter);
 
-        if (gtk_tree_path_is_ancestor(path, descendentPath)) {
-            gint64 lastCompleted, newCompleted, length;
+    if (gtk_tree_path_is_ancestor(path, descendentPath)) {
+        gint64 lastCompleted, newCompleted, length;
 
-            gtk_tree_model_get(model, iter, FILESCOL_BYTESCOMPLETED, &lastCompleted,
-                    FILESCOL_SIZE, &length, -1);
-            newCompleted = lastCompleted + args->increment;
+        gtk_tree_model_get(model, iter, FILESCOL_BYTESCOMPLETED, &lastCompleted,
+                FILESCOL_SIZE, &length, -1);
+        newCompleted = lastCompleted + args->increment;
 
-            gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_BYTESCOMPLETED,
-                    newCompleted, FILESCOL_PROGRESS,
-                    file_get_progress(length, newCompleted), -1);
+        gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_BYTESCOMPLETED,
+                newCompleted, FILESCOL_PROGRESS,
+                file_get_progress(length, newCompleted), -1);
 
-        }
-
-        gtk_tree_path_free(descendentPath);
     }
+
+    gtk_tree_path_free(descendentPath);
 
     return FALSE;
 }
@@ -171,16 +169,19 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
 
             gtk_tree_store_append(GTK_TREE_STORE(model), iter,
                     parentRowRef ? &parentIter : NULL);
-            gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_NAME, elements[i], -1);
+            gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_NAME,
+                    elements[i], -1);
 
             g_value_init(&gvalue, G_TYPE_INT);
             g_value_set_int(&gvalue, -1);
-            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_ID, &gvalue);
+            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_ID,
+                    &gvalue);
 
             memset(&gvalue, 0, sizeof(GValue));
             g_value_init(&gvalue, G_TYPE_INT64);
             g_value_set_int64(&gvalue, TR_PRI_UNSET);
-            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_PRIORITY, &gvalue);
+            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter,
+                    FILESCOL_PRIORITY, &gvalue);
 
             iter_to_row_reference(GTK_TREE_MODEL(model), iter, &parentRowRef);
         }
@@ -213,7 +214,6 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
     gdouble progress = file_get_progress(fileLength, fileCompleted);
 
     struct updateAllArgs args;
-    args.descendentIter = filesIter;
 
     if (isFirst) {
         args.increment = fileCompleted;
@@ -227,8 +227,11 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
     gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_PROGRESS,
             progress, FILESCOL_BYTESCOMPLETED, fileCompleted, -1);
 
-    gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_files_update_all_parents,
-            &args);
+    if (args.increment > 0) {
+        args.descendentIter = filesIter;
+        gtk_tree_model_foreach(GTK_TREE_MODEL(model),
+                trg_files_update_all_parents, &args);
+    }
 
     if (priv->accept) {
         gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_WANTED,
