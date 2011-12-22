@@ -23,12 +23,6 @@
 #include <glib-object.h>
 
 #define SGET_DOWNLOAD_DIR_FREE_SPACE            "download-dir-free-space"
-#define SGET_ALT_SPEED_DOWN                     "alt-speed-down"
-#define SGET_ALT_SPEED_ENABLED                  "alt-speed-enabled"
-#define SGET_ALT_SPEED_TIME_BEGIN               "alt-speed-time-begin"
-#define SGET_ALT_SPEED_TIME_DAY                 "alt-speed-time-day"
-#define SGET_ALT_SPEED_TIME_END                 "alt-speed-time-end"
-#define SGET_ALT_SPEED_UP                       "alt-speed-up"
 #define SGET_BLOCKLIST_ENABLED                  "blocklist-enabled"
 #define SGET_BLOCKLIST_URL                      "blocklist-url"
 #define SGET_BLOCKLIST_SIZE                     "blocklist-size"
@@ -69,6 +63,14 @@
 #define SGET_SEED_QUEUE_SIZE            "seed-queue-size"
 #define SGET_QUEUE_STALLED_ENABLED "queue-stalled-enabled"
 #define SGET_QUEUE_STALLED_MINUTES "queue-stalled-minutes"
+
+#define SGET_ALT_SPEED_DOWN         "alt-speed-down"
+#define SGET_ALT_SPEED_ENABLED      "alt-speed-enabled"
+#define SGET_ALT_SPEED_TIME_BEGIN   "alt-speed-time-begin"
+#define SGET_ALT_SPEED_TIME_ENABLED "alt-speed-time-enabled"
+#define SGET_ALT_SPEED_TIME_END     "alt-speed-time-end"
+#define SGET_ALT_SPEED_TIME_DAY     "alt-speed-time-day"
+#define SGET_ALT_SPEED_UP           "alt-speed-up"
 
 const gchar *session_get_torrent_done_filename(JsonObject * s);
 gboolean session_get_torrent_done_enabled(JsonObject * s);
