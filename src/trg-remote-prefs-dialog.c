@@ -234,6 +234,23 @@ static GtkWidget *trg_rprefs_time_begin_end_new(GList ** wl, JsonObject * obj,
     return hbox;
 }
 
+static GtkWidget *trg_rprefs_alt_speed_spin_new(GList **wl, JsonObject *obj,
+        const gchar *key,
+        GtkWidget *alt_check, GtkWidget *alt_time_check)
+{
+    GtkWidget *w = trg_json_widget_spin_new(wl, obj, key,
+            NULL, 0, INT_MAX, 5);
+    gtk_widget_set_sensitive(
+            w,
+            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(alt_check))
+                    || gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(alt_time_check)));
+    g_signal_connect(G_OBJECT(alt_time_check), "toggled",
+            G_CALLBACK(trg_remote_prefs_double_special_dependent), w);
+    g_signal_connect(G_OBJECT(alt_check), "toggled",
+            G_CALLBACK(trg_remote_prefs_double_special_dependent), w);
+    return w;
+}
+
 static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
         JsonObject * json) {
     TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
@@ -245,51 +262,35 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
     hig_workarea_add_section_title(t, &row, _("Bandwidth"));
 
     tb = trg_json_widget_check_new(&priv->widgets, json,
-            SGET_SPEED_LIMIT_DOWN_ENABLED, _("Limit download speed (KB/s)"),
+            SGET_SPEED_LIMIT_DOWN_ENABLED, _("Down Limit (KB/s)"),
             NULL);
     w = trg_json_widget_spin_new(&priv->widgets, json, SGET_SPEED_LIMIT_DOWN,
             tb, 0, INT_MAX, 5);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     tb = trg_json_widget_check_new(&priv->widgets, json,
-            SGET_SPEED_LIMIT_UP_ENABLED, _("Limit upload speed (KB/s)"), NULL);
+            SGET_SPEED_LIMIT_UP_ENABLED, _("Up Limit (KB/s)"), NULL);
     w = trg_json_widget_spin_new(&priv->widgets, json, SGET_SPEED_LIMIT_UP, tb,
             0, INT_MAX, 5);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     w = priv->alt_check = trg_json_widget_check_new(&priv->widgets, json,
-            SGET_ALT_SPEED_ENABLED, _("Alternative speed limits enabled (now)"),
+            SGET_ALT_SPEED_ENABLED, _("Alternate speed limits enabled (now)"),
             NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
     tb = priv->alt_time_check = trg_json_widget_check_new(&priv->widgets, json,
-            SGET_ALT_SPEED_TIME_ENABLED, _("Alternative time range"), NULL);
+            SGET_ALT_SPEED_TIME_ENABLED, _("Alternate time range"), NULL);
     w = trg_rprefs_time_begin_end_new(&priv->widgets, json, tb);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    w = trg_json_widget_spin_new(&priv->widgets, json, SGET_ALT_SPEED_DOWN,
-            NULL, 0, INT_MAX, 5);
-    gtk_widget_set_sensitive(
-            w,
-            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->alt_check))
-                    || gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tb)));
-    g_signal_connect(G_OBJECT(tb), "toggled",
-            G_CALLBACK(trg_remote_prefs_double_special_dependent), w);
-    g_signal_connect(G_OBJECT(priv->alt_check), "toggled",
-            G_CALLBACK(trg_remote_prefs_double_special_dependent), w);
-    hig_workarea_add_row(t, &row, _("Down (KB/s)"), w, w);
+    w = trg_rprefs_alt_speed_spin_new(&priv->widgets, json, SGET_ALT_SPEED_DOWN,
+            priv->alt_check, tb);
+    hig_workarea_add_row(t, &row, _("Alternate down limit (KB/s)"), w, w);
 
-    w = trg_json_widget_spin_new(&priv->widgets, json, SGET_ALT_SPEED_UP, NULL,
-            0, INT_MAX, 5);
-    gtk_widget_set_sensitive(
-            w,
-            gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->alt_check))
-                    || gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tb)));
-    g_signal_connect(G_OBJECT(tb), "toggled",
-            G_CALLBACK(trg_remote_prefs_double_special_dependent), w);
-    g_signal_connect(G_OBJECT(priv->alt_check), "toggled",
-            G_CALLBACK(trg_remote_prefs_double_special_dependent), w);
-    hig_workarea_add_row(t, &row, _("Up (KB/s)"), w, w);
+    w = trg_rprefs_alt_speed_spin_new(&priv->widgets, json, SGET_ALT_SPEED_UP,
+            priv->alt_check, tb);
+    hig_workarea_add_row(t, &row, _("Alternate up limit (KB/s)"), w, w);
 
     hig_workarea_add_section_title(t, &row, _("Seeding"));
 
