@@ -52,6 +52,7 @@
 #include "remote-exec.h"
 
 #include "trg-main-window.h"
+#include "trg-icons.h"
 #include "trg-about-window.h"
 #include "trg-tree-view.h"
 #include "trg-prefs.h"
@@ -2345,6 +2346,7 @@ static GObject *trg_main_window_constructor(GType type,
     prefs = trg_client_get_prefs(priv->client);
 
     theme = gtk_icon_theme_get_default();
+    register_my_icons(theme);
     priv->icon = gtk_icon_theme_load_icon(theme, PACKAGE_NAME, 48,
                                           GTK_ICON_LOOKUP_USE_BUILTIN,
                                           NULL);
@@ -2458,7 +2460,7 @@ static GObject *trg_main_window_constructor(GType type,
     else
         trg_main_window_remove_status_icon(self);
 
-    priv->statusBar = trg_status_bar_new();
+    priv->statusBar = trg_status_bar_new(self, priv->client);
     g_signal_connect(priv->client, "session-updated",
                      G_CALLBACK(trg_client_session_updated_cb), self);
 

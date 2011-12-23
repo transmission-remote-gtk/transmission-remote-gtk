@@ -70,6 +70,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-state-selector.c \
 	  trg-general-panel.c \
 	  trg-toolbar.c \
+	  trg-icons.c \
 	  trg-menu-bar.c \
 	  trg-status-bar.c \
 	  trg-trackers-tree-view.c \

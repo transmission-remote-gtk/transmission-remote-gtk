@@ -115,6 +115,11 @@ gboolean session_get_incomplete_dir_enabled(JsonObject * s)
     return json_object_get_boolean_member(s, SGET_INCOMPLETE_DIR_ENABLED);
 }
 
+gboolean session_get_alt_speed_enabled(JsonObject * s)
+{
+    return json_object_get_boolean_member(s, SGET_ALT_SPEED_ENABLED);
+}
+
 gboolean session_get_seed_ratio_limited(JsonObject * s)
 {
     return json_object_get_boolean_member(s, SGET_SEED_RATIO_LIMITED);
