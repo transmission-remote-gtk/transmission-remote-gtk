@@ -275,7 +275,7 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     w = priv->alt_check = trg_json_widget_check_new(&priv->widgets, json,
-            SGET_ALT_SPEED_ENABLED, _("Alternate speed limits enabled (now)"),
+            SGET_ALT_SPEED_ENABLED, _("Alternate speed limits active"),
             NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
