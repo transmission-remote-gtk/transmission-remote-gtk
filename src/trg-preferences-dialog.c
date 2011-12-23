@@ -371,7 +371,7 @@ static void notebook_toggled_cb(GtkToggleButton * b, gpointer data)
                                          gtk_toggle_button_get_active(b));
 }
 
-static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog * dlg)
+static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
@@ -381,7 +381,7 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog * dlg)
 
     t = hig_workarea_create();
 
-    hig_workarea_add_section_title(t, &row, _("Features"));
+    hig_workarea_add_section_title(t, &row, _("View"));
 
     dep = w = trgp_check_new(dlg, _("State selector"),
                              TRG_PREFS_KEY_SHOW_STATE_SELECTOR,
@@ -419,16 +419,7 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_wide_control(t, &row, w);
 #endif
 
-#ifdef HAVE_LIBNOTIFY
-    w = trgp_check_new(dlg, _("Torrent added notifications"),
-                       TRG_PREFS_KEY_ADD_NOTIFY, TRG_PREFS_GLOBAL, NULL);
-    hig_workarea_add_wide_control(t, &row, w);
-
-    w = trgp_check_new(dlg, _("Torrent complete notifications"),
-                       TRG_PREFS_KEY_COMPLETE_NOTIFY, TRG_PREFS_GLOBAL,
-                       NULL);
-    hig_workarea_add_wide_control(t, &row, w);
-#endif
+    hig_workarea_add_section_title(t, &row, _("System Tray"));
 
     tray = trgp_check_new(dlg, _("Show in system tray"),
                           TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL,
@@ -449,15 +440,18 @@ static GtkWidget *trg_prefs_desktopPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_wide_control(t, &row, w);
 #endif
 
-    return t;
-}
+#ifdef HAVE_LIBNOTIFY
+    hig_workarea_add_section_title(t, &row, _("Notifications"));
 
-static GtkWidget *trg_prefs_behaviorPage(TrgPreferencesDialog * dlg)
-{
-    GtkWidget *w, *t;
-    gint row = 0;
+    w = trgp_check_new(dlg, _("Torrent added notifications"),
+                       TRG_PREFS_KEY_ADD_NOTIFY, TRG_PREFS_GLOBAL, NULL);
+    hig_workarea_add_wide_control(t, &row, w);
 
-    t = hig_workarea_create();
+    w = trgp_check_new(dlg, _("Torrent complete notifications"),
+                       TRG_PREFS_KEY_COMPLETE_NOTIFY, TRG_PREFS_GLOBAL,
+                       NULL);
+    hig_workarea_add_wide_control(t, &row, w);
+#endif
 
     hig_workarea_add_section_title(t, &row, _("Torrents"));
 
@@ -474,6 +468,7 @@ static GtkWidget *trg_prefs_behaviorPage(TrgPreferencesDialog * dlg)
                        TRG_PREFS_KEY_DELETE_LOCAL_TORRENT,
                        TRG_PREFS_GLOBAL, NULL);
     hig_workarea_add_wide_control(t, &row, w);
+
 
     return t;
 }
@@ -716,8 +711,6 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
 
     /* Profile */
 
-    hig_workarea_add_section_title(t, &row, _("Profile"));
-
     priv->profileNameEntry =
         trgp_entry_new(dlg, TRG_PREFS_KEY_PROFILE_NAME, TRG_PREFS_PROFILE);
 
@@ -725,7 +718,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     profileLabel = gtk_label_new(_("Profile: "));
 
     profileButtonsHbox = gtk_hbox_new(FALSE, 0);
-    w = gtk_button_new_from_stock(GTK_STOCK_ADD);
+    w = gtk_button_new_from_stock(GTK_STOCK_NEW);
     g_signal_connect(w, "clicked", G_CALLBACK(add_profile_cb),
                      priv->profileComboBox);
     gtk_box_pack_start(GTK_BOX(profileButtonsHbox), w, FALSE, FALSE, 4);
@@ -756,7 +749,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
 
     row++;
 
-    hig_workarea_add_section_title(t, &row, _("Server"));
+    hig_workarea_add_section_title(t, &row, _("Connection"));
 
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
     hig_workarea_add_row(t, &row, _("Host:"), w, NULL);
@@ -772,15 +765,6 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     gtk_entry_set_visibility(GTK_ENTRY(w), FALSE);
     hig_workarea_add_row(t, &row, _("Password:"), w, NULL);
 
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_UPDATE_INTERVAL, 1, INT_MAX, 1,
-                      TRG_PREFS_PROFILE, NULL);
-    hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
-
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, INT_MAX, 1,
-                      TRG_PREFS_PROFILE, NULL);
-    hig_workarea_add_row(t, &row, _("Minimised update interval:"), w,
-                         NULL);
-
     w = trgp_check_new(dlg, _("Automatically connect"),
                        TRG_PREFS_KEY_AUTO_CONNECT, TRG_PREFS_PROFILE,
                        NULL);
@@ -791,6 +775,8 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
                        NULL);
     hig_workarea_add_wide_control(t, &row, w);
 #endif
+
+    hig_workarea_add_section_title(t, &row, _("Updates"));
 
     activeOnly = w = trgp_check_new(dlg, _("Update active torrents only"),
                                     TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY,
@@ -810,6 +796,15 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
                      G_CALLBACK(trgp_double_special_dependent), w);
 
     hig_workarea_add_row_w(t, &row, priv->fullUpdateCheck, w, NULL);
+
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_UPDATE_INTERVAL, 1, INT_MAX, 1,
+                      TRG_PREFS_PROFILE, NULL);
+    hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
+
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, INT_MAX, 1,
+                      TRG_PREFS_PROFILE, NULL);
+    hig_workarea_add_row(t, &row, _("Minimised update interval:"), w,
+                         NULL);
 
     hig_workarea_add_section_divider(t, &row);
 
@@ -866,6 +861,11 @@ static GObject *trg_preferences_dialog_constructor(GType type,
                              gtk_label_new(_("Connection")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+                             trg_prefs_generalPage(TRG_PREFERENCES_DIALOG
+                                                   (object)),
+                             gtk_label_new(_("General")));
+
+    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_openExecPage(TRG_PREFERENCES_DIALOG
                                                     (object)),
                              gtk_label_new(_("Actions")));
@@ -874,16 +874,6 @@ static GObject *trg_preferences_dialog_constructor(GType type,
                              trg_prefs_dirsPage(TRG_PREFERENCES_DIALOG
                                                 (object)),
                              gtk_label_new(_("Directories")));
-
-    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-                             trg_prefs_desktopPage(TRG_PREFERENCES_DIALOG
-                                                   (object)),
-                             gtk_label_new(_("Desktop")));
-
-    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-                             trg_prefs_behaviorPage(TRG_PREFERENCES_DIALOG
-                                                    (object)),
-                             gtk_label_new(_("Behavior")));
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 

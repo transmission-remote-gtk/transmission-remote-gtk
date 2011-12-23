@@ -251,7 +251,7 @@ static GtkWidget *trg_rprefs_alt_speed_spin_new(GList **wl, JsonObject *obj,
     return w;
 }
 
-static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
+static GtkWidget *trg_rprefs_bandwidthPage(TrgRemotePrefsDialog * win,
         JsonObject * json) {
     TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
     GtkWidget *w, *tb, *t;
@@ -259,7 +259,7 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
 
     t = hig_workarea_create();
 
-    hig_workarea_add_section_title(t, &row, _("Bandwidth"));
+    hig_workarea_add_section_title(t, &row, _("Bandwidth limits"));
 
     tb = trg_json_widget_check_new(&priv->widgets, json,
             SGET_SPEED_LIMIT_DOWN_ENABLED, _("Down Limit (KB/s)"),
@@ -273,6 +273,8 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
     w = trg_json_widget_spin_new(&priv->widgets, json, SGET_SPEED_LIMIT_UP, tb,
             0, INT_MAX, 5);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
+
+    hig_workarea_add_section_title(t, &row, _("Alternate limits"));
 
     w = priv->alt_check = trg_json_widget_check_new(&priv->widgets, json,
             SGET_ALT_SPEED_ENABLED, _("Alternate speed limits active"),
@@ -291,6 +293,17 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
     w = trg_rprefs_alt_speed_spin_new(&priv->widgets, json, SGET_ALT_SPEED_UP,
             priv->alt_check, tb);
     hig_workarea_add_row(t, &row, _("Alternate up limit (KB/s)"), w, w);
+
+    return t;
+}
+
+static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
+        JsonObject * json) {
+    TrgRemotePrefsDialogPrivate *priv = TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
+    GtkWidget *w, *tb, *t;
+    gint row = 0;
+
+    t = hig_workarea_create();
 
     hig_workarea_add_section_title(t, &row, _("Seeding"));
 
@@ -428,17 +441,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
 
     t = hig_workarea_create();
 
-    w = priv->encryption_combo = gtr_combo_box_new_enum(_("Required"), 0,
-            _("Preferred"), 1, _("Tolerated"), 2, NULL);
-    stringValue = session_get_encryption(s);
-    if (g_strcmp0(stringValue, "required") == 0) {
-        gtk_combo_box_set_active(GTK_COMBO_BOX(w), 0);
-    } else if (g_strcmp0(stringValue, "tolerated") == 0) {
-        gtk_combo_box_set_active(GTK_COMBO_BOX(w), 2);
-    } else {
-        gtk_combo_box_set_active(GTK_COMBO_BOX(w), 1);
-    }
-    hig_workarea_add_row(t, &row, _("Encryption"), w, NULL);
+    hig_workarea_add_section_title(t, &row, _("Connections"));
 
     w = trg_json_widget_spin_new(&priv->widgets, s, SGET_PEER_PORT, NULL, 0,
             65535, 1);
@@ -449,6 +452,19 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     g_signal_connect(w, "clicked", G_CALLBACK(port_test_cb), win);
     hig_workarea_add_row_w(t, &row, priv->port_test_label, w, NULL);
 
+    w = priv->encryption_combo = gtr_combo_box_new_enum(_("Required"), 0,
+            _("Preferred"), 1, _("Tolerated"), 2, NULL);
+    stringValue = session_get_encryption(s);
+    if (g_strcmp0(stringValue, "required") == 0) {
+        gtk_combo_box_set_active(GTK_COMBO_BOX(w), 0);
+    } else if (g_strcmp0(stringValue, "tolerated") == 0) {
+        gtk_combo_box_set_active(GTK_COMBO_BOX(w), 2);
+    } else {
+        gtk_combo_box_set_active(GTK_COMBO_BOX(w), 1);
+    }
+
+    hig_workarea_add_row(t, &row, _("Encryption"), w, NULL);
+
     w = trg_json_widget_check_new(&priv->widgets, s,
             SGET_PEER_PORT_RANDOM_ON_START, _("Random peer port on start"),
             NULL);
@@ -457,6 +473,8 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     w = trg_json_widget_check_new(&priv->widgets, s,
             SGET_PORT_FORWARDING_ENABLED, _("Peer port forwarding"), NULL);
     hig_workarea_add_wide_control(t, &row, w);
+
+    hig_workarea_add_section_title(t, &row, _("Protocol"));
 
     w = trg_json_widget_check_new(&priv->widgets, s, SGET_PEX_ENABLED,
             _("Peer exchange (PEX)"), NULL);
@@ -469,6 +487,8 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
     w = trg_json_widget_check_new(&priv->widgets, s, SGET_LPD_ENABLED,
             _("Local peer discovery"), NULL);
     hig_workarea_add_wide_control(t, &row, w);
+
+    hig_workarea_add_section_title(t, &row, _("Blocklist"));
 
     stringValue = g_strdup_printf(_("Blocklist (%ld entries)"),
             session_get_blocklist_size(s));
@@ -502,6 +522,8 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
 
     t = hig_workarea_create();
 
+    hig_workarea_add_section_title(t, &row, _("Environment"));
+
     w = trg_json_widget_entry_new(&priv->widgets, s, SGET_DOWNLOAD_DIR, NULL);
     hig_workarea_add_row(t, &row, _("Download directory"), w, NULL);
 
@@ -522,6 +544,8 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
                 NULL, 0, INT_MAX, 1);
         hig_workarea_add_row(t, &row, _("Cache size (MB)"), w, w);
     }
+
+    hig_workarea_add_section_title(t, &row, _("Behavior"));
 
     w = trg_json_widget_check_new(&priv->widgets, s, SGET_RENAME_PARTIAL_FILES,
             _("Rename partial files"), NULL);
@@ -578,6 +602,10 @@ static GObject *trg_remote_prefs_dialog_constructor(GType type,
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             trg_rprefs_connPage(TRG_REMOTE_PREFS_DIALOG
             (object), session), gtk_label_new(_("Connections")));
+
+    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+            trg_rprefs_bandwidthPage(TRG_REMOTE_PREFS_DIALOG
+            (object), session), gtk_label_new(_("Bandwidth")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
             trg_rprefs_limitsPage(TRG_REMOTE_PREFS_DIALOG
