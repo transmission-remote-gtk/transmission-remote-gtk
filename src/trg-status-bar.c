@@ -68,7 +68,7 @@ void trg_status_bar_reset(TrgStatusBar * sb) {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     trg_status_bar_clear_indicators(sb);
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), _("Disconnected"));
-    gtk_widget_set_visible(priv->turtleImage, FALSE);
+    gtk_widget_set_visible(priv->turtleEventBox, FALSE);
 }
 
 static void turtle_toggle(GtkWidget *w, GdkEventButton * event, gpointer data) {
