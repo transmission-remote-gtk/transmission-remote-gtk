@@ -133,6 +133,7 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session) {
 void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session) {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     gint64 free = session_get_download_dir_free_space(session);
+    gboolean altSpeedEnabled = session_get_alt_speed_enabled(session);
     gchar freeSpace[64];
 
     if (free >= 0) {
@@ -145,10 +146,13 @@ void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session) {
         gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
     }
 
-    gtk_image_set_from_stock(
-            GTK_IMAGE(priv->turtleImage),
-            session_get_alt_speed_enabled(session) ? "alt-speed-on" :
-                    "alt-speed-off", GTK_ICON_SIZE_SMALL_TOOLBAR);
+    gtk_image_set_from_stock(GTK_IMAGE(priv->turtleImage),
+            altSpeedEnabled ? "alt-speed-on" : "alt-speed-off",
+            GTK_ICON_SIZE_SMALL_TOOLBAR);
+    gtk_widget_set_tooltip_text(
+            priv->turtleImage,
+            altSpeedEnabled ? _("Disable alternate speed limits") :
+                    _("Enable alternate speed limits"));
     gtk_widget_set_visible(priv->turtleEventBox, TRUE);
 }
 
