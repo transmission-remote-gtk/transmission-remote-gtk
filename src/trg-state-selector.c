@@ -525,12 +525,12 @@ static GObject *trg_state_selector_constructor(GType type,
     renderer = gtk_cell_renderer_pixbuf_new();
     gtk_tree_view_column_pack_start(column, renderer, FALSE);
     g_object_set(renderer, "stock-size", 4, NULL);
-    gtk_tree_view_column_set_attributes(column, renderer, "stock-id", 0,
+    gtk_tree_view_column_set_attributes(column, renderer, "stock-id", STATE_SELECTOR_ICON,
                                         NULL);
 
     renderer = gtk_cell_renderer_text_new();
     gtk_tree_view_column_pack_start(column, renderer, TRUE);
-    gtk_tree_view_column_set_attributes(column, renderer, "text", 1, NULL);
+    gtk_tree_view_column_set_attributes(column, renderer, "text", STATE_SELECTOR_NAME, NULL);
 
     gtk_tree_view_append_column(GTK_TREE_VIEW(object), column);
 

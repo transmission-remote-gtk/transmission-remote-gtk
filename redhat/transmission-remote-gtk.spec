@@ -1,5 +1,5 @@
 Name:           transmission-remote-gtk
-Version:        0.8
+Version:        1.0
 Release:        1%{?dist}
 Summary:        Remotely manage the Transmission BitTorrent client
 
@@ -70,6 +70,9 @@ fi
 
 
 %changelog
+* Fri Dec 23 2011 Alan Fitton <alan@eth0.org.uk> 1.0-1
+- New release.
+
 * Fri Dec 09 2011 Alan Fitton <alan@eth0.org.uk> 0.8-1
 - New release.
 

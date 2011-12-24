@@ -10,7 +10,7 @@ Name "Transmission Remote GTK"
 
 ; The file to write
 !ifndef REV
-OutFile "transmission-remote-gtk-0.8-installer.exe"
+OutFile "transmission-remote-gtk-1.0-installer.exe"
 !else
 OutFile "transmission-remote-gtk-${REV}-installer.exe"
 !endif
