@@ -64,14 +64,17 @@ gboolean find_existing_peer_item_foreachfunc(GtkTreeModel * model,
                                              gpointer data)
 {
     struct peerAndIter *pi = (struct peerAndIter *) data;
-
     gchar *ip;
+
     gtk_tree_model_get(model, iter, PEERSCOL_IP, &ip, -1);
+
     if (g_strcmp0(ip, pi->ip) == 0) {
         pi->iter = *iter;
         pi->found = TRUE;
     }
+
     g_free(ip);
+
     return pi->found;
 }
 

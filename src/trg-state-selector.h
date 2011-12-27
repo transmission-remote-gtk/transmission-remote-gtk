@@ -29,6 +29,7 @@
 enum {
     STATE_SELECTOR_ICON,
     STATE_SELECTOR_NAME,
+    STATE_SELECTOR_COUNT,
     STATE_SELECTOR_BIT,
     STATE_SELECTOR_SERIAL,
     STATE_SELECTOR_INDEX,
@@ -60,7 +61,7 @@ typedef struct {
 } TrgStateSelectorClass;
 
 GType trg_state_selector_get_type(void);
-TrgStateSelector *trg_state_selector_new(TrgClient * client);
+TrgStateSelector *trg_state_selector_new(TrgClient * client, TrgTorrentModel *tmodel);
 
 G_END_DECLS guint32 trg_state_selector_get_flag(TrgStateSelector * s);
 void trg_state_selector_update(TrgStateSelector * s);

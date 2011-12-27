@@ -79,6 +79,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-torrent-add-url-dialog.c \
 	  trg-json-widgets.c \
 	  trg-cell-renderer-speed.c \
+	  trg-cell-renderer-counter.c \
 	  trg-cell-renderer-size.c \
 	  trg-cell-renderer-ratio.c \
 	  trg-cell-renderer-eta.c \

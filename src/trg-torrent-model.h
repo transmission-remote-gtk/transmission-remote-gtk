@@ -59,7 +59,17 @@ typedef struct {
     gint paused;
     gint count;
     gint error;
+    gint complete;
+    gint incomplete;
+    gint checking;
+    gint active;
+    gint seed_wait;
+    gint down_wait;
 } trg_torrent_model_update_stats;
+
+#define TORRENT_UPDATE_STATE_CHANGE        (1 << 0)
+#define TORRENT_UPDATE_PATH_CHANGE         (1 << 1)
+#define TORRENT_UPDATE_ADDREMOVE           (1 << 2)
 
 GType trg_torrent_model_get_type(void);
 
