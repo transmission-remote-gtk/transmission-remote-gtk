@@ -146,13 +146,36 @@ gchar *trg_state_selector_get_selected_text(TrgStateSelector * s) {
     return name;
 }
 
-static void trg_state_selector_update_serial(GtkTreeModel * model,
+static void trg_state_selector_update_dynamic_filter(GtkTreeModel * model,
         GtkTreeRowReference * rr, gint64 serial) {
     GtkTreeIter iter;
     GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+    gint64 oldSerial;
+    GValue gvalue = { 0 };
+    gint oldCount;
+
     gtk_tree_model_get_iter(model, &iter, path);
-    gtk_list_store_set(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_SERIAL,
-            serial, -1);
+    gtk_tree_model_get(model, &iter, STATE_SELECTOR_SERIAL, &oldSerial,
+            STATE_SELECTOR_COUNT, &oldCount, -1);
+
+    if (oldSerial != serial) {
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, 1);
+        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_COUNT,
+                &gvalue);
+
+        memset(&gvalue, 0, sizeof(GValue));
+        g_value_init(&gvalue, G_TYPE_INT64);
+        g_value_set_int64(&gvalue, serial);
+        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_SERIAL,
+                &gvalue);
+    } else {
+        g_value_init(&gvalue, G_TYPE_INT);
+        g_value_set_int(&gvalue, ++oldCount);
+        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_COUNT,
+                &gvalue);
+    }
+
     gtk_tree_path_free(path);
 }
 
@@ -294,7 +317,7 @@ void trg_state_selector_update(TrgStateSelector * s) {
                 result = g_hash_table_lookup(priv->trackers, announceHost);
 
                 if (result) {
-                    trg_state_selector_update_serial(model,
+                    trg_state_selector_update_dynamic_filter(model,
                             (GtkTreeRowReference *) result, updateSerial);
                     g_free(announceHost);
                 } else {
@@ -305,6 +328,7 @@ void trg_state_selector_update(TrgStateSelector * s) {
                             STATE_SELECTOR_ICON, GTK_STOCK_NETWORK,
                             STATE_SELECTOR_NAME, announceHost,
                             STATE_SELECTOR_SERIAL, updateSerial,
+                            STATE_SELECTOR_COUNT, 1,
                             STATE_SELECTOR_BIT, FILTER_FLAG_TRACKER,
                             STATE_SELECTOR_INDEX, 0, -1);
                     g_hash_table_insert(priv->trackers, announceHost,
@@ -321,7 +345,7 @@ void trg_state_selector_update(TrgStateSelector * s) {
 
             result = g_hash_table_lookup(priv->directories, dir);
             if (result) {
-                trg_state_selector_update_serial(model,
+                trg_state_selector_update_dynamic_filter(model,
                         (GtkTreeRowReference *) result, updateSerial);
             } else {
                 trg_state_selector_insert(s,
@@ -331,6 +355,7 @@ void trg_state_selector_update(TrgStateSelector * s) {
                         STATE_SELECTOR_ICON, GTK_STOCK_DIRECTORY,
                         STATE_SELECTOR_NAME, dir, STATE_SELECTOR_SERIAL,
                         updateSerial, STATE_SELECTOR_BIT, FILTER_FLAG_DIR,
+                        STATE_SELECTOR_COUNT, 1,
                         STATE_SELECTOR_INDEX, 0, -1);
                 g_hash_table_insert(priv->directories, g_strdup(dir),
                         quick_tree_ref_new(model, &iter));
@@ -550,17 +575,20 @@ static GObject *trg_state_selector_constructor(GType type,
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_GO_DOWN,
             _("Downloading"), TORRENT_FLAG_DOWNLOADING, &priv->down_rr);
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_MEDIA_REWIND,
-            _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT, &priv->down_wait_rr);
+            _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT,
+            &priv->down_wait_rr);
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_GO_UP,
             _("Seeding"), TORRENT_FLAG_SEEDING, &priv->seeding_rr);
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_MEDIA_FORWARD,
-            _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT, &priv->seed_wait_rr);
+            _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT,
+            &priv->seed_wait_rr);
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_MEDIA_PAUSE,
             _("Paused"), TORRENT_FLAG_PAUSED, &priv->paused_rr);
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_APPLY,
             _("Complete"), TORRENT_FLAG_COMPLETE, &priv->complete_rr);
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_SELECT_ALL,
-            _("Incomplete"), TORRENT_FLAG_INCOMPLETE, &priv->incomplete_rr);
+            _("Incomplete"), TORRENT_FLAG_INCOMPLETE,
+            &priv->incomplete_rr);
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_NETWORK,
             _("Active"), TORRENT_FLAG_ACTIVE, &priv->active_rr);
     trg_state_selector_add_state(selector, &iter, -1, GTK_STOCK_REFRESH,
@@ -604,15 +632,16 @@ void trg_state_selector_set_queues_enabled(TrgStateSelector * s,
 
     if (enabled) {
         trg_state_selector_add_state(s, &iter, 2, GTK_STOCK_MEDIA_REWIND,
-                _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT, &priv->down_wait_rr);
+                _("Queue Down"), TORRENT_FLAG_DOWNLOADING_WAIT,
+                &priv->down_wait_rr);
         trg_state_selector_add_state(s, &iter, 4, GTK_STOCK_MEDIA_FORWARD,
-                _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT, &priv->seed_wait_rr);
+                _("Queue Up"), TORRENT_FLAG_SEEDING_WAIT,
+                &priv->seed_wait_rr);
     } else {
         remove_row_ref_and_free(priv->seed_wait_rr);
         remove_row_ref_and_free(priv->down_wait_rr);
         priv->down_wait_rr = NULL;
         priv->seed_wait_rr = NULL;
-
         priv->n_categories -= 2;
     }
 }
