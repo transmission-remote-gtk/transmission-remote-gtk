@@ -161,27 +161,26 @@ static void trg_state_selector_update_dynamic_filter(GtkTreeModel * model,
     if (oldSerial != serial) {
         g_value_init(&gvalue, G_TYPE_INT);
         g_value_set_int(&gvalue, 1);
-        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter,
-                STATE_SELECTOR_COUNT, &gvalue);
+        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_COUNT,
+                &gvalue);
 
         memset(&gvalue, 0, sizeof(GValue));
         g_value_init(&gvalue, G_TYPE_INT64);
         g_value_set_int64(&gvalue, serial);
-        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter,
-                STATE_SELECTOR_SERIAL, &gvalue);
+        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_SERIAL,
+                &gvalue);
     } else {
         g_value_init(&gvalue, G_TYPE_INT);
         g_value_set_int(&gvalue, ++oldCount);
-        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter,
-                STATE_SELECTOR_COUNT, &gvalue);
+        gtk_list_store_set_value(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_COUNT,
+                &gvalue);
     }
 
     gtk_tree_path_free(path);
 }
 
 static void refresh_statelist_cb(GtkWidget * w, gpointer data) {
-    trg_state_selector_update(TRG_STATE_SELECTOR(data),
-            TORRENT_UPDATE_ADDREMOVE);
+    trg_state_selector_update(TRG_STATE_SELECTOR(data));
 }
 
 static void view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
@@ -264,7 +263,7 @@ static void trg_state_selector_insert(TrgStateSelector * s, int offset,
     gtk_list_store_insert(GTK_LIST_STORE(model), iter, args.pos);
 }
 
-void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged) {
+void trg_state_selector_update(TrgStateSelector * s) {
     TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
     TrgClient *client = priv->client;
@@ -301,9 +300,7 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged) {
         if (!t)
             continue;
 
-        if (priv->showTrackers
-                && ((whatsChanged & TORRENT_UPDATE_PATH_CHANGE)
-                        || (whatsChanged & TORRENT_UPDATE_ADDREMOVE))) {
+        if (priv->showTrackers) {
             trackersList = json_array_get_elements(
                     torrent_get_tracker_stats(t));
             for (trackerItem = trackersList; trackerItem;
@@ -331,8 +328,9 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged) {
                             STATE_SELECTOR_ICON, GTK_STOCK_NETWORK,
                             STATE_SELECTOR_NAME, announceHost,
                             STATE_SELECTOR_SERIAL, updateSerial,
-                            STATE_SELECTOR_COUNT, 1, STATE_SELECTOR_BIT,
-                            FILTER_FLAG_TRACKER, STATE_SELECTOR_INDEX, 0, -1);
+                            STATE_SELECTOR_COUNT, 1,
+                            STATE_SELECTOR_BIT, FILTER_FLAG_TRACKER,
+                            STATE_SELECTOR_INDEX, 0, -1);
                     g_hash_table_insert(priv->trackers, announceHost,
                             quick_tree_ref_new(model, &iter));
                 }
@@ -340,7 +338,7 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged) {
             g_list_free(trackersList);
         }
 
-        if (priv->showTrackers && (whatsChanged & TORRENT_UPDATE_ADDREMOVE)) {
+        if (priv->showDirs) {
             gchar *dir;
             gtk_tree_model_get(torrentModel, &torrentIter,
                     TORRENT_COLUMN_DOWNLOADDIR_SHORT, &dir, -1);
@@ -357,7 +355,8 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged) {
                         STATE_SELECTOR_ICON, GTK_STOCK_DIRECTORY,
                         STATE_SELECTOR_NAME, dir, STATE_SELECTOR_SERIAL,
                         updateSerial, STATE_SELECTOR_BIT, FILTER_FLAG_DIR,
-                        STATE_SELECTOR_COUNT, 1, STATE_SELECTOR_INDEX, 0, -1);
+                        STATE_SELECTOR_COUNT, 1,
+                        STATE_SELECTOR_INDEX, 0, -1);
                 g_hash_table_insert(priv->directories, g_strdup(dir),
                         quick_tree_ref_new(model, &iter));
             }
@@ -370,15 +369,13 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged) {
 
     cruft.serial = trg_client_get_serial(client);
 
-    if (priv->showTrackers && ((whatsChanged & TORRENT_UPDATE_ADDREMOVE))) {
+    if (priv->showTrackers) {
         cruft.table = priv->trackers;
         g_hash_table_foreach_remove(priv->trackers,
                 trg_state_selector_remove_cruft, &cruft);
     }
 
-    if (priv->showDirs
-            && ((whatsChanged & TORRENT_UPDATE_PATH_CHANGE)
-                    || (whatsChanged & TORRENT_UPDATE_ADDREMOVE))) {
+    if (priv->showDirs) {
         cruft.table = priv->directories;
         g_hash_table_foreach_remove(priv->directories,
                 trg_state_selector_remove_cruft, &cruft);
@@ -391,18 +388,15 @@ void trg_state_selector_set_show_dirs(TrgStateSelector * s, gboolean show) {
     if (!show)
         g_hash_table_remove_all(priv->directories);
     else
-        trg_state_selector_update(s, TORRENT_UPDATE_PATH_CHANGE);
+        trg_state_selector_update(s);
 }
 
 static void on_torrents_state_change(TrgTorrentModel * model,
         guint whatsChanged, gpointer data) {
     TrgStateSelector *selector = TRG_STATE_SELECTOR(data);
-    trg_state_selector_update(selector, whatsChanged);
-
-    if ((whatsChanged & TORRENT_UPDATE_ADDREMOVE)
-            || (whatsChanged & TORRENT_UPDATE_STATE_CHANGE))
-        trg_state_selector_stats_update(selector,
-                trg_torrent_model_get_stats(model));
+    trg_state_selector_update(selector);
+    trg_state_selector_stats_update(selector,
+            trg_torrent_model_get_stats(model));
 }
 
 void trg_state_selector_set_show_trackers(TrgStateSelector * s, gboolean show) {
@@ -411,7 +405,7 @@ void trg_state_selector_set_show_trackers(TrgStateSelector * s, gboolean show) {
     if (!show)
         g_hash_table_remove_all(priv->trackers);
     else
-        trg_state_selector_update(s, TORRENT_UPDATE_ADDREMOVE);
+        trg_state_selector_update(s);
 }
 
 static void trg_state_selector_add_state(TrgStateSelector * selector,

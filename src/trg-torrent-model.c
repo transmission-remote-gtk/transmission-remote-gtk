@@ -249,7 +249,6 @@ static gboolean trg_torrent_model_reload_dir_aliases_foreachfunc(
 void trg_torrent_model_reload_dir_aliases(TrgClient * tc, GtkTreeModel * model) {
     gtk_tree_model_foreach(model,
             trg_torrent_model_reload_dir_aliases_foreachfunc, tc);
-    g_signal_emit(model, signals[TMODEL_STATE_CHANGED], 0, TORRENT_UPDATE_PATH_CHANGE);
 }
 
 static gboolean trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
