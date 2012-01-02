@@ -180,6 +180,8 @@ static void trg_state_selector_update_dynamic_filter(GtkTreeModel * model,
 }
 
 static void refresh_statelist_cb(GtkWidget * w, gpointer data) {
+    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(data);
+    trg_client_inc_serial(priv->client);
     trg_state_selector_update(TRG_STATE_SELECTOR(data),
             TORRENT_UPDATE_ADDREMOVE);
 }

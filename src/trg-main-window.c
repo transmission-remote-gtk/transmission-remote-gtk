@@ -1005,7 +1005,7 @@ TRANSMISSION_MIN_SUPPORTED, version);
         trg_main_window_conn_changed(win, TRUE);
         trg_trackers_tree_view_new_connection(priv->trackersTreeView,
                                               client);
-        dispatch_async(client, torrent_get(-1), on_torrent_get_first, win);
+        dispatch_async(client, torrent_get(TORRENT_GET_TAG_MODE_FULL), on_torrent_get_first, win);
     }
 
     trg_response_free(response);
@@ -1397,9 +1397,9 @@ gboolean on_generic_interactive_action(gpointer data)
             else if (trg_prefs_get_bool
                      (prefs, TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY,
                       TRG_PREFS_CONNECTION))
-                id = -2;
+                id = TORRENT_GET_TAG_MODE_UPDATE;
             else
-                id = -1;
+                id = TORRENT_GET_TAG_MODE_FULL;
 
             dispatch_async(tc, torrent_get(id), on_torrent_get_interactive,
                            win);
