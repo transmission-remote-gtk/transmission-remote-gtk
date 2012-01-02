@@ -199,6 +199,7 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
     }
 
     priv->session = session;
+    json_object_ref(session);
 
     g_signal_emit(tc, signals[TC_SESSION_UPDATED], 0, session);
 }

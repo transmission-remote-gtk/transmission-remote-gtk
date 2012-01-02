@@ -785,11 +785,16 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win) {
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
 
     GtkWidget *notebook = priv->notebook = gtk_notebook_new();
+    GtkWidget *genScrolledWin = gtk_scrolled_window_new(NULL, NULL);
 
     priv->genDetails = trg_general_panel_new(GTK_TREE_MODEL(priv->torrentModel),
             priv->client);
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(genScrolledWin),
+                                   GTK_POLICY_AUTOMATIC,
+                                   GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW(genScrolledWin), GTK_WIDGET(priv->genDetails));
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-            GTK_WIDGET(priv->genDetails), gtk_label_new(_("General")));
+            genScrolledWin, gtk_label_new(_("General")));
 
     priv->trackersModel = trg_trackers_model_new();
     priv->trackersTreeView = trg_trackers_tree_view_new(priv->trackersModel,
@@ -889,8 +894,6 @@ static gboolean on_session_get(gpointer data) {
 
         if (reloadAliases)
             trg_main_window_reload_dir_aliases(win);
-
-        json_object_ref(newSession);
     }
 
     if (!isConnected) {
@@ -2211,8 +2214,16 @@ static GObject *trg_main_window_constructor(GType type,
     height = trg_prefs_get_int(prefs, TRG_PREFS_KEY_WINDOW_HEIGHT,
             TRG_PREFS_GLOBAL);
 
+    pos = trg_prefs_get_int(prefs, TRG_PREFS_KEY_NOTEBOOK_PANED_POS,
+            TRG_PREFS_GLOBAL);
+
     if (width > 0 && height > 0)
         gtk_window_set_default_size(GTK_WINDOW(self), width, height);
+    else if (pos < 1)
+        gtk_paned_set_position(GTK_PANED(priv->vpaned), 300);
+
+    if (pos > 0)
+        gtk_paned_set_position(GTK_PANED(priv->vpaned), pos);
 
     gtk_widget_show_all(GTK_WIDGET(self));
 
@@ -2224,11 +2235,6 @@ static GObject *trg_main_window_constructor(GType type,
             priv->notebook,
             trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SHOW_NOTEBOOK,
                     TRG_PREFS_GLOBAL));
-
-    pos = trg_prefs_get_int(prefs, TRG_PREFS_KEY_NOTEBOOK_PANED_POS,
-            TRG_PREFS_GLOBAL);
-    if (pos > 0)
-        gtk_paned_set_position(GTK_PANED(priv->vpaned), pos);
 
     pos = trg_prefs_get_int(prefs, TRG_PREFS_KEY_STATES_PANED_POS,
             TRG_PREFS_GLOBAL);
