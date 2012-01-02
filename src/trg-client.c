@@ -522,7 +522,7 @@ trg_tls *trg_tls_new(TrgClient * tc)
     tls->curl = curl_easy_init();
     curl_easy_setopt(tls->curl, CURLOPT_USERAGENT, PACKAGE_NAME);
     curl_easy_setopt(tls->curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    curl_easy_setopt(tls->curl, CURLOPT_TIMEOUT, 20);
+    curl_easy_setopt(tls->curl, CURLOPT_TIMEOUT, 40);
     curl_easy_setopt(tls->curl, CURLOPT_WRITEFUNCTION,
                      &http_receive_callback);
     curl_easy_setopt(tls->curl, CURLOPT_HEADERFUNCTION, &header_callback);

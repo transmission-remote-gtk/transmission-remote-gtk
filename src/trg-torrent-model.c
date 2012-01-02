@@ -679,8 +679,7 @@ trg_torrent_model_update_stats *trg_torrent_model_update(
             g_hash_table_insert(priv->ht, idCopy, rr);
             gtk_tree_path_free(path);
 
-            if (mode != TORRENT_GET_MODE_FIRST
-            )
+            if (mode != TORRENT_GET_MODE_FIRST)
                 g_signal_emit(model, signals[TMODEL_TORRENT_ADDED], 0, &iter);
         } else {
             path = gtk_tree_row_reference_get_path(

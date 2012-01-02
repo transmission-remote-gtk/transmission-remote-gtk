@@ -19,6 +19,7 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
+#include <gdk/gdkkeysyms.h>
 
 #include "trg-main-window.h"
 #include "trg-menu-bar.h"
@@ -48,6 +49,7 @@ enum {
     PROP_QUIT,
     PROP_PREFS,
     PROP_MAIN_WINDOW,
+    PROP_ACCEL_GROUP,
     PROP_DIR_FILTERS,
     PROP_TRACKER_FILTERS,
     PROP_VIEW_SHOW_GRAPH,
@@ -96,6 +98,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_top_queue;
     GtkWidget *mb_start_now;
     GtkWidget *mb_queues_seperator;
+    GtkAccelGroup *accel_group;
     TrgPrefs *prefs;
     TrgMainWindow *main_window;
 };
@@ -154,6 +157,9 @@ static void trg_menu_bar_set_property(GObject * object,
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(object);
 
     switch (prop_id) {
+    case PROP_ACCEL_GROUP:
+        priv->accel_group = g_value_get_object(value);
+        break;
     case PROP_PREFS:
         priv->prefs = g_value_get_object(value);
         break;
@@ -299,6 +305,15 @@ GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, const gchar * text,
     return item;
 }
 
+static void trg_menu_bar_accel_add(TrgMenuBar *menu, GtkWidget *item, guint key, GdkModifierType mods)
+{
+    TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menu);
+
+    gtk_widget_add_accelerator(item, "activate", priv->accel_group,
+          key, mods, GTK_ACCEL_VISIBLE);
+
+}
+
 static void view_menu_item_toggled_cb(GtkCheckMenuItem * w, gpointer data)
 {
     TrgPrefs *p = TRG_PREFS(data);
@@ -406,8 +421,10 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
 }
 
 static
-GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBarPrivate * priv)
+GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBar *menu)
 {
+    TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menu);
+
     GtkWidget *opts = gtk_menu_item_new_with_mnemonic(_("_Options"));
     GtkWidget *optsMenu = gtk_menu_new();
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(opts), optsMenu);
@@ -416,11 +433,13 @@ GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBarPrivate * priv)
         trg_menu_bar_item_new(GTK_MENU_SHELL(optsMenu),
                               _("_Local Preferences"),
                               GTK_STOCK_PREFERENCES, TRUE);
+    trg_menu_bar_accel_add(menu, priv->mb_local_prefs, GDK_s, GDK_CONTROL_MASK);
 
     priv->mb_remote_prefs =
         trg_menu_bar_item_new(GTK_MENU_SHELL(optsMenu),
                               _("_Remote Preferences"),
                               GTK_STOCK_NETWORK, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_remote_prefs, GDK_s, GDK_MOD1_MASK);
 
     return opts;
 }
@@ -432,11 +451,14 @@ static void trg_menu_bar_file_connect_item_new(TrgMainWindow * win,
                                                JsonObject * profile)
 {
     GtkWidget *item = gtk_check_menu_item_new_with_label(text);
+
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), checked);
     g_object_set_data(G_OBJECT(item), "profile", profile);
     gtk_check_menu_item_set_draw_as_radio(GTK_CHECK_MENU_ITEM(item), TRUE);
+
     g_signal_connect(G_OBJECT(item), "activate", G_CALLBACK(connect_cb),
                      win);
+
     gtk_menu_shell_append(shell, item);
 }
 
@@ -471,8 +493,10 @@ GtkWidget *trg_menu_bar_file_connect_menu_new(TrgMainWindow * win,
 }
 
 static
-GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBarPrivate * priv)
+GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBar * menu)
 {
+    TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menu);
+
     GtkWidget *file = gtk_menu_item_new_with_mnemonic(_("_File"));
     GtkWidget *fileMenu = gtk_menu_new();
 
@@ -488,12 +512,17 @@ GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBarPrivate * priv)
     priv->mb_disconnect =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Disconnect"),
                               GTK_STOCK_DISCONNECT, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_disconnect, GDK_d, GDK_CONTROL_MASK);
+
     priv->mb_add =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Add"),
                               GTK_STOCK_ADD, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_add, GDK_a, GDK_CONTROL_MASK);
+
     priv->mb_add_url =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("Add from _URL"),
                               GTK_STOCK_ADD, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_add_url, GDK_u, GDK_CONTROL_MASK);
 
     priv->mb_quit =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Quit"),
@@ -505,38 +534,54 @@ GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBarPrivate * priv)
 }
 
 static
-GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
+GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar *menu)
 {
+    TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menu);
     GtkWidget *torrent = gtk_menu_item_new_with_mnemonic(_("_Torrent"));
     GtkWidget *torrentMenu = gtk_menu_new();
+
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(torrent), torrentMenu);
 
     priv->mb_props =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                               _("Properties"), GTK_STOCK_PROPERTIES,
                               FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_props, GDK_i, GDK_CONTROL_MASK);
+
     priv->mb_resume =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Resume"),
                               GTK_STOCK_MEDIA_PLAY, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_resume, GDK_r, GDK_CONTROL_MASK);
+
     priv->mb_pause =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Pause"),
                               GTK_STOCK_MEDIA_PAUSE, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_pause, GDK_p, GDK_CONTROL_MASK);
+
     priv->mb_verify =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Verify"),
                               GTK_STOCK_REFRESH, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_verify, GDK_v, GDK_CONTROL_MASK);
+
     priv->mb_reannounce =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                               _("Re-_announce"), GTK_STOCK_REFRESH, FALSE);
+
     priv->mb_move =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Move"),
                               GTK_STOCK_HARDDISK, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_move, GDK_m, GDK_CONTROL_MASK);
+
     priv->mb_remove =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("Remove"),
                               GTK_STOCK_REMOVE, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_remove, GDK_Delete, 0);
+
     priv->mb_delete =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                               _("Remove and Delete"), GTK_STOCK_CLEAR,
                               FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_delete, GDK_Delete, GDK_SHIFT_MASK);
 
     priv->mb_queues_seperator = gtk_separator_menu_item_new();
     gtk_menu_shell_append(GTK_MENU_SHELL(torrentMenu),
@@ -550,11 +595,13 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
     priv->mb_up_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                                               _("Move Up Queue"),
                                               GTK_STOCK_GO_UP, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_up_queue, GDK_Up, GDK_SHIFT_MASK);
 
     priv->mb_down_queue =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                               _("Move Down Queue"), GTK_STOCK_GO_DOWN,
                               FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_down_queue, GDK_Down, GDK_SHIFT_MASK);
 
     priv->mb_bottom_queue =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
@@ -572,9 +619,12 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBarPrivate * priv)
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                               _("_Resume All"), GTK_STOCK_MEDIA_PLAY,
                               FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_resume_all, GDK_r, GDK_SHIFT_MASK | GDK_CONTROL_MASK);
+
     priv->mb_pause_all =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Pause All"),
                               GTK_STOCK_MEDIA_PAUSE, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_pause_all, GDK_p, GDK_SHIFT_MASK | GDK_CONTROL_MASK);
 
     return torrent;
 }
@@ -616,22 +666,23 @@ static GObject *trg_menu_bar_constructor(GType type,
 {
     GObject *object;
     TrgMenuBarPrivate *priv;
+    TrgMenuBar *menu;
 
     object = G_OBJECT_CLASS
         (trg_menu_bar_parent_class)->constructor(type,
                                                  n_construct_properties,
                                                  construct_params);
+    menu = TRG_MENU_BAR(object);
     priv = TRG_MENU_BAR_GET_PRIVATE(object);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(object),
-                          trg_menu_bar_file_file_menu_new(priv));
+                          trg_menu_bar_file_file_menu_new(menu));
     gtk_menu_shell_append(GTK_MENU_SHELL(object),
-                          trg_menu_bar_torrent_menu_new(priv));
+                          trg_menu_bar_torrent_menu_new(menu));
     gtk_menu_shell_append(GTK_MENU_SHELL(object),
-                          trg_menu_bar_options_menu_new(priv));
+                          trg_menu_bar_options_menu_new(menu));
     gtk_menu_shell_append(GTK_MENU_SHELL(object),
-                          trg_menu_bar_view_menu_new(TRG_MENU_BAR
-                                                     (object)));
+                          trg_menu_bar_view_menu_new(menu));
     trg_menu_bar_help_menu_new(TRG_MENU_BAR(object));
 
     g_signal_connect(G_OBJECT(priv->prefs), "pref-profile-changed",
@@ -736,6 +787,21 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                                         G_PARAM_STATIC_BLURB));
 
     g_object_class_install_property(object_class,
+                                    PROP_ACCEL_GROUP,
+                                    g_param_spec_object("accel-group",
+                                                        "accel-group",
+                                                        "accel-group",
+                                                        GTK_TYPE_ACCEL_GROUP,
+                                                        G_PARAM_READWRITE |
+                                                        G_PARAM_CONSTRUCT_ONLY
+                                                        |
+                                                        G_PARAM_STATIC_NAME
+                                                        |
+                                                        G_PARAM_STATIC_NICK
+                                                        |
+                                                        G_PARAM_STATIC_BLURB));
+
+    g_object_class_install_property(object_class,
                                     PROP_MAIN_WINDOW,
                                     g_param_spec_object("mainwin",
                                                         "mainwin",
@@ -756,8 +822,8 @@ static void trg_menu_bar_init(TrgMenuBar * self)
 {
 }
 
-TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win, TrgPrefs * prefs)
+TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win, TrgPrefs * prefs, GtkAccelGroup *accel_group)
 {
     return g_object_new(TRG_TYPE_MENU_BAR,
-                        "prefs", prefs, "mainwin", win, NULL);
+                        "prefs", prefs, "mainwin", win, "accel-group", accel_group, NULL);
 }
