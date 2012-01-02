@@ -1745,14 +1745,10 @@ static GtkWidget *limit_item_new(TrgMainWindow * win, GtkWidget * menu,
     GtkWidget *item;
     gboolean active = limit < 0 ? FALSE : (currentLimit == (gint64) limit);
 
-    if (limit >= 1000)
-        g_snprintf(speed, sizeof(speed), "%.2f MB/s", limit / 1024);
-    else
-        g_snprintf(speed, sizeof(speed), "%.0f KB/s", limit);
+    trg_strlspeed(speed, limit);
 
     item = gtk_check_menu_item_new_with_label(speed);
 
-    /* Yeah, I know it's unsafe to cast from a float to an int, but its safe here */
     g_object_set_data(G_OBJECT(item), "limit",
                       GINT_TO_POINTER((gint) limit));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), active);

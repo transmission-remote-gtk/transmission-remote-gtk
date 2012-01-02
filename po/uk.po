@@ -533,12 +533,12 @@ msgid "Bandwidth"
 msgstr "Швидкість"
 
 #: src/trg-remote-prefs-dialog.c:229
-msgid "Limit download speed (KB/s)"
-msgstr "Обмежити швидкість завантаження (KB/s)"
+msgid "Limit download speed (KiB/s)"
+msgstr "Обмежити швидкість завантаження (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:248
-msgid "Limit upload speed (KB/s)"
-msgstr "Обмежити швидкість віддачі (KB/s)"
+msgid "Limit upload speed (KiB/s)"
+msgstr "Обмежити швидкість віддачі (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:268
 msgid "Seed ratio limit"
@@ -642,8 +642,8 @@ msgid "Torrent done script"
 msgstr "Скріпт, який виконується по закінченні завантаження"
 
 #: src/trg-remote-prefs-dialog.c:546
-msgid "Cache size (MB)"
-msgstr "Розмір кеша (MB)"
+msgid "Cache size (MiB)"
+msgstr "Розмір кеша (MiB)"
 
 #: src/trg-remote-prefs-dialog.c:551
 msgid "Rename partial files"
@@ -890,40 +890,33 @@ msgid_plural "%'u bytes"
 msgstr[0] "%'u байт"
 msgstr[1] "%'u байтів"
 
-#: src/util.c:221
-#, c-format
-msgid "%'.1f KB"
-msgstr "%'.1f КБ"
-
 #: src/util.c:224
 #, c-format
-msgid "%'.1f MB"
-msgstr "%'.1f МБ"
+msgid "MiB"
+msgstr "МБ"
 
 #: src/util.c:227
 #, c-format
-msgid "%'.1f GB"
-msgstr "%'.1f ГБ"
+msgid "GiB"
+msgstr "ГБ"
+
+msgid "KiB"
+msgstr "КБ"
 
 #: src/util.c:239
 #, c-format
-msgid "%.1f KB/s"
-msgstr "%.1f КБ/c"
+msgid "KiB/s"
+msgstr "КБ/c"
 
 #: src/util.c:241
 #, c-format
-msgid "%.2f MB/s"
-msgstr "%.2f Мб/с"
-
-#: src/util.c:243
-#, c-format
-msgid "%.1f MB/s"
-msgstr "%.1f МБ/с"
+msgid "MiB/s"
+msgstr "Мб/с"
 
 #: src/util.c:245
 #, c-format
-msgid "%.2f GB/s"
-msgstr "%.2f ГБ/с"
+msgid "GiB/s"
+msgstr "ГБ/с"
 
 #: src/util.c:279
 #, c-format

@@ -524,11 +524,11 @@ msgid "Bandwidth"
 msgstr "Скорость"
 
 #: src/trg-remote-prefs-dialog.c:221
-msgid "Limit download speed (KB/s)"
+msgid "Limit download speed (KiB/s)"
 msgstr "Ограничить скорость загрузки (КБ/с)"
 
 #: src/trg-remote-prefs-dialog.c:240
-msgid "Limit upload speed (KB/s)"
+msgid "Limit upload speed (KiB/s)"
 msgstr "Ограничить скорость отдачи (КБ/с)"
 
 #: src/trg-remote-prefs-dialog.c:260
@@ -638,7 +638,7 @@ msgid "Torrent done script"
 msgstr "Скрипт, запускаемый после завершения торрента"
 
 #: src/trg-remote-prefs-dialog.c:538
-msgid "Cache size (MB)"
+msgid "Cache size (MiB)"
 msgstr "Размер кэша (МБ)"
 
 #: src/trg-remote-prefs-dialog.c:543
@@ -873,38 +873,33 @@ msgstr[2] "%'u байт"
 
 #: src/util.c:173
 #, c-format
-msgid "%'.1f KB"
-msgstr "%'.1f КБ"
-
-#: src/util.c:176
-#, c-format
-msgid "%'.1f MB"
-msgstr "%'.1f МБ"
+msgid "MiB"
+msgstr "МБ"
 
 #: src/util.c:179
 #, c-format
-msgid "%'.1f GB"
-msgstr "%'.1f ГБ"
+msgid "GiB"
+msgstr "ГБ"
 
 #: src/util.c:191
 #, c-format
-msgid "%.1f KB/s"
-msgstr "%.1f КБ/с"
+msgid "KiB/s"
+msgstr "КБ/с"
 
-#: src/util.c:193
+#: src/util.c:191
 #, c-format
-msgid "%.2f MB/s"
-msgstr "%.2f МБ/с"
+msgid "KiB"
+msgstr "КБ"
 
 #: src/util.c:195
 #, c-format
-msgid "%.1f MB/s"
-msgstr "%.1f МБ/с"
+msgid "MiB/s"
+msgstr "МБ/с"
 
 #: src/util.c:197
 #, c-format
-msgid "%.2f GB/s"
-msgstr "%.2f Гб/с"
+msgid "GiB/s"
+msgstr "Гб/с"
 
 #: src/util.c:231
 #, c-format

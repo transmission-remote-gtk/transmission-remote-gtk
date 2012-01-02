@@ -400,7 +400,7 @@ static void trg_torrent_graph_update_net(TrgTorrentGraph * g)
     fp[0] = 1.0f * priv->out / priv->max;
     fp[1] = 1.0f * priv->in / priv->max;
 
-    trg_strlspeed(speed, (gint64) (priv->out / KILOBYTE_FACTOR));
+    trg_strlspeed(speed, (gint64) (priv->out / disk_K));
     labelMarkup =
         g_markup_printf_escaped("<span font_size=\"small\" color=\""
                                 GRAPH_OUT_COLOR "\">%s: %s</span>",

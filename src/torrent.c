@@ -23,6 +23,7 @@
 #include <json-glib/json-glib.h>
 
 #include "trg-client.h"
+#include "json.h"
 #include "torrent.h"
 #include "protocol-constants.h"
 #include "util.h"

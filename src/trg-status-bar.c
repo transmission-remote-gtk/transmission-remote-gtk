@@ -181,8 +181,8 @@ void trg_status_bar_update(TrgStatusBar * sb,
                     session, SGET_SPEED_LIMIT_UP) :
                     -1;
 
-    trg_strlspeed(downRateTotalString, stats->downRateTotal / KILOBYTE_FACTOR);
-    trg_strlspeed(upRateTotalString, stats->upRateTotal / KILOBYTE_FACTOR);
+    trg_strlspeed(downRateTotalString, stats->downRateTotal / disk_K);
+    trg_strlspeed(upRateTotalString, stats->upRateTotal / disk_K);
 
     if (uplimitraw >= 0) {
         gchar uplimitstring[32];

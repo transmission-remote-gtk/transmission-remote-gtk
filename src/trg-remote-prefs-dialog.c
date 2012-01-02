@@ -262,14 +262,14 @@ static GtkWidget *trg_rprefs_bandwidthPage(TrgRemotePrefsDialog * win,
     hig_workarea_add_section_title(t, &row, _("Bandwidth limits"));
 
     tb = trg_json_widget_check_new(&priv->widgets, json,
-            SGET_SPEED_LIMIT_DOWN_ENABLED, _("Down Limit (KB/s)"),
+            SGET_SPEED_LIMIT_DOWN_ENABLED, _("Down Limit (KiB/s)"),
             NULL);
     w = trg_json_widget_spin_new(&priv->widgets, json, SGET_SPEED_LIMIT_DOWN,
             tb, 0, INT_MAX, 5);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     tb = trg_json_widget_check_new(&priv->widgets, json,
-            SGET_SPEED_LIMIT_UP_ENABLED, _("Up Limit (KB/s)"), NULL);
+            SGET_SPEED_LIMIT_UP_ENABLED, _("Up Limit (KiB/s)"), NULL);
     w = trg_json_widget_spin_new(&priv->widgets, json, SGET_SPEED_LIMIT_UP, tb,
             0, INT_MAX, 5);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
@@ -288,11 +288,11 @@ static GtkWidget *trg_rprefs_bandwidthPage(TrgRemotePrefsDialog * win,
 
     w = trg_rprefs_alt_speed_spin_new(&priv->widgets, json, SGET_ALT_SPEED_DOWN,
             priv->alt_check, tb);
-    hig_workarea_add_row(t, &row, _("Alternate down limit (KB/s)"), w, w);
+    hig_workarea_add_row(t, &row, _("Alternate down limit (KiB/s)"), w, w);
 
     w = trg_rprefs_alt_speed_spin_new(&priv->widgets, json, SGET_ALT_SPEED_UP,
             priv->alt_check, tb);
-    hig_workarea_add_row(t, &row, _("Alternate up limit (KB/s)"), w, w);
+    hig_workarea_add_row(t, &row, _("Alternate up limit (KiB/s)"), w, w);
 
     return t;
 }
@@ -542,7 +542,7 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
     if (cache_size_mb >= 0) {
         w = trg_json_widget_spin_new(&priv->widgets, s, SGET_CACHE_SIZE_MB,
                 NULL, 0, INT_MAX, 1);
-        hig_workarea_add_row(t, &row, _("Cache size (MB)"), w, w);
+        hig_workarea_add_row(t, &row, _("Cache size (MiB)"), w, w);
     }
 
     hig_workarea_add_section_title(t, &row, _("Behavior"));

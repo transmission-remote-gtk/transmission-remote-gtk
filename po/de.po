@@ -577,12 +577,12 @@ msgid "Bandwidth"
 msgstr "Bandbreite"
 
 #: src/trg-remote-prefs-dialog.c:229
-msgid "Limit download speed (KB/s)"
-msgstr "Download begrenzen (KB/s)"
+msgid "Limit download speed (KiB/s)"
+msgstr "Download begrenzen (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:248
-msgid "Limit upload speed (KB/s)"
-msgstr "Upload begrenzen (KB/s)"
+msgid "Limit upload speed (KiB/s)"
+msgstr "Upload begrenzen (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:268
 msgid "Seed ratio limit"
@@ -688,8 +688,8 @@ msgid "Torrent done script"
 msgstr "Skript nach Beendigung eines Torrents"
 
 #: src/trg-remote-prefs-dialog.c:546
-msgid "Cache size (MB)"
-msgstr "Cache Größe (MB)"
+msgid "Cache size (MiB)"
+msgstr "Cache Größe (MiB)"
 
 #: src/trg-remote-prefs-dialog.c:551
 msgid "Rename partial files"
@@ -945,38 +945,28 @@ msgstr[1] "%'u bytes"
 
 #: src/util.c:221
 #, c-format
-msgid "%'.1f KB"
-msgstr "%'.1f KB"
-
-#: src/util.c:224
-#, c-format
-msgid "%'.1f MB"
-msgstr "%'.1f MB"
+msgid "MiB"
+msgstr "MiB"
 
 #: src/util.c:227
 #, c-format
-msgid "%'.1f GB"
-msgstr "%'.1f GB"
+msgid "GiB"
+msgstr "GiB"
 
 #: src/util.c:239
 #, c-format
-msgid "%.1f KB/s"
-msgstr "%.1f KB/s"
+msgid "KiB/s"
+msgstr "KiB/s"
 
 #: src/util.c:241
 #, c-format
-msgid "%.2f MB/s"
-msgstr "%.2f MB/s"
-
-#: src/util.c:243
-#, c-format
-msgid "%.1f MB/s"
-msgstr "%.1f MB/s"
+msgid "MiB/s"
+msgstr "MiB/s"
 
 #: src/util.c:245
 #, c-format
-msgid "%.2f GB/s"
-msgstr "%.2f GB/s"
+msgid "GiB/s"
+msgstr "GiB/s"
 
 #: src/util.c:279
 #, c-format

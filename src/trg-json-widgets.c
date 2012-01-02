@@ -21,6 +21,7 @@
 #include <json-glib/json-glib.h>
 
 #include "trg-json-widgets.h"
+#include "json.h"
 #include "util.h"
 
 /* Functions for creating widgets that load/save their state from/to a JSON
