@@ -249,6 +249,8 @@ static gboolean trg_torrent_model_reload_dir_aliases_foreachfunc(
 void trg_torrent_model_reload_dir_aliases(TrgClient * tc, GtkTreeModel * model) {
     gtk_tree_model_foreach(model,
             trg_torrent_model_reload_dir_aliases_foreachfunc, tc);
+    g_signal_emit(model, signals[TMODEL_STATE_CHANGED], 0,
+            TORRENT_UPDATE_PATH_CHANGE);
 }
 
 static gboolean trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
@@ -274,23 +276,25 @@ static gboolean trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel * model,
         stats->error++;
 
     if (flags & TORRENT_FLAG_COMPLETE
-        )
+    )
         stats->complete++;
     else
         stats->incomplete++;
 
     if (flags & TORRENT_FLAG_CHECKING
-        )
+    )
         stats->checking++;
 
     if (flags & TORRENT_FLAG_ACTIVE
-        )
+    )
         stats->active++;
 
-    if (flags & TORRENT_FLAG_SEEDING_WAIT)
+    if (flags & TORRENT_FLAG_SEEDING_WAIT
+        )
         stats->seed_wait++;
 
-    if (flags & TORRENT_FLAG_DOWNLOADING_WAIT)
+    if (flags & TORRENT_FLAG_DOWNLOADING_WAIT
+        )
         stats->down_wait++;
 
     stats->count++;
@@ -720,9 +724,12 @@ trg_torrent_model_update_stats *trg_torrent_model_update(
     }
 
     if (whatsChanged != 0) {
-        trg_torrent_model_stat_counts_clear(&priv->stats);
-        gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-                trg_torrent_model_stats_scan_foreachfunc, &(priv->stats));
+        if ((whatsChanged & TORRENT_UPDATE_ADDREMOVE)
+                || (whatsChanged & TORRENT_UPDATE_STATE_CHANGE)) {
+            trg_torrent_model_stat_counts_clear(&priv->stats);
+            gtk_tree_model_foreach(GTK_TREE_MODEL(model),
+                    trg_torrent_model_stats_scan_foreachfunc, &(priv->stats));
+        }
         g_signal_emit(model, signals[TMODEL_STATE_CHANGED], 0, whatsChanged);
     }
 

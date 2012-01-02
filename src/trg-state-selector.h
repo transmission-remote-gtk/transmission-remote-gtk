@@ -64,7 +64,7 @@ GType trg_state_selector_get_type(void);
 TrgStateSelector *trg_state_selector_new(TrgClient * client, TrgTorrentModel *tmodel);
 
 G_END_DECLS guint32 trg_state_selector_get_flag(TrgStateSelector * s);
-void trg_state_selector_update(TrgStateSelector * s);
+void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged);
 gchar *trg_state_selector_get_selected_text(TrgStateSelector * s);
 GRegex *trg_state_selector_get_url_host_regex(TrgStateSelector * s);
 void trg_state_selector_disconnect(TrgStateSelector * s);

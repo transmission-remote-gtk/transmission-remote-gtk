@@ -195,7 +195,7 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
 
     tb = trg_json_widget_check_new(&priv->widgets, json,
                                    FIELD_DOWNLOAD_LIMITED,
-                                   _("Limit download speed (Kbps)"), NULL);
+                                   _("Limit download speed (KB/s)"), NULL);
     w = trg_json_widget_spin_new(&priv->widgets, json,
                                      FIELD_DOWNLOAD_LIMIT, tb, 0, INT_MAX,
                                      1);
@@ -203,7 +203,7 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
 
     tb = trg_json_widget_check_new(&priv->widgets, json,
                                    FIELD_UPLOAD_LIMITED,
-                                   _("Limit upload speed (Kbps)"), NULL);
+                                   _("Limit upload speed (KB/s)"), NULL);
     w = trg_json_widget_spin_new(&priv->widgets, json,
                                      FIELD_UPLOAD_LIMIT, tb, 0, INT_MAX,
                                      1);
