@@ -39,6 +39,8 @@
 #define TRG_PREFS_KEY_PASSWORD      "password"
 #define TRG_PREFS_KEY_AUTO_CONNECT  "auto-connect"
 #define TRG_PREFS_KEY_SSL            "ssl"
+#define TRG_PREFS_KEY_TIMEOUT            "timeout"
+#define TRG_PREFS_KEY_RETRIES            "retries"
 #define TRG_PREFS_KEY_UPDATE_INTERVAL "update-interval"
 #define TRG_PREFS_KEY_COMPLETE_NOTIFY "complete-notify"
 #define TRG_PREFS_KEY_ADD_NOTIFY    "add-notify"

@@ -371,87 +371,62 @@ static void notebook_toggled_cb(GtkToggleButton * b, gpointer data)
                                          gtk_toggle_button_get_active(b));
 }
 
+static void trgp_double_special_dependent(GtkWidget * widget,
+                                          gpointer data)
+{
+    TrgPreferencesDialogPrivate *priv =
+        TRG_PREFERENCES_DIALOG_GET_PRIVATE(gtk_widget_get_toplevel
+                                           (widget));
+    gtk_widget_set_sensitive(GTK_WIDGET(data),
+                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+                                                          (widget))
+                             &&
+                             gtk_widget_get_sensitive
+                             (priv->fullUpdateCheck)
+                             &&
+                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+                                                          (priv->fullUpdateCheck)));
+}
+
 static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
 
-    GtkWidget *tray, *w, *dep, *t;
+    GtkWidget *w, *activeOnly, *t;
     gint row = 0;
 
     t = hig_workarea_create();
 
-    hig_workarea_add_section_title(t, &row, _("View"));
+    hig_workarea_add_section_title(t, &row, _("Updates"));
 
-    dep = w = trgp_check_new(dlg, _("State selector"),
-                             TRG_PREFS_KEY_SHOW_STATE_SELECTOR,
-                             TRG_PREFS_GLOBAL, NULL);
-    g_signal_connect(G_OBJECT(w), "toggled",
-                     G_CALLBACK(view_states_toggled_cb), priv->win);
+    activeOnly = w = trgp_check_new(dlg, _("Update active torrents only"),
+                                    TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY,
+                                    TRG_PREFS_PROFILE, NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
-    w = trgp_check_new(dlg, _("Directory filters"),
-                       TRG_PREFS_KEY_FILTER_DIRS, TRG_PREFS_GLOBAL,
-                       GTK_TOGGLE_BUTTON(dep));
-    g_signal_connect(G_OBJECT(w), "toggled",
-                     G_CALLBACK(menu_bar_toggle_filter_dirs), priv->win);
-    hig_workarea_add_wide_control(t, &row, w);
+    priv->fullUpdateCheck = trgp_check_new(dlg,
+                                           _
+                                           ("Full update every (?) updates"),
+                                           TRG_PREFS_ACTIVEONLY_FULLSYNC_ENABLED,
+                                           TRG_PREFS_PROFILE,
+                                           GTK_TOGGLE_BUTTON(activeOnly));
+    w = trgp_spin_new(dlg, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2, INT_MAX,
+                      1, TRG_PREFS_PROFILE,
+                      GTK_TOGGLE_BUTTON(priv->fullUpdateCheck));
+    g_signal_connect(activeOnly, "toggled",
+                     G_CALLBACK(trgp_double_special_dependent), w);
 
-    w = trgp_check_new(dlg, _("Tracker filters"),
-                       TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL,
-                       GTK_TOGGLE_BUTTON(dep));
-    g_signal_connect(G_OBJECT(w), "toggled",
-                     G_CALLBACK(toggle_filter_trackers), priv->win);
-    hig_workarea_add_wide_control(t, &row, w);
+    hig_workarea_add_row_w(t, &row, priv->fullUpdateCheck, w, NULL);
 
-    w = trgp_check_new(dlg, _("Torrent Details"),
-                       TRG_PREFS_KEY_SHOW_NOTEBOOK, TRG_PREFS_GLOBAL,
-                       NULL);
-    g_signal_connect(G_OBJECT(w), "toggled",
-                     G_CALLBACK(notebook_toggled_cb), priv->win);
-    hig_workarea_add_wide_control(t, &row, w);
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_UPDATE_INTERVAL, 1, INT_MAX, 1,
+                      TRG_PREFS_PROFILE, NULL);
+    hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
 
-#ifndef TRG_NO_GRAPH
-    w = trgp_check_new(dlg, _("Show graph"), TRG_PREFS_KEY_SHOW_GRAPH,
-                       TRG_PREFS_GLOBAL, GTK_TOGGLE_BUTTON(w));
-    g_signal_connect(G_OBJECT(w), "toggled", G_CALLBACK(toggle_graph),
-                     priv->win);
-    hig_workarea_add_wide_control(t, &row, w);
-#endif
-
-    hig_workarea_add_section_title(t, &row, _("System Tray"));
-
-    tray = trgp_check_new(dlg, _("Show in system tray"),
-                          TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL,
-                          NULL);
-    g_signal_connect(G_OBJECT(tray), "toggled",
-                     G_CALLBACK(toggle_tray_icon), priv->win);
-    hig_workarea_add_wide_control(t, &row, tray);
-
-#ifndef HAVE_LIBAPPINDICATOR
-    w = trgp_check_new(dlg, _("Minimise to system tray"),
-                       TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
-                       TRG_PREFS_GLOBAL, NULL);
-    gtk_widget_set_sensitive(w,
-                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (tray)));
-    g_signal_connect(G_OBJECT(tray), "toggled",
-                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
-    hig_workarea_add_wide_control(t, &row, w);
-#endif
-
-#ifdef HAVE_LIBNOTIFY
-    hig_workarea_add_section_title(t, &row, _("Notifications"));
-
-    w = trgp_check_new(dlg, _("Torrent added notifications"),
-                       TRG_PREFS_KEY_ADD_NOTIFY, TRG_PREFS_GLOBAL, NULL);
-    hig_workarea_add_wide_control(t, &row, w);
-
-    w = trgp_check_new(dlg, _("Torrent complete notifications"),
-                       TRG_PREFS_KEY_COMPLETE_NOTIFY, TRG_PREFS_GLOBAL,
-                       NULL);
-    hig_workarea_add_wide_control(t, &row, w);
-#endif
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, INT_MAX, 1,
+                      TRG_PREFS_PROFILE, NULL);
+    hig_workarea_add_row(t, &row, _("Minimised update interval:"), w,
+                         NULL);
 
     hig_workarea_add_section_title(t, &row, _("Torrents"));
 
@@ -605,23 +580,6 @@ static void add_profile_cb(GtkWidget * w, gpointer data)
     gtk_combo_box_set_active_iter(combo, &iter);
 }
 
-static void trgp_double_special_dependent(GtkWidget * widget,
-                                          gpointer data)
-{
-    TrgPreferencesDialogPrivate *priv =
-        TRG_PREFERENCES_DIALOG_GET_PRIVATE(gtk_widget_get_toplevel
-                                           (widget));
-    gtk_widget_set_sensitive(GTK_WIDGET(data),
-                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (widget))
-                             &&
-                             gtk_widget_get_sensitive
-                             (priv->fullUpdateCheck)
-                             &&
-                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (priv->fullUpdateCheck)));
-}
-
 static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
 {
     TrgPreferencesDialogPrivate *priv =
@@ -697,13 +655,98 @@ static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog * dlg)
     return t;
 }
 
+static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
+{
+    TrgPreferencesDialogPrivate *priv =
+        TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
+
+    GtkWidget *w, *dep, *t, *tray;
+    gint row = 0;
+
+    t = hig_workarea_create();
+
+    hig_workarea_add_section_title(t, &row, _("View"));
+
+    dep = w = trgp_check_new(dlg, _("State selector"),
+                             TRG_PREFS_KEY_SHOW_STATE_SELECTOR,
+                             TRG_PREFS_GLOBAL, NULL);
+    g_signal_connect(G_OBJECT(w), "toggled",
+                     G_CALLBACK(view_states_toggled_cb), priv->win);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = trgp_check_new(dlg, _("Directory filters"),
+                       TRG_PREFS_KEY_FILTER_DIRS, TRG_PREFS_GLOBAL,
+                       GTK_TOGGLE_BUTTON(dep));
+    g_signal_connect(G_OBJECT(w), "toggled",
+                     G_CALLBACK(menu_bar_toggle_filter_dirs), priv->win);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = trgp_check_new(dlg, _("Tracker filters"),
+                       TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL,
+                       GTK_TOGGLE_BUTTON(dep));
+    g_signal_connect(G_OBJECT(w), "toggled",
+                     G_CALLBACK(toggle_filter_trackers), priv->win);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = trgp_check_new(dlg, _("Torrent Details"),
+                       TRG_PREFS_KEY_SHOW_NOTEBOOK, TRG_PREFS_GLOBAL,
+                       NULL);
+    g_signal_connect(G_OBJECT(w), "toggled",
+                     G_CALLBACK(notebook_toggled_cb), priv->win);
+    hig_workarea_add_wide_control(t, &row, w);
+
+#ifndef TRG_NO_GRAPH
+    w = trgp_check_new(dlg, _("Show graph"), TRG_PREFS_KEY_SHOW_GRAPH,
+                       TRG_PREFS_GLOBAL, GTK_TOGGLE_BUTTON(w));
+    g_signal_connect(G_OBJECT(w), "toggled", G_CALLBACK(toggle_graph),
+                     priv->win);
+    hig_workarea_add_wide_control(t, &row, w);
+#endif
+
+    hig_workarea_add_section_title(t, &row, _("System Tray"));
+
+    tray = trgp_check_new(dlg, _("Show in system tray"),
+                          TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL,
+                          NULL);
+    g_signal_connect(G_OBJECT(tray), "toggled",
+                     G_CALLBACK(toggle_tray_icon), priv->win);
+    hig_workarea_add_wide_control(t, &row, tray);
+
+#ifndef HAVE_LIBAPPINDICATOR
+    w = trgp_check_new(dlg, _("Minimise to system tray"),
+                       TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
+                       TRG_PREFS_GLOBAL, NULL);
+    gtk_widget_set_sensitive(w,
+                             gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
+                                                          (tray)));
+    g_signal_connect(G_OBJECT(tray), "toggled",
+                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    hig_workarea_add_wide_control(t, &row, w);
+#endif
+
+#ifdef HAVE_LIBNOTIFY
+    hig_workarea_add_section_title(t, &row, _("Notifications"));
+
+    w = trgp_check_new(dlg, _("Torrent added notifications"),
+                       TRG_PREFS_KEY_ADD_NOTIFY, TRG_PREFS_GLOBAL, NULL);
+    hig_workarea_add_wide_control(t, &row, w);
+
+    w = trgp_check_new(dlg, _("Torrent complete notifications"),
+                       TRG_PREFS_KEY_COMPLETE_NOTIFY, TRG_PREFS_GLOBAL,
+                       NULL);
+    hig_workarea_add_wide_control(t, &row, w);
+#endif
+
+    return t;
+}
+
 static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
     TrgPrefs *prefs = priv->prefs;
 
-    GtkWidget *w, *t, *frame, *frameHbox, *profileLabel, *activeOnly;
+    GtkWidget *w, *t, *frame, *frameHbox, *profileLabel;
     GtkWidget *profileButtonsHbox;
     gint row = 0;
 
@@ -776,37 +819,15 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_wide_control(t, &row, w);
 #endif
 
-    hig_workarea_add_section_title(t, &row, _("Updates"));
-
-    activeOnly = w = trgp_check_new(dlg, _("Update active torrents only"),
-                                    TRG_PREFS_KEY_UPDATE_ACTIVE_ONLY,
-                                    TRG_PREFS_PROFILE, NULL);
-    hig_workarea_add_wide_control(t, &row, w);
-
-    priv->fullUpdateCheck = trgp_check_new(dlg,
-                                           _
-                                           ("Full update every (?) updates"),
-                                           TRG_PREFS_ACTIVEONLY_FULLSYNC_ENABLED,
-                                           TRG_PREFS_PROFILE,
-                                           GTK_TOGGLE_BUTTON(activeOnly));
-    w = trgp_spin_new(dlg, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2, INT_MAX,
-                      1, TRG_PREFS_PROFILE,
-                      GTK_TOGGLE_BUTTON(priv->fullUpdateCheck));
-    g_signal_connect(activeOnly, "toggled",
-                     G_CALLBACK(trgp_double_special_dependent), w);
-
-    hig_workarea_add_row_w(t, &row, priv->fullUpdateCheck, w, NULL);
-
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_UPDATE_INTERVAL, 1, INT_MAX, 1,
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_TIMEOUT, 1, 3600, 1,
                       TRG_PREFS_PROFILE, NULL);
-    hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
+    hig_workarea_add_row(t, &row, _("Timeout:"), w, NULL);
 
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, INT_MAX, 1,
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_RETRIES, 0, 3600, 1,
                       TRG_PREFS_PROFILE, NULL);
-    hig_workarea_add_row(t, &row, _("Minimised update interval:"), w,
-                         NULL);
+    hig_workarea_add_row(t, &row, _("Retries:"), w, NULL);
 
-    hig_workarea_add_section_divider(t, &row);
+    //hig_workarea_add_section_divider(t, &row);
 
     frame = gtk_frame_new(NULL);
     frameHbox = gtk_hbox_new(FALSE, 2);
@@ -864,6 +885,11 @@ static GObject *trg_preferences_dialog_constructor(GType type,
                              trg_prefs_generalPage(TRG_PREFERENCES_DIALOG
                                                    (object)),
                              gtk_label_new(_("General")));
+
+    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+                             trg_prefs_viewPage(TRG_PREFERENCES_DIALOG
+                                                  (object)),
+                             gtk_label_new(_("View")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_openExecPage(TRG_PREFERENCES_DIALOG

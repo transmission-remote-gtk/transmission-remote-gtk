@@ -1026,13 +1026,14 @@ static gboolean on_torrent_get(gpointer data, int mode) {
         interval = TRG_INTERVAL_DEFAULT;
 
     if (response->status != CURLE_OK) {
-        if (trg_client_inc_failcount(client) >= TRG_MAX_RETRIES) {
+        gint64 max_retries = trg_prefs_get_int(prefs, TRG_PREFS_KEY_RETRIES, TRG_PREFS_CONNECTION);
+        if (trg_client_inc_failcount(client) >= max_retries) {
             trg_main_window_conn_changed(win, FALSE);
             trg_dialog_error_handler(win, response);
         } else {
             gchar *msg = make_error_message(response->obj, response->status);
             gchar *statusBarMsg = g_strdup_printf(_("Request %d/%d failed: %s"),
-                    trg_client_get_failcount(client), TRG_MAX_RETRIES, msg);
+                    trg_client_get_failcount(client), max_retries, msg);
             trg_status_bar_push_connection_msg(priv->statusBar, statusBarMsg);
             g_free(msg);
             g_free(statusBarMsg);

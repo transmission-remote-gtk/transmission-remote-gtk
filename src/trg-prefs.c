@@ -108,6 +108,8 @@ static void trg_prefs_create_defaults(TrgPrefs * p)
                               TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_STATES_PANED_POS, 120);
+    trg_prefs_add_default_int(p, TRG_PREFS_KEY_TIMEOUT, 40);
+    trg_prefs_add_default_int(p, TRG_PREFS_KEY_RETRIES, 3);
 
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_DIRS);
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_TRACKERS);
