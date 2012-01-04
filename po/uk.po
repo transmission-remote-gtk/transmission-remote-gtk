@@ -1,173 +1,204 @@
-# SOME DESCRIPTIVE TITLE.
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
-#, fuzzy
+# Yuri Chornoivan <yurchor@ukr.net>, 2012.
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-05-11 10:17+0100\n"
-"PO-Revision-Date: 2011-05-14 00:46+2\n"
-"Last-Translator: Alexander Berezovsky <ROR191505@GMAIL.COM>\n"
-"Language: UK \n"
+"POT-Creation-Date: 2012-01-04 11:06+0000\n"
+"PO-Revision-Date: 2012-01-04 21:22+0000\n"
+"Last-Translator: ajf <Unknown>\n"
+"Language-Team: Ukrainian <kde-i18n-uk@kde.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2012-01-04 21:24+0000\n"
+"X-Generator: Launchpad (build 14616)\n"
+"Language: UK\n"
 
-#: src/trg-about-window.c:68
-msgid "A remote client to transmission-daemon."
-msgstr "Клієнт для transmission-daemon."
-
-#: src/trg-cell-renderer-wanted.c:67
-msgid "Yes"
-msgstr "Так"
-
-#: src/trg-cell-renderer-wanted.c:69
-msgid "No"
-msgstr "Ні"
-
-#: src/torrent.c:209 src/trg-state-selector.c:430
+#: src/torrent.c:321 src/torrent.c:341 src/trg-state-selector.c:584
 msgid "Downloading"
 msgstr "Завантажуються"
 
-#: src/torrent.c:211 src/trg-state-selector.c:433
-msgid "Paused"
-msgstr "Призупинені"
+#: src/torrent.c:323
+msgid "Queued download"
+msgstr "Заплановане завантаження"
 
-#: src/torrent.c:213 src/trg-remote-prefs-dialog.c:265
-#: src/trg-state-selector.c:441 src/trg-torrent-props-dialog.c:218
-msgid "Seeding"
-msgstr "Роздаються"
-
-#: src/torrent.c:215 src/trg-state-selector.c:435
-msgid "Checking"
-msgstr "Перевіряються"
-
-#: src/torrent.c:217
+#: src/torrent.c:325 src/torrent.c:349
 msgid "Waiting To Check"
 msgstr "Очвкує перевірки"
 
-#: src/torrent.c:219
+#: src/torrent.c:327 src/torrent.c:347 src/trg-state-selector.c:603
+msgid "Checking"
+msgstr "Перевіряються"
+
+#: src/torrent.c:329
+msgid "Queued seed"
+msgstr "Заплановане поширення"
+
+#: src/torrent.c:331 src/torrent.c:345 src/trg-remote-prefs-dialog.c:308
+#: src/trg-state-selector.c:589 src/trg-torrent-props-dialog.c:212
+msgid "Seeding"
+msgstr "Роздаються"
+
+#: src/torrent.c:333 src/torrent.c:343 src/trg-state-selector.c:594
+msgid "Paused"
+msgstr "Призупинені"
+
+#: src/torrent.c:354
 msgid "Unknown"
 msgstr "Невідомий"
 
-#: src/trg-files-tree-view.c:208
-msgid "High Priority"
-msgstr "Високий пріорітет"
+#: src/trg-about-window.c:77
+msgid "A remote client to transmission-daemon."
+msgstr "Клієнт для transmission-daemon."
 
-#: src/trg-files-tree-view.c:212
-msgid "Normal Priority"
-msgstr "Нормальний пріорітет"
+#: src/trg-cell-renderer-priority.c:74 src/trg-torrent-add-dialog.c:401
+#: src/trg-torrent-props-dialog.c:182
+msgid "Low"
+msgstr "Низький"
 
-#: src/trg-files-tree-view.c:217
-msgid "Low Priority"
-msgstr "Низький пріоритет"
+#: src/trg-cell-renderer-priority.c:76 src/trg-torrent-add-dialog.c:402
+#: src/trg-torrent-props-dialog.c:182
+msgid "High"
+msgstr "Високий"
 
-#: src/trg-files-tree-view.c:228 src/trg-torrent-add-dialog.c:528
-msgid "Download"
-msgstr "Завантажити"
+#: src/trg-cell-renderer-priority.c:78 src/trg-torrent-add-dialog.c:401
+#: src/trg-torrent-props-dialog.c:182
+msgid "Normal"
+msgstr "Звичайний"
 
-#: src/trg-files-tree-view.c:237
-msgid "Skip"
-msgstr "Пропустити"
+#: src/trg-cell-renderer-priority.c:80
+msgid "Mixed"
+msgstr "Все разом"
 
-#: src/trg-files-tree-view.c:290 src/trg-general-panel.c:251
-#: src/trg-torrent-tree-view.c:43 src/trg-torrent-add-dialog.c:498
+#: src/trg-files-tree-view.c:163 src/trg-general-panel.c:256
+#: src/trg-torrent-add-dialog.c:306 src/trg-torrent-tree-view.c:44
 msgid "Name"
 msgstr "Ім’я"
 
-#: src/trg-files-tree-view.c:295 src/trg-general-panel.c:254
-#: src/trg-torrent-tree-view.c:49 src/trg-torrent-add-dialog.c:515
+#: src/trg-files-tree-view.c:166 src/trg-general-panel.c:259
+#: src/trg-torrent-add-dialog.c:324 src/trg-torrent-tree-view.c:49
 msgid "Size"
 msgstr "Розмір"
 
-#: src/trg-files-tree-view.c:297 src/trg-peers-tree-view.c:65
+#: src/trg-files-tree-view.c:169 src/trg-peers-tree-view.c:66
 msgid "Progress"
 msgstr "Прогрес"
 
-#: src/trg-files-tree-view.c:299
-msgid "Wanted"
-msgstr "Завантажувати"
+#: src/trg-files-tree-view.c:171 src/trg-files-tree-view-common.c:65
+#: src/trg-torrent-add-dialog.c:336
+msgid "Download"
+msgstr "Завантажити"
 
-#: src/trg-files-tree-view.c:301 src/trg-torrent-tree-view.c:84
-#: src/trg-torrent-add-dialog.c:545
+#: src/trg-files-tree-view.c:173 src/trg-torrent-add-dialog.c:350
+#: src/trg-torrent-tree-view.c:124
 msgid "Priority"
 msgstr "Пріорітет"
 
-#: src/trg-general-panel.c:140 src/trg-general-panel.c:181
+#: src/trg-files-tree-view-common.c:47
+msgid "High Priority"
+msgstr "Високий пріорітет"
+
+#: src/trg-files-tree-view-common.c:51
+msgid "Normal Priority"
+msgstr "Нормальний пріорітет"
+
+#: src/trg-files-tree-view-common.c:55
+msgid "Low Priority"
+msgstr "Низький пріоритет"
+
+#: src/trg-files-tree-view-common.c:73
+msgid "Skip"
+msgstr "Пропустити"
+
+#: src/trg-files-tree-view-common.c:79
+msgid "Expand All"
+msgstr "Розкрити всі"
+
+#: src/trg-files-tree-view-common.c:83
+msgid "Collapse All"
+msgstr "Згорнути всі"
+
+#: src/trg-general-panel.c:147 src/trg-general-panel.c:192
 msgid "N/A"
 msgstr "Н/Д"
 
-#: src/trg-general-panel.c:169 src/trg-main-window.c:874
-#: src/trg-main-window.c:1115 src/trg-state-selector.c:443 src/util.c:84
+#: src/trg-general-panel.c:152
+msgid "(Private)"
+msgstr "(Приватний)"
+
+#: src/trg-general-panel.c:152
+msgid "(Public)"
+msgstr "(Відкритий)"
+
+#: src/trg-general-panel.c:180 src/trg-main-window.c:911
+#: src/trg-main-window.c:1234 src/trg-main-window.c:1713
+#: src/trg-state-selector.c:477 src/trg-torrent-add-url-dialog.c:67
+#: src/util.c:322
 msgid "Error"
 msgstr "З помилками"
 
-#: src/trg-general-panel.c:256 src/trg-torrent-tree-view.c:66
+#: src/trg-general-panel.c:261 src/trg-torrent-tree-view.c:102
 msgid "ETA"
 msgstr "Залишилось"
 
-#: src/trg-general-panel.c:258 src/trg-torrent-tree-view.c:86
+#: src/trg-general-panel.c:263 src/trg-torrent-tree-view.c:130
 msgid "Completed"
 msgstr "Завершено"
 
-#: src/trg-general-panel.c:261
+#: src/trg-general-panel.c:266
 msgid "Seeders"
 msgstr "Сідери"
 
-#: src/trg-general-panel.c:263
+#: src/trg-general-panel.c:268
 msgid "Rate Down"
 msgstr "Заватаження"
 
-#: src/trg-general-panel.c:265 src/trg-torrent-tree-view.c:71
+#: src/trg-general-panel.c:270 src/trg-torrent-tree-view.c:107
 msgid "Downloaded"
 msgstr "Завантажено"
 
-#: src/trg-general-panel.c:268 src/trg-torrent-tree-view.c:57
+#: src/trg-general-panel.c:273 src/trg-torrent-tree-view.c:60
 msgid "Leechers"
 msgstr "Лічери"
 
-#: src/trg-general-panel.c:270
+#: src/trg-general-panel.c:275
 msgid "Rate Up"
 msgstr "Віддача"
 
-#: src/trg-general-panel.c:272 src/trg-torrent-tree-view.c:68
+#: src/trg-general-panel.c:277 src/trg-torrent-tree-view.c:104
 msgid "Uploaded"
 msgstr "Віддано"
 
-#: src/trg-general-panel.c:275 src/trg-torrent-tree-view.c:53
+#: src/trg-general-panel.c:280 src/trg-torrent-tree-view.c:53
 msgid "Status"
 msgstr "Статус"
 
-#: src/trg-general-panel.c:277 src/trg-torrent-tree-view.c:74
+#: src/trg-general-panel.c:282 src/trg-torrent-tree-view.c:110
 msgid "Ratio"
 msgstr "Коефіцієнт"
 
-#: src/trg-general-panel.c:280 src/trg-torrent-tree-view.c:78
+#: src/trg-general-panel.c:285 src/trg-torrent-tree-view.c:118
 msgid "Location"
 msgstr "Місцезнаходження"
 
-#: src/trg-main-window.c:325
+#: src/trg-main-window.c:333
 msgid "This torrent has completed."
 msgstr "Цей торент завантажений."
 
-#: src/trg-main-window.c:340
+#: src/trg-main-window.c:343
 msgid "This torrent has been added."
 msgstr "Цей торент був доданий."
 
-#: src/trg-main-window.c:505
-msgid ""
-"Unable to retrieve connection settings from GConf. Schema not installed?"
-msgstr "Неможливо отрмимати налаштування з’єднання з GConf. Чи встановлено файл schema?"
-
-#: src/trg-main-window.c:508
+#: src/trg-main-window.c:513
 msgid "No hostname set"
 msgstr "Не задано ім’я сервера"
 
-#: src/trg-main-window.c:511
+#: src/trg-main-window.c:516
 msgid "Unknown error getting settings"
 msgstr "Невідома помилка при читанні налаштувань"
 
@@ -175,601 +206,854 @@ msgstr "Невідома помилка при читанні налаштува
 msgid "Connecting..."
 msgstr "З’єднання..."
 
-#: src/trg-main-window.c:700
+#: src/trg-main-window.c:748
 #, c-format
 msgid "<big><b>Remove torrent \"%s\"?</b></big>"
 msgstr "<big><b>Видалити торент \"%s\"?</b></big>"
 
-#: src/trg-main-window.c:701
+#: src/trg-main-window.c:749
 #, c-format
 msgid "<big><b>Remove %d torrents?</b></big>"
 msgstr "<big><b>Видалити %d торентів?</b></big>"
 
-#: src/trg-main-window.c:725
+#: src/trg-main-window.c:771
 #, c-format
 msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
 msgstr "<big><b>Видалити торрнт \"%s\" і файли?</b></big>"
 
-#: src/trg-main-window.c:726
+#: src/trg-main-window.c:772
 #, c-format
-msgid "<big><b>Видалити %d торентів з диску?</b></big>"
-msgstr "Видалити %d торентів з диску"
+msgid "<big><b>Remove and delete %d torrents?</b></big>"
+msgstr "<big><b>Вилучити %d торентів і файли цих торентів?</b></big>"
 
-#: src/trg-main-window.c:795 src/trg-remote-prefs-dialog.c:620
+#: src/trg-main-window.c:832 src/trg-preferences-dialog.c:887
+#: src/trg-remote-prefs-dialog.c:600
 msgid "General"
 msgstr "Головні"
 
-#: src/trg-main-window.c:803
+#: src/trg-main-window.c:839
 msgid "Trackers"
 msgstr "Трекери"
 
-#: src/trg-main-window.c:811
+#: src/trg-main-window.c:846
 msgid "Files"
 msgstr "Файли"
 
-#: src/trg-main-window.c:818 src/trg-remote-prefs-dialog.c:285
-#: src/trg-torrent-props-dialog.c:241
+#: src/trg-main-window.c:852 src/trg-remote-prefs-dialog.c:339
+#: src/trg-torrent-props-dialog.c:230 src/trg-trackers-tree-view.c:189
 msgid "Peers"
 msgstr "Піри"
 
-#: src/trg-main-window.c:867
+#: src/trg-main-window.c:906
 #, c-format
 msgid "This application supports Transmission %.2f and later, you have %.2f."
-msgstr "Ця програма підтримує Transmission %.2f та більш пізньої версії, у вас встановлено %.2f версію."
+msgstr ""
+"Ця програма підтримує Transmission %.2f та більш пізньої версії, у вас "
+"встановлено %.2f версію."
 
-#: src/trg-main-window.c:930
+#: src/trg-main-window.c:949 src/trg-torrent-tree-view.c:70
+msgid "Connected"
+msgstr "З’єднано"
+
+#: src/trg-main-window.c:949 src/trg-status-bar.c:70 src/trg-status-bar.c:96
+msgid "Disconnected"
+msgstr "Роз’єднано"
+
+#: src/trg-main-window.c:978
+#, c-format
+msgid "Downloading  %d"
+msgstr "Завантаження %d"
+
+#: src/trg-main-window.c:980
+#, c-format
+msgid "Seeding  %d"
+msgstr "Поширення %d"
+
+#: src/trg-main-window.c:1035
 #, c-format
 msgid "Request %d/%d failed: %s"
 msgstr "Запит %d/%d зазнав невдачі: %s"
 
-#: src/trg-main-window.c:1488
+#: src/trg-main-window.c:1640
 msgid "No Limit"
 msgstr "Без обмежень"
 
-#: src/trg-main-window.c:1532 src/trg-menu-bar.c:302 src/trg-toolbar.c:238
+#: src/trg-main-window.c:1732 src/trg-menu-bar.c:547 src/trg-toolbar.c:238
 msgid "Properties"
 msgstr "Властивості"
 
-#: src/trg-main-window.c:1535 src/trg-toolbar.c:231
+#: src/trg-main-window.c:1734 src/trg-toolbar.c:231
 msgid "Resume"
 msgstr "Відновити"
 
-#: src/trg-main-window.c:1538 src/trg-toolbar.c:234
+#: src/trg-main-window.c:1736 src/trg-toolbar.c:234
 msgid "Pause"
 msgstr "Призупинити"
 
-#: src/trg-main-window.c:1541
+#: src/trg-main-window.c:1738
 msgid "Verify"
 msgstr "Перевірити"
 
-#: src/trg-main-window.c:1544
+#: src/trg-main-window.c:1740
 msgid "Re-announce"
 msgstr "Отримати список пірів"
 
-#: src/trg-main-window.c:1547 src/trg-torrent-move-dialog.c:116
-#: src/trg-torrent-move-dialog.c:123
+#: src/trg-main-window.c:1742 src/trg-torrent-move-dialog.c:121
+#: src/trg-torrent-move-dialog.c:128
 msgid "Move"
 msgstr "Перемістити"
 
-#: src/trg-main-window.c:1550 src/trg-menu-bar.c:320 src/trg-toolbar.c:242
+#: src/trg-main-window.c:1744 src/trg-menu-bar.c:576 src/trg-toolbar.c:242
 msgid "Remove"
 msgstr "Видалити"
 
-#: src/trg-main-window.c:1553
+#: src/trg-main-window.c:1746
 msgid "Remove & Delete"
 msgstr "Видалити торент і файли"
 
-#: src/trg-main-window.c:1559 src/trg-main-window.c:1604
+#: src/trg-main-window.c:1768 src/trg-preferences-dialog.c:897
+msgid "Actions"
+msgstr "Дії"
+
+#: src/trg-main-window.c:1793 src/trg-menu-bar.c:591
+msgid "Start Now"
+msgstr "Розпочати"
+
+#: src/trg-main-window.c:1795 src/trg-menu-bar.c:596
+msgid "Move Up Queue"
+msgstr "Пересунути вище у черзі"
+
+#: src/trg-main-window.c:1797 src/trg-menu-bar.c:602
+msgid "Move Down Queue"
+msgstr "Пересунути нижче у черзі"
+
+#: src/trg-main-window.c:1799 src/trg-menu-bar.c:608
+msgid "Bottom Of Queue"
+msgstr "Поставити в кінець черги"
+
+#: src/trg-main-window.c:1801 src/trg-menu-bar.c:612
+msgid "Top Of Queue"
+msgstr "Поставити на початок черги"
+
+#: src/trg-main-window.c:1809 src/trg-main-window.c:1883
 msgid "Down Limit"
 msgstr "Обмеження швидкості завантаження"
 
-#: src/trg-main-window.c:1564 src/trg-main-window.c:1609
+#: src/trg-main-window.c:1813 src/trg-main-window.c:1888
 msgid "Up Limit"
 msgstr "Обмеження швидкості віддачі"
 
-#: src/trg-main-window.c:1586 src/trg-toolbar.c:215
+#: src/trg-main-window.c:1838 src/trg-main-window.c:1843
+#: src/trg-remote-prefs-dialog.c:427
+msgid "Updating..."
+msgstr "Оновлення..."
+
+#: src/trg-main-window.c:1857 src/trg-menu-bar.c:507 src/trg-toolbar.c:208
 msgid "Connect"
 msgstr "З’єднатися"
 
-#: src/trg-main-window.c:1590 src/trg-toolbar.c:218
+#: src/trg-main-window.c:1863 src/trg-toolbar.c:218
 msgid "Disconnect"
 msgstr "Відєднатися"
 
-#: src/trg-main-window.c:1594 src/trg-toolbar.c:221
-#: src/trg-trackers-tree-view.c:257 src/trg-trackers-tree-view.c:284
+#: src/trg-main-window.c:1867 src/trg-toolbar.c:221
+#: src/trg-trackers-tree-view.c:284 src/trg-trackers-tree-view.c:311
 msgid "Add"
 msgstr "Додати"
 
-#: src/trg-main-window.c:1598
+#: src/trg-main-window.c:1870
 msgid "Add from URL"
 msgstr "Додати з URL"
 
-#: src/trg-main-window.c:1613
+#: src/trg-main-window.c:1873
 msgid "Resume All"
 msgstr "Відновити все"
 
-#: src/trg-main-window.c:1617
+#: src/trg-main-window.c:1877
 msgid "Pause All"
 msgstr "Призупинити все"
 
-#: src/trg-main-window.c:1624
+#: src/trg-main-window.c:1893
 msgid "Quit"
 msgstr "Вихід"
 
-#: src/trg-main-window.c:1738
+#: src/trg-main-window.c:1977 src/trg-menu-bar.c:412
 msgid "Graph"
 msgstr "Графік"
 
-#: src/trg-menu-bar.c:220
+#: src/trg-main-window.c:2131
+msgid "Transmission Remote"
+msgstr "Віддалене керування Transmission"
+
+#: src/trg-menu-bar.c:378
 msgid "_View"
 msgstr "_Вид"
 
-#: src/trg-menu-bar.c:225
+#: src/trg-menu-bar.c:385 src/trg-preferences-dialog.c:670
 msgid "State selector"
 msgstr "Вибір стану"
 
-#: src/trg-menu-bar.c:230
-msgid "Torrent _details"
-msgstr "_Деталі торенту"
-
-#: src/trg-menu-bar.c:235
-msgid "_Statistics"
-msgstr "_Статистика"
-
-#: src/trg-menu-bar.c:249
-msgid "_Options"
-msgstr "_Опції"
-
-#: src/trg-menu-bar.c:255
-msgid "_Local Preferences"
-msgstr "_Локальні налаштування"
-
-#: src/trg-menu-bar.c:260
-msgid "_Remote Preferences"
-msgstr "Налаштування _сервера"
-
-#: src/trg-menu-bar.c:269
-msgid "_File"
-msgstr "_Файл"
-
-#: src/trg-menu-bar.c:274
-msgid "_Connect"
-msgstr "_З’єднатися"
-
-#: src/trg-menu-bar.c:277
-msgid "_Disconnect"
-msgstr "_Відєднатися"
-
-#: src/trg-menu-bar.c:280
-msgid "_Add"
-msgstr "_Додати"
-
-#: src/trg-menu-bar.c:283
-msgid "Add from _URL"
-msgstr "Додати з _URL"
-
-#: src/trg-menu-bar.c:287
-msgid "_Quit"
-msgstr "_Вихід"
-
-#: src/trg-menu-bar.c:296
-msgid "_Torrent"
-msgstr "_Торент"
-
-#: src/trg-menu-bar.c:305
-msgid "_Resume"
-msgstr "_Відновити"
-
-#: src/trg-menu-bar.c:308
-msgid "_Pause"
-msgstr "При_зупинити"
-
-#: src/trg-menu-bar.c:311
-msgid "_Verify"
-msgstr "_Перевірити"
-
-#: src/trg-menu-bar.c:315
-msgid "Re-_announce"
-msgstr "Отримати _список пірів"
-
-#: src/trg-menu-bar.c:317
-msgid "_Move"
-msgstr "_Перемістити файли"
-
-#: src/trg-menu-bar.c:324
-msgid "Remove and Delete"
-msgstr "Видалити торент і файли"
-
-#: src/trg-menu-bar.c:332
-msgid "_Resume All"
-msgstr "_Відновити все"
-
-#: src/trg-menu-bar.c:335
-msgid "_Pause All"
-msgstr "_Призупинити все"
-
-#: src/trg-menu-bar.c:346
-msgid "_Help"
-msgstr "_Допомога"
-
-#: src/trg-menu-bar.c:352
-msgid "_About"
-msgstr "_О програмі"
-
-#: src/trg-peers-tree-view.c:50
-msgid "IP"
-msgstr "IP"
-
-#: src/trg-peers-tree-view.c:54
-msgid "Host"
-msgstr "Хост"
-
-#: src/trg-peers-tree-view.c:58
-msgid "Country"
-msgstr "Країна"
-
-#: src/trg-peers-tree-view.c:61 src/trg-torrent-tree-view.c:60
-msgid "Down Speed"
-msgstr "Завантаження"
-
-#: src/trg-peers-tree-view.c:63 src/trg-torrent-tree-view.c:63
-msgid "Up Speed"
-msgstr "Віддача"
-
-#: src/trg-peers-tree-view.c:67
-msgid "Flags"
-msgstr "Прапори"
-
-#: src/trg-peers-tree-view.c:69
-msgid "Client"
-msgstr "Клієнт"
-
-#: src/trg-preferences-dialog.c:244
-msgid "Features"
-msgstr "Додатково"
-
-#: src/trg-preferences-dialog.c:246
+#: src/trg-menu-bar.c:390 src/trg-preferences-dialog.c:677
 msgid "Directory filters"
 msgstr "Фільтри за директорією"
 
-#: src/trg-preferences-dialog.c:252
+#: src/trg-menu-bar.c:398 src/trg-preferences-dialog.c:684
 msgid "Tracker filters"
 msgstr "Фільтри за торентом"
 
-#: src/trg-preferences-dialog.c:258
-msgid "Show graph"
-msgstr "Показувати графік"
+#: src/trg-menu-bar.c:406 src/trg-preferences-dialog.c:691
+msgid "Torrent Details"
+msgstr "Параметри торента"
 
-#: src/trg-preferences-dialog.c:263
-msgid "System Tray"
-msgstr "Системний трей"
+#: src/trg-menu-bar.c:416
+msgid "_Statistics"
+msgstr "_Статистика"
 
-#: src/trg-preferences-dialog.c:265
-msgid "Show in system tray"
-msgstr "Показувати в системному треї"
+#: src/trg-menu-bar.c:428
+msgid "_Options"
+msgstr "_Опції"
 
-#: src/trg-preferences-dialog.c:271
-msgid "Minimise to system tray"
-msgstr "Мінімізувати до системного трею"
+#: src/trg-menu-bar.c:434
+msgid "_Local Preferences"
+msgstr "_Локальні налаштування"
 
-#: src/trg-preferences-dialog.c:280
-msgid "Torrent added notifications"
-msgstr "Повідомлення про додані торенти"
+#: src/trg-menu-bar.c:440
+msgid "_Remote Preferences"
+msgstr "Налаштування _сервера"
 
-#: src/trg-preferences-dialog.c:289
-msgid "Torrent complete notifications"
-msgstr "Повідомлення про завершені торенти"
+#: src/trg-menu-bar.c:500
+msgid "_File"
+msgstr "_Файл"
 
-#: src/trg-preferences-dialog.c:308
-msgid "Torrents"
-msgstr "Торенти"
+#: src/trg-menu-bar.c:513
+msgid "_Disconnect"
+msgstr "_Відєднатися"
 
-#: src/trg-preferences-dialog.c:310
-msgid "Start paused"
-msgstr "Додавати призупиненим"
+#: src/trg-menu-bar.c:518
+msgid "_Add"
+msgstr "_Додати"
 
-#: src/trg-preferences-dialog.c:314
-msgid "Options dialog on add"
-msgstr "Вікно налаштуваннь торента при додаванні"
+#: src/trg-menu-bar.c:523
+msgid "Add from _URL"
+msgstr "Додати з _URL"
 
-#: src/trg-preferences-dialog.c:330
-msgid "Server"
-msgstr "Свервер"
+#: src/trg-menu-bar.c:528
+msgid "_Quit"
+msgstr "_Вихід"
 
-#: src/trg-preferences-dialog.c:333
-msgid "Host:"
-msgstr "Хост:"
+#: src/trg-menu-bar.c:540
+msgid "_Torrent"
+msgstr "_Торент"
 
-#: src/trg-preferences-dialog.c:337
-msgid "Port:"
-msgstr "Порт:"
+#: src/trg-menu-bar.c:552
+msgid "_Resume"
+msgstr "_Відновити"
 
-#: src/trg-preferences-dialog.c:339
-msgid "Automatically connect"
-msgstr "З’єднуватись автоматично"
+#: src/trg-menu-bar.c:557
+msgid "_Pause"
+msgstr "При_зупинити"
 
-#: src/trg-preferences-dialog.c:343
-msgid "SSL"
-msgstr "SSL"
+#: src/trg-menu-bar.c:562
+msgid "_Verify"
+msgstr "_Перевірити"
 
-#: src/trg-preferences-dialog.c:350
-msgid "Update interval:"
-msgstr "Інтервал оновлення"
+#: src/trg-menu-bar.c:568
+msgid "Re-_announce"
+msgstr "Отримати _список пірів"
 
-#: src/trg-preferences-dialog.c:352
+#: src/trg-menu-bar.c:571
+msgid "_Move"
+msgstr "_Перемістити файли"
+
+#: src/trg-menu-bar.c:582
+msgid "Remove and Delete"
+msgstr "Видалити торент і файли"
+
+#: src/trg-menu-bar.c:620
+msgid "_Resume All"
+msgstr "_Відновити все"
+
+#: src/trg-menu-bar.c:625
+msgid "_Pause All"
+msgstr "_Призупинити все"
+
+#: src/trg-menu-bar.c:637
+msgid "_Help"
+msgstr "_Допомога"
+
+#: src/trg-menu-bar.c:643
+msgid "_About"
+msgstr "_О програмі"
+
+#: src/trg-peers-tree-view.c:51
+msgid "IP"
+msgstr "IP"
+
+#: src/trg-peers-tree-view.c:55 src/trg-trackers-tree-view.c:208
+msgid "Host"
+msgstr "Хост"
+
+#: src/trg-peers-tree-view.c:59
+msgid "Country"
+msgstr "Країна"
+
+#: src/trg-peers-tree-view.c:62 src/trg-torrent-tree-view.c:96
+msgid "Down Speed"
+msgstr "Завантаження"
+
+#: src/trg-peers-tree-view.c:64 src/trg-torrent-tree-view.c:99
+msgid "Up Speed"
+msgstr "Віддача"
+
+#: src/trg-peers-tree-view.c:68
+msgid "Flags"
+msgstr "Прапори"
+
+#: src/trg-peers-tree-view.c:70
+msgid "Client"
+msgstr "Клієнт"
+
+#: src/trg-preferences-dialog.c:401
+msgid "Updates"
+msgstr "Оновлення"
+
+#: src/trg-preferences-dialog.c:403
 msgid "Update active torrents only"
 msgstr "Оновлювати тільки активні торенти"
 
-#: src/trg-preferences-dialog.c:359
-msgid "Authentication"
-msgstr "Аутентифікація"
+#: src/trg-preferences-dialog.c:410
+msgid "Full update every (?) updates"
+msgstr "Повне оновлення кожні (?) оновлень"
 
-#: src/trg-preferences-dialog.c:362
-msgid "Username:"
-msgstr "Логін:"
+#: src/trg-preferences-dialog.c:424
+msgid "Update interval:"
+msgstr "Інтервал оновлення"
 
-#: src/trg-preferences-dialog.c:366
-msgid "Password:"
-msgstr "Пароль:"
+#: src/trg-preferences-dialog.c:428
+msgid "Minimised update interval:"
+msgstr "Інтервал оновлення під час згортання:"
 
-#: src/trg-preferences-dialog.c:393 src/trg-toolbar.c:257
-msgid "Local Preferences"
-msgstr "Локальні налаштування"
+#: src/trg-preferences-dialog.c:431
+msgid "Torrents"
+msgstr "Торенти"
 
-#: src/trg-preferences-dialog.c:404
+#: src/trg-preferences-dialog.c:433
+msgid "Start paused"
+msgstr "Додавати призупиненим"
+
+#: src/trg-preferences-dialog.c:437
+msgid "Options dialog on add"
+msgstr "Вікно налаштуваннь торента при додаванні"
+
+#: src/trg-preferences-dialog.c:442 src/trg-torrent-add-dialog.c:609
+msgid "Delete local .torrent file after adding"
+msgstr "Вилучити локальний файл .torrent після додавання"
+
+#: src/trg-preferences-dialog.c:595
+msgid "Commands"
+msgstr "Команди"
+
+#: src/trg-preferences-dialog.c:605 src/trg-preferences-dialog.c:643
+msgid "Label"
+msgstr "Мітка"
+
+#: src/trg-preferences-dialog.c:608
+msgid "Command"
+msgstr "Команда"
+
+#: src/trg-preferences-dialog.c:633
+msgid "Remote Download Directories"
+msgstr "Каталоги віддаленого завантаження"
+
+#: src/trg-preferences-dialog.c:646
+msgid "Directory"
+msgstr "Каталог"
+
+#: src/trg-preferences-dialog.c:668 src/trg-preferences-dialog.c:892
+msgid "View"
+msgstr "Перегляд"
+
+#: src/trg-preferences-dialog.c:699
+msgid "Show graph"
+msgstr "Показувати графік"
+
+#: src/trg-preferences-dialog.c:706
+msgid "System Tray"
+msgstr "Системний трей"
+
+#: src/trg-preferences-dialog.c:708
+msgid "Show in system tray"
+msgstr "Показувати в системному треї"
+
+#: src/trg-preferences-dialog.c:716
+msgid "Minimise to system tray"
+msgstr "Мінімізувати до системного трею"
+
+#: src/trg-preferences-dialog.c:728
+msgid "Notifications"
+msgstr "Сповіщення"
+
+#: src/trg-preferences-dialog.c:730
+msgid "Torrent added notifications"
+msgstr "Повідомлення про додані торенти"
+
+#: src/trg-preferences-dialog.c:734
+msgid "Torrent complete notifications"
+msgstr "Повідомлення про завершені торенти"
+
+#: src/trg-preferences-dialog.c:761
+msgid "Profile: "
+msgstr "Профіль: "
+
+#: src/trg-preferences-dialog.c:787
+msgid "Name:"
+msgstr "Назва:"
+
+#: src/trg-preferences-dialog.c:795 src/trg-preferences-dialog.c:882
 msgid "Connection"
 msgstr "З’єднання"
 
-#: src/trg-preferences-dialog.c:409
-msgid "Desktop"
-msgstr "Робочій стіл"
+#: src/trg-preferences-dialog.c:798
+msgid "Host:"
+msgstr "Хост:"
 
-#: src/trg-preferences-dialog.c:413
-msgid "Behavior"
-msgstr "Поведінка"
+#: src/trg-preferences-dialog.c:802
+msgid "Port:"
+msgstr "Порт:"
 
-#: src/trg-remote-prefs-dialog.c:226 src/trg-torrent-props-dialog.c:174
-msgid "Bandwidth"
-msgstr "Швидкість"
+#: src/trg-preferences-dialog.c:805
+msgid "Username:"
+msgstr "Логін:"
 
-#: src/trg-remote-prefs-dialog.c:229
-msgid "Limit download speed (KiB/s)"
-msgstr "Обмежити швидкість завантаження (KiB/s)"
+#: src/trg-preferences-dialog.c:809
+msgid "Password:"
+msgstr "Пароль:"
 
-#: src/trg-remote-prefs-dialog.c:248
-msgid "Limit upload speed (KiB/s)"
-msgstr "Обмежити швидкість віддачі (KiB/s)"
+#: src/trg-preferences-dialog.c:811
+msgid "Automatically connect"
+msgstr "З’єднуватись автоматично"
 
-#: src/trg-remote-prefs-dialog.c:268
+#: src/trg-preferences-dialog.c:817
+msgid "SSL"
+msgstr "SSL"
+
+#: src/trg-preferences-dialog.c:824
+msgid "Timeout:"
+msgstr "Тайм-аут:"
+
+#: src/trg-preferences-dialog.c:828
+msgid "Retries:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:871 src/trg-toolbar.c:257
+msgid "Local Preferences"
+msgstr "Локальні налаштування"
+
+#: src/trg-preferences-dialog.c:902
+msgid "Directories"
+msgstr "Каталоги"
+
+#: src/trg-remote-prefs-dialog.c:262
+msgid "Bandwidth limits"
+msgstr "Обмеження каналу"
+
+#: src/trg-remote-prefs-dialog.c:265
+msgid "Down Limit (KiB/s)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:272
+msgid "Up Limit (KiB/s)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:277
+msgid "Alternate limits"
+msgstr "Різні значення обмежень"
+
+#: src/trg-remote-prefs-dialog.c:280
+msgid "Alternate speed limits active"
+msgstr "Різні обмеження швидкості активних торентів"
+
+#: src/trg-remote-prefs-dialog.c:285
+msgid "Alternate time range"
+msgstr "Різні діапазони часів"
+
+#: src/trg-remote-prefs-dialog.c:291
+msgid "Alternate down limit (KiB/s)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:295
+msgid "Alternate up limit (KiB/s)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:311
 msgid "Seed ratio limit"
 msgstr "Віддавати до отримання коефіцієнту роздачі"
 
-#: src/trg-remote-prefs-dialog.c:292
+#: src/trg-remote-prefs-dialog.c:317
+msgid "Queues"
+msgstr "Черги"
+
+#: src/trg-remote-prefs-dialog.c:320
+msgid "Download queue size"
+msgstr "Розмір черги завантаження"
+
+#: src/trg-remote-prefs-dialog.c:326
+msgid "Seed queue size"
+msgstr "Розмір черги вивантаження"
+
+#: src/trg-remote-prefs-dialog.c:332
+msgid "Ignore stalled (minutes)"
+msgstr "Ігнорувати статичні (у хвилинах)"
+
+#: src/trg-remote-prefs-dialog.c:343
 msgid "Global peer limit"
 msgstr "Глобальний ліміт пірів"
 
-#: src/trg-remote-prefs-dialog.c:299
+#: src/trg-remote-prefs-dialog.c:347
 msgid "Per torrent peer limit"
 msgstr "Ліміт пірів кожного торенту"
 
-#: src/trg-remote-prefs-dialog.c:314
+#: src/trg-remote-prefs-dialog.c:358
 msgid "Retest"
 msgstr "Пвторити тестування"
 
-#: src/trg-remote-prefs-dialog.c:324
+#: src/trg-remote-prefs-dialog.c:368
 msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
-msgstr "Порт <span font_weight=\"bold\" fgcolor=\"darkgreen\">відкритий</span>"
+msgstr ""
+"Порт <span font_weight=\"bold\" fgcolor=\"darkgreen\">відкритий</span>"
 
-#: src/trg-remote-prefs-dialog.c:328
+#: src/trg-remote-prefs-dialog.c:373
 msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
 msgstr "Порт <span font_weight=\"bold\" fgcolor=\"red\">Закритий"
 
-#: src/trg-remote-prefs-dialog.c:344 src/trg-remote-prefs-dialog.c:428
+#: src/trg-remote-prefs-dialog.c:388 src/trg-remote-prefs-dialog.c:450
 msgid "Port test"
 msgstr "Перевірка порту"
 
-#: src/trg-remote-prefs-dialog.c:345
+#: src/trg-remote-prefs-dialog.c:389
 msgid "Testing..."
 msgstr "Перевірка..."
 
-#: src/trg-remote-prefs-dialog.c:367 src/trg-remote-prefs-dialog.c:459
+#: src/trg-remote-prefs-dialog.c:403 src/trg-remote-prefs-dialog.c:499
+msgid "Update"
+msgstr "Оновити чорний список"
+
+#: src/trg-remote-prefs-dialog.c:407 src/trg-remote-prefs-dialog.c:493
 #, c-format
 msgid "Blocklist (%ld entries)"
 msgstr "Чорний список (%ld записів)"
 
-#: src/trg-remote-prefs-dialog.c:390
-msgid "Updating..."
-msgstr "Оновлення..."
+#: src/trg-remote-prefs-dialog.c:444 src/trg-remote-prefs-dialog.c:604
+msgid "Connections"
+msgstr "Зєднання"
 
-#: src/trg-remote-prefs-dialog.c:409
-msgid "Required"
-msgstr "Необхідне"
-
-#: src/trg-remote-prefs-dialog.c:410
-msgid "Preferred"
-msgstr "Привілейоване"
-
-#: src/trg-remote-prefs-dialog.c:411
-msgid "Tolerated"
-msgstr "Припустимо"
-
-#: src/trg-remote-prefs-dialog.c:420
-msgid "Encryption"
-msgstr "Шифрування трафіку"
-
-#: src/trg-remote-prefs-dialog.c:426
+#: src/trg-remote-prefs-dialog.c:448
 msgid "Peer port"
 msgstr "Порт"
 
-#: src/trg-remote-prefs-dialog.c:429
+#: src/trg-remote-prefs-dialog.c:451
 msgid "Test"
 msgstr "Перевірка порту"
 
-#: src/trg-remote-prefs-dialog.c:435
+#: src/trg-remote-prefs-dialog.c:455
+msgid "Required"
+msgstr "Необхідне"
+
+#: src/trg-remote-prefs-dialog.c:456
+msgid "Preferred"
+msgstr "Привілейоване"
+
+#: src/trg-remote-prefs-dialog.c:456
+msgid "Tolerated"
+msgstr "Припустимо"
+
+#: src/trg-remote-prefs-dialog.c:466
+msgid "Encryption"
+msgstr "Шифрування трафіку"
+
+#: src/trg-remote-prefs-dialog.c:469
 msgid "Random peer port on start"
 msgstr "Випадковий порт при кожному завантаженні"
 
-#: src/trg-remote-prefs-dialog.c:441
+#: src/trg-remote-prefs-dialog.c:474
 msgid "Peer port forwarding"
 msgstr "Проброс порту"
 
-#: src/trg-remote-prefs-dialog.c:448
+#: src/trg-remote-prefs-dialog.c:477
+msgid "Protocol"
+msgstr "Протокол"
+
+#: src/trg-remote-prefs-dialog.c:480
 msgid "Peer exchange (PEX)"
 msgstr "Обмін пірами (PEX)"
 
-#: src/trg-remote-prefs-dialog.c:454
+#: src/trg-remote-prefs-dialog.c:484
+msgid "Distributed Hash Table (DHT)"
+msgstr "Розподілена таблиця хешів (DHT)"
+
+#: src/trg-remote-prefs-dialog.c:488
 msgid "Local peer discovery"
 msgstr "Пошук локальних пірів"
 
-#: src/trg-remote-prefs-dialog.c:469
-msgid "Update"
-msgstr "Оновити чорний список"
+#: src/trg-remote-prefs-dialog.c:491
+msgid "Blocklist"
+msgstr "Чорний список"
 
-#: src/trg-remote-prefs-dialog.c:485
+#: src/trg-remote-prefs-dialog.c:509
 msgid "Blocklist URL:"
 msgstr "URL чорного списку:"
 
-#: src/trg-remote-prefs-dialog.c:506
+#: src/trg-remote-prefs-dialog.c:525
+msgid "Environment"
+msgstr "Середовище"
+
+#: src/trg-remote-prefs-dialog.c:528
 msgid "Download directory"
 msgstr "Директорія для завантаження"
 
-#: src/trg-remote-prefs-dialog.c:509
+#: src/trg-remote-prefs-dialog.c:531
 msgid "Incomplete download dir"
 msgstr "Директорія для незавершенийх файлів"
 
-#: src/trg-remote-prefs-dialog.c:525
+#: src/trg-remote-prefs-dialog.c:536
 msgid "Torrent done script"
 msgstr "Скріпт, який виконується по закінченні завантаження"
 
-#: src/trg-remote-prefs-dialog.c:546
+#: src/trg-remote-prefs-dialog.c:545
 msgid "Cache size (MiB)"
 msgstr "Розмір кеша (MiB)"
+
+#: src/trg-remote-prefs-dialog.c:548
+msgid "Behavior"
+msgstr "Поведінка"
 
 #: src/trg-remote-prefs-dialog.c:551
 msgid "Rename partial files"
 msgstr "Змінювати ім’я не повністю завантажених файлів"
 
-#: src/trg-remote-prefs-dialog.c:559
+#: src/trg-remote-prefs-dialog.c:556
 msgid "Trash original torrent files"
 msgstr "Видаляти торент файли"
 
-#: src/trg-remote-prefs-dialog.c:566
+#: src/trg-remote-prefs-dialog.c:560
 msgid "Start added torrents"
 msgstr "Додавати торенти призупиненими"
 
-#: src/trg-remote-prefs-dialog.c:592 src/trg-toolbar.c:261
+#: src/trg-remote-prefs-dialog.c:581 src/trg-toolbar.c:261
 msgid "Remote Preferences"
 msgstr "Налаштування сервера"
 
-#: src/trg-remote-prefs-dialog.c:625
-msgid "Connections"
-msgstr "Зєднання"
+#: src/trg-remote-prefs-dialog.c:608 src/trg-torrent-props-dialog.c:174
+msgid "Bandwidth"
+msgstr "Швидкість"
 
-#: src/trg-remote-prefs-dialog.c:630 src/trg-torrent-props-dialog.c:317
+#: src/trg-remote-prefs-dialog.c:612 src/trg-torrent-props-dialog.c:299
 msgid "Limits"
 msgstr "Обмеження"
 
-#: src/trg-state-selector.c:427
+#: src/trg-state-selector.c:581
 msgid "All"
 msgstr "Всі"
 
-#: src/trg-state-selector.c:437
+#: src/trg-state-selector.c:586 src/trg-state-selector.c:643
+msgid "Queue Down"
+msgstr "Вниз чергою"
+
+#: src/trg-state-selector.c:591 src/trg-state-selector.c:646
+msgid "Queue Up"
+msgstr "Вгору чергою"
+
+#: src/trg-state-selector.c:596
 msgid "Complete"
 msgstr "Завершені"
 
-#: src/trg-state-selector.c:439
+#: src/trg-state-selector.c:598
 msgid "Incomplete"
 msgstr "Незавершені"
 
-#: src/trg-stats-dialog.c:264
+#: src/trg-state-selector.c:601
+msgid "Active"
+msgstr "Активний"
+
+#: src/trg-stats-dialog.c:269
 msgid "Statistics"
 msgstr "Статистика"
 
-#: src/trg-stats-dialog.c:283
+#: src/trg-stats-dialog.c:288
+msgid "Version"
+msgstr "Версія"
+
+#: src/trg-stats-dialog.c:290
 msgid "Download Total"
 msgstr "Всього завантажено"
 
-#: src/trg-stats-dialog.c:285
+#: src/trg-stats-dialog.c:292
 msgid "Upload Total"
 msgstr "Всього віддано"
 
-#: src/trg-stats-dialog.c:287
+#: src/trg-stats-dialog.c:294
 msgid "Files Added"
 msgstr "Додано файлв"
 
-#: src/trg-stats-dialog.c:289
+#: src/trg-stats-dialog.c:296
 msgid "Session Count"
 msgstr "Кількість сесій"
 
-#: src/trg-stats-dialog.c:291
+#: src/trg-stats-dialog.c:298
 msgid "Time Active"
 msgstr "Час роботи"
 
-#: src/trg-stats-dialog.c:296
+#: src/trg-stats-dialog.c:303
 msgid "Statistic"
 msgstr "Статистика"
 
-#: src/trg-stats-dialog.c:298
+#: src/trg-stats-dialog.c:305
 msgid "Session"
 msgstr "Поточна сесія"
 
-#: src/trg-stats-dialog.c:301
+#: src/trg-stats-dialog.c:308
 msgid "Cumulative"
 msgstr "Всього"
 
-#: src/trg-status-bar.c:74
+#: src/trg-status-bar.c:126
 #, c-format
 msgid "Connected to Transmission %g, getting torrents..."
 msgstr "Підєднаний до Transmission %g, отримання торентів..."
 
-#: src/trg-status-bar.c:112 src/trg-status-bar.c:119
+#: src/trg-status-bar.c:142
+#, c-format
+msgid "Free space: %s"
+msgstr "Вільне місце: %s"
+
+#: src/trg-status-bar.c:154
+msgid "Disable alternate speed limits"
+msgstr "Вимкнути різні обмеження швидкості"
+
+#: src/trg-status-bar.c:155
+msgid "Enable alternate speed limits"
+msgstr "Увімкнути різні обмеження швидкості"
+
+#: src/trg-status-bar.c:190 src/trg-status-bar.c:196
 #, c-format
 msgid " (Limit: %s)"
 msgstr " (Обмеження: %s)"
 
-#: src/trg-status-bar.c:126
+#: src/trg-status-bar.c:200
 #, c-format
-msgid ""
-"%d torrent ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
-msgid_plural ""
-"%d torrents ..  Down %s%s, Up %s%s  ..  %d seeding, %d downloading, %d paused"
-msgstr[0] ""
-msgstr[1] ""
+msgid "Down: %s%s, Up: %s%s"
+msgstr "Завант.: %s%s, вивант.: %s%s"
+
+#: src/trg-status-bar.c:205
+#, c-format
+msgid "%d torrent:  %d seeding, %d downloading, %d paused"
+msgid_plural "%d torrents: %d seeding, %d downloading, %d paused"
+msgstr[0] "%d торент:  %d поширюються, %d завантажуються, %d призупинено"
+msgstr[1] "%d торенти:  %d поширюються, %d завантажуються, %d призупинено"
+msgstr[2] "%d торентів:  %d поширюються, %d завантажуються, %d призупинено"
 
 #: src/trg-toolbar.c:246
 msgid "Remove with data"
 msgstr "Фидалити з файлами"
 
-#: src/trg-torrent-add-url-dialog.c:86
+#: src/trg-torrent-add-dialog.c:409
+msgid "Torrent files"
+msgstr "Торент файли"
+
+#: src/trg-torrent-add-dialog.c:414
+msgid "All files"
+msgstr "Всі файли"
+
+#: src/trg-torrent-add-dialog.c:451
+msgid ""
+"Unable to parse torrent file. File preferences unavailable, but you can "
+"still try uploading it."
+msgstr ""
+"Неможливо прочитати торент файл. Налаштування недоступні, але ви можете все "
+"ще спробувати відправити їх."
+
+#: src/trg-torrent-add-dialog.c:460
+#, c-format
+msgid "Unable to open torrent file: %s"
+msgstr "Не вдалося відкрити файл торента: %s"
+
+#: src/trg-torrent-add-dialog.c:510
+msgid "(None)"
+msgstr "(Немає)"
+
+#: src/trg-torrent-add-dialog.c:512
+msgid "(Multiple)"
+msgstr "(Декілька)"
+
+#: src/trg-torrent-add-dialog.c:532
+msgid "Add a Torrent"
+msgstr "Додати торент"
+
+#: src/trg-torrent-add-dialog.c:581
+msgid "Add Torrent"
+msgstr "Додати торент"
+
+#: src/trg-torrent-add-dialog.c:602
+msgid "Start _paused"
+msgstr "Розпочати _призупиненим"
+
+#: src/trg-torrent-add-dialog.c:618
+msgid "_Torrent file:"
+msgstr "_Торент файл"
+
+#: src/trg-torrent-add-dialog.c:637
+msgid "_Destination folder:"
+msgstr "_Місце завантаження"
+
+#: src/trg-torrent-add-dialog.c:657
+msgid "Torrent _priority:"
+msgstr "_Пріорітет торенту"
+
+#: src/trg-torrent-add-dialog.c:743
+msgid "Show _options dialog"
+msgstr "Показати вікно _опцій"
+
+#: src/trg-torrent-add-url-dialog.c:61
+msgid ""
+"You are trying to add a magnet torrent, but DHT is disabled. Distributed "
+"Hash Table (DHT) should be enabled in remote settings."
+msgstr ""
+"Ви намагаєтеся додати маґнет-торент, але DHT вимкнено. Вам слід увімкнути "
+"розподілену таблицю хешів (DHT) у параметрах сервера."
+
+#: src/trg-torrent-add-url-dialog.c:120
 msgid "URL:"
 msgstr "URL:"
 
-#: src/trg-torrent-add-url-dialog.c:89
+#: src/trg-torrent-add-url-dialog.c:123
 msgid "Start Paused"
 msgstr "Додавати призупиненим"
 
-#: src/trg-torrent-add-url-dialog.c:92
+#: src/trg-torrent-add-url-dialog.c:126
 msgid "Add torrent from URL"
 msgstr "Додати торент з URL"
 
-#: src/trg-torrent-graph.c:401
+#: src/trg-torrent-graph.c:407
 msgid "Total Uploading"
 msgstr "Загальна швидкість віддачі"
 
-#: src/trg-torrent-graph.c:409
+#: src/trg-torrent-graph.c:415
 msgid "Total Downloading"
 msgstr "Загальна хвидкість завантаження"
 
-#: src/trg-torrent-move-dialog.c:113
+#: src/trg-torrent-model.c:343
+msgid "Default"
+msgstr "Типовий"
+
+#: src/trg-torrent-move-dialog.c:118
 msgid "Location:"
 msgstr "Нове місцезнаходження:"
 
-#: src/trg-torrent-move-dialog.c:155
+#: src/trg-torrent-move-dialog.c:165
 #, c-format
 msgid "Move %s"
 msgstr "Перемістити %s"
 
-#: src/trg-torrent-move-dialog.c:157
+#: src/trg-torrent-move-dialog.c:167
 #, c-format
 msgid "Move %d torrents"
 msgstr "Перемістити %d торентів"
@@ -778,58 +1062,47 @@ msgstr "Перемістити %d торентів"
 msgid "Honor global limits"
 msgstr "Використовувати глобальні обмеження"
 
-#: src/trg-torrent-props-dialog.c:185 src/trg-cell-renderer-priority.c:73
-#: src/trg-torrent-add-dialog.c:275 src/trg-torrent-add-dialog.c:636
-msgid "Low"
-msgstr "Низький"
-
-#: src/trg-torrent-props-dialog.c:186 src/trg-cell-renderer-priority.c:77
-#: src/trg-torrent-add-dialog.c:272 src/trg-torrent-add-dialog.c:637
-msgid "Normal"
-msgstr "Звичайний"
-
-#: src/trg-torrent-props-dialog.c:187 src/trg-cell-renderer-priority.c:75
-#: src/trg-torrent-add-dialog.c:269 src/trg-torrent-add-dialog.c:638
-msgid "High"
-msgstr "Високий"
-
-#: src/trg-torrent-props-dialog.c:190
+#: src/trg-torrent-props-dialog.c:187
 msgid "Torrent priority:"
 msgstr "Пріортет торенту:"
 
 #: src/trg-torrent-props-dialog.c:193
-msgid "Limit download speed (Kbps)"
-msgstr "Обмежувати швидкість завантаження (Кб/c)"
+msgid "Queue Position:"
+msgstr "Місце у черзі:"
+
+#: src/trg-torrent-props-dialog.c:198
+msgid "Limit download speed (KiB/s)"
+msgstr "Обмежити швидкість завантаження (KiB/s)"
 
 #: src/trg-torrent-props-dialog.c:206
-msgid "Limit upload speed (Kbps)"
-msgstr "Обмежувати швидкість віддачі (Кб/c"
+msgid "Limit upload speed (KiB/s)"
+msgstr "Обмежити швидкість віддачі (KiB/s)"
 
-#: src/trg-torrent-props-dialog.c:222
+#: src/trg-torrent-props-dialog.c:215
 msgid "Use global settings"
 msgstr "Використовувати глобальні налаштування"
 
-#: src/trg-torrent-props-dialog.c:224
+#: src/trg-torrent-props-dialog.c:216
 msgid "Stop seeding at ratio"
 msgstr "Зупиняти роздачу при коефіцієнті віддачі"
 
-#: src/trg-torrent-props-dialog.c:226
+#: src/trg-torrent-props-dialog.c:217
 msgid "Seed regardless of ratio"
 msgstr "Роздавати без урахування коефіцієнту віддачі"
 
-#: src/trg-torrent-props-dialog.c:229
+#: src/trg-torrent-props-dialog.c:220
 msgid "Seed ratio mode:"
 msgstr "Режим коефіцієнта віддачі:"
 
-#: src/trg-torrent-props-dialog.c:237
+#: src/trg-torrent-props-dialog.c:228
 msgid "Seed ratio limit:"
 msgstr "Ліміт коефіцієнта віддачі:"
 
-#: src/trg-torrent-props-dialog.c:248
+#: src/trg-torrent-props-dialog.c:235
 msgid "Peer limit:"
 msgstr "Ліміт пірів:"
 
-#: src/trg-torrent-props-dialog.c:282
+#: src/trg-torrent-props-dialog.c:269
 #, c-format
 msgid "Multiple (%d) torrent properties"
 msgstr "Властивості декількох (%d) торентів"
@@ -842,83 +1115,152 @@ msgstr "Завершено"
 msgid "Seeds"
 msgstr "Сіди"
 
-#: src/trg-torrent-tree-view.c:76
+#: src/trg-torrent-tree-view.c:57
+msgid "Sending"
+msgstr "Надсилання"
+
+#: src/trg-torrent-tree-view.c:63
+msgid "Downloads"
+msgstr "Завантаження"
+
+#: src/trg-torrent-tree-view.c:66
+msgid "Receiving"
+msgstr "Отримання"
+
+#: src/trg-torrent-tree-view.c:72
+msgid "PEX Peers"
+msgstr "Вузли PEX"
+
+#: src/trg-torrent-tree-view.c:75
+msgid "DHT Peers"
+msgstr "Вузли DHT"
+
+#: src/trg-torrent-tree-view.c:79
+msgid "Tracker Peers"
+msgstr "Вузли-координатори"
+
+#: src/trg-torrent-tree-view.c:82
+msgid "LTEP Peers"
+msgstr "Вузли LTEP"
+
+#: src/trg-torrent-tree-view.c:85
+msgid "Resumed Peers"
+msgstr "Відновлені вузли"
+
+#: src/trg-torrent-tree-view.c:89
+msgid "Incoming Peers"
+msgstr "Вузли вхідних з’єднань"
+
+#: src/trg-torrent-tree-view.c:93
+msgid "Peers T/I/E/H/X/L/R"
+msgstr "Вузли T/I/E/H/X/L/R"
+
+#: src/trg-torrent-tree-view.c:112
 msgid "Added"
 msgstr "Додано"
 
-#: src/trg-torrent-tree-view.c:81
+#: src/trg-torrent-tree-view.c:115
+msgid "First Tracker"
+msgstr "Перший координатор"
+
+#: src/trg-torrent-tree-view.c:121
 msgid "ID"
 msgstr "ID"
 
-#: src/trg-trackers-tree-view.c:158
+#: src/trg-torrent-tree-view.c:127
+msgid "Queue Position"
+msgstr "Місце у черзі"
+
+#: src/trg-torrent-tree-view.c:133
+msgid "Last Active"
+msgstr "Останній активний"
+
+#: src/trg-trackers-tree-view.c:167
 msgid "Tier"
 msgstr "Номер"
 
-#: src/trg-trackers-tree-view.c:164
+#: src/trg-trackers-tree-view.c:173
 msgid "Announce URL"
 msgstr "URL анонсування"
 
-#: src/trg-trackers-tree-view.c:179
+#: src/trg-trackers-tree-view.c:191
+msgid "Seeder Count"
+msgstr "Кількість вузлів"
+
+#: src/trg-trackers-tree-view.c:194
+msgid "Leecher Count"
+msgstr "Кількість п’явок"
+
+#: src/trg-trackers-tree-view.c:198
+msgid "Last Announce"
+msgstr "Останнє оголошення"
+
+#: src/trg-trackers-tree-view.c:201
+msgid "Last Result"
+msgstr "Останній результат"
+
+#: src/trg-trackers-tree-view.c:203
 msgid "Scrape URL"
 msgstr "URL scrape-запиту"
 
-#: src/trg-trackers-tree-view.c:278
+#: src/trg-trackers-tree-view.c:205
+msgid "Last Scrape"
+msgstr "Останній зішкріб"
+
+#: src/trg-trackers-tree-view.c:305
 msgid "Delete"
 msgstr "Видалити"
 
-#: src/util.c:133
-msgid "JSON decoding error."
-msgstr "Помилка декодування JSON"
-
-#: src/util.c:138
-msgid "Server responded, but with no result."
-msgstr "Сервер відповів, але безрезультатно"
-
-#: src/util.c:142
-#, c-format
-msgid "Request failed with HTTP code %d"
-msgstr "Запит завершився HTTP помилкою. Код"
-
-#: src/util.c:205
-msgid "None"
-msgstr "Ні"
-
-#: src/util.c:215
-#, c-format
-msgid "%'u byte"
-msgid_plural "%'u bytes"
-msgstr[0] "%'u байт"
-msgstr[1] "%'u байтів"
-
-#: src/util.c:224
-#, c-format
-msgid "MiB"
-msgstr "МБ"
-
-#: src/util.c:227
-#, c-format
-msgid "GiB"
-msgstr "ГБ"
-
+#: src/util.c:41
 msgid "KiB"
 msgstr "КБ"
 
-#: src/util.c:239
-#, c-format
+#: src/util.c:42
+msgid "MiB"
+msgstr "МБ"
+
+#: src/util.c:43
+msgid "GiB"
+msgstr "ГБ"
+
+#: src/util.c:44
+msgid "TiB"
+msgstr "ТБ"
+
+#: src/util.c:47
 msgid "KiB/s"
 msgstr "КБ/c"
 
-#: src/util.c:241
-#, c-format
+#: src/util.c:48
 msgid "MiB/s"
 msgstr "Мб/с"
 
-#: src/util.c:245
-#, c-format
+#: src/util.c:49
 msgid "GiB/s"
 msgstr "ГБ/с"
 
-#: src/util.c:279
+#: src/util.c:50
+msgid "TiB/s"
+msgstr "ТіБ/с"
+
+#: src/util.c:331
+msgid "JSON decoding error."
+msgstr "Помилка декодування JSON"
+
+#: src/util.c:336
+msgid "Server responded, but with no result."
+msgstr "Сервер відповів, але безрезультатно"
+
+#: src/util.c:340
+#, c-format
+msgid "Request failed with HTTP code %d"
+msgstr "Помилка запиту з кодом HTTP %d"
+
+#: src/util.c:379
+msgid "None"
+msgstr "Ні"
+
+#: src/util.c:425
 #, c-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -926,7 +1268,7 @@ msgstr[0] "%d день"
 msgstr[1] "%d дня"
 msgstr[2] "%d днів"
 
-#: src/util.c:280
+#: src/util.c:426
 #, c-format
 msgid "%d hour"
 msgid_plural "%d hours"
@@ -934,7 +1276,7 @@ msgstr[0] "%d година"
 msgstr[1] "%d години"
 msgstr[2] "%d годин"
 
-#: src/util.c:282
+#: src/util.c:428
 #, c-format
 msgid "%d minute"
 msgid_plural "%d minutes"
@@ -942,66 +1284,13 @@ msgstr[0] "%d хвилина"
 msgstr[1] "%d хвилини"
 msgstr[2] "%d хвилин"
 
-#: src/util.c:285
+#: src/util.c:431
 #, c-format
 msgid "%ld second"
 msgid_plural "%ld seconds"
-msgstr[0] "%d секунда"
-msgstr[1] "%d секунди"
-msgstr[2] "%d секунд"
+msgstr[0] "%ld секунда"
+msgstr[1] "%ld секунди"
+msgstr[2] "%ld секунд"
 
-#: src/trg-torrent-add-dialog.c:278
-msgid "Mixed"
-msgstr "Все разом"
-
-#: src/trg-torrent-add-dialog.c:646
-msgid "Torrent files"
-msgstr "Торент файли"
-
-#: src/trg-torrent-add-dialog.c:651
-msgid "All files"
-msgstr "Всі файли"
-
-#: src/trg-torrent-add-dialog.c:687
-msgid ""
-"Unable to parse torrent file. File preferences unavailable, but you can "
-"still try uploading it."
-msgstr ""
-"Неможливо прочитати торент файл. Налаштування недоступні, але ви можете "
-"все ще спробувати відправити їх."
-#: src/trg-torrent-add-dialog.c:726
-msgid "(None)"
-msgstr ""
-
-#: src/trg-torrent-add-dialog.c:728
-msgid "(Multiple)"
-msgstr ""
-
-#: src/trg-torrent-add-dialog.c:750
-msgid "Add a Torrent"
-msgstr "Додати торент"
-
-#: src/trg-torrent-add-dialog.c:813
-msgid "Add Torrent"
-msgstr "Додати торент"
-
-#: src/trg-torrent-add-dialog.c:837
-msgid "Start _paused"
-msgstr "Розпочати _призупиненим"
-
-#: src/trg-torrent-add-dialog.c:845
-msgid "_Torrent file:"
-msgstr "_Торент файл"
-
-#: src/trg-torrent-add-dialog.c:865
-msgid "_Destination folder:"
-msgstr "_Місце завантаження"
-
-#: src/trg-torrent-add-dialog.c:885
-msgid "Torrent _priority:"
-msgstr "_Пріорітет торенту"
-
-#: src/trg-torrent-add-dialog.c:985
-msgid "Show _options dialog"
-msgstr "Показати вікно _опцій"
-
+#~ msgid "Wanted"
+#~ msgstr "Завантажувати"
