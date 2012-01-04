@@ -227,12 +227,9 @@ Section $(NAME_SecGlibGtkEtc) SecGlibGtkEtc
   
   SetOutPath $INSTDIR\share\locale\lt\LC_MESSAGES
   
-  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\libiconv.mo"
   File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gtk20.mo"
   File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
   File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gettext-tools.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gettext-runtime.mo"
   File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
   File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\atk10.mo"
   
@@ -426,12 +423,9 @@ Section "Uninstall"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\transmission-remote-gtk.mo"
   Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\atk10.mo"
   Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
-  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gettext-runtime.mo"
-  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gettext-tools.mo"
   Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\glib20.mo"
   Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
   Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gtk20.mo"
-  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\libiconv.mo"
   Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\transmission-remote-gtk.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\atk10.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gdk-pixbuf.mo"
