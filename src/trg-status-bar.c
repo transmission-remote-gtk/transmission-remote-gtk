@@ -158,28 +158,28 @@ void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session) {
 
 void trg_status_bar_update(TrgStatusBar * sb,
         trg_torrent_model_update_stats * stats, TrgClient * client) {
-    TrgStatusBarPrivate *priv;
-    JsonObject *session;
+    TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
+    JsonObject *session = trg_client_get_session(client);
+    gboolean altLimits = session_get_speed_limit_alt_enabled(session);
+
     gchar *speedText, *infoText;
     gint64 uplimitraw, downlimitraw;
     gchar downRateTotalString[32], upRateTotalString[32];
     gchar uplimit[64], downlimit[64];
 
-    priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
-    session = trg_client_get_session(client);
+    if (session_get_speed_limit_down_enabled(session))
+        downlimitraw = session_get_speed_limit_down(session);
+    else if (altLimits)
+        downlimitraw = session_get_alt_speed_limit_down(session);
+    else
+        downlimitraw = -1;
 
-    // The session should always exist otherwise this function wouldn't be called
-    downlimitraw =
-            json_object_get_boolean_member(session,
-                    SGET_SPEED_LIMIT_DOWN_ENABLED) ? json_object_get_int_member(
-                    session, SGET_SPEED_LIMIT_DOWN) :
-                    -1;
-
-    uplimitraw =
-            json_object_get_boolean_member(session,
-                    SGET_SPEED_LIMIT_UP_ENABLED) ? json_object_get_int_member(
-                    session, SGET_SPEED_LIMIT_UP) :
-                    -1;
+    if (session_get_speed_limit_up_enabled(session))
+        uplimitraw = session_get_speed_limit_up(session);
+    else if (altLimits)
+        uplimitraw = session_get_alt_speed_limit_up(session);
+    else
+        uplimitraw = -1;
 
     trg_strlspeed(downRateTotalString, stats->downRateTotal / disk_K);
     trg_strlspeed(upRateTotalString, stats->upRateTotal / disk_K);

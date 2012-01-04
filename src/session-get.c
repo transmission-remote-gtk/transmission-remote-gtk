@@ -181,6 +181,11 @@ gboolean session_get_trash_original_torrent_files(JsonObject * s)
                                           SGET_TRASH_ORIGINAL_TORRENT_FILES);
 }
 
+gboolean session_get_speed_limit_alt_enabled(JsonObject * s)
+{
+    return json_object_get_boolean_member(s, SGET_ALT_SPEED_ENABLED);
+}
+
 gboolean session_get_speed_limit_up_enabled(JsonObject * s)
 {
     return json_object_get_boolean_member(s, SGET_SPEED_LIMIT_UP_ENABLED);
@@ -196,6 +201,11 @@ gint64 session_get_peer_limit_global(JsonObject * s)
     return json_object_get_int_member(s, SGET_PEER_LIMIT_GLOBAL);
 }
 
+gint64 session_get_alt_speed_limit_up(JsonObject * s)
+{
+    return json_object_get_int_member(s, SGET_ALT_SPEED_UP);
+}
+
 gint64 session_get_speed_limit_up(JsonObject * s)
 {
     return json_object_get_int_member(s, SGET_SPEED_LIMIT_UP);
@@ -205,6 +215,11 @@ gboolean session_get_speed_limit_down_enabled(JsonObject * s)
 {
     return json_object_get_boolean_member(s,
                                           SGET_SPEED_LIMIT_DOWN_ENABLED);
+}
+
+gint64 session_get_alt_speed_limit_down(JsonObject * s)
+{
+    return json_object_get_int_member(s, SGET_ALT_SPEED_DOWN);
 }
 
 gint64 session_get_speed_limit_down(JsonObject * s)

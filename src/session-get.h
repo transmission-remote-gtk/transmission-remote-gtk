@@ -97,6 +97,7 @@ gdouble session_get_seed_ratio_limit(JsonObject * s);
 gboolean session_get_start_added_torrents(JsonObject * s);
 gboolean session_get_trash_original_torrent_files(JsonObject * s);
 gboolean session_get_speed_limit_up_enabled(JsonObject * s);
+gboolean session_get_speed_limit_alt_enabled(JsonObject * s);
 gint64 session_get_speed_limit_up(JsonObject * s);
 gboolean session_get_speed_limit_down_enabled(JsonObject * s);
 gint64 session_get_speed_limit_down(JsonObject * s);
@@ -108,5 +109,7 @@ gint64 session_get_rpc_version(JsonObject * s);
 gint64 session_get_download_dir_free_space(JsonObject * s);
 gboolean session_get_dht_enabled(JsonObject * s);
 gboolean session_get_alt_speed_enabled(JsonObject * s);
+gint64 session_get_alt_speed_limit_up(JsonObject * s);
+gint64 session_get_alt_speed_limit_down(JsonObject * s);
 
 #endif                          /* SESSION_GET_H_ */

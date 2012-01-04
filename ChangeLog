@@ -1,3 +1,18 @@
+* Wed Jan 4 2011 1.0
+- Show files in a tree.
+- Consistency/code share in files tree view and add dialog tree view.
+- Expand/collapse all, selection based changes for add dialog tree view.
+- Counts for filters.
+- Some update efficiency improvements.
+- Put general panel in a scrolled window.
+- Reorganise/cleanup local preferences dialog.
+- Keyboard accelerators.
+- Use IEC standard for expressing base2 units - KiB not KB etc.
+- Configurable timeout/retries.
+- Add the "turtle" mode icon, which enables alternative speed limits.
+- Remote preferences for configuring a time range for alternative speed
+limits.
+
 * Sun Dec 11 2011 0.8
 - Define labels for directories.
 - Use labels in filters.
