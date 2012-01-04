@@ -63,9 +63,11 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-sortable-filtered-model.c \
 	  trg-peers-model.c \
 	  trg-peers-tree-view.c \
+	  trg-files-model-common.c \
 	  trg-model.c \
 	  trg-persistent-tree-view.c \
 	  trg-files-model.c \
+	  trg-files-tree-view-common.c \
 	  trg-files-tree-view.c \
 	  trg-state-selector.c \
 	  trg-general-panel.c \
@@ -85,6 +87,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-cell-renderer-eta.c \
 	  trg-remote-prefs-dialog.c \
 	  trg-cell-renderer-priority.c \
+	  trg-cell-renderer-wanted.c \
 	  trg-cell-renderer-file-icon.c \
 	  trg-cell-renderer-epoch.c \
 	  trg-cell-renderer-numgteqthan.c \

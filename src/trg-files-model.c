@@ -22,6 +22,8 @@
 #include <json-glib/json-glib.h>
 
 #include "protocol-constants.h"
+#include "trg-files-model-common.h"
+#include "trg-files-tree-view-common.h"
 #include "trg-files-model.h"
 #include "trg-client.h"
 #include "torrent.h"
@@ -58,26 +60,6 @@ static void rowref_to_iter(GtkTreeModel *model, GtkTreeRowReference *rr,
     GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
     gtk_tree_model_get_iter(model, iter, path);
     gtk_tree_path_free(path);
-}
-
-static gboolean trg_files_update_new_parents(GtkTreeModel *model,
-        GtkTreePath *path, GtkTreeIter *iter, gpointer data) {
-    GtkTreeIter *descendentIter = (GtkTreeIter*) data;
-    GtkTreePath *descendentPath = gtk_tree_model_get_path(model,
-            descendentIter);
-
-    if (gtk_tree_path_is_ancestor(path, descendentPath)
-            && gtk_tree_model_get_iter(model, descendentIter, descendentPath)) {
-        gint64 size, oldSize;
-        gtk_tree_model_get(model, descendentIter, FILESCOL_SIZE, &size, -1);
-        gtk_tree_model_get(model, iter, FILESCOL_SIZE, &oldSize, -1);
-        gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_SIZE,
-                size + oldSize, -1);
-    }
-
-    gtk_tree_path_free(descendentPath);
-
-    return FALSE;
 }
 
 struct updateAllArgs {
@@ -134,10 +116,8 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
                     elements[i], FILESCOL_SIZE, file_get_length(file),
                     FILESCOL_ID, id, -1);
 
-            if (parentRowRef) {
-                gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-                        trg_files_update_new_parents, iter);
-            }
+            if (parentRowRef)
+                trg_files_model_update_parents(GTK_TREE_MODEL(model), iter, FILESCOL_SIZE);
 
             break;
         }
@@ -169,8 +149,9 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
 
             gtk_tree_store_append(GTK_TREE_STORE(model), iter,
                     parentRowRef ? &parentIter : NULL);
-            gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_NAME,
-                    elements[i], -1);
+            gtk_tree_store_set(GTK_TREE_STORE(model), iter,
+                    FILESCOL_PRIORITY, TR_PRI_UNSET,
+                    FILESCOL_NAME, elements[i], -1);
 
             g_value_init(&gvalue, G_TYPE_INT);
             g_value_set_int(&gvalue, -1);
@@ -178,8 +159,8 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
                     &gvalue);
 
             memset(&gvalue, 0, sizeof(GValue));
-            g_value_init(&gvalue, G_TYPE_INT64);
-            g_value_set_int64(&gvalue, TR_PRI_UNSET);
+            g_value_init(&gvalue, G_TYPE_INT);
+            g_value_set_int(&gvalue, TR_PRI_UNSET);
             gtk_tree_store_set_value(GTK_TREE_STORE(model), iter,
                     FILESCOL_PRIORITY, &gvalue);
 
@@ -209,7 +190,7 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
 
     gboolean wanted = json_node_get_int(json_array_get_element(wantedArray, id))
             == 1;
-    gint64 priority = json_node_get_int(
+    gint priority = (gint)json_node_get_int(
             json_array_get_element(prioritiesArray, id));
     gdouble progress = file_get_progress(fileLength, fileCompleted);
 
@@ -233,12 +214,14 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
                 trg_files_update_all_parents, &args);
     }
 
-    if (priv->accept) {
-        gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_WANTED,
-                wanted ? GTK_STOCK_APPLY : GTK_STOCK_CANCEL
-                , FILESCOL_PRIORITY, priority, -1);
-
+    if (isFirst) {
+        trg_files_tree_model_propogateChangeUp(GTK_TREE_MODEL(model), filesIter, FILESCOL_PRIORITY, priority);
+        trg_files_tree_model_propogateChangeUp(GTK_TREE_MODEL(model), filesIter, FILESCOL_WANTED, wanted);
     }
+
+    if (priv->accept)
+        gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_WANTED,
+                wanted, FILESCOL_PRIORITY, priority, -1);
 }
 
 static void trg_files_model_class_init(TrgFilesModelClass * klass) {
@@ -255,8 +238,8 @@ static void trg_files_model_init(TrgFilesModel * self) {
     column_types[FILESCOL_SIZE] = G_TYPE_INT64;
     column_types[FILESCOL_PROGRESS] = G_TYPE_DOUBLE;
     column_types[FILESCOL_ID] = G_TYPE_INT;
-    column_types[FILESCOL_WANTED] = G_TYPE_STRING;
-    column_types[FILESCOL_PRIORITY] = G_TYPE_INT64;
+    column_types[FILESCOL_WANTED] = G_TYPE_INT;
+    column_types[FILESCOL_PRIORITY] = G_TYPE_INT;
     column_types[FILESCOL_BYTESCOMPLETED] = G_TYPE_INT64;
 
     gtk_tree_store_set_column_types(GTK_TREE_STORE(self), FILESCOL_COLUMNS,

@@ -443,14 +443,11 @@ static size_t header_callback(void *ptr, size_t size, size_t nmemb, void *data) 
 }
 
 static void trg_tls_update(TrgClient * tc, trg_tls * tls, gint serial) {
-    TrgPrefs *prefs = trg_client_get_prefs(tc);
     gchar *proxy;
 
     curl_easy_setopt(tls->curl, CURLOPT_PASSWORD, trg_client_get_password(tc));
     curl_easy_setopt(tls->curl, CURLOPT_USERNAME, trg_client_get_username(tc));
     curl_easy_setopt(tls->curl, CURLOPT_URL, trg_client_get_url(tc));
-    curl_easy_setopt(tls->curl, CURLOPT_TIMEOUT,
-            trg_prefs_get_int(prefs, TRG_PREFS_KEY_TIMEOUT, TRG_PREFS_CONNECTION));
 
 #ifndef CURL_NO_SSL
     if (trg_client_get_ssl(tc))
@@ -484,6 +481,7 @@ trg_tls *trg_tls_new(TrgClient * tc) {
 static int trg_http_perform_inner(TrgClient * tc, gchar * reqstr,
         trg_response * response, gboolean recurse) {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
+    TrgPrefs *prefs = trg_client_get_prefs(tc);
     gpointer threadLocalStorage = g_private_get(priv->tlsKey);
     trg_tls *tls;
     long httpCode = 0;
@@ -507,6 +505,9 @@ static int trg_http_perform_inner(TrgClient * tc, gchar * reqstr,
         headers = curl_slist_append(NULL, session_id);
         curl_easy_setopt(tls->curl, CURLOPT_HTTPHEADER, headers);
     }
+
+    curl_easy_setopt(tls->curl, CURLOPT_TIMEOUT,
+            (long)trg_prefs_get_int(prefs, TRG_PREFS_KEY_TIMEOUT, TRG_PREFS_CONNECTION));
 
     g_mutex_unlock(priv->configMutex);
 

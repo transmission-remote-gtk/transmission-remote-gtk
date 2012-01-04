@@ -53,7 +53,7 @@ G_END_DECLS GList *trg_tree_view_get_selected_refs_list(GtkTreeView * tv);
 enum {
     TRG_COLTYPE_STOCKICONTEXT,
     TRG_COLTYPE_FILEICONTEXT,
-    TRG_COLTYPE_ICON,
+    TRG_COLTYPE_WANTED,
     TRG_COLTYPE_TEXT,
     TRG_COLTYPE_SIZE,
     TRG_COLTYPE_RATIO,
