@@ -37,16 +37,16 @@
 #define TR_RATIO_INF -2
 
 extern const int disk_K;
-extern const char * disk_K_str;
-extern const char * disk_M_str;
-extern const char * disk_G_str;
-extern const char * disk_T_str;
+extern const char *disk_K_str;
+extern const char *disk_M_str;
+extern const char *disk_G_str;
+extern const char *disk_T_str;
 
 extern const int speed_K;
-extern const char * speed_K_str;
-extern const char * speed_M_str;
-extern const char * speed_G_str;
-extern const char * speed_T_str;
+extern const char *speed_K_str;
+extern const char *speed_M_str;
+extern const char *speed_G_str;
+extern const char *speed_T_str;
 
 void add_file_id_to_array(JsonObject * args, gchar * key, gint index);
 void g_str_slist_free(GSList * list);
@@ -56,18 +56,16 @@ gchar *make_error_message(JsonObject * response, int status);
 void trg_error_dialog(GtkWindow * parent, trg_response * response);
 
 void
-tr_formatter_size_init( unsigned int kilo,
-                        const char * kb, const char * mb,
-                        const char * gb, const char * tb );
-char*
-tr_formatter_size_B( char * buf, gint64 bytes, size_t buflen );
+tr_formatter_size_init(unsigned int kilo,
+                       const char *kb, const char *mb,
+                       const char *gb, const char *tb);
+char *tr_formatter_size_B(char *buf, gint64 bytes, size_t buflen);
 
 void
-tr_formatter_speed_init( unsigned int kilo,
-                         const char * kb, const char * mb,
-                         const char * gb, const char * tb );
-char*
-tr_formatter_speed_KBps( char * buf, double KBps, size_t buflen );
+tr_formatter_speed_init(unsigned int kilo,
+                        const char *kb, const char *mb,
+                        const char *gb, const char *tb);
+char *tr_formatter_speed_KBps(char *buf, double KBps, size_t buflen);
 
 char *tr_strltime_long(char *buf, long seconds, size_t buflen);
 char *tr_strltime_short(char *buf, long seconds, size_t buflen);

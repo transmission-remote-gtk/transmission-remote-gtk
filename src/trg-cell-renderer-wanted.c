@@ -44,8 +44,8 @@ struct _TrgCellRendererWantedPrivate {
 
 static void
 trg_cell_renderer_wanted_get_property(GObject * object,
-                                        guint property_id, GValue * value,
-                                        GParamSpec * pspec)
+                                      guint property_id, GValue * value,
+                                      GParamSpec * pspec)
 {
     TrgCellRendererWantedPrivate *priv =
         TRG_CELL_RENDERER_WANTED_GET_PRIVATE(object);
@@ -61,17 +61,18 @@ trg_cell_renderer_wanted_get_property(GObject * object,
 
 static void
 trg_cell_renderer_wanted_set_property(GObject * object,
-                                        guint property_id,
-                                        const GValue * value,
-                                        GParamSpec * pspec)
+                                      guint property_id,
+                                      const GValue * value,
+                                      GParamSpec * pspec)
 {
     TrgCellRendererWantedPrivate *priv =
         TRG_CELL_RENDERER_WANTED_GET_PRIVATE(object);
 
     if (property_id == PROP_WANTED_VALUE) {
         priv->wanted_value = g_value_get_int(value);
-        g_object_set(G_OBJECT(object), "inconsistent", (priv->wanted_value == TR_PRI_MIXED),
-                         "active", (priv->wanted_value == TRUE), NULL);
+        g_object_set(G_OBJECT(object), "inconsistent",
+                     (priv->wanted_value == TR_PRI_MIXED), "active",
+                     (priv->wanted_value == TRUE), NULL);
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
@@ -97,16 +98,13 @@ trg_cell_renderer_wanted_class_init(TrgCellRendererWantedClass * klass)
                                      G_PARAM_STATIC_NICK |
                                      G_PARAM_STATIC_BLURB));
 
-    g_type_class_add_private(klass,
-                             sizeof(TrgCellRendererWantedPrivate));
+    g_type_class_add_private(klass, sizeof(TrgCellRendererWantedPrivate));
 }
 
-static void
-trg_cell_renderer_wanted_init(TrgCellRendererWanted *
-                                self)
+static void trg_cell_renderer_wanted_init(TrgCellRendererWanted * self)
 {
     /*g_object_set(G_OBJECT(self), "xalign", (gfloat) 0.5, "yalign", (gfloat) 0.5,
-                 NULL);*/
+       NULL); */
 }
 
 GtkCellRenderer *trg_cell_renderer_wanted_new(void)

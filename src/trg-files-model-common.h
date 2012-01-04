@@ -20,14 +20,22 @@
 #ifndef TRG_FILES_TREE_MODEL_COMMON_H_
 #define TRG_FILES_TREE_MODEL_COMMON_H_
 
-void trg_files_tree_model_propogateChangeUp(GtkTreeModel * model, GtkTreeIter * iter, gint column, gint new_value);
-void
-trg_files_tree_model_setSubtree(GtkTreeModel * model, GtkTreePath * path, GtkTreeIter * iter,
-           gint column, gint new_value);
-void trg_files_tree_model_set_priority(GtkTreeView *tv, gint column, gint new_value);
-void trg_files_model_set_wanted(GtkTreeView *tv, gint column, gint new_value);
-gboolean trg_files_model_update_parent_size(GtkTreeModel *model,
-        GtkTreePath *path, GtkTreeIter *iter, gpointer data);
-void trg_files_model_update_parents(GtkTreeModel *model, GtkTreeIter *iter, gint size_column);
+void trg_files_tree_model_propogateChangeUp(GtkTreeModel * model,
+                                            GtkTreeIter * iter,
+                                            gint column, gint new_value);
+void trg_files_tree_model_setSubtree(GtkTreeModel * model,
+                                     GtkTreePath * path,
+                                     GtkTreeIter * iter, gint column,
+                                     gint new_value);
+void trg_files_tree_model_set_priority(GtkTreeView * tv, gint column,
+                                       gint new_value);
+void trg_files_model_set_wanted(GtkTreeView * tv, gint column,
+                                gint new_value);
+gboolean trg_files_model_update_parent_size(GtkTreeModel * model,
+                                            GtkTreePath * path,
+                                            GtkTreeIter * iter,
+                                            gpointer data);
+void trg_files_model_update_parents(GtkTreeModel * model,
+                                    GtkTreeIter * iter, gint size_column);
 
-#endif /* TRG_FILES_TREE_MODEL_COMMON_H_ */
+#endif                          /* TRG_FILES_TREE_MODEL_COMMON_H_ */

@@ -32,7 +32,8 @@
  * pointers for load/save.
  */
 
-void trg_json_widgets_save(GList * list, JsonObject * out) {
+void trg_json_widgets_save(GList * list, JsonObject * out)
+{
     GList *li;
     for (li = list; li; li = g_list_next(li)) {
         trg_json_widget_desc *wd = (trg_json_widget_desc *) li->data;
@@ -40,12 +41,14 @@ void trg_json_widgets_save(GList * list, JsonObject * out) {
     }
 }
 
-void trg_json_widget_desc_free(trg_json_widget_desc * wd) {
+void trg_json_widget_desc_free(trg_json_widget_desc * wd)
+{
     g_free(wd->key);
     g_free(wd);
 }
 
-void trg_json_widget_desc_list_free(GList * list) {
+void trg_json_widget_desc_list_free(GList * list)
+{
     GList *li;
     for (li = list; li; li = g_list_next(li))
         trg_json_widget_desc_free((trg_json_widget_desc *) li->data);
@@ -53,12 +56,17 @@ void trg_json_widget_desc_list_free(GList * list) {
     g_list_free(list);
 }
 
-void toggle_active_arg_is_sensitive(GtkToggleButton * b, gpointer data) {
-    gtk_widget_set_sensitive(GTK_WIDGET(data), gtk_toggle_button_get_active(b));
+void toggle_active_arg_is_sensitive(GtkToggleButton * b, gpointer data)
+{
+    gtk_widget_set_sensitive(GTK_WIDGET(data),
+                             gtk_toggle_button_get_active(b));
 }
 
 GtkWidget *trg_json_widget_check_new(GList ** wl, JsonObject * obj,
-        const gchar * key, const gchar * label, GtkWidget * toggleDep) {
+                                     const gchar * key,
+                                     const gchar * label,
+                                     GtkWidget * toggleDep)
+{
     GtkWidget *w = gtk_check_button_new_with_mnemonic(label);
     trg_json_widget_desc *wd = g_new0(trg_json_widget_desc, 1);
 
@@ -68,13 +76,14 @@ GtkWidget *trg_json_widget_check_new(GList ** wl, JsonObject * obj,
 
     if (toggleDep) {
         gtk_widget_set_sensitive(w,
-                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toggleDep)));
+                                 gtk_toggle_button_get_active
+                                 (GTK_TOGGLE_BUTTON(toggleDep)));
         g_signal_connect(G_OBJECT(toggleDep), "toggled",
-                G_CALLBACK(toggle_active_arg_is_sensitive), w);
+                         G_CALLBACK(toggle_active_arg_is_sensitive), w);
     }
 
     gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w),
-            json_object_get_boolean_member(obj, key));
+                                 json_object_get_boolean_member(obj, key));
 
     *wl = g_list_append(*wl, wd);
 
@@ -82,7 +91,9 @@ GtkWidget *trg_json_widget_check_new(GList ** wl, JsonObject * obj,
 }
 
 GtkWidget *trg_json_widget_entry_new(GList ** wl, JsonObject * obj,
-        const gchar * key, GtkWidget * toggleDep) {
+                                     const gchar * key,
+                                     GtkWidget * toggleDep)
+{
     GtkWidget *w = gtk_entry_new();
     trg_json_widget_desc *wd = g_new0(trg_json_widget_desc, 1);
 
@@ -92,12 +103,14 @@ GtkWidget *trg_json_widget_entry_new(GList ** wl, JsonObject * obj,
 
     if (toggleDep) {
         gtk_widget_set_sensitive(w,
-                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toggleDep)));
+                                 gtk_toggle_button_get_active
+                                 (GTK_TOGGLE_BUTTON(toggleDep)));
         g_signal_connect(G_OBJECT(toggleDep), "toggled",
-                G_CALLBACK(toggle_active_arg_is_sensitive), w);
+                         G_CALLBACK(toggle_active_arg_is_sensitive), w);
     }
 
-    gtk_entry_set_text(GTK_ENTRY(w), json_object_get_string_member(obj, key));
+    gtk_entry_set_text(GTK_ENTRY(w),
+                       json_object_get_string_member(obj, key));
 
     *wl = g_list_append(*wl, wd);
 
@@ -105,16 +118,19 @@ GtkWidget *trg_json_widget_entry_new(GList ** wl, JsonObject * obj,
 }
 
 void trg_json_widget_time_save(GtkWidget * widget, JsonObject * obj,
-        gchar * key) {
+                               gchar * key)
+{
 
     json_object_set_double_member(obj, key,
-            gtk_spin_button_get_value(GTK_SPIN_BUTTON
-            (widget)));
+                                  gtk_spin_button_get_value(GTK_SPIN_BUTTON
+                                                            (widget)));
 }
 
 GtkWidget *trg_json_widget_spin_new(GList ** wl, JsonObject * obj,
-        const gchar * key, GtkWidget * toggleDep, gdouble min, gdouble max,
-        gdouble step) {
+                                    const gchar * key,
+                                    GtkWidget * toggleDep, gdouble min,
+                                    gdouble max, gdouble step)
+{
     GtkWidget *w = gtk_spin_button_new_with_range(min, max, step);
     trg_json_widget_desc *wd = g_new0(trg_json_widget_desc, 1);
     JsonNode *node = json_object_get_member(obj, key);
@@ -125,13 +141,14 @@ GtkWidget *trg_json_widget_spin_new(GList ** wl, JsonObject * obj,
 
     if (toggleDep) {
         gtk_widget_set_sensitive(w,
-                gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(toggleDep)));
+                                 gtk_toggle_button_get_active
+                                 (GTK_TOGGLE_BUTTON(toggleDep)));
         g_signal_connect(G_OBJECT(toggleDep), "toggled",
-                G_CALLBACK(toggle_active_arg_is_sensitive), w);
+                         G_CALLBACK(toggle_active_arg_is_sensitive), w);
     }
 
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-            json_node_really_get_double(node));
+                              json_node_really_get_double(node));
 
     *wl = g_list_append(*wl, wd);
 
@@ -139,20 +156,24 @@ GtkWidget *trg_json_widget_spin_new(GList ** wl, JsonObject * obj,
 }
 
 void trg_json_widget_check_save(GtkWidget * widget, JsonObject * obj,
-        gchar * key) {
-    gboolean active = gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
+                                gchar * key)
+{
+    gboolean active =
+        gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(widget));
     json_object_set_boolean_member(obj, key, active);
 }
 
 void trg_json_widget_entry_save(GtkWidget * widget, JsonObject * obj,
-        gchar * key) {
+                                gchar * key)
+{
     json_object_set_string_member(obj, key,
-            gtk_entry_get_text(GTK_ENTRY(widget)));
+                                  gtk_entry_get_text(GTK_ENTRY(widget)));
 }
 
 void trg_json_widget_spin_save_double(GtkWidget * widget, JsonObject * obj,
-        gchar * key) {
+                                      gchar * key)
+{
     json_object_set_double_member(obj, key,
-            gtk_spin_button_get_value(GTK_SPIN_BUTTON
-            (widget)));
+                                  gtk_spin_button_get_value(GTK_SPIN_BUTTON
+                                                            (widget)));
 }

@@ -182,8 +182,8 @@ typedef enum {
 } tr_torrent_activity;
 
 enum {
-    TR_PRI_UNSET = -3, // Not actually in the protocol. Just used in UI.
-    TR_PRI_MIXED = -2, // Neither is this.
+    TR_PRI_UNSET = -3,          // Not actually in the protocol. Just used in UI.
+    TR_PRI_MIXED = -2,          // Neither is this.
     TR_PRI_LOW = -1,
     TR_PRI_NORMAL = 0,          /* since NORMAL is 0, memset initializes nicely */
     TR_PRI_HIGH = 1

@@ -44,8 +44,9 @@ struct _TrgFilesModelPrivate {
     gboolean accept;
 };
 
-static void iter_to_row_reference(GtkTreeModel *model, GtkTreeIter *iter,
-        GtkTreeRowReference **rr) {
+static void iter_to_row_reference(GtkTreeModel * model, GtkTreeIter * iter,
+                                  GtkTreeRowReference ** rr)
+{
     GtkTreePath *path = gtk_tree_model_get_path(model, iter);
 
     if (*rr)
@@ -55,8 +56,9 @@ static void iter_to_row_reference(GtkTreeModel *model, GtkTreeIter *iter,
     gtk_tree_path_free(path);
 }
 
-static void rowref_to_iter(GtkTreeModel *model, GtkTreeRowReference *rr,
-        GtkTreeIter *iter) {
+static void rowref_to_iter(GtkTreeModel * model, GtkTreeRowReference * rr,
+                           GtkTreeIter * iter)
+{
     GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
     gtk_tree_model_get_iter(model, iter, path);
     gtk_tree_path_free(path);
@@ -67,23 +69,33 @@ struct UpdateParentProgressForeachData {
     gint64 increment;
 };
 
-static gboolean trg_files_update_parent_progress_foreachfunc(GtkTreeModel *model,
-        GtkTreePath *path, GtkTreeIter *iter, gpointer data) {
-    struct UpdateParentProgressForeachData *args = (struct UpdateParentProgressForeachData*) data;
+static gboolean trg_files_update_parent_progress_foreachfunc(GtkTreeModel *
+                                                             model,
+                                                             GtkTreePath *
+                                                             path,
+                                                             GtkTreeIter *
+                                                             iter,
+                                                             gpointer data)
+{
+    struct UpdateParentProgressForeachData *args =
+        (struct UpdateParentProgressForeachData *) data;
 
     GtkTreePath *descendentPath = gtk_tree_model_get_path(model,
-            args->descendentIter);
+                                                          args->
+                                                          descendentIter);
 
     if (gtk_tree_path_is_ancestor(path, descendentPath)) {
         gint64 lastCompleted, newCompleted, length;
 
-        gtk_tree_model_get(model, iter, FILESCOL_BYTESCOMPLETED, &lastCompleted,
-                FILESCOL_SIZE, &length, -1);
+        gtk_tree_model_get(model, iter, FILESCOL_BYTESCOMPLETED,
+                           &lastCompleted, FILESCOL_SIZE, &length, -1);
         newCompleted = lastCompleted + args->increment;
 
-        gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_BYTESCOMPLETED,
-                newCompleted, FILESCOL_PROGRESS,
-                file_get_progress(length, newCompleted), -1);
+        gtk_tree_store_set(GTK_TREE_STORE(model), iter,
+                           FILESCOL_BYTESCOMPLETED, newCompleted,
+                           FILESCOL_PROGRESS, file_get_progress(length,
+                                                                newCompleted),
+                           -1);
 
     }
 
@@ -92,7 +104,9 @@ static gboolean trg_files_update_parent_progress_foreachfunc(GtkTreeModel *model
     return FALSE;
 }
 
-static void trg_files_update_parent_progress(GtkTreeModel *model, GtkTreeIter *iter, gint64 increment)
+static void trg_files_update_parent_progress(GtkTreeModel * model,
+                                             GtkTreeIter * iter,
+                                             gint64 increment)
 {
     if (increment > 0) {
         struct UpdateParentProgressForeachData args;
@@ -100,12 +114,15 @@ static void trg_files_update_parent_progress(GtkTreeModel *model, GtkTreeIter *i
         args.increment = increment;
 
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-                trg_files_update_parent_progress_foreachfunc, &args);
+                               trg_files_update_parent_progress_foreachfunc,
+                               &args);
     }
 }
 
-static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
-        JsonObject * file, gint id) {
+static void trg_files_model_iter_new(TrgFilesModel * model,
+                                     GtkTreeIter * iter, JsonObject * file,
+                                     gint id)
+{
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     gchar **elements = g_strsplit(file_get_name(file), "/", -1);
     gchar *existingName;
@@ -117,19 +134,21 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
         GtkTreeIter *found = NULL;
 
         if (parentRowRef)
-            rowref_to_iter(GTK_TREE_MODEL(model), parentRowRef, &parentIter);
+            rowref_to_iter(GTK_TREE_MODEL(model), parentRowRef,
+                           &parentIter);
 
         /* If this is the last component of the path, create a file node. */
 
         if (!elements[i + 1]) {
             gtk_tree_store_append(GTK_TREE_STORE(model), iter,
-                    parentRowRef ? &parentIter : NULL);
+                                  parentRowRef ? &parentIter : NULL);
             gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_NAME,
-                    elements[i], FILESCOL_SIZE, file_get_length(file),
-                    FILESCOL_ID, id, -1);
+                               elements[i], FILESCOL_SIZE,
+                               file_get_length(file), FILESCOL_ID, id, -1);
 
             if (parentRowRef)
-                trg_files_model_update_parents(GTK_TREE_MODEL(model), iter, FILESCOL_SIZE);
+                trg_files_model_update_parents(GTK_TREE_MODEL(model), iter,
+                                               FILESCOL_SIZE);
 
             break;
         }
@@ -138,45 +157,50 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
          * GtkTreeRowReferece *parent. */
 
         if (gtk_tree_model_iter_children(GTK_TREE_MODEL(model), iter,
-                parentRowRef ? &parentIter : NULL)) {
+                                         parentRowRef ? &parentIter :
+                                         NULL)) {
             do {
-                gtk_tree_model_get(GTK_TREE_MODEL(model), iter, FILESCOL_NAME,
-                        &existingName, FILESCOL_ID, &existingId, -1);
+                gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
+                                   FILESCOL_NAME, &existingName,
+                                   FILESCOL_ID, &existingId, -1);
 
-                if (existingId == -1 && !g_strcmp0(elements[i], existingName)) {
+                if (existingId == -1
+                    && !g_strcmp0(elements[i], existingName)) {
                     found = iter;
                     iter_to_row_reference(GTK_TREE_MODEL(model), iter,
-                            &parentRowRef);
+                                          &parentRowRef);
                 }
 
                 g_free(existingName);
 
                 if (found)
                     break;
-            } while (gtk_tree_model_iter_next(GTK_TREE_MODEL(model), iter));
+            } while (gtk_tree_model_iter_next
+                     (GTK_TREE_MODEL(model), iter));
         }
 
         if (!found) {
             GValue gvalue = { 0 };
 
             gtk_tree_store_append(GTK_TREE_STORE(model), iter,
-                    parentRowRef ? &parentIter : NULL);
+                                  parentRowRef ? &parentIter : NULL);
             gtk_tree_store_set(GTK_TREE_STORE(model), iter,
-                    FILESCOL_PRIORITY, TR_PRI_UNSET,
-                    FILESCOL_NAME, elements[i], -1);
+                               FILESCOL_PRIORITY, TR_PRI_UNSET,
+                               FILESCOL_NAME, elements[i], -1);
 
             g_value_init(&gvalue, G_TYPE_INT);
             g_value_set_int(&gvalue, -1);
-            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, FILESCOL_ID,
-                    &gvalue);
+            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter,
+                                     FILESCOL_ID, &gvalue);
 
             memset(&gvalue, 0, sizeof(GValue));
             g_value_init(&gvalue, G_TYPE_INT);
             g_value_set_int(&gvalue, TR_PRI_UNSET);
             gtk_tree_store_set_value(GTK_TREE_STORE(model), iter,
-                    FILESCOL_PRIORITY, &gvalue);
+                                     FILESCOL_PRIORITY, &gvalue);
 
-            iter_to_row_reference(GTK_TREE_MODEL(model), iter, &parentRowRef);
+            iter_to_row_reference(GTK_TREE_MODEL(model), iter,
+                                  &parentRowRef);
         }
     }
 
@@ -187,24 +211,32 @@ static void trg_files_model_iter_new(TrgFilesModel * model, GtkTreeIter * iter,
     priv->n_items++;
 }
 
-void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept) {
+void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept)
+{
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     priv->accept = accept;
 }
 
 static void trg_files_model_iter_update(TrgFilesModel * model,
-        GtkTreeIter * filesIter, gboolean isFirst, JsonObject * file,
-        JsonArray * wantedArray, JsonArray * prioritiesArray, int id) {
+                                        GtkTreeIter * filesIter,
+                                        gboolean isFirst,
+                                        JsonObject * file,
+                                        JsonArray * wantedArray,
+                                        JsonArray * prioritiesArray,
+                                        int id)
+{
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
 
     gint64 fileLength = file_get_length(file);
     gint64 fileCompleted = file_get_bytes_completed(file);
     gint64 increment;
 
-    gboolean wanted = json_node_get_int(json_array_get_element(wantedArray, id))
-            == 1;
-    gint priority = (gint)json_node_get_int(
-            json_array_get_element(prioritiesArray, id));
+    gboolean wanted =
+        json_node_get_int(json_array_get_element(wantedArray, id))
+        == 1;
+    gint priority =
+        (gint)
+        json_node_get_int(json_array_get_element(prioritiesArray, id));
     gdouble progress = file_get_progress(fileLength, fileCompleted);
 
     if (isFirst) {
@@ -212,30 +244,40 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
     } else {
         gint64 lastCompleted;
         gtk_tree_model_get(GTK_TREE_MODEL(model), filesIter,
-                FILESCOL_BYTESCOMPLETED, &lastCompleted, -1);
+                           FILESCOL_BYTESCOMPLETED, &lastCompleted, -1);
         increment = fileCompleted - lastCompleted;
     }
 
     gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_PROGRESS,
-            progress, FILESCOL_BYTESCOMPLETED, fileCompleted, -1);
+                       progress, FILESCOL_BYTESCOMPLETED, fileCompleted,
+                       -1);
 
-    trg_files_update_parent_progress(GTK_TREE_MODEL(model), filesIter, increment);
+    trg_files_update_parent_progress(GTK_TREE_MODEL(model), filesIter,
+                                     increment);
 
     if (priv->accept)
-        gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_WANTED,
-                wanted, FILESCOL_PRIORITY, priority, -1);
+        gtk_tree_store_set(GTK_TREE_STORE(model), filesIter,
+                           FILESCOL_WANTED, wanted, FILESCOL_PRIORITY,
+                           priority, -1);
 
     if (isFirst) {
-        trg_files_tree_model_propogateChangeUp(GTK_TREE_MODEL(model), filesIter, FILESCOL_PRIORITY, priority);
-        trg_files_tree_model_propogateChangeUp(GTK_TREE_MODEL(model), filesIter, FILESCOL_WANTED, wanted);
+        trg_files_tree_model_propogateChangeUp(GTK_TREE_MODEL(model),
+                                               filesIter,
+                                               FILESCOL_PRIORITY,
+                                               priority);
+        trg_files_tree_model_propogateChangeUp(GTK_TREE_MODEL(model),
+                                               filesIter, FILESCOL_WANTED,
+                                               wanted);
     }
 }
 
-static void trg_files_model_class_init(TrgFilesModelClass * klass) {
+static void trg_files_model_class_init(TrgFilesModelClass * klass)
+{
     g_type_class_add_private(klass, sizeof(TrgFilesModelPrivate));
 }
 
-static void trg_files_model_init(TrgFilesModel * self) {
+static void trg_files_model_init(TrgFilesModel * self)
+{
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(self);
     GType column_types[FILESCOL_COLUMNS];
 
@@ -250,11 +292,13 @@ static void trg_files_model_init(TrgFilesModel * self) {
     column_types[FILESCOL_BYTESCOMPLETED] = G_TYPE_INT64;
 
     gtk_tree_store_set_column_types(GTK_TREE_STORE(self), FILESCOL_COLUMNS,
-            column_types);
+                                    column_types);
 }
 
 gboolean trg_files_model_update_foreach(GtkListStore * model,
-        GtkTreePath * path G_GNUC_UNUSED, GtkTreeIter * iter, GList * files) {
+                                        GtkTreePath * path G_GNUC_UNUSED,
+                                        GtkTreeIter * iter, GList * files)
+{
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     JsonObject *file;
     gint id;
@@ -263,15 +307,17 @@ gboolean trg_files_model_update_foreach(GtkListStore * model,
 
     if (id >= 0) {
         file = json_node_get_object(g_list_nth_data(files, id));
-        trg_files_model_iter_update(TRG_FILES_MODEL(model), iter, FALSE, file,
-                priv->wanted, priv->priorities, id);
+        trg_files_model_iter_update(TRG_FILES_MODEL(model), iter, FALSE,
+                                    file, priv->wanted, priv->priorities,
+                                    id);
     }
 
     return FALSE;
 }
 
 void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
-        JsonObject * t, gint mode) {
+                            JsonObject * t, gint mode)
+{
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     GList *filesList, *li;
     GtkTreeIter filesIter;
@@ -292,21 +338,22 @@ void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
 
             trg_files_model_iter_new(model, &filesIter, file, j);
             trg_files_model_iter_update(model, &filesIter, TRUE, file,
-                    priv->wanted, priv->priorities, j);
+                                        priv->wanted, priv->priorities, j);
             j++;
         }
     } else {
         guint n_updates = g_list_length(filesList);
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-                (GtkTreeModelForeachFunc) trg_files_model_update_foreach,
-                filesList);
+                               (GtkTreeModelForeachFunc)
+                               trg_files_model_update_foreach, filesList);
         if (n_updates > priv->n_items) {
             gint n_new = n_updates - priv->n_items;
             for (j = n_updates - n_new; j < n_updates; j++) {
                 file = json_node_get_object(g_list_nth_data(filesList, j));
                 trg_files_model_iter_new(model, &filesIter, file, j);
                 trg_files_model_iter_update(model, &filesIter, TRUE, file,
-                        priv->wanted, priv->priorities, j);
+                                            priv->wanted, priv->priorities,
+                                            j);
             }
         }
     }
@@ -314,11 +361,13 @@ void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
     g_list_free(filesList);
 }
 
-gint64 trg_files_model_get_torrent_id(TrgFilesModel * model) {
+gint64 trg_files_model_get_torrent_id(TrgFilesModel * model)
+{
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     return priv->torrentId;
 }
 
-TrgFilesModel *trg_files_model_new(void) {
+TrgFilesModel *trg_files_model_new(void)
+{
     return g_object_new(TRG_TYPE_FILES_MODEL, NULL);
 }

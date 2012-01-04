@@ -127,6 +127,10 @@ Section $(NAME_SecTransmissionRemoteGTK) SecTransmissionRemoteGTK
 
   File "C:\MinGW\msys\1.0\lib\locale\de\LC_MESSAGES\transmission-remote-gtk.mo"
 
+  SetOutPath $INSTDIR\share\locale\lt\LC_MESSAGES
+
+  File "C:\MinGW\msys\1.0\lib\locale\lt\LC_MESSAGES\transmission-remote-gtk.mo"
+
   SetOutPath $INSTDIR\share\icons\hicolor\scalable\apps
 
   File "C:\MinGW\msys\1.0\share\icons\hicolor\scalable\apps\transmission-remote-gtk.svg"
@@ -220,6 +224,17 @@ Section $(NAME_SecGlibGtkEtc) SecGlibGtkEtc
   SetOutPath $INSTDIR\lib\gtk-2.0\modules
   
   File "..\..\gtk-2.24-win32-bin\lib\gtk-2.0\modules\libgail.dll"
+  
+  SetOutPath $INSTDIR\share\locale\lt\LC_MESSAGES
+  
+  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\libiconv.mo"
+  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gtk20.mo"
+  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
+  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\glib20.mo"
+  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gettext-tools.mo"
+  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gettext-runtime.mo"
+  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
+  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\atk10.mo"
   
   SetOutPath $INSTDIR\share\locale\uk\LC_MESSAGES
   
@@ -409,6 +424,15 @@ Section "Uninstall"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gtk20.mo"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\libiconv.mo"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\transmission-remote-gtk.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\atk10.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gdk-pixbuf.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gettext-runtime.mo"
@@ -497,6 +521,8 @@ Section "Uninstall"
   RMDir "$INSTDIR\share\locale\es"
   RMDir "$INSTDIR\share\locale\de\LC_MESSAGES"
   RMDir "$INSTDIR\share\locale\de"
+  RMDir "$INSTDIR\share\locale\lt\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\lt"
   RMDir "$INSTDIR\share\locale"
   RMDir "$INSTDIR\share\icons\hicolor\scalable\apps"
   RMDir "$INSTDIR\share\icons\hicolor\scalable"

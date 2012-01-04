@@ -21,12 +21,21 @@
 #define TRG_FILES_TREE_VIEW_COMMON_H_
 
 gboolean
-trg_files_tree_view_onViewButtonPressed(GtkWidget * w, GdkEventButton * event,
-        gint pri_id, gint enabled_id,
-        GCallback low_cb, GCallback normal_cb, GCallback high_cb,
-        GCallback wanted_cb, GCallback unwanted_cb, gpointer gdata);
+trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
+                                        GdkEventButton * event,
+                                        gint pri_id, gint enabled_id,
+                                        GCallback low_cb,
+                                        GCallback normal_cb,
+                                        GCallback high_cb,
+                                        GCallback wanted_cb,
+                                        GCallback unwanted_cb,
+                                        gpointer gdata);
 gboolean trg_files_tree_view_viewOnPopupMenu(GtkWidget * treeview,
-        GCallback low_cb, GCallback normal_cb, GCallback high_cb,
-        GCallback wanted_cb, GCallback unwanted_cb, gpointer userdata);
+                                             GCallback low_cb,
+                                             GCallback normal_cb,
+                                             GCallback high_cb,
+                                             GCallback wanted_cb,
+                                             GCallback unwanted_cb,
+                                             gpointer userdata);
 
-#endif /* TRG_FILES_TREE_VIEW_COMMON_H_ */
+#endif                          /* TRG_FILES_TREE_VIEW_COMMON_H_ */

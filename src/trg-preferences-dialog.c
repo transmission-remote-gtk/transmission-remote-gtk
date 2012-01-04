@@ -385,7 +385,8 @@ static void trgp_double_special_dependent(GtkWidget * widget,
                              (priv->fullUpdateCheck)
                              &&
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (priv->fullUpdateCheck)));
+                                                          (priv->
+                                                           fullUpdateCheck)));
 }
 
 static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)
@@ -888,7 +889,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_viewPage(TRG_PREFERENCES_DIALOG
-                                                  (object)),
+                                                (object)),
                              gtk_label_new(_("View")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),

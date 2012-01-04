@@ -21,52 +21,43 @@
 
 #include "icon-turtle.h"
 
-typedef struct
-{
-    const guint8*   raw;
-    const char *    name;
-}
-BuiltinIconInfo;
+typedef struct {
+    const guint8 *raw;
+    const char *name;
+} BuiltinIconInfo;
 
-static const BuiltinIconInfo my_fallback_icons[] =
-{
-    { blue_turtle,      "alt-speed-on"       },
-    { grey_turtle,      "alt-speed-off"      }
+static const BuiltinIconInfo my_fallback_icons[] = {
+    {blue_turtle, "alt-speed-on"},
+    {grey_turtle, "alt-speed-off"}
 };
 
-void
-register_my_icons( GtkIconTheme *theme )
+void register_my_icons(GtkIconTheme * theme)
 {
-    int              i;
-    const int        n = G_N_ELEMENTS( my_fallback_icons );
-    GtkIconFactory * factory = gtk_icon_factory_new( );
+    int i;
+    const int n = G_N_ELEMENTS(my_fallback_icons);
+    GtkIconFactory *factory = gtk_icon_factory_new();
 
-    gtk_icon_factory_add_default( factory );
+    gtk_icon_factory_add_default(factory);
 
-    for( i = 0; i < n; ++i )
-    {
-        const char * name = my_fallback_icons[i].name;
+    for (i = 0; i < n; ++i) {
+        const char *name = my_fallback_icons[i].name;
 
-        if( !gtk_icon_theme_has_icon( theme, name ) )
-        {
-            int          width;
-            GdkPixbuf *  p;
-            GtkIconSet * icon_set;
+        if (!gtk_icon_theme_has_icon(theme, name)) {
+            int width;
+            GdkPixbuf *p;
+            GtkIconSet *icon_set;
 
-            p =
-                gdk_pixbuf_new_from_inline( -1, my_fallback_icons[i].raw,
-                                            FALSE,
-                                            NULL );
-            width = gdk_pixbuf_get_width( p );
-            icon_set = gtk_icon_set_new_from_pixbuf( p );
-            gtk_icon_theme_add_builtin_icon( name, width, p );
-            gtk_icon_factory_add( factory, name, icon_set );
+            p = gdk_pixbuf_new_from_inline(-1, my_fallback_icons[i].raw,
+                                           FALSE, NULL);
+            width = gdk_pixbuf_get_width(p);
+            icon_set = gtk_icon_set_new_from_pixbuf(p);
+            gtk_icon_theme_add_builtin_icon(name, width, p);
+            gtk_icon_factory_add(factory, name, icon_set);
 
-            g_object_unref( p );
-            gtk_icon_set_unref( icon_set );
+            g_object_unref(p);
+            gtk_icon_set_unref(icon_set);
         }
     }
 
-    g_object_unref ( G_OBJECT ( factory ) );
+    g_object_unref(G_OBJECT(factory));
 }
-

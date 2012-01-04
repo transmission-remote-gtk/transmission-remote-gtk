@@ -27,19 +27,22 @@
 #include "trg-files-model-common.h"
 #include "trg-files-tree-view-common.h"
 
-static void expand_all_cb(GtkWidget *w, gpointer data)
+static void expand_all_cb(GtkWidget * w, gpointer data)
 {
     gtk_tree_view_expand_all(GTK_TREE_VIEW(data));
 }
 
-static void collapse_all_cb(GtkWidget *w, gpointer data)
+static void collapse_all_cb(GtkWidget * w, gpointer data)
 {
     gtk_tree_view_collapse_all(GTK_TREE_VIEW(data));
 }
 
 static void view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
-        GCallback low_cb, GCallback normal_cb, GCallback high_cb,
-        GCallback wanted_cb, GCallback unwanted_cb, gpointer data G_GNUC_UNUSED) {
+                            GCallback low_cb, GCallback normal_cb,
+                            GCallback high_cb, GCallback wanted_cb,
+                            GCallback unwanted_cb,
+                            gpointer data G_GNUC_UNUSED)
+{
     GtkWidget *menu, *menuitem;
 
     menu = gtk_menu_new();
@@ -56,12 +59,13 @@ static void view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
     g_signal_connect(menuitem, "activate", low_cb, treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),
+                          gtk_separator_menu_item_new());
 
     menuitem = gtk_image_menu_item_new_with_label(GTK_STOCK_APPLY);
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(menuitem), TRUE);
     gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
-    (menuitem), TRUE);
+                                              (menuitem), TRUE);
     gtk_menu_item_set_label(GTK_MENU_ITEM(menuitem), _("Download"));
     g_signal_connect(menuitem, "activate", wanted_cb, treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
@@ -69,38 +73,49 @@ static void view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
     menuitem = gtk_image_menu_item_new_with_label(GTK_STOCK_CANCEL);
     gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(menuitem), TRUE);
     gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
-    (menuitem), TRUE);
+                                              (menuitem), TRUE);
     gtk_menu_item_set_label(GTK_MENU_ITEM(menuitem), _("Skip"));
     g_signal_connect(menuitem, "activate", unwanted_cb, treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
-    gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
+    gtk_menu_shell_append(GTK_MENU_SHELL(menu),
+                          gtk_separator_menu_item_new());
 
     menuitem = gtk_image_menu_item_new_with_label(_("Expand All"));
-    g_signal_connect(menuitem, "activate", G_CALLBACK(expand_all_cb), treeview);
+    g_signal_connect(menuitem, "activate", G_CALLBACK(expand_all_cb),
+                     treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
     menuitem = gtk_image_menu_item_new_with_label(_("Collapse All"));
-    g_signal_connect(menuitem, "activate", G_CALLBACK(collapse_all_cb), treeview);
+    g_signal_connect(menuitem, "activate", G_CALLBACK(collapse_all_cb),
+                     treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
     gtk_widget_show_all(menu);
 
     gtk_menu_popup(GTK_MENU(menu), NULL, NULL, NULL, NULL,
-            (event != NULL) ? event->button : 0,
-            gdk_event_get_time((GdkEvent *) event));
-        }
+                   (event != NULL) ? event->button : 0,
+                   gdk_event_get_time((GdkEvent *) event));
+}
 
 gboolean trg_files_tree_view_viewOnPopupMenu(GtkWidget * treeview,
-        GCallback low_cb, GCallback normal_cb, GCallback high_cb,
-        GCallback wanted_cb, GCallback unwanted_cb, gpointer userdata) {
+                                             GCallback low_cb,
+                                             GCallback normal_cb,
+                                             GCallback high_cb,
+                                             GCallback wanted_cb,
+                                             GCallback unwanted_cb,
+                                             gpointer userdata)
+{
     view_popup_menu(treeview, NULL, low_cb, normal_cb, high_cb, wanted_cb,
-            unwanted_cb, userdata);
+                    unwanted_cb, userdata);
     return TRUE;
 }
 
-static gboolean onViewPathToggled(GtkTreeView * view, GtkTreeViewColumn * col,
-        GtkTreePath * path, gint pri_id, gint enabled_id, gpointer data) {
+static gboolean onViewPathToggled(GtkTreeView * view,
+                                  GtkTreeViewColumn * col,
+                                  GtkTreePath * path, gint pri_id,
+                                  gint enabled_id, gpointer data)
+{
     int cid;
     gboolean handled = FALSE;
 
@@ -129,14 +144,14 @@ static gboolean onViewPathToggled(GtkTreeView * view, GtkTreeViewColumn * col,
                 break;
             }
             trg_files_tree_model_setSubtree(model, path, &iter, pri_id,
-                    priority);
+                                            priority);
         } else {
             int enabled;
             gtk_tree_model_get(model, &iter, enabled_id, &enabled, -1);
             enabled = !enabled;
 
             trg_files_tree_model_setSubtree(model, path, &iter, enabled_id,
-                    enabled);
+                                            enabled);
         }
 
         handled = TRUE;
@@ -146,11 +161,14 @@ static gboolean onViewPathToggled(GtkTreeView * view, GtkTreeViewColumn * col,
 }
 
 static gboolean getAndSelectEventPath(GtkTreeView * treeview,
-        GdkEventButton * event, GtkTreeViewColumn ** col, GtkTreePath ** path) {
+                                      GdkEventButton * event,
+                                      GtkTreeViewColumn ** col,
+                                      GtkTreePath ** path)
+{
     GtkTreeSelection *sel;
 
-    if (gtk_tree_view_get_path_at_pos(treeview, event->x, event->y, path, col,
-            NULL, NULL)) {
+    if (gtk_tree_view_get_path_at_pos
+        (treeview, event->x, event->y, path, col, NULL, NULL)) {
         sel = gtk_tree_view_get_selection(treeview);
         if (!gtk_tree_selection_path_is_selected(sel, *path)) {
             gtk_tree_selection_unselect_all(sel);
@@ -163,9 +181,16 @@ static gboolean getAndSelectEventPath(GtkTreeView * treeview,
 }
 
 gboolean trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
-        GdkEventButton * event, gint pri_id, gint enabled_id, GCallback low_cb,
-        GCallback normal_cb, GCallback high_cb, GCallback wanted_cb,
-        GCallback unwanted_cb, gpointer gdata) {
+                                                 GdkEventButton * event,
+                                                 gint pri_id,
+                                                 gint enabled_id,
+                                                 GCallback low_cb,
+                                                 GCallback normal_cb,
+                                                 GCallback high_cb,
+                                                 GCallback wanted_cb,
+                                                 GCallback unwanted_cb,
+                                                 gpointer gdata)
+{
     GtkTreeViewColumn *col = NULL;
     GtkTreePath *path = NULL;
     GtkTreeSelection *selection;
@@ -173,22 +198,24 @@ gboolean trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
     GtkTreeView *treeview = GTK_TREE_VIEW(w);
 
     if (event->type == GDK_BUTTON_PRESS && event->button == 1
-            && !(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK))
-            && getAndSelectEventPath(treeview, event, &col, &path)) {
-        handled = onViewPathToggled(treeview, col, path, pri_id, enabled_id,
-                NULL);
+        && !(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK))
+        && getAndSelectEventPath(treeview, event, &col, &path)) {
+        handled =
+            onViewPathToggled(treeview, col, path, pri_id, enabled_id,
+                              NULL);
     } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));
 
         if (gtk_tree_view_get_path_at_pos(GTK_TREE_VIEW(treeview),
-                (gint) event->x, (gint) event->y, &path, NULL, NULL, NULL)) {
+                                          (gint) event->x, (gint) event->y,
+                                          &path, NULL, NULL, NULL)) {
             if (!gtk_tree_selection_path_is_selected(selection, path)) {
                 gtk_tree_selection_unselect_all(selection);
                 gtk_tree_selection_select_path(selection, path);
             }
 
-            view_popup_menu(w, event, low_cb, normal_cb, high_cb, wanted_cb,
-                    unwanted_cb, gdata);
+            view_popup_menu(w, event, low_cb, normal_cb, high_cb,
+                            wanted_cb, unwanted_cb, gdata);
             handled = TRUE;
         }
     }

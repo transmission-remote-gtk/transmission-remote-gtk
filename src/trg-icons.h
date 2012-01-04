@@ -20,7 +20,6 @@
 #ifndef TRG_ICONS_H_
 #define TRG_ICONS_H_
 
-void
-register_my_icons( GtkIconTheme *theme );
+void register_my_icons(GtkIconTheme * theme);
 
-#endif /* TRG_ICONS_H_ */
+#endif                          /* TRG_ICONS_H_ */

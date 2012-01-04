@@ -42,12 +42,17 @@ struct _TrgFilesTreeViewPrivate {
     TrgMainWindow *win;
 };
 
-static void trg_files_tree_view_class_init(TrgFilesTreeViewClass * klass) {
+static void trg_files_tree_view_class_init(TrgFilesTreeViewClass * klass)
+{
     g_type_class_add_private(klass, sizeof(TrgFilesTreeViewPrivate));
 }
 
 static gboolean send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
-        GtkTreePath * path G_GNUC_UNUSED, GtkTreeIter * iter, gpointer data) {
+                                                    GtkTreePath *
+                                                    path G_GNUC_UNUSED,
+                                                    GtkTreeIter * iter,
+                                                    gpointer data)
+{
     JsonObject *args = (JsonObject *) data;
     gint priority;
     gint id;
@@ -58,8 +63,8 @@ static gboolean send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
     if (id < 0)
         return FALSE;
 
-    gtk_tree_model_get(model, iter, FILESCOL_WANTED, &wanted, FILESCOL_PRIORITY,
-            &priority, -1);
+    gtk_tree_model_get(model, iter, FILESCOL_WANTED, &wanted,
+                       FILESCOL_PRIORITY, &priority, -1);
 
     if (wanted)
         add_file_id_to_array(args, FIELD_FILES_WANTED, id);
@@ -76,12 +81,13 @@ static gboolean send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
     return FALSE;
 }
 
-static gboolean on_files_update(gpointer data) {
+static gboolean on_files_update(gpointer data)
+{
     trg_response *response = (trg_response *) data;
     TrgFilesTreeViewPrivate *priv =
-            TRG_FILES_TREE_VIEW_GET_PRIVATE(response->cb_data);
-    GtkTreeModel *model = gtk_tree_view_get_model(
-            GTK_TREE_VIEW(response->cb_data));
+        TRG_FILES_TREE_VIEW_GET_PRIVATE(response->cb_data);
+    GtkTreeModel *model =
+        gtk_tree_view_get_model(GTK_TREE_VIEW(response->cb_data));
 
     trg_files_model_set_accept(TRG_FILES_MODEL(model), TRUE);
 
@@ -90,7 +96,8 @@ static gboolean on_files_update(gpointer data) {
     return on_generic_interactive_action(data);
 }
 
-static void send_updated_file_prefs(TrgFilesTreeView * tv) {
+static void send_updated_file_prefs(TrgFilesTreeView * tv)
+{
     TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(tv);
     JsonNode *req;
     JsonObject *args;
@@ -107,47 +114,62 @@ static void send_updated_file_prefs(TrgFilesTreeView * tv) {
     args = node_get_arguments(req);
     request_set_tag(req, targetId);
 
-    gtk_tree_model_foreach(model, send_updated_file_prefs_foreachfunc, args);
+    gtk_tree_model_foreach(model, send_updated_file_prefs_foreachfunc,
+                           args);
 
     trg_files_model_set_accept(TRG_FILES_MODEL(model), FALSE);
 
     dispatch_async(priv->client, req, on_files_update, tv);
 }
 
-static void set_low(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
-    trg_files_tree_model_set_priority(GTK_TREE_VIEW(data), FILESCOL_PRIORITY,
-            TR_PRI_LOW);
+static void set_low(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
+    trg_files_tree_model_set_priority(GTK_TREE_VIEW(data),
+                                      FILESCOL_PRIORITY, TR_PRI_LOW);
     send_updated_file_prefs(TRG_FILES_TREE_VIEW(data));
 }
 
-static void set_normal(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
-    trg_files_tree_model_set_priority(GTK_TREE_VIEW(data), FILESCOL_PRIORITY,
-            TR_PRI_NORMAL);
+static void set_normal(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
+    trg_files_tree_model_set_priority(GTK_TREE_VIEW(data),
+                                      FILESCOL_PRIORITY, TR_PRI_NORMAL);
     send_updated_file_prefs(TRG_FILES_TREE_VIEW(data));
 }
 
-static void set_high(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
-    trg_files_tree_model_set_priority(GTK_TREE_VIEW(data), FILESCOL_PRIORITY,
-            TR_PRI_HIGH);
+static void set_high(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
+    trg_files_tree_model_set_priority(GTK_TREE_VIEW(data),
+                                      FILESCOL_PRIORITY, TR_PRI_HIGH);
     send_updated_file_prefs(TRG_FILES_TREE_VIEW(data));
 }
 
-static void set_unwanted(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
-    trg_files_model_set_wanted(GTK_TREE_VIEW(data), FILESCOL_WANTED, FALSE);
+static void set_unwanted(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
+    trg_files_model_set_wanted(GTK_TREE_VIEW(data), FILESCOL_WANTED,
+                               FALSE);
     send_updated_file_prefs(TRG_FILES_TREE_VIEW(data));
 }
 
-static void set_wanted(GtkWidget * w G_GNUC_UNUSED, gpointer data) {
+static void set_wanted(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
     trg_files_model_set_wanted(GTK_TREE_VIEW(data), FILESCOL_WANTED, TRUE);
     send_updated_file_prefs(TRG_FILES_TREE_VIEW(data));
 }
 
 static gboolean view_onButtonPressed(GtkWidget * treeview,
-        GdkEventButton * event, gpointer userdata) {
-    gboolean handled = trg_files_tree_view_onViewButtonPressed(treeview, event,
-            FILESCOL_PRIORITY, FILESCOL_WANTED, G_CALLBACK(set_low),
-            G_CALLBACK(set_normal), G_CALLBACK(set_high),
-            G_CALLBACK(set_wanted), G_CALLBACK(set_unwanted), userdata);
+                                     GdkEventButton * event,
+                                     gpointer userdata)
+{
+    gboolean handled =
+        trg_files_tree_view_onViewButtonPressed(treeview, event,
+                                                FILESCOL_PRIORITY,
+                                                FILESCOL_WANTED,
+                                                G_CALLBACK(set_low),
+                                                G_CALLBACK(set_normal),
+                                                G_CALLBACK(set_high),
+                                                G_CALLBACK(set_wanted),
+                                                G_CALLBACK(set_unwanted),
+                                                userdata);
 
     if (handled)
         send_updated_file_prefs(TRG_FILES_TREE_VIEW(treeview));
@@ -155,37 +177,42 @@ static gboolean view_onButtonPressed(GtkWidget * treeview,
     return handled;
 }
 
-static void trg_files_tree_view_init(TrgFilesTreeView * self) {
+static void trg_files_tree_view_init(TrgFilesTreeView * self)
+{
     TrgTreeView *ttv = TRG_TREE_VIEW(self);
     trg_column_description *desc;
 
     desc = trg_tree_view_reg_column(ttv, TRG_COLTYPE_FILEICONTEXT,
-            FILESCOL_NAME, _("Name"), "name", 0);
+                                    FILESCOL_NAME, _("Name"), "name", 0);
     desc->model_column_extra = FILESCOL_ID;
 
-    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, FILESCOL_SIZE, _("Size"),
-            "size", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_SIZE, FILESCOL_SIZE,
+                             _("Size"), "size", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PROG, FILESCOL_PROGRESS,
-            _("Progress"), "progress", 0);
+                             _("Progress"), "progress", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_WANTED, FILESCOL_WANTED,
-            _("Download"), "wanted", 0);
+                             _("Download"), "wanted", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_PRIO, FILESCOL_PRIORITY,
-            _("Priority"), "priority", 0);
+                             _("Priority"), "priority", 0);
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), FILESCOL_NAME);
 
     g_signal_connect(self, "button-press-event",
-            G_CALLBACK(view_onButtonPressed), NULL);
+                     G_CALLBACK(view_onButtonPressed), NULL);
     g_signal_connect(self, "popup-menu",
-            G_CALLBACK(trg_files_tree_view_viewOnPopupMenu), NULL);
+                     G_CALLBACK(trg_files_tree_view_viewOnPopupMenu),
+                     NULL);
 }
 
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
-        TrgMainWindow * win, TrgClient * client) {
+                                          TrgMainWindow * win,
+                                          TrgClient * client)
+{
     GObject *obj = g_object_new(TRG_TYPE_FILES_TREE_VIEW, NULL);
     TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(obj);
 
-    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), trg_client_get_prefs(client));
+    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj),
+                            trg_client_get_prefs(client));
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
 
     priv->client = client;

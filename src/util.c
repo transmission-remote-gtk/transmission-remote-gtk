@@ -38,93 +38,93 @@
 ***/
 
 const int disk_K = 1024;
-const char * disk_K_str = N_("KiB");
-const char * disk_M_str = N_("MiB");
-const char * disk_G_str = N_("GiB");
-const char * disk_T_str = N_("TiB");
+const char *disk_K_str = N_("KiB");
+const char *disk_M_str = N_("MiB");
+const char *disk_G_str = N_("GiB");
+const char *disk_T_str = N_("TiB");
 
 const int speed_K = 1024;
-const char * speed_K_str = N_("KiB/s");
-const char * speed_M_str = N_("MiB/s");
-const char * speed_G_str = N_("GiB/s");
-const char * speed_T_str = N_("TiB/s");
+const char *speed_K_str = N_("KiB/s");
+const char *speed_M_str = N_("MiB/s");
+const char *speed_G_str = N_("GiB/s");
+const char *speed_T_str = N_("TiB/s");
 
-struct formatter_unit
-{
-    char * name;
+struct formatter_unit {
+    char *name;
     gint64 value;
 };
 
-struct formatter_units
-{
+struct formatter_units {
     struct formatter_unit units[4];
 };
 
 enum { TR_FMT_KB, TR_FMT_MB, TR_FMT_GB, TR_FMT_TB };
 
 static void
-formatter_init( struct formatter_units * units,
-                unsigned int kilo,
-                const char * kb, const char * mb,
-                const char * gb, const char * tb )
+formatter_init(struct formatter_units *units,
+               unsigned int kilo,
+               const char *kb, const char *mb,
+               const char *gb, const char *tb)
 {
     guint64 value = kilo;
-    units->units[TR_FMT_KB].name = g_strdup( kb );
+    units->units[TR_FMT_KB].name = g_strdup(kb);
     units->units[TR_FMT_KB].value = value;
 
     value *= kilo;
-    units->units[TR_FMT_MB].name = g_strdup( mb );
+    units->units[TR_FMT_MB].name = g_strdup(mb);
     units->units[TR_FMT_MB].value = value;
 
     value *= kilo;
-    units->units[TR_FMT_GB].name = g_strdup( gb );
+    units->units[TR_FMT_GB].name = g_strdup(gb);
     units->units[TR_FMT_GB].value = value;
 
     value *= kilo;
-    units->units[TR_FMT_TB].name = g_strdup( tb );
+    units->units[TR_FMT_TB].name = g_strdup(tb);
     units->units[TR_FMT_TB].value = value;
 }
 
-static char*
-formatter_get_size_str( const struct formatter_units * u,
-                        char * buf, gint64 bytes, size_t buflen )
+static char *formatter_get_size_str(const struct formatter_units *u,
+                                    char *buf, gint64 bytes, size_t buflen)
 {
     int precision;
     double value;
-    const char * units;
-    const struct formatter_unit * unit;
+    const char *units;
+    const struct formatter_unit *unit;
 
-         if( bytes < u->units[1].value ) unit = &u->units[0];
-    else if( bytes < u->units[2].value ) unit = &u->units[1];
-    else if( bytes < u->units[3].value ) unit = &u->units[2];
-    else                                 unit = &u->units[3];
+    if (bytes < u->units[1].value)
+        unit = &u->units[0];
+    else if (bytes < u->units[2].value)
+        unit = &u->units[1];
+    else if (bytes < u->units[3].value)
+        unit = &u->units[2];
+    else
+        unit = &u->units[3];
 
-    value = (double)bytes / unit->value;
+    value = (double) bytes / unit->value;
     units = unit->name;
-    if( unit->value == 1 )
+    if (unit->value == 1)
         precision = 0;
-    else if( value < 100 )
+    else if (value < 100)
         precision = 2;
     else
         precision = 1;
-    tr_snprintf( buf, buflen, "%.*f %s", precision, value, units );
+    tr_snprintf(buf, buflen, "%.*f %s", precision, value, units);
     return buf;
 }
 
 static struct formatter_units size_units;
 
 void
-tr_formatter_size_init( unsigned int kilo,
-                        const char * kb, const char * mb,
-                        const char * gb, const char * tb )
+tr_formatter_size_init(unsigned int kilo,
+                       const char *kb, const char *mb,
+                       const char *gb, const char *tb)
 {
-    formatter_init( &size_units, kilo, kb, mb, gb, tb );
+    formatter_init(&size_units, kilo, kb, mb, gb, tb);
 }
 
-char*
-tr_formatter_size_B( char * buf, gint64 bytes, size_t buflen )
+char *tr_formatter_size_B(char *buf, gint64 bytes, size_t buflen)
 {
-    return formatter_get_size_str( &size_units, buf, bytes, buflen );
+    return formatter_get_size_str(&size_units, buf, bytes, buflen);
 }
 
 static struct formatter_units speed_units;
@@ -132,31 +132,34 @@ static struct formatter_units speed_units;
 unsigned int tr_speed_K = 0u;
 
 void
-tr_formatter_speed_init( unsigned int kilo,
-                         const char * kb, const char * mb,
-                         const char * gb, const char * tb )
+tr_formatter_speed_init(unsigned int kilo,
+                        const char *kb, const char *mb,
+                        const char *gb, const char *tb)
 {
     tr_speed_K = kilo;
-    formatter_init( &speed_units, kilo, kb, mb, gb, tb );
+    formatter_init(&speed_units, kilo, kb, mb, gb, tb);
 }
 
-char*
-tr_formatter_speed_KBps( char * buf, double KBps, size_t buflen )
+char *tr_formatter_speed_KBps(char *buf, double KBps, size_t buflen)
 {
     const double K = speed_units.units[TR_FMT_KB].value;
     double speed = KBps;
 
-    if( speed <= 999.95 ) /* 0.0 KB to 999.9 KB */
-        tr_snprintf( buf, buflen, "%d %s", (int)speed, speed_units.units[TR_FMT_KB].name );
+    if (speed <= 999.95)        /* 0.0 KB to 999.9 KB */
+        tr_snprintf(buf, buflen, "%d %s", (int) speed,
+                    speed_units.units[TR_FMT_KB].name);
     else {
         speed /= K;
-        if( speed <= 99.995 ) /* 0.98 MB to 99.99 MB */
-            tr_snprintf( buf, buflen, "%.2f %s", speed, speed_units.units[TR_FMT_MB].name );
-        else if (speed <= 999.95) /* 100.0 MB to 999.9 MB */
-            tr_snprintf( buf, buflen, "%.1f %s", speed, speed_units.units[TR_FMT_MB].name );
+        if (speed <= 99.995)    /* 0.98 MB to 99.99 MB */
+            tr_snprintf(buf, buflen, "%.2f %s", speed,
+                        speed_units.units[TR_FMT_MB].name);
+        else if (speed <= 999.95)       /* 100.0 MB to 999.9 MB */
+            tr_snprintf(buf, buflen, "%.1f %s", speed,
+                        speed_units.units[TR_FMT_MB].name);
         else {
             speed /= K;
-            tr_snprintf( buf, buflen, "%.1f %s", speed, speed_units.units[TR_FMT_GB].name );
+            tr_snprintf(buf, buflen, "%.1f %s", speed,
+                        speed_units.units[TR_FMT_GB].name);
         }
     }
 

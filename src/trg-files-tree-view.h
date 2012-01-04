@@ -58,15 +58,18 @@ TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
                                           TrgClient * client);
 
 void
-trg_files_tree_view_renderPriority(GtkTreeViewColumn * column G_GNUC_UNUSED,
-               GtkCellRenderer * renderer,
-               GtkTreeModel * model,
-               GtkTreeIter * iter, gpointer data G_GNUC_UNUSED);
-void
-trg_files_tree_view_renderDownload(GtkTreeViewColumn * column G_GNUC_UNUSED,
-               GtkCellRenderer * renderer,
-               GtkTreeModel * model,
-               GtkTreeIter * iter, gpointer data G_GNUC_UNUSED);
+trg_files_tree_view_renderPriority(GtkTreeViewColumn *
+                                   column G_GNUC_UNUSED,
+                                   GtkCellRenderer * renderer,
+                                   GtkTreeModel * model,
+                                   GtkTreeIter * iter,
+                                   gpointer data G_GNUC_UNUSED);
+void trg_files_tree_view_renderDownload(GtkTreeViewColumn *
+                                        column G_GNUC_UNUSED,
+                                        GtkCellRenderer * renderer,
+                                        GtkTreeModel * model,
+                                        GtkTreeIter * iter,
+                                        gpointer data G_GNUC_UNUSED);
 
 G_END_DECLS
 #endif                          /* TRG_FILES_TREE_VIEW_H_ */

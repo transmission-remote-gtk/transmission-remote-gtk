@@ -74,9 +74,9 @@ trg_cell_renderer_priority_set_property(GObject * object,
             g_object_set(object, "text", _("Low"), NULL);
         } else if (priv->priority_value == TR_PRI_HIGH) {
             g_object_set(object, "text", _("High"), NULL);
-        } else if (priv->priority_value == TR_PRI_NORMAL){
+        } else if (priv->priority_value == TR_PRI_NORMAL) {
             g_object_set(object, "text", _("Normal"), NULL);
-        } else if (priv->priority_value == TR_PRI_MIXED){
+        } else if (priv->priority_value == TR_PRI_MIXED) {
             g_object_set(object, "text", _("Mixed"), NULL);
         } else {
             g_object_set(object, "text", "", NULL);
@@ -110,9 +110,7 @@ trg_cell_renderer_priority_class_init(TrgCellRendererPriorityClass * klass)
                              sizeof(TrgCellRendererPriorityPrivate));
 }
 
-static void
-trg_cell_renderer_priority_init(TrgCellRendererPriority *
-                                self)
+static void trg_cell_renderer_priority_init(TrgCellRendererPriority * self)
 {
 }
 

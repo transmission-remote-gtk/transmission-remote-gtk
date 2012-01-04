@@ -65,8 +65,7 @@ trg_cell_renderer_speed_set_property(GObject * object, guint property_id,
         priv->speed_value = g_value_get_int64(value);
         if (priv->speed_value > 0) {
             char speedString[32];
-            trg_strlspeed(speedString,
-                          priv->speed_value / disk_K);
+            trg_strlspeed(speedString, priv->speed_value / disk_K);
             g_object_set(object, "text", speedString, NULL);
         } else {
             g_object_set(object, "text", "", NULL);
