@@ -103,7 +103,7 @@ static gboolean setSubtreeForeach(GtkTreeModel * model, GtkTreePath * path,
 void trg_files_tree_model_propogateChangeUp(GtkTreeModel * model,
         GtkTreeIter * iter, gint column, gint new_value) {
     GtkTreeIter back_iter = *iter;
-    gint result;
+    gint result = new_value;
 
     while (1) {
         GtkTreeIter tmp_iter;
@@ -141,14 +141,12 @@ void trg_files_tree_model_setSubtree(GtkTreeModel * model, GtkTreePath * path,
 
     if (gtk_tree_model_iter_has_child(model, iter)) {
         struct SubtreeForeachData tmp;
-        GtkTreeIter parent;
 
         tmp.column = column;
         tmp.new_value = new_value;
         tmp.path = path;
 
         gtk_tree_model_foreach(model, setSubtreeForeach, &tmp);
-        gtk_tree_model_iter_parent(model, &parent, iter);
     } else {
         gtk_tree_store_set(GTK_TREE_STORE(model), &back_iter, column, new_value,
                 -1);

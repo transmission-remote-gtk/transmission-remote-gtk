@@ -517,7 +517,7 @@ GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBar * menu)
     priv->mb_add =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Add"),
                               GTK_STOCK_ADD, FALSE);
-    trg_menu_bar_accel_add(menu, priv->mb_add, GDK_a, GDK_CONTROL_MASK);
+    trg_menu_bar_accel_add(menu, priv->mb_add, GDK_o, GDK_CONTROL_MASK);
 
     priv->mb_add_url =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("Add from _URL"),

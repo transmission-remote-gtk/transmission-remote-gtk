@@ -39,7 +39,7 @@ typedef struct _TrgCellRendererWantedPrivate
  TrgCellRendererWantedPrivate;
 
 struct _TrgCellRendererWantedPrivate {
-    gint64 wanted_value;
+    gint wanted_value;
 };
 
 static void
@@ -51,7 +51,7 @@ trg_cell_renderer_wanted_get_property(GObject * object,
         TRG_CELL_RENDERER_WANTED_GET_PRIVATE(object);
     switch (property_id) {
     case PROP_WANTED_VALUE:
-        g_value_set_int64(value, priv->wanted_value);
+        g_value_set_int(value, priv->wanted_value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -91,7 +91,7 @@ trg_cell_renderer_wanted_class_init(TrgCellRendererWantedClass * klass)
                                     ("wanted-value",
                                      "Wanted Value",
                                      "Wanted Value", TR_PRI_UNSET,
-                                     TR_PRI_HIGH, TR_PRI_NORMAL,
+                                     TRUE, TRUE,
                                      G_PARAM_READWRITE |
                                      G_PARAM_STATIC_NAME |
                                      G_PARAM_STATIC_NICK |
