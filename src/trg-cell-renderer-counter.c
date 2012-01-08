@@ -32,7 +32,7 @@ G_DEFINE_TYPE(TrgCellRendererCounter, trg_cell_renderer_counter,
 #define TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CELL_RENDERER_COUNTER, TrgCellRendererCounterPrivate))
 typedef struct _TrgCellRendererCounterPrivate
-    TrgCellRendererCounterPrivate;
+ TrgCellRendererCounterPrivate;
 
 struct _TrgCellRendererCounterPrivate {
     gint count;
@@ -102,8 +102,8 @@ static void trg_cell_renderer_counter_dispose(GObject * object)
     TrgCellRendererCounterPrivate *priv =
         TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(object);
     g_free(priv->originalLabel);
-    G_OBJECT_CLASS(trg_cell_renderer_counter_parent_class)->
-        dispose(object);
+    G_OBJECT_CLASS(trg_cell_renderer_counter_parent_class)->dispose
+        (object);
 }
 
 static void

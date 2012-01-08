@@ -28,57 +28,69 @@
 
 static trg_torrent_file_node
     * trg_torrent_file_node_insert(trg_torrent_file_node * top,
+                                   trg_torrent_file_node * last,
                                    be_node * file_node, guint index,
                                    gint64 * total_length)
 {
-    int i;
-    trg_torrent_file_node *path_el_parent = top;
     be_node *file_length_node = be_dict_find(file_node, "length", BE_INT);
-    be_node *file_path_node = be_dict_find(file_node, "path", BE_LIST);
+    be_node *file_path_list = be_dict_find(file_node, "path", BE_LIST);
+    trg_torrent_file_node *lastIter = last;
+    GList *parentList = NULL;
+    be_node *path_el_node;
+    GList *li;
+    int i;
 
-    if (!file_path_node || !file_length_node)
+    if (!file_path_list || !file_length_node)
         return NULL;
+
+    if (lastIter)
+        while ((lastIter = lastIter->parent))
+            parentList = g_list_prepend(parentList, lastIter);
+
+    li = parentList;
+    lastIter = NULL;
 
     /* Iterate over the path list which contains each file/directory
      * component of the path in order.
      */
-    for (i = 0;;) {
-        be_node *path_el_node = file_path_node->val.l[i];
-
+    for (i = 0; (path_el_node = file_path_list->val.l[i]); i++) {
+        gboolean isFile = !file_path_list->val.l[i + 1];
         trg_torrent_file_node *target_node = NULL;
-        GList *li;
 
-        /* Does this element exist already? */
-        for (li = path_el_parent->children; li != NULL;
-             li = g_list_next(li)) {
-            trg_torrent_file_node *x = (trg_torrent_file_node *) li->data;
-            if (!g_strcmp0(x->name, path_el_node->val.s)) {
-                target_node = x;
-                break;
-            }
+        if (li && !isFile) {
+            trg_torrent_file_node *lastPathNode =
+                (trg_torrent_file_node *) li->data;
+
+            if (!g_strcmp0(lastPathNode->name, path_el_node->val.s))
+                target_node = lastPathNode;
+
+            li = g_list_next(li);
         }
 
         if (!target_node) {
-            /* Create a new node and add it as a child of the parent from the
-             * last iteration. */
             target_node = g_new0(trg_torrent_file_node, 1);
             target_node->name = g_strdup(path_el_node->val.s);
-            path_el_parent->children =
-                g_list_append(path_el_parent->children, target_node);
+            target_node->parent = lastIter;
+
+            if (lastIter)
+                lastIter->children =
+                    g_list_append(lastIter->children, target_node);
+            else
+                top->children = g_list_append(top->children, target_node);
         }
 
-        path_el_parent = target_node;
+        lastIter = target_node;
 
-        /* Is this the last component of the path (the file)? */
-        if (!file_path_node->val.l[++i]) {
+        if (isFile) {
             *total_length += (target_node->length =
                               (gint64) (file_length_node->val.i));
             target_node->index = index;
-            return target_node;
         }
     }
 
-    return NULL;
+    g_list_free(parentList);
+
+    return lastIter;
 }
 
 static void trg_torrent_file_node_free(trg_torrent_file_node * node)
@@ -105,6 +117,7 @@ static trg_torrent_file_node *trg_parse_torrent_file_nodes(be_node *
 {
     be_node *files_node = be_dict_find(info_node, "files", BE_LIST);
     trg_torrent_file_node *top_node = g_new0(trg_torrent_file_node, 1);
+    trg_torrent_file_node *lastNode = NULL;
     int i;
 
     /* Probably means single file mode. */
@@ -114,9 +127,11 @@ static trg_torrent_file_node *trg_parse_torrent_file_nodes(be_node *
     for (i = 0; files_node->val.l[i]; ++i) {
         be_node *file_node = files_node->val.l[i];
 
-        if (be_validate_node(file_node, BE_DICT) ||
-            !trg_torrent_file_node_insert(top_node, file_node, i,
-                                          total_length)) {
+        if (!be_validate_node(file_node, BE_DICT)
+            || !(lastNode =
+                 trg_torrent_file_node_insert(top_node, lastNode,
+                                              file_node, i,
+                                              total_length))) {
             /* Unexpected format. Throw away everything, file indexes need to
              * be correct. */
             trg_torrent_file_node_free(top_node);
@@ -156,7 +171,7 @@ trg_torrent_file *trg_parse_torrent_file(const gchar * filename)
 
     if (!top_node) {
         return NULL;
-    } else if (be_validate_node(top_node, BE_DICT)) {
+    } else if (!be_validate_node(top_node, BE_DICT)) {
         goto out;
     }
 

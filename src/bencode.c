@@ -180,12 +180,12 @@ be_node *be_decode(const char *data)
     return be_decoden(data, strlen(data));
 }
 
-int be_validate_node(be_node * node, int type)
+gboolean be_validate_node(be_node * node, gint type)
 {
     if (!node || node->type != type)
-        return 1;
+        return FALSE;
     else
-        return 0;
+        return TRUE;
 }
 
 static inline void _be_free_str(char *str)

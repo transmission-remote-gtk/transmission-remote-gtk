@@ -354,8 +354,8 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged)
                     g_free(announceHost);
                 } else {
                     trg_state_selector_insert(s, priv->n_categories,
-                                              g_hash_table_size(priv->
-                                                                trackers),
+                                              g_hash_table_size
+                                              (priv->trackers),
                                               announceHost, &iter);
                     gtk_list_store_set(GTK_LIST_STORE(model), &iter,
                                        STATE_SELECTOR_ICON,
@@ -389,9 +389,9 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged)
             } else {
                 trg_state_selector_insert(s,
                                           priv->n_categories +
-                                          g_hash_table_size(priv->
-                                                            trackers), -1,
-                                          dir, &iter);
+                                          g_hash_table_size
+                                          (priv->trackers), -1, dir,
+                                          &iter);
                 gtk_list_store_set(GTK_LIST_STORE(model), &iter,
                                    STATE_SELECTOR_ICON,
                                    GTK_STOCK_DIRECTORY,

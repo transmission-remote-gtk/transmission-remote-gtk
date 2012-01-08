@@ -89,5 +89,9 @@ GtkWidget *my_scrolledwin_new(GtkWidget * child);
 gboolean is_url(gchar * string);
 gboolean is_magnet(gchar * string);
 GtkWidget *gtr_combo_box_new_enum(const char *text_1, ...);
+void iter_to_row_reference(GtkTreeModel * model, GtkTreeIter * iter,
+                           GtkTreeRowReference ** rr);
+void rowref_to_iter(GtkTreeModel * model, GtkTreeRowReference * rr,
+                    GtkTreeIter * iter);
 
 #endif                          /* UTIL_H_ */

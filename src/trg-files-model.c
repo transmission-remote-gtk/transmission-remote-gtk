@@ -44,78 +44,33 @@ struct _TrgFilesModelPrivate {
     gboolean accept;
 };
 
-static void iter_to_row_reference(GtkTreeModel * model, GtkTreeIter * iter,
-                                  GtkTreeRowReference ** rr)
+static void trg_files_update_parent_progress(GtkTreeModel * model,
+                                             GtkTreeIter * iter,
+                                             gint64 increment)
 {
-    GtkTreePath *path = gtk_tree_model_get_path(model, iter);
+    GtkTreeIter back_iter = *iter;
 
-    if (*rr)
-        gtk_tree_row_reference_free(*rr);
+    if (increment < 1)
+        return;
 
-    *rr = gtk_tree_row_reference_new(model, path);
-    gtk_tree_path_free(path);
-}
-
-static void rowref_to_iter(GtkTreeModel * model, GtkTreeRowReference * rr,
-                           GtkTreeIter * iter)
-{
-    GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
-    gtk_tree_model_get_iter(model, iter, path);
-    gtk_tree_path_free(path);
-}
-
-struct UpdateParentProgressForeachData {
-    GtkTreeIter *descendentIter;
-    gint64 increment;
-};
-
-static gboolean trg_files_update_parent_progress_foreachfunc(GtkTreeModel *
-                                                             model,
-                                                             GtkTreePath *
-                                                             path,
-                                                             GtkTreeIter *
-                                                             iter,
-                                                             gpointer data)
-{
-    struct UpdateParentProgressForeachData *args =
-        (struct UpdateParentProgressForeachData *) data;
-
-    GtkTreePath *descendentPath = gtk_tree_model_get_path(model,
-                                                          args->
-                                                          descendentIter);
-
-    if (gtk_tree_path_is_ancestor(path, descendentPath)) {
+    while (1) {
+        GtkTreeIter tmp_iter;
         gint64 lastCompleted, newCompleted, length;
 
-        gtk_tree_model_get(model, iter, FILESCOL_BYTESCOMPLETED,
-                           &lastCompleted, FILESCOL_SIZE, &length, -1);
-        newCompleted = lastCompleted + args->increment;
+        if (!gtk_tree_model_iter_parent(model, &tmp_iter, &back_iter))
+            break;
 
-        gtk_tree_store_set(GTK_TREE_STORE(model), iter,
+        gtk_tree_model_get(model, &tmp_iter, FILESCOL_BYTESCOMPLETED,
+                           &lastCompleted, FILESCOL_SIZE, &length, -1);
+        newCompleted = lastCompleted + increment;
+
+        gtk_tree_store_set(GTK_TREE_STORE(model), &tmp_iter,
                            FILESCOL_BYTESCOMPLETED, newCompleted,
                            FILESCOL_PROGRESS, file_get_progress(length,
                                                                 newCompleted),
                            -1);
 
-    }
-
-    gtk_tree_path_free(descendentPath);
-
-    return FALSE;
-}
-
-static void trg_files_update_parent_progress(GtkTreeModel * model,
-                                             GtkTreeIter * iter,
-                                             gint64 increment)
-{
-    if (increment > 0) {
-        struct UpdateParentProgressForeachData args;
-        args.descendentIter = iter;
-        args.increment = increment;
-
-        gtk_tree_model_foreach(GTK_TREE_MODEL(model),
-                               trg_files_update_parent_progress_foreachfunc,
-                               &args);
+        back_iter = tmp_iter;
     }
 }
 
@@ -234,8 +189,7 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
     gboolean wanted =
         json_node_get_int(json_array_get_element(wantedArray, id))
         == 1;
-    gint priority =
-        (gint)
+    gint priority = (gint)
         json_node_get_int(json_array_get_element(prioritiesArray, id));
     gdouble progress = file_get_progress(fileLength, fileCompleted);
 
@@ -261,13 +215,13 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
                            priority, -1);
 
     if (isFirst) {
-        trg_files_tree_model_propogateChangeUp(GTK_TREE_MODEL(model),
-                                               filesIter,
-                                               FILESCOL_PRIORITY,
-                                               priority);
-        trg_files_tree_model_propogateChangeUp(GTK_TREE_MODEL(model),
-                                               filesIter, FILESCOL_WANTED,
-                                               wanted);
+        trg_files_tree_model_propogate_change_up(GTK_TREE_MODEL(model),
+                                                 filesIter,
+                                                 FILESCOL_PRIORITY,
+                                                 priority);
+        trg_files_tree_model_propogate_change_up(GTK_TREE_MODEL(model),
+                                                 filesIter,
+                                                 FILESCOL_WANTED, wanted);
     }
 }
 

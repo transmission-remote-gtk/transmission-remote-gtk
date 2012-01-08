@@ -257,9 +257,8 @@ int trg_client_populate_with_settings(TrgClient * tc)
 #endif
 
     priv->url = g_strdup_printf("%s://%s:%d/transmission/rpc",
-                                priv->
-                                ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX,
-                                host, port);
+                                priv->ssl ? HTTPS_URI_PREFIX :
+                                HTTP_URI_PREFIX, host, port);
     g_free(host);
 
     priv->username = trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME,

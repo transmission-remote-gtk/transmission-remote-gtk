@@ -51,8 +51,7 @@ enum {
 };
 
 enum {
-    FC_ICON, FC_INDEX, FC_LABEL, FC_SIZE, FC_PRIORITY, FC_ENABLED,
-        N_FILE_COLS
+    FC_INDEX, FC_LABEL, FC_SIZE, FC_PRIORITY, FC_ENABLED, N_FILE_COLS
 };
 
 G_DEFINE_TYPE(TrgTorrentAddDialog, trg_torrent_add_dialog, GTK_TYPE_DIALOG)
@@ -402,8 +401,7 @@ GtkWidget *gtr_file_list_new(GtkTreeStore ** store)
     gtk_tree_view_column_set_sort_column_id(col, FC_PRIORITY);
     gtk_tree_view_append_column(tree_view, col);
 
-    *store = gtk_tree_store_new(N_FILE_COLS, G_TYPE_STRING,     /* icon */
-                                G_TYPE_INT,     /* index */
+    *store = gtk_tree_store_new(N_FILE_COLS, G_TYPE_INT,        /* index */
                                 G_TYPE_STRING,  /* label */
                                 G_TYPE_INT64,   /* size */
                                 G_TYPE_INT,     /* priority */
@@ -473,10 +471,7 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
     if (node->name) {
         gtk_tree_store_append(store, &child, parent);
         gtk_tree_store_set(store, &child, FC_LABEL, node->name, FC_ENABLED,
-                           1, FC_ICON,
-                           node->
-                           children ? GTK_STOCK_DIRECTORY : GTK_STOCK_FILE,
-                           FC_INDEX, node->children ? -1 : node->index,
+                           1, FC_INDEX, node->children ? -1 : node->index,
                            FC_PRIORITY, TR_PRI_NORMAL, -1);
 
         if (!node->children) {
@@ -627,8 +622,8 @@ static void trg_torrent_add_dialog_source_click_cb(GtkWidget * w,
             gtk_file_chooser_get_filenames(GTK_FILE_CHOOSER(d));
 
         trg_torrent_add_dialog_generic_save_dir(GTK_FILE_CHOOSER(d),
-                                                trg_client_get_prefs(priv->
-                                                                     client));
+                                                trg_client_get_prefs
+                                                (priv->client));
         trg_torrent_add_dialog_set_filenames(TRG_TORRENT_ADD_DIALOG(data),
                                              priv->filenames);
     }

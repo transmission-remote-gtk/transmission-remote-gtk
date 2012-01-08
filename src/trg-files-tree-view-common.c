@@ -143,15 +143,15 @@ static gboolean onViewPathToggled(GtkTreeView * view,
                 priority = TR_PRI_NORMAL;
                 break;
             }
-            trg_files_tree_model_setSubtree(model, path, &iter, pri_id,
-                                            priority);
+            trg_files_tree_model_set_subtree(model, path, &iter, pri_id,
+                                             priority);
         } else {
             int enabled;
             gtk_tree_model_get(model, &iter, enabled_id, &enabled, -1);
             enabled = !enabled;
 
-            trg_files_tree_model_setSubtree(model, path, &iter, enabled_id,
-                                            enabled);
+            trg_files_tree_model_set_subtree(model, path, &iter,
+                                             enabled_id, enabled);
         }
 
         handled = TRUE;

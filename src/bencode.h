@@ -52,13 +52,13 @@ extern "C" {
         } val;
     } be_node;
 
-    extern gint64 be_str_len(be_node * node);
-    extern be_node *be_decode(const char *bencode);
-    extern be_node *be_decoden(const char *bencode, gint64 bencode_len);
-    extern void be_free(be_node * node);
-    extern void be_dump(be_node * node);
-    extern be_node *be_dict_find(be_node * node, char *key, int type);
-    extern int be_validate_node(be_node * node, int type);
+    gint64 be_str_len(be_node * node);
+    be_node *be_decode(const char *bencode);
+    be_node *be_decoden(const char *bencode, gint64 bencode_len);
+    void be_free(be_node * node);
+    void be_dump(be_node * node);
+    be_node *be_dict_find(be_node * node, char *key, int type);
+    gboolean be_validate_node(be_node * node, gint type);
 
 #ifdef __cplusplus
 }

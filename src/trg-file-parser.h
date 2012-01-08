@@ -22,6 +22,7 @@ typedef struct {
     gint64 length;
     GList *children;
     guint index;
+    gpointer parent;
 } trg_torrent_file_node;
 
 typedef struct {

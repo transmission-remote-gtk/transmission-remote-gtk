@@ -34,7 +34,7 @@ G_DEFINE_TYPE(TrgCellRendererFileIcon, trg_cell_renderer_file_icon,
 #define TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CELL_RENDERER_FILE_ICON, TrgCellRendererFileIconPrivate))
 typedef struct _TrgCellRendererFileIconPrivate
-    TrgCellRendererFileIconPrivate;
+ TrgCellRendererFileIconPrivate;
 
 struct _TrgCellRendererFileIconPrivate {
     gint64 file_id;
@@ -117,8 +117,8 @@ static void trg_cell_renderer_file_icon_dispose(GObject * object)
     TrgCellRendererFileIconPrivate *priv =
         TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(object);
     g_free(priv->text);
-    G_OBJECT_CLASS(trg_cell_renderer_file_icon_parent_class)->
-        dispose(object);
+    G_OBJECT_CLASS(trg_cell_renderer_file_icon_parent_class)->dispose
+        (object);
 }
 
 static void

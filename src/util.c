@@ -533,3 +533,23 @@ evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
     return r;
 #endif
 }
+
+void iter_to_row_reference(GtkTreeModel * model, GtkTreeIter * iter,
+                           GtkTreeRowReference ** rr)
+{
+    GtkTreePath *path = gtk_tree_model_get_path(model, iter);
+
+    if (*rr)
+        gtk_tree_row_reference_free(*rr);
+
+    *rr = gtk_tree_row_reference_new(model, path);
+    gtk_tree_path_free(path);
+}
+
+void rowref_to_iter(GtkTreeModel * model, GtkTreeRowReference * rr,
+                    GtkTreeIter * iter)
+{
+    GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
+    gtk_tree_model_get_iter(model, iter, path);
+    gtk_tree_path_free(path);
+}

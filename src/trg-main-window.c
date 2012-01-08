@@ -143,9 +143,9 @@ static void open_about_cb(GtkWidget * w, GtkWindow * parent);
 static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
                                                    GtkTreeIter * iter,
                                                    gpointer data);
-static TrgTorrentTreeView *
-trg_main_window_torrent_tree_view_new(TrgMainWindow * win,
-                                      GtkTreeModel * model);
+static TrgTorrentTreeView
+    * trg_main_window_torrent_tree_view_new(TrgMainWindow * win,
+                                            GtkTreeModel * model);
 static gboolean trg_dialog_error_handler(TrgMainWindow * win,
                                          trg_response * response);
 static gboolean torrent_selection_changed(GtkTreeSelection * selection,
@@ -1192,9 +1192,8 @@ static gboolean on_torrent_get(gpointer data, int mode)
     update_selected_torrent_notebook(win, mode, priv->selectedTorrentId);
     trg_status_bar_update(priv->statusBar, stats, client);
     update_whatever_statusicon(win,
-                               trg_status_bar_get_speed_text(priv->
-                                                             statusBar),
-                               stats);
+                               trg_status_bar_get_speed_text
+                               (priv->statusBar), stats);
 
 #ifndef TRG_NO_GRAPH
     if (priv->graphNotebookIndex >= 0)
@@ -1358,8 +1357,8 @@ void trg_main_window_reload_dir_aliases(TrgMainWindow * win)
 }
 
 static TrgTorrentTreeView
-    *trg_main_window_torrent_tree_view_new(TrgMainWindow * win,
-                                           GtkTreeModel * model)
+    * trg_main_window_torrent_tree_view_new(TrgMainWindow * win,
+                                            GtkTreeModel * model)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     TrgTorrentTreeView *torrentTreeView =
