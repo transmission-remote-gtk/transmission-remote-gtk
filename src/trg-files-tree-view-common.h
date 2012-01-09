@@ -20,16 +20,18 @@
 #ifndef TRG_FILES_TREE_VIEW_COMMON_H_
 #define TRG_FILES_TREE_VIEW_COMMON_H_
 
-gboolean
-trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
-                                        GdkEventButton * event,
-                                        gint pri_id, gint enabled_id,
-                                        GCallback low_cb,
-                                        GCallback normal_cb,
-                                        GCallback high_cb,
-                                        GCallback wanted_cb,
-                                        GCallback unwanted_cb,
-                                        gpointer gdata);
+gboolean trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
+                                                 GdkEventButton * event,
+                                                 gint pri_id,
+                                                 gint enabled_id,
+                                                 gboolean one_click,
+                                                 GCallback low_cb,
+                                                 GCallback normal_cb,
+                                                 GCallback high_cb,
+                                                 GCallback wanted_cb,
+                                                 GCallback unwanted_cb,
+                                                 gpointer gdata);
+
 gboolean trg_files_tree_view_viewOnPopupMenu(GtkWidget * treeview,
                                              GCallback low_cb,
                                              GCallback normal_cb,

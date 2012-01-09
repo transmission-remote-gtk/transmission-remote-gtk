@@ -17,18 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-typedef struct {
-    char *name;
-    gint64 length;
-    GList *children;
-    guint index;
-    gpointer parent;
-} trg_torrent_file_node;
+#include "trg-files-tree.h"
 
 typedef struct {
     char *name;
-    trg_torrent_file_node *top_node;
-    gint64 total_length;
+    trg_files_tree_node *top_node;
 } trg_torrent_file;
 
 void trg_torrent_file_free(trg_torrent_file * t);

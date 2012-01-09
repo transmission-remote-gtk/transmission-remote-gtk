@@ -26,15 +26,14 @@
 #include "bencode.h"
 #include "trg-file-parser.h"
 
-static trg_torrent_file_node
-    * trg_torrent_file_node_insert(trg_torrent_file_node * top,
-                                   trg_torrent_file_node * last,
-                                   be_node * file_node, guint index,
-                                   gint64 * total_length)
+static trg_files_tree_node
+    * trg_file_parser_node_insert(trg_files_tree_node * top,
+                                   trg_files_tree_node * last,
+                                   be_node * file_node, gint index)
 {
     be_node *file_length_node = be_dict_find(file_node, "length", BE_INT);
     be_node *file_path_list = be_dict_find(file_node, "path", BE_LIST);
-    trg_torrent_file_node *lastIter = last;
+    trg_files_tree_node *lastIter = last;
     GList *parentList = NULL;
     be_node *path_el_node;
     GList *li;
@@ -55,11 +54,11 @@ static trg_torrent_file_node
      */
     for (i = 0; (path_el_node = file_path_list->val.l[i]); i++) {
         gboolean isFile = !file_path_list->val.l[i + 1];
-        trg_torrent_file_node *target_node = NULL;
+        trg_files_tree_node *target_node = NULL;
 
         if (li && !isFile) {
-            trg_torrent_file_node *lastPathNode =
-                (trg_torrent_file_node *) li->data;
+            trg_files_tree_node *lastPathNode =
+                (trg_files_tree_node *) li->data;
 
             if (!g_strcmp0(lastPathNode->name, path_el_node->val.s))
                 target_node = lastPathNode;
@@ -68,7 +67,7 @@ static trg_torrent_file_node
         }
 
         if (!target_node) {
-            target_node = g_new0(trg_torrent_file_node, 1);
+            target_node = g_new0(trg_files_tree_node, 1);
             target_node->name = g_strdup(path_el_node->val.s);
             target_node->parent = lastIter;
 
@@ -82,8 +81,7 @@ static trg_torrent_file_node
         lastIter = target_node;
 
         if (isFile) {
-            *total_length += (target_node->length =
-                              (gint64) (file_length_node->val.i));
+            target_node->length = (gint64)file_length_node->val.i;
             target_node->index = index;
         }
     }
@@ -93,31 +91,19 @@ static trg_torrent_file_node
     return lastIter;
 }
 
-static void trg_torrent_file_node_free(trg_torrent_file_node * node)
-{
-    GList *li;
-    for (li = node->children; li != NULL; li = g_list_next(li))
-        trg_torrent_file_node_free((trg_torrent_file_node *) li->data);
-    g_list_free(node->children);
-    g_free(node->name);
-    g_free(node);
-}
-
 void trg_torrent_file_free(trg_torrent_file * t)
 {
-    trg_torrent_file_node_free(t->top_node);
+    trg_files_tree_node_free(t->top_node);
     g_free(t->name);
     g_free(t);
 }
 
-static trg_torrent_file_node *trg_parse_torrent_file_nodes(be_node *
-                                                           info_node,
-                                                           gint64 *
-                                                           total_length)
+static trg_files_tree_node *trg_parse_torrent_file_nodes(be_node *
+                                                           info_node)
 {
     be_node *files_node = be_dict_find(info_node, "files", BE_LIST);
-    trg_torrent_file_node *top_node = g_new0(trg_torrent_file_node, 1);
-    trg_torrent_file_node *lastNode = NULL;
+    trg_files_tree_node *top_node = g_new0(trg_files_tree_node, 1);
+    trg_files_tree_node *lastNode = NULL;
     int i;
 
     /* Probably means single file mode. */
@@ -129,12 +115,11 @@ static trg_torrent_file_node *trg_parse_torrent_file_nodes(be_node *
 
         if (!be_validate_node(file_node, BE_DICT)
             || !(lastNode =
-                 trg_torrent_file_node_insert(top_node, lastNode,
-                                              file_node, i,
-                                              total_length))) {
+                 trg_file_parser_node_insert(top_node, lastNode,
+                                              file_node, i))) {
             /* Unexpected format. Throw away everything, file indexes need to
              * be correct. */
-            trg_torrent_file_node_free(top_node);
+            trg_files_tree_node_free(top_node);
             return NULL;
         }
     }
@@ -187,9 +172,9 @@ trg_torrent_file *trg_parse_torrent_file(const gchar * filename)
     ret->name = g_strdup(name_node->val.s);
 
     ret->top_node =
-        trg_parse_torrent_file_nodes(info_node, &(ret->total_length));
+        trg_parse_torrent_file_nodes(info_node);
     if (!ret->top_node) {
-        trg_torrent_file_node *file_node;
+        trg_files_tree_node *file_node;
         be_node *length_node = be_dict_find(info_node, "length", BE_INT);
 
         if (!length_node) {
@@ -198,8 +183,8 @@ trg_torrent_file *trg_parse_torrent_file(const gchar * filename)
             goto out;
         }
 
-        file_node = g_new0(trg_torrent_file_node, 1);
-        file_node->length = ret->total_length =
+        file_node = g_new0(trg_files_tree_node, 1);
+        file_node->length =
             (gint64) (length_node->val.i);
         file_node->name = g_strdup(ret->name);
         ret->top_node = file_node;

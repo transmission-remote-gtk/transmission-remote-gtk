@@ -24,6 +24,7 @@
 #include "protocol-constants.h"
 #include "trg-files-model-common.h"
 #include "trg-files-tree-view-common.h"
+#include "trg-files-tree.h"
 #include "trg-files-model.h"
 #include "trg-client.h"
 #include "torrent.h"
@@ -65,105 +66,136 @@ static void trg_files_update_parent_progress(GtkTreeModel * model,
         newCompleted = lastCompleted + increment;
 
         gtk_tree_store_set(GTK_TREE_STORE(model), &tmp_iter,
-                           FILESCOL_BYTESCOMPLETED, newCompleted,
                            FILESCOL_PROGRESS, file_get_progress(length,
                                                                 newCompleted),
+                           FILESCOL_BYTESCOMPLETED, newCompleted,
                            -1);
 
         back_iter = tmp_iter;
     }
 }
 
-static void trg_files_model_iter_new(TrgFilesModel * model,
-                                     GtkTreeIter * iter, JsonObject * file,
-                                     gint id)
+static void trg_files_tree_update_ancestors(
+        trg_files_tree_node *node)
 {
-    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
-    gchar **elements = g_strsplit(file_get_name(file), "/", -1);
-    gchar *existingName;
-    gint i, existingId;
-    GtkTreeRowReference *parentRowRef = NULL;
-    GtkTreeIter parentIter;
+    trg_files_tree_node *back_iter = node;
+    gint pri_result = node->priority;
+    gint enabled_result = node->enabled;
 
-    for (i = 0; elements[i]; i++) {
-        GtkTreeIter *found = NULL;
+    while ((back_iter = back_iter->parent)) {
+        GList *li;
+        for (li = back_iter->children; li; li = g_list_next(li)) {
+            trg_files_tree_node *back_node = (trg_files_tree_node*)li->data;
+            gboolean stop = FALSE;
 
-        if (parentRowRef)
-            rowref_to_iter(GTK_TREE_MODEL(model), parentRowRef,
-                           &parentIter);
+            if (back_node->priority != pri_result) {
+                pri_result = TR_PRI_MIXED;
+                stop = TRUE;
+            }
 
-        /* If this is the last component of the path, create a file node. */
+            if (back_node->enabled != enabled_result) {
+                enabled_result = TR_PRI_MIXED;
+                stop = TRUE;
+            }
 
-        if (!elements[i + 1]) {
-            gtk_tree_store_append(GTK_TREE_STORE(model), iter,
-                                  parentRowRef ? &parentIter : NULL);
-            gtk_tree_store_set(GTK_TREE_STORE(model), iter, FILESCOL_NAME,
-                               elements[i], FILESCOL_SIZE,
-                               file_get_length(file), FILESCOL_ID, id, -1);
-
-            if (parentRowRef)
-                trg_files_model_update_parents(GTK_TREE_MODEL(model), iter,
-                                               FILESCOL_SIZE);
-
-            break;
+            if (stop)
+                break;
         }
 
-        /* Search for the directory this files goes under, under the saved
-         * GtkTreeRowReferece *parent. */
+        back_iter->bytesCompleted += node->bytesCompleted;
+        back_iter->length += node->length;
+        back_iter->priority = pri_result;
+        back_iter->enabled = enabled_result;
+    }
+}
 
-        if (gtk_tree_model_iter_children(GTK_TREE_MODEL(model), iter,
-                                         parentRowRef ? &parentIter :
-                                         NULL)) {
-            do {
-                gtk_tree_model_get(GTK_TREE_MODEL(model), iter,
-                                   FILESCOL_NAME, &existingName,
-                                   FILESCOL_ID, &existingId, -1);
+static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
+                           trg_files_tree_node * node)
+{
+    GtkTreeIter child;
+    GList *li;
 
-                if (existingId == -1
-                    && !g_strcmp0(elements[i], existingName)) {
-                    found = iter;
-                    iter_to_row_reference(GTK_TREE_MODEL(model), iter,
-                                          &parentRowRef);
-                }
+    if (node->name) {
+        gdouble progress = file_get_progress(node->length, node->bytesCompleted);
+        gtk_tree_store_append(store, &child, parent);
+        gtk_tree_store_set(store, &child, FILESCOL_WANTED, node->enabled,
+                FILESCOL_PROGRESS, progress,
+                FILESCOL_SIZE, node->length,
+                FILESCOL_ID, node->children ? -1 : node->index,
+                           FILESCOL_PRIORITY, node->priority, FILESCOL_NAME, node->name,
+                           -1);
+    }
 
-                g_free(existingName);
+    for (li = node->children; li; li = g_list_next(li))
+        store_add_node(store, node->name ? &child : NULL,
+                       (trg_files_tree_node *) li->data);
+}
 
-                if (found)
-                    break;
-            } while (gtk_tree_model_iter_next
-                     (GTK_TREE_MODEL(model), iter));
+static trg_files_tree_node
+    * trg_file_parser_node_insert(trg_files_tree_node * top,
+                                   trg_files_tree_node * last,
+                                   JsonObject *file, gint index,
+                                   JsonArray *enabled, JsonArray *priorities)
+{
+    gchar **path = g_strsplit(file_get_name(file), "/", -1);
+    trg_files_tree_node *lastIter = last;
+    GList *parentList = NULL;
+    gchar *path_el;
+    GList *li;
+    int i;
+
+    if (lastIter)
+        while ((lastIter = lastIter->parent))
+            parentList = g_list_prepend(parentList, lastIter);
+
+    li = parentList;
+    lastIter = NULL;
+
+    /* Iterate over the path list which contains each file/directory
+     * component of the path in order.
+     */
+    for (i = 0; (path_el = path[i]); i++) {
+        gboolean isFile = !path[i + 1];
+        trg_files_tree_node *target_node = NULL;
+
+        if (li && !isFile) {
+            trg_files_tree_node *lastPathNode =
+                (trg_files_tree_node *) li->data;
+
+            if (!g_strcmp0(lastPathNode->name, path[i]))
+                target_node = lastPathNode;
+
+            li = g_list_next(li);
         }
 
-        if (!found) {
-            GValue gvalue = { 0 };
+        if (!target_node) {
+            target_node = g_new0(trg_files_tree_node, 1);
+            target_node->name = g_strdup(path[i]);
+            target_node->parent = lastIter;
 
-            gtk_tree_store_append(GTK_TREE_STORE(model), iter,
-                                  parentRowRef ? &parentIter : NULL);
-            gtk_tree_store_set(GTK_TREE_STORE(model), iter,
-                               FILESCOL_PRIORITY, TR_PRI_UNSET,
-                               FILESCOL_NAME, elements[i], -1);
+            if (lastIter)
+                lastIter->children =
+                    g_list_append(lastIter->children, target_node);
+            else
+                top->children = g_list_append(top->children, target_node);
+        }
 
-            g_value_init(&gvalue, G_TYPE_INT);
-            g_value_set_int(&gvalue, -1);
-            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter,
-                                     FILESCOL_ID, &gvalue);
+        lastIter = target_node;
 
-            memset(&gvalue, 0, sizeof(GValue));
-            g_value_init(&gvalue, G_TYPE_INT);
-            g_value_set_int(&gvalue, TR_PRI_UNSET);
-            gtk_tree_store_set_value(GTK_TREE_STORE(model), iter,
-                                     FILESCOL_PRIORITY, &gvalue);
+        if (isFile) {
+            target_node->length = file_get_length(file);
+            target_node->bytesCompleted = file_get_bytes_completed(file);
+            target_node->index = index;
+            target_node->enabled = (gint)json_array_get_int_element(enabled, index);
+            target_node->priority = (gint)json_array_get_int_element(priorities, index);
 
-            iter_to_row_reference(GTK_TREE_MODEL(model), iter,
-                                  &parentRowRef);
+            trg_files_tree_update_ancestors(target_node);
         }
     }
 
-    if (parentRowRef)
-        gtk_tree_row_reference_free(parentRowRef);
+    g_list_free(parentList);
 
-    g_strfreev(elements);
-    priv->n_items++;
+    return lastIter;
 }
 
 void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept)
@@ -174,17 +206,15 @@ void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept)
 
 static void trg_files_model_iter_update(TrgFilesModel * model,
                                         GtkTreeIter * filesIter,
-                                        gboolean isFirst,
                                         JsonObject * file,
                                         JsonArray * wantedArray,
                                         JsonArray * prioritiesArray,
-                                        int id)
+                                        gint id)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
-
     gint64 fileLength = file_get_length(file);
     gint64 fileCompleted = file_get_bytes_completed(file);
-    gint64 increment;
+    gint64 lastCompleted;
 
     gboolean wanted =
         json_node_get_int(json_array_get_element(wantedArray, id))
@@ -193,36 +223,20 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
         json_node_get_int(json_array_get_element(prioritiesArray, id));
     gdouble progress = file_get_progress(fileLength, fileCompleted);
 
-    if (isFirst) {
-        increment = fileCompleted;
-    } else {
-        gint64 lastCompleted;
-        gtk_tree_model_get(GTK_TREE_MODEL(model), filesIter,
+    gtk_tree_model_get(GTK_TREE_MODEL(model), filesIter,
                            FILESCOL_BYTESCOMPLETED, &lastCompleted, -1);
-        increment = fileCompleted - lastCompleted;
-    }
 
     gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_PROGRESS,
                        progress, FILESCOL_BYTESCOMPLETED, fileCompleted,
                        -1);
 
     trg_files_update_parent_progress(GTK_TREE_MODEL(model), filesIter,
-                                     increment);
+            fileCompleted - lastCompleted);
 
     if (priv->accept)
         gtk_tree_store_set(GTK_TREE_STORE(model), filesIter,
                            FILESCOL_WANTED, wanted, FILESCOL_PRIORITY,
                            priority, -1);
-
-    if (isFirst) {
-        trg_files_tree_model_propogate_change_up(GTK_TREE_MODEL(model),
-                                                 filesIter,
-                                                 FILESCOL_PRIORITY,
-                                                 priority);
-        trg_files_tree_model_propogate_change_up(GTK_TREE_MODEL(model),
-                                                 filesIter,
-                                                 FILESCOL_WANTED, wanted);
-    }
 }
 
 static void trg_files_model_class_init(TrgFilesModelClass * klass)
@@ -261,7 +275,7 @@ gboolean trg_files_model_update_foreach(GtkListStore * model,
 
     if (id >= 0) {
         file = json_node_get_object(g_list_nth_data(files, id));
-        trg_files_model_iter_update(TRG_FILES_MODEL(model), iter, FALSE,
+        trg_files_model_iter_update(TRG_FILES_MODEL(model), iter,
                                     file, priv->wanted, priv->priorities,
                                     id);
     }
@@ -274,42 +288,39 @@ void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     GList *filesList, *li;
-    GtkTreeIter filesIter;
     JsonObject *file;
     gint j = 0;
+    guint n_updates;
 
     priv->torrentId = torrent_get_id(t);
     priv->priorities = torrent_get_priorities(t);
     priv->wanted = torrent_get_wanted(t);
 
     filesList = json_array_get_elements(torrent_get_files(t));
+    n_updates = g_list_length(filesList);
 
-    if (mode == TORRENT_GET_MODE_FIRST) {
+    if (mode == TORRENT_GET_MODE_FIRST || priv->n_items != n_updates) {
+        trg_files_tree_node *top_node = g_new0(trg_files_tree_node, 1);
+        trg_files_tree_node *lastNode = NULL;
         gtk_tree_store_clear(GTK_TREE_STORE(model));
         priv->accept = TRUE;
+
         for (li = filesList; li; li = g_list_next(li)) {
             file = json_node_get_object((JsonNode *) li->data);
 
-            trg_files_model_iter_new(model, &filesIter, file, j);
-            trg_files_model_iter_update(model, &filesIter, TRUE, file,
-                                        priv->wanted, priv->priorities, j);
-            j++;
+            lastNode =
+                     trg_file_parser_node_insert(top_node, lastNode,
+                                                  file, j++, priv->wanted, priv->priorities);
         }
+
+        priv->n_items = j;
+
+        store_add_node(GTK_TREE_STORE(model), NULL, top_node);
+
     } else {
-        guint n_updates = g_list_length(filesList);
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),
                                (GtkTreeModelForeachFunc)
                                trg_files_model_update_foreach, filesList);
-        if (n_updates > priv->n_items) {
-            gint n_new = n_updates - priv->n_items;
-            for (j = n_updates - n_new; j < n_updates; j++) {
-                file = json_node_get_object(g_list_nth_data(filesList, j));
-                trg_files_model_iter_new(model, &filesIter, file, j);
-                trg_files_model_iter_update(model, &filesIter, TRUE, file,
-                                            priv->wanted, priv->priorities,
-                                            j);
-            }
-        }
     }
 
     g_list_free(filesList);

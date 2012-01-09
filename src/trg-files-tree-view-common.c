@@ -184,6 +184,7 @@ gboolean trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
                                                  GdkEventButton * event,
                                                  gint pri_id,
                                                  gint enabled_id,
+                                                 gboolean one_click,
                                                  GCallback low_cb,
                                                  GCallback normal_cb,
                                                  GCallback high_cb,
@@ -197,7 +198,7 @@ gboolean trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
     gboolean handled = FALSE;
     GtkTreeView *treeview = GTK_TREE_VIEW(w);
 
-    if (event->type == GDK_BUTTON_PRESS && event->button == 1
+    if (one_click && event->type == GDK_BUTTON_PRESS && event->button == 1
         && !(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK))
         && getAndSelectEventPath(treeview, event, &col, &path)) {
         handled =

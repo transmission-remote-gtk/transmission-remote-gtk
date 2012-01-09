@@ -1879,7 +1879,8 @@ static void exec_cmd_cb(GtkWidget * w, gpointer data)
     GList *selectedRows = gtk_tree_selection_get_selected_rows(selection,
                                                                &model);
     GError *cmd_error = NULL;
-    gchar *cmd_line, **argv;
+    gchar *cmd_line = NULL;
+    gchar **argv = NULL;
 
     cmd_line = build_remote_exec_cmd(priv->client,
                                      model,
@@ -1901,7 +1902,10 @@ static void exec_cmd_cb(GtkWidget * w, gpointer data)
 
     g_list_foreach(selectedRows, (GFunc) gtk_tree_path_free, NULL);
     g_list_free(selectedRows);
-    g_strfreev(argv);
+
+    if (argv)
+        g_strfreev(argv);
+
     g_free(cmd_line);
 
     if (cmd_error) {

@@ -292,6 +292,7 @@ static gboolean onViewButtonPressed(GtkWidget * w, GdkEventButton * event,
 {
     return trg_files_tree_view_onViewButtonPressed(w, event, FC_PRIORITY,
                                                    FC_ENABLED,
+                                                   TRUE,
                                                    G_CALLBACK(set_low),
                                                    G_CALLBACK(set_normal),
                                                    G_CALLBACK(set_high),
@@ -463,7 +464,7 @@ static void addTorrentFilters(GtkFileChooser * chooser)
 }
 
 static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
-                           trg_torrent_file_node * node)
+                           trg_files_tree_node * node)
 {
     GtkTreeIter child;
     GList *li;
@@ -483,7 +484,7 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
 
     for (li = node->children; li; li = g_list_next(li))
         store_add_node(store, node->name ? &child : NULL,
-                       (trg_torrent_file_node *) li->data);
+                       (trg_files_tree_node *) li->data);
 }
 
 static void torrent_not_parsed_warning(GtkWindow * parent)
