@@ -322,7 +322,7 @@ void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
         priv->n_items = j;
 
         store_add_node(GTK_TREE_STORE(model), NULL, top_node);
-
+        trg_files_tree_node_free(top_node);
     } else {
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),
                                (GtkTreeModelForeachFunc)
