@@ -113,7 +113,8 @@ gboolean trg_files_tree_view_viewOnPopupMenu(GtkWidget * treeview,
 
 static gboolean onViewPathToggled(GtkTreeView * view,
                                   GtkTreeViewColumn * col,
-                                  GtkTreePath * path, gint pri_id,
+                                  GtkTreePath * path, gboolean oneClick,
+                                  gint pri_id,
                                   gint enabled_id, gpointer data)
 {
     int cid;
@@ -129,7 +130,7 @@ static gboolean onViewPathToggled(GtkTreeView * view,
 
         gtk_tree_model_get_iter(model, &iter, path);
 
-        if (cid == pri_id) {
+        if (cid == pri_id && oneClick) {
             int priority;
             gtk_tree_model_get(model, &iter, pri_id, &priority, -1);
             switch (priority) {
@@ -198,11 +199,11 @@ gboolean trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
     gboolean handled = FALSE;
     GtkTreeView *treeview = GTK_TREE_VIEW(w);
 
-    if (one_click && event->type == GDK_BUTTON_PRESS && event->button == 1
+    if (event->type == GDK_BUTTON_PRESS && event->button == 1
         && !(event->state & (GDK_SHIFT_MASK | GDK_CONTROL_MASK))
         && getAndSelectEventPath(treeview, event, &col, &path)) {
         handled =
-            onViewPathToggled(treeview, col, path, pri_id, enabled_id,
+            onViewPathToggled(treeview, col, path, one_click, pri_id, enabled_id,
                               NULL);
     } else if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
         selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(treeview));

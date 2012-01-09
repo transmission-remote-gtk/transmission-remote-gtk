@@ -85,19 +85,15 @@ static void trg_files_tree_update_ancestors(trg_files_tree_node * node)
         for (li = back_iter->children; li; li = g_list_next(li)) {
             trg_files_tree_node *back_node =
                 (trg_files_tree_node *) li->data;
-            gboolean stop = FALSE;
+            gint common_result = 0;
 
-            if (back_node->priority != pri_result) {
-                pri_result = TR_PRI_MIXED;
-                stop = TRUE;
-            }
+            if (back_node->priority != pri_result)
+                common_result = pri_result = TR_PRI_MIXED;
 
-            if (back_node->enabled != enabled_result) {
-                enabled_result = TR_PRI_MIXED;
-                stop = TRUE;
-            }
+            if (back_node->enabled != enabled_result)
+                common_result = enabled_result = TR_PRI_MIXED;
 
-            if (stop)
+            if (common_result == TR_PRI_MIXED)
                 break;
         }
 
@@ -295,16 +291,14 @@ void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
     GList *filesList, *li;
     JsonObject *file;
     gint j = 0;
-    guint n_updates;
 
     priv->torrentId = torrent_get_id(t);
     priv->priorities = torrent_get_priorities(t);
     priv->wanted = torrent_get_wanted(t);
 
     filesList = json_array_get_elements(torrent_get_files(t));
-    n_updates = g_list_length(filesList);
 
-    if (mode == TORRENT_GET_MODE_FIRST || priv->n_items != n_updates) {
+    if (mode == TORRENT_GET_MODE_FIRST || priv->n_items != g_list_length(filesList)) {
         trg_files_tree_node *top_node = g_new0(trg_files_tree_node, 1);
         trg_files_tree_node *lastNode = NULL;
         gtk_tree_store_clear(GTK_TREE_STORE(model));
