@@ -534,7 +534,8 @@ evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
 #endif
 }
 
-GtkTreeRowReference* iter_to_row_reference(GtkTreeModel * model, GtkTreeIter * iter)
+GtkTreeRowReference *iter_to_row_reference(GtkTreeModel * model,
+                                           GtkTreeIter * iter)
 {
     GtkTreePath *path = gtk_tree_model_get_path(model, iter);
     GtkTreeRowReference *rr = gtk_tree_row_reference_new(model, path);
@@ -543,7 +544,7 @@ GtkTreeRowReference* iter_to_row_reference(GtkTreeModel * model, GtkTreeIter * i
 }
 
 void iter_replace_row_reference(GtkTreeModel * model, GtkTreeIter * iter,
-                           GtkTreeRowReference ** rr)
+                                GtkTreeRowReference ** rr)
 {
     if (*rr)
         gtk_tree_row_reference_free(*rr);

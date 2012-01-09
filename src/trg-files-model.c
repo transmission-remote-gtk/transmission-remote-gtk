@@ -68,15 +68,13 @@ static void trg_files_update_parent_progress(GtkTreeModel * model,
         gtk_tree_store_set(GTK_TREE_STORE(model), &tmp_iter,
                            FILESCOL_PROGRESS, file_get_progress(length,
                                                                 newCompleted),
-                           FILESCOL_BYTESCOMPLETED, newCompleted,
-                           -1);
+                           FILESCOL_BYTESCOMPLETED, newCompleted, -1);
 
         back_iter = tmp_iter;
     }
 }
 
-static void trg_files_tree_update_ancestors(
-        trg_files_tree_node *node)
+static void trg_files_tree_update_ancestors(trg_files_tree_node * node)
 {
     trg_files_tree_node *back_iter = node;
     gint pri_result = node->priority;
@@ -85,7 +83,8 @@ static void trg_files_tree_update_ancestors(
     while ((back_iter = back_iter->parent)) {
         GList *li;
         for (li = back_iter->children; li; li = g_list_next(li)) {
-            trg_files_tree_node *back_node = (trg_files_tree_node*)li->data;
+            trg_files_tree_node *back_node =
+                (trg_files_tree_node *) li->data;
             gboolean stop = FALSE;
 
             if (back_node->priority != pri_result) {
@@ -116,14 +115,15 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
     GList *li;
 
     if (node->name) {
-        gdouble progress = file_get_progress(node->length, node->bytesCompleted);
+        gdouble progress =
+            file_get_progress(node->length, node->bytesCompleted);
         gtk_tree_store_append(store, &child, parent);
         gtk_tree_store_set(store, &child, FILESCOL_WANTED, node->enabled,
-                FILESCOL_PROGRESS, progress,
-                FILESCOL_SIZE, node->length,
-                FILESCOL_ID, node->children ? -1 : node->index,
-                           FILESCOL_PRIORITY, node->priority, FILESCOL_NAME, node->name,
-                           -1);
+                           FILESCOL_PROGRESS, progress,
+                           FILESCOL_SIZE, node->length,
+                           FILESCOL_ID, node->index,
+                           FILESCOL_PRIORITY, node->priority,
+                           FILESCOL_NAME, node->name, -1);
     }
 
     for (li = node->children; li; li = g_list_next(li))
@@ -133,9 +133,10 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
 
 static trg_files_tree_node
     * trg_file_parser_node_insert(trg_files_tree_node * top,
-                                   trg_files_tree_node * last,
-                                   JsonObject *file, gint index,
-                                   JsonArray *enabled, JsonArray *priorities)
+                                  trg_files_tree_node * last,
+                                  JsonObject * file, gint index,
+                                  JsonArray * enabled,
+                                  JsonArray * priorities)
 {
     gchar **path = g_strsplit(file_get_name(file), "/", -1);
     trg_files_tree_node *lastIter = last;
@@ -186,10 +187,14 @@ static trg_files_tree_node
             target_node->length = file_get_length(file);
             target_node->bytesCompleted = file_get_bytes_completed(file);
             target_node->index = index;
-            target_node->enabled = (gint)json_array_get_int_element(enabled, index);
-            target_node->priority = (gint)json_array_get_int_element(priorities, index);
+            target_node->enabled =
+                (gint) json_array_get_int_element(enabled, index);
+            target_node->priority =
+                (gint) json_array_get_int_element(priorities, index);
 
             trg_files_tree_update_ancestors(target_node);
+        } else {
+            target_node->index = -1;
         }
     }
 
@@ -224,14 +229,14 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
     gdouble progress = file_get_progress(fileLength, fileCompleted);
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), filesIter,
-                           FILESCOL_BYTESCOMPLETED, &lastCompleted, -1);
+                       FILESCOL_BYTESCOMPLETED, &lastCompleted, -1);
 
     gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_PROGRESS,
                        progress, FILESCOL_BYTESCOMPLETED, fileCompleted,
                        -1);
 
     trg_files_update_parent_progress(GTK_TREE_MODEL(model), filesIter,
-            fileCompleted - lastCompleted);
+                                     fileCompleted - lastCompleted);
 
     if (priv->accept)
         gtk_tree_store_set(GTK_TREE_STORE(model), filesIter,
@@ -309,8 +314,9 @@ void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
             file = json_node_get_object((JsonNode *) li->data);
 
             lastNode =
-                     trg_file_parser_node_insert(top_node, lastNode,
-                                                  file, j++, priv->wanted, priv->priorities);
+                trg_file_parser_node_insert(top_node, lastNode,
+                                            file, j++, priv->wanted,
+                                            priv->priorities);
         }
 
         priv->n_items = j;
