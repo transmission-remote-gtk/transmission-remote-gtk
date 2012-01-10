@@ -169,15 +169,14 @@ void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session)
     gtk_widget_set_visible(priv->turtleEventBox, TRUE);
 }
 
-void trg_status_bar_update(TrgStatusBar * sb,
-                           trg_torrent_model_update_stats * stats,
-                           TrgClient * client)
+void trg_status_bar_update_speed(TrgStatusBar * sb,
+        trg_torrent_model_update_stats * stats,
+        TrgClient * client)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     JsonObject *session = trg_client_get_session(client);
     gboolean altLimits = session_get_speed_limit_alt_enabled(session);
-
-    gchar *speedText, *infoText;
+    gchar *speedText;
     gint64 uplimitraw, downlimitraw;
     gchar downRateTotalString[32], upRateTotalString[32];
     gchar uplimit[64], downlimit[64];
@@ -218,6 +217,18 @@ void trg_status_bar_update(TrgStatusBar * sb,
                         downlimitraw >= 0 ? downlimit : "",
                         upRateTotalString, uplimitraw >= 0 ? uplimit : "");
 
+    gtk_label_set_text(GTK_LABEL(priv->speed_lbl), speedText);
+
+    g_free(speedText);
+}
+
+void trg_status_bar_update(TrgStatusBar * sb,
+                           trg_torrent_model_update_stats * stats,
+                           TrgClient * client)
+{
+    TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
+    gchar *infoText;
+
     infoText = g_strdup_printf(ngettext
                                ("%d torrent:  %d seeding, %d downloading, %d paused",
                                 "%d torrents: %d seeding, %d downloading, %d paused",
@@ -225,9 +236,9 @@ void trg_status_bar_update(TrgStatusBar * sb,
                                stats->seeding, stats->down, stats->paused);
 
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), infoText);
-    gtk_label_set_text(GTK_LABEL(priv->speed_lbl), speedText);
 
-    g_free(speedText);
+    trg_status_bar_update_speed(sb, stats, client);
+
     g_free(infoText);
 }
 

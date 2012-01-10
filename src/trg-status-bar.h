@@ -61,5 +61,7 @@ void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
 void trg_status_bar_reset(TrgStatusBar * sb);
 void trg_status_bar_clear_indicators(TrgStatusBar * sb);
 const gchar *trg_status_bar_get_speed_text(TrgStatusBar * s);
-
+void trg_status_bar_update_speed(TrgStatusBar * sb,
+        trg_torrent_model_update_stats * stats,
+        TrgClient * client);
 #endif                          /* TRG_STATUS_BAR_H_ */
