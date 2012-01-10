@@ -80,12 +80,18 @@ static trg_files_tree_node
                 top->children = g_list_append(top->children, target_node);
         }
 
-        lastIter = target_node;
-
         if (isFile) {
-            target_node->length = (gint64) file_length_node->val.i;
             target_node->index = index;
+            target_node->length = (gint64) file_length_node->val.i;
+
+            while (lastIter)
+            {
+                lastIter->length = target_node->length;
+                lastIter = lastIter->parent;
+            }
         }
+
+        lastIter = target_node;
     }
 
     g_list_free(parentList);

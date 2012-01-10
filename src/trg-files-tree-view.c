@@ -162,9 +162,8 @@ static gboolean view_onButtonPressed(GtkWidget * treeview,
 {
     gboolean handled =
         trg_files_tree_view_onViewButtonPressed(treeview, event,
-                                                FILESCOL_PRIORITY,
+                                                -1, //FILESCOL_PRIORITY,
                                                 FILESCOL_WANTED,
-                                                FALSE,
                                                 G_CALLBACK(set_low),
                                                 G_CALLBACK(set_normal),
                                                 G_CALLBACK(set_high),

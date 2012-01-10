@@ -26,7 +26,7 @@
 #include "trg-files-tree.h"
 
 typedef struct {
-    char *name;
+    gchar *name;
     gint64 length;
     gint64 bytesCompleted;
     GList *children;

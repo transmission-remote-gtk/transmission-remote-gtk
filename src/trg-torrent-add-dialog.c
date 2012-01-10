@@ -292,7 +292,6 @@ static gboolean onViewButtonPressed(GtkWidget * w, GdkEventButton * event,
 {
     return trg_files_tree_view_onViewButtonPressed(w, event, FC_PRIORITY,
                                                    FC_ENABLED,
-                                                   TRUE,
                                                    G_CALLBACK(set_low),
                                                    G_CALLBACK(set_normal),
                                                    G_CALLBACK(set_high),
@@ -473,13 +472,8 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
         gtk_tree_store_append(store, &child, parent);
         gtk_tree_store_set(store, &child, FC_LABEL, node->name, FC_ENABLED,
                            1, FC_INDEX, node->children ? -1 : node->index,
-                           FC_PRIORITY, TR_PRI_NORMAL, -1);
-
-        if (!node->children) {
-            gtk_tree_store_set(store, &child, FC_SIZE, node->length, -1);
-            trg_files_model_update_parents(GTK_TREE_MODEL(store), &child,
-                                           FC_SIZE);
-        }
+                           FC_PRIORITY, TR_PRI_NORMAL,
+                           FC_SIZE, node->length, -1);
     }
 
     for (li = node->children; li; li = g_list_next(li))
