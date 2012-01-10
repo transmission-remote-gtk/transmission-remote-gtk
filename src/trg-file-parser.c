@@ -60,10 +60,12 @@ static trg_files_tree_node
             trg_files_tree_node *lastPathNode =
                 (trg_files_tree_node *) li->data;
 
-            if (!g_strcmp0(lastPathNode->name, path_el_node->val.s))
+            if (!g_strcmp0(lastPathNode->name, path_el_node->val.s)) {
                 target_node = lastPathNode;
-
-            li = g_list_next(li);
+                li = g_list_next(li);
+            } else {
+                li = NULL;
+            }
         }
 
         if (!target_node) {
