@@ -471,7 +471,7 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
     if (node->name) {
         gtk_tree_store_append(store, &child, parent);
         gtk_tree_store_set(store, &child, FC_LABEL, node->name, FC_ENABLED,
-                           1, FC_INDEX, node->children ? -1 : node->index,
+                           1, FC_INDEX, node->index,
                            FC_PRIORITY, TR_PRI_NORMAL,
                            FC_SIZE, node->length, -1);
     }

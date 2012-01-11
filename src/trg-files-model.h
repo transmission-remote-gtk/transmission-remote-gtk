@@ -60,6 +60,8 @@ G_END_DECLS enum {
     FILESCOL_COLUMNS
 };
 
+#define TRG_FILES_MODEL_CREATE_THREAD_IF_GT 600
+
 void
 trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
                        JsonObject * t, gint mode);

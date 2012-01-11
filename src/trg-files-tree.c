@@ -17,6 +17,9 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+/* This is the stuff common between both files trees, built up before
+ * populating the model.
+ */
 #include <stdlib.h>
 #include <string.h>
 

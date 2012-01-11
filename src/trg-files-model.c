@@ -45,6 +45,12 @@ struct _TrgFilesModelPrivate {
     gboolean accept;
 };
 
+/* Push a given increment to a treemodel node and its parents.
+ * Used for updating bytescompleted.
+ * This is only used for user interaction, the initial population is done
+ * in a simple tree before for performance.
+ * */
+
 static void trg_files_update_parent_progress(GtkTreeModel * model,
                                              GtkTreeIter * iter,
                                              gint64 increment)
@@ -74,6 +80,12 @@ static void trg_files_update_parent_progress(GtkTreeModel * model,
     }
 }
 
+/* Update the bytesCompleted and size for a nodes parents, and also figure out
+ * if a priority/enabled change requires updating the parents (needs to iterate
+ * over the other nodes at its level).
+ *
+ * It's faster doing it in here than when it's in the model.
+ */
 static void trg_files_tree_update_ancestors(trg_files_tree_node * node)
 {
     trg_files_tree_node *back_iter = node;
@@ -141,6 +153,9 @@ static trg_files_tree_node
     GList *li;
     int i;
 
+    /* Build up a list of pointers to each parent trg_files_tree_node
+     * reversing the order as it iterates over its parent.
+     */
     if (lastIter)
         while ((lastIter = lastIter->parent))
             parentList = g_list_prepend(parentList, lastIter);
@@ -155,6 +170,10 @@ static trg_files_tree_node
         gboolean isFile = !path[i + 1];
         trg_files_tree_node *target_node = NULL;
 
+        /* No point checking for files. If there is a last parents iterator
+         * check it for a shortcut. I'm assuming that these come in order of
+         * directory at least to give performance a boost.
+         */
         if (li && !isFile) {
             trg_files_tree_node *lastPathNode =
                 (trg_files_tree_node *) li->data;
@@ -163,24 +182,33 @@ static trg_files_tree_node
                 target_node = lastPathNode;
                 li = g_list_next(li);
             } else {
+                /* No need to check any further. */
                 li = NULL;
             }
         }
+
+        /* Node needs creating */
 
         if (!target_node) {
             target_node = g_new0(trg_files_tree_node, 1);
             target_node->name = g_strdup(path[i]);
             target_node->parent = lastIter;
 
+            /* Under the parent of the last iteration. */
             if (lastIter)
                 lastIter->children =
                     g_list_append(lastIter->children, target_node);
+            /* None set, so under the top node. */
             else
                 top->children = g_list_append(top->children, target_node);
         }
 
         lastIter = target_node;
 
+        /* Files have more properties set here than for files.
+         * Directories are updated from here too, by trg_files_tree_update_ancestors
+         * working up the parents.
+         */
         if (isFile) {
             target_node->length = file_get_length(file);
             target_node->bytesCompleted = file_get_bytes_completed(file);
@@ -197,6 +225,7 @@ static trg_files_tree_node
     }
 
     g_list_free(parentList);
+    g_strfreev(path);
 
     return lastIter;
 }
@@ -286,46 +315,107 @@ gboolean trg_files_model_update_foreach(GtkListStore * model,
     return FALSE;
 }
 
+struct FirstUpdateThreadData
+{
+    TrgFilesModel * model;
+    JsonArray *files;
+    gint n_items;
+    trg_files_tree_node *top_node;
+    gint64 torrent_id;
+    GList *filesList;
+    gboolean idle_add;
+};
+
+static gboolean trg_files_model_applytree_idlefunc(gpointer data)
+{
+    struct FirstUpdateThreadData* args = (struct FirstUpdateThreadData*)data;
+    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(args->model);
+
+    if (args->torrent_id == priv->torrentId) {
+        store_add_node(GTK_TREE_STORE(args->model), NULL, args->top_node);
+        priv->n_items = args->n_items;
+        priv->accept = TRUE;
+    }
+
+    trg_files_tree_node_free(args->top_node);
+    g_free(data);
+
+    return FALSE;
+}
+
+static gpointer trg_files_model_buildtree_threadfunc(gpointer data)
+{
+    struct FirstUpdateThreadData* args = (struct FirstUpdateThreadData*)data;
+    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(args->model);
+    trg_files_tree_node *lastNode = NULL;
+    GList *li;
+
+    args->top_node = g_new0(trg_files_tree_node, 1);
+
+    for (li = args->filesList; li; li = g_list_next(li)) {
+        JsonObject *file = json_node_get_object((JsonNode *) li->data);
+
+        lastNode =
+            trg_file_parser_node_insert(args->top_node, lastNode,
+                                        file, args->n_items++, priv->wanted,
+                                        priv->priorities);
+    }
+
+    g_list_free(args->filesList);
+    json_array_unref(args->files);
+
+    if (args->idle_add)
+        g_idle_add(trg_files_model_applytree_idlefunc, data);
+
+    return NULL;
+}
+
 void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
                             JsonObject * t, gint mode)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
-    GList *filesList, *li;
-    JsonObject *file;
-    gint j = 0;
+    JsonArray *files = torrent_get_files(t);
+    GList *filesList = json_array_get_elements(files);
+    guint filesListLength = g_list_length(filesList);
 
     priv->torrentId = torrent_get_id(t);
     priv->priorities = torrent_get_priorities(t);
     priv->wanted = torrent_get_wanted(t);
 
-    filesList = json_array_get_elements(torrent_get_files(t));
+    /* It's quicker to build this up with simple data structures before
+     * putting it into GTK models.
+     */
+    if (mode == TORRENT_GET_MODE_FIRST || priv->n_items != filesListLength) {
+        struct FirstUpdateThreadData *futd = g_new0(struct FirstUpdateThreadData, 1);
 
-    if (mode == TORRENT_GET_MODE_FIRST || priv->n_items != g_list_length(filesList)) {
-        trg_files_tree_node *top_node = g_new0(trg_files_tree_node, 1);
-        trg_files_tree_node *lastNode = NULL;
         gtk_tree_store_clear(GTK_TREE_STORE(model));
-        priv->accept = TRUE;
+        json_array_ref(files);
 
-        for (li = filesList; li; li = g_list_next(li)) {
-            file = json_node_get_object((JsonNode *) li->data);
+        futd->files = files;
+        futd->filesList = filesList;
+        futd->torrent_id = priv->torrentId;
+        futd->model = model;
+        futd->idle_add = filesListLength > TRG_FILES_MODEL_CREATE_THREAD_IF_GT;
 
-            lastNode =
-                trg_file_parser_node_insert(top_node, lastNode,
-                                            file, j++, priv->wanted,
-                                            priv->priorities);
+        /* If this update has more than a given number of files, build up the
+         * simple tree in a thread, then g_idle_add a function whichs
+         * add the contents of this prebuilt tree.
+         *
+         * If less than or equal to, I don't think it's worth spawning threads
+         * for. Just do it in the main loop.
+         */
+        if (futd->idle_add) {
+            g_thread_create(trg_files_model_buildtree_threadfunc, futd, FALSE, NULL);
+        } else {
+            trg_files_model_buildtree_threadfunc(futd);
+            trg_files_model_applytree_idlefunc(futd);
         }
-
-        priv->n_items = j;
-
-        store_add_node(GTK_TREE_STORE(model), NULL, top_node);
-        trg_files_tree_node_free(top_node);
     } else {
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),
                                (GtkTreeModelForeachFunc)
                                trg_files_model_update_foreach, filesList);
+        g_list_free(filesList);
     }
-
-    g_list_free(filesList);
 }
 
 gint64 trg_files_model_get_torrent_id(TrgFilesModel * model)

@@ -887,6 +887,13 @@ gboolean on_session_set(gpointer data) {
     return FALSE;
 }
 
+static gboolean hasEnabledChanged(JsonObject *a, JsonObject *b,
+        const gchar *key)
+{
+    return json_object_get_boolean_member(a, key) !=
+            json_object_get_boolean_member(b, key);
+}
+
 static gboolean on_session_get(gpointer data) {
     trg_response *response = (trg_response *) data;
     TrgMainWindow *win = TRG_MAIN_WINDOW(response->cb_data);
@@ -935,14 +942,10 @@ static gboolean on_session_get(gpointer data) {
                 && g_strcmp0(session_get_download_dir(lastSession),
                         session_get_download_dir(newSession));
         gboolean refreshSpeed = lastSession
-                && ((session_get_alt_speed_enabled(lastSession)
-                        != session_get_alt_speed_enabled(newSession))
-                        || (session_get_speed_limit_down_enabled(lastSession)
-                                != session_get_speed_limit_down_enabled(
-                                        newSession))
-                        || (session_get_speed_limit_up_enabled(lastSession)
-                                != session_get_speed_limit_up_enabled(
-                                        newSession)));
+                &&
+                (hasEnabledChanged(lastSession, newSession, SGET_ALT_SPEED_ENABLED)
+                        || hasEnabledChanged(lastSession, newSession, SGET_SPEED_LIMIT_DOWN_ENABLED)
+                        || hasEnabledChanged(lastSession, newSession, SGET_SPEED_LIMIT_UP_ENABLED));
 
         trg_client_set_session(client, newSession);
 
