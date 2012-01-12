@@ -1,0 +1,1283 @@
+# French translation for transmission-remote-gtk
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the transmission-remote-gtk package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: transmission-remote-gtk\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-01-04 11:06+0000\n"
+"PO-Revision-Date: 2012-01-09 17:31+0000\n"
+"Last-Translator: Pierre Rudloff <rudloff@strasweb.fr>\n"
+"Language-Team: French <fr@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Launchpad-Export-Date: 2012-01-11 22:36+0000\n"
+"X-Generator: Launchpad (build 14640)\n"
+
+#: src/torrent.c:321 src/torrent.c:341 src/trg-state-selector.c:584
+msgid "Downloading"
+msgstr "Téléchargement en cours"
+
+#: src/torrent.c:323
+msgid "Queued download"
+msgstr ""
+
+#: src/torrent.c:325 src/torrent.c:349
+msgid "Waiting To Check"
+msgstr "En attente de vérification"
+
+#: src/torrent.c:327 src/torrent.c:347 src/trg-state-selector.c:603
+msgid "Checking"
+msgstr "Vérification en cours"
+
+#: src/torrent.c:329
+msgid "Queued seed"
+msgstr ""
+
+#: src/torrent.c:331 src/torrent.c:345 src/trg-remote-prefs-dialog.c:308
+#: src/trg-state-selector.c:589 src/trg-torrent-props-dialog.c:212
+msgid "Seeding"
+msgstr "Envoi"
+
+#: src/torrent.c:333 src/torrent.c:343 src/trg-state-selector.c:594
+msgid "Paused"
+msgstr "En pause"
+
+#: src/torrent.c:354
+msgid "Unknown"
+msgstr "Inconnu"
+
+#: src/trg-about-window.c:77
+msgid "A remote client to transmission-daemon."
+msgstr "Un client distant pour transmission-daemon"
+
+#: src/trg-cell-renderer-priority.c:74 src/trg-torrent-add-dialog.c:401
+#: src/trg-torrent-props-dialog.c:182
+msgid "Low"
+msgstr "Bas"
+
+#: src/trg-cell-renderer-priority.c:76 src/trg-torrent-add-dialog.c:402
+#: src/trg-torrent-props-dialog.c:182
+msgid "High"
+msgstr "Haut"
+
+#: src/trg-cell-renderer-priority.c:78 src/trg-torrent-add-dialog.c:401
+#: src/trg-torrent-props-dialog.c:182
+msgid "Normal"
+msgstr "Normal"
+
+#: src/trg-cell-renderer-priority.c:80
+msgid "Mixed"
+msgstr "Mixte"
+
+#: src/trg-files-tree-view.c:163 src/trg-general-panel.c:256
+#: src/trg-torrent-add-dialog.c:306 src/trg-torrent-tree-view.c:44
+msgid "Name"
+msgstr "Nom"
+
+#: src/trg-files-tree-view.c:166 src/trg-general-panel.c:259
+#: src/trg-torrent-add-dialog.c:324 src/trg-torrent-tree-view.c:49
+msgid "Size"
+msgstr "Taille"
+
+#: src/trg-files-tree-view.c:169 src/trg-peers-tree-view.c:66
+msgid "Progress"
+msgstr "Progression"
+
+#: src/trg-files-tree-view.c:171 src/trg-files-tree-view-common.c:65
+#: src/trg-torrent-add-dialog.c:336
+msgid "Download"
+msgstr "Télécharger"
+
+#: src/trg-files-tree-view.c:173 src/trg-torrent-add-dialog.c:350
+#: src/trg-torrent-tree-view.c:124
+msgid "Priority"
+msgstr "Priorité"
+
+#: src/trg-files-tree-view-common.c:47
+msgid "High Priority"
+msgstr "Priorité élevée"
+
+#: src/trg-files-tree-view-common.c:51
+msgid "Normal Priority"
+msgstr "Priorité normale"
+
+#: src/trg-files-tree-view-common.c:55
+msgid "Low Priority"
+msgstr "Priorité faible"
+
+#: src/trg-files-tree-view-common.c:73
+msgid "Skip"
+msgstr "Passer"
+
+#: src/trg-files-tree-view-common.c:79
+msgid "Expand All"
+msgstr "Tout afficher"
+
+#: src/trg-files-tree-view-common.c:83
+msgid "Collapse All"
+msgstr "Tout réduire"
+
+#: src/trg-general-panel.c:147 src/trg-general-panel.c:192
+msgid "N/A"
+msgstr "N/D"
+
+#: src/trg-general-panel.c:152
+msgid "(Private)"
+msgstr "(Privé)"
+
+#: src/trg-general-panel.c:152
+msgid "(Public)"
+msgstr "(Public)"
+
+#: src/trg-general-panel.c:180 src/trg-main-window.c:911
+#: src/trg-main-window.c:1234 src/trg-main-window.c:1713
+#: src/trg-state-selector.c:477 src/trg-torrent-add-url-dialog.c:67
+#: src/util.c:322
+msgid "Error"
+msgstr "Erreur"
+
+#: src/trg-general-panel.c:261 src/trg-torrent-tree-view.c:102
+msgid "ETA"
+msgstr "Durée restante estimée"
+
+#: src/trg-general-panel.c:263 src/trg-torrent-tree-view.c:130
+msgid "Completed"
+msgstr "Terminé"
+
+#: src/trg-general-panel.c:266
+msgid "Seeders"
+msgstr "Sources"
+
+#: src/trg-general-panel.c:268
+msgid "Rate Down"
+msgstr ""
+
+#: src/trg-general-panel.c:270 src/trg-torrent-tree-view.c:107
+msgid "Downloaded"
+msgstr "Téléchargé"
+
+#: src/trg-general-panel.c:273 src/trg-torrent-tree-view.c:60
+msgid "Leechers"
+msgstr "Téléchargeurs"
+
+#: src/trg-general-panel.c:275
+msgid "Rate Up"
+msgstr ""
+
+#: src/trg-general-panel.c:277 src/trg-torrent-tree-view.c:104
+msgid "Uploaded"
+msgstr "Envoyé"
+
+#: src/trg-general-panel.c:280 src/trg-torrent-tree-view.c:53
+msgid "Status"
+msgstr "État"
+
+#: src/trg-general-panel.c:282 src/trg-torrent-tree-view.c:110
+msgid "Ratio"
+msgstr "Ratio"
+
+#: src/trg-general-panel.c:285 src/trg-torrent-tree-view.c:118
+msgid "Location"
+msgstr "Emplacement"
+
+#: src/trg-main-window.c:333
+msgid "This torrent has completed."
+msgstr "The torrent est terminé."
+
+#: src/trg-main-window.c:343
+msgid "This torrent has been added."
+msgstr "Ce torrent a été ajouté."
+
+#: src/trg-main-window.c:513
+msgid "No hostname set"
+msgstr "Aucun nom d'hôte défini"
+
+#: src/trg-main-window.c:516
+msgid "Unknown error getting settings"
+msgstr "Erreur inconnue lors de l'obtention des paramètres"
+
+#: src/trg-main-window.c:529
+msgid "Connecting..."
+msgstr "Connexion…"
+
+#: src/trg-main-window.c:748
+#, c-format
+msgid "<big><b>Remove torrent \"%s\"?</b></big>"
+msgstr "<big><b>Retirer le torrent \"%s\" ?</b></big>"
+
+#: src/trg-main-window.c:749
+#, c-format
+msgid "<big><b>Remove %d torrents?</b></big>"
+msgstr "<big><b>Retirer %d torrents ?</b></big>"
+
+#: src/trg-main-window.c:771
+#, c-format
+msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
+msgstr "<big><b>Retirer et supprimer le torrent \"%s\" ?</b></big>"
+
+#: src/trg-main-window.c:772
+#, c-format
+msgid "<big><b>Remove and delete %d torrents?</b></big>"
+msgstr "<big><b>Retirer et supprimer %d torrents ?</b></big>"
+
+#: src/trg-main-window.c:832 src/trg-preferences-dialog.c:887
+#: src/trg-remote-prefs-dialog.c:600
+msgid "General"
+msgstr "Général"
+
+#: src/trg-main-window.c:839
+msgid "Trackers"
+msgstr "Traqueurs"
+
+#: src/trg-main-window.c:846
+msgid "Files"
+msgstr "Fichiers"
+
+#: src/trg-main-window.c:852 src/trg-remote-prefs-dialog.c:339
+#: src/trg-torrent-props-dialog.c:230 src/trg-trackers-tree-view.c:189
+msgid "Peers"
+msgstr "Pairs"
+
+#: src/trg-main-window.c:906
+#, c-format
+msgid "This application supports Transmission %.2f and later, you have %.2f."
+msgstr ""
+"Cette application supporte Transmission %.2f ou plus récent, vous avez la "
+"version %.2f."
+
+#: src/trg-main-window.c:949 src/trg-torrent-tree-view.c:70
+msgid "Connected"
+msgstr "Connecté"
+
+#: src/trg-main-window.c:949 src/trg-status-bar.c:70 src/trg-status-bar.c:96
+msgid "Disconnected"
+msgstr "Déconnecté"
+
+#: src/trg-main-window.c:978
+#, c-format
+msgid "Downloading  %d"
+msgstr "Téléchargement de  %d"
+
+#: src/trg-main-window.c:980
+#, c-format
+msgid "Seeding  %d"
+msgstr "Envoi de  %d"
+
+#: src/trg-main-window.c:1035
+#, c-format
+msgid "Request %d/%d failed: %s"
+msgstr "Échec de la requête %d/%d : %s"
+
+#: src/trg-main-window.c:1640
+msgid "No Limit"
+msgstr "Pas de limite"
+
+#: src/trg-main-window.c:1732 src/trg-menu-bar.c:547 src/trg-toolbar.c:238
+msgid "Properties"
+msgstr "Propriétés"
+
+#: src/trg-main-window.c:1734 src/trg-toolbar.c:231
+msgid "Resume"
+msgstr "Reprendre"
+
+#: src/trg-main-window.c:1736 src/trg-toolbar.c:234
+msgid "Pause"
+msgstr "Pause"
+
+#: src/trg-main-window.c:1738
+msgid "Verify"
+msgstr "Vérifier"
+
+#: src/trg-main-window.c:1740
+msgid "Re-announce"
+msgstr "Annoncer de nouveau"
+
+#: src/trg-main-window.c:1742 src/trg-torrent-move-dialog.c:121
+#: src/trg-torrent-move-dialog.c:128
+msgid "Move"
+msgstr "Déplacer"
+
+#: src/trg-main-window.c:1744 src/trg-menu-bar.c:576 src/trg-toolbar.c:242
+msgid "Remove"
+msgstr "Retirer"
+
+#: src/trg-main-window.c:1746
+msgid "Remove & Delete"
+msgstr "Retirer et supprimer"
+
+#: src/trg-main-window.c:1768 src/trg-preferences-dialog.c:897
+msgid "Actions"
+msgstr "Actions"
+
+#: src/trg-main-window.c:1793 src/trg-menu-bar.c:591
+msgid "Start Now"
+msgstr "Démarrer"
+
+#: src/trg-main-window.c:1795 src/trg-menu-bar.c:596
+msgid "Move Up Queue"
+msgstr ""
+
+#: src/trg-main-window.c:1797 src/trg-menu-bar.c:602
+msgid "Move Down Queue"
+msgstr ""
+
+#: src/trg-main-window.c:1799 src/trg-menu-bar.c:608
+msgid "Bottom Of Queue"
+msgstr ""
+
+#: src/trg-main-window.c:1801 src/trg-menu-bar.c:612
+msgid "Top Of Queue"
+msgstr ""
+
+#: src/trg-main-window.c:1809 src/trg-main-window.c:1883
+msgid "Down Limit"
+msgstr "Limite de réception"
+
+#: src/trg-main-window.c:1813 src/trg-main-window.c:1888
+msgid "Up Limit"
+msgstr "Limite d'envoi"
+
+#: src/trg-main-window.c:1838 src/trg-main-window.c:1843
+#: src/trg-remote-prefs-dialog.c:427
+msgid "Updating..."
+msgstr "Mise à jour..."
+
+#: src/trg-main-window.c:1857 src/trg-menu-bar.c:507 src/trg-toolbar.c:208
+msgid "Connect"
+msgstr "Se connecter"
+
+#: src/trg-main-window.c:1863 src/trg-toolbar.c:218
+msgid "Disconnect"
+msgstr "Se déconnecter"
+
+#: src/trg-main-window.c:1867 src/trg-toolbar.c:221
+#: src/trg-trackers-tree-view.c:284 src/trg-trackers-tree-view.c:311
+msgid "Add"
+msgstr "Ajouter"
+
+#: src/trg-main-window.c:1870
+msgid "Add from URL"
+msgstr "Ajouter à partir d'une URL"
+
+#: src/trg-main-window.c:1873
+msgid "Resume All"
+msgstr "Tout reprendre"
+
+#: src/trg-main-window.c:1877
+msgid "Pause All"
+msgstr "Tout mettre en pause"
+
+#: src/trg-main-window.c:1893
+msgid "Quit"
+msgstr "Quitter"
+
+#: src/trg-main-window.c:1977 src/trg-menu-bar.c:412
+msgid "Graph"
+msgstr "Graphique"
+
+#: src/trg-main-window.c:2131
+msgid "Transmission Remote"
+msgstr "Transmission Remote"
+
+#: src/trg-menu-bar.c:378
+msgid "_View"
+msgstr "_Affichage"
+
+#: src/trg-menu-bar.c:385 src/trg-preferences-dialog.c:670
+msgid "State selector"
+msgstr "Sélecteur d'état"
+
+#: src/trg-menu-bar.c:390 src/trg-preferences-dialog.c:677
+msgid "Directory filters"
+msgstr "Filtres de répertoire"
+
+#: src/trg-menu-bar.c:398 src/trg-preferences-dialog.c:684
+msgid "Tracker filters"
+msgstr "Filtres de traqueurs"
+
+#: src/trg-menu-bar.c:406 src/trg-preferences-dialog.c:691
+msgid "Torrent Details"
+msgstr "Détails du torrent"
+
+#: src/trg-menu-bar.c:416
+msgid "_Statistics"
+msgstr "_Statistiques"
+
+#: src/trg-menu-bar.c:428
+msgid "_Options"
+msgstr "_Options"
+
+#: src/trg-menu-bar.c:434
+msgid "_Local Preferences"
+msgstr "Préférences _locales"
+
+#: src/trg-menu-bar.c:440
+msgid "_Remote Preferences"
+msgstr "Préférences _distantes"
+
+#: src/trg-menu-bar.c:500
+msgid "_File"
+msgstr "_Fichier"
+
+#: src/trg-menu-bar.c:513
+msgid "_Disconnect"
+msgstr "Se _déconnecter"
+
+#: src/trg-menu-bar.c:518
+msgid "_Add"
+msgstr "_Ajouter"
+
+#: src/trg-menu-bar.c:523
+msgid "Add from _URL"
+msgstr "Ajouter à partir d'une _URL"
+
+#: src/trg-menu-bar.c:528
+msgid "_Quit"
+msgstr "_Quitter"
+
+#: src/trg-menu-bar.c:540
+msgid "_Torrent"
+msgstr "_Torrent"
+
+#: src/trg-menu-bar.c:552
+msgid "_Resume"
+msgstr "_Reprendre"
+
+#: src/trg-menu-bar.c:557
+msgid "_Pause"
+msgstr "_Pause"
+
+#: src/trg-menu-bar.c:562
+msgid "_Verify"
+msgstr "_Vérifier"
+
+#: src/trg-menu-bar.c:568
+msgid "Re-_announce"
+msgstr "_Annoncer de nouveau"
+
+#: src/trg-menu-bar.c:571
+msgid "_Move"
+msgstr "_Déplacer"
+
+#: src/trg-menu-bar.c:582
+msgid "Remove and Delete"
+msgstr "Retirer et supprimer"
+
+#: src/trg-menu-bar.c:620
+msgid "_Resume All"
+msgstr "Tout _reprendre"
+
+#: src/trg-menu-bar.c:625
+msgid "_Pause All"
+msgstr "_Tout mettre en pause"
+
+#: src/trg-menu-bar.c:637
+msgid "_Help"
+msgstr "_Aide"
+
+#: src/trg-menu-bar.c:643
+msgid "_About"
+msgstr "_À propos"
+
+#: src/trg-peers-tree-view.c:51
+msgid "IP"
+msgstr "Adresse IP"
+
+#: src/trg-peers-tree-view.c:55 src/trg-trackers-tree-view.c:208
+msgid "Host"
+msgstr "Hôte"
+
+#: src/trg-peers-tree-view.c:59
+msgid "Country"
+msgstr "Pays"
+
+#: src/trg-peers-tree-view.c:62 src/trg-torrent-tree-view.c:96
+msgid "Down Speed"
+msgstr "Vitesse de téléchargement"
+
+#: src/trg-peers-tree-view.c:64 src/trg-torrent-tree-view.c:99
+msgid "Up Speed"
+msgstr "Vitesse d'envoi"
+
+#: src/trg-peers-tree-view.c:68
+msgid "Flags"
+msgstr "Drapeaux"
+
+#: src/trg-peers-tree-view.c:70
+msgid "Client"
+msgstr "Client"
+
+#: src/trg-preferences-dialog.c:401
+msgid "Updates"
+msgstr "Mises à jour"
+
+#: src/trg-preferences-dialog.c:403
+msgid "Update active torrents only"
+msgstr "Actualiser uniquement les torrents actifs"
+
+#: src/trg-preferences-dialog.c:410
+msgid "Full update every (?) updates"
+msgstr "Actualisation complète toutes les (?) actualisations"
+
+#: src/trg-preferences-dialog.c:424
+msgid "Update interval:"
+msgstr "Intervalle de mise à jour :"
+
+#: src/trg-preferences-dialog.c:428
+msgid "Minimised update interval:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:431
+msgid "Torrents"
+msgstr "Torrents"
+
+#: src/trg-preferences-dialog.c:433
+msgid "Start paused"
+msgstr "Commencer en pause"
+
+#: src/trg-preferences-dialog.c:437
+msgid "Options dialog on add"
+msgstr "Options à l'ajout"
+
+#: src/trg-preferences-dialog.c:442 src/trg-torrent-add-dialog.c:609
+msgid "Delete local .torrent file after adding"
+msgstr "Supprimer le fichier .torrent local après l'ajout"
+
+#: src/trg-preferences-dialog.c:595
+msgid "Commands"
+msgstr "Commandes"
+
+#: src/trg-preferences-dialog.c:605 src/trg-preferences-dialog.c:643
+msgid "Label"
+msgstr "Label"
+
+#: src/trg-preferences-dialog.c:608
+msgid "Command"
+msgstr "Commande"
+
+#: src/trg-preferences-dialog.c:633
+msgid "Remote Download Directories"
+msgstr "Répertoires de téléchargement distants"
+
+#: src/trg-preferences-dialog.c:646
+msgid "Directory"
+msgstr "Répertoire"
+
+#: src/trg-preferences-dialog.c:668 src/trg-preferences-dialog.c:892
+msgid "View"
+msgstr "Affichage"
+
+#: src/trg-preferences-dialog.c:699
+msgid "Show graph"
+msgstr "Montrer le graphique"
+
+#: src/trg-preferences-dialog.c:706
+msgid "System Tray"
+msgstr "Notification système"
+
+#: src/trg-preferences-dialog.c:708
+msgid "Show in system tray"
+msgstr "Afficher une notification système"
+
+#: src/trg-preferences-dialog.c:716
+msgid "Minimise to system tray"
+msgstr "Réduire dans la zone de notification"
+
+#: src/trg-preferences-dialog.c:728
+msgid "Notifications"
+msgstr "Notifications"
+
+#: src/trg-preferences-dialog.c:730
+msgid "Torrent added notifications"
+msgstr "Notifications lors de l'ajout d'un torrent"
+
+#: src/trg-preferences-dialog.c:734
+msgid "Torrent complete notifications"
+msgstr "Notifications lors de la fin d'un téléchargement"
+
+#: src/trg-preferences-dialog.c:761
+msgid "Profile: "
+msgstr "Profil : "
+
+#: src/trg-preferences-dialog.c:787
+msgid "Name:"
+msgstr "Nom :"
+
+#: src/trg-preferences-dialog.c:795 src/trg-preferences-dialog.c:882
+msgid "Connection"
+msgstr "Connexion"
+
+#: src/trg-preferences-dialog.c:798
+msgid "Host:"
+msgstr "Hôte :"
+
+#: src/trg-preferences-dialog.c:802
+msgid "Port:"
+msgstr "Port :"
+
+#: src/trg-preferences-dialog.c:805
+msgid "Username:"
+msgstr "Nom d'utilisateur :"
+
+#: src/trg-preferences-dialog.c:809
+msgid "Password:"
+msgstr "Mot de passe :"
+
+#: src/trg-preferences-dialog.c:811
+msgid "Automatically connect"
+msgstr "Se connecter automatiquement"
+
+#: src/trg-preferences-dialog.c:817
+msgid "SSL"
+msgstr "SSL"
+
+#: src/trg-preferences-dialog.c:824
+msgid "Timeout:"
+msgstr "Délai :"
+
+#: src/trg-preferences-dialog.c:828
+msgid "Retries:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:871 src/trg-toolbar.c:257
+msgid "Local Preferences"
+msgstr "Préférences locales"
+
+#: src/trg-preferences-dialog.c:902
+msgid "Directories"
+msgstr "Répertoires"
+
+#: src/trg-remote-prefs-dialog.c:262
+msgid "Bandwidth limits"
+msgstr "Limites de bande passante"
+
+#: src/trg-remote-prefs-dialog.c:265
+msgid "Down Limit (KiB/s)"
+msgstr "Limite de réception (Kio/s)"
+
+#: src/trg-remote-prefs-dialog.c:272
+msgid "Up Limit (KiB/s)"
+msgstr "Limite d'envoi (Kio/s)"
+
+#: src/trg-remote-prefs-dialog.c:277
+msgid "Alternate limits"
+msgstr "Limites alternatives"
+
+#: src/trg-remote-prefs-dialog.c:280
+msgid "Alternate speed limits active"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:285
+msgid "Alternate time range"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:291
+msgid "Alternate down limit (KiB/s)"
+msgstr "Limite de réception alternative (Kio/s)"
+
+#: src/trg-remote-prefs-dialog.c:295
+msgid "Alternate up limit (KiB/s)"
+msgstr "Limite d'envoi alternative (Kio/s)"
+
+#: src/trg-remote-prefs-dialog.c:311
+msgid "Seed ratio limit"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:317
+msgid "Queues"
+msgstr "Files d'attente"
+
+#: src/trg-remote-prefs-dialog.c:320
+msgid "Download queue size"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:326
+msgid "Seed queue size"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:332
+msgid "Ignore stalled (minutes)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:343
+msgid "Global peer limit"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:347
+msgid "Per torrent peer limit"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:358
+msgid "Retest"
+msgstr "Tester de nouveau"
+
+#: src/trg-remote-prefs-dialog.c:368
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+msgstr ""
+"Le port est <span font_weight=\"bold\" fgcolor=\"darkgreen\">ouvert</span>"
+
+#: src/trg-remote-prefs-dialog.c:373
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+msgstr "Le porte est <span font_weight=\"bold\" fgcolor=\"red\">fermé</span>"
+
+#: src/trg-remote-prefs-dialog.c:388 src/trg-remote-prefs-dialog.c:450
+msgid "Port test"
+msgstr "Test du port"
+
+#: src/trg-remote-prefs-dialog.c:389
+msgid "Testing..."
+msgstr "Test..."
+
+#: src/trg-remote-prefs-dialog.c:403 src/trg-remote-prefs-dialog.c:499
+msgid "Update"
+msgstr "Mettre à jour"
+
+#: src/trg-remote-prefs-dialog.c:407 src/trg-remote-prefs-dialog.c:493
+#, c-format
+msgid "Blocklist (%ld entries)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:444 src/trg-remote-prefs-dialog.c:604
+msgid "Connections"
+msgstr "Connexions"
+
+#: src/trg-remote-prefs-dialog.c:448
+msgid "Peer port"
+msgstr "Port des pairs"
+
+#: src/trg-remote-prefs-dialog.c:451
+msgid "Test"
+msgstr "Tester"
+
+#: src/trg-remote-prefs-dialog.c:455
+msgid "Required"
+msgstr "Requis"
+
+#: src/trg-remote-prefs-dialog.c:456
+msgid "Preferred"
+msgstr "Préféré"
+
+#: src/trg-remote-prefs-dialog.c:456
+msgid "Tolerated"
+msgstr "Toléré"
+
+#: src/trg-remote-prefs-dialog.c:466
+msgid "Encryption"
+msgstr "Chiffrement"
+
+#: src/trg-remote-prefs-dialog.c:469
+msgid "Random peer port on start"
+msgstr "Port aléatoire au lancement"
+
+#: src/trg-remote-prefs-dialog.c:474
+msgid "Peer port forwarding"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:477
+msgid "Protocol"
+msgstr "Protocole"
+
+#: src/trg-remote-prefs-dialog.c:480
+msgid "Peer exchange (PEX)"
+msgstr "Échange de pairs (PEX)"
+
+#: src/trg-remote-prefs-dialog.c:484
+msgid "Distributed Hash Table (DHT)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:488
+msgid "Local peer discovery"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:491
+msgid "Blocklist"
+msgstr "Liste d'exclusion"
+
+#: src/trg-remote-prefs-dialog.c:509
+msgid "Blocklist URL:"
+msgstr "URL de la liste d'exclusion :"
+
+#: src/trg-remote-prefs-dialog.c:525
+msgid "Environment"
+msgstr "Environnement"
+
+#: src/trg-remote-prefs-dialog.c:528
+msgid "Download directory"
+msgstr "Dossier des téléchargements"
+
+#: src/trg-remote-prefs-dialog.c:531
+msgid "Incomplete download dir"
+msgstr "Dossier des téléchargements incomplets"
+
+#: src/trg-remote-prefs-dialog.c:536
+msgid "Torrent done script"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:545
+msgid "Cache size (MiB)"
+msgstr "Taille du cache (MiB)"
+
+#: src/trg-remote-prefs-dialog.c:548
+msgid "Behavior"
+msgstr "Comportement"
+
+#: src/trg-remote-prefs-dialog.c:551
+msgid "Rename partial files"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:556
+msgid "Trash original torrent files"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:560
+msgid "Start added torrents"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:581 src/trg-toolbar.c:261
+msgid "Remote Preferences"
+msgstr "Préférences distantes"
+
+#: src/trg-remote-prefs-dialog.c:608 src/trg-torrent-props-dialog.c:174
+msgid "Bandwidth"
+msgstr "Bande passante"
+
+#: src/trg-remote-prefs-dialog.c:612 src/trg-torrent-props-dialog.c:299
+msgid "Limits"
+msgstr "Limites"
+
+#: src/trg-state-selector.c:581
+msgid "All"
+msgstr "Tout"
+
+#: src/trg-state-selector.c:586 src/trg-state-selector.c:643
+msgid "Queue Down"
+msgstr "Déplacer vers le bas"
+
+#: src/trg-state-selector.c:591 src/trg-state-selector.c:646
+msgid "Queue Up"
+msgstr "Déplacer vers le haut"
+
+#: src/trg-state-selector.c:596
+msgid "Complete"
+msgstr "Terminé"
+
+#: src/trg-state-selector.c:598
+msgid "Incomplete"
+msgstr "Inachevé"
+
+#: src/trg-state-selector.c:601
+msgid "Active"
+msgstr "Actif"
+
+#: src/trg-stats-dialog.c:269
+msgid "Statistics"
+msgstr "Statistiques"
+
+#: src/trg-stats-dialog.c:288
+msgid "Version"
+msgstr "Version"
+
+#: src/trg-stats-dialog.c:290
+msgid "Download Total"
+msgstr ""
+
+#: src/trg-stats-dialog.c:292
+msgid "Upload Total"
+msgstr "Total des envois"
+
+#: src/trg-stats-dialog.c:294
+msgid "Files Added"
+msgstr ""
+
+#: src/trg-stats-dialog.c:296
+msgid "Session Count"
+msgstr ""
+
+#: src/trg-stats-dialog.c:298
+msgid "Time Active"
+msgstr ""
+
+#: src/trg-stats-dialog.c:303
+msgid "Statistic"
+msgstr "Statistiques"
+
+#: src/trg-stats-dialog.c:305
+msgid "Session"
+msgstr "Session"
+
+#: src/trg-stats-dialog.c:308
+msgid "Cumulative"
+msgstr "Cumulatif"
+
+#: src/trg-status-bar.c:126
+#, c-format
+msgid "Connected to Transmission %g, getting torrents..."
+msgstr ""
+
+#: src/trg-status-bar.c:142
+#, c-format
+msgid "Free space: %s"
+msgstr "Espace libre : %s"
+
+#: src/trg-status-bar.c:154
+msgid "Disable alternate speed limits"
+msgstr ""
+
+#: src/trg-status-bar.c:155
+msgid "Enable alternate speed limits"
+msgstr ""
+
+#: src/trg-status-bar.c:190 src/trg-status-bar.c:196
+#, c-format
+msgid " (Limit: %s)"
+msgstr " (Limite : %s)"
+
+#: src/trg-status-bar.c:200
+#, c-format
+msgid "Down: %s%s, Up: %s%s"
+msgstr ""
+
+#: src/trg-status-bar.c:205
+#, c-format
+msgid "%d torrent:  %d seeding, %d downloading, %d paused"
+msgid_plural "%d torrents: %d seeding, %d downloading, %d paused"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/trg-toolbar.c:246
+msgid "Remove with data"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:409
+msgid "Torrent files"
+msgstr "Fichiers torrents"
+
+#: src/trg-torrent-add-dialog.c:414
+msgid "All files"
+msgstr "Tous les fichiers"
+
+#: src/trg-torrent-add-dialog.c:451
+msgid ""
+"Unable to parse torrent file. File preferences unavailable, but you can "
+"still try uploading it."
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:460
+#, c-format
+msgid "Unable to open torrent file: %s"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:510
+msgid "(None)"
+msgstr "(Aucun)"
+
+#: src/trg-torrent-add-dialog.c:512
+msgid "(Multiple)"
+msgstr "(Multiple)"
+
+#: src/trg-torrent-add-dialog.c:532
+msgid "Add a Torrent"
+msgstr "Ajouter un torrent"
+
+#: src/trg-torrent-add-dialog.c:581
+msgid "Add Torrent"
+msgstr "Ajouter le torrent"
+
+#: src/trg-torrent-add-dialog.c:602
+msgid "Start _paused"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:618
+msgid "_Torrent file:"
+msgstr "Fichier _torrent :"
+
+#: src/trg-torrent-add-dialog.c:637
+msgid "_Destination folder:"
+msgstr "Dossier de _destination :"
+
+#: src/trg-torrent-add-dialog.c:657
+msgid "Torrent _priority:"
+msgstr "_Priorité du torrent :"
+
+#: src/trg-torrent-add-dialog.c:743
+msgid "Show _options dialog"
+msgstr "Afficher les _options"
+
+#: src/trg-torrent-add-url-dialog.c:61
+msgid ""
+"You are trying to add a magnet torrent, but DHT is disabled. Distributed "
+"Hash Table (DHT) should be enabled in remote settings."
+msgstr ""
+
+#: src/trg-torrent-add-url-dialog.c:120
+msgid "URL:"
+msgstr "URL :"
+
+#: src/trg-torrent-add-url-dialog.c:123
+msgid "Start Paused"
+msgstr ""
+
+#: src/trg-torrent-add-url-dialog.c:126
+msgid "Add torrent from URL"
+msgstr "Ajouter un torrent depuis une URL"
+
+#: src/trg-torrent-graph.c:407
+msgid "Total Uploading"
+msgstr ""
+
+#: src/trg-torrent-graph.c:415
+msgid "Total Downloading"
+msgstr ""
+
+#: src/trg-torrent-model.c:343
+msgid "Default"
+msgstr "Par défaut"
+
+#: src/trg-torrent-move-dialog.c:118
+msgid "Location:"
+msgstr "Emplacement :"
+
+#: src/trg-torrent-move-dialog.c:165
+#, c-format
+msgid "Move %s"
+msgstr "Déplacer %s"
+
+#: src/trg-torrent-move-dialog.c:167
+#, c-format
+msgid "Move %d torrents"
+msgstr "Déplacer %d torrents"
+
+#: src/trg-torrent-props-dialog.c:178
+msgid "Honor global limits"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:187
+msgid "Torrent priority:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:193
+msgid "Queue Position:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:198
+msgid "Limit download speed (KiB/s)"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:206
+msgid "Limit upload speed (KiB/s)"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:215
+msgid "Use global settings"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:216
+msgid "Stop seeding at ratio"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:217
+msgid "Seed regardless of ratio"
+msgstr "Partager quel que soit le ratio"
+
+#: src/trg-torrent-props-dialog.c:220
+msgid "Seed ratio mode:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:228
+msgid "Seed ratio limit:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:235
+msgid "Peer limit:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:269
+#, c-format
+msgid "Multiple (%d) torrent properties"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:51
+msgid "Done"
+msgstr "Terminé"
+
+#: src/trg-torrent-tree-view.c:55
+msgid "Seeds"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:57
+msgid "Sending"
+msgstr "Envoi"
+
+#: src/trg-torrent-tree-view.c:63
+msgid "Downloads"
+msgstr "Téléchargements"
+
+#: src/trg-torrent-tree-view.c:66
+msgid "Receiving"
+msgstr "Réception"
+
+#: src/trg-torrent-tree-view.c:72
+msgid "PEX Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:75
+msgid "DHT Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:79
+msgid "Tracker Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:82
+msgid "LTEP Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:85
+msgid "Resumed Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:89
+msgid "Incoming Peers"
+msgstr "Pairs entrants"
+
+#: src/trg-torrent-tree-view.c:93
+msgid "Peers T/I/E/H/X/L/R"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:112
+msgid "Added"
+msgstr "Ajouté"
+
+#: src/trg-torrent-tree-view.c:115
+msgid "First Tracker"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:121
+msgid "ID"
+msgstr "Identifiant"
+
+#: src/trg-torrent-tree-view.c:127
+msgid "Queue Position"
+msgstr "Position dans la file d'attente"
+
+#: src/trg-torrent-tree-view.c:133
+msgid "Last Active"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:167
+msgid "Tier"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:173
+msgid "Announce URL"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:191
+msgid "Seeder Count"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:194
+msgid "Leecher Count"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:198
+msgid "Last Announce"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:201
+msgid "Last Result"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:203
+msgid "Scrape URL"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:205
+msgid "Last Scrape"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:305
+msgid "Delete"
+msgstr "Supprimer"
+
+#: src/util.c:41
+msgid "KiB"
+msgstr "Kio"
+
+#: src/util.c:42
+msgid "MiB"
+msgstr "Mio"
+
+#: src/util.c:43
+msgid "GiB"
+msgstr "Gio"
+
+#: src/util.c:44
+msgid "TiB"
+msgstr "Tio"
+
+#: src/util.c:47
+msgid "KiB/s"
+msgstr "Kio/s"
+
+#: src/util.c:48
+msgid "MiB/s"
+msgstr "Mio/s"
+
+#: src/util.c:49
+msgid "GiB/s"
+msgstr "Gio/s"
+
+#: src/util.c:50
+msgid "TiB/s"
+msgstr "Tio/s"
+
+#: src/util.c:331
+msgid "JSON decoding error."
+msgstr ""
+
+#: src/util.c:336
+msgid "Server responded, but with no result."
+msgstr ""
+
+#: src/util.c:340
+#, c-format
+msgid "Request failed with HTTP code %d"
+msgstr ""
+
+#: src/util.c:379
+msgid "None"
+msgstr "Aucun"
+
+#: src/util.c:425
+#, c-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d jour"
+msgstr[1] "%d jours"
+
+#: src/util.c:426
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d heure"
+msgstr[1] "%d heures"
+
+#: src/util.c:428
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/util.c:431
+#, c-format
+msgid "%ld second"
+msgid_plural "%ld seconds"
+msgstr[0] ""
+msgstr[1] ""

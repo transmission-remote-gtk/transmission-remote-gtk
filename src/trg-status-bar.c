@@ -170,8 +170,8 @@ void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session)
 }
 
 void trg_status_bar_update_speed(TrgStatusBar * sb,
-        trg_torrent_model_update_stats * stats,
-        TrgClient * client)
+                                 trg_torrent_model_update_stats * stats,
+                                 TrgClient * client)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     JsonObject *session = trg_client_get_session(client);

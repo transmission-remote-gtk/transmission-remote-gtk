@@ -620,12 +620,14 @@ trg_response *dispatch_str(TrgClient * client, gchar * req)
     trg_http_perform(client, req, response);
     g_free(req);
 
-    if (response->status != CURLE_OK)
-        return response;
+    if (response->status == CURLE_OK)
+        response->obj = trg_deserialize(response, &decode_error);
 
-    response->obj = trg_deserialize(response, &decode_error);
     g_free(response->raw);
     response->raw = NULL;
+
+    if (response->status != CURLE_OK)
+        return response;
 
     if (decode_error) {
         g_error("JSON decoding error: %s", decode_error->message);

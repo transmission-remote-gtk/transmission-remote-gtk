@@ -83,8 +83,7 @@ static trg_files_tree_node
         if (isFile) {
             target_node->length = (gint64) file_length_node->val.i;
 
-            while (lastIter)
-            {
+            while (lastIter) {
                 lastIter->length = target_node->length;
                 lastIter = lastIter->parent;
             }

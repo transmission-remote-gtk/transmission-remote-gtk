@@ -313,7 +313,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
             gtk_cell_renderer_text_new();
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer, "text",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
 
         break;
@@ -322,7 +323,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "speed-value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     case TRG_COLTYPE_EPOCH:
@@ -330,7 +332,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "epoch-value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     case TRG_COLTYPE_ETA:
@@ -338,7 +341,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "eta-value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     case TRG_COLTYPE_SIZE:
@@ -346,7 +350,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "size-value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     case TRG_COLTYPE_PROG:
@@ -354,7 +359,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     case TRG_COLTYPE_RATIO:
@@ -362,7 +368,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "ratio-value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     case TRG_COLTYPE_WANTED:
@@ -387,7 +394,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "priority-value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     case TRG_COLTYPE_NUMGTZERO:
@@ -395,7 +403,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     case TRG_COLTYPE_NUMGTEQZERO:
@@ -403,7 +412,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
         column = gtk_tree_view_column_new_with_attributes(desc->header,
                                                           renderer,
                                                           "value",
-                                                          desc->model_column,
+                                                          desc->
+                                                          model_column,
                                                           NULL);
         break;
     }
@@ -557,7 +567,8 @@ void trg_tree_view_setup_columns(TrgTreeView * tv)
                                                                  json_node_get_string
                                                                  ((JsonNode
                                                                    *)
-                                                                  cli->data));
+                                                                  cli->
+                                                                  data));
         if (desc) {
             gint64 width = json_node_get_int((JsonNode *) wli->data);
             trg_tree_view_add_column(tv, desc, width);
