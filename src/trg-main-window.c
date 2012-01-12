@@ -296,15 +296,11 @@ static void update_selected_torrent_notebook(TrgMainWindow * win,
         trg_general_panel_update(priv->genDetails, t, &iter);
         trg_trackers_model_update(priv->trackersModel,
                                   trg_client_get_serial(client), t, mode);
-        trg_files_model_update(priv->filesModel,
+        trg_files_model_update(priv->filesModel, GTK_TREE_VIEW(priv->filesTreeView),
                                trg_client_get_serial(client), t, mode);
         trg_peers_model_update(priv->peersModel,
                                TRG_TREE_VIEW(priv->peersTreeView),
                                trg_client_get_serial(client), t, mode);
-
-        if (mode == TORRENT_GET_MODE_FIRST)
-            gtk_tree_view_expand_all(GTK_TREE_VIEW(priv->filesTreeView));
-
     } else if (id < 0) {
         trg_main_window_torrent_scrub(win);
     }

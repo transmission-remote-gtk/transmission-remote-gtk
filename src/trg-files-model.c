@@ -317,6 +317,7 @@ gboolean trg_files_model_update_foreach(GtkListStore * model,
 
 struct FirstUpdateThreadData {
     TrgFilesModel *model;
+    GtkTreeView *tree_view;
     JsonArray *files;
     gint n_items;
     trg_files_tree_node *top_node;
@@ -333,6 +334,7 @@ static gboolean trg_files_model_applytree_idlefunc(gpointer data)
 
     if (args->torrent_id == priv->torrentId) {
         store_add_node(GTK_TREE_STORE(args->model), NULL, args->top_node);
+        gtk_tree_view_expand_all(args->tree_view);
         priv->n_items = args->n_items;
         priv->accept = TRUE;
     }
@@ -371,8 +373,8 @@ static gpointer trg_files_model_buildtree_threadfunc(gpointer data)
     return NULL;
 }
 
-void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
-                            JsonObject * t, gint mode)
+void trg_files_model_update(TrgFilesModel * model, GtkTreeView *tv,
+        gint64 updateSerial, JsonObject * t, gint mode)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     JsonArray *files = torrent_get_files(t);
@@ -393,6 +395,7 @@ void trg_files_model_update(TrgFilesModel * model, gint64 updateSerial,
         gtk_tree_store_clear(GTK_TREE_STORE(model));
         json_array_ref(files);
 
+        futd->tree_view = tv;
         futd->files = files;
         futd->filesList = filesList;
         futd->torrent_id = priv->torrentId;
