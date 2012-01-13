@@ -62,8 +62,9 @@ G_END_DECLS enum {
 
 #define TRG_FILES_MODEL_CREATE_THREAD_IF_GT 600
 
-void trg_files_model_update(TrgFilesModel * model, GtkTreeView *tv,
-        gint64 updateSerial, JsonObject * t, gint mode);
+void trg_files_model_update(TrgFilesModel * model, GtkTreeView * tv,
+                            gint64 updateSerial, JsonObject * t,
+                            gint mode);
 gint64 trg_files_model_get_torrent_id(TrgFilesModel * model);
 void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept);
 

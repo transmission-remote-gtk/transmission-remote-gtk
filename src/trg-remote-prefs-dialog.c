@@ -159,12 +159,10 @@ static void trg_remote_prefs_double_special_dependent(GtkWidget * widget,
 
     gtk_widget_set_sensitive(GTK_WIDGET(data),
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (priv->
-                                                           alt_time_check))
+                                                          (priv->alt_time_check))
                              ||
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (priv->
-                                                           alt_check)));
+                                                          (priv->alt_check)));
 }
 
 static void trg_rprefs_time_widget_savefunc(GtkWidget * w,

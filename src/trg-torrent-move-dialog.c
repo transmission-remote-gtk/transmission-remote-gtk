@@ -67,7 +67,6 @@ trg_torrent_move_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
                                                  (GTK_TOGGLE_BUTTON
                                                   (priv->move_check)));
         g_free(location);
-        request_set_tag_from_ids(request, priv->ids);
         trg_destination_combo_save_selection(TRG_DESTINATION_COMBO
                                              (priv->location_combo));
         dispatch_async(priv->client, request,

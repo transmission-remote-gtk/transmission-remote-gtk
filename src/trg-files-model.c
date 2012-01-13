@@ -248,11 +248,8 @@ static void trg_files_model_iter_update(TrgFilesModel * model,
     gint64 fileCompleted = file_get_bytes_completed(file);
     gint64 lastCompleted;
 
-    gboolean wanted =
-        json_node_get_int(json_array_get_element(wantedArray, id))
-        == 1;
-    gint priority = (gint)
-        json_node_get_int(json_array_get_element(prioritiesArray, id));
+    gint wanted = (gint) json_array_get_int_element(wantedArray, id);
+    gint priority = (gint) json_array_get_int_element(prioritiesArray, id);
     gdouble progress = file_get_progress(fileLength, fileCompleted);
 
     gtk_tree_model_get(GTK_TREE_MODEL(model), filesIter,
@@ -373,8 +370,8 @@ static gpointer trg_files_model_buildtree_threadfunc(gpointer data)
     return NULL;
 }
 
-void trg_files_model_update(TrgFilesModel * model, GtkTreeView *tv,
-        gint64 updateSerial, JsonObject * t, gint mode)
+void trg_files_model_update(TrgFilesModel * model, GtkTreeView * tv,
+                            gint64 updateSerial, JsonObject * t, gint mode)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     JsonArray *files = torrent_get_files(t);

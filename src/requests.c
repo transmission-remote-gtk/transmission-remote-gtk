@@ -39,9 +39,11 @@ JsonNode *generic_request(gchar * method, JsonArray * ids)
 {
     JsonNode *root = base_request(method);
 
-    if (ids)
-        json_object_set_array_member(node_get_arguments(root),
-                                     PARAM_IDS, ids);
+    if (ids) {
+        JsonObject *args = node_get_arguments(root);
+        json_object_set_array_member(args, PARAM_IDS, ids);
+        request_set_tag_from_ids(root, ids);
+    }
 
     return root;
 }
@@ -273,8 +275,7 @@ void request_set_tag(JsonNode * req, gint64 tag)
 void request_set_tag_from_ids(JsonNode * req, JsonArray * ids)
 {
     gint64 id =
-        json_array_get_length(ids) == 1 ? json_array_get_int_element(ids,
-                                                                     0) :
-        -1;
+        json_array_get_length(ids) == 1 ?
+        json_array_get_int_element(ids, 0) : TORRENT_GET_TAG_MODE_FULL;
     request_set_tag(req, id);
 }
