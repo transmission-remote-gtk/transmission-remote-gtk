@@ -1,6 +1,7 @@
 * Wed Jan 4 2011 1.0
 - Show files in a tree.
 - Consistency/code share in files tree view and add dialog tree view.
+- A lot of optimisation for building either files tree view. 
 - Expand/collapse all, selection based changes for add dialog tree view.
 - Counts for filters.
 - Some update efficiency improvements.
@@ -12,6 +13,10 @@
 - Add the "turtle" mode icon, which enables alternative speed limits.
 - Remote preferences for configuring a time range for alternative speed
 limits.
+- Lithuanian translation contributed.
+- French translation contributed.
+- Updates for translations from launchpad.net.
+- Priority torrent right click menu.
 
 * Sun Dec 11 2011 0.8
 - Define labels for directories.
