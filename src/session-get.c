@@ -31,9 +31,11 @@ const gchar *session_get_version_string(JsonObject * s)
     return json_object_get_string_member(s, SGET_VERSION);
 }
 
-int session_get_version(JsonObject * s, float *version)
+gdouble session_get_version(JsonObject * s)
 {
-    return sscanf(session_get_version_string(s), "%g", version);
+    const gchar *versionString = session_get_version_string(s);
+    gchar *spaceChar = g_strrstr(" ", versionString);
+    return g_ascii_strtod(versionString, &spaceChar);
 }
 
 gint64 session_get_download_dir_free_space(JsonObject * s)

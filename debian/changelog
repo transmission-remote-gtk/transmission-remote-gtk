@@ -1,3 +1,9 @@
+transmission-remote-gtk (1.0-1) stable; urgency=low
+
+  * New upstream release 1.0
+
+ -- Alan Fitton <alan@eth0.org.uk>  Fri, 09 Dec 2011 13:13:56 +0000
+
 transmission-remote-gtk (0.8-1) stable; urgency=low
 
   * New upstream release 0.8

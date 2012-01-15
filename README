@@ -10,8 +10,8 @@ BUILDING
 
   Building a Transmission release from the command line:
 
-    $ tar zxfv transmission-remote-gtk-0.1.0.tar.gz
-    $ cd transmission-0.1.0
+    $ tar zxfv transmission-remote-gtk-1.0.tar.gz
+    $ cd transmission-remote-gtk-1.0
     $ ./configure
     $ make
     $ sudo make install

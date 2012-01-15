@@ -75,7 +75,7 @@ struct _TrgClientPrivate {
     gint64 updateSerial;
     JsonObject *session;
     gboolean ssl;
-    float version;
+    gdouble version;
     char *url;
     char *username;
     char *password;
@@ -175,7 +175,7 @@ const gchar *trg_client_get_version_string(TrgClient * tc)
     return session_get_version_string(priv->session);
 }
 
-float trg_client_get_version(TrgClient * tc)
+gdouble trg_client_get_version(TrgClient * tc)
 {
     TrgClientPrivate *priv = TRG_CLIENT_GET_PRIVATE(tc);
     return priv->version;
@@ -200,7 +200,7 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
     if (priv->session) {
         json_object_unref(priv->session);
     } else {
-        session_get_version(session, &priv->version);
+        priv->version = session_get_version(session);
     }
 
     priv->session = session;

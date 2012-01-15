@@ -1013,7 +1013,7 @@ static gboolean on_session_get(gpointer data)
         newSession = get_arguments(response->obj);
 
     if (!isConnected) {
-        float version;
+        gdouble version;
 
         if (trg_dialog_error_handler(win, response) == TRUE) {
             trg_response_free(response);
@@ -1021,11 +1021,10 @@ static gboolean on_session_get(gpointer data)
             return FALSE;
         }
 
-        if (session_get_version(newSession, &version) == 0
-            || version < TRANSMISSION_MIN_SUPPORTED) {
+        if ((version = session_get_version(newSession)) < TRANSMISSION_MIN_SUPPORTED) {
             gchar *msg =
                 g_strdup_printf(_
-                                ("This application supports Transmission %.2f and later, you have %.2f."),
+                                ("This application supports Transmission %g and later, you have %g."),
 TRANSMISSION_MIN_SUPPORTED, version);
             GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(win),
                                                        GTK_DIALOG_MODAL,

@@ -132,16 +132,15 @@ void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session, TrgClient *
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     TrgPrefs *prefs = trg_client_get_prefs(client);
-    gchar *statusMsg;
-    float version;
+    gdouble version = session_get_version(session);
 
-    session_get_version(session, &version);
-    statusMsg =
+    gchar *statusMsg =
         g_strdup_printf(_
                         ("Connected: %s (Transmission %g)"),
                         trg_prefs_get_string(prefs, TRG_PREFS_KEY_PROFILE_NAME, TRG_PREFS_CONNECTION),
                         version);
     g_message("%s", statusMsg);
+
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);
 
