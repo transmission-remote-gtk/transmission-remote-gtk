@@ -20,6 +20,10 @@
 #include <stdint.h>
 #include <gtk/gtk.h>
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "trg-cell-renderer-file-icon.h"
 #include "util.h"
 
@@ -69,6 +73,7 @@ static void trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon *
     } else if (priv->file_id == -1) {
         g_object_set(fi, "stock-id", GTK_STOCK_DIRECTORY, NULL);
     } else if (priv->text) {
+#ifndef WIN32
         gboolean uncertain;
         gchar *mimetype =
             g_content_type_guess(priv->text, NULL, 0, &uncertain);
@@ -85,6 +90,9 @@ static void trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon *
         } else {
             g_object_set(fi, "stock-id", GTK_STOCK_FILE, NULL);
         }
+#else
+		g_object_set(fi, "stock-id", GTK_STOCK_FILE, NULL);
+#endif
     }
 }
 

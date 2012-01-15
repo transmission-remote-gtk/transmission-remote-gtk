@@ -112,7 +112,6 @@ if WIN32
 	windres $^ -o $@
 
 AM_CFLAGS = -mms-bitfields -mwin32 -mwindows
-transmission_remote_gtk_LDFLAGS += -Wl,--subsystem,windows
 transmission_remote_gtk_SOURCES += win32.rc
 INCLUDES += -O2
 else
