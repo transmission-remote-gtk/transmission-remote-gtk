@@ -112,7 +112,6 @@ static void send_updated_file_prefs(TrgFilesTreeView * tv)
 
     req = torrent_set(targetIdArray);
     args = node_get_arguments(req);
-    request_set_tag(req, targetId);
 
     gtk_tree_model_foreach(model, send_updated_file_prefs_foreachfunc,
                            args);

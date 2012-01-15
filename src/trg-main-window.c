@@ -93,7 +93,6 @@ static void torrent_event_notification(TrgTorrentModel * model,
 static void connchange_whatever_statusicon(TrgMainWindow * win,
                                            gboolean connected);
 static void update_whatever_statusicon(TrgMainWindow * win,
-                                       const gchar * speedLabel,
                                        trg_torrent_model_update_stats *
                                        stats);
 static void on_torrent_completed(TrgTorrentModel * model,
@@ -1043,7 +1042,7 @@ TRANSMISSION_MIN_SUPPORTED, version);
             return FALSE;
         }
 
-        trg_status_bar_connect(priv->statusBar, newSession);
+        trg_status_bar_connect(priv->statusBar, newSession, client);
     }
 
     if (newSession) {
@@ -1088,7 +1087,10 @@ static void connchange_whatever_statusicon(TrgMainWindow * win,
                                            gboolean connected)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
-    const gchar *display = connected ? _("Connected") : _("Disconnected");
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+    const gchar *display = connected ?
+            trg_prefs_get_string(prefs, TRG_PREFS_KEY_PROFILE_NAME,
+                    TRG_PREFS_CONNECTION) : _("Disconnected");
 
 #ifdef HAVE_LIBAPPINDICATOR
     if (priv->appIndicator) {
@@ -1109,7 +1111,6 @@ static void connchange_whatever_statusicon(TrgMainWindow * win,
 }
 
 static void update_whatever_statusicon(TrgMainWindow * win,
-                                       const gchar * speedLabel,
                                        trg_torrent_model_update_stats *
                                        stats)
 {
@@ -1120,26 +1121,24 @@ static void update_whatever_statusicon(TrgMainWindow * win,
     gtk_widget_set_visible(priv->iconSepItem, stats != NULL);
 
     if (stats) {
-        gchar *downloadingLabel = g_strdup_printf(_("Downloading  %d"),
-                                                  stats->down);
-        gchar *seedingLabel =
-            g_strdup_printf(_("Seeding  %d"), stats->seeding);
-        gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconSeedingItem),
-                                seedingLabel);
+        gchar *downloadingLabel;
+        gchar *seedingLabel;
+        gchar buf[32];
+
+        trg_strlsize(buf, stats->downRateTotal);
+        downloadingLabel = g_strdup_printf(_("%d Downloading @ %s"),
+                                                  stats->down, buf);
         gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconDownloadingItem),
                                 downloadingLabel);
         g_free(downloadingLabel);
+
+        trg_strlsize(buf, stats->upRateTotal);
+        seedingLabel = g_strdup_printf(_("%d Seeding @ %s"),
+                                                  stats->seeding, buf);
+        gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconSeedingItem),
+                seedingLabel);
         g_free(seedingLabel);
     }
-
-    if (priv->iconStatusItem)
-        gtk_menu_item_set_label(GTK_MENU_ITEM
-                                (priv->iconStatusItem), speedLabel);
-
-#ifndef HAVE_LIBAPPINDICATOR
-    if (priv->statusIcon)
-        gtk_status_icon_set_tooltip_text(priv->statusIcon, speedLabel);
-#endif
 }
 
 /*
@@ -1209,9 +1208,7 @@ static gboolean on_torrent_get(gpointer data, int mode)
                                  mode);
     update_selected_torrent_notebook(win, mode, priv->selectedTorrentId);
     trg_status_bar_update(priv->statusBar, stats, client);
-    update_whatever_statusicon(win,
-                               trg_status_bar_get_speed_text
-                               (priv->statusBar), stats);
+    update_whatever_statusicon(win, stats);
 
 #ifndef TRG_NO_GRAPH
     if (priv->graphNotebookIndex >= 0)

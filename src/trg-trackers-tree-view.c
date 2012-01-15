@@ -112,7 +112,6 @@ static void trg_tracker_announce_edited(GtkCellRendererText * renderer,
     json_array_add_int_element(torrentIds, torrentId);
 
     req = torrent_set(torrentIds);
-    request_set_tag(req, torrentId);
     args = node_get_arguments(req);
 
     if (!g_strcmp0(icon, GTK_STOCK_ADD)) {
@@ -262,7 +261,6 @@ static void delete_tracker(GtkWidget * w, gpointer data)
     json_array_add_int_element(torrentIds, torrentId);
 
     req = torrent_set(torrentIds);
-    request_set_tag(req, torrentId);
     args = node_get_arguments(req);
 
     json_object_set_array_member(args, "trackerRemove", trackerIds);

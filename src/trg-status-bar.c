@@ -21,6 +21,7 @@
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 
+#include "trg-prefs.h"
 #include "trg-main-window.h"
 #include "trg-status-bar.h"
 #include "trg-torrent-model.h"
@@ -127,19 +128,24 @@ void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), msg);
 }
 
-void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session)
+void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session, TrgClient *client)
 {
+    TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
+    TrgPrefs *prefs = trg_client_get_prefs(client);
     gchar *statusMsg;
     float version;
 
     session_get_version(session, &version);
     statusMsg =
         g_strdup_printf(_
-                        ("Connected to Transmission %g, getting torrents..."),
+                        ("Connected: %s (Transmission %g)"),
+                        trg_prefs_get_string(prefs, TRG_PREFS_KEY_PROFILE_NAME, TRG_PREFS_CONNECTION),
                         version);
     g_message("%s", statusMsg);
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);
+
+    gtk_label_set_text(GTK_LABEL(priv->speed_lbl), _("Updating torrents..."));
 }
 
 void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session)
@@ -226,20 +232,7 @@ void trg_status_bar_update(TrgStatusBar * sb,
                            trg_torrent_model_update_stats * stats,
                            TrgClient * client)
 {
-    TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
-    gchar *infoText;
-
-    infoText = g_strdup_printf(ngettext
-                               ("%d torrent:  %d seeding, %d downloading, %d paused",
-                                "%d torrents: %d seeding, %d downloading, %d paused",
-                                stats->count), stats->count,
-                               stats->seeding, stats->down, stats->paused);
-
-    gtk_label_set_text(GTK_LABEL(priv->info_lbl), infoText);
-
     trg_status_bar_update_speed(sb, stats, client);
-
-    g_free(infoText);
 }
 
 const gchar *trg_status_bar_get_speed_text(TrgStatusBar * s)
