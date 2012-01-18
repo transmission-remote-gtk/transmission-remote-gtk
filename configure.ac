@@ -97,13 +97,13 @@ fi
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
 
-PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [], [
-AC_MSG_WARN([gtk+-3.0 not found, trying gtk+-2.0])
+dnl PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [], [
+dnl AC_MSG_WARN([gtk+-3.0 not found, trying gtk+-2.0])
 PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
 if test x$with_libunique != xno; then
   PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents on gtk+-2.0. not needed for gtk+-3.0 or win32. ]))
 fi
-])
+dnl ])
 
 PKG_CHECK_MODULES([libcurl], [libcurl])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])

@@ -26,7 +26,7 @@
 #include "util.h"
 
 enum {
-    PROP_0, PROP_CLIENT, PROP_START_ARGS, PROP_MINIMISE_ON_START
+    PROP_0, PROP_CLIENT, PROP_MINIMISE_ON_START
 };
 
 G_DEFINE_TYPE(TrgGtkApp, trg_gtk_app, GTK_TYPE_APPLICATION)
@@ -190,21 +190,6 @@ static void trg_gtk_app_class_init(TrgGtkAppClass * klass)
                                                          "Min On Start",
                                                          "Min On Start",
                                                          FALSE,
-                                                         G_PARAM_READWRITE
-                                                         |
-                                                         G_PARAM_CONSTRUCT_ONLY
-                                                         |
-                                                         G_PARAM_STATIC_NAME
-                                                         |
-                                                         G_PARAM_STATIC_NICK
-                                                         |
-                                                         G_PARAM_STATIC_BLURB));
-
-    g_object_class_install_property(object_class,
-                                    PROP_START_ARGS,
-                                    g_param_spec_pointer("start-args",
-                                                         "start args",
-                                                         "start args",
                                                          G_PARAM_READWRITE
                                                          |
                                                          G_PARAM_CONSTRUCT_ONLY
