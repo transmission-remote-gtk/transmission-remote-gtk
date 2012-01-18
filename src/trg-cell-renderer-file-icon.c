@@ -91,7 +91,7 @@ static void trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon *
             g_object_set(fi, "stock-id", GTK_STOCK_FILE, NULL);
         }
 #else
-		g_object_set(fi, "stock-id", GTK_STOCK_FILE, NULL);
+        g_object_set(fi, "stock-id", GTK_STOCK_FILE, NULL);
 #endif
     }
 }

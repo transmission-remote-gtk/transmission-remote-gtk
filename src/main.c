@@ -30,30 +30,32 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
-#ifdef HAVE_LIBUNIQUE
+
+#if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
 #include <unique/unique.h>
+#elif GTK_CHECK_VERSION( 3, 0, 0 )
+#include "trg-gtk-app.h"
 #elif WIN32
-#include <windows.h>
+#include "win32-mailslot.h"
 #endif
 
 #include "trg-main-window.h"
 #include "trg-client.h"
 #include "util.h"
 
-/* The file with the main() function. It converts arguments into a NULL terminated
- * array, with relative paths converted to absolute paths.
+/* Handle arguments and start the main window. Unfortunately, there's three
+ * different ways to achieve a unique instance and pass arguments around. :(
  *
- * Much of the code here is to optionally handle passing torrent files/URLs to
- * a first instance. UNIX can use libunique (should alternatively use
- * GApplication for GNOME3). Windows uses the mailslot feature in the
- * native Win32 API, so there is no dependency on dbus etc.
+ * 1) libunique - GTK2 (non-win32). deprecated in GTK3 for GtkApplication.
+ * 2) GtkApplication - replaces libunique, GTK3 only, and non-win32.
+ * 3) win32 API mailslots.
  */
 
-#define TRG_LIBUNIQUE_DOMAIN "uk.org.eth0.trg"
-#define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"      //Name given to the Mailslot
-#define MAILSLOT_BUFFER_SIZE 1024*32
+/*
+ * libunique.
+ */
 
-#ifdef HAVE_LIBUNIQUE
+#if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
 
 enum {
     COMMAND_0,
@@ -94,259 +96,15 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
     return res;
 }
 
-#elif WIN32
-
-struct trg_mailslot_recv_args {
-    TrgMainWindow *win;
-    gchar **uris;
-    gboolean present;
-};
-
-/* to be queued into the glib main loop with g_idle_add() */
-
-static gboolean mailslot_recv_args(gpointer data)
+static gint trg_libunique_init(TrgClient * client, int argc,
+                               gchar * argv[], gchar ** args)
 {
-    struct trg_mailslot_recv_args *args =
-        (struct trg_mailslot_recv_args *) data;
-
-    if (args->present) {
-        gtk_window_deiconify(GTK_WINDOW(args->win));
-        gtk_window_present(GTK_WINDOW(args->win));
-    }
-
-    if (args->uris)
-        trg_add_from_filename(args->win, args->uris);
-
-    g_free(args);
-
-    return FALSE;
-}
-
-static gpointer mailslot_recv_thread(gpointer data)
-{
-    TrgMainWindow *win = TRG_MAIN_WINDOW(data);
-    JsonParser *parser;
-    char szBuffer[MAILSLOT_BUFFER_SIZE];
-    HANDLE hMailslot;
-    DWORD cbBytes;
-    BOOL bResult;
-
-    hMailslot = CreateMailslot(TRG_MAILSLOT_NAME,       // mailslot name
-                               MAILSLOT_BUFFER_SIZE,    // input buffer size
-                               MAILSLOT_WAIT_FOREVER,   // no timeout
-                               NULL);   // default security attribute
-
-    if (INVALID_HANDLE_VALUE == hMailslot) {
-        g_error("\nError occurred while creating the mailslot: %d",
-                GetLastError());
-        return NULL;            //Error
-    }
-
-    while (1) {
-        bResult = ReadFile(hMailslot,   // handle to mailslot
-                           szBuffer,    // buffer to receive data
-                           sizeof(szBuffer),    // size of buffer
-                           &cbBytes,    // number of bytes read
-                           NULL);       // not overlapped I/O
-
-        if ((!bResult) || (0 == cbBytes)) {
-            g_error("Mailslot error from client: %d", GetLastError());
-            break;
-        }
-
-        parser = json_parser_new();
-
-        if (json_parser_load_from_data(parser, szBuffer, cbBytes, NULL)) {
-            JsonNode *node = json_parser_get_root(parser);
-            JsonObject *obj = json_node_get_object(node);
-            struct trg_mailslot_recv_args *args =
-                g_new0(struct trg_mailslot_recv_args, 1);
-
-            args->present = json_object_has_member(obj, "present")
-                && json_object_get_boolean_member(obj, "present");
-            args->win = win;
-
-            if (json_object_has_member(obj, "args")) {
-                JsonArray *array =
-                    json_object_get_array_member(obj, "args");
-                GList *arrayList = json_array_get_elements(array);
-
-                if (arrayList) {
-                    guint arrayLength = g_list_length(arrayList);
-                    guint i = 0;
-                    GList *li;
-
-                    args->uris = g_new0(gchar *, arrayLength + 1);
-
-                    for (li = arrayList; li; li = g_list_next(li)) {
-                        const gchar *liStr =
-                            json_node_get_string((JsonNode *) li->data);
-                        args->uris[i++] = g_strdup(liStr);
-                    }
-
-                    g_list_free(arrayList);
-                }
-            }
-
-            json_node_free(node);
-
-            g_idle_add(mailslot_recv_args, args);
-        }
-
-        g_object_unref(parser);
-    }
-
-    CloseHandle(hMailslot);
-    return NULL;                //Success
-}
-
-static int mailslot_send_message(HANDLE h, gchar ** args)
-{
-    DWORD cbBytes;
-    JsonNode *node = json_node_new(JSON_NODE_OBJECT);
-    JsonObject *obj = json_object_new();
-    JsonArray *array = json_array_new();
-    JsonGenerator *generator;
-    gchar *msg;
-    int i;
-
-    if (args) {
-        for (i = 0; args[i]; i++)
-            json_array_add_string_element(array, args[i]);
-
-        json_object_set_array_member(obj, "args", array);
-
-        g_strfreev(args);
-    } else {
-        json_object_set_boolean_member(obj, "present", TRUE);
-    }
-
-    json_node_take_object(node, obj);
-
-    generator = json_generator_new();
-    json_generator_set_root(generator, node);
-    msg = json_generator_to_data(generator, NULL);
-
-    json_node_free(node);
-    g_object_unref(generator);
-
-    WriteFile(h,                // handle to mailslot
-              msg,              // buffer to write from
-              strlen(msg) + 1,  // number of bytes to write, include the NULL
-              &cbBytes,         // number of bytes written
-              NULL);
-
-    CloseHandle(h);
-    g_free(msg);
-
-    return 0;
-}
-
-#endif
-
-static gboolean is_minimised_arg(gchar * arg)
-{
-    return !g_strcmp0(arg, "-m")
-        || !g_strcmp0(arg, "--minimized")
-        || !g_strcmp0(arg, "/m");
-}
-
-static gboolean should_be_minimised(int argc, char *argv[])
-{
-    int i;
-    for (i = 1; i < argc; i++)
-        if (is_minimised_arg(argv[i]))
-            return TRUE;
-
-    return FALSE;
-}
-
-static gchar **convert_args(int argc, char *argv[])
-{
-    gchar *cwd = g_get_current_dir();
-    gchar **files = NULL;
-
-    if (argc > 1) {
-        GSList *list = NULL;
-        int i;
-
-        for (i = 1; i < argc; i++) {
-            if (is_minimised_arg(argv[i])) {
-                continue;
-            } else if (!is_url(argv[i]) && !is_magnet(argv[i])
-                       && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
-                       && !g_path_is_absolute(argv[i])) {
-                list = g_slist_append(list,
-                                      g_build_path(G_DIR_SEPARATOR_S, cwd,
-                                                   argv[i], NULL));
-            } else {
-                list = g_slist_append(list, g_strdup(argv[i]));
-            }
-        }
-
-        if (list) {
-            GSList *li;
-            files = g_new0(gchar *, g_slist_length(list) + 1);
-            i = 0;
-            for (li = list; li; li = g_slist_next(li)) {
-                files[i++] = li->data;
-            }
-            g_slist_free(list);
-        }
-    }
-
-    g_free(cwd);
-
-    return files;
-}
-
-int main(int argc, char *argv[])
-{
-    int returnValue = EXIT_SUCCESS;
+    UniqueApp *app = unique_app_new_with_commands("uk.org.eth0.trg", NULL,
+                                                  "add", COMMAND_ADD,
+                                                  NULL);
     TrgMainWindow *window;
-    TrgClient *client;
-    gchar **args = convert_args(argc, argv);
-    gboolean withUnique;
-#ifdef HAVE_LIBUNIQUE
-    UniqueApp *app = NULL;
-#endif
-#ifdef WIN32
-    gchar *localedir, *moddir;
-    HANDLE hMailSlot;
-#endif
-#ifdef TRG_MEMPROFILE
-    GMemVTable gmvt = { malloc, realloc, free, calloc, malloc, realloc };
-    g_mem_set_vtable(&gmvt);
-    g_mem_set_vtable(glib_mem_profiler_table);
-    g_mem_profile();
-#endif
 
-    g_type_init();
-    g_thread_init(NULL);
-    gtk_init(&argc, &argv);
-
-    g_set_application_name(PACKAGE_NAME);
-#ifdef WIN32
-    moddir = g_win32_get_package_installation_directory_of_module(NULL);
-    localedir = g_build_path(G_DIR_SEPARATOR_S, moddir, "share", "locale",
-                             NULL);
-    g_free(moddir);
-    bindtextdomain(GETTEXT_PACKAGE, localedir);
-    g_free(localedir);
-#else
-    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-#endif
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
-
-    withUnique = (g_getenv("TRG_NOUNIQUE") == NULL);
-
-#ifdef HAVE_LIBUNIQUE
-    if (withUnique)
-        app = unique_app_new_with_commands(TRG_LIBUNIQUE_DOMAIN, NULL,
-                                           "add", COMMAND_ADD, NULL);
-
-    if (withUnique && unique_app_is_running(app)) {
+    if (unique_app_is_running(app)) {
         UniqueCommand command;
         UniqueResponse response;
         UniqueMessageData *message;
@@ -365,49 +123,125 @@ int main(int argc, char *argv[])
         unique_message_data_free(message);
 
         if (response != UNIQUE_RESPONSE_OK)
-            returnValue = EXIT_FAILURE;
+            return EXIT_FAILURE;
     } else {
-#elif WIN32
-    hMailSlot = CreateFile(TRG_MAILSLOT_NAME,   // mailslot name
-                           GENERIC_WRITE,       // mailslot write only
-                           FILE_SHARE_READ,     // required for mailslots
-                           NULL,        // default security attributes
-                           OPEN_EXISTING,       // opens existing mailslot
-                           FILE_ATTRIBUTE_NORMAL,       // normal attributes
-                           NULL);       // no template file
-
-    if (INVALID_HANDLE_VALUE != hMailSlot) {
-        returnValue = mailslot_send_message(hMailSlot, args);
-    } else {
-#endif
-        client = trg_client_new();
-
-        curl_global_init(CURL_GLOBAL_ALL);
-
         window =
             trg_main_window_new(client, should_be_minimised(argc, argv));
-
-#ifdef HAVE_LIBUNIQUE
-        if (withUnique) {
-            g_signal_connect(app, "message-received",
-                             G_CALLBACK(message_received_cb), window);
-        }
-#elif WIN32
-        g_thread_create(mailslot_recv_thread, window, FALSE, NULL);
-#endif
+        g_signal_connect(app, "message-received",
+                         G_CALLBACK(message_received_cb), window);
 
         auto_connect_if_required(window, args);
         gtk_main();
-
-        curl_global_cleanup();
-#ifdef HAVE_LIBUNIQUE
     }
 
-    if (withUnique)
-        g_object_unref(app);
-#elif WIN32
-    }
+    g_object_unref(app);
+
+    return EXIT_SUCCESS;
+}
+
+#elif GTK_CHECK_VERSION( 3, 0, 0 )
+
+/* GtkApplication - the replacement for libunique.
+ * This is implemented in trg-gtk-app.c
+ */
+
+static gint trg_gtkapp_init(TrgClient * client, int argc, char *argv[])
+{
+    TrgGtkApp *gtk_app = trg_gtk_app_new(client);
+
+    gint exitCode = g_application_run(G_APPLICATION(gtk_app), argc, argv);
+
+    g_object_unref(gtk_app);
+
+    return exitCode;
+}
+
+#else
+
+static gint trg_simple_init(TrgClient * client, int argc, char *argv[], gchar **args)
+{
+    TrgMainWindow *window =
+        trg_main_window_new(client, should_be_minimised(argc, argv));
+    auto_connect_if_required(window, args);
+    gtk_main();
+
+    return EXIT_SUCCESS;
+}
+
 #endif
 
-    return returnValue;
+
+/* Win32 mailslots. I've implemented this in win32-mailslot.c */
+
+#ifdef WIN32
+static gint trg_win32_init(TrgClient * client, int argc, char *argv[],
+                           gchar ** args)
+{
+    gchar *moddir =
+        g_win32_get_package_installation_directory_of_module(NULL);
+    gchar *localedir =
+        g_build_path(G_DIR_SEPARATOR_S, moddir, "share", "locale",
+                     NULL);
+
+    bindtextdomain(GETTEXT_PACKAGE, localedir);
+    g_free(moddir);
+    g_free(localedir);
+
+    if (!mailslot_send_message(args)) {
+        TrgMainWindow *window =
+            trg_main_window_new(client, should_be_minimised(argc, argv));
+        auto_connect_if_required(window, args);
+        mailslot_start_background_listener(window);
+        gtk_main();
+    }
+
+    return EXIT_SUCCESS;
+}
+#else
+static void trg_non_win32_init()
+{
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
+}
+#endif
+
+static void trg_cleanup()
+{
+    curl_global_cleanup();
+}
+
+int main(int argc, char *argv[])
+{
+#if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
+    gchar **args = convert_args(argc, argv);
+#endif
+    gint exitCode = EXIT_SUCCESS;
+    TrgClient *client;
+
+    g_type_init();
+    g_thread_init(NULL);
+    gtk_init(&argc, &argv);
+
+    curl_global_init(CURL_GLOBAL_ALL);
+    client = trg_client_new();
+
+    g_set_application_name(PACKAGE_NAME);
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
+
+#ifdef WIN32
+    exitCode = trg_win32_init(client, argc, argv, args);
+#else
+    trg_non_win32_init();
+#if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
+    exitCode = trg_libunique_init(client, argc, argv, args);
+#elif GTK_CHECK_VERSION( 3, 0, 0 )
+    exitCode = trg_gtkapp_init(client, argc, argv);
+#else
+    exitCode = trg_simple_init(client, argc, argv, args);
+#endif
+#endif
+
+    trg_cleanup();
+
+    return exitCode;
 }

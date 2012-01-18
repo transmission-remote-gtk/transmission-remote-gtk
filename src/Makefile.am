@@ -101,6 +101,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-prefs.c \
 	  trg-destination-combo.c \
 	  remote-exec.c \
+	  trg-gtk-app.c \
 	  $(NULL)
 
 transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS) $(libappindicator_LIBS)
@@ -112,7 +113,7 @@ if WIN32
 	windres $^ -o $@
 
 AM_CFLAGS = -mms-bitfields -mwin32 -mwindows
-transmission_remote_gtk_SOURCES += win32.rc
+transmission_remote_gtk_SOURCES += win32.rc win32-mailslot.c
 INCLUDES += -O2
 else
 %.1: %.pod

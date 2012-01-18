@@ -57,7 +57,7 @@ typedef struct {
 #define TORRENT_ADD_NOTIFY_TMOUT 3000
 
 GType trg_main_window_get_type(void);
-gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
+gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
 gboolean on_session_set(gpointer data);
 gboolean on_generic_interactive_action(gpointer data);
 void auto_connect_if_required(TrgMainWindow * win, gchar ** args);
@@ -73,6 +73,7 @@ void trg_main_window_notebook_set_visible(TrgMainWindow * win,
                                           gboolean visible);
 void connect_cb(GtkWidget * w, gpointer data);
 void trg_main_window_reload_dir_aliases(TrgMainWindow * win);
+void trg_main_window_set_start_args(TrgMainWindow * window, gchar ** args);
 
 #if !GTK_CHECK_VERSION(2, 21, 1)
 #define gdk_drag_context_get_actions(context) context->actions

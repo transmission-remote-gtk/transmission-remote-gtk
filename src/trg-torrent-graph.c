@@ -27,13 +27,15 @@
  * on this widget but with some improvements I didn't do.
  */
 
+#include "trg-torrent-graph.h"
+
+#if TRG_WITH_GRAPH
+
 #include <math.h>
 #include <glib.h>
 #include <cairo.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-
-#include "trg-torrent-graph.h"
 #include "util.h"
 
 /* damn you freebsd */
@@ -633,3 +635,5 @@ unsigned trg_torrent_graph_get_num_bars(TrgTorrentGraph * g)
 
     return n;
 }
+
+#endif

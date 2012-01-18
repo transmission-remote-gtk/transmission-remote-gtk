@@ -66,9 +66,7 @@
 #include "trg-trackers-tree-view.h"
 #include "trg-trackers-model.h"
 #include "trg-state-selector.h"
-#ifndef TRG_NO_GRAPH
 #include "trg-torrent-graph.h"
-#endif
 #include "trg-torrent-move-dialog.h"
 #include "trg-torrent-props-dialog.h"
 #include "trg-torrent-add-url-dialog.h"
@@ -200,6 +198,7 @@ static gboolean window_state_event(GtkWidget * widget,
                                    GdkEventWindowState * event,
                                    gpointer trayIcon);
 
+
 G_DEFINE_TYPE(TrgMainWindow, trg_main_window, GTK_TYPE_WINDOW)
 #define TRG_MAIN_WINDOW_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_MAIN_WINDOW, TrgMainWindowPrivate))
@@ -240,7 +239,7 @@ struct _TrgMainWindowPrivate {
     TrgPeersModel *peersModel;
     TrgPeersTreeView *peersTreeView;
 
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
     TrgTorrentGraph *graph;
 #endif
     gint graphNotebookIndex;
@@ -430,8 +429,7 @@ static void add_url_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
     TrgTorrentAddUrlDialog *dlg = trg_torrent_add_url_dialog_new(win,
-                                                                 priv->
-                                                                 client);
+                                                                 priv->client);
     gtk_widget_show_all(GTK_WIDGET(dlg));
 }
 
@@ -463,7 +461,7 @@ static void pause_all_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
                        on_generic_interactive_action, data);
 }
 
-gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
+gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     TrgClient *client = priv->client;
@@ -472,7 +470,8 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
     int i;
 
     for (i = 0; uris[i]; i++)
-        filesList = g_slist_append(filesList, uris[i]);
+        if (uris[i])
+            filesList = g_slist_append(filesList, uris[i]);
 
     if (trg_prefs_get_bool(prefs, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG,
                            TRG_PREFS_GLOBAL)) {
@@ -497,8 +496,14 @@ gboolean trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
 
     priv->args = NULL;
 
-    return TRUE;
+    return EXIT_SUCCESS;
 }
+
+/*void trg_main_window_set_start_args(TrgMainWindow * window, gchar ** args)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(window);
+    priv->args = args;
+}*/
 
 static void resume_all_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
@@ -874,11 +879,13 @@ static void view_stats_toggled_cb(GtkWidget * w, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
-    TrgStatsDialog *dlg =
-        trg_stats_dialog_get_instance(TRG_MAIN_WINDOW(data),
-                                      priv->client);
+    if (trg_client_is_connected(priv->client)) {
+        TrgStatsDialog *dlg =
+            trg_stats_dialog_get_instance(TRG_MAIN_WINDOW(data),
+                                          priv->client);
 
-    gtk_widget_show_all(GTK_WIDGET(dlg));
+        gtk_widget_show_all(GTK_WIDGET(dlg));
+    }
 }
 
 static void view_states_toggled_cb(GtkCheckMenuItem * w, gpointer data)
@@ -895,7 +902,7 @@ static void view_notebook_toggled_cb(GtkCheckMenuItem * w, gpointer data)
                            gtk_check_menu_item_get_active(w));
 }
 
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
 static void trg_main_window_toggle_graph_cb(GtkCheckMenuItem * w,
                                             gpointer win)
 {
@@ -963,7 +970,7 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
                                                 (priv->peersTreeView)),
                              gtk_label_new(_("Peers")));
 
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
     if (trg_prefs_get_bool
         (prefs, TRG_PREFS_KEY_SHOW_GRAPH, TRG_PREFS_GLOBAL))
         trg_main_window_add_graph(win, FALSE);
@@ -1021,7 +1028,9 @@ static gboolean on_session_get(gpointer data)
             return FALSE;
         }
 
-        if ((version = session_get_version(newSession)) < TRANSMISSION_MIN_SUPPORTED) {
+        if ((version =
+             session_get_version(newSession)) <
+            TRANSMISSION_MIN_SUPPORTED) {
             gchar *msg =
                 g_strdup_printf(_
                                 ("This application supports Transmission %g and later, you have %g."),
@@ -1088,8 +1097,8 @@ static void connchange_whatever_statusicon(TrgMainWindow * win,
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     const gchar *display = connected ?
-            trg_prefs_get_string(prefs, TRG_PREFS_KEY_PROFILE_NAME,
-                    TRG_PREFS_CONNECTION) : _("Disconnected");
+        trg_prefs_get_string(prefs, TRG_PREFS_KEY_PROFILE_NAME,
+                             TRG_PREFS_CONNECTION) : _("Disconnected");
 
 #ifdef HAVE_LIBAPPINDICATOR
     if (priv->appIndicator) {
@@ -1126,16 +1135,16 @@ static void update_whatever_statusicon(TrgMainWindow * win,
 
         trg_strlsize(buf, stats->downRateTotal);
         downloadingLabel = g_strdup_printf(_("%d Downloading @ %s"),
-                                                  stats->down, buf);
+                                           stats->down, buf);
         gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconDownloadingItem),
                                 downloadingLabel);
         g_free(downloadingLabel);
 
         trg_strlsize(buf, stats->upRateTotal);
         seedingLabel = g_strdup_printf(_("%d Seeding @ %s"),
-                                                  stats->seeding, buf);
+                                       stats->seeding, buf);
         gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconSeedingItem),
-                seedingLabel);
+                                seedingLabel);
         g_free(seedingLabel);
     }
 }
@@ -1209,7 +1218,7 @@ static gboolean on_torrent_get(gpointer data, int mode)
     trg_status_bar_update(priv->statusBar, stats, client);
     update_whatever_statusicon(win, stats);
 
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
     if (priv->graphNotebookIndex >= 0)
         trg_torrent_graph_set_speed(priv->graph, stats);
 #endif
@@ -1318,8 +1327,7 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
             matchesTracker = (!json
                               || !torrent_has_tracker(json,
                                                       trg_state_selector_get_url_host_regex
-                                                      (priv->
-                                                       stateSelector),
+                                                      (priv->stateSelector),
                                                       text));
             g_free(text);
             if (matchesTracker)
@@ -1531,7 +1539,7 @@ void trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected)
         trg_main_window_torrent_scrub(win);
         trg_state_selector_disconnect(priv->stateSelector);
 
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
         if (priv->graphNotebookIndex >= 0)
             trg_torrent_graph_set_nothing(priv->graph);
 #endif
@@ -1597,7 +1605,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
         *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
         *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_up_queue,
         *b_down_queue, *b_top_queue, *b_bottom_queue,
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
     *b_show_graph,
 #endif
     *b_start_now;
@@ -1624,7 +1632,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                  &b_view_stats, "about-button", &b_about, "quit-button",
                  &b_quit, "dir-filters", &b_dir_filters, "tracker-filters",
                  &b_tracker_filters,
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
                  "show-graph", &b_show_graph,
 #endif
                  "up-queue", &b_up_queue, "down-queue", &b_down_queue,
@@ -1671,7 +1679,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                      G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
                      G_CALLBACK(view_stats_toggled_cb), win);
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
     g_signal_connect(b_show_graph, "toggled",
                      G_CALLBACK(trg_main_window_toggle_graph_cb), win);
 #endif
@@ -2300,7 +2308,7 @@ void trg_main_window_remove_status_icon(TrgMainWindow * win)
 #endif
 }
 
-#ifndef TRG_NO_GRAPH
+#if TRG_WITH_GRAPH
 void trg_main_window_add_graph(TrgMainWindow * win, gboolean show)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
@@ -2513,8 +2521,7 @@ static GObject *trg_main_window_constructor(GType type,
                                            self, NULL);
 
     priv->torrentTreeView = trg_main_window_torrent_tree_view_new(self,
-                                                                  priv->
-                                                                  filteredTorrentModel);
+                                                                  priv->filteredTorrentModel);
     g_signal_connect(priv->torrentTreeView, "popup-menu",
                      G_CALLBACK(torrent_tv_popup_menu_cb), self);
     g_signal_connect(priv->torrentTreeView, "button-press-event",
@@ -2562,8 +2569,7 @@ static GObject *trg_main_window_constructor(GType type,
                     FALSE, FALSE);
 
     gtk_paned_pack2(GTK_PANED(priv->hpaned), my_scrolledwin_new(GTK_WIDGET
-                                                                (priv->
-                                                                 torrentTreeView)),
+                                                                (priv->torrentTreeView)),
                     TRUE, TRUE);
 
     g_signal_connect(G_OBJECT(priv->stateSelector),

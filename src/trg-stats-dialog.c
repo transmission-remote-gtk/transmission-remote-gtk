@@ -232,8 +232,9 @@ static gboolean trg_update_stats_timerfunc(gpointer data)
 
     if (TRG_IS_STATS_DIALOG(data)) {
         priv = TRG_STATS_DIALOG_GET_PRIVATE(data);
-        dispatch_async(priv->client, session_stats(), on_stats_reply,
-                       data);
+        if (trg_client_is_connected(priv->client))
+            dispatch_async(priv->client, session_stats(), on_stats_reply,
+                           data);
     }
 
     return FALSE;

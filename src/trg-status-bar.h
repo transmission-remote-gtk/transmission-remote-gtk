@@ -55,7 +55,8 @@ G_END_DECLS
                                TrgClient * client);
 void trg_status_bar_session_update(TrgStatusBar * sb,
                                    JsonObject * session);
-void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session, TrgClient *client);
+void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session,
+                            TrgClient * client);
 void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
                                         const gchar * msg);
 void trg_status_bar_reset(TrgStatusBar * sb);

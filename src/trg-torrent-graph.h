@@ -3,9 +3,13 @@
 #ifndef _TRG_TORRENT_GRAPH
 #define _TRG_TORRENT_GRAPH
 
-#include <glib-object.h>
 #include <gtk/gtk.h>
 
+#define TRG_WITH_GRAPH !GTK_CHECK_VERSION( 3, 0, 0 )
+
+#if TRG_WITH_GRAPH
+
+#include <glib-object.h>
 #include "trg-torrent-model.h"
 
 G_BEGIN_DECLS
@@ -49,4 +53,6 @@ void trg_torrent_graph_set_speed(TrgTorrentGraph * g,
 void trg_torrent_graph_set_nothing(TrgTorrentGraph * g);
 
 G_END_DECLS
-#endif                          /* _TRG_TORRENT_GRAPH */
+
+#endif
+#endif /* _TRG_TORRENT_GRAPH */

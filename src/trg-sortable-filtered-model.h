@@ -49,6 +49,5 @@ GtkTreeModel *trg_sortable_filtered_model_new(GtkTreeSortable *
                                               child_model,
                                               GtkTreePath * root);
 
-
 G_END_DECLS
 #endif                          /* _TRG_SORTABLE_FILTERED_MODEL */

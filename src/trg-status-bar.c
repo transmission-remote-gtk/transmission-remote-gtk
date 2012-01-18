@@ -128,23 +128,26 @@ void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), msg);
 }
 
-void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session, TrgClient *client)
+void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session,
+                            TrgClient * client)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     TrgPrefs *prefs = trg_client_get_prefs(client);
     gdouble version = session_get_version(session);
 
     gchar *statusMsg =
-        g_strdup_printf(_
-                        ("Connected: %s (Transmission %g)"),
-                        trg_prefs_get_string(prefs, TRG_PREFS_KEY_PROFILE_NAME, TRG_PREFS_CONNECTION),
+        g_strdup_printf(_("Connected: %s (Transmission %g)"),
+                        trg_prefs_get_string(prefs,
+                                             TRG_PREFS_KEY_PROFILE_NAME,
+                                             TRG_PREFS_CONNECTION),
                         version);
     g_message("%s", statusMsg);
 
     trg_status_bar_push_connection_msg(sb, statusMsg);
     g_free(statusMsg);
 
-    gtk_label_set_text(GTK_LABEL(priv->speed_lbl), _("Updating torrents..."));
+    gtk_label_set_text(GTK_LABEL(priv->speed_lbl),
+                       _("Updating torrents..."));
 }
 
 void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session)
@@ -244,7 +247,9 @@ TrgStatusBar *trg_status_bar_new(TrgMainWindow * win, TrgClient * client)
 {
     TrgStatusBar *sb = g_object_new(TRG_TYPE_STATUS_BAR, NULL);
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
+
     priv->client = client;
     priv->win = win;
+
     return sb;
 }

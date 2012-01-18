@@ -55,12 +55,6 @@ AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
 AC_DEFINE_DIR([LOCALEDIR], [datarootdir/locale], [gettext catalogs])
 
-PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
-PKG_CHECK_MODULES([gthread], [gthread-2.0])
-PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
-PKG_CHECK_MODULES([libcurl], [libcurl])
-PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
-
 AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
 have_libgeoip=no
 if test x$with_libgeoip != xno; then
@@ -75,24 +69,21 @@ AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
 
 AC_ARG_WITH([libunique], AC_HELP_STRING([--without-libunique], [disable libunique]))
 have_libunique=no
-if test x$with_libunique != xno; then
-  PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents on non-win32]))
-fi
-
 AC_ARG_WITH([libnotify], AC_HELP_STRING([--without-libnotify], [disable libnotify]))
 have_libnotify=no
+AC_ARG_WITH([libproxy], AC_HELP_STRING([--without-libproxy], [disable libproxy]))
+have_libproxy=no
+AC_ARG_WITH([libappindicator], AC_HELP_STRING([--without-libappindicator], [disable libappindicator]))
+have_libappindicator=no
+
 if test x$with_libnotify != xno; then
   PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
 fi
 
-AC_ARG_WITH([libproxy], AC_HELP_STRING([--without-libproxy], [disable libproxy]))
-have_libproxy=no
 if test x$with_libproxy != xno; then
   PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
 fi
 
-AC_ARG_WITH([libappindicator], AC_HELP_STRING([--without-libappindicator], [disable libappindicator]))
-have_libappindicator=no
 if test x$with_libappindicator != xno; then
   PKG_CHECK_MODULES([libappindicator], [appindicator-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
 fi
@@ -102,5 +93,19 @@ AC_ARG_ENABLE(debug, [AS_HELP_STRING(--enable-debug,
 if test x$enable_debug = xyes; then
     AC_DEFINE([DEBUG], [],  [enable debugging])
 fi
+
+PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
+PKG_CHECK_MODULES([gthread], [gthread-2.0])
+
+PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [], [
+AC_MSG_WARN([gtk+-3.0 not found, trying gtk+-2.0])
+PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
+if test x$with_libunique != xno; then
+  PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents on gtk+-2.0. not needed for gtk+-3.0 or win32. ]))
+fi
+])
+
+PKG_CHECK_MODULES([libcurl], [libcurl])
+PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
 
 AC_OUTPUT([Makefile po/Makefile.in src/Makefile])
