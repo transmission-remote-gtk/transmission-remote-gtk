@@ -209,45 +209,6 @@ static void trg_cleanup()
     curl_global_cleanup();
 }
 
-int main(int argc, char *argv[])
-{
-#if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
-    gchar **args = convert_args(argc, argv);
-#endif
-    gint exitCode = EXIT_SUCCESS;
-    TrgClient *client;
-
-    g_type_init();
-    g_thread_init(NULL);
-    gtk_init(&argc, &argv);
-
-    curl_global_init(CURL_GLOBAL_ALL);
-    client = trg_client_new();
-
-    g_set_application_name(PACKAGE_NAME);
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
-
-#ifdef WIN32
-    exitCode = trg_win32_init(client, argc, argv, args);
-#else
-    trg_non_win32_init();
-#if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
-    exitCode = trg_libunique_init(client, argc, argv, args);
-#elif GTK_CHECK_VERSION( 3, 0, 0 )
-    exitCode = trg_gtkapp_init(client, argc, argv);
-#else
-    exitCode = trg_simple_init(client, argc, argv, args);
-#endif
-#endif
-
-    trg_cleanup();
-
-    return exitCode;
-}
-
-/* Utility functions. */
-
 #if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
 
 static gchar **convert_args(int argc, char *argv[])
@@ -290,3 +251,40 @@ static gchar **convert_args(int argc, char *argv[])
 }
 
 #endif
+
+int main(int argc, char *argv[])
+{
+#if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
+    gchar **args = convert_args(argc, argv);
+#endif
+    gint exitCode = EXIT_SUCCESS;
+    TrgClient *client;
+
+    g_type_init();
+    g_thread_init(NULL);
+    gtk_init(&argc, &argv);
+
+    curl_global_init(CURL_GLOBAL_ALL);
+    client = trg_client_new();
+
+    g_set_application_name(PACKAGE_NAME);
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
+
+#ifdef WIN32
+    exitCode = trg_win32_init(client, argc, argv, args);
+#else
+    trg_non_win32_init();
+#if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
+    exitCode = trg_libunique_init(client, argc, argv, args);
+#elif GTK_CHECK_VERSION( 3, 0, 0 )
+    exitCode = trg_gtkapp_init(client, argc, argv);
+#else
+    exitCode = trg_simple_init(client, argc, argv, args);
+#endif
+#endif
+
+    trg_cleanup();
+
+    return exitCode;
+}
