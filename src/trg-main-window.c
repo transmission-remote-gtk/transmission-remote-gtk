@@ -499,12 +499,6 @@ gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
     return EXIT_SUCCESS;
 }
 
-/*void trg_main_window_set_start_args(TrgMainWindow * window, gchar ** args)
-{
-    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(window);
-    priv->args = args;
-}*/
-
 static void resume_all_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
@@ -1133,7 +1127,7 @@ static void update_whatever_statusicon(TrgMainWindow * win,
         gchar *seedingLabel;
         gchar buf[32];
 
-        trg_strlsize(buf, stats->downRateTotal);
+        trg_strlspeed(buf, stats->downRateTotal);
         downloadingLabel = g_strdup_printf(_("%d Downloading @ %s"),
                                            stats->down, buf);
         gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconDownloadingItem),

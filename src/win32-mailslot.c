@@ -17,6 +17,8 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#if WIN32
+
 #define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"      //Name given to the Mailslot
 #define MAILSLOT_BUFFER_SIZE 1024*32
 
@@ -190,3 +192,5 @@ gboolean mailslot_send_message(gchar ** args)
 
     return FALSE;
 }
+
+#endif

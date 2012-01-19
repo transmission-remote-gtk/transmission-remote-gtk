@@ -20,10 +20,13 @@
 #ifndef WIN32_MAILSLOT_H_
 #define WIN32_MAILSLOT_H_
 
+#if WIN32
+
 #include <windows.h>
 #include "trg-main-window.h"
 
 void mailslot_start_background_listener(TrgMainWindow * win);
 int mailslot_send_message(gchar ** args);
 
-#endif                          /* WIN32_MAILSLOT_H_ */
+#endif
+#endif /* WIN32_MAILSLOT_H_ */

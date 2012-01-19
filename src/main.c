@@ -245,3 +245,48 @@ int main(int argc, char *argv[])
 
     return exitCode;
 }
+
+/* Utility functions. */
+
+#if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
+
+static gchar **convert_args(int argc, char *argv[])
+{
+    gchar *cwd = g_get_current_dir();
+    gchar **files = NULL;
+
+    if (argc > 1) {
+        GSList *list = NULL;
+        int i;
+
+        for (i = 1; i < argc; i++) {
+            if (is_minimised_arg(argv[i])) {
+                continue;
+            } else if (!is_url(argv[i]) && !is_magnet(argv[i])
+                       && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
+                       && !g_path_is_absolute(argv[i])) {
+                list = g_slist_append(list,
+                                      g_build_path(G_DIR_SEPARATOR_S, cwd,
+                                                   argv[i], NULL));
+            } else {
+                list = g_slist_append(list, g_strdup(argv[i]));
+            }
+        }
+
+        if (list) {
+            GSList *li;
+            files = g_new0(gchar *, g_slist_length(list) + 1);
+            i = 0;
+            for (li = list; li; li = g_slist_next(li)) {
+                files[i++] = li->data;
+            }
+            g_slist_free(list);
+        }
+    }
+
+    g_free(cwd);
+
+    return files;
+}
+
+#endif

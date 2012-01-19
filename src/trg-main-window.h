@@ -73,7 +73,6 @@ void trg_main_window_notebook_set_visible(TrgMainWindow * win,
                                           gboolean visible);
 void connect_cb(GtkWidget * w, gpointer data);
 void trg_main_window_reload_dir_aliases(TrgMainWindow * win);
-void trg_main_window_set_start_args(TrgMainWindow * window, gchar ** args);
 
 #if !GTK_CHECK_VERSION(2, 21, 1)
 #define gdk_drag_context_get_actions(context) context->actions

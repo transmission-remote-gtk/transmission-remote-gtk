@@ -168,12 +168,12 @@ char *tr_formatter_speed_KBps(char *buf, double KBps, size_t buflen)
 
 /* URL checkers. */
 
-gboolean is_magnet(gchar * string)
+gboolean is_magnet(const gchar * string)
 {
     return g_str_has_prefix(string, "magnet:");
 }
 
-gboolean is_url(gchar * string)
+gboolean is_url(const gchar * string)
 {
     //return g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?", string, 0, 0);
     return g_regex_match_simple("^http[s]?://", string, 0, 0);
@@ -248,7 +248,7 @@ void rm_trailing_slashes(gchar * str)
 
 /* Working with torrents.. */
 
-void add_file_id_to_array(JsonObject * args, gchar * key, gint index)
+void add_file_id_to_array(JsonObject * args, const gchar * key, gint index)
 {
     JsonArray *array;
     if (json_object_has_member(args, key)) {
@@ -534,7 +534,7 @@ evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
 #endif
 }
 
-gboolean is_minimised_arg(gchar * arg)
+gboolean is_minimised_arg(const gchar * arg)
 {
     return !g_strcmp0(arg, "-m")
         || !g_strcmp0(arg, "--minimized")
@@ -549,43 +549,4 @@ gboolean should_be_minimised(int argc, char *argv[])
             return TRUE;
 
     return FALSE;
-}
-
-gchar **convert_args(int argc, char *argv[])
-{
-    gchar *cwd = g_get_current_dir();
-    gchar **files = NULL;
-
-    if (argc > 1) {
-        GSList *list = NULL;
-        int i;
-
-        for (i = 1; i < argc; i++) {
-            if (is_minimised_arg(argv[i])) {
-                continue;
-            } else if (!is_url(argv[i]) && !is_magnet(argv[i])
-                       && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
-                       && !g_path_is_absolute(argv[i])) {
-                list = g_slist_append(list,
-                                      g_build_path(G_DIR_SEPARATOR_S, cwd,
-                                                   argv[i], NULL));
-            } else {
-                list = g_slist_append(list, g_strdup(argv[i]));
-            }
-        }
-
-        if (list) {
-            GSList *li;
-            files = g_new0(gchar *, g_slist_length(list) + 1);
-            i = 0;
-            for (li = list; li; li = g_slist_next(li)) {
-                files[i++] = li->data;
-            }
-            g_slist_free(list);
-        }
-    }
-
-    g_free(cwd);
-
-    return files;
 }

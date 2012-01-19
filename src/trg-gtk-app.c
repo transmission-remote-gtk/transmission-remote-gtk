@@ -105,11 +105,6 @@ trg_gtk_app_command_line(GApplication * application,
     if (argv && argv[0])
         auto_connect_if_required(TRG_MAIN_WINDOW(windows->data), argv);
 
-    /*if (argv && argv[0])
-        trg_main_window_set_start_args(TRG_MAIN_WINDOW(windows->data),
-                                       argv);*/
-
-
     return 0;
 }
 

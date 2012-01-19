@@ -48,7 +48,7 @@ extern const char *speed_M_str;
 extern const char *speed_G_str;
 extern const char *speed_T_str;
 
-void add_file_id_to_array(JsonObject * args, gchar * key, gint index);
+void add_file_id_to_array(JsonObject * args, const gchar * key, gint index);
 void g_str_slist_free(GSList * list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);
@@ -86,12 +86,11 @@ void rm_trailing_slashes(gchar * str);
 void trg_widget_set_visible(GtkWidget * w, gboolean visible);
 gchar *trg_base64encode(const gchar * filename);
 GtkWidget *my_scrolledwin_new(GtkWidget * child);
-gboolean is_url(gchar * string);
-gboolean is_magnet(gchar * string);
+gboolean is_url(const gchar * string);
+gboolean is_magnet(const gchar * string);
 GtkWidget *gtr_combo_box_new_enum(const char *text_1, ...);
 
-gchar **convert_args(int argc, char *argv[]);
 gboolean should_be_minimised(int argc, char *argv[]);
-gboolean is_minimised_arg(gchar * arg);
+gboolean is_minimised_arg(const gchar * arg);
 
 #endif                          /* UTIL_H_ */
