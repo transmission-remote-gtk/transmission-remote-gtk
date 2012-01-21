@@ -218,7 +218,6 @@ struct _TrgMainWindowPrivate {
     GtkMenu *iconMenu;
     GtkStatusIcon *statusIcon;
 #endif
-    GdkPixbuf *icon;
     TrgStateSelector *stateSelector;
     GtkWidget *stateSelectorScroller;
     TrgGeneralPanel *genDetails;
@@ -429,7 +428,8 @@ static void add_url_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(data);
 
     TrgTorrentAddUrlDialog *dlg = trg_torrent_add_url_dialog_new(win,
-                                                                 priv->client);
+                                                                 priv->
+                                                                 client);
     gtk_widget_show_all(GTK_WIDGET(dlg));
 }
 
@@ -469,9 +469,15 @@ gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
     GSList *filesList = NULL;
     int i;
 
-    for (i = 0; uris[i]; i++)
-        if (uris[i])
-            filesList = g_slist_append(filesList, uris[i]);
+    if (uris)
+        for (i = 0; uris[i]; i++)
+            if (uris[i])
+                filesList = g_slist_append(filesList, uris[i]);
+
+    g_free(uris);
+
+    if (!filesList)
+        return EXIT_SUCCESS;
 
     if (trg_prefs_get_bool(prefs, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG,
                            TRG_PREFS_GLOBAL)) {
@@ -491,10 +497,6 @@ gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
 
         launch_add_thread(args);
     }
-
-    g_free(uris);               // launch_add_thread() or trg_torrent_add_dialog() will free the filenames and fileList;
-
-    priv->args = NULL;
 
     return EXIT_SUCCESS;
 }
@@ -907,9 +909,8 @@ static void trg_main_window_toggle_graph_cb(GtkCheckMenuItem * w,
     } else if (gtk_check_menu_item_get_active(w)) {
         if (priv->graphNotebookIndex < 0)
             trg_main_window_add_graph(TRG_MAIN_WINDOW(win), TRUE);
-    } else {
-        if (priv->graphNotebookIndex >= 0)
-            trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
+    } else if (priv->graphNotebookIndex >= 0) {
+        trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
     }
 }
 #endif
@@ -1241,8 +1242,10 @@ static gboolean on_torrent_get_first(gpointer data)
 
     gboolean result = on_torrent_get(data, TORRENT_GET_MODE_FIRST);
 
-    if (priv->args)
+    if (priv->args) {
         trg_add_from_filename(win, priv->args);
+        priv->args = NULL;
+    }
 
     return result;
 }
@@ -1321,7 +1324,8 @@ static gboolean trg_torrent_tree_view_visible_func(GtkTreeModel * model,
             matchesTracker = (!json
                               || !torrent_has_tracker(json,
                                                       trg_state_selector_get_url_host_regex
-                                                      (priv->stateSelector),
+                                                      (priv->
+                                                       stateSelector),
                                                       text));
             g_free(text);
             if (matchesTracker)
@@ -1698,7 +1702,7 @@ static void status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED,
         g_source_remove(priv->timerId);
         dispatch_async(priv->client,
                        torrent_get(TORRENT_GET_TAG_MODE_FULL),
-                       on_torrent_get_first, data);
+                       on_torrent_get_update, data);
     }
 }
 
@@ -1709,12 +1713,11 @@ static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
 
     gtk_menu_popup(priv->iconMenu, NULL, NULL,
 #ifdef WIN32
-                       NULL,
+                   NULL,
 #else
-                       gtk_status_icon_position_menu,
+                   gtk_status_icon_position_menu,
 #endif
-				   priv->statusIcon, 0,
-                   gtk_get_current_event_time());
+                   priv->statusIcon, 0, gtk_get_current_event_time());
 
     return TRUE;
 }
@@ -1731,7 +1734,7 @@ static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
 #else
                        gtk_status_icon_position_menu,
 #endif
-					   priv->statusIcon,
+                       priv->statusIcon,
                        event->button,
                        gdk_event_get_time((GdkEvent *) event));
         return TRUE;
@@ -2345,10 +2348,8 @@ void trg_main_window_add_status_icon(TrgMainWindow * win)
                                trg_status_icon_view_menu(win, NULL));
     }
 #else
-    if (!priv->icon)
-        return;
 
-    priv->statusIcon = gtk_status_icon_new_from_pixbuf(priv->icon);
+    priv->statusIcon = gtk_status_icon_new_from_icon_name(PACKAGE_NAME);
     gtk_status_icon_set_screen(priv->statusIcon,
                                gtk_window_get_screen(GTK_WINDOW(win)));
     g_signal_connect(priv->statusIcon, "activate",
@@ -2471,15 +2472,11 @@ static GObject *trg_main_window_constructor(GType type,
 
     theme = gtk_icon_theme_get_default();
     register_my_icons(theme);
-    priv->icon = gtk_icon_theme_load_icon(theme, PACKAGE_NAME, 48,
-                                          GTK_ICON_LOOKUP_USE_BUILTIN,
-                                          NULL);
 
 #ifdef HAVE_LIBNOTIFY
     notify_init(PACKAGE_NAME);
 #endif
-    if (priv->icon)
-        gtk_window_set_default_icon(priv->icon);
+    gtk_window_set_default_icon_name(PACKAGE_NAME);
 
     gtk_window_set_title(GTK_WINDOW(self), _("Transmission Remote"));
     gtk_window_set_default_size(GTK_WINDOW(self), 1000, 600);
@@ -2515,7 +2512,8 @@ static GObject *trg_main_window_constructor(GType type,
                                            self, NULL);
 
     priv->torrentTreeView = trg_main_window_torrent_tree_view_new(self,
-                                                                  priv->filteredTorrentModel);
+                                                                  priv->
+                                                                  filteredTorrentModel);
     g_signal_connect(priv->torrentTreeView, "popup-menu",
                      G_CALLBACK(torrent_tv_popup_menu_cb), self);
     g_signal_connect(priv->torrentTreeView, "button-press-event",
@@ -2563,7 +2561,8 @@ static GObject *trg_main_window_constructor(GType type,
                     FALSE, FALSE);
 
     gtk_paned_pack2(GTK_PANED(priv->hpaned), my_scrolledwin_new(GTK_WIDGET
-                                                                (priv->torrentTreeView)),
+                                                                (priv->
+                                                                 torrentTreeView)),
                     TRUE, TRUE);
 
     g_signal_connect(G_OBJECT(priv->stateSelector),

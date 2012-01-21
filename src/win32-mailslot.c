@@ -141,13 +141,13 @@ void mailslot_start_background_listener(TrgMainWindow * win)
 
 gboolean mailslot_send_message(gchar ** args)
 {
-    HANDLE hMailSlot = CreateFile(TRG_MAILSLOT_NAME,   // mailslot name
-                           GENERIC_WRITE,       // mailslot write only
-                           FILE_SHARE_READ,     // required for mailslots
-                           NULL,        // default security attributes
-                           OPEN_EXISTING,       // opens existing mailslot
-                           FILE_ATTRIBUTE_NORMAL,       // normal attributes
-                           NULL);       // no template file
+    HANDLE hMailSlot = CreateFile(TRG_MAILSLOT_NAME,    // mailslot name
+                                  GENERIC_WRITE,        // mailslot write only
+                                  FILE_SHARE_READ,      // required for mailslots
+                                  NULL, // default security attributes
+                                  OPEN_EXISTING,        // opens existing mailslot
+                                  FILE_ATTRIBUTE_NORMAL,        // normal attributes
+                                  NULL);        // no template file
 
     if (hMailSlot != INVALID_HANDLE_VALUE) {
         DWORD cbBytes;
@@ -178,7 +178,7 @@ gboolean mailslot_send_message(gchar ** args)
         json_node_free(node);
         g_object_unref(generator);
 
-        WriteFile(hMailSlot,            // handle to mailslot
+        WriteFile(hMailSlot,    // handle to mailslot
                   msg,          // buffer to write from
                   strlen(msg) + 1,      // number of bytes to write, include the NULL
                   &cbBytes,     // number of bytes written

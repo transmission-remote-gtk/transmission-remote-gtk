@@ -158,7 +158,8 @@ static gint trg_gtkapp_init(TrgClient * client, int argc, char *argv[])
 
 #else
 
-static gint trg_simple_init(TrgClient * client, int argc, char *argv[], gchar **args)
+static gint trg_simple_init(TrgClient * client, int argc, char *argv[],
+                            gchar ** args)
 {
     TrgMainWindow *window =
         trg_main_window_new(client, should_be_minimised(argc, argv));

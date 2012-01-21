@@ -29,4 +29,4 @@ void mailslot_start_background_listener(TrgMainWindow * win);
 int mailslot_send_message(gchar ** args);
 
 #endif
-#endif /* WIN32_MAILSLOT_H_ */
+#endif                          /* WIN32_MAILSLOT_H_ */

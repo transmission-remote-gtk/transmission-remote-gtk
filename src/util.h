@@ -48,7 +48,8 @@ extern const char *speed_M_str;
 extern const char *speed_G_str;
 extern const char *speed_T_str;
 
-void add_file_id_to_array(JsonObject * args, const gchar * key, gint index);
+void add_file_id_to_array(JsonObject * args, const gchar * key,
+                          gint index);
 void g_str_slist_free(GSList * list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);

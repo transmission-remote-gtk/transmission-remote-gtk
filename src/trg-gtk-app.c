@@ -91,7 +91,6 @@ static void trg_gtk_app_startup(GtkApplication * app, gpointer data)
     TrgMainWindow *window =
         trg_main_window_new(priv->client, priv->min_start);
     gtk_window_set_application(GTK_WINDOW(window), app);
-
 }
 
 static int
@@ -102,8 +101,7 @@ trg_gtk_app_command_line(GApplication * application,
         gtk_application_get_windows(GTK_APPLICATION(application));
     gchar **argv = g_application_command_line_get_arguments(cmdline, NULL);
 
-    if (argv && argv[0])
-        auto_connect_if_required(TRG_MAIN_WINDOW(windows->data), argv);
+    auto_connect_if_required(TRG_MAIN_WINDOW(windows->data), argv);
 
     return 0;
 }
