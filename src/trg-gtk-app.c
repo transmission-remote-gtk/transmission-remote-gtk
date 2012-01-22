@@ -99,9 +99,18 @@ trg_gtk_app_command_line(GApplication * application,
 {
     GList *windows =
         gtk_application_get_windows(GTK_APPLICATION(application));
+    TrgMainWindow *window = TRG_MAIN_WINDOW(windows->data);
     gchar **argv = g_application_command_line_get_arguments(cmdline, NULL);
 
-    auto_connect_if_required(TRG_MAIN_WINDOW(windows->data), argv);
+    if (g_application_get_is_remote(application)) {
+        if (!argv[0])
+           gtk_window_present(GTK_WINDOW(window));
+        else
+            return trg_add_from_filename(window, argv);
+    } else {
+        trg_main_window_set_start_args(window, argv);
+        auto_connect_if_required(TRG_MAIN_WINDOW(windows->data));
+    }
 
     return 0;
 }

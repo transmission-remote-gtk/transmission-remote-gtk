@@ -469,6 +469,11 @@ gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
     GSList *filesList = NULL;
     int i;
 
+    if (!trg_client_is_connected(client)) {
+        g_strfreev(uris);
+        return EXIT_SUCCESS;
+    }
+
     if (uris)
         for (i = 0; uris[i]; i++)
             if (uris[i])
@@ -1118,6 +1123,13 @@ static void update_whatever_statusicon(TrgMainWindow * win,
                                        stats)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+
+#ifdef HAVE_LIBAPPINDICATOR
+    if (!priv->appIndicator)
+#else
+    if (!priv->statusIcon)
+#endif
+        return;
 
     gtk_widget_set_visible(priv->iconSeedingItem, stats != NULL);
     gtk_widget_set_visible(priv->iconDownloadingItem, stats != NULL);
@@ -2679,7 +2691,13 @@ static void trg_main_window_class_init(TrgMainWindowClass * klass)
                                                          G_PARAM_STATIC_BLURB));
 }
 
-void auto_connect_if_required(TrgMainWindow * win, gchar ** args)
+void trg_main_window_set_start_args(TrgMainWindow * win, gchar ** args)
+{
+    TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
+    priv->args = args;
+}
+
+void auto_connect_if_required(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
@@ -2692,14 +2710,9 @@ void auto_connect_if_required(TrgMainWindow * win, gchar ** args)
         if (len > 0
             && trg_prefs_get_bool(prefs, TRG_PREFS_KEY_AUTO_CONNECT,
                                   TRG_PREFS_PROFILE)) {
-            priv->args = args;
             connect_cb(NULL, win);
-            return;
         }
     }
-
-    if (args)
-        g_strfreev(args);
 }
 
 TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart)

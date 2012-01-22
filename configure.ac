@@ -96,7 +96,7 @@ PKG_CHECK_MODULES([gthread], [gthread-2.0])
 
 dnl PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [
 dnl if test x$with_libappindicator != xno; then
-dnl  PKG_CHECK_MODULES([libappindicator], [appindicator3-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
+dnl PKG_CHECK_MODULES([libappindicator], [appindicator3-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
 dnl fi
 dnl ], [
 dnl AC_MSG_WARN([gtk+-3.0 not found, trying gtk+-2.0])

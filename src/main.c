@@ -130,7 +130,8 @@ static gint trg_libunique_init(TrgClient * client, int argc,
         g_signal_connect(app, "message-received",
                          G_CALLBACK(message_received_cb), window);
 
-        auto_connect_if_required(window, args);
+        trg_main_window_set_start_args(window, args);
+        auto_connect_if_required(window);
         gtk_main();
     }
 
@@ -163,7 +164,8 @@ static gint trg_simple_init(TrgClient * client, int argc, char *argv[],
 {
     TrgMainWindow *window =
         trg_main_window_new(client, should_be_minimised(argc, argv));
-    auto_connect_if_required(window, args);
+    trg_main_window_set_start_args(window, args);
+    auto_connect_if_required(window);
     gtk_main();
 
     return EXIT_SUCCESS;
@@ -191,7 +193,8 @@ static gint trg_win32_init(TrgClient * client, int argc, char *argv[],
     if (!mailslot_send_message(args)) {
         TrgMainWindow *window =
             trg_main_window_new(client, should_be_minimised(argc, argv));
-        auto_connect_if_required(window, args);
+        trg_main_window_set_start_args(window, args);
+        auto_connect_if_required(window);
         mailslot_start_background_listener(window);
         gtk_main();
     }
