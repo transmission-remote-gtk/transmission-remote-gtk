@@ -1147,7 +1147,7 @@ static void update_whatever_statusicon(TrgMainWindow * win,
                                 downloadingLabel);
         g_free(downloadingLabel);
 
-        trg_strlsize(buf, stats->upRateTotal);
+        trg_strlspeed(buf, stats->upRateTotal);
         seedingLabel = g_strdup_printf(_("%d Seeding @ %s"),
                                        stats->seeding, buf);
         gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconSeedingItem),
@@ -2347,6 +2347,14 @@ void trg_main_window_remove_graph(TrgMainWindow * win)
 }
 #endif
 
+/*static gboolean status_icon_size_changed(GtkStatusIcon *status_icon,
+        gint           size,
+        gpointer       user_data)
+{
+    gtk_status_icon_set_from_icon_name(status_icon, PACKAGE_NAME);
+    return TRUE;
+}*/
+
 void trg_main_window_add_status_icon(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = TRG_MAIN_WINDOW_GET_PRIVATE(win);
@@ -2370,6 +2378,7 @@ void trg_main_window_add_status_icon(TrgMainWindow * win)
                      G_CALLBACK(status_icon_button_press_event), win);
     g_signal_connect(priv->statusIcon, "popup-menu",
                      G_CALLBACK(trg_status_icon_popup_menu_cb), win);
+    // g_signal_connect(priv->statusIcon, "size-changed", G_CALLBACK(status_icon_size_changed), win);
 
     gtk_status_icon_set_visible(priv->statusIcon, TRUE);
 #endif
