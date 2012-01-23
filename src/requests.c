@@ -50,22 +50,22 @@ JsonNode *generic_request(gchar * method, JsonArray * ids)
 
 JsonNode *session_stats(void)
 {
-    return generic_request(METHOD_SESSION_STATS, NULL);
+    return base_request(METHOD_SESSION_STATS);
 }
 
 JsonNode *blocklist_update(void)
 {
-    return generic_request(METHOD_BLOCKLIST_UPDATE, NULL);
+    return base_request(METHOD_BLOCKLIST_UPDATE);
 }
 
 JsonNode *port_test(void)
 {
-    return generic_request(METHOD_PORT_TEST, NULL);
+    return base_request(METHOD_PORT_TEST);
 }
 
 JsonNode *session_get(void)
 {
-    return generic_request(METHOD_SESSION_GET, NULL);
+    return base_request(METHOD_SESSION_GET);
 }
 
 JsonNode *torrent_set_location(JsonArray * array, gchar * location,
@@ -267,9 +267,11 @@ static JsonNode *base_request(gchar * method)
     JsonNode *root = json_node_new(JSON_NODE_OBJECT);
     JsonObject *object = json_object_new();
     JsonObject *args = json_object_new();
+
     json_object_set_string_member(object, PARAM_METHOD, method);
     json_object_set_object_member(object, PARAM_ARGUMENTS, args);
     json_node_take_object(root, object);
+
     return root;
 }
 

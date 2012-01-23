@@ -34,7 +34,7 @@ typedef struct _TrgDestinationComboPrivate TrgDestinationComboPrivate;
 
 struct _TrgDestinationComboPrivate {
     TrgClient *client;
-    const gchar *last_selection;
+    gchar *last_selection;
     GtkWidget *entry;
     GtkCellRenderer *text_renderer;
 };
@@ -55,7 +55,7 @@ static void trg_destination_combo_finalize(GObject * object)
 {
     TrgDestinationComboPrivate *priv =
         TRG_DESTINATION_COMBO_GET_PRIVATE(object);
-    g_free((gpointer) priv->last_selection);
+    g_free(priv->last_selection);
 }
 
 static void trg_destination_combo_get_property(GObject * object,
@@ -328,6 +328,7 @@ static GObject *trg_destination_combo_constructor(GType type,
                                  NULL,
                                  defaultDir,
                                  DEST_DEFAULT, lastDestination);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(object), 0);
 
     if (savedDestinations) {
         list = json_array_get_elements(savedDestinations);

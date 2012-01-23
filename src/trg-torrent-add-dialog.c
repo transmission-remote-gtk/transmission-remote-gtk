@@ -251,6 +251,8 @@ static void trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id,
             launch_add_thread(args);
         }
 
+        trg_destination_combo_save_selection(TRG_DESTINATION_COMBO(priv->dest_combo));
+
         g_free(dir);
     } else {
         g_str_slist_free(priv->filenames);
@@ -712,8 +714,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
                      0, 0, 0);
     ++col;
 
-    priv->dest_combo = trg_destination_combo_new(priv->client, NULL);
-    gtk_combo_box_set_active(GTK_COMBO_BOX(priv->dest_combo), 0);
+    priv->dest_combo = trg_destination_combo_new(priv->client, TRG_PREFS_KEY_LAST_ADD_DESTINATION);
+    //gtk_combo_box_set_active(GTK_COMBO_BOX(priv->dest_combo), 0);
     gtk_table_attach(GTK_TABLE(t), priv->dest_combo, col, col + 1, row,
                      row + 1, ~0, 0, 0, 0);
     gtk_label_set_mnemonic_widget(GTK_LABEL(l), priv->dest_combo);
