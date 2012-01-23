@@ -87,19 +87,25 @@ fi
 
 AC_ARG_ENABLE(debug, [AS_HELP_STRING(--enable-debug,
                                      [enable debugging])])
+
 if test x$enable_debug = xyes; then
     AC_DEFINE([DEBUG], [],  [enable debugging])
 fi
 
+AC_ARG_ENABLE(gtk3, [AS_HELP_STRING(--enable-gtk3,
+                                     [enable gtk3 support])])
+
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
 
-dnl PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [
-dnl if test x$with_libappindicator != xno; then
-dnl PKG_CHECK_MODULES([libappindicator], [appindicator3-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
-dnl fi
-dnl ], [
-dnl AC_MSG_WARN([gtk+-3.0 not found, trying gtk+-2.0])
+if test x$enable_gtk3 = xyes; then
+
+PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [
+if test x$with_libappindicator != xno; then
+PKG_CHECK_MODULES([libappindicator], [appindicator3-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
+fi
+], [
+AC_MSG_WARN([gtk+-3.0 not found, trying gtk+-2.0])
 PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
 if test x$with_libappindicator != xno; then
   PKG_CHECK_MODULES([libappindicator], [appindicator-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
@@ -107,7 +113,19 @@ fi
 if test x$with_libunique != xno; then
   PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents on gtk+-2.0. not needed for gtk+-3.0 or win32. ]))
 fi
-dnl ])
+])
+
+else
+
+PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
+if test x$with_libappindicator != xno; then
+  PKG_CHECK_MODULES([libappindicator], [appindicator-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
+fi
+if test x$with_libunique != xno; then
+  PKG_CHECK_MODULES([unique], [unique-1.0], AC_DEFINE(HAVE_LIBUNIQUE, 1, [Define if libunique is available]), AC_MSG_WARN([libunique is required for opening torrents on gtk+-2.0. not needed for gtk+-3.0 or win32. ]))
+fi
+
+fi
 
 PKG_CHECK_MODULES([libcurl], [libcurl])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
