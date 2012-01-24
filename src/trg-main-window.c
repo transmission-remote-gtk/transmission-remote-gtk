@@ -1170,6 +1170,8 @@ static gboolean on_torrent_get(gpointer data, int mode)
     TrgPrefs *prefs = trg_client_get_prefs(client);
     trg_torrent_model_update_stats *stats;
     guint interval;
+    gint old_sort_id;
+    GtkSortType old_order;
 
     /* Disconnected between request and response callback */
     if (!trg_client_is_connected(client)) {
@@ -1192,6 +1194,7 @@ static gboolean on_torrent_get(gpointer data, int mode)
         gint64 max_retries =
             trg_prefs_get_int(prefs, TRG_PREFS_KEY_RETRIES,
                               TRG_PREFS_CONNECTION);
+
         if (trg_client_inc_failcount(client) >= max_retries) {
             trg_main_window_conn_changed(win, FALSE);
             trg_dialog_error_handler(win, response);
@@ -1210,17 +1213,27 @@ static gboolean on_torrent_get(gpointer data, int mode)
                                                   trg_update_torrents_timerfunc,
                                                   win);
         }
+
         trg_client_updateunlock(client);
         trg_response_free(response);
+
         return FALSE;
     }
 
     trg_client_reset_failcount(client);
     trg_client_inc_serial(client);
 
+    gtk_widget_freeze_child_notify(GTK_WIDGET(priv->torrentTreeView));
+    gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(priv->sortedTorrentModel), &old_sort_id, &old_order);
+    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(priv->sortedTorrentModel), GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID, GTK_SORT_ASCENDING);
+
     stats =
         trg_torrent_model_update(priv->torrentModel, client, response->obj,
                                  mode);
+
+    gtk_tree_sortable_set_sort_column_id(GTK_TREE_SORTABLE(priv->sortedTorrentModel), old_sort_id, old_order);
+    gtk_widget_thaw_child_notify(GTK_WIDGET(priv->torrentTreeView));
+
     update_selected_torrent_notebook(win, mode, priv->selectedTorrentId);
     trg_status_bar_update(priv->statusBar, stats, client);
     update_whatever_statusicon(win, stats);

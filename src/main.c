@@ -157,26 +157,8 @@ static gint trg_gtkapp_init(TrgClient * client, int argc, char *argv[])
     return exitCode;
 }
 
-#else
+#elif WIN32
 
-static gint trg_simple_init(TrgClient * client, int argc, char *argv[],
-                            gchar ** args)
-{
-    TrgMainWindow *window =
-        trg_main_window_new(client, should_be_minimised(argc, argv));
-    trg_main_window_set_start_args(window, args);
-    auto_connect_if_required(window);
-    gtk_main();
-
-    return EXIT_SUCCESS;
-}
-
-#endif
-
-
-/* Win32 mailslots. I've implemented this in win32-mailslot.c */
-
-#ifdef WIN32
 static gint trg_win32_init(TrgClient * client, int argc, char *argv[],
                            gchar ** args)
 {
@@ -201,7 +183,26 @@ static gint trg_win32_init(TrgClient * client, int argc, char *argv[],
 
     return EXIT_SUCCESS;
 }
+
 #else
+
+static gint trg_simple_init(TrgClient * client, int argc, char *argv[],
+                            gchar ** args)
+{
+    TrgMainWindow *window =
+        trg_main_window_new(client, should_be_minimised(argc, argv));
+    trg_main_window_set_start_args(window, args);
+    auto_connect_if_required(window);
+    gtk_main();
+
+    return EXIT_SUCCESS;
+}
+
+#endif
+
+/* Win32 mailslots. I've implemented this in win32-mailslot.c */
+
+#if !WIN32
 static void trg_non_win32_init()
 {
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
