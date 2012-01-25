@@ -97,67 +97,67 @@ Section $(NAME_SecTransmissionRemoteGTK) SecTransmissionRemoteGTK
   
   SetOutPath $INSTDIR\etc\gtk-2.0
   
-  File "..\..\gtk-2.24-win32-bin\etc\gtk-2.0\gtkrc"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\etc\gtk-2.0\gtkrc"
   
   SetOutPath $INSTDIR\share\themes\MS-Windows\gtk-2.0
   
-  File "..\..\gtk-2.24-win32-bin\share\themes\MS-Windows\gtk-2.0\gtkrc"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\share\themes\MS-Windows\gtk-2.0\gtkrc"
   
   SetOutPath $INSTDIR\share\locale\uk\LC_MESSAGES
   
-  File "C:\MinGW\msys\1.0\lib\locale\uk\LC_MESSAGES\transmission-remote-gtk.mo"
+  File "C:\MinGW-GTK2\msys\1.0\lib\locale\uk\LC_MESSAGES\transmission-remote-gtk.mo"
   
   SetOutPath $INSTDIR\share\locale\fr\LC_MESSAGES
   
-  File "C:\MinGW\msys\1.0\lib\locale\fr\LC_MESSAGES\transmission-remote-gtk.mo"
+  File "C:\MinGW-GTK2\msys\1.0\lib\locale\fr\LC_MESSAGES\transmission-remote-gtk.mo"
 
   SetOutPath $INSTDIR\share\locale\ru\LC_MESSAGES
   
-  File "C:\MinGW\msys\1.0\lib\locale\ru\LC_MESSAGES\transmission-remote-gtk.mo"
+  File "C:\MinGW-GTK2\msys\1.0\lib\locale\ru\LC_MESSAGES\transmission-remote-gtk.mo"
 
   SetOutPath $INSTDIR\share\locale\pl\LC_MESSAGES
 
-  File "C:\MinGW\msys\1.0\lib\locale\pl\LC_MESSAGES\transmission-remote-gtk.mo"
+  File "C:\MinGW-GTK2\msys\1.0\lib\locale\pl\LC_MESSAGES\transmission-remote-gtk.mo"
 
   SetOutPath $INSTDIR\share\locale\ko\LC_MESSAGES
 
-  File "C:\MinGW\msys\1.0\lib\locale\ko\LC_MESSAGES\transmission-remote-gtk.mo"
+  File "C:\MinGW-GTK2\msys\1.0\lib\locale\ko\LC_MESSAGES\transmission-remote-gtk.mo"
 
   SetOutPath $INSTDIR\share\locale\es\LC_MESSAGES
 
-  File "C:\MinGW\msys\1.0\lib\locale\es\LC_MESSAGES\transmission-remote-gtk.mo"
+  File "C:\MinGW-GTK2\msys\1.0\lib\locale\es\LC_MESSAGES\transmission-remote-gtk.mo"
 
   SetOutPath $INSTDIR\share\locale\de\LC_MESSAGES
 
-  File "C:\MinGW\msys\1.0\lib\locale\de\LC_MESSAGES\transmission-remote-gtk.mo"
+  File "C:\MinGW-GTK2\msys\1.0\lib\locale\de\LC_MESSAGES\transmission-remote-gtk.mo"
 
   SetOutPath $INSTDIR\share\locale\lt\LC_MESSAGES
 
-  File "C:\MinGW\msys\1.0\lib\locale\lt\LC_MESSAGES\transmission-remote-gtk.mo"
+  File "C:\MinGW-GTK2\msys\1.0\lib\locale\lt\LC_MESSAGES\transmission-remote-gtk.mo"
 
   SetOutPath $INSTDIR\share\icons\hicolor\scalable\apps
 
-  File "C:\MinGW\msys\1.0\share\icons\hicolor\scalable\apps\transmission-remote-gtk.svg"
+  File "C:\MinGW-GTK2\msys\1.0\share\icons\hicolor\scalable\apps\transmission-remote-gtk.svg"
 
   SetOutPath $INSTDIR\share\icons\hicolor\48x48\apps
 
-  File "C:\MinGW\msys\1.0\share\icons\hicolor\48x48\apps\transmission-remote-gtk.png"
+  File "C:\MinGW-GTK2\msys\1.0\share\icons\hicolor\48x48\apps\transmission-remote-gtk.png"
 
   SetOutPath $INSTDIR\share\icons\hicolor\32x32\apps
 
-  File "C:\MinGW\msys\1.0\share\icons\hicolor\32x32\apps\transmission-remote-gtk.png"
+  File "C:\MinGW-GTK2\msys\1.0\share\icons\hicolor\32x32\apps\transmission-remote-gtk.png"
 
   SetOutPath $INSTDIR\share\icons\hicolor\24x24\apps
 
-  File "C:\MinGW\msys\1.0\share\icons\hicolor\24x24\apps\transmission-remote-gtk.png"
+  File "C:\MinGW-GTK2\msys\1.0\share\icons\hicolor\24x24\apps\transmission-remote-gtk.png"
 
   SetOutPath $INSTDIR\share\icons\hicolor\22x22\apps
 
-  File "C:\MinGW\msys\1.0\share\icons\hicolor\22x22\apps\transmission-remote-gtk.png"
+  File "C:\MinGW-GTK2\msys\1.0\share\icons\hicolor\22x22\apps\transmission-remote-gtk.png"
 
   SetOutPath $INSTDIR\share\icons\hicolor\16x16\apps
 
-  File "C:\MinGW\msys\1.0\share\icons\hicolor\16x16\apps\transmission-remote-gtk.png"
+  File "C:\MinGW-GTK2\msys\1.0\share\icons\hicolor\16x16\apps\transmission-remote-gtk.png"
 
   !ifndef PORTABLE
   ; Write the installation path into the registry
@@ -189,132 +189,132 @@ SectionEnd
 Section $(NAME_SecGlibGtkEtc) SecGlibGtkEtc
   SetOutPath $INSTDIR\bin
 
-  File "..\..\gtk-2.24-win32-bin\bin\freetype6.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\intl.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libatk-1.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libcairo-2.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libcurl-4.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libexpat-1.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libfontconfig-1.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libgdk-win32-2.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libgdk_pixbuf-2.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libgio-2.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libglib-2.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libgmodule-2.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libgobject-2.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libgthread-2.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libgtk-win32-2.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libjson-glib-1.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libpango-1.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libpangocairo-1.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libpangoft2-1.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libpangowin32-1.0-0.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libpng14-14.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\zlib1.dll"  
-  File "..\..\gtk-2.24-win32-bin\bin\libintl-8.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\libiconv-2.dll"
-  File "..\..\gtk-2.24-win32-bin\bin\gspawn-win32-helper-console.exe"
-  File "..\..\gtk-2.24-win32-bin\bin\gspawn-win32-helper.exe"
-  File "c:\MinGW\msys\1.0\bin\libproxy.dll"
-  File "c:\MinGW\msys\1.0\bin\libmodman.dll"
-  File "c:\MinGW\msys\1.0\bin\libstdc++-6.dll"
-  File "c:\MinGW\msys\1.0\bin\libgcc_s_sjlj-1.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\freetype6.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\intl.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libatk-1.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libcairo-2.dll"
+  File "C:\MinGW-GTK2\msys\1.0\bin\libcurl-4.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libexpat-1.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libfontconfig-1.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libgdk-win32-2.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libgdk_pixbuf-2.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libgio-2.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libglib-2.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libgmodule-2.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libgobject-2.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libgthread-2.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libgtk-win32-2.0-0.dll"
+  File "C:\MinGW-GTK2\msys\1.0\bin\libjson-glib-1.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libpango-1.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libpangocairo-1.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libpangoft2-1.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libpangowin32-1.0-0.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\libpng14-14.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\zlib1.dll"  
+  File "C:\MinGW-GTK2\msys\1.0\bin\libintl-8.dll"
+  File "C:\MinGW-GTK2\msys\1.0\bin\libiconv-2.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\gspawn-win32-helper-console.exe"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\bin\gspawn-win32-helper.exe"
+  File "C:\MinGW-GTK2\msys\1.0\bin\libproxy.dll"
+  File "C:\MinGW-GTK2\msys\1.0\bin\libmodman.dll"
+  File "C:\MinGW-GTK2\msys\1.0\bin\libstdc++-6.dll"
+  File "C:\MinGW-GTK2\msys\1.0\bin\libgcc_s_sjlj-1.dll"
     
   SetOutPath $INSTDIR\lib\gtk-2.0\2.10.0\engines
 	
-  File "..\..\gtk-2.24-win32-bin\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
-  File "..\..\gtk-2.24-win32-bin\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
   
   SetOutPath $INSTDIR\lib\gtk-2.0\modules
   
-  File "..\..\gtk-2.24-win32-bin\lib\gtk-2.0\modules\libgail.dll"
+  File "..\..\gtk+-bundle_2.24.8-20111122_win32\lib\gtk-2.0\modules\libgail.dll"
   
   SetOutPath $INSTDIR\share\locale\lt\LC_MESSAGES
   
-  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gtk20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\lt\LC_MESSAGES\atk10.mo"
+  File "C:\MinGW-GTK2\share\locale\lt\LC_MESSAGES\gtk20.mo"
+  File "C:\MinGW-GTK2\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
+  File "C:\MinGW-GTK2\share\locale\lt\LC_MESSAGES\glib20.mo"
+  File "C:\MinGW-GTK2\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
+  File "C:\MinGW-GTK2\share\locale\lt\LC_MESSAGES\atk10.mo"
   
   SetOutPath $INSTDIR\share\locale\uk\LC_MESSAGES
   
-  File "..\..\gtk-2.24-win32-bin\share\locale\uk\LC_MESSAGES\libiconv.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\uk\LC_MESSAGES\gtk20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\uk\LC_MESSAGES\gtk20-properties.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\uk\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\uk\LC_MESSAGES\gettext-tools.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\uk\LC_MESSAGES\gettext-runtime.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\uk\LC_MESSAGES\gdk-pixbuf.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\uk\LC_MESSAGES\atk10.mo"
+  File "C:\MinGW-GTK2\share\locale\uk\LC_MESSAGES\libiconv.mo"
+  File "C:\MinGW-GTK2\share\locale\uk\LC_MESSAGES\gtk20.mo"
+  File "C:\MinGW-GTK2\share\locale\uk\LC_MESSAGES\gtk20-properties.mo"
+  File "C:\MinGW-GTK2\share\locale\uk\LC_MESSAGES\glib20.mo"
+  File "C:\MinGW-GTK2\share\locale\uk\LC_MESSAGES\gettext-tools.mo"
+  File "C:\MinGW-GTK2\share\locale\uk\LC_MESSAGES\gettext-runtime.mo"
+  File "C:\MinGW-GTK2\share\locale\uk\LC_MESSAGES\gdk-pixbuf.mo"
+  File "C:\MinGW-GTK2\share\locale\uk\LC_MESSAGES\atk10.mo"
   
   SetOutPath $INSTDIR\share\locale\fr\LC_MESSAGES
   
-  File "..\..\gtk-2.24-win32-bin\share\locale\fr\LC_MESSAGES\gtk20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\fr\LC_MESSAGES\gtk20-properties.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\fr\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\fr\LC_MESSAGES\gettext-runtime.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\fr\LC_MESSAGES\gdk-pixbuf.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\fr\LC_MESSAGES\atk10.mo"
+  File "C:\MinGW-GTK2\share\locale\fr\LC_MESSAGES\gtk20.mo"
+  File "C:\MinGW-GTK2\share\locale\fr\LC_MESSAGES\gtk20-properties.mo"
+  File "C:\MinGW-GTK2\share\locale\fr\LC_MESSAGES\glib20.mo"
+  File "C:\MinGW-GTK2\share\locale\fr\LC_MESSAGES\gettext-runtime.mo"
+  File "C:\MinGW-GTK2\share\locale\fr\LC_MESSAGES\gdk-pixbuf.mo"
+  File "C:\MinGW-GTK2\share\locale\fr\LC_MESSAGES\atk10.mo"
   
   SetOutPath $INSTDIR\share\locale\ru\LC_MESSAGES
   
-  File "..\..\gtk-2.24-win32-bin\share\locale\ru\LC_MESSAGES\libiconv.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ru\LC_MESSAGES\gtk20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ru\LC_MESSAGES\gtk20-properties.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ru\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ru\LC_MESSAGES\gettext-tools.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ru\LC_MESSAGES\gettext-runtime.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ru\LC_MESSAGES\gdk-pixbuf.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ru\LC_MESSAGES\atk10.mo"
+  File "C:\MinGW-GTK2\share\locale\ru\LC_MESSAGES\libiconv.mo"
+  File "C:\MinGW-GTK2\share\locale\ru\LC_MESSAGES\gtk20.mo"
+  File "C:\MinGW-GTK2\share\locale\ru\LC_MESSAGES\gtk20-properties.mo"
+  File "C:\MinGW-GTK2\share\locale\ru\LC_MESSAGES\glib20.mo"
+  File "C:\MinGW-GTK2\share\locale\ru\LC_MESSAGES\gettext-tools.mo"
+  File "C:\MinGW-GTK2\share\locale\ru\LC_MESSAGES\gettext-runtime.mo"
+  File "C:\MinGW-GTK2\share\locale\ru\LC_MESSAGES\gdk-pixbuf.mo"
+  File "C:\MinGW-GTK2\share\locale\ru\LC_MESSAGES\atk10.mo"
 
   SetOutPath $INSTDIR\share\locale\pl\LC_MESSAGES
 
-  File "..\..\gtk-2.24-win32-bin\share\locale\pl\LC_MESSAGES\libiconv.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\pl\LC_MESSAGES\gtk20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\pl\LC_MESSAGES\gtk20-properties.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\pl\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\pl\LC_MESSAGES\gettext-tools.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\pl\LC_MESSAGES\gettext-runtime.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\pl\LC_MESSAGES\gdk-pixbuf.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\pl\LC_MESSAGES\atk10.mo"
+  File "C:\MinGW-GTK2\share\locale\pl\LC_MESSAGES\libiconv.mo"
+  File "C:\MinGW-GTK2\share\locale\pl\LC_MESSAGES\gtk20.mo"
+  File "C:\MinGW-GTK2\share\locale\pl\LC_MESSAGES\gtk20-properties.mo"
+  File "C:\MinGW-GTK2\share\locale\pl\LC_MESSAGES\glib20.mo"
+  File "C:\MinGW-GTK2\share\locale\pl\LC_MESSAGES\gettext-tools.mo"
+  File "C:\MinGW-GTK2\share\locale\pl\LC_MESSAGES\gettext-runtime.mo"
+  File "C:\MinGW-GTK2\share\locale\pl\LC_MESSAGES\gdk-pixbuf.mo"
+  File "C:\MinGW-GTK2\share\locale\pl\LC_MESSAGES\atk10.mo"
 
   SetOutPath $INSTDIR\share\locale\ko\LC_MESSAGES
 
-  File "..\..\gtk-2.24-win32-bin\share\locale\ko\LC_MESSAGES\gtk20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ko\LC_MESSAGES\gtk20-properties.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ko\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ko\LC_MESSAGES\gettext-tools.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ko\LC_MESSAGES\gettext-runtime.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ko\LC_MESSAGES\gdk-pixbuf.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\ko\LC_MESSAGES\atk10.mo"
+  File "C:\MinGW-GTK2\share\locale\ko\LC_MESSAGES\gtk20.mo"
+  File "C:\MinGW-GTK2\share\locale\ko\LC_MESSAGES\gtk20-properties.mo"
+  File "C:\MinGW-GTK2\share\locale\ko\LC_MESSAGES\glib20.mo"
+  File "C:\MinGW-GTK2\share\locale\ko\LC_MESSAGES\gettext-tools.mo"
+  File "C:\MinGW-GTK2\share\locale\ko\LC_MESSAGES\gettext-runtime.mo"
+  File "C:\MinGW-GTK2\share\locale\ko\LC_MESSAGES\gdk-pixbuf.mo"
+  File "C:\MinGW-GTK2\share\locale\ko\LC_MESSAGES\atk10.mo"
 
   SetOutPath $INSTDIR\share\locale\es\LC_MESSAGES
 
-  File "..\..\gtk-2.24-win32-bin\share\locale\es\LC_MESSAGES\libiconv.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\es\LC_MESSAGES\gtk20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\es\LC_MESSAGES\gtk20-properties.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\es\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\es\LC_MESSAGES\gettext-tools.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\es\LC_MESSAGES\gettext-runtime.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\es\LC_MESSAGES\gdk-pixbuf.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\es\LC_MESSAGES\atk10.mo"
+  File "C:\MinGW-GTK2\share\locale\es\LC_MESSAGES\libiconv.mo"
+  File "C:\MinGW-GTK2\share\locale\es\LC_MESSAGES\gtk20.mo"
+  File "C:\MinGW-GTK2\share\locale\es\LC_MESSAGES\gtk20-properties.mo"
+  File "C:\MinGW-GTK2\share\locale\es\LC_MESSAGES\glib20.mo"
+  File "C:\MinGW-GTK2\share\locale\es\LC_MESSAGES\gettext-tools.mo"
+  File "C:\MinGW-GTK2\share\locale\es\LC_MESSAGES\gettext-runtime.mo"
+  File "C:\MinGW-GTK2\share\locale\es\LC_MESSAGES\gdk-pixbuf.mo"
+  File "C:\MinGW-GTK2\share\locale\es\LC_MESSAGES\atk10.mo"
 
   SetOutPath $INSTDIR\share\locale\de\LC_MESSAGES
 
-  File "..\..\gtk-2.24-win32-bin\share\locale\de\LC_MESSAGES\libiconv.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\de\LC_MESSAGES\gtk20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\de\LC_MESSAGES\gtk20-properties.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\de\LC_MESSAGES\glib20.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\de\LC_MESSAGES\gettext-tools.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\de\LC_MESSAGES\gettext-runtime.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\de\LC_MESSAGES\gdk-pixbuf.mo"
-  File "..\..\gtk-2.24-win32-bin\share\locale\de\LC_MESSAGES\atk10.mo"
+  File "C:\MinGW-GTK2\share\locale\de\LC_MESSAGES\libiconv.mo"
+  File "C:\MinGW-GTK2\share\locale\de\LC_MESSAGES\gtk20.mo"
+  File "C:\MinGW-GTK2\share\locale\de\LC_MESSAGES\gtk20-properties.mo"
+  File "C:\MinGW-GTK2\share\locale\de\LC_MESSAGES\glib20.mo"
+  File "C:\MinGW-GTK2\share\locale\de\LC_MESSAGES\gettext-tools.mo"
+  File "C:\MinGW-GTK2\share\locale\de\LC_MESSAGES\gettext-runtime.mo"
+  File "C:\MinGW-GTK2\share\locale\de\LC_MESSAGES\gdk-pixbuf.mo"
+  File "C:\MinGW-GTK2\share\locale\de\LC_MESSAGES\atk10.mo"
 
   SetOutPath $INSTDIR\share\icons\hicolor
 
-  File "..\..\gtk-2.24-win32-bin\share\icons\hicolor\index.theme"
-  File "..\..\gtk-2.24-win32-bin\share\icons\hicolor\icon-theme.cache"
+  File "C:\MinGW-GTK2\msys\1.0\share\icons\hicolor\index.theme"
+  File "C:\MinGW-GTK2\msys\1.0\share\icons\hicolor\icon-theme.cache"
   
 SectionEnd
 
@@ -379,6 +379,8 @@ Section "Uninstall"
   ; Remove files and uninstaller
   Delete "$INSTDIR\COPYING.txt"
   Delete "$INSTDIR\README.txt"
+  Delete "$INSTDIR\AUTHORS.txt"
+  Delete "$INSTDIR\ChangeLog.txt"
   Delete "$INSTDIR\uninstall.exe"
   Delete "$INSTDIR\bin\transmission-remote-gtk.exe"
   Delete "$INSTDIR\bin\freetype6.dll"
