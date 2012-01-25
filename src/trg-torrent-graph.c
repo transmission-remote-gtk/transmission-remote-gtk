@@ -219,8 +219,9 @@ void trg_torrent_graph_set_nothing(TrgTorrentGraph * g)
     priv->in = priv->out = 0;
 }
 
-void trg_torrent_graph_set_speed(TrgTorrentGraph * g,
-                                 trg_torrent_model_update_stats * stats)
+void
+trg_torrent_graph_set_speed(TrgTorrentGraph * g,
+                            trg_torrent_model_update_stats * stats)
 {
     TrgTorrentGraphPrivate *priv = TRG_TORRENT_GRAPH_GET_PRIVATE(g);
 

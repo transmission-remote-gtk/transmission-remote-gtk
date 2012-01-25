@@ -175,7 +175,7 @@ gboolean is_magnet(const gchar * string)
 
 gboolean is_url(const gchar * string)
 {
-    //return g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?", string, 0, 0);
+    /* return g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?", string, 0, 0); */
     return g_regex_match_simple("^http[s]?://", string, 0, 0);
 }
 
@@ -231,10 +231,11 @@ void g_str_slist_free(GSList * list)
 
 void rm_trailing_slashes(gchar * str)
 {
+    int i, len;
+
     if (!str)
         return;
 
-    int i, len;
     if ((len = strlen(str)) < 1)
         return;
 
@@ -537,8 +538,7 @@ evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
 gboolean is_minimised_arg(const gchar * arg)
 {
     return !g_strcmp0(arg, "-m")
-        || !g_strcmp0(arg, "--minimized")
-        || !g_strcmp0(arg, "/m");
+        || !g_strcmp0(arg, "--minimized") || !g_strcmp0(arg, "/m");
 }
 
 gboolean should_be_minimised(int argc, char *argv[])

@@ -65,7 +65,8 @@ static gchar *dump_json_value(JsonNode * node)
         g_string_append_printf(buffer, "%" G_GINT64_FORMAT,
                                g_value_get_int64(&value));
         break;
-    case G_TYPE_STRING:{
+    case G_TYPE_STRING:
+        {
             gchar *tmp;
 
             tmp = g_strescape(g_value_get_string(&value), json_exceptions);
@@ -74,7 +75,8 @@ static gchar *dump_json_value(JsonNode * node)
             g_free(tmp);
         }
         break;
-    case G_TYPE_DOUBLE:{
+    case G_TYPE_DOUBLE:
+        {
             gchar buf[G_ASCII_DTOSTR_BUF_SIZE];
 
             g_string_append(buffer,

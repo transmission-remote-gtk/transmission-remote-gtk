@@ -95,8 +95,9 @@ static void update_session(GtkDialog * dlg)
     dispatch_async(priv->client, request, on_session_set, priv->parent);
 }
 
-static void trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
-                                         gpointer data G_GNUC_UNUSED)
+static void
+trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
+                             gpointer data G_GNUC_UNUSED)
 {
     TrgRemotePrefsDialogPrivate *priv =
         TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(dlg);
@@ -110,10 +111,10 @@ static void trg_remote_prefs_response_cb(GtkDialog * dlg, gint res_id,
     instance = NULL;
 }
 
-static void trg_remote_prefs_dialog_get_property(GObject * object,
-                                                 guint property_id,
-                                                 GValue * value,
-                                                 GParamSpec * pspec)
+static void
+trg_remote_prefs_dialog_get_property(GObject * object,
+                                     guint property_id,
+                                     GValue * value, GParamSpec * pspec)
 {
     TrgRemotePrefsDialogPrivate *priv =
         TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
@@ -130,10 +131,11 @@ static void trg_remote_prefs_dialog_get_property(GObject * object,
     }
 }
 
-static void trg_remote_prefs_dialog_set_property(GObject * object,
-                                                 guint property_id,
-                                                 const GValue * value,
-                                                 GParamSpec * pspec)
+static void
+trg_remote_prefs_dialog_set_property(GObject * object,
+                                     guint property_id,
+                                     const GValue * value,
+                                     GParamSpec * pspec)
 {
     TrgRemotePrefsDialogPrivate *priv =
         TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(object);
@@ -150,8 +152,9 @@ static void trg_remote_prefs_dialog_set_property(GObject * object,
     }
 }
 
-static void trg_remote_prefs_double_special_dependent(GtkWidget * widget,
-                                                      gpointer data)
+static void
+trg_remote_prefs_double_special_dependent(GtkWidget * widget,
+                                          gpointer data)
 {
     TrgRemotePrefsDialogPrivate *priv =
         TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(gtk_widget_get_toplevel
@@ -167,8 +170,9 @@ static void trg_remote_prefs_double_special_dependent(GtkWidget * widget,
                                                            alt_check)));
 }
 
-static void trg_rprefs_time_widget_savefunc(GtkWidget * w,
-                                            JsonObject * obj, gchar * key)
+static void
+trg_rprefs_time_widget_savefunc(GtkWidget * w, JsonObject * obj,
+                                gchar * key)
 {
     GtkWidget *hourSpin = g_object_get_data(G_OBJECT(w), "hours-spin");
     GtkWidget *minutesSpin = g_object_get_data(G_OBJECT(w), "mins-spin");
@@ -515,7 +519,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
                                  0, 65535, 1);
     hig_workarea_add_row(t, &row, _("Peer port"), w, w);
 
-    w = priv->port_test_label = gtk_label_new(_("Port test"));
+    priv->port_test_label = gtk_label_new(_("Port test"));
     w = priv->port_test_button = gtk_button_new_with_label(_("Test"));
     g_signal_connect(w, "clicked", G_CALLBACK(port_test_cb), win);
     hig_workarea_add_row_w(t, &row, priv->port_test_label, w, NULL);
@@ -525,9 +529,9 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
                                                         _("Tolerated"), 2,
                                                         NULL);
     stringValue = session_get_encryption(s);
-    if (g_strcmp0(stringValue, "required") == 0) {
+    if (!g_strcmp0(stringValue, "required")) {
         gtk_combo_box_set_active(GTK_COMBO_BOX(w), 0);
-    } else if (g_strcmp0(stringValue, "tolerated") == 0) {
+    } else if (!g_strcmp0(stringValue, "tolerated")) {
         gtk_combo_box_set_active(GTK_COMBO_BOX(w), 2);
     } else {
         gtk_combo_box_set_active(GTK_COMBO_BOX(w), 1);
@@ -575,7 +579,6 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
                      G_CALLBACK(update_blocklist_cb), win);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
-    //GtkWidget *trg_json_widget_entry_new(GList **wl, JsonObject *obj, gchar *key, GtkWidget *toggleDep);
     stringValue = session_get_blocklist_url(s);
     if (stringValue) {
         w = trg_json_widget_entry_new(&priv->widgets, s,
@@ -711,8 +714,8 @@ static GObject *trg_remote_prefs_dialog_constructor(GType type,
     return object;
 }
 
-static void trg_remote_prefs_dialog_class_init(TrgRemotePrefsDialogClass *
-                                               klass)
+static void
+trg_remote_prefs_dialog_class_init(TrgRemotePrefsDialogClass * klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
@@ -753,8 +756,8 @@ static void trg_remote_prefs_dialog_class_init(TrgRemotePrefsDialogClass *
                                                         G_PARAM_STATIC_BLURB));
 }
 
-static void trg_remote_prefs_dialog_init(TrgRemotePrefsDialog *
-                                         self G_GNUC_UNUSED)
+static void
+trg_remote_prefs_dialog_init(TrgRemotePrefsDialog * self G_GNUC_UNUSED)
 {
 }
 

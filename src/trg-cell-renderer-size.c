@@ -39,8 +39,9 @@ struct _TrgCellRendererSizePrivate {
 };
 
 static void
-trg_cell_renderer_size_get_property(GObject * object, guint property_id,
-                                    GValue * value, GParamSpec * pspec)
+trg_cell_renderer_size_get_property(GObject * object,
+                                    guint property_id, GValue * value,
+                                    GParamSpec * pspec)
 {
     TrgCellRendererSizePrivate *priv =
         TRG_CELL_RENDERER_SIZE_GET_PRIVATE(object);

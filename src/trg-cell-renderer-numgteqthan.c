@@ -131,8 +131,8 @@ trg_cell_renderer_numgteqthan_class_init(TrgCellRendererNumGtEqThanClass *
                              sizeof(TrgCellRendererNumGtEqThanPrivate));
 }
 
-static void trg_cell_renderer_numgteqthan_init(TrgCellRendererNumGtEqThan *
-                                               self)
+static void
+trg_cell_renderer_numgteqthan_init(TrgCellRendererNumGtEqThan * self)
 {
     g_object_set(self, "xalign", 1.0f, NULL);
 }

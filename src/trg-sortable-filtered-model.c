@@ -75,15 +75,14 @@ G_DEFINE_TYPE_WITH_CODE(TrgSortableFilteredModel,
                         GTK_TYPE_TREE_MODEL_FILTER,
                         G_IMPLEMENT_INTERFACE(GTK_TYPE_TREE_SORTABLE,
                                               trg_sortable_filtered_model_tree_sortable_init))
-
 static void
 trg_sortable_filtered_model_class_init(TrgSortableFilteredModelClass *
                                        klass)
 {
 }
 
-static void trg_sortable_filtered_model_init(TrgSortableFilteredModel *
-                                             self)
+static void
+trg_sortable_filtered_model_init(TrgSortableFilteredModel * self)
 {
 }
 
@@ -102,12 +101,13 @@ trg_sortable_filtered_model_tree_sortable_init(GtkTreeSortableIface *
         trg_sortable_filtered_model_sort_has_default_sort_func;
 }
 
-static void trg_sortable_filtered_model_sort_column_changed(GtkTreeSortable
-                                                            *
-                                                            realSortable
-                                                            G_GNUC_UNUSED,
-                                                            GtkTreeSortable
-                                                            * fakeSortable)
+static void
+trg_sortable_filtered_model_sort_column_changed(GtkTreeSortable
+                                                *
+                                                realSortable
+                                                G_GNUC_UNUSED,
+                                                GtkTreeSortable
+                                                * fakeSortable)
 {
     g_signal_emit_by_name(fakeSortable, "sort-column-changed");
 }
@@ -116,9 +116,6 @@ GtkTreeModel *trg_sortable_filtered_model_new(GtkTreeSortable *
                                               child_model,
                                               GtkTreePath * root)
 {
-    g_return_val_if_fail(GTK_IS_TREE_MODEL(child_model), NULL);
-    g_return_val_if_fail(GTK_IS_TREE_SORTABLE(child_model), NULL);
-
     GObject *obj = g_object_new(TRG_TYPE_SORTABLE_FILTERED_MODEL,
                                 "child-model", GTK_TREE_MODEL(child_model),
                                 "virtual-root", root,
@@ -133,8 +130,8 @@ GtkTreeModel *trg_sortable_filtered_model_new(GtkTreeSortable *
 }
 
 static GtkTreeSortable
-    * trg_sortable_filtered_model_get_real_sortable(GtkTreeSortable *
-                                                    sortable)
+    *trg_sortable_filtered_model_get_real_sortable(GtkTreeSortable *
+                                                   sortable)
 {
     return
         GTK_TREE_SORTABLE(gtk_tree_model_filter_get_model
@@ -165,15 +162,15 @@ trg_sortable_filtered_model_sort_set_sort_column_id(GtkTreeSortable *
                                          order);
 }
 
-static void trg_sortable_filtered_model_sort_set_sort_func(GtkTreeSortable
-                                                           * sortable,
-                                                           gint
-                                                           sort_column_id,
-                                                           GtkTreeIterCompareFunc
-                                                           func,
-                                                           gpointer data,
-                                                           GDestroyNotify
-                                                           destroy)
+static void
+trg_sortable_filtered_model_sort_set_sort_func(GtkTreeSortable
+                                               * sortable,
+                                               gint
+                                               sort_column_id,
+                                               GtkTreeIterCompareFunc
+                                               func,
+                                               gpointer data,
+                                               GDestroyNotify destroy)
 {
     GtkTreeSortable *realSortable =
         trg_sortable_filtered_model_get_real_sortable(sortable);

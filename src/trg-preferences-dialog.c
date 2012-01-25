@@ -47,7 +47,6 @@
 
 G_DEFINE_TYPE(TrgPreferencesDialog, trg_preferences_dialog,
               GTK_TYPE_DIALOG)
-
 enum {
     PROP_0, PROP_TRG_CLIENT, PROP_MAIN_WINDOW
 };
@@ -81,8 +80,9 @@ trg_pref_widget_desc *trg_pref_widget_desc_new(GtkWidget * w, gchar * key,
     return desc;
 }
 
-static void trg_pref_widget_refresh(TrgPreferencesDialog * dlg,
-                                    trg_pref_widget_desc * wd)
+static void
+trg_pref_widget_refresh(TrgPreferencesDialog * dlg,
+                        trg_pref_widget_desc * wd)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
@@ -100,8 +100,8 @@ static void trg_pref_widget_refresh_all(TrgPreferencesDialog * dlg)
         trg_pref_widget_refresh(dlg, (trg_pref_widget_desc *) li->data);
 }
 
-static void trg_pref_widget_save(TrgPreferencesDialog * dlg,
-                                 trg_pref_widget_desc * wd)
+static void
+trg_pref_widget_save(TrgPreferencesDialog * dlg, trg_pref_widget_desc * wd)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
@@ -126,11 +126,11 @@ static void trg_pref_widget_save_all(TrgPreferencesDialog * dlg)
     trg_client_configunlock(priv->client);
 }
 
-static void trg_preferences_dialog_set_property(GObject * object,
-                                                guint prop_id,
-                                                const GValue * value,
-                                                GParamSpec *
-                                                pspec G_GNUC_UNUSED)
+static void
+trg_preferences_dialog_set_property(GObject * object,
+                                    guint prop_id,
+                                    const GValue * value,
+                                    GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
@@ -146,11 +146,13 @@ static void trg_preferences_dialog_set_property(GObject * object,
     }
 }
 
-static void trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
-                                        gpointer data G_GNUC_UNUSED)
+static void
+trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
+                            gpointer data G_GNUC_UNUSED)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
+    GList *li;
 
     if (res_id == GTK_RESPONSE_OK) {
         trg_pref_widget_save_all(TRG_PREFERENCES_DIALOG(dlg));
@@ -159,7 +161,6 @@ static void trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
 
     trg_main_window_reload_dir_aliases(priv->win);
 
-    GList *li;
     for (li = priv->widgets; li; li = g_list_next(li))
         trg_pref_widget_desc_free((trg_pref_widget_desc *) li->data);
     g_list_free(priv->widgets);
@@ -168,11 +169,11 @@ static void trg_preferences_response_cb(GtkDialog * dlg, gint res_id,
     instance = NULL;
 }
 
-static void trg_preferences_dialog_get_property(GObject * object,
-                                                guint prop_id,
-                                                GValue * value,
-                                                GParamSpec *
-                                                pspec G_GNUC_UNUSED)
+static void
+trg_preferences_dialog_get_property(GObject * object,
+                                    guint prop_id,
+                                    GValue * value,
+                                    GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(object);
@@ -191,6 +192,7 @@ static void entry_refresh(TrgPrefs * prefs, void *wdp)
 {
     trg_pref_widget_desc *wd = (trg_pref_widget_desc *) wdp;
     gchar *value = trg_prefs_get_string(prefs, wd->key, wd->flags);
+
     if (value) {
         gtk_entry_set_text(GTK_ENTRY(wd->widget), value);
         g_free(value);
@@ -202,6 +204,7 @@ static void entry_refresh(TrgPrefs * prefs, void *wdp)
 static void entry_save(TrgPrefs * prefs, void *wdp)
 {
     trg_pref_widget_desc *wd = (trg_pref_widget_desc *) wdp;
+
     trg_prefs_set_string(prefs, wd->key,
                          gtk_entry_get_text(GTK_ENTRY(wd->widget)),
                          wd->flags);
@@ -212,11 +215,9 @@ static GtkWidget *trgp_entry_new(TrgPreferencesDialog * dlg, gchar * key,
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
-    GtkWidget *w;
-
-    w = gtk_entry_new();
-
+    GtkWidget *w = gtk_entry_new();
     trg_pref_widget_desc *wd = trg_pref_widget_desc_new(w, key, flags);
+
     wd->saveFunc = &entry_save;
     wd->refreshFunc = &entry_refresh;
 
@@ -299,13 +300,11 @@ static GtkWidget *trgp_spin_new(TrgPreferencesDialog * dlg, gchar * key,
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
-    GtkWidget *w;
-
-    w = gtk_spin_button_new_with_range(low, high, step);
+    GtkWidget *w = gtk_spin_button_new_with_range(low, high, step);
+    trg_pref_widget_desc *wd = trg_pref_widget_desc_new(w, key, flags);
 
     gtk_spin_button_set_digits(GTK_SPIN_BUTTON(w), 0);
 
-    trg_pref_widget_desc *wd = trg_pref_widget_desc_new(w, key, flags);
     wd->saveFunc = &spin_save;
     wd->refreshFunc = &spin_refresh;
 
@@ -371,8 +370,8 @@ static void notebook_toggled_cb(GtkToggleButton * b, gpointer data)
                                          gtk_toggle_button_get_active(b));
 }
 
-static void trgp_double_special_dependent(GtkWidget * widget,
-                                          gpointer data)
+static void
+trgp_double_special_dependent(GtkWidget * widget, gpointer data)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(gtk_widget_get_toplevel
@@ -380,9 +379,8 @@ static void trgp_double_special_dependent(GtkWidget * widget,
     gtk_widget_set_sensitive(GTK_WIDGET(data),
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
                                                           (widget))
-                             &&
-                             gtk_widget_get_sensitive
-                             (priv->fullUpdateCheck)
+                             && gtk_widget_get_sensitive(priv->
+                                                         fullUpdateCheck)
                              &&
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
                                                           (priv->
@@ -451,16 +449,16 @@ static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)
 
 static void profile_changed_cb(GtkWidget * w, gpointer data)
 {
-    GtkTreeModel *model = gtk_combo_box_get_model(GTK_COMBO_BOX(w));
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(data);
+    GtkTreeModel *model = gtk_combo_box_get_model(GTK_COMBO_BOX(w));
+    gint n_children = gtk_tree_model_iter_n_children(model, NULL);
 
     GtkTreeIter iter;
     JsonObject *profile;
 
     trg_pref_widget_save_all(TRG_PREFERENCES_DIALOG(data));
 
-    gint n_children = gtk_tree_model_iter_n_children(model, NULL);
     if (gtk_combo_box_get_active_iter(GTK_COMBO_BOX(w), &iter)) {
         gtk_tree_model_get(model, &iter, 0, &profile, -1);
         trg_prefs_set_profile(priv->prefs, profile);
@@ -472,9 +470,9 @@ static void profile_changed_cb(GtkWidget * w, gpointer data)
     }
 }
 
-static void trg_prefs_profile_combo_populate(TrgPreferencesDialog * dialog,
-                                             GtkComboBox * combo,
-                                             TrgPrefs * prefs)
+static void
+trg_prefs_profile_combo_populate(TrgPreferencesDialog * dialog,
+                                 GtkComboBox * combo, TrgPrefs * prefs)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dialog);
@@ -758,7 +756,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     priv->profileNameEntry =
         trgp_entry_new(dlg, TRG_PREFS_KEY_PROFILE_NAME, TRG_PREFS_PROFILE);
 
-    w = priv->profileComboBox = trg_prefs_profile_combo_new(priv->client);
+    priv->profileComboBox = trg_prefs_profile_combo_new(priv->client);
     profileLabel = gtk_label_new(_("Profile: "));
 
     profileButtonsHbox = gtk_hbox_new(FALSE, 0);
@@ -767,12 +765,12 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
                      priv->profileComboBox);
     gtk_box_pack_start(GTK_BOX(profileButtonsHbox), w, FALSE, FALSE, 4);
 
-    w = priv->profileDelButton =
-        gtk_button_new_from_stock(GTK_STOCK_DELETE);
-    g_signal_connect(w, "clicked", G_CALLBACK(del_profile_cb),
-                     priv->profileComboBox);
-    gtk_widget_set_sensitive(w, FALSE);
-    gtk_box_pack_start(GTK_BOX(profileButtonsHbox), w, FALSE, FALSE, 4);
+    priv->profileDelButton = gtk_button_new_from_stock(GTK_STOCK_DELETE);
+    g_signal_connect(priv->profileDelButton, "clicked",
+                     G_CALLBACK(del_profile_cb), priv->profileComboBox);
+    gtk_widget_set_sensitive(priv->profileDelButton, FALSE);
+    gtk_box_pack_start(GTK_BOX(profileButtonsHbox), priv->profileDelButton,
+                       FALSE, FALSE, 4);
 
     trg_prefs_profile_combo_populate(dlg,
                                      GTK_COMBO_BOX(priv->profileComboBox),
@@ -827,8 +825,6 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     w = trgp_spin_new(dlg, TRG_PREFS_KEY_RETRIES, 0, 3600, 1,
                       TRG_PREFS_PROFILE, NULL);
     hig_workarea_add_row(t, &row, _("Retries:"), w, NULL);
-
-    //hig_workarea_add_section_divider(t, &row);
 
     frame = gtk_frame_new(NULL);
     frameHbox = gtk_hbox_new(FALSE, 2);
@@ -913,8 +909,8 @@ static void trg_preferences_dialog_init(TrgPreferencesDialog * pref_dlg)
 {
 }
 
-static void trg_preferences_dialog_class_init(TrgPreferencesDialogClass *
-                                              class)
+static void
+trg_preferences_dialog_class_init(TrgPreferencesDialogClass * class)
 {
     GObjectClass *g_object_class = (GObjectClass *) class;
 

@@ -27,10 +27,8 @@
 
 G_DEFINE_TYPE(TrgTorrentTreeView, trg_torrent_tree_view,
               TRG_TYPE_TREE_VIEW)
-
-static void
-trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass *
-                                 klass G_GNUC_UNUSED)
+static void trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass *
+                                             klass G_GNUC_UNUSED)
 {
 }
 

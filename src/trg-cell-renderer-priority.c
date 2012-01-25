@@ -44,8 +44,8 @@ struct _TrgCellRendererPriorityPrivate {
 
 static void
 trg_cell_renderer_priority_get_property(GObject * object,
-                                        guint property_id, GValue * value,
-                                        GParamSpec * pspec)
+                                        guint property_id,
+                                        GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererPriorityPrivate *priv =
         TRG_CELL_RENDERER_PRIORITY_GET_PRIVATE(object);

@@ -75,8 +75,8 @@ void trg_status_bar_reset(TrgStatusBar * sb)
     gtk_widget_set_visible(priv->turtleEventBox, FALSE);
 }
 
-static void turtle_toggle(GtkWidget * w, GdkEventButton * event,
-                          gpointer data)
+static void
+turtle_toggle(GtkWidget * w, GdkEventButton * event, gpointer data)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(data);
     JsonNode *req = session_set();
@@ -121,15 +121,16 @@ static void trg_status_bar_init(TrgStatusBar * self)
     gtk_box_pack_end(GTK_BOX(self), priv->free_lbl, FALSE, TRUE, 30);
 }
 
-void trg_status_bar_push_connection_msg(TrgStatusBar * sb,
-                                        const gchar * msg)
+void
+trg_status_bar_push_connection_msg(TrgStatusBar * sb, const gchar * msg)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), msg);
 }
 
-void trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session,
-                            TrgClient * client)
+void
+trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session,
+                       TrgClient * client)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     TrgPrefs *prefs = trg_client_get_prefs(client);
@@ -177,9 +178,10 @@ void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session)
     gtk_widget_set_visible(priv->turtleEventBox, TRUE);
 }
 
-void trg_status_bar_update_speed(TrgStatusBar * sb,
-                                 trg_torrent_model_update_stats * stats,
-                                 TrgClient * client)
+void
+trg_status_bar_update_speed(TrgStatusBar * sb,
+                            trg_torrent_model_update_stats * stats,
+                            TrgClient * client)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
     JsonObject *session = trg_client_get_session(client);
@@ -230,9 +232,10 @@ void trg_status_bar_update_speed(TrgStatusBar * sb,
     g_free(speedText);
 }
 
-void trg_status_bar_update(TrgStatusBar * sb,
-                           trg_torrent_model_update_stats * stats,
-                           TrgClient * client)
+void
+trg_status_bar_update(TrgStatusBar * sb,
+                      trg_torrent_model_update_stats * stats,
+                      TrgClient * client)
 {
     trg_status_bar_update_speed(sb, stats, client);
 }

@@ -116,8 +116,9 @@ static void trg_files_tree_update_ancestors(trg_files_tree_node * node)
     }
 }
 
-static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
-                           trg_files_tree_node * node)
+static void
+store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
+               trg_files_tree_node * node)
 {
     GtkTreeIter child;
     GList *li;
@@ -125,13 +126,14 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
     if (node->name) {
         gdouble progress =
             file_get_progress(node->length, node->bytesCompleted);
-        gtk_tree_store_append(store, &child, parent);
-        gtk_tree_store_set(store, &child, FILESCOL_WANTED, node->enabled,
-                           FILESCOL_PROGRESS, progress,
-                           FILESCOL_SIZE, node->length,
-                           FILESCOL_ID, node->index,
-                           FILESCOL_PRIORITY, node->priority,
-                           FILESCOL_NAME, node->name, -1);
+        gtk_tree_store_insert_with_values(store, &child, parent, INT_MAX,
+                                          FILESCOL_WANTED, node->enabled,
+                                          FILESCOL_PROGRESS, progress,
+                                          FILESCOL_SIZE, node->length,
+                                          FILESCOL_ID, node->index,
+                                          FILESCOL_PRIORITY,
+                                          node->priority, FILESCOL_NAME,
+                                          node->name, -1);
     }
 
     for (li = node->children; li; li = g_list_next(li))
@@ -139,12 +141,16 @@ static void store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
                        (trg_files_tree_node *) li->data);
 }
 
-static trg_files_tree_node
-    * trg_file_parser_node_insert(trg_files_tree_node * top,
-                                  trg_files_tree_node * last,
-                                  JsonObject * file, gint index,
-                                  JsonArray * enabled,
-                                  JsonArray * priorities)
+static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
+                                                        * top,
+                                                        trg_files_tree_node
+                                                        * last,
+                                                        JsonObject * file,
+                                                        gint index,
+                                                        JsonArray *
+                                                        enabled,
+                                                        JsonArray *
+                                                        priorities)
 {
     gchar **path = g_strsplit(file_get_name(file), "/", -1);
     trg_files_tree_node *lastIter = last;
@@ -236,12 +242,12 @@ void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept)
     priv->accept = accept;
 }
 
-static void trg_files_model_iter_update(TrgFilesModel * model,
-                                        GtkTreeIter * filesIter,
-                                        JsonObject * file,
-                                        JsonArray * wantedArray,
-                                        JsonArray * prioritiesArray,
-                                        gint id)
+static void
+trg_files_model_iter_update(TrgFilesModel * model,
+                            GtkTreeIter * filesIter,
+                            JsonObject * file,
+                            JsonArray * wantedArray,
+                            JsonArray * prioritiesArray, gint id)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     gint64 fileLength = file_get_length(file);
@@ -292,9 +298,10 @@ static void trg_files_model_init(TrgFilesModel * self)
                                     column_types);
 }
 
-gboolean trg_files_model_update_foreach(GtkListStore * model,
-                                        GtkTreePath * path G_GNUC_UNUSED,
-                                        GtkTreeIter * iter, GList * files)
+gboolean
+trg_files_model_update_foreach(GtkListStore * model,
+                               GtkTreePath * path G_GNUC_UNUSED,
+                               GtkTreeIter * iter, GList * files)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     JsonObject *file;
@@ -370,8 +377,9 @@ static gpointer trg_files_model_buildtree_threadfunc(gpointer data)
     return NULL;
 }
 
-void trg_files_model_update(TrgFilesModel * model, GtkTreeView * tv,
-                            gint64 updateSerial, JsonObject * t, gint mode)
+void
+trg_files_model_update(TrgFilesModel * model, GtkTreeView * tv,
+                       gint64 updateSerial, JsonObject * t, gint mode)
 {
     TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     JsonArray *files = torrent_get_files(t);

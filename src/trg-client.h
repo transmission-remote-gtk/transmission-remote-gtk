@@ -74,6 +74,8 @@ typedef struct {
     gpointer cb_data;
 } trg_request;
 
+typedef struct _TrgClientPrivate TrgClientPrivate;
+
 G_BEGIN_DECLS
 #define TRG_TYPE_CLIENT trg_client_get_type()
 #define TRG_CLIENT(obj) \
@@ -88,6 +90,7 @@ G_BEGIN_DECLS
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_CLIENT, TrgClientClass))
     typedef struct {
     GObject parent;
+    TrgClientPrivate *priv;
 } TrgClient;
 
 typedef struct {
@@ -160,4 +163,4 @@ void trg_client_inc_serial(TrgClient * tc);
 void trg_client_inc_connid(TrgClient * tc);
 
 G_END_DECLS
-#endif                          // _TRG_CLIENT_H_
+#endif                          /* _TRG_CLIENT_H_ */

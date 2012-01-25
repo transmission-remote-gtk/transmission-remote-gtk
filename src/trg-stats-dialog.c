@@ -114,8 +114,9 @@ static GtkTreeRowReference *stats_dialog_add_statistic(GtkListStore *
     return rr;
 }
 
-static void update_statistic(GtkTreeRowReference * rr, gchar * session,
-                             gchar * cumulat)
+static void
+update_statistic(GtkTreeRowReference * rr, gchar * session,
+                 gchar * cumulat)
 {
     GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
     GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);
@@ -139,8 +140,9 @@ static JsonObject *get_cumulat_arg(JsonObject * args)
     return json_object_get_object_member(args, "cumulative-stats");
 }
 
-static void update_int_stat(JsonObject * args, GtkTreeRowReference * rr,
-                            gchar * jsonKey)
+static void
+update_int_stat(JsonObject * args, GtkTreeRowReference * rr,
+                gchar * jsonKey)
 {
     gchar session_val[32];
     gchar cumulat_val[32];
@@ -153,8 +155,9 @@ static void update_int_stat(JsonObject * args, GtkTreeRowReference * rr,
     update_statistic(rr, session_val, cumulat_val);
 }
 
-static void update_size_stat(JsonObject * args, GtkTreeRowReference * rr,
-                             gchar * jsonKey)
+static void
+update_size_stat(JsonObject * args, GtkTreeRowReference * rr,
+                 gchar * jsonKey)
 {
     gchar session_val[32];
     gchar cumulat_val[32];
@@ -169,8 +172,9 @@ static void update_size_stat(JsonObject * args, GtkTreeRowReference * rr,
     update_statistic(rr, session_val, cumulat_val);
 }
 
-static void update_time_stat(JsonObject * args, GtkTreeRowReference * rr,
-                             gchar * jsonKey)
+static void
+update_time_stat(JsonObject * args, GtkTreeRowReference * rr,
+                 gchar * jsonKey)
 {
     gchar session_val[32];
     gchar cumulat_val[32];
@@ -192,6 +196,7 @@ static gboolean on_stats_reply(gpointer data)
     trg_response *response = (trg_response *) data;
     TrgStatsDialogPrivate *priv;
     JsonObject *args;
+    char versionStr[32];
 
     if (!TRG_IS_STATS_DIALOG(response->cb_data)) {
         trg_response_free(response);
@@ -203,7 +208,6 @@ static gboolean on_stats_reply(gpointer data)
     if (response->status == CURLE_OK) {
         args = get_arguments(response->obj);
 
-        char versionStr[32];
         g_snprintf(versionStr, sizeof(versionStr), "Transmission %s",
                    trg_client_get_version_string(priv->client));
         update_statistic(priv->rr_version, versionStr, "");
@@ -240,8 +244,9 @@ static gboolean trg_update_stats_timerfunc(gpointer data)
     return FALSE;
 }
 
-static void trg_stats_add_column(GtkTreeView * tv, gint index,
-                                 gchar * title, gint width)
+static void
+trg_stats_add_column(GtkTreeView * tv, gint index, gchar * title,
+                     gint width)
 {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     GtkTreeViewColumn *column =
@@ -256,8 +261,8 @@ static void trg_stats_add_column(GtkTreeView * tv, gint index,
 static GObject *trg_stats_dialog_constructor(GType type,
                                              guint
                                              n_construct_properties,
-                                             GObjectConstructParam
-                                             * construct_params)
+                                             GObjectConstructParam *
+                                             construct_params)
 {
     GtkWidget *tv;
 

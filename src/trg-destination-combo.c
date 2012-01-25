@@ -58,10 +58,10 @@ static void trg_destination_combo_finalize(GObject * object)
     g_free(priv->last_selection);
 }
 
-static void trg_destination_combo_get_property(GObject * object,
-                                               guint property_id,
-                                               GValue * value,
-                                               GParamSpec * pspec)
+static void
+trg_destination_combo_get_property(GObject * object,
+                                   guint property_id,
+                                   GValue * value, GParamSpec * pspec)
 {
     TrgDestinationComboPrivate *priv =
         TRG_DESTINATION_COMBO_GET_PRIVATE(object);
@@ -78,10 +78,11 @@ static void trg_destination_combo_get_property(GObject * object,
     }
 }
 
-static void trg_destination_combo_set_property(GObject * object,
-                                               guint property_id,
-                                               const GValue * value,
-                                               GParamSpec * pspec)
+static void
+trg_destination_combo_set_property(GObject * object,
+                                   guint property_id,
+                                   const GValue * value,
+                                   GParamSpec * pspec)
 {
     TrgDestinationComboPrivate *priv =
         TRG_DESTINATION_COMBO_GET_PRIVATE(object);
@@ -118,8 +119,8 @@ void trg_destination_combo_save_selection(TrgDestinationCombo * combo_box)
     GtkTreeIter iter;
 
     if (priv->last_selection
-        && gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combo_box),
-                                         &iter)) {
+        && gtk_combo_box_get_active_iter(GTK_COMBO_BOX(combo_box), &iter))
+    {
         GtkTreeModel *model =
             gtk_combo_box_get_model(GTK_COMBO_BOX(combo_box));
         TrgPrefs *prefs = trg_client_get_prefs(priv->client);
@@ -132,8 +133,9 @@ void trg_destination_combo_save_selection(TrgDestinationCombo * combo_box)
     }
 }
 
-static void gtk_combo_box_entry_active_changed(GtkComboBox * combo_box,
-                                               gpointer user_data)
+static void
+gtk_combo_box_entry_active_changed(GtkComboBox * combo_box,
+                                   gpointer user_data)
 {
     GtkTreeModel *model;
     GtkTreeIter iter;
@@ -188,9 +190,10 @@ GtkEntry *trg_destination_combo_get_entry(TrgDestinationCombo * combo)
     return GTK_ENTRY(priv->entry);
 }
 
-static void add_entry_cb(GtkEntry * entry,
-                         GtkEntryIconPosition icon_pos,
-                         GdkEvent * event, gpointer user_data)
+static void
+add_entry_cb(GtkEntry * entry,
+             GtkEntryIconPosition icon_pos,
+             GdkEvent * event, gpointer user_data)
 {
     GtkComboBox *combo = GTK_COMBO_BOX(user_data);
     GtkTreeModel *model = gtk_combo_box_get_model(combo);
@@ -222,10 +225,11 @@ trg_destination_combo_insert_check_dupe_foreach(GtkTreeModel * model,
     return args->isDupe;
 }
 
-static void trg_destination_combo_insert(GtkComboBox * box,
-                                         const gchar * label,
-                                         const gchar * dir, guint type,
-                                         const gchar * lastDestination)
+static void
+trg_destination_combo_insert(GtkComboBox * box,
+                             const gchar * label,
+                             const gchar * dir, guint type,
+                             const gchar * lastDestination)
 {
     GtkTreeModel *model = gtk_combo_box_get_model(box);
     gchar *comboLabel;
@@ -281,7 +285,7 @@ static GObject *trg_destination_combo_constructor(GType type,
     GtkListStore *comboModel;
     JsonArray *savedDestinations;
     gchar *defaultDir;
-    const gchar *lastDestination = NULL;
+    gchar *lastDestination = NULL;
 
     comboModel = gtk_list_store_new(N_DEST_COLUMNS, G_TYPE_STRING,
                                     G_TYPE_STRING, G_TYPE_UINT);
@@ -326,8 +330,8 @@ static GObject *trg_destination_combo_constructor(GType type,
 
     trg_destination_combo_insert(GTK_COMBO_BOX(object),
                                  NULL,
-                                 defaultDir,
-                                 DEST_DEFAULT, lastDestination);
+                                 defaultDir, DEST_DEFAULT,
+                                 lastDestination);
     gtk_combo_box_set_active(GTK_COMBO_BOX(object), 0);
 
     if (savedDestinations) {
@@ -384,6 +388,7 @@ static GObject *trg_destination_combo_constructor(GType type,
 
     g_list_free(list);
     g_free(defaultDir);
+    g_free(lastDestination);
 
     return object;
 }
@@ -410,8 +415,8 @@ gchar *trg_destination_combo_get_dir(TrgDestinationCombo * combo)
                  (trg_destination_combo_get_entry(combo)));
 }
 
-static void trg_destination_combo_class_init(TrgDestinationComboClass *
-                                             klass)
+static void
+trg_destination_combo_class_init(TrgDestinationComboClass * klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 

@@ -72,10 +72,11 @@ static void trg_cell_renderer_counter_refresh(TrgCellRendererCounter * cr)
     }
 }
 
-static void trg_cell_renderer_counter_set_property(GObject * object,
-                                                   guint property_id,
-                                                   const GValue * value,
-                                                   GParamSpec * pspec)
+static void
+trg_cell_renderer_counter_set_property(GObject * object,
+                                       guint property_id,
+                                       const GValue * value,
+                                       GParamSpec * pspec)
 {
     TrgCellRendererCounterPrivate *priv =
         TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(object);
@@ -102,8 +103,8 @@ static void trg_cell_renderer_counter_dispose(GObject * object)
     TrgCellRendererCounterPrivate *priv =
         TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(object);
     g_free(priv->originalLabel);
-    G_OBJECT_CLASS(trg_cell_renderer_counter_parent_class)->dispose
-        (object);
+    G_OBJECT_CLASS(trg_cell_renderer_counter_parent_class)->
+        dispose(object);
 }
 
 static void

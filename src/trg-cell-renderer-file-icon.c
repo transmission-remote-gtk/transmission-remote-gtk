@@ -47,7 +47,8 @@ struct _TrgCellRendererFileIconPrivate {
 
 static void
 trg_cell_renderer_file_icon_get_property(GObject * object,
-                                         guint property_id, GValue * value,
+                                         guint property_id,
+                                         GValue * value,
                                          GParamSpec * pspec)
 {
     TrgCellRendererFileIconPrivate *priv =
@@ -62,8 +63,8 @@ trg_cell_renderer_file_icon_get_property(GObject * object,
     }
 }
 
-static void trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon *
-                                                fi)
+static void
+trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon * fi)
 {
     TrgCellRendererFileIconPrivate *priv =
         TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(fi);
@@ -125,8 +126,8 @@ static void trg_cell_renderer_file_icon_dispose(GObject * object)
     TrgCellRendererFileIconPrivate *priv =
         TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(object);
     g_free(priv->text);
-    G_OBJECT_CLASS(trg_cell_renderer_file_icon_parent_class)->dispose
-        (object);
+    G_OBJECT_CLASS(trg_cell_renderer_file_icon_parent_class)->
+        dispose(object);
 }
 
 static void
@@ -173,8 +174,8 @@ trg_cell_renderer_file_icon_class_init(TrgCellRendererFileIconClass *
                              sizeof(TrgCellRendererFileIconPrivate));
 }
 
-static void trg_cell_renderer_file_icon_init(TrgCellRendererFileIcon *
-                                             self)
+static void
+trg_cell_renderer_file_icon_init(TrgCellRendererFileIcon * self)
 {
 }
 

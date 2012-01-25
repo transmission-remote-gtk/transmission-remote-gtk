@@ -77,13 +77,14 @@
 #define TRG_PREFS_KEY_LAST_ADD_DESTINATION "last-add-destination"
 #define TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR "dir"
 
-
 #define TRG_PREFS_NOFLAGS    (1 << 0)   /* 0x00 */
 #define TRG_PREFS_GLOBAL     (1 << 1)   /* 0x01 */
 #define TRG_PREFS_PROFILE    (1 << 2)   /* 0x02 */
 #define TRG_PREFS_CONNECTION (1 << 3)   /* 0x04 */
 #define TRG_PREFS_NEWNODE    (1 << 4)   /* 0x08 */
 #define TRG_PREFS_REPLACENODE (1 << 5)  /* 0x16 */
+
+typedef struct _TrgPrefsPrivate TrgPrefsPrivate;
 
 G_BEGIN_DECLS
 #define TRG_TYPE_PREFS trg_prefs_get_type()
@@ -99,6 +100,7 @@ G_BEGIN_DECLS
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_PREFS, TrgPrefsClass))
     typedef struct {
     GObject parent;
+    TrgPrefsPrivate *priv;
 } TrgPrefs;
 
 typedef struct {

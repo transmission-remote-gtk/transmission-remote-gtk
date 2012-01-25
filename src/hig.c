@@ -33,8 +33,8 @@ void hig_workarea_add_section_divider(GtkWidget * t, int *row)
 }
 
 void
-hig_workarea_add_section_title_widget(GtkWidget * t,
-                                      int *row, GtkWidget * w)
+hig_workarea_add_section_title_widget(GtkWidget * t, int *row,
+                                      GtkWidget * w)
 {
     gtk_table_attach(GTK_TABLE(t), w, 0, 2, *row, *row + 1, ~0, 0, 0, 0);
     ++*row;
@@ -115,8 +115,8 @@ void hig_workarea_add_label_w(GtkWidget * t, int row, GtkWidget * l)
                      GTK_FILL, 0, 0);
 }
 
-GtkWidget *hig_workarea_add_label(GtkWidget * t,
-                                  int row, const char *mnemonic_string)
+GtkWidget *hig_workarea_add_label(GtkWidget * t, int row,
+                                  const char *mnemonic_string)
 {
     GtkWidget *l = gtk_label_new_with_mnemonic(mnemonic_string);
 

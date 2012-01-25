@@ -37,9 +37,6 @@
  */
 
 G_DEFINE_TYPE(TrgPrefs, trg_prefs, G_TYPE_OBJECT)
-#define GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_PREFS, TrgPrefsPrivate))
-typedef struct _TrgPrefsPrivate TrgPrefsPrivate;
 
 struct _TrgPrefsPrivate {
     JsonObject *defaultsObj;
@@ -68,8 +65,9 @@ void trg_prefs_changed_emit_signal(TrgPrefs * p, const gchar * key)
     g_signal_emit(p, signals[PREF_CHANGE], 0, key);
 }
 
-static void trg_prefs_get_property(GObject * object, guint property_id,
-                                   GValue * value, GParamSpec * pspec)
+static void
+trg_prefs_get_property(GObject * object, guint property_id,
+                       GValue * value, GParamSpec * pspec)
 {
     switch (property_id) {
     default:
@@ -78,9 +76,9 @@ static void trg_prefs_get_property(GObject * object, guint property_id,
     }
 }
 
-static void trg_prefs_set_property(GObject * object, guint property_id,
-                                   const GValue * value,
-                                   GParamSpec * pspec)
+static void
+trg_prefs_set_property(GObject * object, guint property_id,
+                       const GValue * value, GParamSpec * pspec)
 {
     switch (property_id) {
     default:
@@ -96,7 +94,7 @@ static void trg_prefs_dispose(GObject * object)
 
 static void trg_prefs_create_defaults(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     priv->defaultsObj = json_object_new();
 
     trg_prefs_add_default_string(p, TRG_PREFS_KEY_PROFILE_NAME,
@@ -124,15 +122,13 @@ static GObject *trg_prefs_constructor(GType type,
                                       GObjectConstructParam *
                                       construct_params)
 {
-    GObject *object;
-    TrgPrefsPrivate *priv;
+    GObject *object = G_OBJECT_CLASS
+            (trg_prefs_parent_class)->constructor(type, n_construct_properties,
+                                                  construct_params);
+    TrgPrefs *prefs = TRG_PREFS(object);
+    TrgPrefsPrivate *priv = prefs->priv;
 
-    object = G_OBJECT_CLASS
-        (trg_prefs_parent_class)->constructor(type, n_construct_properties,
-                                              construct_params);
-    priv = GET_PRIVATE(object);
-
-    trg_prefs_create_defaults(TRG_PREFS(object));
+    trg_prefs_create_defaults(prefs);
 
     priv->file = g_build_filename(g_get_user_config_dir(),
                                   g_get_application_name(),
@@ -172,6 +168,7 @@ static void trg_prefs_class_init(TrgPrefsClass * klass)
 
 static void trg_prefs_init(TrgPrefs * self)
 {
+    self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TRG_TYPE_PREFS, TrgPrefsPrivate);
 }
 
 TrgPrefs *trg_prefs_new(void)
@@ -181,40 +178,43 @@ TrgPrefs *trg_prefs_new(void)
 
 static JsonObject *trg_prefs_new_profile_object()
 {
-    JsonObject *obj = json_object_new();
-    return obj;
+    return json_object_new();
 }
 
 void trg_prefs_add_default_int(TrgPrefs * p, const gchar * key, int value)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
+
     json_object_set_int_member(priv->defaultsObj, key, value);
 }
 
-void trg_prefs_add_default_string(TrgPrefs * p, const gchar * key,
-                                  gchar * value)
+void
+trg_prefs_add_default_string(TrgPrefs * p, const gchar * key,
+                             gchar * value)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
+
     json_object_set_string_member(priv->defaultsObj, key, value);
 }
 
-void trg_prefs_add_default_double(TrgPrefs * p, const gchar * key,
-                                  double value)
+void
+trg_prefs_add_default_double(TrgPrefs * p, const gchar * key, double value)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
+
     json_object_set_double_member(priv->defaultsObj, key, value);
 }
 
 /* Not much point adding a default of FALSE, as that's the fallback */
 void trg_prefs_add_default_bool_true(TrgPrefs * p, const gchar * key)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     json_object_set_boolean_member(priv->defaultsObj, key, TRUE);
 }
 
 gint trg_prefs_get_profile_id(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     return (gint) json_object_get_int_member(priv->userObj,
                                              TRG_PREFS_KEY_PROFILE_ID);
 }
@@ -242,7 +242,7 @@ static JsonNode *trg_prefs_get_value_inner(JsonObject * obj,
 JsonNode *trg_prefs_get_value(TrgPrefs * p, const gchar * key, int type,
                               int flags)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     JsonNode *res;
 
     if (priv->profile && (flags & TRG_PREFS_PROFILE)) {
@@ -269,7 +269,7 @@ JsonNode *trg_prefs_get_value(TrgPrefs * p, const gchar * key, int type,
 
 void trg_prefs_set_connection(TrgPrefs * p, JsonObject * profile)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
 
     if (priv->connectionObj)
         json_object_unref(priv->connectionObj);
@@ -283,6 +283,7 @@ void trg_prefs_set_connection(TrgPrefs * p, JsonObject * profile)
 gchar *trg_prefs_get_string(TrgPrefs * p, const gchar * key, int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags);
+
     if (node)
         return g_strdup(json_node_get_string(node));
     else
@@ -292,6 +293,7 @@ gchar *trg_prefs_get_string(TrgPrefs * p, const gchar * key, int flags)
 JsonArray *trg_prefs_get_array(TrgPrefs * p, const gchar * key, int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_ARRAY, flags);
+
     if (node)
         return json_node_get_array(node);
     else
@@ -301,6 +303,7 @@ JsonArray *trg_prefs_get_array(TrgPrefs * p, const gchar * key, int flags)
 gint64 trg_prefs_get_int(TrgPrefs * p, const gchar * key, int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags);
+
     if (node)
         return json_node_get_int(node);
     else
@@ -319,23 +322,26 @@ gdouble trg_prefs_get_double(TrgPrefs * p, const gchar * key, int flags)
 gboolean trg_prefs_get_bool(TrgPrefs * p, const gchar * key, int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags);
+
     if (node)
         return json_node_get_boolean(node);
     else
         return FALSE;
 }
 
-void trg_prefs_set_int(TrgPrefs * p, const gchar * key, int value,
-                       int flags)
+void
+trg_prefs_set_int(TrgPrefs * p, const gchar * key, int value, int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE,
                                          flags | TRG_PREFS_NEWNODE);
+
     json_node_set_int(node, (gint64) value);
     trg_prefs_changed_emit_signal(p, key);
 }
 
-void trg_prefs_set_string(TrgPrefs * p, const gchar * key,
-                          const gchar * value, int flags)
+void
+trg_prefs_set_string(TrgPrefs * p, const gchar * key,
+                     const gchar * value, int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE,
                                          flags | TRG_PREFS_NEWNODE);
@@ -345,12 +351,12 @@ void trg_prefs_set_string(TrgPrefs * p, const gchar * key,
 
 void trg_prefs_set_profile(TrgPrefs * p, JsonObject * profile)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     GList *profiles = json_array_get_elements(trg_prefs_get_profiles(p));
-    priv->profile = profile;
-
-    GList *li;
     gint i = 0;
+    GList *li;
+
+    priv->profile = profile;
 
     for (li = profiles; li; li = g_list_next(li)) {
         if (json_node_get_object((JsonNode *) li->data) == profile) {
@@ -371,7 +377,9 @@ JsonObject *trg_prefs_new_profile(TrgPrefs * p)
 {
     JsonArray *profiles = trg_prefs_get_profiles(p);
     JsonObject *newp = trg_prefs_new_profile_object();
+
     json_array_add_object_element(profiles, newp);
+
     return newp;
 }
 
@@ -386,7 +394,7 @@ void trg_prefs_del_profile(TrgPrefs * p, JsonObject * profile)
 
     for (li = profilesList; li; li = g_list_next(li)) {
         node = (JsonNode *) li->data;
-        if (profile == (gpointer) json_node_get_object(node)) {
+        if (profile == json_node_get_object(node)) {
             json_array_remove_element(profiles, i);
             break;
         }
@@ -400,25 +408,26 @@ void trg_prefs_del_profile(TrgPrefs * p, JsonObject * profile)
 
 JsonObject *trg_prefs_get_profile(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     return priv->profile;
 }
 
 JsonObject *trg_prefs_get_connection(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     return priv->connectionObj;
 }
 
 JsonArray *trg_prefs_get_profiles(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     return json_object_get_array_member(priv->userObj,
                                         TRG_PREFS_KEY_PROFILES);
 }
 
-void trg_prefs_set_double(TrgPrefs * p, const gchar * key, gdouble value,
-                          int flags)
+void
+trg_prefs_set_double(TrgPrefs * p, const gchar * key, gdouble value,
+                     int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE,
                                          flags | TRG_PREFS_NEWNODE);
@@ -426,8 +435,9 @@ void trg_prefs_set_double(TrgPrefs * p, const gchar * key, gdouble value,
     trg_prefs_changed_emit_signal(p, key);
 }
 
-void trg_prefs_set_bool(TrgPrefs * p, const gchar * key, gboolean value,
-                        int flags)
+void
+trg_prefs_set_bool(TrgPrefs * p, const gchar * key, gboolean value,
+                   int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE,
                                          flags | TRG_PREFS_NEWNODE);
@@ -437,7 +447,7 @@ void trg_prefs_set_bool(TrgPrefs * p, const gchar * key, gboolean value,
 
 gboolean trg_prefs_save(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     JsonGenerator *gen = json_generator_new();
     gchar *dirName;
     gboolean success = TRUE;
@@ -477,20 +487,21 @@ gboolean trg_prefs_save(TrgPrefs * p)
 
 JsonObject *trg_prefs_get_root(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     return priv->userObj;
 }
 
 void trg_prefs_empty_init(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
+    JsonArray *profiles = json_array_new();
+
     priv->user = json_node_new(JSON_NODE_OBJECT);
     priv->userObj = json_object_new();
     json_node_take_object(priv->user, priv->userObj);
 
     priv->profile = trg_prefs_new_profile_object();
 
-    JsonArray *profiles = json_array_new();
     json_array_add_object_element(profiles, priv->profile);
     json_object_set_array_member(priv->userObj, TRG_PREFS_KEY_PROFILES,
                                  profiles);
@@ -500,7 +511,7 @@ void trg_prefs_empty_init(TrgPrefs * p)
 
 void trg_prefs_load(TrgPrefs * p)
 {
-    TrgPrefsPrivate *priv = GET_PRIVATE(p);
+    TrgPrefsPrivate *priv = p->priv;
     JsonParser *parser = json_parser_new();
     JsonNode *root;
     guint n_profiles;

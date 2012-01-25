@@ -48,7 +48,6 @@
 
 G_DEFINE_TYPE(TrgTorrentPropsDialog, trg_torrent_props_dialog,
               GTK_TYPE_DIALOG)
-
 enum {
     PROP_0,
     PROP_TREEVIEW,
@@ -58,7 +57,8 @@ enum {
 
 #define TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_TORRENT_PROPS_DIALOG, TrgTorrentPropsDialogPrivate))
-typedef struct _TrgTorrentPropsDialogPrivate TrgTorrentPropsDialogPrivate;
+typedef struct _TrgTorrentPropsDialogPrivate
+ TrgTorrentPropsDialogPrivate;
 
 struct _TrgTorrentPropsDialogPrivate {
     TrgTorrentTreeView *tv;

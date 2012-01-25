@@ -32,9 +32,10 @@ struct SubtreeForeachData {
     GtkTreePath *path;
 };
 
-static void set_wanted_foreachfunc(GtkTreeModel * model,
-                                   GtkTreePath * path G_GNUC_UNUSED,
-                                   GtkTreeIter * iter, gpointer data)
+static void
+set_wanted_foreachfunc(GtkTreeModel * model,
+                       GtkTreePath * path G_GNUC_UNUSED,
+                       GtkTreeIter * iter, gpointer data)
 {
     struct SubtreeForeachData *args = (struct SubtreeForeachData *) data;
 
@@ -45,9 +46,10 @@ static void set_wanted_foreachfunc(GtkTreeModel * model,
                                      args->new_value);
 }
 
-static void set_priority_foreachfunc(GtkTreeModel * model,
-                                     GtkTreePath * path,
-                                     GtkTreeIter * iter, gpointer data)
+static void
+set_priority_foreachfunc(GtkTreeModel * model,
+                         GtkTreePath * path,
+                         GtkTreeIter * iter, gpointer data)
 {
     struct SubtreeForeachData *args = (struct SubtreeForeachData *) data;
     GValue value = { 0 };
@@ -62,8 +64,8 @@ static void set_priority_foreachfunc(GtkTreeModel * model,
                                      args->new_value);
 }
 
-void trg_files_model_set_wanted(GtkTreeView * tv, gint column,
-                                gint new_value)
+void
+trg_files_model_set_wanted(GtkTreeView * tv, gint column, gint new_value)
 {
     struct SubtreeForeachData args;
     GtkTreeSelection *selection = gtk_tree_view_get_selection(tv);
@@ -75,8 +77,9 @@ void trg_files_model_set_wanted(GtkTreeView * tv, gint column,
                                         &args);
 }
 
-void trg_files_tree_model_set_priority(GtkTreeView * tv, gint column,
-                                       gint new_value)
+void
+trg_files_tree_model_set_priority(GtkTreeView * tv, gint column,
+                                  gint new_value)
 {
     struct SubtreeForeachData args;
     GtkTreeSelection *selection = gtk_tree_view_get_selection(tv);
@@ -89,8 +92,9 @@ void trg_files_tree_model_set_priority(GtkTreeView * tv, gint column,
 
 }
 
-static gboolean setSubtreeForeach(GtkTreeModel * model, GtkTreePath * path,
-                                  GtkTreeIter * iter, gpointer gdata)
+static gboolean
+setSubtreeForeach(GtkTreeModel * model, GtkTreePath * path,
+                  GtkTreeIter * iter, gpointer gdata)
 {
     struct SubtreeForeachData *data = gdata;
 
@@ -108,9 +112,10 @@ static gboolean setSubtreeForeach(GtkTreeModel * model, GtkTreePath * path,
     return FALSE;               /* keep walking */
 }
 
-void trg_files_tree_model_propogate_change_up(GtkTreeModel * model,
-                                              GtkTreeIter * iter,
-                                              gint column, gint new_value)
+void
+trg_files_tree_model_propogate_change_up(GtkTreeModel * model,
+                                         GtkTreeIter * iter,
+                                         gint column, gint new_value)
 {
     GtkTreeIter back_iter = *iter;
     gint result = new_value;
@@ -146,10 +151,11 @@ void trg_files_tree_model_propogate_change_up(GtkTreeModel * model,
     }
 }
 
-void trg_files_tree_model_set_subtree(GtkTreeModel * model,
-                                      GtkTreePath * path,
-                                      GtkTreeIter * iter, gint column,
-                                      gint new_value)
+void
+trg_files_tree_model_set_subtree(GtkTreeModel * model,
+                                 GtkTreePath * path,
+                                 GtkTreeIter * iter, gint column,
+                                 gint new_value)
 {
     GtkTreeIter back_iter = *iter;
 
@@ -170,8 +176,9 @@ void trg_files_tree_model_set_subtree(GtkTreeModel * model,
                                              new_value);
 }
 
-void trg_files_model_update_parents(GtkTreeModel * model,
-                                    GtkTreeIter * iter, gint size_column)
+void
+trg_files_model_update_parents(GtkTreeModel * model,
+                               GtkTreeIter * iter, gint size_column)
 {
     GtkTreeIter back_iter = *iter;
     GtkTreeIter tmp_iter;
@@ -187,5 +194,6 @@ void trg_files_model_update_parents(GtkTreeModel * model,
         gtk_tree_store_set(GTK_TREE_STORE(model), &tmp_iter, size_column,
                            size + oldSize, -1);
         back_iter = tmp_iter;
-    } while (gtk_tree_model_iter_parent(model, &tmp_iter, &back_iter));
+    }
+    while (gtk_tree_model_iter_parent(model, &tmp_iter, &back_iter));
 }

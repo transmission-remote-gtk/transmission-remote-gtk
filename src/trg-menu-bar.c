@@ -130,7 +130,6 @@ void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
 
     gtk_widget_set_sensitive(priv->mb_add, connected);
     gtk_widget_set_sensitive(priv->mb_add_url, connected);
-    //gtk_widget_set_sensitive(priv->mb_connect, !connected);
     gtk_widget_set_sensitive(priv->mb_disconnect, connected);
     gtk_widget_set_sensitive(priv->mb_remote_prefs, connected);
     gtk_widget_set_sensitive(priv->mb_view_stats, connected);
@@ -138,8 +137,8 @@ void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
     gtk_widget_set_sensitive(priv->mb_pause_all, connected);
 }
 
-void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
-                                            gboolean sensitive)
+void
+trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb, gboolean sensitive)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(mb);
 
@@ -158,9 +157,10 @@ void trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb,
     gtk_widget_set_sensitive(priv->mb_bottom_queue, sensitive);
 }
 
-static void trg_menu_bar_set_property(GObject * object,
-                                      guint prop_id, const GValue * value,
-                                      GParamSpec * pspec G_GNUC_UNUSED)
+static void
+trg_menu_bar_set_property(GObject * object,
+                          guint prop_id, const GValue * value,
+                          GParamSpec * pspec G_GNUC_UNUSED)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(object);
 
@@ -315,8 +315,9 @@ GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, const gchar * text,
     return item;
 }
 
-static void trg_menu_bar_accel_add(TrgMenuBar * menu, GtkWidget * item,
-                                   guint key, GdkModifierType mods)
+static void
+trg_menu_bar_accel_add(TrgMenuBar * menu, GtkWidget * item,
+                       guint key, GdkModifierType mods)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menu);
 
@@ -334,16 +335,17 @@ static void view_menu_item_toggled_cb(GtkCheckMenuItem * w, gpointer data)
                        TRG_PREFS_GLOBAL);
 }
 
-static void view_menu_bar_toggled_dependency_cb(GtkCheckMenuItem * w,
-                                                gpointer data)
+static void
+view_menu_bar_toggled_dependency_cb(GtkCheckMenuItem * w, gpointer data)
 {
     gtk_widget_set_sensitive(GTK_WIDGET(data),
                              gtk_check_menu_item_get_active
                              (GTK_CHECK_MENU_ITEM(w)));
 }
 
-static void trg_menu_bar_view_item_update(TrgPrefs * p, gchar * updatedKey,
-                                          gpointer data)
+static void
+trg_menu_bar_view_item_update(TrgPrefs * p, gchar * updatedKey,
+                              gpointer data)
 {
     gchar *key =
         (gchar *) g_object_get_data(G_OBJECT(data), G_DATAKEY_CONF_KEY);
@@ -439,8 +441,7 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
     return view;
 }
 
-static
-GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBar * menu)
+static GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBar * menu)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menu);
 
@@ -465,11 +466,11 @@ GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBar * menu)
     return opts;
 }
 
-static void trg_menu_bar_file_connect_item_new(TrgMainWindow * win,
-                                               GtkMenuShell * shell,
-                                               const gchar * text,
-                                               gboolean checked,
-                                               JsonObject * profile)
+static void
+trg_menu_bar_file_connect_item_new(TrgMainWindow * win,
+                                   GtkMenuShell * shell,
+                                   const gchar * text,
+                                   gboolean checked, JsonObject * profile)
 {
     GtkWidget *item = gtk_check_menu_item_new_with_label(text);
 
@@ -513,8 +514,7 @@ GtkWidget *trg_menu_bar_file_connect_menu_new(TrgMainWindow * win,
     return menu;
 }
 
-static
-GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBar * menu)
+static GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBar * menu)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menu);
 
@@ -556,8 +556,7 @@ GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBar * menu)
     return file;
 }
 
-static
-GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar * menu)
+static GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar * menu)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menu);
     GtkWidget *torrent = gtk_menu_item_new_with_mnemonic(_("_Torrent"));
@@ -657,8 +656,7 @@ GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar * menu)
     return torrent;
 }
 
-static
-GtkWidget *trg_menu_bar_help_menu_new(TrgMenuBar * menuBar)
+static GtkWidget *trg_menu_bar_help_menu_new(TrgMenuBar * menuBar)
 {
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(menuBar);
 

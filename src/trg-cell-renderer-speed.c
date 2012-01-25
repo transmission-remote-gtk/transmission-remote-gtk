@@ -39,7 +39,8 @@ struct _TrgCellRendererSpeedPrivate {
 };
 
 static void
-trg_cell_renderer_speed_get_property(GObject * object, guint property_id,
+trg_cell_renderer_speed_get_property(GObject * object,
+                                     guint property_id,
                                      GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererSpeedPrivate *priv =

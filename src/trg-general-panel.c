@@ -102,8 +102,9 @@ static void trg_general_panel_class_init(TrgGeneralPanelClass * klass)
     g_type_class_add_private(klass, sizeof(TrgGeneralPanelPrivate));
 }
 
-void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
-                              GtkTreeIter * iter)
+void
+trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
+                         GtkTreeIter * iter)
 {
     TrgGeneralPanelPrivate *priv;
     gchar buf[32];

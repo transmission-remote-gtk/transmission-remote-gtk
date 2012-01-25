@@ -33,7 +33,8 @@ G_DEFINE_TYPE(TrgPersistentTreeView, trg_persistent_tree_view,
               GTK_TYPE_VBOX)
 #define GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeViewPrivate))
-typedef struct _TrgPersistentTreeViewPrivate TrgPersistentTreeViewPrivate;
+typedef struct _TrgPersistentTreeViewPrivate
+ TrgPersistentTreeViewPrivate;
 
 enum {
     PROP_0, PROP_PREFS, PROP_KEY, PROP_MODEL
@@ -61,9 +62,10 @@ static void selection_changed(GtkTreeSelection * selection, gpointer data)
         gtk_widget_set_sensitive(priv->delButton, FALSE);
 }
 
-static void trg_persistent_tree_view_edit(GtkCellRendererText * renderer,
-                                          gchar * path, gchar * new_text,
-                                          gpointer user_data)
+static void
+trg_persistent_tree_view_edit(GtkCellRendererText * renderer,
+                              gchar * path, gchar * new_text,
+                              gpointer user_data)
 {
     trg_persistent_tree_view_column *cd =
         (trg_persistent_tree_view_column *) user_data;
@@ -112,13 +114,13 @@ static void trg_persistent_tree_view_refresh(TrgPrefs * prefs, void *wdp)
     g_list_free(ja_list);
 }
 
-static gboolean trg_persistent_tree_view_save_foreachfunc(GtkTreeModel *
-                                                          model,
-                                                          GtkTreePath *
-                                                          path,
-                                                          GtkTreeIter *
-                                                          iter,
-                                                          gpointer data)
+static gboolean
+trg_persistent_tree_view_save_foreachfunc(GtkTreeModel *
+                                          model,
+                                          GtkTreePath *
+                                          path,
+                                          GtkTreeIter * iter,
+                                          gpointer data)
 {
     TrgPersistentTreeViewPrivate *priv = GET_PRIVATE(data);
     JsonObject *new = json_object_new();
@@ -145,8 +147,8 @@ static void trg_persistent_tree_view_save(TrgPrefs * prefs, void *wdp)
     GtkTreeModel *model = gtk_tree_view_get_model(priv->tv);
 
     JsonNode *node = trg_prefs_get_value(prefs, wd->key, JSON_NODE_ARRAY,
-                                         wd->flags |
-                                         TRG_PREFS_REPLACENODE);
+                                         wd->
+                                         flags | TRG_PREFS_REPLACENODE);
 
     priv->ja = json_array_new();
 
@@ -189,8 +191,8 @@ trg_persistent_tree_view_column
 }
 
 static GtkTreeView
-    * trg_persistent_tree_view_tree_view_new(TrgPersistentTreeView * ptv,
-                                             GtkTreeModel * model)
+    *trg_persistent_tree_view_tree_view_new(TrgPersistentTreeView * ptv,
+                                            GtkTreeModel * model)
 {
     GtkTreeView *tv = GTK_TREE_VIEW(gtk_tree_view_new_with_model(model));
     GtkTreeSelection *selection;
@@ -235,10 +237,10 @@ static void trg_persistent_tree_view_del_cb(GtkWidget * w, gpointer data)
         gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
 }
 
-static void trg_persistent_tree_view_get_property(GObject * object,
-                                                  guint property_id,
-                                                  GValue * value,
-                                                  GParamSpec * pspec)
+static void
+trg_persistent_tree_view_get_property(GObject * object,
+                                      guint property_id,
+                                      GValue * value, GParamSpec * pspec)
 {
     switch (property_id) {
     default:
@@ -247,10 +249,11 @@ static void trg_persistent_tree_view_get_property(GObject * object,
     }
 }
 
-static void trg_persistent_tree_view_set_property(GObject * object,
-                                                  guint property_id,
-                                                  const GValue * value,
-                                                  GParamSpec * pspec)
+static void
+trg_persistent_tree_view_set_property(GObject * object,
+                                      guint property_id,
+                                      const GValue * value,
+                                      GParamSpec * pspec)
 {
     TrgPersistentTreeViewPrivate *priv = GET_PRIVATE(object);
     switch (property_id) {
@@ -282,8 +285,8 @@ static void trg_persistent_tree_view_finalize(GObject * object)
     }
     g_slist_free(priv->columns);
     g_free(priv->key);
-    G_OBJECT_CLASS(trg_persistent_tree_view_parent_class)->finalize
-        (object);
+    G_OBJECT_CLASS(trg_persistent_tree_view_parent_class)->
+        finalize(object);
 }
 
 trg_pref_widget_desc
@@ -293,9 +296,10 @@ trg_pref_widget_desc
     return priv->wd;
 }
 
-void trg_persistent_tree_view_set_add_select(TrgPersistentTreeView * ptv,
-                                             trg_persistent_tree_view_column
-                                             * cd)
+void
+trg_persistent_tree_view_set_add_select(TrgPersistentTreeView * ptv,
+                                        trg_persistent_tree_view_column *
+                                        cd)
 {
     TrgPersistentTreeViewPrivate *priv = GET_PRIVATE(ptv);
     priv->addSelect = cd;
@@ -347,8 +351,8 @@ static GObject *trg_persistent_tree_view_constructor(GType type,
     return object;
 }
 
-static void trg_persistent_tree_view_class_init(TrgPersistentTreeViewClass
-                                                * klass)
+static void
+trg_persistent_tree_view_class_init(TrgPersistentTreeViewClass * klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
@@ -415,7 +419,8 @@ TrgPersistentTreeView *trg_persistent_tree_view_new(TrgPrefs * prefs,
 {
     GObject *obj =
         g_object_new(TRG_TYPE_PERSISTENT_TREE_VIEW, "prefs", prefs,
-                     "conf-key", g_strdup(key), "persistent-model", model,
+                     "conf-key", g_strdup(key), "persistent-model",
+                     model,
                      NULL);
 
     return TRG_PERSISTENT_TREE_VIEW(obj);

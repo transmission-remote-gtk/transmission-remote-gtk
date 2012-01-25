@@ -34,8 +34,7 @@ G_DEFINE_TYPE(TrgTorrentMoveDialog, trg_torrent_move_dialog,
               GTK_TYPE_DIALOG)
 #define TRG_TORRENT_MOVE_DIALOG_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_TORRENT_MOVE_DIALOG, TrgTorrentMoveDialogPrivate))
-typedef struct _TrgTorrentMoveDialogPrivate
- TrgTorrentMoveDialogPrivate;
+typedef struct _TrgTorrentMoveDialogPrivate TrgTorrentMoveDialogPrivate;
 
 struct _TrgTorrentMoveDialogPrivate {
     TrgClient *client;
@@ -90,8 +89,8 @@ static void location_changed(GtkWidget * w, gpointer data)
 static GObject *trg_torrent_move_dialog_constructor(GType type,
                                                     guint
                                                     n_construct_properties,
-                                                    GObjectConstructParam
-                                                    * construct_params)
+                                                    GObjectConstructParam *
+                                                    construct_params)
 {
     GObject *object = G_OBJECT_CLASS
         (trg_torrent_move_dialog_parent_class)->constructor(type,
@@ -279,6 +278,6 @@ TrgTorrentMoveDialog *trg_torrent_move_dialog_new(TrgMainWindow * win,
 {
     return g_object_new(TRG_TYPE_TORRENT_MOVE_DIALOG,
                         "trg-client", client,
-                        "torrent-tree-view", ttv,
-                        "parent-window", win, NULL);
+                        "torrent-tree-view", ttv, "parent-window", win,
+                        NULL);
 }

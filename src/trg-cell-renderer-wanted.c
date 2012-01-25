@@ -44,8 +44,8 @@ struct _TrgCellRendererWantedPrivate {
 
 static void
 trg_cell_renderer_wanted_get_property(GObject * object,
-                                      guint property_id, GValue * value,
-                                      GParamSpec * pspec)
+                                      guint property_id,
+                                      GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererWantedPrivate *priv =
         TRG_CELL_RENDERER_WANTED_GET_PRIVATE(object);

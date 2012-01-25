@@ -40,7 +40,8 @@ struct _TrgCellRendererEpochPrivate {
 };
 
 static void
-trg_cell_renderer_epoch_get_property(GObject * object, guint property_id,
+trg_cell_renderer_epoch_get_property(GObject * object,
+                                     guint property_id,
                                      GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererEpochPrivate *priv =

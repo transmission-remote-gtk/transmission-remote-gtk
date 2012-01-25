@@ -39,8 +39,9 @@ struct _TrgCellRendererEtaPrivate {
 };
 
 static void
-trg_cell_renderer_eta_get_property(GObject * object, guint property_id,
-                                   GValue * value, GParamSpec * pspec)
+trg_cell_renderer_eta_get_property(GObject * object,
+                                   guint property_id, GValue * value,
+                                   GParamSpec * pspec)
 {
     TrgCellRendererEtaPrivate *priv =
         TRG_CELL_RENDERER_ETA_GET_PRIVATE(object);

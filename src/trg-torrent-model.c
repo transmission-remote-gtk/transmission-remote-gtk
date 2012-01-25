@@ -140,9 +140,9 @@ trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel
     return &(priv->stats);
 }
 
-static void trg_torrent_model_count_peers(TrgTorrentModel * model,
-                                          GtkTreeIter * iter,
-                                          JsonObject * t)
+static void
+trg_torrent_model_count_peers(TrgTorrentModel * model,
+                              GtkTreeIter * iter, JsonObject * t)
 {
     GList *trackersList =
         json_array_get_elements(torrent_get_tracker_stats(t));
@@ -279,8 +279,8 @@ trg_torrent_model_reload_dir_aliases_foreachfunc(GtkTreeModel * model,
     return FALSE;
 }
 
-void trg_torrent_model_reload_dir_aliases(TrgClient * tc,
-                                          GtkTreeModel * model)
+void
+trg_torrent_model_reload_dir_aliases(TrgClient * tc, GtkTreeModel * model)
 {
     gtk_tree_model_foreach(model,
                            trg_torrent_model_reload_dir_aliases_foreachfunc,
@@ -289,14 +289,14 @@ void trg_torrent_model_reload_dir_aliases(TrgClient * tc,
                   TORRENT_UPDATE_PATH_CHANGE);
 }
 
-static gboolean trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel *
-                                                         model,
-                                                         GtkTreePath *
-                                                         path
-                                                         G_GNUC_UNUSED,
-                                                         GtkTreeIter *
-                                                         iter,
-                                                         gpointer gdata)
+static gboolean
+trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel *
+                                         model,
+                                         GtkTreePath *
+                                         path
+                                         G_GNUC_UNUSED,
+                                         GtkTreeIter * iter,
+                                         gpointer gdata)
 {
     trg_torrent_model_update_stats *stats =
         (trg_torrent_model_update_stats *) gdata;
@@ -394,12 +394,13 @@ gchar *shorten_download_dir(TrgClient * tc, const gchar * downloadDir)
     return g_strdup(downloadDir);
 }
 
-static inline void update_torrent_iter(TrgTorrentModel * model,
-                                       TrgClient * tc, gint64 rpcv,
-                                       gint64 serial, GtkTreeIter * iter,
-                                       JsonObject * t,
-                                       trg_torrent_model_update_stats *
-                                       stats, guint * whatsChanged)
+static inline void
+update_torrent_iter(TrgTorrentModel * model,
+                    TrgClient * tc, gint64 rpcv,
+                    gint64 serial, GtkTreeIter * iter,
+                    JsonObject * t,
+                    trg_torrent_model_update_stats *
+                    stats, guint * whatsChanged)
 {
     TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
     GtkListStore *ls = GTK_LIST_STORE(model);
@@ -482,13 +483,12 @@ static inline void update_torrent_iter(TrgTorrentModel * model,
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNSPEED, downRate, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FLAGS, newFlags, -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPSPEED, upRate, -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ETA,
-                       torrent_get_eta(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ETA, torrent_get_eta(t),
+                       -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPLOADED, uploaded, -1);
-    gtk_list_store_set(ls, iter,
-                       TORRENT_COLUMN_DOWNLOADED, downloaded, -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_RATIO,
-                       uploaded > 0
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADED, downloaded,
+                       -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_RATIO, uploaded > 0
                        && downloaded >
                        0 ? (double) uploaded / (double) downloaded : 0,
                        -1);
@@ -498,8 +498,8 @@ static inline void update_torrent_iter(TrgTorrentModel * model,
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR,
-                       downloadDir, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR, downloadDir,
+                       -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY,
                        torrent_get_bandwidth_priority(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DONE_DATE,
@@ -516,8 +516,8 @@ static inline void update_torrent_iter(TrgTorrentModel * model,
                        peerfrom_get_resume(pf), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_FROMINCOMING,
                        peerfrom_get_incoming(pf), -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEER_SOURCES,
-                       peerSources, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEER_SOURCES, peerSources,
+                       -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_CONNECTED,
                        torrent_get_peers_connected(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_TO_US,
@@ -624,11 +624,11 @@ GHashTable *get_torrent_table(TrgTorrentModel * model)
     return priv->ht;
 }
 
-gboolean trg_model_find_removed_foreachfunc(GtkTreeModel * model,
-                                            GtkTreePath *
-                                            path G_GNUC_UNUSED,
-                                            GtkTreeIter * iter,
-                                            gpointer gdata)
+gboolean
+trg_model_find_removed_foreachfunc(GtkTreeModel * model,
+                                   GtkTreePath *
+                                   path G_GNUC_UNUSED,
+                                   GtkTreeIter * iter, gpointer gdata)
 {
     struct TrgModelRemoveData *args = (struct TrgModelRemoveData *) gdata;
     gint64 rowSerial;
@@ -658,8 +658,9 @@ GList *trg_torrent_model_find_removed(GtkTreeModel * model,
     return args.toRemove;
 }
 
-gboolean get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
-                          GtkTreeIter * out_iter)
+gboolean
+get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
+                 GtkTreeIter * out_iter)
 {
     gpointer result = g_hash_table_lookup(table, &id);
     gboolean found = FALSE;

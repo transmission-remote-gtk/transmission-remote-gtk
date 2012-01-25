@@ -96,8 +96,9 @@ message_received_cb(UniqueApp * app G_GNUC_UNUSED,
     return res;
 }
 
-static gint trg_libunique_init(TrgClient * client, int argc,
-                               gchar * argv[], gchar ** args)
+static gint
+trg_libunique_init(TrgClient * client, int argc,
+                   gchar * argv[], gchar ** args)
 {
     UniqueApp *app = unique_app_new_with_commands("uk.org.eth0.trg", NULL,
                                                   "add", COMMAND_ADD,
@@ -159,8 +160,8 @@ static gint trg_gtkapp_init(TrgClient * client, int argc, char *argv[])
 
 #elif WIN32
 
-static gint trg_win32_init(TrgClient * client, int argc, char *argv[],
-                           gchar ** args)
+static gint
+trg_win32_init(TrgClient * client, int argc, char *argv[], gchar ** args)
 {
     gchar *moddir =
         g_win32_get_package_installation_directory_of_module(NULL);
@@ -186,8 +187,8 @@ static gint trg_win32_init(TrgClient * client, int argc, char *argv[],
 
 #else
 
-static gint trg_simple_init(TrgClient * client, int argc, char *argv[],
-                            gchar ** args)
+static gint
+trg_simple_init(TrgClient * client, int argc, char *argv[], gchar ** args)
 {
     TrgMainWindow *window =
         trg_main_window_new(client, should_be_minimised(argc, argv));

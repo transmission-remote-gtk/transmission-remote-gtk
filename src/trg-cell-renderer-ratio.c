@@ -39,7 +39,8 @@ struct _TrgCellRendererRatioPrivate {
 };
 
 static void
-trg_cell_renderer_ratio_get_property(GObject * object, guint property_id,
+trg_cell_renderer_ratio_get_property(GObject * object,
+                                     guint property_id,
                                      GValue * value, GParamSpec * pspec)
 {
     TrgCellRendererRatioPrivate *priv =

@@ -26,10 +26,13 @@
 #include "bencode.h"
 #include "trg-file-parser.h"
 
-static trg_files_tree_node
-    * trg_file_parser_node_insert(trg_files_tree_node * top,
-                                  trg_files_tree_node * last,
-                                  be_node * file_node, gint index)
+static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
+                                                        * top,
+                                                        trg_files_tree_node
+                                                        * last,
+                                                        be_node *
+                                                        file_node,
+                                                        gint index)
 {
     be_node *file_length_node = be_dict_find(file_node, "length", BE_INT);
     be_node *file_path_list = be_dict_find(file_node, "path", BE_LIST);

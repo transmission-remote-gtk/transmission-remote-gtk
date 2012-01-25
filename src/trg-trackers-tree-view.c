@@ -69,8 +69,9 @@ static gboolean on_trackers_update(gpointer data)
     return on_generic_interactive_action(data);
 }
 
-void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
-                                           TrgClient * tc)
+void
+trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
+                                      TrgClient * tc)
 {
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(tv);
@@ -83,10 +84,10 @@ void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
                  GTK_CELL_RENDERER_MODE_INERT, NULL);
 }
 
-static void trg_tracker_announce_edited(GtkCellRendererText * renderer,
-                                        gchar * path,
-                                        gchar * new_text,
-                                        gpointer user_data)
+static void
+trg_tracker_announce_edited(GtkCellRendererText * renderer,
+                            gchar * path,
+                            gchar * new_text, gpointer user_data)
 {
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(user_data);
@@ -129,13 +130,14 @@ static void trg_tracker_announce_edited(GtkCellRendererText * renderer,
     dispatch_async(priv->client, req, on_trackers_update, user_data);
 }
 
-static void trg_tracker_announce_editing_started(GtkCellRenderer *
-                                                 renderer G_GNUC_UNUSED,
-                                                 GtkCellEditable *
-                                                 editable G_GNUC_UNUSED,
-                                                 gchar *
-                                                 path G_GNUC_UNUSED,
-                                                 gpointer user_data)
+static void
+trg_tracker_announce_editing_started(GtkCellRenderer *
+                                     renderer G_GNUC_UNUSED,
+                                     GtkCellEditable *
+                                     editable G_GNUC_UNUSED,
+                                     gchar *
+                                     path G_GNUC_UNUSED,
+                                     gpointer user_data)
 {
     TrgTrackersModel *model =
         TRG_TRACKERS_MODEL(gtk_tree_view_get_model
@@ -144,9 +146,9 @@ static void trg_tracker_announce_editing_started(GtkCellRenderer *
     trg_trackers_model_set_accept(model, FALSE);
 }
 
-static void trg_tracker_announce_editing_canceled(GtkWidget *
-                                                  w G_GNUC_UNUSED,
-                                                  gpointer data)
+static void
+trg_tracker_announce_editing_canceled(GtkWidget *
+                                      w G_GNUC_UNUSED, gpointer data)
 {
     TrgTrackersModel *model =
         TRG_TRACKERS_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(data)));
@@ -383,7 +385,6 @@ TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model,
     priv->win = win;
 
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
-    //trg_tree_view_restore_sort(TRG_TREE_VIEW(obj));
 
     return TRG_TRACKERS_TREE_VIEW(obj);
 }

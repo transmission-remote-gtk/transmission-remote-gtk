@@ -57,11 +57,11 @@ static void trg_peers_model_class_init(TrgPeersModelClass *
 #endif
 }
 
-gboolean find_existing_peer_item_foreachfunc(GtkTreeModel * model,
-                                             GtkTreePath *
-                                             path G_GNUC_UNUSED,
-                                             GtkTreeIter * iter,
-                                             gpointer data)
+gboolean
+find_existing_peer_item_foreachfunc(GtkTreeModel * model,
+                                    GtkTreePath *
+                                    path G_GNUC_UNUSED,
+                                    GtkTreeIter * iter, gpointer data)
 {
     struct peerAndIter *pi = (struct peerAndIter *) data;
     gchar *ip;
@@ -78,8 +78,9 @@ gboolean find_existing_peer_item_foreachfunc(GtkTreeModel * model,
     return pi->found;
 }
 
-gboolean find_existing_peer_item(TrgPeersModel * model, JsonObject * p,
-                                 GtkTreeIter * iter)
+gboolean
+find_existing_peer_item(TrgPeersModel * model, JsonObject * p,
+                        GtkTreeIter * iter)
 {
     struct peerAndIter pi;
     pi.ip = peer_get_address(p);
@@ -94,8 +95,8 @@ gboolean find_existing_peer_item(TrgPeersModel * model, JsonObject * p,
     return pi.found;
 }
 
-static void resolved_dns_cb(GObject * source_object, GAsyncResult * res,
-                            gpointer data)
+static void
+resolved_dns_cb(GObject * source_object, GAsyncResult * res, gpointer data)
 {
     GtkTreeRowReference *treeRef;
     GtkTreeModel *model;
@@ -125,8 +126,9 @@ static void resolved_dns_cb(GObject * source_object, GAsyncResult * res,
     gtk_tree_row_reference_free(treeRef);
 }
 
-void trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
-                            gint64 updateSerial, JsonObject * t, gint mode)
+void
+trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
+                       gint64 updateSerial, JsonObject * t, gint mode)
 {
 #ifdef HAVE_GEOIP
     TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
@@ -160,7 +162,7 @@ void trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
 
             address = peer_get_address(peer);
 #ifdef HAVE_GEOIP
-            if (address && doGeoLookup) {       // just in case address wasn't set
+            if (address && doGeoLookup) {       /* just in case address wasn't set */
                 if (strchr(address, ':') && priv->geoipv6)
                     country =
                         GeoIP_country_name_by_addr_v6(priv->geoipv6,

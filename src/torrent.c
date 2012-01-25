@@ -208,8 +208,9 @@ gint64 torrent_get_activity_date(JsonObject * t)
     return json_object_get_int_member(t, FIELD_ACTIVITY_DATE);
 }
 
-guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
-                          gint64 downRate, gint64 upRate)
+guint32
+torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
+                  gint64 downRate, gint64 upRate)
 {
     guint32 flags = 0;
 
@@ -239,8 +240,8 @@ guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
             if (!(flags & TORRENT_FLAG_COMPLETE))
                 flags |= TORRENT_FLAG_DOWNLOADING;
 
-            //if (torrent_get_metadata_percent_complete(t) < 100)
-            //    flags |= TORRENT_FLAG_DOWNLOADING_METADATA;
+            /* if (torrent_get_metadata_percent_complete(t) < 100)
+             *    flags |= TORRENT_FLAG_DOWNLOADING_METADATA; */
 
             flags |= TORRENT_FLAG_ACTIVE;
             break;
@@ -286,8 +287,8 @@ gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
 {
     if (flags & TORRENT_FLAG_ERROR)
         return g_strdup(GTK_STOCK_DIALOG_WARNING);
-    //else if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
-    //    return g_strdup(GTK_STOCK_FIND);
+    /*else if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
+     *    return g_strdup(GTK_STOCK_FIND); */
     else if (flags & TORRENT_FLAG_DOWNLOADING)
         return g_strdup(GTK_STOCK_GO_DOWN);
     else if (flags & TORRENT_FLAG_PAUSED)
@@ -350,7 +351,6 @@ gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags)
         }
     }
 
-    //g_warning("Unknown status: %ld", value);
     return g_strdup(_("Unknown"));
 }
 

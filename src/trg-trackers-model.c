@@ -48,9 +48,9 @@ gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model)
     return priv->torrentId;
 }
 
-void trg_trackers_model_update(TrgTrackersModel * model,
-                               gint64 updateSerial, JsonObject * t,
-                               gint mode)
+void
+trg_trackers_model_update(TrgTrackersModel * model,
+                          gint64 updateSerial, JsonObject * t, gint mode)
 {
     TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
 
@@ -156,8 +156,8 @@ static void trg_trackers_model_class_init(TrgTrackersModelClass * klass)
     g_type_class_add_private(klass, sizeof(TrgTrackersModelPrivate));
 }
 
-void trg_trackers_model_set_accept(TrgTrackersModel * model,
-                                   gboolean accept)
+void
+trg_trackers_model_set_accept(TrgTrackersModel * model, gboolean accept)
 {
     TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
     priv->accept = accept;

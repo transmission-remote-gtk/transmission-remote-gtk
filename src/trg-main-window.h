@@ -45,8 +45,11 @@ G_BEGIN_DECLS
   (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_MAIN_WINDOW))
 #define TRG_MAIN_WINDOW_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_MAIN_WINDOW, TrgMainWindowClass))
-    typedef struct {
+typedef struct _TrgMainWindowPrivate TrgMainWindowPrivate;
+
+typedef struct {
     GtkWindow parent;
+    TrgMainWindowPrivate *priv;
 } TrgMainWindow;
 
 typedef struct {

@@ -204,7 +204,8 @@ void be_free(be_node * node)
     case BE_INT:
         break;
 
-    case BE_LIST:{
+    case BE_LIST:
+        {
             unsigned int i;
             if (node->val.l) {
                 for (i = 0; node->val.l[i]; ++i)
@@ -214,7 +215,8 @@ void be_free(be_node * node)
             break;
         }
 
-    case BE_DICT:{
+    case BE_DICT:
+        {
             unsigned int i;
             for (i = 0; node->val.d[i].val; ++i) {
                 _be_free_str(node->val.d[i].key);

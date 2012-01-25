@@ -40,7 +40,6 @@
 #define FIELD_TOTAL_SIZE        "totalSize"
 #define FIELD_DONE_DATE         "doneDate"
 #define FIELD_ADDED_DATE        "addedDate"
-//#define FIELD_TRACKERS          "trackers"
 #define FIELD_TRACKER_STATS          "trackerStats"
 #define FIELD_DOWNLOAD_DIR      "downloadDir"
 #define FIELD_HASH_STRING       "hashString"
@@ -182,8 +181,8 @@ typedef enum {
 } tr_torrent_activity;
 
 enum {
-    TR_PRI_UNSET = -3,          // Not actually in the protocol. Just used in UI.
-    TR_PRI_MIXED = -2,          // Neither is this.
+    TR_PRI_UNSET = -3,          /* Not actually in the protocol. Just used in UI. */
+    TR_PRI_MIXED = -2,          /* Neither is this. */
     TR_PRI_LOW = -1,
     TR_PRI_NORMAL = 0,          /* since NORMAL is 0, memset initializes nicely */
     TR_PRI_HIGH = 1

@@ -37,11 +37,11 @@ static void collapse_all_cb(GtkWidget * w, gpointer data)
     gtk_tree_view_collapse_all(GTK_TREE_VIEW(data));
 }
 
-static void view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
-                            GCallback low_cb, GCallback normal_cb,
-                            GCallback high_cb, GCallback wanted_cb,
-                            GCallback unwanted_cb,
-                            gpointer data G_GNUC_UNUSED)
+static void
+view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
+                GCallback low_cb, GCallback normal_cb,
+                GCallback high_cb, GCallback wanted_cb,
+                GCallback unwanted_cb, gpointer data G_GNUC_UNUSED)
 {
     GtkWidget *menu, *menuitem;
 
@@ -98,24 +98,25 @@ static void view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
                    gdk_event_get_time((GdkEvent *) event));
 }
 
-gboolean trg_files_tree_view_viewOnPopupMenu(GtkWidget * treeview,
-                                             GCallback low_cb,
-                                             GCallback normal_cb,
-                                             GCallback high_cb,
-                                             GCallback wanted_cb,
-                                             GCallback unwanted_cb,
-                                             gpointer userdata)
+gboolean
+trg_files_tree_view_viewOnPopupMenu(GtkWidget * treeview,
+                                    GCallback low_cb,
+                                    GCallback normal_cb,
+                                    GCallback high_cb,
+                                    GCallback wanted_cb,
+                                    GCallback unwanted_cb,
+                                    gpointer userdata)
 {
     view_popup_menu(treeview, NULL, low_cb, normal_cb, high_cb, wanted_cb,
                     unwanted_cb, userdata);
     return TRUE;
 }
 
-static gboolean onViewPathToggled(GtkTreeView * view,
-                                  GtkTreeViewColumn * col,
-                                  GtkTreePath * path,
-                                  gint pri_id,
-                                  gint enabled_id, gpointer data)
+static gboolean
+onViewPathToggled(GtkTreeView * view,
+                  GtkTreeViewColumn * col,
+                  GtkTreePath * path,
+                  gint pri_id, gint enabled_id, gpointer data)
 {
     int cid;
     gboolean handled = FALSE;
@@ -161,10 +162,10 @@ static gboolean onViewPathToggled(GtkTreeView * view,
     return handled;
 }
 
-static gboolean getAndSelectEventPath(GtkTreeView * treeview,
-                                      GdkEventButton * event,
-                                      GtkTreeViewColumn ** col,
-                                      GtkTreePath ** path)
+static gboolean
+getAndSelectEventPath(GtkTreeView * treeview,
+                      GdkEventButton * event,
+                      GtkTreeViewColumn ** col, GtkTreePath ** path)
 {
     GtkTreeSelection *sel;
 
@@ -181,16 +182,17 @@ static gboolean getAndSelectEventPath(GtkTreeView * treeview,
     return FALSE;
 }
 
-gboolean trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
-                                                 GdkEventButton * event,
-                                                 gint pri_id,
-                                                 gint enabled_id,
-                                                 GCallback low_cb,
-                                                 GCallback normal_cb,
-                                                 GCallback high_cb,
-                                                 GCallback wanted_cb,
-                                                 GCallback unwanted_cb,
-                                                 gpointer gdata)
+gboolean
+trg_files_tree_view_onViewButtonPressed(GtkWidget * w,
+                                        GdkEventButton * event,
+                                        gint pri_id,
+                                        gint enabled_id,
+                                        GCallback low_cb,
+                                        GCallback normal_cb,
+                                        GCallback high_cb,
+                                        GCallback wanted_cb,
+                                        GCallback unwanted_cb,
+                                        gpointer gdata)
 {
     GtkTreeViewColumn *col = NULL;
     GtkTreePath *path = NULL;
