@@ -52,12 +52,10 @@ struct _TrgToolbarPrivate {
     GtkWidget *tb_connect;
     GtkWidget *tb_disconnect;
     GtkWidget *tb_add;
-    /*GtkWidget *tb_add_url; */
     GtkWidget *tb_remove;
     GtkWidget *tb_delete;
     GtkWidget *tb_resume;
     GtkWidget *tb_pause;
-    /*GtkWidget *tb_verify; */
     GtkWidget *tb_props;
     GtkWidget *tb_remote_prefs;
     GtkWidget *tb_local_prefs;
@@ -111,9 +109,6 @@ trg_toolbar_get_property(GObject * object, guint property_id,
     case PROP_PAUSE_BUTTON:
         g_value_set_object(value, priv->tb_pause);
         break;
-        /*case PROP_VERIFY_BUTTON:
-           g_value_set_object(value, priv->tb_verify);
-           break; */
     case PROP_PROPS_BUTTON:
         g_value_set_object(value, priv->tb_props);
         break;

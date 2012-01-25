@@ -1,7 +1,12 @@
 * Sun Jan 15 2011 1.0
 - Show files in a tree.
 - Consistency/code share in files tree view and add dialog tree view.
-- A lot of optimisation for building either files tree view. 
+- A lot of optimisation for building either files tree view.
+- Optimise changes to the torrent tree view (suspend sorting during).
+- Remember last add destination.
+- Fix a bug causing scrolled window position to be lost during maximise
+from system tray.
+- Experimental GTK3 support (--enable-gtk3).
 - Expand/collapse all, selection based changes for add dialog tree view.
 - Counts for filters.
 - Some update efficiency improvements.

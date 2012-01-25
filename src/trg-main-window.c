@@ -1117,7 +1117,6 @@ connchange_whatever_statusicon(TrgMainWindow * win, gboolean connected)
     gchar *display = connected ?
         trg_prefs_get_string(prefs, TRG_PREFS_KEY_PROFILE_NAME,
                              TRG_PREFS_CONNECTION) : g_strdup(_("Disconnected"));
-    GtkMenu *menu = trg_status_icon_view_menu(win, display);
 
 #ifdef HAVE_LIBAPPINDICATOR
     if (priv->appIndicator) {
@@ -1125,11 +1124,10 @@ connchange_whatever_statusicon(TrgMainWindow * win, gboolean connected)
         app_indicator_set_menu(priv->appIndicator, menu);
     }
 #else
-
     if (priv->iconMenu)
         gtk_widget_destroy(GTK_WIDGET(priv->iconMenu));
 
-    priv->iconMenu = menu;
+    priv->iconMenu = trg_status_icon_view_menu(win, display);
 
     if (priv->statusIcon)
         gtk_status_icon_set_tooltip_text(priv->statusIcon, display);
