@@ -128,25 +128,34 @@ trg_status_bar_push_connection_msg(TrgStatusBar * sb, const gchar * msg)
     gtk_label_set_text(GTK_LABEL(priv->info_lbl), msg);
 }
 
+static void
+trg_status_bar_set_connected_label(TrgStatusBar *sb, JsonObject * session,
+        TrgClient *client)
+{
+    TrgPrefs *prefs = trg_client_get_prefs(client);
+    gdouble version = session_get_version(session);
+
+    gchar *profileName = trg_prefs_get_string(prefs,
+            TRG_PREFS_KEY_PROFILE_NAME,
+            TRG_PREFS_CONNECTION);
+    gchar *statusMsg =
+        g_strdup_printf(_("Connected: %s (Transmission %g)"),
+                        profileName,
+                        version);
+
+    trg_status_bar_push_connection_msg(sb, statusMsg);
+
+    g_free(profileName);
+    g_free(statusMsg);
+}
+
 void
 trg_status_bar_connect(TrgStatusBar * sb, JsonObject * session,
                        TrgClient * client)
 {
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
-    TrgPrefs *prefs = trg_client_get_prefs(client);
-    gdouble version = session_get_version(session);
 
-    gchar *statusMsg =
-        g_strdup_printf(_("Connected: %s (Transmission %g)"),
-                        trg_prefs_get_string(prefs,
-                                             TRG_PREFS_KEY_PROFILE_NAME,
-                                             TRG_PREFS_CONNECTION),
-                        version);
-    g_message("%s", statusMsg);
-
-    trg_status_bar_push_connection_msg(sb, statusMsg);
-    g_free(statusMsg);
-
+    trg_status_bar_set_connected_label(sb, session, client);
     gtk_label_set_text(GTK_LABEL(priv->speed_lbl),
                        _("Updating torrents..."));
 }
@@ -237,6 +246,7 @@ trg_status_bar_update(TrgStatusBar * sb,
                       trg_torrent_model_update_stats * stats,
                       TrgClient * client)
 {
+    trg_status_bar_set_connected_label(sb, trg_client_get_session(client), client);
     trg_status_bar_update_speed(sb, stats, client);
 }
 

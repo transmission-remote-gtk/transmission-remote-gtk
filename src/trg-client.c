@@ -347,8 +347,7 @@ void trg_client_status_change(TrgClient * tc, gboolean connected)
 
 JsonObject *trg_client_get_session(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->session;
+    return tc->priv->session;
 }
 
 void

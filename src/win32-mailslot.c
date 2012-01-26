@@ -73,13 +73,13 @@ static gpointer mailslot_recv_thread(gpointer data)
     if (INVALID_HANDLE_VALUE == hMailslot) {
         g_error("\nError occurred while creating the mailslot: %d",
                 GetLastError());
-        return NULL;            //Error
+        return NULL;            /* Error */
     }
 
     while (1) {
         bResult = ReadFile(hMailslot,   /* handle to mailslot */
                            szBuffer,    /* buffer to receive data */
-                           sizeof(szBuffer),    // size of buffer */
+                           sizeof(szBuffer),    /* size of buffer */
                            &cbBytes,    /* number of bytes read */
                            NULL);       /* not overlapped I/O */
 
