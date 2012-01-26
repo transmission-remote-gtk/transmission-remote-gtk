@@ -104,8 +104,8 @@ trg_cell_renderer_epoch_class_init(TrgCellRendererEpochClass * klass)
                                     g_param_spec_int64("epoch-value",
                                                        "Epoch Value",
                                                        "Epoch Value",
-                                                       INT64_MIN,
-                                                       INT64_MAX,
+                                                       G_MININT64,
+                                                       G_MAXINT64,
                                                        0,
                                                        G_PARAM_READWRITE
                                                        |

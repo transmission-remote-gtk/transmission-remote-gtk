@@ -19,7 +19,7 @@
 
 #if WIN32
 
-#define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"      //Name given to the Mailslot
+#define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"
 #define MAILSLOT_BUFFER_SIZE 1024*32
 
 #include <windows.h>
@@ -65,10 +65,10 @@ static gpointer mailslot_recv_thread(gpointer data)
     DWORD cbBytes;
     BOOL bResult;
 
-    hMailslot = CreateMailslot(TRG_MAILSLOT_NAME,       // mailslot name
-                               MAILSLOT_BUFFER_SIZE,    // input buffer size
-                               MAILSLOT_WAIT_FOREVER,   // no timeout
-                               NULL);   // default security attribute
+    hMailslot = CreateMailslot(TRG_MAILSLOT_NAME,       /* mailslot name */
+                               MAILSLOT_BUFFER_SIZE,    /* input buffer size */
+                               MAILSLOT_WAIT_FOREVER,   /* no timeout */
+                               NULL);   /* default security attribute */
 
     if (INVALID_HANDLE_VALUE == hMailslot) {
         g_error("\nError occurred while creating the mailslot: %d",
@@ -77,11 +77,11 @@ static gpointer mailslot_recv_thread(gpointer data)
     }
 
     while (1) {
-        bResult = ReadFile(hMailslot,   // handle to mailslot
-                           szBuffer,    // buffer to receive data
-                           sizeof(szBuffer),    // size of buffer
-                           &cbBytes,    // number of bytes read
-                           NULL);       // not overlapped I/O
+        bResult = ReadFile(hMailslot,   /* handle to mailslot */
+                           szBuffer,    /* buffer to receive data */
+                           sizeof(szBuffer),    // size of buffer */
+                           &cbBytes,    /* number of bytes read */
+                           NULL);       /* not overlapped I/O */
 
         if ((!bResult) || (0 == cbBytes)) {
             g_error("Mailslot error from client: %d", GetLastError());
@@ -131,7 +131,7 @@ static gpointer mailslot_recv_thread(gpointer data)
     }
 
     CloseHandle(hMailslot);
-    return NULL;                //Success
+    return NULL;                /* Success */
 }
 
 void mailslot_start_background_listener(TrgMainWindow * win)
@@ -141,13 +141,13 @@ void mailslot_start_background_listener(TrgMainWindow * win)
 
 gboolean mailslot_send_message(gchar ** args)
 {
-    HANDLE hMailSlot = CreateFile(TRG_MAILSLOT_NAME,    // mailslot name
-                                  GENERIC_WRITE,        // mailslot write only
-                                  FILE_SHARE_READ,      // required for mailslots
-                                  NULL, // default security attributes
-                                  OPEN_EXISTING,        // opens existing mailslot
-                                  FILE_ATTRIBUTE_NORMAL,        // normal attributes
-                                  NULL);        // no template file
+    HANDLE hMailSlot = CreateFile(TRG_MAILSLOT_NAME,    /* mailslot name */
+                                  GENERIC_WRITE,        /* mailslot write only */
+                                  FILE_SHARE_READ,      /* required for mailslots */
+                                  NULL, /* default security attributes */
+                                  OPEN_EXISTING,        /* opens existing mailslot */
+                                  FILE_ATTRIBUTE_NORMAL,        /* normal attributes */
+                                  NULL);        /* no template file */
 
     if (hMailSlot != INVALID_HANDLE_VALUE) {
         DWORD cbBytes;
@@ -178,10 +178,10 @@ gboolean mailslot_send_message(gchar ** args)
         json_node_free(node);
         g_object_unref(generator);
 
-        WriteFile(hMailSlot,    // handle to mailslot
-                  msg,          // buffer to write from
-                  strlen(msg) + 1,      // number of bytes to write, include the NULL
-                  &cbBytes,     // number of bytes written
+        WriteFile(hMailSlot,    /* handle to mailslot */
+                  msg,          /* buffer to write from */
+                  strlen(msg) + 1,      /* number of bytes to write, include the NULL */
+                  &cbBytes,     /* number of bytes written */
                   NULL);
 
         CloseHandle(hMailSlot);

@@ -93,8 +93,8 @@ trg_cell_renderer_eta_class_init(TrgCellRendererEtaClass * klass)
                                     g_param_spec_int64("eta-value",
                                                        "Eta Value",
                                                        "Eta Value",
-                                                       INT64_MIN,
-                                                       INT64_MAX,
+                                                       G_MININT64,
+                                                       G_MAXINT64,
                                                        0,
                                                        G_PARAM_READWRITE
                                                        |

@@ -90,7 +90,7 @@ trg_cell_renderer_speed_class_init(TrgCellRendererSpeedClass * klass)
                                                        "Speed Value",
                                                        "Speed Value",
                                                        0,
-                                                       INT64_MAX,
+                                                       G_MAXINT64,
                                                        0,
                                                        G_PARAM_READWRITE
                                                        |

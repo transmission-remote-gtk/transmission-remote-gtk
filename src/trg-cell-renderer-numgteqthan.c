@@ -100,8 +100,8 @@ trg_cell_renderer_numgteqthan_class_init(TrgCellRendererNumGtEqThanClass *
                                     g_param_spec_int64("value",
                                                        "Value",
                                                        "Value",
-                                                       INT64_MIN,
-                                                       INT64_MAX,
+                                                       G_MININT64,
+                                                       G_MAXINT64,
                                                        0,
                                                        G_PARAM_READWRITE
                                                        |
@@ -116,8 +116,8 @@ trg_cell_renderer_numgteqthan_class_init(TrgCellRendererNumGtEqThanClass *
                                     g_param_spec_int64("minvalue",
                                                        "Min Value",
                                                        "Min Value",
-                                                       INT64_MIN,
-                                                       INT64_MAX,
+                                                       G_MININT64,
+                                                       G_MAXINT64,
                                                        1,
                                                        G_PARAM_READWRITE
                                                        |

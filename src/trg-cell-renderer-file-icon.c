@@ -146,7 +146,7 @@ trg_cell_renderer_file_icon_class_init(TrgCellRendererFileIconClass *
                                                        "File ID",
                                                        "File ID",
                                                        -2,
-                                                       INT64_MAX,
+                                                       G_MAXINT64,
                                                        -2,
                                                        G_PARAM_READWRITE
                                                        |

@@ -90,7 +90,7 @@ trg_cell_renderer_size_class_init(TrgCellRendererSizeClass * klass)
                                                        "Size Value",
                                                        "Size Value",
                                                        0,
-                                                       INT64_MAX,
+                                                       G_MAXINT64,
                                                        0,
                                                        G_PARAM_READWRITE
                                                        |
