@@ -1040,7 +1040,7 @@ static gboolean on_session_get(gpointer data)
     if (!isConnected) {
         gdouble version;
 
-        if (trg_dialog_error_handler(win, response) == TRUE) {
+        if (trg_dialog_error_handler(win, response)) {
             trg_response_free(response);
             reset_connect_args(win);
             return FALSE;

@@ -274,7 +274,8 @@ int trg_client_populate_with_settings(TrgClient * tc)
         int i;
 
         for (i = 0; proxies[i]; i++) {
-            if (g_str_has_prefix(proxies[i], HTTP_URI_PREFIX)) {
+            if (g_str_has_prefix(proxies[i], HTTP_URI_PREFIX)
+                    || g_str_has_prefix(proxies[i], HTTPS_URI_PREFIX)) {
                 g_free(priv->proxy);
                 priv->proxy = proxies[i];
             } else {
@@ -294,20 +295,17 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
 gchar *trg_client_get_password(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->password;
+    return tc->priv->password;
 }
 
 gchar *trg_client_get_username(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->username;
+    return tc->priv->username;
 }
 
 gchar *trg_client_get_url(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->url;
+    return tc->priv->url;
 }
 
 gchar *trg_client_get_session_id(TrgClient * tc)
