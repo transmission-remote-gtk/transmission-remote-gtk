@@ -1000,10 +1000,9 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 
 gboolean on_session_set(gpointer data)
 {
-    TrgMainWindow *win = TRG_MAIN_WINDOW(data);
-    TrgMainWindowPrivate *priv = win->priv;
-
     trg_response *response = (trg_response *) data;
+    TrgMainWindow *win = TRG_MAIN_WINDOW(response->cb_data);
+    TrgMainWindowPrivate *priv = win->priv;
 
     if (response->status == CURLE_OK
         || response->status == FAIL_RESPONSE_UNSUCCESSFUL)
