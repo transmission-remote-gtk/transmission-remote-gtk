@@ -1,5 +1,5 @@
 Name:           transmission-remote-gtk
-Version:        1.0
+Version:        1.0.1
 Release:        1%{?dist}
 Summary:        Remotely manage the Transmission BitTorrent client
 
