@@ -169,14 +169,12 @@ TrgClient *trg_client_new(void)
 
 const gchar *trg_client_get_version_string(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return session_get_version_string(priv->session);
+    return session_get_version_string(tc->priv->session);
 }
 
 gdouble trg_client_get_version(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->version;
+    return tc->priv->version;
 }
 
 gint64 trg_client_get_rpc_version(TrgClient * tc)
@@ -209,8 +207,7 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
 
 TrgPrefs *trg_client_get_prefs(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->prefs;
+    return tc->priv->prefs;
 }
 
 int trg_client_populate_with_settings(TrgClient * tc)
@@ -351,8 +348,7 @@ JsonObject *trg_client_get_session(TrgClient * tc)
 void
 trg_client_thread_pool_push(TrgClient * tc, gpointer data, GError ** err)
 {
-    TrgClientPrivate *priv = tc->priv;
-    g_thread_pool_push(priv->pool, data, err);
+    g_thread_pool_push(tc->priv->pool, data, err);
 }
 
 void trg_client_inc_serial(TrgClient * tc)
@@ -363,22 +359,19 @@ void trg_client_inc_serial(TrgClient * tc)
 
 gint64 trg_client_get_serial(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->updateSerial;
+    return tc->priv->updateSerial;
 }
 
 #ifndef CURL_NO_SSL
 gboolean trg_client_get_ssl(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->ssl;
+    return tc->priv->ssl;
 }
 #endif
 
 gchar *trg_client_get_proxy(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->proxy;
+    return tc->priv->proxy;
 }
 
 void trg_client_set_torrent_table(TrgClient * tc, GHashTable * table)
