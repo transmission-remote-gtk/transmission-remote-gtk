@@ -65,7 +65,7 @@ static void selection_changed(TrgPersistentTreeView *ptv, GtkTreeSelection * sel
         gtk_widget_set_sensitive(priv->upButton, gtk_tree_path_prev(path));
         gtk_widget_set_sensitive(priv->downButton, gtk_tree_model_iter_next(model, &iter));
         gtk_tree_path_free(path);
-        gtk_widget_set_sensitive(priv->delButton, FALSE);
+        gtk_widget_set_sensitive(priv->delButton, TRUE);
     } else {
         gtk_widget_set_sensitive(priv->delButton, FALSE);
         gtk_widget_set_sensitive(priv->upButton, FALSE);
@@ -313,7 +313,7 @@ trg_persistent_tree_view_set_property(GObject * object,
         priv->prefs = g_value_get_object(value);
         break;
     case PROP_KEY:
-        priv->key = g_value_get_pointer(value);
+        priv->key = g_strdup(g_value_get_pointer(value));
         break;
     case PROP_MODEL:
         priv->model = g_value_get_object(value);
@@ -483,7 +483,7 @@ TrgPersistentTreeView *trg_persistent_tree_view_new(TrgPrefs * prefs,
 {
     GObject *obj =
         g_object_new(TRG_TYPE_PERSISTENT_TREE_VIEW, "prefs", prefs,
-                     "conf-key", g_strdup(key), "persistent-model",
+                     "conf-key", key, "persistent-model",
                      model,
                      NULL);
 
