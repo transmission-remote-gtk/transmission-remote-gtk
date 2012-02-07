@@ -193,11 +193,10 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
 {
     TrgClientPrivate *priv = tc->priv;
 
-    if (priv->session) {
+    if (priv->session)
         json_object_unref(priv->session);
-    } else {
+    else
         priv->version = session_get_version(session);
-    }
 
     priv->session = session;
     json_object_ref(session);

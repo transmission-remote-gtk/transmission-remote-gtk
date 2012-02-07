@@ -2486,31 +2486,26 @@ static GtkTargetEntry target_list[] = {
 
 static guint n_targets = G_N_ELEMENTS(target_list);
 
-static void
-on_dropped_file(GtkWidget * widget, GdkDragContext * context,
-                gint x, gint y, GtkSelectionData * data,
-                guint info, guint time, gpointer user_data)
-{
+static void on_dropped_file(GtkWidget * widget, GdkDragContext * context,
+        gint x, gint y, GtkSelectionData * data, guint info, guint time,
+        gpointer user_data) {
     TrgMainWindow *win = user_data;
 
     if ((gtk_selection_data_get_length(data) >= 0)
-        && (gtk_selection_data_get_format(data) == 8)) {
-        if (gdk_drag_context_get_actions(context) == GDK_ACTION_MOVE) {
-            gchar **uri_list = gtk_selection_data_get_uris(data);
-            guint num_files = g_strv_length(uri_list);
-            gchar **file_list = g_new0(gchar *, num_files + 1);
-            int i;
+            && (gtk_selection_data_get_format(data) == 8)) {
+        gchar **uri_list = gtk_selection_data_get_uris(data);
+        guint num_files = g_strv_length(uri_list);
+        gchar **file_list = g_new0(gchar *, num_files + 1);
+        int i;
 
-            for (i = 0; i < num_files; i++)
-                file_list[i] =
-                    g_filename_from_uri(uri_list[i], NULL, NULL);
+        for (i = 0; i < num_files; i++)
+            file_list[i] = g_filename_from_uri(uri_list[i], NULL, NULL);
 
-            g_strfreev(uri_list);
-            gtk_drag_finish(context, TRUE, FALSE, time);
-            trg_add_from_filename(win, file_list);
-            return;
-        }
+        g_strfreev(uri_list);
+        gtk_drag_finish(context, TRUE, FALSE, time);
+        trg_add_from_filename(win, file_list);
     }
+
     gtk_drag_finish(context, FALSE, FALSE, time);
 }
 
