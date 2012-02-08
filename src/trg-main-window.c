@@ -2504,9 +2504,9 @@ static void on_dropped_file(GtkWidget * widget, GdkDragContext * context,
         g_strfreev(uri_list);
         gtk_drag_finish(context, TRUE, FALSE, time);
         trg_add_from_filename(win, file_list);
+    } else {
+        gtk_drag_finish(context, FALSE, FALSE, time);
     }
-
-    gtk_drag_finish(context, FALSE, FALSE, time);
 }
 
 static GObject *trg_main_window_constructor(GType type,
