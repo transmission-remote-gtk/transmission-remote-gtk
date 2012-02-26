@@ -8,18 +8,18 @@ BUILDING
   * To optionally see which country peers are located in,
     install libgeoip and its headers when building.
 
-  Building a Transmission release from the command line:
+  Building a transmission-remote-gtk release from the command line:
 
     $ tar zxfv transmission-remote-gtk-1.0.tar.gz
     $ cd transmission-remote-gtk-1.0
     $ ./configure
     $ make
-    $ sudo make install
+    # make install
 
-  Building from subversion checkout:
+  Building from git clone:
     
-    $ svn co <repository URL>
+    $ git clone https://code.google.com/p/transmission-remote-gtk/
     $ ./autogen.sh
     $ ./configure
     $ make
-    $ sudo make install
+    # make install

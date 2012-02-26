@@ -399,14 +399,12 @@ void trg_client_updatelock(TrgClient * tc)
 
 void trg_client_configlock(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    g_mutex_lock(priv->configMutex);
+    g_mutex_lock(tc->priv->configMutex);
 }
 
 guint trg_client_get_failcount(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->failCount;
+    return tc->priv->failCount;
 }
 
 guint trg_client_inc_failcount(TrgClient * tc)
@@ -417,20 +415,17 @@ guint trg_client_inc_failcount(TrgClient * tc)
 
 void trg_client_reset_failcount(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    priv->failCount = 0;
+    tc->priv->failCount = 0;
 }
 
 void trg_client_updateunlock(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    g_mutex_unlock(priv->updateMutex);
+    g_mutex_unlock(tc->priv->updateMutex);
 }
 
 void trg_client_configunlock(TrgClient * tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    g_mutex_unlock(priv->configMutex);
+    g_mutex_unlock(tc->priv->configMutex);
 }
 
 /* formerly http.c */

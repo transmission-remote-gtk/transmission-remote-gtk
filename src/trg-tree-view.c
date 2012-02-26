@@ -38,7 +38,7 @@
  * by right clicking on any column for a menu to hide the clicked column, or
  * insert any hidden column after.
  *
- * This class persists these choices to TrgConf, and restores them when it is
+ * This class persists these choices to TrgPrefs, and restores them when it is
  * initialised. Column widths are also saved/restored.
  *
  * All the columns must be preregistered so it knows what model column,

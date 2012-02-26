@@ -125,9 +125,9 @@ static void delete_cb(GtkWidget * w, TrgMainWindow * win);
 static void open_props_cb(GtkWidget * w, TrgMainWindow * win);
 static gint confirm_action_dialog(GtkWindow * gtk_win,
                                   GtkTreeSelection * selection,
-                                  gchar * question_single,
-                                  gchar * question_multi,
-                                  gchar * action_stock);
+                                  const gchar * question_single,
+                                  const gchar * question_multi,
+                                  const gchar * action_stock);
 static void view_stats_toggled_cb(GtkWidget * w, gpointer data);
 static void view_states_toggled_cb(GtkCheckMenuItem * w,
                                    TrgMainWindow * win);
@@ -763,8 +763,8 @@ static void down_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
 static gint
 confirm_action_dialog(GtkWindow * gtk_win,
                       GtkTreeSelection * selection,
-                      gchar * question_single,
-                      gchar * question_multi, gchar * action_stock)
+                      const gchar * question_single,
+                      const gchar * question_multi, const gchar * action_stock)
 {
     TrgMainWindow *win = TRG_MAIN_WINDOW(gtk_win);
     TrgMainWindowPrivate *priv = win->priv;
@@ -1220,7 +1220,7 @@ static gboolean on_torrent_get(gpointer data, int mode)
             gchar *statusBarMsg =
                 g_strdup_printf(_("Request %d/%d failed: %s"),
                                 trg_client_get_failcount(client),
-                                max_retries, msg);
+                                (gint)max_retries, msg);
             trg_status_bar_push_connection_msg(priv->statusBar,
                                                statusBarMsg);
             g_free(msg);

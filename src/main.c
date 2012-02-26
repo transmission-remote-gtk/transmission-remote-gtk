@@ -30,6 +30,7 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
+#include <fontconfig/fontconfig.h>
 
 #if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
 #include <unique/unique.h>

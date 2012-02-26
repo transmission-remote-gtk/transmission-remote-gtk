@@ -588,6 +588,8 @@ static GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar * menu)
     priv->mb_reannounce =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                               _("Re-_announce"), GTK_STOCK_REFRESH, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_reannounce, GDK_q,
+                           GDK_CONTROL_MASK);
 
     priv->mb_move =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Move"),
