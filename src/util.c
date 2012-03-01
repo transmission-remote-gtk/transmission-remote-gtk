@@ -490,6 +490,22 @@ int tr_snprintf(char *buf, size_t buflen, const char *fmt, ...)
     return len;
 }
 
+gchar *epoch_to_string(gint64 epoch)
+{
+#if GLIB_CHECK_VERSION(2, 26, 00)
+        GDateTime *dt = g_date_time_new_from_unix_local(epoch);
+        gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
+        g_date_time_unref(dt);
+        return timestring;
+#else
+        char buf[64];
+        time_t time_val = epoch;
+        struct tm *ts = localtime(&time_val);
+        int wrote = strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ts);
+        return g_strndup(buf, wrote);
+#endif
+}
+
 size_t tr_strlcpy(char *dst, const void *src, size_t siz)
 {
 #ifdef HAVE_STRLCPY

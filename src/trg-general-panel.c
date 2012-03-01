@@ -59,6 +59,7 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_down_rate_label;
     GtkLabel *gen_up_rate_label;
     GtkLabel *gen_ratio_label;
+    GtkLabel *gen_completedat_label;
     GtkLabel *gen_downloaddir_label;
     GtkLabel *gen_comment_label;
     GtkLabel *gen_error_label;
@@ -82,6 +83,7 @@ void trg_general_panel_clear(TrgGeneralPanel * panel)
     gtk_label_clear(priv->gen_down_rate_label);
     gtk_label_clear(priv->gen_up_rate_label);
     gtk_label_clear(priv->gen_ratio_label);
+    gtk_label_clear(priv->gen_completedat_label);
     gtk_label_clear(priv->gen_downloaddir_label);
     gtk_label_clear(priv->gen_comment_label);
     gtk_label_clear(priv->gen_error_label);
@@ -111,10 +113,10 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     TrgGeneralPanelPrivate *priv;
     gchar buf[32];
     gint sizeOfBuf;
-    gchar *statusString, *fullStatusString;
+    gchar *statusString, *fullStatusString, *completedAtString;
     const gchar *comment;
     const gchar *errorStr;
-    gint64 eta, uploaded, downloaded;
+    gint64 eta, uploaded, downloaded, completedAt;
     GtkLabel *keyLabel;
     gint64 seeders = 0, leechers = 0;
 
@@ -151,6 +153,16 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), _("N/A"));
     }
 
+    completedAt = torrent_get_done_date(t);
+    if (completedAt > 0)
+    {
+        completedAtString = epoch_to_string(completedAt);
+        gtk_label_set_text(GTK_LABEL(priv->gen_completedat_label), completedAtString);
+        g_free(completedAtString);
+    } else {
+        gtk_label_set_text(GTK_LABEL(priv->gen_completedat_label), "");
+    }
+
     fullStatusString = g_strdup_printf("%s %s", statusString,
                                        torrent_get_is_private(t) ?
                                        _("(Private)") : _("(Public)"));
@@ -169,12 +181,15 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
                        torrent_get_download_dir(t));
 
     comment = torrent_get_comment(t);
-    if(comment == strstr(comment, "http://")) {
+    if(g_str_has_prefix(comment, "http")) {
       /* starts with http -> url, converting to markup */
-      comment = g_markup_printf_escaped("<a href='%s'>%s</a>",
+      gchar *commentMarkup = g_markup_printf_escaped("<a href='%s'>%s</a>",
                                              comment, comment);
-    };
-    gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
+      gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), commentMarkup);
+      g_free(commentMarkup);
+    } else {
+      gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
+    }
 
     errorStr = torrent_get_errorstr(t);
     keyLabel =
@@ -296,8 +311,12 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
     priv->gen_comment_label =
         trg_general_panel_add_label(self, _("Comment"), 2, 4);
 
+    priv->gen_completedat_label =
+        trg_general_panel_add_label_with_width(self, _("Completed At"), 0, 5,
+                                               -1);
+
     priv->gen_downloaddir_label =
-        trg_general_panel_add_label_with_width(self, _("Location"), 0, 5,
+        trg_general_panel_add_label_with_width(self, _("Location"), 1, 5,
                                                -1);
 
     priv->gen_error_label =

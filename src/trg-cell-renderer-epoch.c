@@ -68,19 +68,9 @@ trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
         gint64 new_value = g_value_get_int64(value);
         if (priv->epoch_value != new_value) {
             if (new_value > 0) {
-#if GLIB_CHECK_VERSION(2, 26, 00)
-                GDateTime *dt = g_date_time_new_from_unix_local(new_value);
-                gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
-                g_object_set(object, "text", timestring, NULL);
+                gchar *timestring = epoch_to_string(new_value);
+                g_object_set(object, "text", "", NULL);
                 g_free(timestring);
-                g_date_time_unref(dt);
-#else
-                time_t time_val = new_value;
-                char buf[64];
-                struct tm *ts = localtime(&time_val);
-                strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ts);
-                g_object_set(object, "text", buf, NULL);
-#endif
             } else {
                 g_object_set(object, "text", "", NULL);
             }
