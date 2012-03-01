@@ -60,6 +60,7 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_up_rate_label;
     GtkLabel *gen_ratio_label;
     GtkLabel *gen_downloaddir_label;
+    GtkLabel *gen_comment_label;
     GtkLabel *gen_error_label;
     GtkTreeModel *model;
     TrgClient *tc;
@@ -82,6 +83,7 @@ void trg_general_panel_clear(TrgGeneralPanel * panel)
     gtk_label_clear(priv->gen_up_rate_label);
     gtk_label_clear(priv->gen_ratio_label);
     gtk_label_clear(priv->gen_downloaddir_label);
+    gtk_label_clear(priv->gen_comment_label);
     gtk_label_clear(priv->gen_error_label);
     gtk_label_clear(gen_panel_label_get_key_label
                     (GTK_LABEL(priv->gen_error_label)));
@@ -110,6 +112,7 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gchar buf[32];
     gint sizeOfBuf;
     gchar *statusString, *fullStatusString;
+    const gchar *comment;
     const gchar *errorStr;
     gint64 eta, uploaded, downloaded;
     GtkLabel *keyLabel;
@@ -164,6 +167,14 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
 
     gtk_label_set_text(GTK_LABEL(priv->gen_downloaddir_label),
                        torrent_get_download_dir(t));
+
+    comment = torrent_get_comment(t);
+    if(comment == strstr(comment, "http://")) {
+      /* starts with http -> url, converting to markup */
+      comment = g_markup_printf_escaped("<a href='%s'>%s</a>",
+                                             comment, comment);
+    };
+    gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
 
     errorStr = torrent_get_errorstr(t);
     keyLabel =
@@ -281,6 +292,9 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
         trg_general_panel_add_label(self, _("Status"), 0, 4);
     priv->gen_ratio_label =
         trg_general_panel_add_label(self, _("Ratio"), 1, 4);
+
+    priv->gen_comment_label =
+        trg_general_panel_add_label(self, _("Comment"), 2, 4);
 
     priv->gen_downloaddir_label =
         trg_general_panel_add_label_with_width(self, _("Location"), 0, 5,

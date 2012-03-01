@@ -69,6 +69,11 @@ const gchar *torrent_get_download_dir(JsonObject * t)
     return json_object_get_string_member(t, FIELD_DOWNLOAD_DIR);
 }
 
+const gchar *torrent_get_comment(JsonObject * t)
+{
+    return json_object_get_string_member(t, FIELD_COMMENT);
+}
+
 gdouble torrent_get_metadata_percent_complete(JsonObject * t)
 {
     JsonNode *node =
