@@ -506,6 +506,23 @@ gchar *epoch_to_string(gint64 epoch)
 #endif
 }
 
+/* wrap a link in text with a hyperlink, for use in pango markup.
+ * with or without any links - a newly allocated string is returned. */
+
+gchar *add_links_to_text(const gchar *original) {
+    /* only perform replacement if string doesn't contains links */
+    if (!g_regex_match_simple("<a\\s.*>", original, 0, 0)) {
+        GRegex *regex = g_regex_new("(https?://[a-zA-Z0-9_\\-\\./?=]+)", 0, 0,
+                NULL);
+        gchar *newText = g_regex_replace(regex, original, -1, 0,
+                "<a href='\\1'>\\1</a>", 0, NULL);
+        g_regex_unref(regex);
+        return newText;
+    } else {
+        return g_strdup(original);
+    }
+}
+
 size_t tr_strlcpy(char *dst, const void *src, size_t siz)
 {
 #ifdef HAVE_STRLCPY

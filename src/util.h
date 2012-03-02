@@ -55,6 +55,7 @@ GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);
 gchar *make_error_message(JsonObject * response, int status);
 void trg_error_dialog(GtkWindow * parent, trg_response * response);
+gchar *add_links_to_text(const gchar *original);
 
 void
 tr_formatter_size_init(unsigned int kilo,

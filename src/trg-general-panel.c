@@ -113,8 +113,7 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     TrgGeneralPanelPrivate *priv;
     gchar buf[32];
     gint sizeOfBuf;
-    gchar *statusString, *fullStatusString, *completedAtString;
-    const gchar *comment;
+    gchar *statusString, *fullStatusString, *completedAtString, *comment;
     const gchar *errorStr;
     gint64 eta, uploaded, downloaded, completedAt;
     GtkLabel *keyLabel;
@@ -180,16 +179,9 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gtk_label_set_text(GTK_LABEL(priv->gen_downloaddir_label),
                        torrent_get_download_dir(t));
 
-    comment = torrent_get_comment(t);
-    if(g_str_has_prefix(comment, "http")) {
-      /* starts with http -> url, converting to markup */
-      gchar *commentMarkup = g_markup_printf_escaped("<a href='%s'>%s</a>",
-                                             comment, comment);
-      gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), commentMarkup);
-      g_free(commentMarkup);
-    } else {
-      gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
-    }
+    comment = add_links_to_text(torrent_get_comment(t));
+    gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
+    g_free(comment);
 
     errorStr = torrent_get_errorstr(t);
     keyLabel =
