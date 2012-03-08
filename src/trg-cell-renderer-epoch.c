@@ -69,7 +69,7 @@ trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
         if (priv->epoch_value != new_value) {
             if (new_value > 0) {
                 gchar *timestring = epoch_to_string(new_value);
-                g_object_set(object, "text", "", NULL);
+                g_object_set(object, "text", timestring, NULL);
                 g_free(timestring);
             } else {
                 g_object_set(object, "text", "", NULL);

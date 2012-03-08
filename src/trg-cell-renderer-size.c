@@ -63,13 +63,16 @@ trg_cell_renderer_size_set_property(GObject * object, guint property_id,
     TrgCellRendererSizePrivate *priv =
         TRG_CELL_RENDERER_SIZE_GET_PRIVATE(object);
     if (property_id == PROP_SIZE_VALUE) {
-        priv->size_value = g_value_get_int64(value);
-        if (priv->size_value > 0) {
-            char sizeString[32];
-            trg_strlsize(sizeString, priv->size_value);
-            g_object_set(object, "text", sizeString, NULL);
-        } else {
-            g_object_set(object, "text", "", NULL);
+        gint64 new_value = g_value_get_int64(value);
+        if (priv->size_value != new_value) {
+            if (new_value > 0) {
+                char sizeString[32];
+                trg_strlsize(sizeString, new_value);
+                g_object_set(object, "text", sizeString, NULL);
+            } else {
+                g_object_set(object, "text", "", NULL);
+            }
+            priv->size_value = new_value;
         }
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
