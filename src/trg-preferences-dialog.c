@@ -427,6 +427,10 @@ static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_row(t, &row, _("Minimised update interval:"), w,
                          NULL);
 
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_SESSION_UPDATE_INTERVAL, 1, INT_MAX, 1,
+                      TRG_PREFS_PROFILE, NULL);
+    hig_workarea_add_row(t, &row, _("Session update interval:"), w, NULL);
+
     hig_workarea_add_section_title(t, &row, _("Torrents"));
 
     w = trgp_check_new(dlg, _("Start paused"), TRG_PREFS_KEY_START_PAUSED,

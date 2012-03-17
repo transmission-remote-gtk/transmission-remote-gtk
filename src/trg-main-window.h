@@ -62,6 +62,7 @@ typedef struct {
 GType trg_main_window_get_type(void);
 gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
 gboolean on_session_set(gpointer data);
+gboolean on_delete_complete(gpointer data);
 gboolean on_generic_interactive_action(gpointer data);
 void auto_connect_if_required(TrgMainWindow * win);
 void trg_main_window_set_start_args(TrgMainWindow * win, gchar ** args);

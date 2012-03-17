@@ -27,6 +27,7 @@
 #define TRG_PREFS_DEFAULT_DIR_MODE  448
 #define TRG_PORT_DEFAULT            9091
 #define TRG_INTERVAL_DEFAULT        3
+#define TRG_SESSION_INTERVAL_DEFAULT 60
 #define TRG_PROFILE_NAME_DEFAULT   "Default"
 
 #define TRG_PREFS_KEY_PROFILE_ID    "profile-id"
@@ -42,6 +43,7 @@
 #define TRG_PREFS_KEY_TIMEOUT            "timeout"
 #define TRG_PREFS_KEY_RETRIES            "retries"
 #define TRG_PREFS_KEY_UPDATE_INTERVAL "update-interval"
+#define TRG_PREFS_KEY_SESSION_UPDATE_INTERVAL "session-update-interval"
 #define TRG_PREFS_KEY_COMPLETE_NOTIFY "complete-notify"
 #define TRG_PREFS_KEY_ADD_NOTIFY    "add-notify"
 #define TRG_PREFS_KEY_WINDOW_WIDTH  "window-width"

@@ -36,6 +36,7 @@
 #include "trg-prefs.h"
 #include "protocol-constants.h"
 #include "util.h"
+#include "requests.h"
 #include "trg-client.h"
 
 /* This class manages/does quite a few things, and is passed around a lot. It:
@@ -687,4 +688,10 @@ dispatch_async_str(TrgClient * tc, gchar * req,
     trg_req->str = req;
 
     return dispatch_async_common(tc, trg_req, callback, data);
+}
+
+gboolean trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer data)
+{
+    return dispatch_async(tc, session_get(), callback,
+            data);
 }
