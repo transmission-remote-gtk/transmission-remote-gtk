@@ -1052,8 +1052,6 @@ static gboolean on_session_get(gpointer data)
     JsonObject *lastSession = trg_client_get_session(client);
     JsonObject *newSession = NULL;
 
-    g_message("session update!");
-
     if (response->obj)
         newSession = get_arguments(response->obj);
 
