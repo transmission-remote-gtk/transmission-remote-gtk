@@ -47,7 +47,6 @@
 #define TORRENT_GET_TAG_MODE_UPDATE -2
 
 #define TRG_NO_HOSTNAME_SET -2
-#define SESSION_UPDATE_DIVISOR 10
 
 #define HTTP_URI_PREFIX "http"
 #define HTTPS_URI_PREFIX "https"

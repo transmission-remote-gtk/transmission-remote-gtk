@@ -43,4 +43,5 @@ src/trg-torrent-tree-view.c
 src/trg-trackers-model.c
 src/trg-trackers-tree-view.c
 src/trg-tree-view.c
+src/trg-files-tree-view-common.c
 src/util.c
