@@ -1176,14 +1176,14 @@ update_whatever_statusicon(TrgMainWindow * win,
         gchar *seedingLabel;
         gchar buf[32];
 
-        trg_strlspeed(buf, stats->downRateTotal);
+        trg_strlspeed(buf, stats->downRateTotal / disk_K);
         downloadingLabel = g_strdup_printf(_("%d Downloading @ %s"),
                                            stats->down, buf);
         gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconDownloadingItem),
                                 downloadingLabel);
         g_free(downloadingLabel);
 
-        trg_strlspeed(buf, stats->upRateTotal);
+        trg_strlspeed(buf, stats->upRateTotal / disk_K);
         seedingLabel = g_strdup_printf(_("%d Seeding @ %s"),
                                        stats->seeding, buf);
         gtk_menu_item_set_label(GTK_MENU_ITEM(priv->iconSeedingItem),
