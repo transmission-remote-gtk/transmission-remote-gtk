@@ -115,7 +115,7 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gint sizeOfBuf;
     gchar *statusString, *fullStatusString, *completedAtString, *comment;
     const gchar *errorStr;
-    gint64 eta, uploaded, downloaded, completedAt;
+    gint64 eta, uploaded, haveValid, completedAt;
     GtkLabel *keyLabel;
     gint64 seeders = 0, leechers = 0;
 
@@ -141,12 +141,12 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     trg_strlsize(buf, uploaded);
     gtk_label_set_text(GTK_LABEL(priv->gen_uploaded_label), buf);
 
-    downloaded = torrent_get_downloaded(t);
-    trg_strlsize(buf, downloaded);
+    haveValid = torrent_get_have_valid(t);
+    trg_strlsize(buf, torrent_get_downloaded(t));
     gtk_label_set_text(GTK_LABEL(priv->gen_downloaded_label), buf);
 
-    if (uploaded > 0 && downloaded > 0) {
-        trg_strlratio(buf, (double) uploaded / (double) downloaded);
+    if (uploaded > 0 && haveValid > 0) {
+        trg_strlratio(buf, (double) uploaded / (double) haveValid);
         gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), buf);
     } else {
         gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), _("N/A"));
