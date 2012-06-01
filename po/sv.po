@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-03-01 22:09+0000\n"
-"PO-Revision-Date: 2012-05-21 08:26+0100\n"
+"PO-Revision-Date: 2012-05-28 10:23+0100\n"
 "Last-Translator: swanson <webaake@gmail.com>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: Swedish\n"
@@ -30,13 +30,13 @@ msgstr "Köad nedladdning"
 #: src/torrent.c:331
 #: src/torrent.c:355
 msgid "Waiting To Check"
-msgstr "Väntar på kontroll"
+msgstr "Väntar på verifiering"
 
 #: src/torrent.c:333
 #: src/torrent.c:353
 #: src/trg-state-selector.c:684
 msgid "Checking"
-msgstr "Kontrollerar"
+msgstr "Verifierar"
 
 #: src/torrent.c:335
 msgid "Queued seed"
@@ -48,13 +48,13 @@ msgstr "Köad seed"
 #: src/trg-state-selector.c:665
 #: src/trg-torrent-props-dialog.c:208
 msgid "Seeding"
-msgstr "Seedar"
+msgstr "Seedning"
 
 #: src/torrent.c:339
 #: src/torrent.c:349
 #: src/trg-state-selector.c:672
 msgid "Paused"
-msgstr "Pausad"
+msgstr "Pausade"
 
 #: src/torrent.c:359
 msgid "Unknown"
@@ -148,7 +148,7 @@ msgstr "Kollapsa alla"
 #: src/trg-general-panel.c:153
 #: src/trg-general-panel.c:219
 msgid "N/A"
-msgstr "Inget alternativ"
+msgstr "N/A"
 
 #: src/trg-general-panel.c:168
 msgid "(Private)"
@@ -455,7 +455,7 @@ msgstr "_Visa"
 #: src/trg-menu-bar.c:398
 #: src/trg-preferences-dialog.c:669
 msgid "State selector"
-msgstr "Tillståndsväljare"
+msgstr "Statusfönster"
 
 #: src/trg-menu-bar.c:404
 #: src/trg-preferences-dialog.c:676
@@ -490,7 +490,7 @@ msgstr "_Server inställningar"
 
 #: src/trg-menu-bar.c:521
 msgid "_File"
-msgstr "_Fil"
+msgstr "_Arkiv"
 
 #: src/trg-menu-bar.c:534
 msgid "_Disconnect"
@@ -601,7 +601,7 @@ msgstr "Uppdateringsintervall:"
 
 #: src/trg-preferences-dialog.c:427
 msgid "Minimised update interval:"
-msgstr "Minimerad uppdateringsintervall:"
+msgstr "Uppdateringsintervall minimerat:"
 
 #: src/trg-preferences-dialog.c:430
 msgid "Torrents"
@@ -618,7 +618,7 @@ msgstr "Alternativdialog vid tillägg"
 #: src/trg-preferences-dialog.c:441
 #: src/trg-torrent-add-dialog.c:687
 msgid "Delete local .torrent file after adding"
-msgstr "Radara lokal .torrentfil efter tillagd"
+msgstr "Radera lokal .torrentfil efter tillagd"
 
 #: src/trg-preferences-dialog.c:594
 msgid "Commands"
@@ -746,7 +746,7 @@ msgstr "Alternativa begränsningar"
 
 #: src/trg-remote-prefs-dialog.c:326
 msgid "Alternate speed limits active"
-msgstr "Alterantiva begränsningar aktiverade"
+msgstr "Alternativa begränsningar aktiverade"
 
 #: src/trg-remote-prefs-dialog.c:333
 msgid "Alternate time range"
@@ -803,7 +803,7 @@ msgstr "Porten är  <span font_weight=\"bold\" fgcolor=\"red\">stängd</span>"
 #: src/trg-remote-prefs-dialog.c:453
 #: src/trg-remote-prefs-dialog.c:522
 msgid "Port test"
-msgstr "Test av port"
+msgstr "Testa port"
 
 #: src/trg-remote-prefs-dialog.c:454
 msgid "Testing..."
@@ -948,15 +948,15 @@ msgstr "Kö ned"
 
 #: src/trg-state-selector.c:675
 msgid "Complete"
-msgstr "Komplett"
+msgstr "Kompletta"
 
 #: src/trg-state-selector.c:678
 msgid "Incomplete"
-msgstr "Pågående"
+msgstr "Ej kompletta"
 
 #: src/trg-state-selector.c:681
 msgid "Active"
-msgstr "Aktiv"
+msgstr "Aktiva"
 
 #: src/trg-stats-dialog.c:275
 msgid "Statistics"
@@ -1164,7 +1164,7 @@ msgstr "Seeda oavsett ratio"
 
 #: src/trg-torrent-props-dialog.c:216
 msgid "Seed ratio mode:"
-msgstr "Seed ratio sätt:"
+msgstr "Alternativ för ratio:"
 
 #: src/trg-torrent-props-dialog.c:224
 msgid "Seed ratio limit:"
@@ -1172,7 +1172,7 @@ msgstr "Seed ratio max:"
 
 #: src/trg-torrent-props-dialog.c:230
 msgid "Peer limit:"
-msgstr "Peer max antal:"
+msgstr "Max antal peers:"
 
 #: src/trg-torrent-props-dialog.c:264
 #, c-format
@@ -1253,7 +1253,7 @@ msgstr "Senast aktiv"
 
 #: src/trg-trackers-tree-view.c:168
 msgid "Tier"
-msgstr "Segment"
+msgstr "#"
 
 #: src/trg-trackers-tree-view.c:174
 msgid "Announce URL"

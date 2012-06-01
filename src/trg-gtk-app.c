@@ -102,7 +102,7 @@ trg_gtk_app_command_line(GApplication * application,
     TrgMainWindow *window = TRG_MAIN_WINDOW(windows->data);
     gchar **argv = g_application_command_line_get_arguments(cmdline, NULL);
 
-    if (g_application_get_is_remote(application)) {
+    if (g_application_command_line_get_is_remote(cmdline)) {
         if (!argv[0]) {
             gtk_window_present(GTK_WINDOW(window));
             g_strfreev(argv);
