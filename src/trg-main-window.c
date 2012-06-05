@@ -2631,14 +2631,14 @@ static GObject *trg_main_window_constructor(GType type,
     g_signal_connect(priv->torrentTreeView, "row-activated",
                      G_CALLBACK(torrent_tv_onRowActivated), self);
 
-    outerVbox = gtk_vbox_new(FALSE, 0);
+    outerVbox = trg_vbox_new(FALSE, 0);
     gtk_container_add(GTK_CONTAINER(self), outerVbox);
 
     priv->menuBar = trg_main_window_menu_bar_new(self);
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(priv->menuBar),
                        FALSE, FALSE, 0);
 
-    toolbarHbox = gtk_hbox_new(FALSE, 0);
+    toolbarHbox = trg_hbox_new(FALSE, 0);
     priv->toolBar = trg_main_window_toolbar_new(self);
     gtk_box_pack_start(GTK_BOX(toolbarHbox), GTK_WIDGET(priv->toolBar),
                        TRUE, TRUE, 0);
@@ -2658,8 +2658,14 @@ static GObject *trg_main_window_constructor(GType type,
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(toolbarHbox), FALSE,
                        FALSE, 0);
 
+#if GTK_CHECK_VERSION( 3, 0, 0 )
+    priv->hpaned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
+    priv->vpaned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+#else
     priv->vpaned = gtk_vpaned_new();
     priv->hpaned = gtk_hpaned_new();
+#endif
+
     gtk_box_pack_start(GTK_BOX(outerVbox), priv->vpaned, TRUE, TRUE, 0);
     gtk_paned_pack1(GTK_PANED(priv->vpaned), priv->hpaned, TRUE, TRUE);
 

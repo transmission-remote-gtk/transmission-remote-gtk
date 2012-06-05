@@ -373,7 +373,7 @@ static GObject *trg_persistent_tree_view_constructor(GType type,
                                                              construct_params);
     priv = GET_PRIVATE(object);
 
-    hbox = gtk_hbox_new(FALSE, 0);
+    hbox = trg_hbox_new(FALSE, 0);
 
     w = gtk_button_new_from_stock(GTK_STOCK_ADD);
     g_signal_connect(w, "clicked",

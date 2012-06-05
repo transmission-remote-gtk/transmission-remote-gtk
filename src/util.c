@@ -583,3 +583,27 @@ gboolean should_be_minimised(int argc, char *argv[])
 
     return FALSE;
 }
+
+GtkWidget *trg_hbox_new(gboolean homogeneous, gint spacing)
+{
+	GtkWidget *box;
+#if GTK_CHECK_VERSION( 3, 0, 0 )
+	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, spacing);
+	gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
+#else
+	box = gtk_hbox_new(homogenous, spacing);
+#endif
+	return box;
+}
+
+GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing)
+{
+	GtkWidget *box;
+#if GTK_CHECK_VERSION( 3, 0, 0 )
+	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, spacing);
+	gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
+#else
+	box = gtk_vbox_new(homogenous, spacing);
+#endif
+	return box;
+}

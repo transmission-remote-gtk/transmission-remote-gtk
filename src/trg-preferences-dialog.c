@@ -763,7 +763,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     priv->profileComboBox = trg_prefs_profile_combo_new(priv->client);
     profileLabel = gtk_label_new(_("Profile: "));
 
-    profileButtonsHbox = gtk_hbox_new(FALSE, 0);
+    profileButtonsHbox = trg_hbox_new(FALSE, 0);
     w = gtk_button_new_from_stock(GTK_STOCK_NEW);
     g_signal_connect(w, "clicked", G_CALLBACK(add_profile_cb),
                      priv->profileComboBox);
@@ -831,7 +831,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_row(t, &row, _("Retries:"), w, NULL);
 
     frame = gtk_frame_new(NULL);
-    frameHbox = gtk_hbox_new(FALSE, 2);
+    frameHbox = trg_hbox_new(FALSE, 2);
     gtk_box_pack_start(GTK_BOX(frameHbox), profileLabel, FALSE, FALSE, 2);
     gtk_box_pack_start(GTK_BOX(frameHbox), priv->profileComboBox, FALSE,
                        FALSE, 4);

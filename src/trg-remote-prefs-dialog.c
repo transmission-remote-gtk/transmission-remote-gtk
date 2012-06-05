@@ -219,7 +219,7 @@ static GtkWidget *trg_rprefs_time_widget_new(GList ** wl, JsonObject * obj,
                                              const gchar * key,
                                              GtkWidget * alt_time_check)
 {
-    GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
+    GtkWidget *hbox = trg_hbox_new(FALSE, 0);
     GtkWidget *colonLabel = gtk_label_new(":");
     GtkWidget *hourSpin =
         trg_rprefs_timer_widget_spin_new(23, alt_time_check);
@@ -253,7 +253,7 @@ static GtkWidget *trg_rprefs_time_begin_end_new(GList ** wl,
                                                 JsonObject * obj,
                                                 GtkWidget * alt_time_check)
 {
-    GtkWidget *hbox = gtk_hbox_new(FALSE, 0);
+    GtkWidget *hbox = trg_hbox_new(FALSE, 0);
     GtkWidget *begin = trg_rprefs_time_widget_new(wl, obj,
                                                   SGET_ALT_SPEED_TIME_BEGIN,
                                                   alt_time_check);
