@@ -18,6 +18,7 @@
  */
 
 #include <string.h>
+#include <limits.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
@@ -409,8 +410,8 @@ trg_files_model_update(TrgFilesModel * model, GtkTreeView * tv,
             filesListLength > TRG_FILES_MODEL_CREATE_THREAD_IF_GT;
 
         /* If this update has more than a given number of files, build up the
-         * simple tree in a thread, then g_idle_add a function whichs
-         * add the contents of this prebuilt tree.
+         * simple tree in a thread, then g_idle_add a function which
+         * adds the contents of this prebuilt tree.
          *
          * If less than or equal to, I don't think it's worth spawning threads
          * for. Just do it in the main loop.

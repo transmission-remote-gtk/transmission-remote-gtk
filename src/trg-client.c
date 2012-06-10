@@ -21,6 +21,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <stddef.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <glib/gi18n.h>

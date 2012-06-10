@@ -633,6 +633,71 @@ trg_torrent_add_dialog_source_click_cb(GtkWidget * w, gpointer data)
     gtk_widget_destroy(GTK_WIDGET(d));
 }
 
+static gboolean
+apply_all_changed_foreachfunc(GtkTreeModel *model,
+        GtkTreePath *path,
+        GtkTreeIter *iter,
+        gpointer data)
+{
+	GtkComboBox *combo = GTK_COMBO_BOX(data);
+	GtkTreeModel *combo_model = gtk_combo_box_get_model(combo);
+	GtkTreeIter selection_iter;
+	if (gtk_combo_box_get_active_iter(combo, &selection_iter)) {
+		gint column;
+		gint value;
+	    GValue gvalue = { 0 };
+	    g_value_init(&gvalue, G_TYPE_INT);
+		gtk_tree_model_get(combo_model, &selection_iter, 2, &column, 3, &value, -1);
+		g_value_set_int(&gvalue, value);
+		gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, column, &gvalue);
+	}
+	return FALSE;
+}
+
+static void
+trg_torrent_add_dialog_apply_all_changed_cb(GtkWidget * w, gpointer data)
+{
+    TrgTorrentAddDialogPrivate *priv =
+        TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(data);
+    GtkWidget *tv = gtk_bin_get_child(GTK_BIN(priv->file_list));
+    GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tv));
+    gtk_tree_model_foreach(model, apply_all_changed_foreachfunc, w);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(w), -1);
+}
+
+static GtkWidget *trg_torrent_add_dialog_apply_all_combo_new(TrgTorrentAddDialog *dialog)
+{
+	GtkListStore *model = gtk_list_store_new(4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT);
+	GtkWidget *combo = gtk_combo_box_new();
+	GtkTreeIter iter;
+	GtkCellRenderer *renderer;
+
+	gtk_list_store_append(model, &iter);
+	gtk_list_store_set(model, &iter, 1, _("High Priority"), 2, FC_PRIORITY, 3, TR_PRI_HIGH, -1);
+	gtk_list_store_append(model, &iter);
+	gtk_list_store_set(model, &iter, 1, _("Normal Priority"), 2, FC_PRIORITY, 3, TR_PRI_NORMAL, -1);
+	gtk_list_store_append(model, &iter);
+	gtk_list_store_set(model, &iter, 1, _("Low Priority"), 2, FC_PRIORITY, 3, TR_PRI_LOW, -1);
+	gtk_list_store_append(model, &iter);
+	gtk_list_store_set(model, &iter, 0, GTK_STOCK_APPLY, 1, _("Download"), 2, FC_ENABLED, 3, TRUE, -1);
+	gtk_list_store_append(model, &iter);
+	gtk_list_store_set(model, &iter, 0, GTK_STOCK_CANCEL, 1, _("Skip"), 2, FC_ENABLED, 3, FALSE, -1);
+
+	renderer = gtk_cell_renderer_pixbuf_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
+    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer, "stock-id", 0);
+    renderer = gtk_cell_renderer_text_new();
+    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
+    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer, "text", 1);
+
+    gtk_combo_box_set_model(GTK_COMBO_BOX(combo), GTK_TREE_MODEL(model));
+    g_signal_connect(combo, "changed",
+                     G_CALLBACK(trg_torrent_add_dialog_apply_all_changed_cb),
+                     dialog);
+
+	return combo;
+}
+
 static GObject *trg_torrent_add_dialog_constructor(GType type,
                                                    guint
                                                    n_construct_properties,
@@ -647,7 +712,7 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
         TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(obj);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
 
-    GtkWidget *t, *l;
+    GtkWidget *t, *l, *applyall_combo;
     gint row = 0;
     gint col = 0;
 
@@ -731,6 +796,16 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     gtk_widget_set_size_request(priv->file_list, 466u, 300u);
     gtk_table_attach_defaults(GTK_TABLE(t), priv->file_list, col, col + 2,
                               row, row + 1);
+
+    ++row;
+    l = gtk_label_new_with_mnemonic(_("Apply to all:"));
+    gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
+    gtk_table_attach(GTK_TABLE(t), l, col, col + 1, row, row + 1, ~0, 0, 0,
+                     0);
+    ++col;
+    applyall_combo = trg_torrent_add_dialog_apply_all_combo_new(TRG_TORRENT_ADD_DIALOG(obj));
+    gtk_table_attach(GTK_TABLE(t), applyall_combo, col, col + 1, row,
+                     row + 1, ~0, 0, 0, 0);
 
     ++row;
     col = 0;
