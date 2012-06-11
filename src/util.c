@@ -591,7 +591,7 @@ GtkWidget *trg_hbox_new(gboolean homogeneous, gint spacing)
 	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, spacing);
 	gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
 #else
-	box = gtk_hbox_new(homogenous, spacing);
+	box = gtk_hbox_new(homogeneous, spacing);
 #endif
 	return box;
 }
@@ -603,7 +603,7 @@ GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing)
 	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, spacing);
 	gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
 #else
-	box = gtk_vbox_new(homogenous, spacing);
+	box = gtk_vbox_new(homogeneous, spacing);
 #endif
 	return box;
 }
