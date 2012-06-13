@@ -19,6 +19,7 @@
 
 /* Many of these functions are taken from the Transmission Project. */
 
+#include <limits.h>
 #include <stdlib.h>
 #include <math.h>
 #include <string.h>

@@ -2555,6 +2555,18 @@ static void on_dropped_file(GtkWidget * widget, GdkDragContext * context,
     }
 }
 
+static gboolean window_key_press_handler(GtkWidget *widget, GdkEvent *event,
+		gpointer user_data) {
+	TrgMainWindow *win = TRG_MAIN_WINDOW(widget);
+
+	if ((event->key.state & GDK_CONTROL_MASK) && event->key.keyval == GDK_KEY_k) {
+		gtk_widget_grab_focus(win->priv->filterEntry);
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 static GObject *trg_main_window_constructor(GType type,
                                             guint n_construct_properties,
                                             GObjectConstructParam *
@@ -2599,6 +2611,7 @@ static GObject *trg_main_window_constructor(GType type,
                      G_CALLBACK(window_state_event), NULL);
     g_signal_connect(G_OBJECT(self), "configure-event",
                      G_CALLBACK(trg_main_window_config_event), NULL);
+    g_signal_connect (G_OBJECT(self), "key-press-event", G_CALLBACK (window_key_press_handler), NULL);
 
     priv->torrentModel = trg_torrent_model_new();
     trg_client_set_torrent_table(priv->client,
