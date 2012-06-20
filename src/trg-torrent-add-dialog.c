@@ -72,6 +72,8 @@ struct _TrgTorrentAddDialogPrivate {
     GtkWidget *delete_check;
 };
 
+#define MAGNET_MAX_LINK_WIDTH		75
+
 static void trg_torrent_add_dialog_set_property(GObject * object,
                                                 guint prop_id,
                                                 const GValue * value,
@@ -526,7 +528,16 @@ trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
     if (nfiles == 1) {
         gchar *file_name = (gchar *) filenames->data;
         if (is_url(file_name) || is_magnet(file_name)) {
-            gtk_button_set_label(chooser, file_name);
+        	if (strlen(file_name) > MAGNET_MAX_LINK_WIDTH) {
+        		gchar *file_name_trunc = g_strndup(file_name, MAGNET_MAX_LINK_WIDTH);
+        		gchar *file_name_trunc_fmt  = g_strdup_printf("%s ...", file_name_trunc);
+        		gtk_button_set_label(chooser, file_name_trunc_fmt);
+        		g_free(file_name_trunc);
+        		g_free(file_name_trunc_fmt);
+        	} else {
+        		gtk_button_set_label(chooser, file_name);
+        	}
+
             gtk_widget_set_sensitive(priv->file_list, FALSE);
             gtk_widget_set_sensitive(priv->delete_check, FALSE);
         } else {
