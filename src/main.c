@@ -142,7 +142,7 @@ trg_libunique_init(TrgClient * client, int argc,
     return EXIT_SUCCESS;
 }
 
-#elif GTK_CHECK_VERSION( 3, 0, 0 )
+#elif !WIN32 && GTK_CHECK_VERSION( 3, 0, 0 )
 
 /* GtkApplication - the replacement for libunique.
  * This is implemented in trg-gtk-app.c
