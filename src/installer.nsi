@@ -62,6 +62,8 @@ Var StartMenuFolder
 ; English
 LangString NAME_SecTransmissionRemoteGTK ${LANG_ENGLISH} "Transmission Remote GTK (required)"
 LangString DESC_SecTransmissionRemoteGTK ${LANG_ENGLISH} "The application."
+LangString NAME_GeoIP ${LANG_ENGLISH} "GeoIP database"
+LangString DESC_GeoIP ${LANG_ENGLISH} "Shows the country of origin for a peer"
 LangString NAME_SecGlibGtkEtc ${LANG_ENGLISH} "Glib, GTK, and other dependencies (recommended)."
 LangString DESC_SecGlibGtkEtc ${LANG_ENGLISH} "If unset, you'll need to install these yourself."
 LangString NAME_SecDesktopIcon ${LANG_ENGLISH} "Create icon on desktop"
@@ -184,6 +186,13 @@ Section $(NAME_SecTransmissionRemoteGTK) SecTransmissionRemoteGTK
 !endif
   !insertmacro MUI_STARTMENU_WRITE_END
 
+SectionEnd
+
+Section $(NAME_GeoIP) SecGeoIP
+  SetOutPath $INSTDIR
+  
+  File "..\GeoIP.dat"
+  File "..\GeoIPv6.dat"
 SectionEnd
 
 Section $(NAME_SecGlibGtkEtc) SecGlibGtkEtc
@@ -331,11 +340,6 @@ Section /o $(NAME_SecDesktopIcon) SecDesktopIcon
   CreateShortCut "$DESKTOP\Transmission Remote GTK.lnk" "$INSTDIR\bin\transmission-remote-gtk.exe" "" "$INSTDIR\bin\transmission-remote-gtk.exe" 0
 SectionEnd
 
-;Section "GeoIP Database" SecGeoIPDatabase
-;  SetOutPath "$INSTDIR"
-;  File "GeoIP.dat"
-;SectionEnd
-
 ;!ifndef PORTABLE
 ;SubSection $(NAME_SecFiletypeAssociations) SecFiletypeAssociations
 
@@ -384,8 +388,10 @@ Section "Uninstall"
   ; Remove files and uninstaller
   Delete "$INSTDIR\COPYING.txt"
   Delete "$INSTDIR\README.txt"
-  Delete "$INSTDIR\AUTHORS.txt"
+  Delete "$INSTDIR\AUTHORS.txt"  
   Delete "$INSTDIR\ChangeLog.txt"
+  Delete "$INSTDIR\GeoIP.dat"
+  Delete "$INSTDIR\GeoIPv6.dat"
   Delete "$INSTDIR\uninstall.exe"
   Delete "$INSTDIR\bin\transmission-remote-gtk.exe"
   Delete "$INSTDIR\bin\freetype6.dll"
@@ -592,6 +598,7 @@ SectionEnd
 
 !insertmacro MUI_FUNCTION_DESCRIPTION_BEGIN
   !insertmacro MUI_DESCRIPTION_TEXT ${SecTransmissionRemoteGTK} $(DESC_SecTransmissionRemoteGTK)
+  !insertmacro MUI_DESCRIPTION_TEXT ${SecGeoIP} $(DESC_GeoIP)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecGlibGtkEtc} $(DESC_SecGlibGtkEtc)
   !insertmacro MUI_DESCRIPTION_TEXT ${SecDesktopIcon} $(DESC_SecDesktopIcon)
 ;  !insertmacro MUI_DESCRIPTION_TEXT ${SecFiletypeAssociations} $(DESC_SecFiletypeAssociations)

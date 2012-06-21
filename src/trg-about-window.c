@@ -37,10 +37,7 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gchar *licenseFile;
 
 #ifdef WIN32
-    gchar *moddir =
-        g_win32_get_package_installation_directory_of_module(NULL);
-    licenseFile = g_build_filename(moddir, "COPYING.TXT", NULL);
-    g_free(moddir);
+    licenseFile = trg_win32_support_path("COPYING.TXT");
 #else
     licenseFile = g_strdup(TRGLICENSE);
 #endif

@@ -112,7 +112,8 @@ if WIN32
 %.o : %.rc
 	windres $^ -o $@
 
-AM_CFLAGS = -mms-bitfields -mwin32 -mwindows
+CFLAGS += -mms-bitfields -mwin32 -mwindows
+LDFLAGS += -Wl,--allow-multiple-definition -lws2_32 -lintl
 transmission_remote_gtk_SOURCES += win32.rc win32-mailslot.c
 INCLUDES += -O2
 else

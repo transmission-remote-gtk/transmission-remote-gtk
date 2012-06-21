@@ -19,6 +19,10 @@
 
 /* Many of these functions are taken from the Transmission Project. */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <limits.h>
 #include <stdlib.h>
 #include <math.h>
@@ -608,3 +612,13 @@ GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing)
 #endif
 	return box;
 }
+
+#ifdef WIN32
+gchar *trg_win32_support_path(gchar *file) {
+    gchar *moddir =
+        g_win32_get_package_installation_directory_of_module(NULL);
+    gchar *path = g_build_filename(moddir, file, NULL);
+    g_free(moddir);
+	return path;
+}
+#endif

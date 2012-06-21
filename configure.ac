@@ -47,6 +47,9 @@ case "${host_os}" in
 esac
 
 AM_CONDITIONAL([WIN32], test "$WIN32" = "yes")
+#if WIN32
+CFLAGS="$CFLAGS -IC:/MinGW/msys/1.0/include"
+#endif
 
 trglicense='${docdir}-$(PACKAGE_VERSION)/COPYING'
 AC_SUBST(trglicense)

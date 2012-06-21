@@ -98,4 +98,8 @@ gboolean is_minimised_arg(const gchar * arg);
 GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing);
 GtkWidget *trg_hbox_new(gboolean homogeneous, gint spacing);
 
+#ifdef WIN32
+gchar *trg_win32_support_path(gchar *file);
+#endif
+
 #endif                          /* UTIL_H_ */

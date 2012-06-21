@@ -246,12 +246,24 @@ static void trg_peers_model_init(TrgPeersModel * self)
                                     column_types);
 
 #ifdef HAVE_GEOIP
-    if (g_file_test(TRG_GEOIP_DATABASE, G_FILE_TEST_EXISTS) == TRUE)
-        priv->geoip = GeoIP_open(TRG_GEOIP_DATABASE,
+#ifdef WIN32
+    gchar *geoip_db_path = trg_win32_support_path("GeoIP.dat");
+	gchar *geoip_v6_db_path = trg_win32_support_path("GeoIP.dat");
+#else
+    gchar *geoip_db_path = g_strdup(TRG_GEOIP_DATABASE);
+	gchar *geoip_v6_db_path = g_strdup(TRG_GEOIPV6_DATABASE);
+#endif
+
+    if (g_file_test(geoip_db_path, G_FILE_TEST_EXISTS) == TRUE)
+        priv->geoip = GeoIP_open(geoip_db_path,
                                  GEOIP_STANDARD | GEOIP_CHECK_CACHE);
-    if (g_file_test(TRG_GEOIPV6_DATABASE, G_FILE_TEST_EXISTS) == TRUE)
-        priv->geoipv6 = GeoIP_open(TRG_GEOIPV6_DATABASE,
+								 
+    if (g_file_test(geoip_v6_db_path, G_FILE_TEST_EXISTS) == TRUE)
+        priv->geoipv6 = GeoIP_open(geoip_v6_db_path,
                                    GEOIP_STANDARD | GEOIP_CHECK_CACHE);
+								   
+	g_free(geoip_db_path);
+	g_free(geoip_v6_db_path);
 #endif
 }
 
