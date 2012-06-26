@@ -2379,10 +2379,8 @@ window_state_event(TrgMainWindow * win,
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
 
     if (priv->statusIcon
-        && event->changed_mask == GDK_WINDOW_STATE_ICONIFIED
-        && (event->new_window_state == GDK_WINDOW_STATE_ICONIFIED
-            || event->new_window_state ==
-            (GDK_WINDOW_STATE_ICONIFIED | GDK_WINDOW_STATE_MAXIMIZED))
+        && (event->changed_mask & GDK_WINDOW_STATE_ICONIFIED)
+        && (event->new_window_state & GDK_WINDOW_STATE_ICONIFIED)
         && trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
                               TRG_PREFS_GLOBAL)) {
         gtk_widget_hide(GTK_WIDGET(win));

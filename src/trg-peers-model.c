@@ -225,6 +225,8 @@ static void trg_peers_model_init(TrgPeersModel * self)
 {
 #ifdef HAVE_GEOIP
     TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(self);
+    gchar *geoip_db_path = NULL;
+    gchar *geoip_v6_db_path = NULL;
 #endif
 
     GType column_types[PEERSCOL_COLUMNS];
@@ -247,11 +249,11 @@ static void trg_peers_model_init(TrgPeersModel * self)
 
 #ifdef HAVE_GEOIP
 #ifdef WIN32
-    gchar *geoip_db_path = trg_win32_support_path("GeoIP.dat");
-	gchar *geoip_v6_db_path = trg_win32_support_path("GeoIP.dat");
+    geoip_db_path = trg_win32_support_path("GeoIP.dat");
+	geoip_v6_db_path = trg_win32_support_path("GeoIP.dat");
 #else
-    gchar *geoip_db_path = g_strdup(TRG_GEOIP_DATABASE);
-	gchar *geoip_v6_db_path = g_strdup(TRG_GEOIPV6_DATABASE);
+    geoip_db_path = g_strdup(TRG_GEOIP_DATABASE);
+	geoip_v6_db_path = g_strdup(TRG_GEOIPV6_DATABASE);
 #endif
 
     if (g_file_test(geoip_db_path, G_FILE_TEST_EXISTS) == TRUE)
