@@ -169,7 +169,6 @@ static void trg_main_window_set_property(GObject * object,
                                          GParamSpec * pspec);
 static void quit_cb(GtkWidget * w, gpointer data);
 static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win);
-#ifndef HAVE_LIBAPPINDICATOR
 static void status_icon_activated(GtkStatusIcon * icon,
                                   TrgMainWindow * win);
 static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
@@ -177,7 +176,6 @@ static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
 static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
                                                GdkEventButton * event,
                                                TrgMainWindow * win);
-#endif
 static void clear_filter_entry_cb(GtkEntry * entry,
                                   GtkEntryIconPosition icon_pos,
                                   GdkEvent * event, gpointer user_data);
@@ -338,12 +336,10 @@ torrent_event_notification(TrgTorrentModel * model,
 #endif
         );
 
-#ifndef HAVE_LIBAPPINDICATOR
 #if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7)
     if (priv->statusIcon && gtk_status_icon_is_embedded(priv->statusIcon))
         notify_notification_attach_to_status_icon(notify,
                                                   priv->statusIcon);
-#endif
 #endif
 
     notify_notification_set_urgency(notify, NOTIFY_URGENCY_LOW);
@@ -1791,7 +1787,6 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
     return menuBar;
 }
 
-#ifndef HAVE_LIBAPPINDICATOR
 static void
 status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED,
                       TrgMainWindow * win)
@@ -1847,7 +1842,6 @@ status_icon_button_press_event(GtkStatusIcon * icon,
         return FALSE;
     }
 }
-#endif
 
 static void
 clear_filter_entry_cb(GtkEntry * entry,
