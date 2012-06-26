@@ -2454,7 +2454,7 @@ void trg_main_window_add_status_icon(TrgMainWindow * win)
 							   trg_status_icon_view_menu(win, NULL));
     } else {
 #else
-    if (1) {
+    if (!is_unity()) {
 #endif
 		priv->statusIcon = gtk_status_icon_new_from_icon_name(PACKAGE_NAME);
 		gtk_status_icon_set_screen(priv->statusIcon,
