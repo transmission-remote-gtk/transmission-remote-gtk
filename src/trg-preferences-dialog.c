@@ -707,11 +707,11 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_wide_control(t, &row, w);
 #endif
 
-    hig_workarea_add_section_title(t, &row, _("System Tray"));
-
 #ifndef HAVE_LIBAPPINDICATOR
     if (!_is_unity) {
 #endif
+    hig_workarea_add_section_title(t, &row, _("System Tray"));
+
     tray = trgp_check_new(dlg, _("Show in system tray"),
                           TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL,
                           NULL);
