@@ -1,4 +1,20 @@
-* Tue Jan 31 2011 1.0.1
+* Fri Jun 29 2012 1.0.2
+- win32: update to gtk3 (also fixes blank tray icon)
+- win32: GeoIP support
+- fix minimise to tray
+- fix units in status icon text
+- truncate magnet links in add dialog
+- ctrl+k to focus on search entry like firefox
+- only use libappindicator if using unity
+- use gtk_box_new instead of gtk_{h,v}box_new (deprecated) on gtk3
+- Swedish translation
+- translation updates from launchpad
+- fix 'make test' due to file missing in POTFILES.in
+- update free space (session) after delete
+- URL links in comment field
+- reorder buttons for actions and directories
+
+* Tue Jan 31 2012 1.0.1
 - Fix a crash when toggling turtle mode or setting remote preferences.
 - Update Russian translation.
 
