@@ -27,9 +27,9 @@
  * on this widget but with some improvements I didn't do.
  */
 
-#include "trg-torrent-graph.h"
+#include "trg-torrent-graph3.h"
 
-#if !GTK_CHECK_VERSION( 3, 0, 0 )
+#if GTK_CHECK_VERSION( 3, 0, 0 )
 
 #include <math.h>
 #include <glib.h>
@@ -74,8 +74,7 @@ struct _TrgTorrentGraphPrivate {
     GList *points;
 
     GtkWidget *disp;
-    GdkGC *gc;
-    GdkDrawable *background;
+    cairo_surface_t *background;
     guint timer_index;
     gboolean draw;
     guint64 out, in;
@@ -243,9 +242,6 @@ trg_torrent_graph_configure(GtkWidget * widget,
 
     trg_torrent_graph_clear_background(g);
 
-    if (priv->gc == NULL)
-        priv->gc = gdk_gc_new(GDK_DRAWABLE(gtk_widget_get_window(widget)));
-
     trg_torrent_graph_draw(g);
 
     return TRUE;
@@ -266,15 +262,19 @@ trg_torrent_graph_expose(GtkWidget * widget,
     float *fp;
     gdouble sample_width, x_offset;
 
-    if (priv->background == NULL)
+    if (priv->background == NULL) {
         trg_torrent_graph_draw_background(g);
+        cairo_pattern_t * pattern = cairo_pattern_create_for_surface(priv->background);
+        gdk_window_set_background_pattern (window, pattern);
+        cairo_pattern_destroy (pattern);
+    }
 
     window = gtk_widget_get_window(priv->disp);
     gtk_widget_get_allocation(priv->disp, &allocation);
-    gdk_draw_drawable(window,
+    /*gdk_draw_drawable(window,
                       priv->gc,
                       priv->background,
-                      0, 0, 0, 0, allocation.width, allocation.height);
+                      0, 0, 0, 0, allocation.width, allocation.height);*/
 
     sample_width =
         (float) (priv->draw_width - priv->rmargin -
@@ -492,7 +492,6 @@ static GObject *trg_torrent_graph_constructor(GType type,
     priv->graph_delx = 0.0;
     priv->graph_buffer_offset = 0;
     priv->disp = NULL;
-    priv->gc = NULL;
     priv->background = NULL;
     priv->timer_index = 0;
     priv->draw = FALSE;
@@ -586,7 +585,7 @@ void trg_torrent_graph_clear_background(TrgTorrentGraph * g)
     TrgTorrentGraphPrivate *priv = TRG_TORRENT_GRAPH_GET_PRIVATE(g);
 
     if (priv->background) {
-        g_object_unref(priv->background);
+        cairo_surface_destroy (priv->background);
         priv->background = NULL;
     }
 }

@@ -95,6 +95,7 @@ transmission_remote_gtk_SOURCES = main.c \
 	  trg-torrent-move-dialog.c \
 	  trg-stats-dialog.c \
 	  trg-torrent-graph.c \
+          trg-torrent-graph3.c \
 	  trg-torrent-add-dialog.c \
 	  trg-file-parser.c \
 	  bencode.c \

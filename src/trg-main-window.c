@@ -239,9 +239,7 @@ struct _TrgMainWindowPrivate {
     TrgPeersModel *peersModel;
     TrgPeersTreeView *peersTreeView;
 
-#if TRG_WITH_GRAPH
     TrgTorrentGraph *graph;
-#endif
     gint graphNotebookIndex;
 
     GtkWidget *hpaned, *vpaned;
@@ -917,7 +915,6 @@ view_notebook_toggled_cb(GtkCheckMenuItem * w, TrgMainWindow * win)
                            gtk_check_menu_item_get_active(w));
 }
 
-#if TRG_WITH_GRAPH
 static void
 trg_main_window_toggle_graph_cb(GtkCheckMenuItem * w, gpointer data)
 {
@@ -933,7 +930,6 @@ trg_main_window_toggle_graph_cb(GtkCheckMenuItem * w, gpointer data)
         trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
     }
 }
-#endif
 
 void
 trg_main_window_notebook_set_visible(TrgMainWindow * win, gboolean visible)
@@ -985,13 +981,11 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
                                                 (priv->peersTreeView)),
                              gtk_label_new(_("Peers")));
 
-#if TRG_WITH_GRAPH
     if (trg_prefs_get_bool
         (prefs, TRG_PREFS_KEY_SHOW_GRAPH, TRG_PREFS_GLOBAL))
         trg_main_window_add_graph(win, FALSE);
     else
         priv->graphNotebookIndex = -1;
-#endif
 
     return notebook;
 }
@@ -1281,10 +1275,8 @@ static gboolean on_torrent_get(gpointer data, int mode)
     trg_status_bar_update(priv->statusBar, stats, client);
     update_whatever_statusicon(win, stats);
 
-#if TRG_WITH_GRAPH
     if (priv->graphNotebookIndex >= 0)
         trg_torrent_graph_set_speed(priv->graph, stats);
-#endif
 
     if (mode != TORRENT_GET_MODE_INTERACTION)
         priv->timerId = g_timeout_add_seconds(interval,
@@ -1628,10 +1620,8 @@ trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected)
         trg_main_window_torrent_scrub(win);
         trg_state_selector_disconnect(priv->stateSelector);
 
-#if TRG_WITH_GRAPH
         if (priv->graphNotebookIndex >= 0)
             trg_torrent_graph_set_nothing(priv->graph);
-#endif
 
         trg_torrent_model_remove_all(priv->torrentModel);
 
@@ -1700,11 +1690,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
         *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
         *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
         *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_up_queue,
-        *b_down_queue, *b_top_queue, *b_bottom_queue,
-#if TRG_WITH_GRAPH
-    *b_show_graph,
-#endif
-    *b_start_now;
+        *b_down_queue, *b_top_queue, *b_bottom_queue, *b_show_graph, *b_start_now;
 
     TrgMenuBar *menuBar;
     GtkAccelGroup *accel_group;
@@ -1728,9 +1714,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                  &b_view_stats, "about-button", &b_about, "quit-button",
                  &b_quit, "dir-filters", &b_dir_filters, "tracker-filters",
                  &b_tracker_filters,
-#if TRG_WITH_GRAPH
                  "show-graph", &b_show_graph,
-#endif
                  "up-queue", &b_up_queue, "down-queue", &b_down_queue,
                  "top-queue", &b_top_queue, "bottom-queue",
                  &b_bottom_queue, "start-now", &b_start_now, NULL);
@@ -1775,10 +1759,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                      G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
                      G_CALLBACK(view_stats_toggled_cb), win);
-#if TRG_WITH_GRAPH
     g_signal_connect(b_show_graph, "toggled",
                      G_CALLBACK(trg_main_window_toggle_graph_cb), win);
-#endif
     g_signal_connect(b_props, "activate", G_CALLBACK(open_props_cb), win);
     g_signal_connect(b_quit, "activate", G_CALLBACK(quit_cb), win);
 
@@ -2403,7 +2385,6 @@ void trg_main_window_remove_status_icon(TrgMainWindow * win)
     }
 }
 
-#if TRG_WITH_GRAPH
 void trg_main_window_add_graph(TrgMainWindow * win, gboolean show)
 {
     TrgMainWindowPrivate *priv = win->priv;
@@ -2431,7 +2412,6 @@ void trg_main_window_remove_graph(TrgMainWindow * win)
         priv->graphNotebookIndex = -1;
     }
 }
-#endif
 
 /*static gboolean status_icon_size_changed(GtkStatusIcon *status_icon,
         gint           size,

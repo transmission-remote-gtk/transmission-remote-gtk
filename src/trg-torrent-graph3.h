@@ -1,11 +1,11 @@
 /* trg-torrent-graph.h */
 
-#ifndef _TRG_TORRENT_GRAPH
-#define _TRG_TORRENT_GRAPH
+#ifndef _TRG_TORRENT_GRAPH3
+#define _TRG_TORRENT_GRAPH3
 
 #include <gtk/gtk.h>
 
-#if !GTK_CHECK_VERSION( 3, 0, 0 )
+#if GTK_CHECK_VERSION( 3, 0, 0 )
 
 #include <glib-object.h>
 #include "trg-torrent-model.h"

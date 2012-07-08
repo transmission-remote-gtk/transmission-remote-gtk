@@ -56,9 +56,7 @@ enum {
     PROP_ACCEL_GROUP,
     PROP_DIR_FILTERS,
     PROP_TRACKER_FILTERS,
-#if TRG_WITH_GRAPH
     PROP_VIEW_SHOW_GRAPH,
-#endif
     PROP_MOVE_DOWN_QUEUE,
     PROP_MOVE_UP_QUEUE,
     PROP_MOVE_BOTTOM_QUEUE,
@@ -97,9 +95,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_quit;
     GtkWidget *mb_directory_filters;
     GtkWidget *mb_tracker_filters;
-#if TRG_WITH_GRAPH
     GtkWidget *mb_view_graph;
-#endif
     GtkWidget *mb_down_queue;
     GtkWidget *mb_up_queue;
     GtkWidget *mb_bottom_queue;
@@ -249,11 +245,9 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
     case PROP_ABOUT_BUTTON:
         g_value_set_object(value, priv->mb_about);
         break;
-#if TRG_WITH_GRAPH
     case PROP_VIEW_SHOW_GRAPH:
         g_value_set_object(value, priv->mb_view_graph);
         break;
-#endif
     case PROP_VIEW_STATES_BUTTON:
         g_value_set_object(value, priv->mb_view_states);
         break;
@@ -424,13 +418,11 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
                           priv->mb_view_notebook);
 
-#if TRG_WITH_GRAPH
     priv->mb_view_graph =
         trg_menu_bar_view_item_new(priv->prefs, TRG_PREFS_KEY_SHOW_GRAPH,
                                    _("Graph"), priv->mb_view_notebook);
     trg_menu_bar_accel_add(mb, priv->mb_view_graph, GDK_F6, 0);
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_graph);
-#endif
 
     priv->mb_view_stats =
         gtk_menu_item_new_with_mnemonic(_("_Statistics"));
@@ -786,10 +778,8 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "dir-filters", "Dir Filters");
     trg_menu_bar_install_widget_prop(object_class, PROP_TRACKER_FILTERS,
                                      "tracker-filters", "Tracker Filters");
-#if TRG_WITH_GRAPH
     trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_SHOW_GRAPH,
                                      "show-graph", "Show Graph");
-#endif
     trg_menu_bar_install_widget_prop(object_class, PROP_MOVE_DOWN_QUEUE,
                                      "down-queue", "Down Queue");
     trg_menu_bar_install_widget_prop(object_class, PROP_MOVE_UP_QUEUE,
