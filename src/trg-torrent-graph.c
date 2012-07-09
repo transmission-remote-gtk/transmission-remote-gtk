@@ -29,7 +29,7 @@
 
 #include "trg-torrent-graph.h"
 
-#if !GTK_CHECK_VERSION( 3, 0, 0 )
+#if TRG_WITH_GRAPH
 
 #include <math.h>
 #include <glib.h>

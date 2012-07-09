@@ -5,7 +5,9 @@
 
 #include <gtk/gtk.h>
 
-#if !GTK_CHECK_VERSION( 3, 0, 0 )
+#define TRG_WITH_GRAPH !GTK_CHECK_VERSION( 3, 0, 0 )
+
+#if TRG_WITH_GRAPH
 
 #include <glib-object.h>
 #include "trg-torrent-model.h"
