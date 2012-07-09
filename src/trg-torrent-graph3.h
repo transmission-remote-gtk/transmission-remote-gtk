@@ -38,7 +38,7 @@ unsigned trg_torrent_graph_get_num_bars(TrgTorrentGraph * g);
 
 void trg_torrent_graph_clear_background();
 
-void trg_torrent_graph_draw(TrgTorrentGraph * g);
+void trg_torrent_graph_queue_draw(TrgTorrentGraph * g);
 
 void trg_torrent_graph_start(TrgTorrentGraph * g);
 

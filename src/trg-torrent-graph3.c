@@ -137,10 +137,8 @@ void trg_torrent_graph_draw_background(TrgTorrentGraph * g)
         (int) (1.5 * priv->graph_delx) + GRAPH_FRAME_WIDTH;
 
     gtk_widget_get_allocation(priv->disp, &allocation);
-    priv->background =
-        gdk_pixmap_new(GDK_DRAWABLE(gtk_widget_get_window(priv->disp)),
-                       allocation.width, allocation.height, -1);
-    cr = gdk_cairo_create(priv->background);
+
+    cr = cairo_create(priv->background);
 
     gdk_cairo_set_source_color(cr, &priv->style->bg[GTK_STATE_NORMAL]);
     cairo_paint(cr);
@@ -242,20 +240,20 @@ trg_torrent_graph_configure(GtkWidget * widget,
 
     trg_torrent_graph_clear_background(g);
 
-    trg_torrent_graph_draw(g);
+    trg_torrent_graph_queue_draw(g);
 
     return TRUE;
 }
 
 static gboolean
-trg_torrent_graph_expose(GtkWidget * widget,
-                         GdkEventExpose * event, gpointer data_ptr)
+trg_torrent_graph_draw(GtkWidget * widget,
+                         cairo_t *context, gpointer data_ptr)
 {
     TrgTorrentGraph *g = TRG_TORRENT_GRAPH(data_ptr);
     TrgTorrentGraphPrivate *priv = TRG_TORRENT_GRAPH_GET_PRIVATE(data_ptr);
+    GdkWindow *window = gtk_widget_get_window(priv->disp);
 
     GtkAllocation allocation;
-    GdkWindow *window;
     cairo_t *cr;
 
     guint i, j;
@@ -263,13 +261,13 @@ trg_torrent_graph_expose(GtkWidget * widget,
     gdouble sample_width, x_offset;
 
     if (priv->background == NULL) {
+    	cairo_pattern_t * pattern = NULL;
         trg_torrent_graph_draw_background(g);
-        cairo_pattern_t * pattern = cairo_pattern_create_for_surface(priv->background);
+        pattern = cairo_pattern_create_for_surface(priv->background);
         gdk_window_set_background_pattern (window, pattern);
         cairo_pattern_destroy (pattern);
     }
 
-    window = gtk_widget_get_window(priv->disp);
     gtk_widget_get_allocation(priv->disp, &allocation);
     /*gdk_draw_drawable(window,
                       priv->gc,
@@ -507,7 +505,7 @@ static GObject *trg_torrent_graph_constructor(GType type,
     priv->speed = 1000;
     priv->max = 1024;
 
-    hbox = gtk_hbox_new(FALSE, 0);
+    hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 0);
 
     priv->label_in = gtk_label_new(NULL);
     priv->label_out = gtk_label_new(NULL);
@@ -527,8 +525,8 @@ static GObject *trg_torrent_graph_constructor(GType type,
     gtk_box_set_homogeneous(GTK_BOX(object), FALSE);
 
     priv->disp = gtk_drawing_area_new();
-    g_signal_connect(G_OBJECT(priv->disp), "expose_event",
-                     G_CALLBACK(trg_torrent_graph_expose), object);
+    g_signal_connect(G_OBJECT(priv->disp), "draw",
+                     G_CALLBACK(trg_torrent_graph_draw), object);
     g_signal_connect(G_OBJECT(priv->disp), "configure_event",
                      G_CALLBACK(trg_torrent_graph_configure), object);
 
@@ -573,7 +571,7 @@ TrgTorrentGraph *trg_torrent_graph_new(GtkStyle * style)
     return TRG_TORRENT_GRAPH(obj);
 }
 
-void trg_torrent_graph_draw(TrgTorrentGraph * g)
+void trg_torrent_graph_queue_draw(TrgTorrentGraph * g)
 {
     TrgTorrentGraphPrivate *priv = TRG_TORRENT_GRAPH_GET_PRIVATE(g);
 
@@ -601,7 +599,7 @@ static gboolean trg_torrent_graph_update(gpointer user_data)
         trg_torrent_graph_update_net(g);
 
     if (priv->draw)
-        trg_torrent_graph_draw(g);
+        trg_torrent_graph_queue_draw(g);
 
     priv->render_counter++;
 

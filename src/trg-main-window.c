@@ -66,7 +66,11 @@
 #include "trg-trackers-tree-view.h"
 #include "trg-trackers-model.h"
 #include "trg-state-selector.h"
+#if GTK_CHECK_VERSION( 3, 0, 0 )
+#include "trg-torrent-graph3.h"
+#else
 #include "trg-torrent-graph.h"
+#endif
 #include "trg-torrent-move-dialog.h"
 #include "trg-torrent-props-dialog.h"
 #include "trg-torrent-add-url-dialog.h"
