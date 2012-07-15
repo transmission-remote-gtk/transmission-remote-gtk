@@ -302,6 +302,10 @@ gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
         return g_strdup(GTK_STOCK_GO_UP);
     else if (flags & TORRENT_FLAG_CHECKING)
         return g_strdup(GTK_STOCK_REFRESH);
+    else if (flags & TORRENT_FLAG_DOWNLOADING_WAIT)
+    	return g_strdup(GTK_STOCK_MEDIA_REWIND);
+    else if (flags & TORRENT_FLAG_SEEDING_WAIT)
+    	return g_strdup(GTK_STOCK_MEDIA_FORWARD);
     else
         return g_strdup(GTK_STOCK_DIALOG_QUESTION);
 }

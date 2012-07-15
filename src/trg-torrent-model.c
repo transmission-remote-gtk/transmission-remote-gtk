@@ -409,7 +409,7 @@ update_torrent_iter(TrgTorrentModel * model,
     JsonObject *lastJson, *pf;
     JsonArray *trackerStats;
     gchar *statusString, *statusIcon, *downloadDir;
-    gint64 downRate, upRate, haveValid, uploaded, id, status, lpd;
+    gint64 downRate, upRate, haveValid, uploaded, downloaded, id, status, lpd;
     gchar *firstTrackerHost = NULL;
     gchar *peerSources = NULL;
     gchar *lastDownloadDir = NULL;
@@ -421,6 +421,7 @@ update_torrent_iter(TrgTorrentModel * model,
     stats->upRateTotal += upRate;
 
     uploaded = torrent_get_uploaded(t);
+    downloaded = torrent_get_downloaded(t);
     haveValid = torrent_get_have_valid(t);
 
     downloadDir = (gchar *) torrent_get_download_dir(t);
@@ -487,7 +488,7 @@ update_torrent_iter(TrgTorrentModel * model,
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ETA, torrent_get_eta(t),
                        -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPLOADED, uploaded, -1);
-    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADED, torrent_get_downloaded(t),
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADED, downloaded,
                        -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_RATIO, uploaded > 0
                        && downloaded >
@@ -549,7 +550,7 @@ update_torrent_iter(TrgTorrentModel * model,
                        TORRENT_COLUMN_FLAGS, newFlags,
                        TORRENT_COLUMN_UPSPEED, upRate, TORRENT_COLUMN_ETA,
                        torrent_get_eta(t), TORRENT_COLUMN_UPLOADED,
-                       uploaded, TORRENT_COLUMN_DOWNLOADED, torrent_get_downloaded(t),
+                       uploaded, TORRENT_COLUMN_DOWNLOADED, downloaded,
                        TORRENT_COLUMN_HAVE_VALID, haveValid,
                        TORRENT_COLUMN_FROMPEX, peerfrom_get_pex(pf),
                        TORRENT_COLUMN_FROMDHT, peerfrom_get_dht(pf),
