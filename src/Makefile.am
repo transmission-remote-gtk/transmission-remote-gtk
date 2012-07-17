@@ -46,62 +46,63 @@ endif
 bin_PROGRAMS = transmission-remote-gtk
 INCLUDES = --pedantic -Wall -I.. -Wno-overflow -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS)
 		
-transmission_remote_gtk_SOURCES = main.c \
-	  requests.c \
-	  json.c \
-	  trg-main-window.c \
-	  util.c \
-	  trg-about-window.c \
-	  torrent.c \
-	  session-get.c \
-	  trg-client.c \
-	  trg-preferences-dialog.c \
-	  hig.c \
-	  trg-torrent-tree-view.c \
-	  trg-tree-view.c \
-	  trg-torrent-model.c \
-	  trg-sortable-filtered-model.c \
-	  trg-peers-model.c \
-	  trg-peers-tree-view.c \
-	  trg-files-model-common.c \
-	  trg-files-tree.c \
-	  trg-model.c \
-	  trg-persistent-tree-view.c \
-	  trg-files-model.c \
-	  trg-files-tree-view-common.c \
-	  trg-files-tree-view.c \
-	  trg-state-selector.c \
-	  trg-general-panel.c \
-	  trg-toolbar.c \
-	  trg-icons.c \
-	  trg-menu-bar.c \
-	  trg-status-bar.c \
-	  trg-trackers-tree-view.c \
-	  trg-trackers-model.c \
-	  trg-torrent-props-dialog.c \
-	  trg-torrent-add-url-dialog.c \
-	  trg-json-widgets.c \
+transmission_remote_gtk_SOURCES = \
 	  trg-cell-renderer-speed.c \
 	  trg-cell-renderer-counter.c \
 	  trg-cell-renderer-size.c \
 	  trg-cell-renderer-ratio.c \
 	  trg-cell-renderer-eta.c \
-	  trg-remote-prefs-dialog.c \
 	  trg-cell-renderer-priority.c \
 	  trg-cell-renderer-wanted.c \
 	  trg-cell-renderer-file-icon.c \
 	  trg-cell-renderer-epoch.c \
 	  trg-cell-renderer-numgteqthan.c \
-	  trg-torrent-move-dialog.c \
-	  trg-stats-dialog.c \
-	  trg-torrent-graph.c \
+	  trg-remote-prefs-dialog.c \
+	  trg-torrent-props-dialog.c \
+	  trg-torrent-add-url-dialog.c \
 	  trg-torrent-add-dialog.c \
+	  trg-torrent-move-dialog.c \
+	  trg-preferences-dialog.c \
+	  trg-stats-dialog.c \
+	  trg-about-window.c \
+	  trg-destination-combo.c \
+	  trg-state-selector.c \
+	  trg-general-panel.c \
+	  trg-torrent-graph.c \
+	  trg-icons.c \
+	  trg-toolbar.c \
+	  trg-menu-bar.c \
+	  trg-status-bar.c \
 	  trg-file-parser.c \
+	  trg-json-widgets.c \
+	  trg-model.c \
+	  trg-sortable-filtered-model.c \
+	  trg-files-tree.c \
+	  trg-files-model.c \
+	  trg-files-tree-view-common.c \
+	  trg-files-tree-view.c \
+	  trg-files-model-common.c \
+	  trg-trackers-model.c \
+	  trg-trackers-tree-view.c \
+	  trg-peers-model.c \
+	  trg-peers-tree-view.c \
+	  trg-torrent-model.c \
+	  trg-torrent-tree-view.c \
+	  trg-persistent-tree-view.c \
+	  trg-tree-view.c \
+	  util.c \
+	  hig.c \
 	  bencode.c \
 	  trg-prefs.c \
-	  trg-destination-combo.c \
 	  remote-exec.c \
 	  trg-gtk-app.c \
+	  requests.c \
+	  torrent.c \
+	  session-get.c \
+	  json.c \
+	  trg-client.c \
+	  trg-main-window.c \
+	  main.c \
 	  $(NULL)
 
 transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(unique_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS) $(libappindicator_LIBS)
