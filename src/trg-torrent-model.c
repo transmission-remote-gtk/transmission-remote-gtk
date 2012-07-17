@@ -146,9 +146,9 @@ trg_torrent_model_count_peers(TrgTorrentModel * model,
 {
     GList *trackersList =
         json_array_get_elements(torrent_get_tracker_stats(t));
-    gint seeders = 0;
-    gint leechers = 0;
-    gint downloads = 0;
+    gint64 seeders = 0;
+    gint64 leechers = 0;
+    gint64 downloads = 0;
     GList *li;
 
     for (li = trackersList; li; li = g_list_next(li)) {
@@ -202,9 +202,9 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_SIZE] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_DONE] = G_TYPE_DOUBLE;
     column_types[TORRENT_COLUMN_STATUS] = G_TYPE_STRING;
-    column_types[TORRENT_COLUMN_SEEDS] = G_TYPE_INT;
-    column_types[TORRENT_COLUMN_LEECHERS] = G_TYPE_INT;
-    column_types[TORRENT_COLUMN_DOWNLOADS] = G_TYPE_INT;
+    column_types[TORRENT_COLUMN_SEEDS] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_LEECHERS] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_DOWNLOADS] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_DOWNSPEED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_ADDED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_UPSPEED] = G_TYPE_INT64;

@@ -211,9 +211,9 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), _("N/A"));
     }
 
-    snprintf(buf, sizeof(buf), "%ld", seeders >= 0 ? seeders : 0);
+    snprintf(buf, sizeof(buf), "%"G_GINT64_FORMAT, seeders >= 0 ? seeders : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_seeders_label), buf);
-    snprintf(buf, sizeof(buf), "%ld", leechers >= 0 ? leechers : 0);
+    snprintf(buf, sizeof(buf), "%"G_GINT64_FORMAT, leechers >= 0 ? leechers : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_leechers_label), buf);
 }
 
@@ -225,7 +225,7 @@ static GtkLabel *trg_general_panel_add_label_with_width(TrgGeneralPanel *
 {
     GtkWidget *value, *keyLabel, *alignment;
 
-    int startCol = (col == 0) ? 0 : col * 2;
+    int startCol = col * 2;
 
     alignment = gtk_alignment_new(0, 0, 0, 0);
     keyLabel = gtk_label_new(NULL);
