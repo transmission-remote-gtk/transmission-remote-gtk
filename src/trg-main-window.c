@@ -2552,7 +2552,7 @@ static gboolean window_key_press_handler(GtkWidget *widget, GdkEvent *event,
 		gpointer user_data) {
 	TrgMainWindow *win = TRG_MAIN_WINDOW(widget);
 
-	if ((event->key.state & GDK_CONTROL_MASK) && event->key.keyval == GDK_KEY_k) {
+	if ((event->key.state & GDK_CONTROL_MASK) && event->key.keyval == GDK_k) {
 		gtk_widget_grab_focus(win->priv->filterEntry);
 		return TRUE;
 	}
