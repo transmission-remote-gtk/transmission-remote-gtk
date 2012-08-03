@@ -113,7 +113,7 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     TrgGeneralPanelPrivate *priv;
     gchar buf[32];
     gint sizeOfBuf;
-    gchar *statusString, *fullStatusString, *completedAtString, *comment;
+    gchar *statusString, *fullStatusString, *completedAtString, *comment, *markup;
     const gchar *errorStr;
     gint64 eta, uploaded, haveValid, completedAt;
     GtkLabel *keyLabel;
@@ -180,14 +180,16 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
                        torrent_get_download_dir(t));
 
     comment = add_links_to_text(torrent_get_comment(t));
-    gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
+    markup = g_markup_printf_escaped("%s", comment);
+    gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), markup);
     g_free(comment);
+    g_free(markup);
 
     errorStr = torrent_get_errorstr(t);
     keyLabel =
         gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label));
     if (strlen(errorStr) > 0) {
-        gchar *markup =
+        markup =
             g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>",
                                     errorStr);
         gtk_label_set_markup(GTK_LABEL(priv->gen_error_label), markup);
