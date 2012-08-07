@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: transmission-remote-gtk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
-"POT-Creation-Date: 2012-03-01 22:09+0000\n"
-"PO-Revision-Date: 2012-05-24 09:14+0000\n"
+"POT-Creation-Date: 2012-06-29 15:38+0100\n"
+"PO-Revision-Date: 2012-07-01 05:55+0000\n"
 "Last-Translator: Algimantas Margevičius <Margevicius.Algimantas@gmail.com>\n"
 "Language-Team: Lithuanian <lt@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,8 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "(n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2012-06-29 14:32+0000\n"
-"X-Generator: Launchpad (build 15520)\n"
+"X-Launchpad-Export-Date: 2012-08-07 08:16+0000\n"
+"X-Generator: Launchpad (build 15745)\n"
 
 #: src/torrent.c:327 src/torrent.c:347 src/trg-state-selector.c:658
 msgid "Downloading"
@@ -52,22 +52,22 @@ msgstr "Pristabdyta"
 msgid "Unknown"
 msgstr "Nežinoma"
 
-#: src/trg-about-window.c:77
+#: src/trg-about-window.c:74
 msgid "A remote client to transmission-daemon."
 msgstr "Nuotolinis  transmission demono klientas"
 
-#: src/trg-cell-renderer-priority.c:74 src/trg-main-window.c:1950
-#: src/trg-torrent-add-dialog.c:448 src/trg-torrent-props-dialog.c:179
+#: src/trg-cell-renderer-priority.c:74 src/trg-main-window.c:1991
+#: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:179
 msgid "Low"
 msgstr "Žemas"
 
-#: src/trg-cell-renderer-priority.c:76 src/trg-main-window.c:1946
-#: src/trg-torrent-add-dialog.c:449 src/trg-torrent-props-dialog.c:179
+#: src/trg-cell-renderer-priority.c:76 src/trg-main-window.c:1987
+#: src/trg-torrent-add-dialog.c:451 src/trg-torrent-props-dialog.c:179
 msgid "High"
 msgstr "Aukštas"
 
-#: src/trg-cell-renderer-priority.c:78 src/trg-main-window.c:1948
-#: src/trg-torrent-add-dialog.c:448 src/trg-torrent-props-dialog.c:179
+#: src/trg-cell-renderer-priority.c:78 src/trg-main-window.c:1989
+#: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:179
 msgid "Normal"
 msgstr "Normalus"
 
@@ -75,13 +75,13 @@ msgstr "Normalus"
 msgid "Mixed"
 msgstr "Mišrus"
 
-#: src/trg-files-tree-view.c:185 src/trg-general-panel.c:283
-#: src/trg-torrent-add-dialog.c:346 src/trg-torrent-tree-view.c:42
+#: src/trg-files-tree-view.c:185 src/trg-general-panel.c:275
+#: src/trg-torrent-add-dialog.c:348 src/trg-torrent-tree-view.c:42
 msgid "Name"
 msgstr "Pavadinimas"
 
-#: src/trg-files-tree-view.c:189 src/trg-general-panel.c:286
-#: src/trg-torrent-add-dialog.c:364 src/trg-torrent-tree-view.c:47
+#: src/trg-files-tree-view.c:189 src/trg-general-panel.c:278
+#: src/trg-torrent-add-dialog.c:366 src/trg-torrent-tree-view.c:47
 msgid "Size"
 msgstr "Dydis"
 
@@ -90,28 +90,28 @@ msgid "Progress"
 msgstr "Eiga"
 
 #: src/trg-files-tree-view.c:193 src/trg-files-tree-view-common.c:69
-#: src/trg-torrent-add-dialog.c:377
+#: src/trg-torrent-add-dialog.c:379 src/trg-torrent-add-dialog.c:693
 msgid "Download"
 msgstr "Atsisiųsti"
 
-#: src/trg-files-tree-view.c:195 src/trg-main-window.c:1939
-#: src/trg-torrent-add-dialog.c:393 src/trg-torrent-tree-view.c:122
+#: src/trg-files-tree-view.c:195 src/trg-main-window.c:1980
+#: src/trg-torrent-add-dialog.c:395 src/trg-torrent-tree-view.c:122
 msgid "Priority"
 msgstr "Prioritetas"
 
-#: src/trg-files-tree-view-common.c:50
+#: src/trg-files-tree-view-common.c:50 src/trg-torrent-add-dialog.c:687
 msgid "High Priority"
 msgstr "Aukštas prioritetas"
 
-#: src/trg-files-tree-view-common.c:54
+#: src/trg-files-tree-view-common.c:54 src/trg-torrent-add-dialog.c:689
 msgid "Normal Priority"
 msgstr "Normalus prioritetas"
 
-#: src/trg-files-tree-view-common.c:58
+#: src/trg-files-tree-view-common.c:58 src/trg-torrent-add-dialog.c:691
 msgid "Low Priority"
 msgstr "Žemas prioritetas"
 
-#: src/trg-files-tree-view-common.c:77
+#: src/trg-files-tree-view-common.c:77 src/trg-torrent-add-dialog.c:695
 msgid "Skip"
 msgstr "Praleisti"
 
@@ -123,267 +123,267 @@ msgstr "Išskleisti visus"
 msgid "Collapse All"
 msgstr "Suskleisti visus"
 
-#: src/trg-general-panel.c:153 src/trg-general-panel.c:219
+#: src/trg-general-panel.c:152 src/trg-general-panel.c:211
 msgid "N/A"
 msgstr "Nėra"
 
-#: src/trg-general-panel.c:168
+#: src/trg-general-panel.c:167
 msgid "(Private)"
 msgstr "(Privatus)"
 
-#: src/trg-general-panel.c:168
+#: src/trg-general-panel.c:167
 msgid "(Public)"
 msgstr "(Viešas)"
 
-#: src/trg-general-panel.c:207 src/trg-main-window.c:1061
-#: src/trg-main-window.c:1464 src/trg-main-window.c:2074
+#: src/trg-general-panel.c:199 src/trg-main-window.c:1075
+#: src/trg-main-window.c:1486 src/trg-main-window.c:2115
 #: src/trg-state-selector.c:538 src/trg-torrent-add-url-dialog.c:67
-#: src/util.c:326
+#: src/util.c:331
 msgid "Error"
 msgstr "Klaida"
 
-#: src/trg-general-panel.c:288 src/trg-torrent-tree-view.c:100
+#: src/trg-general-panel.c:280 src/trg-torrent-tree-view.c:100
 msgid "ETA"
 msgstr "Likęs laikas"
 
-#: src/trg-general-panel.c:290 src/trg-torrent-tree-view.c:128
+#: src/trg-general-panel.c:282 src/trg-torrent-tree-view.c:128
 msgid "Completed"
 msgstr "Užbaigtas"
 
-#: src/trg-general-panel.c:293
+#: src/trg-general-panel.c:285
 msgid "Seeders"
 msgstr "Skleidėjai"
 
-#: src/trg-general-panel.c:295
+#: src/trg-general-panel.c:287
 msgid "Rate Down"
 msgstr "Sumažinti įvertinimą"
 
-#: src/trg-general-panel.c:297 src/trg-torrent-tree-view.c:105
+#: src/trg-general-panel.c:289 src/trg-torrent-tree-view.c:105
 msgid "Downloaded"
 msgstr "Atsisiųsta"
 
-#: src/trg-general-panel.c:300 src/trg-torrent-tree-view.c:58
+#: src/trg-general-panel.c:292 src/trg-torrent-tree-view.c:58
 msgid "Leechers"
 msgstr "Siuntėjai"
 
-#: src/trg-general-panel.c:302
+#: src/trg-general-panel.c:294
 msgid "Rate Up"
 msgstr "Padidinti įvertinimą"
 
-#: src/trg-general-panel.c:304 src/trg-torrent-tree-view.c:102
+#: src/trg-general-panel.c:296 src/trg-torrent-tree-view.c:102
 msgid "Uploaded"
 msgstr "Išsiųsta"
 
-#: src/trg-general-panel.c:307 src/trg-torrent-tree-view.c:51
+#: src/trg-general-panel.c:299 src/trg-torrent-tree-view.c:51
 msgid "Status"
 msgstr "Būsena"
 
-#: src/trg-general-panel.c:309 src/trg-torrent-tree-view.c:108
+#: src/trg-general-panel.c:301 src/trg-torrent-tree-view.c:108
 msgid "Ratio"
 msgstr "Santykis"
 
-#: src/trg-general-panel.c:312
+#: src/trg-general-panel.c:304
 msgid "Comment"
 msgstr "Komentaras"
 
-#: src/trg-general-panel.c:315
+#: src/trg-general-panel.c:307
 msgid "Completed At"
 msgstr "Baigta"
 
-#: src/trg-general-panel.c:319 src/trg-torrent-tree-view.c:116
+#: src/trg-general-panel.c:311 src/trg-torrent-tree-view.c:116
 msgid "Location"
 msgstr "Vieta"
 
-#: src/trg-main-window.c:362
+#: src/trg-main-window.c:360
 msgid "This torrent has completed."
 msgstr "Šis torentas parsiųstas."
 
-#: src/trg-main-window.c:374
+#: src/trg-main-window.c:372
 msgid "This torrent has been added."
 msgstr "Šis torentas pridėtas."
 
-#: src/trg-main-window.c:581
+#: src/trg-main-window.c:579
 msgid "No hostname set"
 msgstr "Nenurodytas mazgo vardas"
 
-#: src/trg-main-window.c:584
+#: src/trg-main-window.c:582
 msgid "Unknown error getting settings"
 msgstr "Gaunant nustatymus įvyko nežinoma klaida"
 
-#: src/trg-main-window.c:599
+#: src/trg-main-window.c:597
 msgid "Connecting..."
 msgstr "Jungiamasi..."
 
-#: src/trg-main-window.c:857
+#: src/trg-main-window.c:855
 #, c-format
 msgid "<big><b>Remove torrent \"%s\"?</b></big>"
 msgstr "<big><b>Pašalinti torentą „%s“?</b></big>"
 
-#: src/trg-main-window.c:858
+#: src/trg-main-window.c:856
 #, c-format
 msgid "<big><b>Remove %d torrents?</b></big>"
 msgstr "<big><b>Pašalinti %d torentus?</b></big>"
 
-#: src/trg-main-window.c:880
+#: src/trg-main-window.c:878
 #, c-format
 msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
 msgstr "<big><b>Pašalinti ir ištrinti torentą „%s“?</b></big>"
 
-#: src/trg-main-window.c:882
+#: src/trg-main-window.c:880
 #, c-format
 msgid "<big><b>Remove and delete %d torrents?</b></big>"
 msgstr "<big><b>Pašalinti ir ištrinti %d torentus?</b></big>"
 
-#: src/trg-main-window.c:965 src/trg-preferences-dialog.c:884
+#: src/trg-main-window.c:963 src/trg-preferences-dialog.c:896
 #: src/trg-remote-prefs-dialog.c:693
 msgid "General"
 msgstr "Bendri"
 
-#: src/trg-main-window.c:973
+#: src/trg-main-window.c:971
 msgid "Trackers"
 msgstr "Sekimo serveriai"
 
-#: src/trg-main-window.c:981
+#: src/trg-main-window.c:979
 msgid "Files"
 msgstr "Failai"
 
-#: src/trg-main-window.c:988 src/trg-remote-prefs-dialog.c:399
+#: src/trg-main-window.c:986 src/trg-remote-prefs-dialog.c:399
 #: src/trg-torrent-props-dialog.c:226 src/trg-trackers-tree-view.c:190
 msgid "Peers"
 msgstr "Siuntėjai ir skleidėjai"
 
-#: src/trg-main-window.c:1053
+#: src/trg-main-window.c:1067
 #, c-format
 msgid "This application supports Transmission %g and later, you have %g."
 msgstr "Ši programa palaiko Transmission %g ir vėlesnes, jūs turite %g."
 
-#: src/trg-main-window.c:1118 src/trg-status-bar.c:74 src/trg-status-bar.c:104
+#: src/trg-main-window.c:1132 src/trg-status-bar.c:74 src/trg-status-bar.c:104
 msgid "Disconnected"
 msgstr "Atsijungta"
 
-#: src/trg-main-window.c:1161
+#: src/trg-main-window.c:1177
 #, c-format
 msgid "%d Downloading @ %s"
 msgstr "%d Parsiunčiama %s"
 
-#: src/trg-main-window.c:1168
+#: src/trg-main-window.c:1184
 #, c-format
 msgid "%d Seeding @ %s"
 msgstr "%d Skleidžiama %s"
 
-#: src/trg-main-window.c:1221
+#: src/trg-main-window.c:1237
 #, c-format
 msgid "Request %d/%d failed: %s"
 msgstr "Užklausa %d/%d nepavyko: %s"
 
-#: src/trg-main-window.c:1994
+#: src/trg-main-window.c:2035
 msgid "No Limit"
 msgstr "Be apribojimų"
 
-#: src/trg-main-window.c:2095 src/trg-menu-bar.c:569 src/trg-toolbar.c:223
+#: src/trg-main-window.c:2136 src/trg-menu-bar.c:569 src/trg-toolbar.c:223
 msgid "Properties"
 msgstr "Savybės"
 
-#: src/trg-main-window.c:2098 src/trg-toolbar.c:216
+#: src/trg-main-window.c:2139 src/trg-toolbar.c:216
 msgid "Resume"
 msgstr "Tęsti"
 
-#: src/trg-main-window.c:2101 src/trg-toolbar.c:219
+#: src/trg-main-window.c:2142 src/trg-toolbar.c:219
 msgid "Pause"
 msgstr "Pristabdyti"
 
-#: src/trg-main-window.c:2104
+#: src/trg-main-window.c:2145
 msgid "Verify"
 msgstr "Patikrinti"
 
-#: src/trg-main-window.c:2107
+#: src/trg-main-window.c:2148
 msgid "Re-announce"
 msgstr "Paskelbti iš naujo"
 
-#: src/trg-main-window.c:2110 src/trg-torrent-move-dialog.c:119
+#: src/trg-main-window.c:2151 src/trg-torrent-move-dialog.c:119
 #: src/trg-torrent-move-dialog.c:126
 msgid "Move"
 msgstr "Perkelti"
 
-#: src/trg-main-window.c:2113 src/trg-menu-bar.c:600 src/trg-toolbar.c:227
+#: src/trg-main-window.c:2154 src/trg-menu-bar.c:600 src/trg-toolbar.c:227
 msgid "Remove"
 msgstr "Pašalinti"
 
-#: src/trg-main-window.c:2116
+#: src/trg-main-window.c:2157
 msgid "Remove & Delete"
 msgstr "Pašalinti ir ištrinti"
 
-#: src/trg-main-window.c:2140 src/trg-preferences-dialog.c:894
+#: src/trg-main-window.c:2181 src/trg-preferences-dialog.c:906
 msgid "Actions"
 msgstr "Veiksmai"
 
-#: src/trg-main-window.c:2169 src/trg-menu-bar.c:616
+#: src/trg-main-window.c:2210 src/trg-menu-bar.c:616
 msgid "Start Now"
 msgstr "Pradėti dabar"
 
-#: src/trg-main-window.c:2172 src/trg-menu-bar.c:621
+#: src/trg-main-window.c:2213 src/trg-menu-bar.c:621
 msgid "Move Up Queue"
 msgstr "Eilėje perkelti aukštyn"
 
-#: src/trg-main-window.c:2175 src/trg-menu-bar.c:628
+#: src/trg-main-window.c:2216 src/trg-menu-bar.c:628
 msgid "Move Down Queue"
 msgstr "Eilėje perkelti žemyn"
 
-#: src/trg-main-window.c:2178 src/trg-menu-bar.c:635
+#: src/trg-main-window.c:2219 src/trg-menu-bar.c:635
 msgid "Bottom Of Queue"
 msgstr "Eilės apačia"
 
-#: src/trg-main-window.c:2181 src/trg-menu-bar.c:639
+#: src/trg-main-window.c:2222 src/trg-menu-bar.c:639
 msgid "Top Of Queue"
 msgstr "Eilės viršus"
 
-#: src/trg-main-window.c:2190 src/trg-main-window.c:2273
+#: src/trg-main-window.c:2231 src/trg-main-window.c:2314
 msgid "Down Limit"
 msgstr "Parsiuntimo riba"
 
-#: src/trg-main-window.c:2195 src/trg-main-window.c:2277
+#: src/trg-main-window.c:2236 src/trg-main-window.c:2318
 msgid "Up Limit"
 msgstr "Išsiuntimo riba"
 
-#: src/trg-main-window.c:2224 src/trg-main-window.c:2231
+#: src/trg-main-window.c:2265 src/trg-main-window.c:2272
 #: src/trg-remote-prefs-dialog.c:497
 msgid "Updating..."
 msgstr "Atnaujinama..."
 
-#: src/trg-main-window.c:2245 src/trg-menu-bar.c:528 src/trg-toolbar.c:196
+#: src/trg-main-window.c:2286 src/trg-menu-bar.c:528 src/trg-toolbar.c:196
 msgid "Connect"
 msgstr "Prisijungti"
 
-#: src/trg-main-window.c:2252 src/trg-toolbar.c:206
+#: src/trg-main-window.c:2293 src/trg-toolbar.c:206
 msgid "Disconnect"
 msgstr "Atsijungti"
 
-#: src/trg-main-window.c:2256 src/trg-toolbar.c:209
+#: src/trg-main-window.c:2297 src/trg-toolbar.c:209
 #: src/trg-trackers-tree-view.c:284 src/trg-trackers-tree-view.c:311
 msgid "Add"
 msgstr "Pridėti"
 
-#: src/trg-main-window.c:2260
+#: src/trg-main-window.c:2301
 msgid "Add from URL"
 msgstr "Pridėti iš URL"
 
-#: src/trg-main-window.c:2264
+#: src/trg-main-window.c:2305
 msgid "Resume All"
 msgstr "Pratęsti visus"
 
-#: src/trg-main-window.c:2268
+#: src/trg-main-window.c:2309
 msgid "Pause All"
 msgstr "Sustabdyti visus"
 
-#: src/trg-main-window.c:2284
+#: src/trg-main-window.c:2325
 msgid "Quit"
 msgstr "Išeiti"
 
-#: src/trg-main-window.c:2378 src/trg-menu-bar.c:430
+#: src/trg-main-window.c:2416 src/trg-menu-bar.c:430
 msgid "Graph"
 msgstr "Diagrama"
 
-#: src/trg-main-window.c:2545
+#: src/trg-main-window.c:2596
 msgid "Transmission Remote"
 msgstr "Transmission Remote"
 
@@ -391,19 +391,19 @@ msgstr "Transmission Remote"
 msgid "_View"
 msgstr "_Rodymas"
 
-#: src/trg-menu-bar.c:398 src/trg-preferences-dialog.c:669
+#: src/trg-menu-bar.c:398 src/trg-preferences-dialog.c:674
 msgid "State selector"
 msgstr "Būsenos pasirinkimas"
 
-#: src/trg-menu-bar.c:404 src/trg-preferences-dialog.c:676
+#: src/trg-menu-bar.c:404 src/trg-preferences-dialog.c:681
 msgid "Directory filters"
 msgstr "Aplankų filtrai"
 
-#: src/trg-menu-bar.c:413 src/trg-preferences-dialog.c:683
+#: src/trg-menu-bar.c:413 src/trg-preferences-dialog.c:688
 msgid "Tracker filters"
 msgstr "Serverių filtrai"
 
-#: src/trg-menu-bar.c:422 src/trg-preferences-dialog.c:690
+#: src/trg-menu-bar.c:422 src/trg-preferences-dialog.c:695
 msgid "Torrent Details"
 msgstr "Išsamesnė torento informacija"
 
@@ -535,123 +535,127 @@ msgstr "Atnaujinimo intervalas:"
 msgid "Minimised update interval:"
 msgstr "Sumažinto atnaujinimo intervalas:"
 
-#: src/trg-preferences-dialog.c:430
+#: src/trg-preferences-dialog.c:432
+msgid "Session update interval:"
+msgstr "Sesijo atnaujinimo intervalas:"
+
+#: src/trg-preferences-dialog.c:434
 msgid "Torrents"
 msgstr "Torentai"
 
-#: src/trg-preferences-dialog.c:432
+#: src/trg-preferences-dialog.c:436
 msgid "Start paused"
 msgstr "Pradėti sustabdytoje būsenoj"
 
-#: src/trg-preferences-dialog.c:436
+#: src/trg-preferences-dialog.c:440
 msgid "Options dialog on add"
 msgstr "Parinkčių dialogas pridedant"
 
-#: src/trg-preferences-dialog.c:441 src/trg-torrent-add-dialog.c:687
+#: src/trg-preferences-dialog.c:445 src/trg-torrent-add-dialog.c:763
 msgid "Delete local .torrent file after adding"
 msgstr "Pridėjus ištrinti vietinį .torrent failą"
 
-#: src/trg-preferences-dialog.c:594
+#: src/trg-preferences-dialog.c:598
 msgid "Commands"
 msgstr "Komandos"
 
-#: src/trg-preferences-dialog.c:604 src/trg-preferences-dialog.c:642
+#: src/trg-preferences-dialog.c:608 src/trg-preferences-dialog.c:646
 msgid "Label"
 msgstr "Etiketė"
 
-#: src/trg-preferences-dialog.c:607
+#: src/trg-preferences-dialog.c:611
 msgid "Command"
 msgstr "Komanda"
 
-#: src/trg-preferences-dialog.c:632
+#: src/trg-preferences-dialog.c:636
 msgid "Remote Download Directories"
 msgstr "Nuotolinio parsiuntimo aplankai"
 
-#: src/trg-preferences-dialog.c:645
+#: src/trg-preferences-dialog.c:649
 msgid "Directory"
 msgstr "Aplankas"
 
-#: src/trg-preferences-dialog.c:667 src/trg-preferences-dialog.c:889
+#: src/trg-preferences-dialog.c:672 src/trg-preferences-dialog.c:901
 msgid "View"
 msgstr "Rodymas"
 
-#: src/trg-preferences-dialog.c:698
+#: src/trg-preferences-dialog.c:703
 msgid "Show graph"
 msgstr "Rodyti diagramą"
 
-#: src/trg-preferences-dialog.c:705
+#: src/trg-preferences-dialog.c:713
 msgid "System Tray"
 msgstr "Sistemos dėklas"
 
-#: src/trg-preferences-dialog.c:707
+#: src/trg-preferences-dialog.c:715
 msgid "Show in system tray"
 msgstr "Rodyti sistemos dėkle"
 
-#: src/trg-preferences-dialog.c:715
+#: src/trg-preferences-dialog.c:723
 msgid "Minimise to system tray"
 msgstr "Sumažinti į sistemos dėklą"
 
-#: src/trg-preferences-dialog.c:727
+#: src/trg-preferences-dialog.c:739
 msgid "Notifications"
 msgstr "Pranešimai"
 
-#: src/trg-preferences-dialog.c:729
+#: src/trg-preferences-dialog.c:741
 msgid "Torrent added notifications"
 msgstr "Pranešimai apie pridėtą torentą"
 
-#: src/trg-preferences-dialog.c:733
+#: src/trg-preferences-dialog.c:745
 msgid "Torrent complete notifications"
 msgstr "Pranešimai apie baigtą torentą"
 
-#: src/trg-preferences-dialog.c:760
+#: src/trg-preferences-dialog.c:772
 msgid "Profile: "
 msgstr "Profilis: "
 
-#: src/trg-preferences-dialog.c:786
+#: src/trg-preferences-dialog.c:798
 msgid "Name:"
 msgstr "Pavadinimas:"
 
-#: src/trg-preferences-dialog.c:794 src/trg-preferences-dialog.c:879
+#: src/trg-preferences-dialog.c:806 src/trg-preferences-dialog.c:891
 msgid "Connection"
 msgstr "Prisijungimas"
 
-#: src/trg-preferences-dialog.c:797
+#: src/trg-preferences-dialog.c:809
 msgid "Host:"
 msgstr "Serveris:"
 
-#: src/trg-preferences-dialog.c:801
+#: src/trg-preferences-dialog.c:813
 msgid "Port:"
 msgstr "Prievadas:"
 
-#: src/trg-preferences-dialog.c:804
+#: src/trg-preferences-dialog.c:816
 msgid "Username:"
 msgstr "Naudotojo vardas:"
 
-#: src/trg-preferences-dialog.c:808
+#: src/trg-preferences-dialog.c:820
 msgid "Password:"
 msgstr "Slaptažodis:"
 
-#: src/trg-preferences-dialog.c:810
+#: src/trg-preferences-dialog.c:822
 msgid "Automatically connect"
 msgstr "Prisijungti automatiškai"
 
-#: src/trg-preferences-dialog.c:816
+#: src/trg-preferences-dialog.c:828
 msgid "SSL"
 msgstr "SSL"
 
-#: src/trg-preferences-dialog.c:823
+#: src/trg-preferences-dialog.c:835
 msgid "Timeout:"
 msgstr "Laukimo laikas:"
 
-#: src/trg-preferences-dialog.c:827
+#: src/trg-preferences-dialog.c:839
 msgid "Retries:"
 msgstr "Kartojimų skaičius:"
 
-#: src/trg-preferences-dialog.c:868 src/trg-toolbar.c:238
+#: src/trg-preferences-dialog.c:880 src/trg-toolbar.c:238
 msgid "Local Preferences"
 msgstr "Vietiniai nustatymai"
 
-#: src/trg-preferences-dialog.c:899
+#: src/trg-preferences-dialog.c:911
 msgid "Directories"
 msgstr "Aplankai"
 
@@ -956,15 +960,15 @@ msgstr "Pars: %s%s, Išs: %s%s"
 msgid "Remove with data"
 msgstr "Pašalinti su duomenimis"
 
-#: src/trg-torrent-add-dialog.c:458
+#: src/trg-torrent-add-dialog.c:460
 msgid "Torrent files"
 msgstr "Torentų failai"
 
-#: src/trg-torrent-add-dialog.c:463
+#: src/trg-torrent-add-dialog.c:465
 msgid "All files"
 msgstr "Visi failai"
 
-#: src/trg-torrent-add-dialog.c:495
+#: src/trg-torrent-add-dialog.c:497
 msgid ""
 "Unable to parse torrent file. File preferences unavailable, but you can "
 "still try uploading it."
@@ -972,44 +976,48 @@ msgstr ""
 "Nepavyko apdoroti torent failo. Failo nustatymai neprieinami, bet vistiek "
 "galite bandyti išsisųti."
 
-#: src/trg-torrent-add-dialog.c:508
+#: src/trg-torrent-add-dialog.c:510
 #, c-format
 msgid "Unable to open torrent file: %s"
 msgstr "Nepavyko atverti torent failo:  %s"
 
-#: src/trg-torrent-add-dialog.c:563
+#: src/trg-torrent-add-dialog.c:574
 msgid "(None)"
 msgstr "(Joks)"
 
-#: src/trg-torrent-add-dialog.c:565
+#: src/trg-torrent-add-dialog.c:576
 msgid "(Multiple)"
 msgstr "(Keli)"
 
-#: src/trg-torrent-add-dialog.c:588
+#: src/trg-torrent-add-dialog.c:599
 msgid "Add a Torrent"
 msgstr "Pridėti torentą"
 
-#: src/trg-torrent-add-dialog.c:655
+#: src/trg-torrent-add-dialog.c:731
 msgid "Add Torrent"
 msgstr "Pridėti torentą"
 
-#: src/trg-torrent-add-dialog.c:680
+#: src/trg-torrent-add-dialog.c:756
 msgid "Start _paused"
 msgstr "Paleisti _sustabdytą"
 
-#: src/trg-torrent-add-dialog.c:696
+#: src/trg-torrent-add-dialog.c:772
 msgid "_Torrent file:"
 msgstr "Torento _failas:"
 
-#: src/trg-torrent-add-dialog.c:716
+#: src/trg-torrent-add-dialog.c:792
 msgid "_Destination folder:"
 msgstr "_Paskirties aplankas:"
 
-#: src/trg-torrent-add-dialog.c:737
+#: src/trg-torrent-add-dialog.c:812
+msgid "Apply to all:"
+msgstr "Pritaikyti visiems:"
+
+#: src/trg-torrent-add-dialog.c:823
 msgid "Torrent _priority:"
 msgstr "Torento p_rioritetas:"
 
-#: src/trg-torrent-add-dialog.c:843
+#: src/trg-torrent-add-dialog.c:929
 msgid "Show _options dialog"
 msgstr "Rodyti _parinkčių langą"
 
@@ -1041,7 +1049,7 @@ msgstr "Viso išsiunčiama"
 msgid "Total Downloading"
 msgstr "Viso parsiunčiama"
 
-#: src/trg-torrent-model.c:382
+#: src/trg-torrent-model.c:383
 msgid "Default"
 msgstr "Numatytas"
 
@@ -1216,24 +1224,24 @@ msgstr "Paskutinis informacijos rinkimas"
 msgid "Delete"
 msgstr "Pašalinti"
 
-#: src/util.c:335
+#: src/util.c:340
 msgid "JSON decoding error."
 msgstr "JSON iškodavimo klaida."
 
-#: src/util.c:340
+#: src/util.c:345
 msgid "Server responded, but with no result."
 msgstr "Serveris atsakė, bet be rezultato."
 
-#: src/util.c:344
+#: src/util.c:349
 #, c-format
 msgid "Request failed with HTTP code %d"
 msgstr "Užklausa nepavyko su HTTP kodu %d"
 
-#: src/util.c:383
+#: src/util.c:388
 msgid "None"
 msgstr "Nėra"
 
-#: src/util.c:429
+#: src/util.c:434
 #, c-format
 msgid "%d day"
 msgid_plural "%d days"
@@ -1241,7 +1249,7 @@ msgstr[0] "%d diena"
 msgstr[1] "%d dienos"
 msgstr[2] "%d dienų"
 
-#: src/util.c:430
+#: src/util.c:435
 #, c-format
 msgid "%d hour"
 msgid_plural "%d hours"
@@ -1249,7 +1257,7 @@ msgstr[0] "%d valanda"
 msgstr[1] "%d valandos"
 msgstr[2] "%d valandų"
 
-#: src/util.c:432
+#: src/util.c:437
 #, c-format
 msgid "%d minute"
 msgid_plural "%d minutes"
@@ -1257,7 +1265,7 @@ msgstr[0] "%d minutė"
 msgstr[1] "%d minutės"
 msgstr[2] "%d minučių"
 
-#: src/util.c:435
+#: src/util.c:440
 #, c-format
 msgid "%ld second"
 msgid_plural "%ld seconds"
