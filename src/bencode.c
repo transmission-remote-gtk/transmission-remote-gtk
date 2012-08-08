@@ -218,11 +218,13 @@ void be_free(be_node * node)
     case BE_DICT:
         {
             unsigned int i;
-            for (i = 0; node->val.d[i].val; ++i) {
-                _be_free_str(node->val.d[i].key);
-                be_free(node->val.d[i].val);
+            if (node->val.d) {
+				for (i = 0; node->val.d[i].val; ++i) {
+					_be_free_str(node->val.d[i].key);
+					be_free(node->val.d[i].val);
+				}
+				g_free(node->val.d);
             }
-            g_free(node->val.d);
             break;
         }
     }
