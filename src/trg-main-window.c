@@ -306,7 +306,7 @@ update_selected_torrent_notebook(TrgMainWindow * win, gint mode, gint64 id)
         trg_peers_model_update(priv->peersModel,
                                TRG_TREE_VIEW(priv->peersTreeView),
                                trg_client_get_serial(client), t, mode);
-    } else if (id < 0) {
+    } else {
         trg_main_window_torrent_scrub(win);
     }
 

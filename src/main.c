@@ -262,7 +262,7 @@ static gchar **convert_args(int argc, char *argv[])
 int main(int argc, char *argv[])
 {
 #if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
-    gchar **args = convert_args(argc, argv);
+    gchar **args;
 #endif
     gint exitCode = EXIT_SUCCESS;
     TrgClient *client;
@@ -270,6 +270,10 @@ int main(int argc, char *argv[])
     g_type_init();
     g_thread_init(NULL);
     gtk_init(&argc, &argv);
+
+#if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
+    args = convert_args(argc, argv);
+#endif
 
     curl_global_init(CURL_GLOBAL_ALL);
     client = trg_client_new();
