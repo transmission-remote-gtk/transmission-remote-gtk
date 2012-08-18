@@ -454,7 +454,7 @@ update_torrent_iter(TrgTorrentModel * model,
     if (newFlags & TORRENT_FLAG_ACTIVE) {
         if (lpd >= 0) {
             peerSources =
-                g_strdup_printf("%ld / %ld / %ld / %ld / %ld / %ld / %ld",
+                g_strdup_printf("%"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT,
                                 peerfrom_get_trackers(pf),
                                 peerfrom_get_incoming(pf),
                                 peerfrom_get_ltep(pf),
@@ -462,7 +462,7 @@ update_torrent_iter(TrgTorrentModel * model,
                                 lpd, peerfrom_get_resume(pf));
         } else {
             peerSources =
-                g_strdup_printf("%ld / %ld / %ld / %ld / %ld / N/A / %ld",
+                g_strdup_printf("%"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / N/A / %"G_GINT64_FORMAT,
                                 peerfrom_get_trackers(pf),
                                 peerfrom_get_incoming(pf),
                                 peerfrom_get_ltep(pf),
