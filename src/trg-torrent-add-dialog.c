@@ -724,8 +724,6 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
 
     GtkWidget *t, *l, *applyall_combo;
-    gint row = 0;
-    gint col = 0;
 
     /* window */
     gtk_window_set_title(GTK_WINDOW(obj), _("Add Torrent"));
@@ -771,73 +769,60 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
 
     l = gtk_label_new_with_mnemonic(_("_Torrent file:"));
     gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
-    gtk_table_attach(GTK_TABLE(t), l, col, col + 1, row, row + 1, GTK_FILL,
+    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 0, 1, GTK_FILL,
                      0, 0, 0);
-    ++col;
 
     priv->source_chooser = gtk_button_new();
     gtk_button_set_alignment(GTK_BUTTON(priv->source_chooser), 0.0f, 0.5f);
     trg_torrent_add_dialog_set_filenames(TRG_TORRENT_ADD_DIALOG(obj),
                                          priv->filenames);
 
-    gtk_table_attach(GTK_TABLE(t), priv->source_chooser, col, col + 1, row,
-                     row + 1, ~0, 0, 0, 0);
+    gtk_table_attach(GTK_TABLE(t), priv->source_chooser, 1, 2, 0,
+                     1, ~0, 0, 0, 0);
     gtk_label_set_mnemonic_widget(GTK_LABEL(l), priv->source_chooser);
     g_signal_connect(priv->source_chooser, "clicked",
                      G_CALLBACK(trg_torrent_add_dialog_source_click_cb),
                      obj);
 
-    ++row;
-    col = 0;
     l = gtk_label_new_with_mnemonic(_("_Destination folder:"));
     gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
-    gtk_table_attach(GTK_TABLE(t), l, col, col + 1, row, row + 1, GTK_FILL,
+    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 1, 2, GTK_FILL,
                      0, 0, 0);
-    ++col;
 
     priv->dest_combo =
         trg_destination_combo_new(priv->client,
                                   TRG_PREFS_KEY_LAST_ADD_DESTINATION);
-    gtk_table_attach(GTK_TABLE(t), priv->dest_combo, col, col + 1, row,
-                     row + 1, ~0, 0, 0, 0);
+    gtk_table_attach(GTK_TABLE(t), priv->dest_combo, 1, 2, 1,
+                     2, ~0, 0, 0, 0);
     gtk_label_set_mnemonic_widget(GTK_LABEL(l), priv->dest_combo);
 
-    ++row;
-    col = 0;
     gtk_widget_set_size_request(priv->file_list, 466u, 300u);
-    gtk_table_attach_defaults(GTK_TABLE(t), priv->file_list, col, col + 2,
-                              row, row + 1);
+    gtk_table_attach_defaults(GTK_TABLE(t), priv->file_list, 0, 2,
+                              2, 3);
 
-    ++row;
     l = gtk_label_new_with_mnemonic(_("Apply to all:"));
     gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
-    gtk_table_attach(GTK_TABLE(t), l, col, col + 1, row, row + 1, ~0, 0, 0,
+    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 3, 4, ~0, 0, 0,
                      0);
-    ++col;
-    applyall_combo = trg_torrent_add_dialog_apply_all_combo_new(TRG_TORRENT_ADD_DIALOG(obj));
-    gtk_table_attach(GTK_TABLE(t), applyall_combo, col, col + 1, row,
-                     row + 1, ~0, 0, 0, 0);
 
-    ++row;
-    col = 0;
+    applyall_combo = trg_torrent_add_dialog_apply_all_combo_new(TRG_TORRENT_ADD_DIALOG(obj));
+    gtk_table_attach(GTK_TABLE(t), applyall_combo, 1, 2, 3,
+                     4, ~0, 0, 0, 0);
+
     l = gtk_label_new_with_mnemonic(_("Torrent _priority:"));
     gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
-    gtk_table_attach(GTK_TABLE(t), l, col, col + 1, row, row + 1, ~0, 0, 0,
+    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 4, 5, ~0, 0, 0,
                      0);
-    ++col;
-    gtk_table_attach(GTK_TABLE(t), priv->priority_combo, col, col + 1, row,
-                     row + 1, ~0, 0, 0, 0);
+
+    gtk_table_attach(GTK_TABLE(t), priv->priority_combo, 1, 2, 4,
+                     5, ~0, 0, 0, 0);
     gtk_label_set_mnemonic_widget(GTK_LABEL(l), priv->priority_combo);
 
-    ++row;
-    col = 0;
-    gtk_table_attach(GTK_TABLE(t), priv->paused_check, col, col + 2, row,
-                     row + 1, GTK_FILL, 0, 0, 0);
+    gtk_table_attach(GTK_TABLE(t), priv->paused_check, 0, 2, 5,
+                     6, GTK_FILL, 0, 0, 0);
 
-    ++row;
-    col = 0;
-    gtk_table_attach(GTK_TABLE(t), priv->delete_check, col, col + 2, row,
-                     row + 1, GTK_FILL, 0, 0, 0);
+    gtk_table_attach(GTK_TABLE(t), priv->delete_check, 0, 2, 6,
+                     7, GTK_FILL, 0, 0, 0);
 
     gtr_dialog_set_content(GTK_DIALOG(obj), t);
 
