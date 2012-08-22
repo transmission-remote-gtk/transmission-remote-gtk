@@ -3,12 +3,12 @@ Section: net
 Priority: optional
 Maintainer: Alan Fitton <alan@eth0.org.uk>
 Build-Depends: debhelper, autotools-dev, libcurl4-openssl-dev,
- libgtk3.0-dev, libglib2.0-dev (>= 2.22~), libproxy-dev,
+ libgtk-3-dev, libglib2.0-dev (>= 2.22~), libproxy-dev,
  libnotify-dev, libjson-glib-dev, libgeoip-dev, intltool,
  dh-autoreconf, libappindicator3-dev
 Standards-Version: 3.9.2
 Homepage: http://code.google.com/p/transmission-remote-gtk/
-Vcs-Svn: http://transmission-remote-gtk.googlecode.com/svn/trunk/
+Vcs-Git: https://code.google.com/p/transmission-remote-gtk/
 Vcs-Browser: http://code.google.com/p/transmission-remote-gtk/source/browse/
 
 Package: transmission-remote-gtk
