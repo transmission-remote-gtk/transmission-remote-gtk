@@ -20,39 +20,24 @@
 #include "torrent.h"
 #include "util.h"
 
-/* #define TEST_RTL */
-
-    /*"status", TORRENT_COLUMN_FLAGS,
-    "ratio", TORRENT_COLUMN_RATIO,
-    "downloaded", TORRENT_COLUMN_DOWNLOADED,
-    "name", TORRENT_COLUMN_NAME,
-    "sizeWhenDone", TORRENT_COLUMN_SIZE,
-    "uploaded", TORRENT_COLUMN_UPLOADED,
-    "percentComplete", TORRENT_COLUMN_DONE,
-    "upSpeed", TORRENT_COLUMN_UPSPEED,
-    "downSpeed", TORRENT_COLUMN_DOWNSPEED,
-    "leechers", TORRENT_COLUMN_LEECHERS,
-    "seeds", TORRENT_COLUMN_SEEDS,
-    "eta", TORRENT_COLUMN_ETA,
-    "json", TORRENT_COLUMN_JSON,
-    "connected", TORRENT_COLUMN_PEERS_CONNECTED,*/
-
 enum
 {
     P_STATUS = 1,
     P_RATIO,
     P_DOWNLOADED,
+    P_ERROR,
     P_NAME,
     P_SIZEWHENDONE,
     P_UPLOADED,
     P_PERCENTCOMPLETE,
     P_UPSPEED,
     P_DOWNSPEED,
-    P_LEECHERS,
-    P_SEEDS,
+    P_PEERSGETTINGFROMUS,
+    P_PEERSTOUS,
     P_ETA,
     P_JSON,
     P_CONNECTED,
+    P_FILECOUNT,
     P_BAR_HEIGHT,
     P_COMPACT
 };
@@ -111,7 +96,9 @@ struct TorrentCellRendererPrivate
     gint64 peersFromUs;
     gint64 peersToUs;
     gint64 connected;
+    guint fileCount;
     gint64 eta;
+    gint64 error;
 
     gboolean compact;
 };
@@ -288,7 +275,12 @@ getStatusString( GString           * gstr,
 	//TODO: handle metadata for downloading
 	//TODO: handle errors
 
-	if (priv->flags & TORRENT_FLAG_DOWNLOADING) {
+	if ( priv->error ) {
+        const char * fmt[] = { NULL, N_( "Tracker gave a warning: \"%s\"" ),
+                                     N_( "Tracker gave an error: \"%s\"" ),
+                                     N_( "Error: %s" ) };
+        g_string_append_printf( gstr, _( fmt[priv->error] ), torrent_get_errorstr(priv->json) );
+	} else if (priv->flags & TORRENT_FLAG_DOWNLOADING) {
         g_string_append_printf( gstr,
             ngettext( "Downloading from %1$'d of %2$'d connected peer",
                       "Downloading from %1$'d of %2$'d connected peers",
@@ -324,19 +316,20 @@ getStatusString( GString           * gstr,
 static GdkPixbuf*
 get_icon( TorrentCellRenderer *r, GtkIconSize icon_size, GtkWidget * for_widget )
 {
-    const char * mime_type;
-    /*const tr_info * info = tr_torrentInfo( tor );
+	struct TorrentCellRendererPrivate *p = r->priv;
 
-    if( info->fileCount == 0  )
+    const char * mime_type;
+
+    if( p->fileCount == 0  )
         mime_type = UNKNOWN_MIME_TYPE;
-    else if( info->fileCount > 1 )
+    else if( p->fileCount > 1 )
         mime_type = DIRECTORY_MIME_TYPE;
-    else if( strchr( info->files[0].name, '/' ) != NULL )
+    /*else if( strchr( info->files[0].name, '/' ) != NULL )
         mime_type = DIRECTORY_MIME_TYPE;
     else
         mime_type = gtr_get_mime_type_from_filename( info->files[0].name );*/
-
-    mime_type = DIRECTORY_MIME_TYPE;
+    else
+    	mime_type = FILE_MIME_TYPE;
 
     //return NULL;
     return gtr_get_mime_type_icon( mime_type, icon_size, for_widget );
@@ -495,10 +488,10 @@ torrent_cell_renderer_get_size( GtkCellRenderer     * cell,
 static void
 get_text_color( GtkWidget * w, TorrentCellRenderer *r, GtrColor * setme )
 {
-    /*static const GdkRGBA red = { 1.0, 0, 0, 0 };
-    if( st->error )
+    static const GdkRGBA red = { 1.0, 0, 0, 0 };
+    if( r->priv->error )
         *setme = red;
-    else */if( r->priv->flags & TORRENT_FLAG_PAUSED )
+    else if( r->priv->flags & TORRENT_FLAG_PAUSED )
         gtk_style_context_get_color( gtk_widget_get_style_context( w ), GTK_STATE_FLAG_INSENSITIVE, setme );
     else
         gtk_style_context_get_color( gtk_widget_get_style_context( w ), GTK_STATE_FLAG_NORMAL, setme );
@@ -557,35 +550,70 @@ torrent_cell_renderer_render( GtkCellRenderer       * cell,
     }
 }
 
-static void
-torrent_cell_renderer_set_property( GObject      * object,
-                                    guint          property_id,
-                                    const GValue * v,
-                                    GParamSpec   * pspec )
-{
-    TorrentCellRenderer * self = TORRENT_CELL_RENDERER( object );
-    struct TorrentCellRendererPrivate * p = self->priv;
+static void torrent_cell_renderer_set_property(GObject * object,
+		guint property_id, const GValue * v, GParamSpec * pspec) {
+	TorrentCellRenderer * self = TORRENT_CELL_RENDERER( object );
+	struct TorrentCellRendererPrivate * p = self->priv;
 
-    switch( property_id )
-    {
-        case P_JSON:        p->json                 = g_value_get_pointer( v ); break;
-        case P_STATUS:		p->flags				= g_value_get_uint( v ); break;
-        case P_SIZEWHENDONE: p->sizeWhenDone = g_value_get_int64( v ); break;
-        case P_DOWNLOADED: p->downloaded = g_value_get_int64( v ); break;
-        case P_UPLOADED: p->uploadedEver = g_value_get_int64( v ); break;
-        case P_UPSPEED: p->upSpeed = g_value_get_int64( v ); break;
-        case P_DOWNSPEED: p->downSpeed = g_value_get_int64( v ); break;
-        case P_LEECHERS: p->peersFromUs = g_value_get_int64( v ); break;
-        case P_CONNECTED: p->connected = g_value_get_int64( v ); break;
-        case P_ETA: p->eta = g_value_get_int64( v ); break;
-        case P_SEEDS: p->peersToUs = g_value_get_int64( v ); break;
-        case P_NAME: p->name = g_value_get_string( v ); break;
-        case P_RATIO: p->ratio = g_value_get_double( v ); break;
-        case P_PERCENTCOMPLETE: p->done = g_value_get_double( v ); break;
-        case P_BAR_HEIGHT:     p->bar_height          = g_value_get_int( v ); break;
-        case P_COMPACT:        p->compact             = g_value_get_boolean( v ); break;
-        default: G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, pspec ); break;
-    }
+	switch (property_id) {
+	case P_JSON:
+		p->json = g_value_get_pointer(v);
+		break;
+	case P_STATUS:
+		p->flags = g_value_get_uint(v);
+		break;
+	case P_SIZEWHENDONE:
+		p->sizeWhenDone = g_value_get_int64(v);
+		break;
+	case P_DOWNLOADED:
+		p->downloaded = g_value_get_int64(v);
+		break;
+	case P_UPLOADED:
+		p->uploadedEver = g_value_get_int64(v);
+		break;
+	case P_UPSPEED:
+		p->upSpeed = g_value_get_int64(v);
+		break;
+	case P_DOWNSPEED:
+		p->downSpeed = g_value_get_int64(v);
+		break;
+	case P_PEERSGETTINGFROMUS:
+		p->peersFromUs = g_value_get_int64(v);
+		break;
+	case P_CONNECTED:
+		p->connected = g_value_get_int64(v);
+		break;
+	case P_FILECOUNT:
+		p->fileCount = g_value_get_uint(v);
+		break;
+	case P_ETA:
+		p->eta = g_value_get_int64(v);
+		break;
+	case P_PEERSTOUS:
+		p->peersToUs = g_value_get_int64(v);
+		break;
+	case P_ERROR:
+		p->error = g_value_get_int64(v);
+		break;
+	case P_NAME:
+		p->name = g_value_get_string(v);
+		break;
+	case P_RATIO:
+		p->ratio = g_value_get_double(v);
+		break;
+	case P_PERCENTCOMPLETE:
+		p->done = g_value_get_double(v);
+		break;
+	case P_BAR_HEIGHT:
+		p->bar_height = g_value_get_int(v);
+		break;
+	case P_COMPACT:
+		p->compact = g_value_get_boolean(v);
+		break;
+	default:
+		G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, pspec);
+		break;
+	}
 }
 
 static void
@@ -679,6 +707,18 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
                                                          0, G_MAXUINT, 0,
                                                          G_PARAM_READWRITE ) );
 
+    g_object_class_install_property( gobject_class, P_FILECOUNT,
+                                    g_param_spec_uint( "fileCount", NULL,
+                                                         "fileCount",
+                                                         0, G_MAXUINT, 0,
+                                                         G_PARAM_READWRITE ) );
+
+    g_object_class_install_property( gobject_class, P_ERROR,
+                                    g_param_spec_int64( "error", NULL,
+                                                         "error",
+                                                         0, G_MAXINT64, 0,
+                                                         G_PARAM_READWRITE ) );
+
     g_object_class_install_property( gobject_class, P_UPSPEED,
                                     g_param_spec_int64( "upSpeed", NULL,
                                                          "upSpeed",
@@ -703,22 +743,22 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
                                                          0, G_MAXINT64, 0,
                                                          G_PARAM_READWRITE ) );
 
-    g_object_class_install_property( gobject_class, P_LEECHERS,
-                                    g_param_spec_int64( "leechers", NULL,
-                                                         "leechers",
+    g_object_class_install_property( gobject_class, P_PEERSGETTINGFROMUS,
+                                    g_param_spec_int64( "peersGettingFromUs", NULL,
+                                                         "peersGettingFromUs",
                                                          -1, G_MAXINT64, 0,
                                                          G_PARAM_READWRITE ) );
 
-    g_object_class_install_property( gobject_class, P_SEEDS,
-                                    g_param_spec_int64( "seeds", NULL,
-                                                         "seeds",
+    g_object_class_install_property( gobject_class, P_PEERSTOUS,
+                                    g_param_spec_int64( "peersToUs", NULL,
+                                                         "peersToUs",
                                                          -1, G_MAXINT64, 0,
                                                          G_PARAM_READWRITE ) );
 
     g_object_class_install_property( gobject_class, P_ETA,
                                     g_param_spec_int64( "eta", NULL,
                                                          "eta",
-                                                         -1, G_MAXINT64, 0,
+                                                         -2, G_MAXINT64, 0,
                                                          G_PARAM_READWRITE ) );
 
     g_object_class_install_property( gobject_class, P_CONNECTED,
@@ -790,16 +830,13 @@ render_compact( TorrentCellRenderer   * cell,
     GdkRectangle fill_area;
     GdkPixbuf * icon;
     GtrColor text_color;
-    gboolean seed;
-
-    //TODO: Handle errors
+    //TODO
+    //gboolean seed;
 
     struct TorrentCellRendererPrivate * p = cell->priv;
-    //const tr_torrent * tor = p->tor;
-    //const tr_stat * st = tr_torrentStatCached( (tr_torrent*)tor );
     const gboolean active = ( p->flags & ~TORRENT_FLAG_PAUSED ) && ( p->flags & ~TORRENT_FLAG_DOWNLOADING_WAIT ) && ( p->flags & ~TORRENT_FLAG_SEEDING_WAIT );
 
-    const gboolean sensitive = active;// || st->error;
+    const gboolean sensitive = active || p->error;
     GString * gstr_stat = p->gstr1;
 
     icon = get_icon( cell, COMPACT_ICON_SIZE, widget );
@@ -869,11 +906,12 @@ render_full( TorrentCellRenderer   * cell,
     GdkRectangle prct_area;
     GdkPixbuf * icon;
     GtrColor text_color;
+    //TODO
     //gboolean seed;
 
     struct TorrentCellRendererPrivate * p = cell->priv;
     const gboolean active = ( p->flags & ~TORRENT_FLAG_PAUSED ) && ( p->flags & ~TORRENT_FLAG_DOWNLOADING_WAIT ) && ( p->flags & ~TORRENT_FLAG_SEEDING_WAIT );
-    const gboolean sensitive = active;// || st->error;
+    const gboolean sensitive = active || p->error;
     GString * gstr_prog = p->gstr1;
     GString * gstr_stat = p->gstr2;
 

@@ -18,6 +18,7 @@
 #define GTR_UNICODE_UP		"\xE2\x86\x91"
 #define GTR_UNICODE_DOWN	"\xE2\x86\x93"
 #define DIRECTORY_MIME_TYPE "folder"
+#define FILE_MIME_TYPE "file"
 #define UNKNOWN_MIME_TYPE   "unknown"
 
 #define TORRENT_CELL_RENDERER_TYPE ( torrent_cell_renderer_get_type( ) )

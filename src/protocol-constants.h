@@ -68,6 +68,7 @@
 #define FIELD_ISFINISHED        "isFinished"
 #define FIELD_ISPRIVATE         "isPrivate"
 #define FIELD_ERRORSTR          "errorString"
+#define FIELD_ERROR				"error"
 #define FIELD_BANDWIDTH_PRIORITY "bandwidthPriority"
 #define FIELD_UPLOAD_LIMIT      "uploadLimit"
 #define FIELD_UPLOAD_LIMITED    "uploadLimited"

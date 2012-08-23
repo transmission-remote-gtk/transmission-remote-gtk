@@ -282,7 +282,7 @@ torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
             flags |= TORRENT_FLAG_ACTIVE;
     }
 
-    if (strlen(torrent_get_errorstr(t)) > 0)
+    if (torrent_get_error(t) > 0)
         flags |= TORRENT_FLAG_ERROR;
 
     return flags;
@@ -318,6 +318,14 @@ gint64 torrent_get_done_date(JsonObject * t)
 const gchar *torrent_get_errorstr(JsonObject * t)
 {
     return json_object_get_string_member(t, FIELD_ERRORSTR);
+}
+
+gint64 torrent_get_error(JsonObject *t)
+{
+	if (!json_object_has_member(t, FIELD_ERROR))
+		return 0;
+	else
+		return json_object_get_int_member(t, FIELD_ERROR);
 }
 
 gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags)
@@ -420,7 +428,6 @@ JsonArray *get_torrents(JsonObject * response)
 
 JsonArray *torrent_get_files(JsonObject * args)
 {
-    g_assert(json_object_get_array_member(args, FIELD_FILES));
     return json_object_get_array_member(args, FIELD_FILES);
 }
 

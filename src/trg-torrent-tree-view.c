@@ -169,6 +169,8 @@ static void setup_classic_layout(TrgTorrentTreeView *tv)
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes("",
                                                     renderer,
                                                     "status", TORRENT_COLUMN_FLAGS,
+                                                    "error", TORRENT_COLUMN_ERROR,
+                                                    "fileCount", TORRENT_COLUMN_FILECOUNT,
                                                     "ratio", TORRENT_COLUMN_RATIO,
                                                     "downloaded", TORRENT_COLUMN_DOWNLOADED,
                                                     "sizeWhenDone", TORRENT_COLUMN_SIZEWHENDONE,
