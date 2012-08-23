@@ -57,6 +57,7 @@ transmission_remote_gtk_SOURCES = \
 	  trg-cell-renderer-file-icon.c \
 	  trg-cell-renderer-epoch.c \
 	  trg-cell-renderer-numgteqthan.c \
+	  torrent-cell-renderer.c \
 	  trg-remote-prefs-dialog.c \
 	  trg-torrent-props-dialog.c \
 	  trg-torrent-add-url-dialog.c \
@@ -70,6 +71,7 @@ transmission_remote_gtk_SOURCES = \
 	  trg-general-panel.c \
 	  trg-torrent-graph.c \
 	  trg-icons.c \
+	  icons.c \
 	  trg-toolbar.c \
 	  trg-menu-bar.c \
 	  trg-status-bar.c \

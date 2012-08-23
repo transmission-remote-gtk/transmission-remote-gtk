@@ -573,6 +573,17 @@ evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
 #endif
 }
 
+char*
+tr_strlsize( char * buf, guint64 bytes, size_t buflen )
+{
+    if( !bytes )
+        g_strlcpy( buf, Q_( "None" ), buflen );
+    else
+        tr_formatter_size_B( buf, bytes, buflen );
+
+    return buf;
+}
+
 gboolean is_minimised_arg(const gchar * arg)
 {
     return !g_strcmp0(arg, "-m")

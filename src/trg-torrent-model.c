@@ -199,8 +199,8 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
 
     column_types[TORRENT_COLUMN_ICON] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_NAME] = G_TYPE_STRING;
-    column_types[TORRENT_COLUMN_SIZE] = G_TYPE_INT64;
-    column_types[TORRENT_COLUMN_DONE] = G_TYPE_DOUBLE;
+    column_types[TORRENT_COLUMN_SIZEWHENDONE] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_PERCENTDONE] = G_TYPE_DOUBLE;
     column_types[TORRENT_COLUMN_STATUS] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_SEEDS] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_LEECHERS] = G_TYPE_INT64;
@@ -475,9 +475,9 @@ update_torrent_iter(TrgTorrentModel * model,
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
     gtk_list_store_set(ls, iter,
-                       TORRENT_COLUMN_SIZE, torrent_get_size(t), -1);
+                       TORRENT_COLUMN_SIZEWHENDONE, torrent_get_size(t), -1);
     gtk_list_store_set(ls, iter,
-                       TORRENT_COLUMN_DONE,
+                       TORRENT_COLUMN_PERCENTDONE,
                        (newFlags & TORRENT_FLAG_CHECKING) ?
                        torrent_get_recheck_progress(t)
                        : torrent_get_percent_done(t), -1);
@@ -540,8 +540,8 @@ update_torrent_iter(TrgTorrentModel * model,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t),
                        TORRENT_COLUMN_NAME, torrent_get_name(t),
-                       TORRENT_COLUMN_SIZE, torrent_get_size(t),
-                       TORRENT_COLUMN_DONE,
+                       TORRENT_COLUMN_SIZEWHENDONE, torrent_get_size(t),
+                       TORRENT_COLUMN_PERCENTDONE,
                        (newFlags & TORRENT_FLAG_CHECKING) ?
                        torrent_get_recheck_progress(t)
                        : torrent_get_percent_done(t),

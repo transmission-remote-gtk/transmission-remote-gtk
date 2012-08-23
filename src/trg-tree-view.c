@@ -464,6 +464,11 @@ void trg_tree_view_persist(TrgTreeView * tv, gboolean parentIsSortable)
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tv));
     GList *cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(tv));
 
+    if (cols && g_object_get_data(G_OBJECT(cols->data), "column-desc") == NULL) {
+    	g_list_free(cols);
+    	return;
+    }
+
     GList *li;
     gint sort_column_id;
     GtkSortType sort_type;
