@@ -62,6 +62,7 @@
 #define FIELD_PEERSFROM         "peersFrom"
 #define FIELD_FILES             "files"
 #define FIELD_WANTED            "wanted"
+#define FIELD_WEB_SEEDS_SENDING_TO_US "webseedsSendingToUs"
 #define FIELD_PRIORITIES        "priorities"
 #define FIELD_COMMENT           "comment"
 #define FIELD_LEFTUNTILDONE     "leftUntilDone"

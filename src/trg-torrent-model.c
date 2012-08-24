@@ -207,6 +207,7 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_TOTALSIZE] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_HAVE_UNCHECKED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PERCENTDONE] = G_TYPE_DOUBLE;
+    column_types[TORRENT_COLUMN_METADATAPERCENTCOMPLETE] = G_TYPE_DOUBLE;
     column_types[TORRENT_COLUMN_STATUS] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_SEEDS] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_LEECHERS] = G_TYPE_INT64;
@@ -238,6 +239,7 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_SEED_RATIO_MODE] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_CONNECTED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_FROM_US] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_WEB_SEEDS_TO_US] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_TO_US] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_TRACKERHOST] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_QUEUE_POSITION] = G_TYPE_INT64;
@@ -490,6 +492,8 @@ update_torrent_iter(TrgTorrentModel * model,
                        (newFlags & TORRENT_FLAG_CHECKING) ?
                        torrent_get_recheck_progress(t)
                        : torrent_get_percent_done(t),
+                       TORRENT_COLUMN_METADATAPERCENTCOMPLETE,
+                       torrent_get_metadata_percent_complete(t),
                        TORRENT_COLUMN_STATUS, statusString,
                        TORRENT_COLUMN_DOWNSPEED, downRate,
                        TORRENT_COLUMN_FLAGS, newFlags,
@@ -514,6 +518,8 @@ update_torrent_iter(TrgTorrentModel * model,
                        torrent_get_peers_sending_to_us(t),
                        TORRENT_COLUMN_PEERS_FROM_US,
                        torrent_get_peers_getting_from_us(t),
+                       TORRENT_COLUMN_WEB_SEEDS_TO_US,
+                       torrent_get_web_seeds_sending_to_us(t),
                        TORRENT_COLUMN_QUEUE_POSITION,
                        torrent_get_queue_position(t),
                        TORRENT_COLUMN_SEED_RATIO_LIMIT, torrent_get_seed_ratio_limit(t),

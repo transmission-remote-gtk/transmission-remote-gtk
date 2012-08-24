@@ -44,7 +44,7 @@ desktop_DATA = transmission-remote-gtk.desktop
 endif
 
 bin_PROGRAMS = transmission-remote-gtk
-INCLUDES = -std=c99 --pedantic -Wall -I.. -Wno-overflow -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS)
+INCLUDES = -std=c99 -Wall -I.. -Wno-overflow -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(unique_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS)
 		
 transmission_remote_gtk_SOURCES = \
 	  trg-cell-renderer-speed.c \

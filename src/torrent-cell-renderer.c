@@ -37,9 +37,11 @@ enum
     P_TOTALSIZE,
     P_UPLOADED,
     P_PERCENTCOMPLETE,
+    P_METADATAPERCENTCOMPLETE,
     P_UPSPEED,
     P_DOWNSPEED,
     P_PEERSGETTINGFROMUS,
+    P_WEBSEEDSTOUS,
     P_PEERSTOUS,
     P_ETA,
     P_JSON,
@@ -100,10 +102,12 @@ struct TorrentCellRendererPrivate
     gint64 downSpeed;
     gpointer json;
     gdouble done;
+    gdouble metadataPercentComplete;
     gdouble ratio;
     guint flags;
     const gchar *name;
     gint64 peersFromUs;
+    gint64 webSeedsToUs;
     gint64 peersToUs;
     gint64 connected;
     guint fileCount;
@@ -227,11 +231,9 @@ getShortTransferString( TorrentCellRenderer * r,
 	struct TorrentCellRendererPrivate *priv = r->priv;
 
     char downStr[32], upStr[32];
-    //const int haveMeta = tr_torrentHasMetadata( tor );
-    //const int haveUp = haveMeta && st->peersGettingFromUs > 0;
-    //const int haveDown = haveMeta && ( ( st->peersSendingToUs > 0 ) || ( st->webseedsSendingToUs > 0 ) );
-    const int haveUp = priv->peersFromUs > 0;
-    const int haveDown = priv->peersToUs > 0;
+    const gboolean haveMeta = priv->fileCount > 0;
+    const gboolean haveUp = haveMeta && priv->peersFromUs > 0;
+    const gboolean haveDown = haveMeta && priv->peersToUs > 0;
 
     if( haveDown )
         tr_formatter_speed_KBps( downStr, priv->downSpeed, sizeof( downStr ) );
@@ -252,9 +254,9 @@ getShortTransferString( TorrentCellRenderer * r,
         g_snprintf( buf, buflen, _( "%1$s %2$s" ),
                     GTR_UNICODE_UP, upStr );
     /*else if( st->isStalled )
-        g_strlcpy( buf, _( "Stalled" ), buflen );
+        g_strlcpy( buf, _( "Stalled" ), buflen );*/
     else if( haveMeta )
-        g_strlcpy( buf, _( "Idle" ), buflen );*/
+        g_strlcpy( buf, _( "Idle" ), buflen );
     else
         *buf = '\0';
 
@@ -277,8 +279,9 @@ getShortStatusString( GString           * gstr,
 	} else if (flags & TORRENT_FLAG_SEEDING_WAIT) {
         g_string_append( gstr, _( "Queued for seeding" ) );
 	} else if (flags & TORRENT_FLAG_CHECKING) {
-        g_string_append_printf( gstr, _( "Verifying data (%.1f% tested)" ),
-                                    tr_truncd( priv->done * 100.0, 1 ) );
+		char buf1[32];
+        g_string_append_printf( gstr, _( "Verifying data (%1$s tested)" ),
+        		tr_strlpercent( buf1, priv->done, sizeof( buf1 ) ) );
 	} else if ((flags & TORRENT_FLAG_DOWNLOADING) || (flags & TORRENT_FLAG_SEEDING)) {
             char buf[512];
             if( flags & ~TORRENT_FLAG_DOWNLOADING )
@@ -297,8 +300,7 @@ getStatusString( GString           * gstr,
                  TorrentCellRenderer * r )
 {
 	struct TorrentCellRendererPrivate *priv = r->priv;
-
-	//TODO: handle metadata for downloading
+	char buf[256];
 
 	if ( priv->error ) {
         const char * fmt[] = { NULL, N_( "Tracker gave a warning: \"%s\"" ),
@@ -306,16 +308,24 @@ getStatusString( GString           * gstr,
                                      N_( "Error: %s" ) };
         g_string_append_printf( gstr, _( fmt[priv->error] ), torrent_get_errorstr(priv->json) );
 	} else if (priv->flags & TORRENT_FLAG_DOWNLOADING) {
-        g_string_append_printf( gstr,
-            ngettext( "Downloading from %1$'d of %2$'d connected peer",
-                      "Downloading from %1$'d of %2$'d connected peers",
-                      priv->peersToUs ),
-            priv->peersToUs,
-            priv->connected );
+		if (priv->fileCount > 0) {
+	        g_string_append_printf( gstr,
+	            ngettext( "Downloading from %1$li of %2$li connected peer",
+	                      "Downloading from %1$li of %2$li connected peers",
+	                      priv->webSeedsToUs + priv->peersToUs ),
+	            priv->webSeedsToUs + priv->peersToUs,
+	            priv->webSeedsToUs + priv->connected );
+		} else {
+            g_string_append_printf( gstr,
+                ngettext( "Downloading metadata from %1$li peer (%2$s done)",
+                          "Downloading metadata from %1$li peers (%2$s done)",
+                          priv->connected + priv->webSeedsToUs ),
+                priv->connected + priv->webSeedsToUs, tr_strlpercent( buf, priv->metadataPercentComplete, sizeof(buf) ) );
+		}
 	} else if (priv->flags & TORRENT_FLAG_SEEDING) {
         g_string_append_printf( gstr,
-            ngettext( "Seeding to %1$'d of %2$'d connected peer",
-                      "Seeding to %1$'d of %2$'d connected peers",
+            ngettext( "Seeding to %1$li of %2$li connected peer",
+                      "Seeding to %1$li of %2$li connected peers",
                       priv->connected ),
             priv->peersFromUs,
             priv->connected );
@@ -327,7 +337,6 @@ getStatusString( GString           * gstr,
         ( priv->flags & ~TORRENT_FLAG_SEEDING_WAIT ) &&
         ( priv->flags & ~TORRENT_FLAG_PAUSED ) )
     {
-        char buf[256];
         getShortTransferString( r, buf, sizeof( buf ) );
         if( *buf )
             g_string_append_printf( gstr, " - %s", buf );
@@ -522,18 +531,16 @@ get_text_color( GtkWidget * w, TorrentCellRenderer *r, GtrColor * setme )
         gtk_style_context_get_color( gtk_widget_get_style_context( w ), GTK_STATE_FLAG_NORMAL, setme );
 }
 
-/*static double
+static double
 get_percent_done( TorrentCellRenderer *r, gboolean * seed )
 {
 	struct TorrentCellRendererPrivate *priv = r->priv;
     double d;
 
-    //TODO: handle seed ratios
-
-    if( ( priv->flags & TORRENT_FLAG_SEEDING ) && tr_torrentGetSeedRatio( tor, &d ) )
+    if( ( priv->flags & TORRENT_FLAG_SEEDING ) && getSeedRatio( r, &d ) )
     {
-        *seed = true;
-        d = MAX( 0.0, st->seedRatioPercentDone );
+        *seed = TRUE;
+        d = MAX( 0.0, (priv->ratio/d)*100 );
     }
     else
     {
@@ -542,7 +549,7 @@ get_percent_done( TorrentCellRenderer *r, gboolean * seed )
     }
 
     return d;
-}*/
+}
 
 static void
 gtr_cell_renderer_render( GtkCellRenderer       * renderer,
@@ -614,6 +621,9 @@ static void torrent_cell_renderer_set_property(GObject * object,
 	case P_PEERSGETTINGFROMUS:
 		p->peersFromUs = g_value_get_int64(v);
 		break;
+	case P_WEBSEEDSTOUS:
+		p->webSeedsToUs = g_value_get_int64(v);
+		break;
 	case P_CONNECTED:
 		p->connected = g_value_get_int64(v);
 		break;
@@ -637,6 +647,9 @@ static void torrent_cell_renderer_set_property(GObject * object,
 		break;
 	case P_PERCENTCOMPLETE:
 		p->done = g_value_get_double(v);
+		break;
+	case P_METADATAPERCENTCOMPLETE:
+		p->metadataPercentComplete = g_value_get_double(v);
 		break;
 	case P_BAR_HEIGHT:
 		p->bar_height = g_value_get_int(v);
@@ -755,6 +768,11 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
                                                           0, 100.00, 0,
                                                           G_PARAM_READWRITE ) );
 
+    g_object_class_install_property( gobject_class, P_METADATAPERCENTCOMPLETE,
+                                    g_param_spec_double( "metadataPercentComplete", NULL,
+                                                          "metadataPercentComplete",
+                                                          0, 100.00, 0,
+                                                          G_PARAM_READWRITE ) );
 
     g_object_class_install_property( gobject_class, P_TOTALSIZE,
                                     g_param_spec_int64( "totalSize", NULL,
@@ -834,6 +852,12 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
                                                          -1, G_MAXINT64, 0,
                                                          G_PARAM_READWRITE ) );
 
+    g_object_class_install_property( gobject_class, P_WEBSEEDSTOUS,
+                                    g_param_spec_int64( "webSeedsToUs", NULL,
+                                                         "webSeedsToUs",
+                                                         0, G_MAXINT64, 0,
+                                                         G_PARAM_READWRITE ) );
+
     g_object_class_install_property( gobject_class, P_ETA,
                                     g_param_spec_int64( "eta", NULL,
                                                          "eta",
@@ -909,12 +933,11 @@ render_compact( TorrentCellRenderer   * cell,
     GdkRectangle fill_area;
     GdkPixbuf * icon;
     GtrColor text_color;
-    //TODO
-    //gboolean seed;
+    gboolean seed;
 
     struct TorrentCellRendererPrivate * p = cell->priv;
     const gboolean active = ( p->flags & ~TORRENT_FLAG_PAUSED ) && ( p->flags & ~TORRENT_FLAG_DOWNLOADING_WAIT ) && ( p->flags & ~TORRENT_FLAG_SEEDING_WAIT );
-
+    const double percentDone = get_percent_done( cell, &seed );
     const gboolean sensitive = active || p->error;
     GString * gstr_stat = p->gstr1;
 
@@ -956,7 +979,7 @@ render_compact( TorrentCellRenderer   * cell,
 
     g_object_set( p->icon_renderer, "pixbuf", icon, "sensitive", sensitive, NULL );
     gtr_cell_renderer_render( p->icon_renderer, window, widget, &icon_area, flags );
-    g_object_set( p->progress_renderer, "value", (gint)p->done, "text", NULL, "sensitive", sensitive, NULL );
+    g_object_set( p->progress_renderer, "value", (gint)percentDone, "text", NULL, "sensitive", sensitive, NULL );
     gtr_cell_renderer_render( p->progress_renderer, window, widget, &prog_area, flags );
     g_object_set( p->text_renderer, "text", gstr_stat->str, "scale", SMALL_SCALE, "ellipsize", PANGO_ELLIPSIZE_END, FOREGROUND_COLOR_KEY, &text_color, NULL );
     gtr_cell_renderer_render( p->text_renderer, window, widget, &stat_area, flags );
@@ -985,12 +1008,12 @@ render_full( TorrentCellRenderer   * cell,
     GdkRectangle prct_area;
     GdkPixbuf * icon;
     GtrColor text_color;
-    //TODO
-    //gboolean seed;
+    gboolean seed;
 
     struct TorrentCellRendererPrivate * p = cell->priv;
     const gboolean active = ( p->flags & ~TORRENT_FLAG_PAUSED ) && ( p->flags & ~TORRENT_FLAG_DOWNLOADING_WAIT ) && ( p->flags & ~TORRENT_FLAG_SEEDING_WAIT );
     const gboolean sensitive = active || p->error;
+    const double percentDone = get_percent_done( cell, &seed );
     GString * gstr_prog = p->gstr1;
     GString * gstr_stat = p->gstr2;
 
@@ -1065,7 +1088,7 @@ render_full( TorrentCellRenderer   * cell,
     gtr_cell_renderer_render( p->text_renderer, window, widget, &name_area, flags );
     g_object_set( p->text_renderer, "text", gstr_prog->str, "scale", SMALL_SCALE, "weight", PANGO_WEIGHT_NORMAL, NULL );
     gtr_cell_renderer_render( p->text_renderer, window, widget, &prog_area, flags );
-    g_object_set( p->progress_renderer, "value", (gint)p->done, /*"text", "",*/ "sensitive", sensitive, NULL );
+    g_object_set( p->progress_renderer, "value", (gint)percentDone, /*"text", "",*/ "sensitive", sensitive, NULL );
     gtr_cell_renderer_render( p->progress_renderer, window, widget, &prct_area, flags );
     g_object_set( p->text_renderer, "text", gstr_stat->str, FOREGROUND_COLOR_KEY, &text_color, NULL );
     gtr_cell_renderer_render( p->text_renderer, window, widget, &stat_area, flags );

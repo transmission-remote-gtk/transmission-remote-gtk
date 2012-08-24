@@ -168,6 +168,7 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_FILES);
     json_array_add_string_element(fields, FIELD_PEERS_SENDING_TO_US);
     json_array_add_string_element(fields, FIELD_PEERS_GETTING_FROM_US);
+    json_array_add_string_element(fields, FIELD_WEB_SEEDS_SENDING_TO_US);
     json_array_add_string_element(fields, FIELD_PEERS_CONNECTED);
     json_array_add_string_element(fields, FIELD_HAVEVALID);
     json_array_add_string_element(fields, FIELD_HAVEUNCHECKED);
@@ -186,6 +187,7 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_PERCENTDONE);
     json_array_add_string_element(fields, FIELD_COMMENT);
     json_array_add_string_element(fields, FIELD_TOTAL_SIZE);
+    json_array_add_string_element(fields, FIELD_METADATAPERCENTCOMPLETE);
     json_array_add_string_element(fields, FIELD_LEFT_UNTIL_DONE);
     json_array_add_string_element(fields, FIELD_ANNOUNCE_URL);
     json_array_add_string_element(fields, FIELD_ERROR_STRING);

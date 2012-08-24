@@ -72,6 +72,7 @@ gint64 torrent_get_id(JsonObject * t);
 JsonArray *torrent_get_files(JsonObject * args);
 gint64 torrent_get_peers_getting_from_us(JsonObject * args);
 gint64 torrent_get_peers_sending_to_us(JsonObject * args);
+gint64 torrent_get_web_seeds_sending_to_us(JsonObject *args);
 gint64 torrent_get_peers_connected(JsonObject * args);
 gdouble torrent_get_percent_done(JsonObject * t);
 gdouble torrent_get_recheck_progress(JsonObject * t);
