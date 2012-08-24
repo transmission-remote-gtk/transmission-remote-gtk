@@ -541,12 +541,17 @@ static double
 get_percent_done( TorrentCellRenderer *r, gboolean * seed )
 {
 	struct TorrentCellRendererPrivate *priv = r->priv;
-    double d;
+    gdouble d;
 
     if( ( priv->flags & TORRENT_FLAG_SEEDING ) && getSeedRatio( r, &d ) )
     {
-        *seed = TRUE;
-        d = MAX( 0.0, (priv->ratio/d)*100 );
+    	*seed = TRUE;
+        const gint64 baseline = priv->downloaded ? priv->downloaded : priv->sizeWhenDone;
+        const gint64 goal = baseline * priv->seedRatioLimit;
+        const gint64 bytesLeft = goal > priv->uploadedEver ? goal - priv->uploadedEver : 0;
+        float seedRatioPercentDone = (gdouble)(goal - bytesLeft) / goal;
+
+        d = MAX( 0.0, seedRatioPercentDone*100.0 );
     }
     else
     {
