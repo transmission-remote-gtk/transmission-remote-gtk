@@ -307,6 +307,12 @@ getStatusString( GString           * gstr,
                                      N_( "Tracker gave an error: \"%s\"" ),
                                      N_( "Error: %s" ) };
         g_string_append_printf( gstr, _( fmt[priv->error] ), torrent_get_errorstr(priv->json) );
+	} else if ((priv->flags & TORRENT_FLAG_PAUSED)
+			|| (priv->flags & TORRENT_FLAG_WAITING_CHECK)
+			|| (priv->flags & TORRENT_FLAG_CHECKING)
+			|| (priv->flags & TORRENT_FLAG_DOWNLOADING_WAIT)
+			|| (priv->flags & TORRENT_FLAG_SEEDING_WAIT)) {
+		getShortStatusString( gstr, r );
 	} else if (priv->flags & TORRENT_FLAG_DOWNLOADING) {
 		if (priv->fileCount > 0) {
 	        g_string_append_printf( gstr,
