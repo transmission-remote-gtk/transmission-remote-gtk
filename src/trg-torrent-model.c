@@ -22,7 +22,10 @@
 #include <json-glib/json-glib.h>
 #include <glib/gi18n.h>
 
+#ifdef HAVE_CONFIG_H
 #include "config.h"
+#endif
+
 #include "torrent.h"
 #include "json.h"
 #include "trg-torrent-model.h"
@@ -201,6 +204,8 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_NAME] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_ERROR] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_SIZEWHENDONE] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_TOTALSIZE] = G_TYPE_INT64;
+    column_types[TORRENT_COLUMN_HAVE_UNCHECKED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PERCENTDONE] = G_TYPE_DOUBLE;
     column_types[TORRENT_COLUMN_STATUS] = G_TYPE_STRING;
     column_types[TORRENT_COLUMN_SEEDS] = G_TYPE_INT64;
@@ -229,6 +234,8 @@ static void trg_torrent_model_init(TrgTorrentModel * self)
     column_types[TORRENT_COLUMN_FROMRESUME] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_FROMINCOMING] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEER_SOURCES] = G_TYPE_STRING;
+    column_types[TORRENT_COLUMN_SEED_RATIO_LIMIT] = G_TYPE_DOUBLE;
+    column_types[TORRENT_COLUMN_SEED_RATIO_MODE] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_CONNECTED] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_FROM_US] = G_TYPE_INT64;
     column_types[TORRENT_COLUMN_PEERS_TO_US] = G_TYPE_INT64;
@@ -478,7 +485,7 @@ update_torrent_iter(TrgTorrentModel * model,
                        TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t),
                        TORRENT_COLUMN_NAME, torrent_get_name(t),
                        TORRENT_COLUMN_ERROR, torrent_get_error(t),
-                       TORRENT_COLUMN_SIZEWHENDONE, torrent_get_size(t),
+                       TORRENT_COLUMN_SIZEWHENDONE, torrent_get_size_when_done(t),
                        TORRENT_COLUMN_PERCENTDONE,
                        (newFlags & TORRENT_FLAG_CHECKING) ?
                        torrent_get_recheck_progress(t)
@@ -489,6 +496,8 @@ update_torrent_iter(TrgTorrentModel * model,
                        TORRENT_COLUMN_UPSPEED, upRate, TORRENT_COLUMN_ETA,
                        torrent_get_eta(t), TORRENT_COLUMN_UPLOADED,
                        uploaded, TORRENT_COLUMN_DOWNLOADED, downloaded,
+                       TORRENT_COLUMN_TOTALSIZE, torrent_get_total_size(t),
+                       TORRENT_COLUMN_HAVE_UNCHECKED, torrent_get_have_unchecked(t),
                        TORRENT_COLUMN_HAVE_VALID, haveValid,
                        TORRENT_COLUMN_FROMPEX, peerfrom_get_pex(pf),
                        TORRENT_COLUMN_FROMDHT, peerfrom_get_dht(pf),
@@ -507,6 +516,8 @@ update_torrent_iter(TrgTorrentModel * model,
                        torrent_get_peers_getting_from_us(t),
                        TORRENT_COLUMN_QUEUE_POSITION,
                        torrent_get_queue_position(t),
+                       TORRENT_COLUMN_SEED_RATIO_LIMIT, torrent_get_seed_ratio_limit(t),
+                       TORRENT_COLUMN_SEED_RATIO_MODE, torrent_get_seed_ratio_mode(t),
                        TORRENT_COLUMN_LASTACTIVE,
                        torrent_get_activity_date(t), TORRENT_COLUMN_RATIO,
                        uploaded > 0

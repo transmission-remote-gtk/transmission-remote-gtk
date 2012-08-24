@@ -163,7 +163,7 @@ JsonArray *build_json_id_array(TrgTorrentTreeView * tv)
     return ids;
 }
 
-static void setup_classic_layout(TrgTorrentTreeView *tv)
+static void setup_classic_layout(TrgClient *tc, TrgTorrentTreeView *tv)
 {
     GtkCellRenderer *renderer = torrent_cell_renderer_new();
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes("",
@@ -171,8 +171,10 @@ static void setup_classic_layout(TrgTorrentTreeView *tv)
                                                     "status", TORRENT_COLUMN_FLAGS,
                                                     "error", TORRENT_COLUMN_ERROR,
                                                     "fileCount", TORRENT_COLUMN_FILECOUNT,
+                                                    "totalSize", TORRENT_COLUMN_TOTALSIZE,
                                                     "ratio", TORRENT_COLUMN_RATIO,
                                                     "downloaded", TORRENT_COLUMN_DOWNLOADED,
+                                                    "haveValid", TORRENT_COLUMN_HAVE_VALID,
                                                     "sizeWhenDone", TORRENT_COLUMN_SIZEWHENDONE,
                                                     "uploaded", TORRENT_COLUMN_UPLOADED,
                                                     "percentComplete", TORRENT_COLUMN_PERCENTDONE,
@@ -182,8 +184,12 @@ static void setup_classic_layout(TrgTorrentTreeView *tv)
                                                     "peersGettingFromUs", TORRENT_COLUMN_PEERS_FROM_US,
                                                     "eta", TORRENT_COLUMN_ETA,
                                                     "json", TORRENT_COLUMN_JSON,
+                                                    "seedRatioMode", TORRENT_COLUMN_SEED_RATIO_MODE,
+                                                    "seedRatioLimit", TORRENT_COLUMN_SEED_RATIO_LIMIT,
                                                     "connected", TORRENT_COLUMN_PEERS_CONNECTED,
                                                     NULL);
+
+    g_object_set(G_OBJECT(renderer), "client", tv, NULL);
 
     //gtk_tree_view_column_set_min_width(column, 0);
     gtk_tree_view_column_set_resizable(column, FALSE);
@@ -197,15 +203,15 @@ static void setup_classic_layout(TrgTorrentTreeView *tv)
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 }
 
-TrgTorrentTreeView *trg_torrent_tree_view_new(TrgPrefs * prefs,
+TrgTorrentTreeView *trg_torrent_tree_view_new(TrgClient *tc,
                                               GtkTreeModel * model)
 {
     GObject *obj = g_object_new(TRG_TYPE_TORRENT_TREE_VIEW, NULL);
 
-    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), prefs);
+    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), trg_client_get_prefs(tc));
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), model);
     //trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
-    setup_classic_layout(TRG_TORRENT_TREE_VIEW(obj));
+    setup_classic_layout(tc, TRG_TORRENT_TREE_VIEW(obj));
 
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), TRUE);
 

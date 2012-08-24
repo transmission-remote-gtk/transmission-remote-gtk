@@ -16,18 +16,25 @@
 
 #include "hig.h"
 #include "icons.h"
-#include "torrent-cell-renderer.h"
+#include "trg-client.h"
 #include "torrent.h"
 #include "util.h"
+#include "torrent-cell-renderer.h"
 
 enum
 {
     P_STATUS = 1,
+    P_CLIENT,
     P_RATIO,
+    P_SEEDRATIOLIMIT,
+    P_SEEDRATIOMODE,
     P_DOWNLOADED,
+    P_HAVEVALID,
+    P_HAVEUNCHECKED,
     P_ERROR,
     P_NAME,
     P_SIZEWHENDONE,
+    P_TOTALSIZE,
     P_UPLOADED,
     P_PERCENTCOMPLETE,
     P_UPSPEED,
@@ -85,7 +92,10 @@ struct TorrentCellRendererPrivate
 
     gint64 uploadedEver;
     gint64 sizeWhenDone;
+    gint64 totalSize;
     gint64 downloaded;
+    gint64 haveValid;
+    gint64 haveUnchecked;
     gint64 upSpeed;
     gint64 downSpeed;
     gpointer json;
@@ -99,87 +109,103 @@ struct TorrentCellRendererPrivate
     guint fileCount;
     gint64 eta;
     gint64 error;
+    gint64 seedRatioMode;
+    gdouble seedRatioLimit;
+    TrgClient *client;
 
     gboolean compact;
 };
+
+static gboolean getSeedRatio(TorrentCellRenderer *r, gdouble *ratio) {
+	struct TorrentCellRendererPrivate *p = r->priv;
+
+	if ((p->seedRatioMode == 0) && (trg_client_get_seed_ratio_limited(p->client) == TRUE)) {
+		*ratio = trg_client_get_seed_ratio_limit(p->client);
+		return TRUE;
+	} else if (p->seedRatioMode == 1) {
+		*ratio = p->seedRatioLimit;
+		return TRUE;
+	}
+
+	return FALSE;
+}
 
 static void
 getProgressString( GString          * gstr,
 		TorrentCellRenderer         * r)
 {
-	struct TorrentCellRendererPrivate *priv = r->priv;
+	struct TorrentCellRendererPrivate *p = r->priv;
 
-    //const int      isSeed = st->haveValid >= info->totalSize;
+	const gint64 haveTotal = p->haveUnchecked + p->haveValid;
+    const int      isSeed = p->haveValid >= p->totalSize;
     char           buf1[32], buf2[32], buf3[32], buf4[32], buf5[32], buf6[32];
-    //double         seedRatio;
-    //const gboolean hasSeedRatio = tr_torrentGetSeedRatio( tor, &seedRatio );
+    double         seedRatio;
+    const gboolean hasSeedRatio = getSeedRatio( r, &seedRatio );
 
-    //TODO : use seed ratios
-
-    if( priv->flags & TORRENT_FLAG_DOWNLOADING ) /* downloading */
+    if( p->flags & TORRENT_FLAG_DOWNLOADING ) /* downloading */
     {
         g_string_append_printf( gstr,
             /* %1$s is how much we've got,
                %2$s is how much we'll have when done,
                %3$s%% is a percentage of the two */
-            _( "%1$s of %2$s (%3$s%%)" ),
-            tr_strlsize( buf1, priv->downloaded, sizeof( buf1 ) ),
-            tr_strlsize( buf2, priv->sizeWhenDone, sizeof( buf2 ) ),
-            tr_strlpercent( buf3, priv->done, sizeof( buf3 ) ) );
+            _( "%1$s of %2$s (%3$s)" ),
+            tr_strlsize( buf1, haveTotal, sizeof( buf1 ) ),
+            tr_strlsize( buf2, p->sizeWhenDone, sizeof( buf2 ) ),
+            tr_strlpercent( buf3, p->done, sizeof( buf3 ) ) );
     }
-    /*else if( isSeed )
+    else if( isSeed )
     {
         if( hasSeedRatio )
         {
             g_string_append_printf( gstr,
-                _( "%1$s of %2$s (%3$s%%), uploaded %4$s (Ratio: %5$s Goal: %6$s)" ),
+                _( "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s Goal: %6$s)" ),
                 tr_strlsize( buf1, haveTotal, sizeof( buf1 ) ),
-                tr_strlsize( buf2, info->totalSize, sizeof( buf2 ) ),
-                tr_strlpercent( buf3, st->percentComplete * 100.0, sizeof( buf3 ) ),
-                tr_strlsize( buf4, st->uploadedEver, sizeof( buf4 ) ),
-                tr_strlratio( buf5, st->ratio, sizeof( buf5 ) ),
+                tr_strlsize( buf2, p->totalSize, sizeof( buf2 ) ),
+                tr_strlpercent( buf3, p->done, sizeof( buf3 ) ),
+                tr_strlsize( buf4, p->uploadedEver, sizeof( buf4 ) ),
+                tr_strlratio( buf5, p->ratio, sizeof( buf5 ) ),
                 tr_strlratio( buf6, seedRatio, sizeof( buf6 ) ) );
         }
         else
         {
             g_string_append_printf( gstr,
-                _( "%1$s of %2$s (%3$s%%), uploaded %4$s (Ratio: %5$s)" ),
-                tr_strlsize( buf1, priv->downloaded, sizeof( buf1 ) ),
-                tr_strlsize( buf2, priv->sizeWhenDone, sizeof( buf2 ) ),
-                tr_strlpercent( buf3, priv->done, sizeof( buf3 ) ),
-                tr_strlsize( buf4, priv->uploadedEver, sizeof( buf4 ) ),
-                tr_strlratio( buf5, priv->ratio, sizeof( buf5 ) ) );
+                _( "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s)" ),
+                tr_strlsize( buf1, haveTotal, sizeof( buf1 ) ),
+                tr_strlsize( buf2, p->totalSize, sizeof( buf2 ) ),
+                tr_strlpercent( buf3, p->done, sizeof( buf3 ) ),
+                tr_strlsize( buf4, p->uploadedEver, sizeof( buf4 ) ),
+                tr_strlratio( buf5, p->ratio, sizeof( buf5 ) ) );
         }
-    }*/
+    }
     else /* seeding */
     {
-        /*if( hasSeedRatio )
+        if( hasSeedRatio )
         {
             g_string_append_printf( gstr,
                 _( "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)" ),
-                tr_strlsize( buf1, info->totalSize, sizeof( buf1 ) ),
-                tr_strlsize( buf2, st->uploadedEver, sizeof( buf2 ) ),
-                tr_strlratio( buf3, st->ratio, sizeof( buf3 ) ),
+                tr_strlsize( buf1, p->totalSize, sizeof( buf1 ) ),
+                tr_strlsize( buf2, p->uploadedEver, sizeof( buf2 ) ),
+                tr_strlratio( buf3, p->ratio, sizeof( buf3 ) ),
                 tr_strlratio( buf4, seedRatio, sizeof( buf4 ) ) );
         }
         else
-        { */
+        {
             g_string_append_printf( gstr,
                 /* %1$s is the torrent's total size,
                    %2$s is how much we've uploaded,
                    %3$s is our upload-to-download ratio */
                 _( "%1$s, uploaded %2$s (Ratio: %3$s)" ),
-                tr_strlsize( buf1, priv->sizeWhenDone, sizeof( buf1 ) ),
-                tr_strlsize( buf2, priv->uploadedEver, sizeof( buf2 ) ),
-                tr_strlratio( buf3, priv->ratio, sizeof( buf3 ) ) );
-        //}
+                tr_strlsize( buf1, p->sizeWhenDone, sizeof( buf1 ) ),
+                tr_strlsize( buf2, p->uploadedEver, sizeof( buf2 ) ),
+                tr_strlratio( buf3, p->ratio, sizeof( buf3 ) ) );
+        }
     }
 
     /* add time when downloading */
-    if( ( priv->flags & TORRENT_FLAG_DOWNLOADING ) )
-        //|| ( hasSeedRatio && ( st->activity == TR_STATUS_SEED ) ) )
+    if( ( p->flags & TORRENT_FLAG_DOWNLOADING )
+        || ( hasSeedRatio && ( p->flags & TORRENT_FLAG_SEEDING ) ) )
     {
-        gint64 eta = priv->eta;
+        gint64 eta = p->eta;
         g_string_append( gstr, " - " );
         if( eta < 0 )
             g_string_append( gstr, _( "Remaining time unknown" ) );
@@ -251,7 +277,7 @@ getShortStatusString( GString           * gstr,
 	} else if (flags & TORRENT_FLAG_SEEDING_WAIT) {
         g_string_append( gstr, _( "Queued for seeding" ) );
 	} else if (flags & TORRENT_FLAG_CHECKING) {
-        g_string_append_printf( gstr, _( "Verifying data (%.1f%% tested)" ),
+        g_string_append_printf( gstr, _( "Verifying data (%.1f% tested)" ),
                                     tr_truncd( priv->done * 100.0, 1 ) );
 	} else if ((flags & TORRENT_FLAG_DOWNLOADING) || (flags & TORRENT_FLAG_SEEDING)) {
             char buf[512];
@@ -273,7 +299,6 @@ getStatusString( GString           * gstr,
 	struct TorrentCellRendererPrivate *priv = r->priv;
 
 	//TODO: handle metadata for downloading
-	//TODO: handle errors
 
 	if ( priv->error ) {
         const char * fmt[] = { NULL, N_( "Tracker gave a warning: \"%s\"" ),
@@ -562,11 +587,20 @@ static void torrent_cell_renderer_set_property(GObject * object,
 	case P_STATUS:
 		p->flags = g_value_get_uint(v);
 		break;
+	case P_TOTALSIZE:
+		p->totalSize = g_value_get_int64(v);
+		break;
 	case P_SIZEWHENDONE:
 		p->sizeWhenDone = g_value_get_int64(v);
 		break;
 	case P_DOWNLOADED:
 		p->downloaded = g_value_get_int64(v);
+		break;
+	case P_HAVEVALID:
+		p->haveValid = g_value_get_int64(v);
+		break;
+	case P_HAVEUNCHECKED:
+		p->haveUnchecked = g_value_get_int64(v);
 		break;
 	case P_UPLOADED:
 		p->uploadedEver = g_value_get_int64(v);
@@ -609,6 +643,15 @@ static void torrent_cell_renderer_set_property(GObject * object,
 		break;
 	case P_COMPACT:
 		p->compact = g_value_get_boolean(v);
+		break;
+	case P_SEEDRATIOMODE:
+		p->seedRatioMode = g_value_get_int64(v);
+		break;
+	case P_SEEDRATIOLIMIT:
+		p->seedRatioLimit = g_value_get_double(v);
+		break;
+	case P_CLIENT:
+		p->client = g_value_get_pointer(v);
 		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, pspec);
@@ -682,11 +725,29 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
                                                           "json",
                                                           G_PARAM_READWRITE ) );
 
+    g_object_class_install_property( gobject_class, P_CLIENT,
+                                    g_param_spec_pointer( "client", NULL,
+                                                          "client",
+                                                          G_PARAM_READWRITE ) );
+
+
     g_object_class_install_property( gobject_class, P_RATIO,
                                     g_param_spec_double( "ratio", NULL,
                                                           "ratio",
                                                           0, G_MAXDOUBLE, 0,
                                                           G_PARAM_READWRITE ) );
+
+    g_object_class_install_property( gobject_class, P_SEEDRATIOLIMIT,
+                                    g_param_spec_double( "seedRatioLimit", NULL,
+                                                          "seedRatioLimit",
+                                                          0, G_MAXDOUBLE, 0,
+                                                          G_PARAM_READWRITE ) );
+
+    g_object_class_install_property( gobject_class, P_SEEDRATIOMODE,
+            g_param_spec_int64( "seedRatioMode", NULL,
+                                 "seedRatioMode",
+                                 0, 2, 0,
+                                 G_PARAM_READWRITE ) );
 
     g_object_class_install_property( gobject_class, P_PERCENTCOMPLETE,
                                     g_param_spec_double( "percentComplete", NULL,
@@ -694,6 +755,12 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
                                                           0, 100.00, 0,
                                                           G_PARAM_READWRITE ) );
 
+
+    g_object_class_install_property( gobject_class, P_TOTALSIZE,
+                                    g_param_spec_int64( "totalSize", NULL,
+                                                         "totalSize",
+                                                         0, G_MAXINT64, 0,
+                                                         G_PARAM_READWRITE ) );
 
     g_object_class_install_property( gobject_class, P_SIZEWHENDONE,
                                     g_param_spec_int64( "sizeWhenDone", NULL,
@@ -734,6 +801,18 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
     g_object_class_install_property( gobject_class, P_DOWNLOADED,
                                     g_param_spec_int64( "downloaded", NULL,
                                                          "downloaded",
+                                                         0, G_MAXINT64, 0,
+                                                         G_PARAM_READWRITE ) );
+
+    g_object_class_install_property( gobject_class, P_HAVEVALID,
+                                    g_param_spec_int64( "haveValid", NULL,
+                                                         "haveValid",
+                                                         0, G_MAXINT64, 0,
+                                                         G_PARAM_READWRITE ) );
+
+    g_object_class_install_property( gobject_class, P_HAVEUNCHECKED,
+                                    g_param_spec_int64( "haveUnchecked", NULL,
+                                                         "haveUnchecked",
                                                          0, G_MAXINT64, 0,
                                                          G_PARAM_READWRITE ) );
 

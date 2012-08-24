@@ -72,7 +72,6 @@ char *tr_formatter_speed_KBps(char *buf, double KBps, size_t buflen);
 char *tr_strltime_long(char *buf, long seconds, size_t buflen);
 gchar *epoch_to_string(gint64 epoch);
 char *tr_strltime_short(char *buf, long seconds, size_t buflen);
-char *tr_strpercent(char *buf, double x, size_t buflen);
 char *tr_strlpercent(char *buf, double x, size_t buflen);
 char *tr_strratio(char *buf, size_t buflen, double ratio,
                   const char *infinity);

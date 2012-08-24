@@ -128,7 +128,7 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
 
     sizeOfBuf = sizeof(buf);
 
-    trg_strlsize(buf, torrent_get_size(t));
+    trg_strlsize(buf, torrent_get_size_when_done(t));
     gtk_label_set_text(GTK_LABEL(priv->gen_size_label), buf);
 
     trg_strlspeed(buf, torrent_get_rate_down(t) / disk_K);

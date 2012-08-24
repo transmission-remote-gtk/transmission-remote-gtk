@@ -139,7 +139,12 @@ gboolean torrent_get_download_limited(JsonObject * t)
     return json_object_get_boolean_member(t, FIELD_DOWNLOAD_LIMITED);
 }
 
-gint64 torrent_get_size(JsonObject * t)
+gint64 torrent_get_total_size(JsonObject *t)
+{
+	return json_object_get_int_member(t, FIELD_TOTAL_SIZE);
+}
+
+gint64 torrent_get_size_when_done(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_SIZEWHENDONE);
 }

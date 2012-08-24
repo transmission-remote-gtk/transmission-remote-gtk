@@ -1458,7 +1458,7 @@ static TrgTorrentTreeView
 {
     TrgMainWindowPrivate *priv = win->priv;
     TrgTorrentTreeView *torrentTreeView =
-        trg_torrent_tree_view_new(trg_client_get_prefs(priv->client),
+        trg_torrent_tree_view_new(priv->client,
                                   model);
 
     GtkTreeSelection *selection =

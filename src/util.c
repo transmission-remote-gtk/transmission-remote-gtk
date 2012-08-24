@@ -357,11 +357,6 @@ gchar *make_error_message(JsonObject * response, int status)
 
 char *tr_strlpercent(char *buf, double x, size_t buflen)
 {
-    return tr_strpercent(buf, x, buflen);
-}
-
-char *tr_strpercent(char *buf, double x, size_t buflen)
-{
     int precision;
     if (x < 10.0)
         precision = 2;

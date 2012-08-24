@@ -83,6 +83,8 @@ struct _TrgClientPrivate {
     GPrivate *tlsKey;
     gint configSerial;
     GMutex *configMutex;
+    gboolean seedRatioLimited;
+    gdouble seedRatioLimit;
 };
 
 static void dispatch_async_threadfunc(trg_request * reqrsp,
@@ -202,6 +204,9 @@ void trg_client_set_session(TrgClient * tc, JsonObject * session)
 
     priv->session = session;
     json_object_ref(session);
+
+    priv->seedRatioLimit = session_get_seed_ratio_limit(session);
+    priv->seedRatioLimited = session_get_seed_ratio_limited(session);
 
     g_signal_emit(tc, signals[TC_SESSION_UPDATED], 0, session);
 }
@@ -695,4 +700,14 @@ gboolean trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer
 {
     return dispatch_async(tc, session_get(), callback,
             data);
+}
+
+gdouble trg_client_get_seed_ratio_limit(TrgClient *tc)
+{
+	return tc->priv->seedRatioLimit;
+}
+
+gboolean trg_client_get_seed_ratio_limited(TrgClient *tc)
+{
+	return tc->priv->seedRatioLimited;
 }

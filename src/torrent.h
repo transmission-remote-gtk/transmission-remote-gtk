@@ -44,7 +44,8 @@
 #define TORRENT_ADD_FLAG_PAUSED        (1 << 0) /* 0x01 */
 #define TORRENT_ADD_FLAG_DELETE        (1 << 1) /* 0x02 */
 
-gint64 torrent_get_size(JsonObject * t);
+gint64 torrent_get_total_size(JsonObject *t);
+gint64 torrent_get_size_when_done(JsonObject * t);
 const gchar *torrent_get_name(JsonObject * t);
 gint64 torrent_get_rate_down(JsonObject * t);
 gint64 torrent_get_rate_up(JsonObject * t);
