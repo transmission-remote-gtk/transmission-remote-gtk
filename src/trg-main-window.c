@@ -401,10 +401,14 @@ destroy_window(TrgMainWindow * win, gpointer data G_GNUC_UNUSED)
                       gtk_paned_get_position(GTK_PANED(priv->hpaned)),
                       TRG_PREFS_GLOBAL);
 
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTreeView), FALSE);
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTreeView), FALSE);
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->torrentTreeView), TRUE);
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTreeView), FALSE);
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTreeView), TRG_TREE_VIEW_PERSIST_SORT | TRG_TREE_VIEW_PERSIST_LAYOUT);
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTreeView), TRG_TREE_VIEW_PERSIST_SORT | TRG_TREE_VIEW_PERSIST_LAYOUT);
+	trg_tree_view_persist(TRG_TREE_VIEW(priv->torrentTreeView),
+			TRG_TREE_VIEW_PERSIST_SORT | TRG_TREE_VIEW_SORTABLE_PARENT
+					| (trg_prefs_get_int(prefs, TRG_PREFS_KEY_STYLE,
+							TRG_PREFS_GLOBAL) == TRG_STYLE_CLASSIC ?
+							TRG_TREE_VIEW_PERSIST_LAYOUT : 0));
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTreeView), TRG_TREE_VIEW_PERSIST_SORT | TRG_TREE_VIEW_PERSIST_LAYOUT);
     trg_prefs_save(prefs);
 
     gtk_main_quit();

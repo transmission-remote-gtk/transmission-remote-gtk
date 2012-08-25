@@ -28,9 +28,18 @@
 
 G_DEFINE_TYPE(TrgTorrentTreeView, trg_torrent_tree_view,
               TRG_TYPE_TREE_VIEW)
+#define GET_PRIVATE(o) \
+  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_TORRENT_TREE_VIEW, TrgTorrentTreeViewPrivate))
+typedef struct _TrgTorrentTreeViewPrivate TrgTorrentTreeViewPrivate;
+
+struct _TrgTorrentTreeViewPrivate {
+    TrgClient *client;
+};
+
 static void trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass *
                                              klass G_GNUC_UNUSED)
 {
+	g_type_class_add_private(klass, sizeof(TrgTorrentTreeViewPrivate));
 }
 
 static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
@@ -163,9 +172,35 @@ JsonArray *build_json_id_array(TrgTorrentTreeView * tv)
     return ids;
 }
 
-static void setup_classic_layout(TrgClient *tc, TrgTorrentTreeView *tv)
+static void setup_classic_layout(TrgTorrentTreeView *tv) {
+    gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(tv), TRUE);
+    gtk_tree_view_set_headers_clickable(GTK_TREE_VIEW(tv), TRUE);
+    gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(tv), TRUE);
+    trg_tree_view_setup_columns(TRG_TREE_VIEW(tv));
+}
+
+static void
+trg_torrent_tree_view_renderer_pref_changed(TrgPrefs * p, const gchar * updatedKey,
+                              gpointer data)
 {
+	if (!g_strcmp0(updatedKey, TRG_PREFS_KEY_STYLE)) {
+		GtkTreeView *tv = torrent_cell_renderer_get_owner(TORRENT_CELL_RENDERER(data));
+		gboolean compact = trg_prefs_get_int(p, TRG_PREFS_KEY_STYLE, TRG_PREFS_GLOBAL) == TRG_STYLE_TR_COMPACT;
+		g_object_set(G_OBJECT(data), "compact", GINT_TO_POINTER(compact), NULL);
+#if GTK_CHECK_VERSION( 3,0,0 )
+		g_signal_emit_by_name( tv, "style-updated", NULL, NULL );
+#else
+		g_signal_emit_by_name( tv, "style-set", NULL, NULL );
+#endif
+	}
+}
+
+static void setup_transmission_layout(TrgTorrentTreeView *tv, gint64 style)
+{
+	TrgTorrentTreeViewPrivate *priv = GET_PRIVATE(tv);
     GtkCellRenderer *renderer = torrent_cell_renderer_new();
+    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes("",
                                                     renderer,
                                                     "status", TORRENT_COLUMN_FLAGS,
@@ -191,9 +226,13 @@ static void setup_classic_layout(TrgClient *tc, TrgTorrentTreeView *tv)
                                                     "connected", TORRENT_COLUMN_PEERS_CONNECTED,
                                                     NULL);
 
-    g_object_set(G_OBJECT(renderer), "client", tc, NULL);
+    g_object_set(G_OBJECT(renderer), "client", priv->client,
+    		"owner", tv,
+    		"compact", style == TRG_STYLE_TR_COMPACT, NULL);
 
-    //gtk_tree_view_column_set_min_width(column, 0);
+    g_signal_connect_object(prefs, "pref-changed",
+                     G_CALLBACK(trg_torrent_tree_view_renderer_pref_changed), renderer, G_CONNECT_AFTER);
+
     gtk_tree_view_column_set_resizable(column, FALSE);
     gtk_tree_view_column_set_reorderable(column, FALSE);
     gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(tv), FALSE);
@@ -205,15 +244,43 @@ static void setup_classic_layout(TrgClient *tc, TrgTorrentTreeView *tv)
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 }
 
+static void
+trg_torrent_tree_view_pref_changed(TrgPrefs * p, const gchar * updatedKey,
+                              gpointer data)
+{
+	if (!g_strcmp0(updatedKey, TRG_PREFS_KEY_STYLE)) {
+		TrgTorrentTreeViewPrivate *priv = GET_PRIVATE(data);
+		TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+
+		trg_tree_view_remove_all_columns(TRG_TREE_VIEW(data));
+		if (trg_prefs_get_int(p, TRG_PREFS_KEY_STYLE, TRG_PREFS_GLOBAL) == TRG_STYLE_CLASSIC)
+			setup_classic_layout(TRG_TORRENT_TREE_VIEW(data));
+		else
+			setup_transmission_layout(TRG_TORRENT_TREE_VIEW(data), trg_prefs_get_int(prefs, TRG_PREFS_KEY_STYLE, TRG_PREFS_GLOBAL));
+	}
+}
+
 TrgTorrentTreeView *trg_torrent_tree_view_new(TrgClient *tc,
                                               GtkTreeModel * model)
 {
     GObject *obj = g_object_new(TRG_TYPE_TORRENT_TREE_VIEW, NULL);
+    TrgTorrentTreeViewPrivate *priv = GET_PRIVATE(obj);
+    TrgPrefs *prefs = trg_client_get_prefs(tc);
+    gint64 style = trg_prefs_get_int(prefs, TRG_PREFS_KEY_STYLE, TRG_PREFS_GLOBAL);
 
     trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), trg_client_get_prefs(tc));
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), model);
-    //trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
-    setup_classic_layout(tc, TRG_TORRENT_TREE_VIEW(obj));
+
+    priv->client = tc;
+
+    if (style == TRG_STYLE_CLASSIC) {
+    	setup_classic_layout(TRG_TORRENT_TREE_VIEW(obj));
+    } else {
+    	setup_transmission_layout(TRG_TORRENT_TREE_VIEW(obj), style);
+    }
+
+    g_signal_connect(prefs, "pref-changed",
+                     G_CALLBACK(trg_torrent_tree_view_pref_changed), obj);
 
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), TRUE);
 

@@ -59,6 +59,8 @@ struct _TrgTreeViewPrivate {
     TrgPrefs *prefs;
 };
 
+#define GDATA_KEY_COLUMN_DESC "column-desc"
+
 gboolean trg_tree_view_is_column_showing(TrgTreeView * tv, gint index)
 {
     TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
@@ -146,8 +148,8 @@ static void trg_tree_view_add_column_after(TrgTreeView * tv,
 trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
                                                  gint type,
                                                  gint model_column,
-                                                 gchar * header,
-                                                 gchar * id, gint flags)
+                                                 const gchar * header,
+                                                 const gchar * id, gint flags)
 {
     TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
     trg_column_description *desc = g_new0(trg_column_description, 1);
@@ -183,7 +185,7 @@ static void
 trg_tree_view_hide_column(GtkWidget * w, GtkTreeViewColumn * col)
 {
     trg_column_description *desc = g_object_get_data(G_OBJECT(col),
-                                                     "column-desc");
+    		GDATA_KEY_COLUMN_DESC);
     GtkWidget *tv = gtk_tree_view_column_get_tree_view(col);
     desc->flags &= ~TRG_COLUMN_SHOWING;
     gtk_tree_view_remove_column(GTK_TREE_VIEW(tv), col);
@@ -219,7 +221,7 @@ view_popup_menu(GtkButton * button, GdkEventButton * event,
 
     menu = gtk_menu_new();
 
-    desc = g_object_get_data(G_OBJECT(column), "column-desc");
+    desc = g_object_get_data(G_OBJECT(column), GDATA_KEY_COLUMN_DESC);
     menuitem = gtk_check_menu_item_new_with_label(desc->header);
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(menuitem), TRUE);
     g_signal_connect(menuitem, "activate",
@@ -435,7 +437,7 @@ trg_tree_view_add_column_after(TrgTreeView * tv,
         gtk_tree_view_column_set_fixed_width(column, width);
     }
 
-    g_object_set_data(G_OBJECT(column), "column-desc", desc);
+    g_object_set_data(G_OBJECT(column), GDATA_KEY_COLUMN_DESC, desc);
 
     gtk_tree_view_append_column(GTK_TREE_VIEW(tv), column);
 
@@ -458,64 +460,71 @@ trg_tree_view_add_column_after(TrgTreeView * tv,
     desc->flags |= TRG_COLUMN_SHOWING;
 }
 
-void trg_tree_view_persist(TrgTreeView * tv, gboolean parentIsSortable)
+void trg_tree_view_remove_all_columns(TrgTreeView *tv) {
+	GtkTreeView *gtv = GTK_TREE_VIEW(tv);
+	GList *cols = gtk_tree_view_get_columns(gtv);
+	GList *li;
+	for (li = cols; li; li = g_list_next(li)) {
+		gtk_tree_view_remove_column(gtv, GTK_TREE_VIEW_COLUMN(li->data));
+	}
+	g_list_free(cols);
+}
+
+void trg_tree_view_persist(TrgTreeView * tv, guint flags)
 {
     JsonObject *props = trg_prefs_get_tree_view_props(tv);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(tv));
-    GList *cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(tv));
-
-    if (cols && g_object_get_data(G_OBJECT(cols->data), "column-desc") == NULL) {
-    	g_list_free(cols);
-    	return;
-    }
-
-    GList *li;
+    GList *cols, *li;
+    JsonArray *widths, *columns;
     gint sort_column_id;
     GtkSortType sort_type;
 
-    JsonArray *widths, *columns;
-    if (json_object_has_member(props, TRG_PREFS_KEY_TV_WIDTHS))
-        json_object_remove_member(props, TRG_PREFS_KEY_TV_WIDTHS);
+	if (flags & TRG_TREE_VIEW_PERSIST_SORT) {
+		gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE
+		((flags & TRG_TREE_VIEW_SORTABLE_PARENT) ?
+				gtk_tree_model_filter_get_model
+				(GTK_TREE_MODEL_FILTER(model)) :
+				model), &sort_column_id, &sort_type);
 
-    widths = json_array_new();
-    json_object_set_array_member(props, TRG_PREFS_KEY_TV_WIDTHS, widths);
+		if (json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_COL))
+			json_object_remove_member(props, TRG_PREFS_KEY_TV_SORT_COL);
 
-    if (json_object_has_member(props, TRG_PREFS_KEY_TV_COLUMNS))
-        json_object_remove_member(props, TRG_PREFS_KEY_TV_COLUMNS);
+		if (json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_TYPE))
+			json_object_remove_member(props, TRG_PREFS_KEY_TV_SORT_TYPE);
 
-    columns = json_array_new();
-    json_object_set_array_member(props, TRG_PREFS_KEY_TV_COLUMNS, columns);
+		json_object_set_int_member(props, TRG_PREFS_KEY_TV_SORT_COL,
+				(gint64) sort_column_id);
+		json_object_set_int_member(props, TRG_PREFS_KEY_TV_SORT_TYPE,
+				(gint64) sort_type);
+	}
 
-    for (li = cols; li; li = g_list_next(li)) {
-        GtkTreeViewColumn *col = (GtkTreeViewColumn *) li->data;
-        trg_column_description *desc =
-            g_object_get_data(G_OBJECT(li->data),
-                              "column-desc");
+	if (flags & TRG_TREE_VIEW_PERSIST_LAYOUT) {
+		cols = gtk_tree_view_get_columns(GTK_TREE_VIEW(tv) );
 
-        json_array_add_string_element(columns, desc->id);
-        json_array_add_int_element(widths,
-                                   gtk_tree_view_column_get_width(col));
-    }
+		if (json_object_has_member(props, TRG_PREFS_KEY_TV_WIDTHS))
+			json_object_remove_member(props, TRG_PREFS_KEY_TV_WIDTHS);
 
-    g_list_free(cols);
+		widths = json_array_new();
+		json_object_set_array_member(props, TRG_PREFS_KEY_TV_WIDTHS, widths);
 
-    gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE
-                                         (parentIsSortable ?
-                                          gtk_tree_model_filter_get_model
-                                          (GTK_TREE_MODEL_FILTER(model)) :
-                                          model), &sort_column_id,
-                                         &sort_type);
+		if (json_object_has_member(props, TRG_PREFS_KEY_TV_COLUMNS))
+			json_object_remove_member(props, TRG_PREFS_KEY_TV_COLUMNS);
 
-    if (json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_COL))
-        json_object_remove_member(props, TRG_PREFS_KEY_TV_SORT_COL);
+		columns = json_array_new();
+		json_object_set_array_member(props, TRG_PREFS_KEY_TV_COLUMNS, columns);
 
-    if (json_object_has_member(props, TRG_PREFS_KEY_TV_SORT_TYPE))
-        json_object_remove_member(props, TRG_PREFS_KEY_TV_SORT_TYPE);
+		for (li = cols; li; li = g_list_next(li)) {
+			GtkTreeViewColumn *col = (GtkTreeViewColumn *) li->data;
+			trg_column_description *desc = g_object_get_data(G_OBJECT(li->data),
+					GDATA_KEY_COLUMN_DESC);
 
-    json_object_set_int_member(props, TRG_PREFS_KEY_TV_SORT_COL,
-                               (gint64) sort_column_id);
-    json_object_set_int_member(props, TRG_PREFS_KEY_TV_SORT_TYPE,
-                               (gint64) sort_type);
+			json_array_add_string_element(columns, desc->id);
+			json_array_add_int_element(widths,
+					gtk_tree_view_column_get_width(col));
+		}
+
+		g_list_free(cols);
+	}
 }
 
 void

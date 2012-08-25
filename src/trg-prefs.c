@@ -116,7 +116,7 @@ static void trg_prefs_create_defaults(TrgPrefs * p)
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_SHOW_GRAPH);
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG);
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_SHOW_STATE_SELECTOR);
-    trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_SHOW_NOTEBOOK);
+    //trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_SHOW_NOTEBOOK);
 }
 
 static GObject *trg_prefs_constructor(GType type,

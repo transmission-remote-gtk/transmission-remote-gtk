@@ -82,14 +82,19 @@ typedef struct {
 #define TRG_COLUMN_UNREMOVABLE              (1 << 1)    /* 0x02 */
 #define TRG_COLUMN_EXTRA               (1 << 2) /* 0x04 */
 
+#define TRG_TREE_VIEW_PERSIST_SORT	   (1 << 0)
+#define TRG_TREE_VIEW_PERSIST_LAYOUT   (1 << 1)
+#define TRG_TREE_VIEW_SORTABLE_PARENT  (1 << 2)
+
 trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
                                                  gint type,
                                                  gint model_column,
-                                                 gchar * header,
-                                                 gchar * id, gint flags);
+                                                 const gchar * header,
+                                                 const gchar * id, gint flags);
 void trg_tree_view_setup_columns(TrgTreeView * tv);
 void trg_tree_view_set_prefs(TrgTreeView * tv, TrgPrefs * prefs);
-void trg_tree_view_persist(TrgTreeView * tv, gboolean parentIsSortable);
+void trg_tree_view_persist(TrgTreeView * tv, guint flags);
+void trg_tree_view_remove_all_columns(TrgTreeView *tv);
 void trg_tree_view_restore_sort(TrgTreeView * tv,
                                 gboolean parentIsSortable);
 gboolean trg_tree_view_is_column_showing(TrgTreeView * tv, gint index);

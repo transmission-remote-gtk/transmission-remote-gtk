@@ -64,6 +64,7 @@
 #define TRG_PREFS_STATE_SELECTOR_LAST "state-selector-last"
 #define TRG_PREFS_ACTIVEONLY_FULLSYNC_ENABLED   "activeonly-fullsync-enabled"
 #define TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY     "activeonly-fullsync-every"
+#define TRG_PREFS_KEY_STYLE	"style"
 #define TRG_PREFS_KEY_TREE_VIEWS "tree-views"
 #define TRG_PREFS_KEY_TV_SORT_TYPE "sort-type"
 #define TRG_PREFS_KEY_TV_SORT_COL "sort-col"
@@ -85,6 +86,12 @@
 #define TRG_PREFS_CONNECTION (1 << 3)   /* 0x04 */
 #define TRG_PREFS_NEWNODE    (1 << 4)   /* 0x08 */
 #define TRG_PREFS_REPLACENODE (1 << 5)  /* 0x16 */
+
+enum {
+	TRG_STYLE_TR = 0,
+	TRG_STYLE_CLASSIC,
+	TRG_STYLE_TR_COMPACT
+};
 
 typedef struct _TrgPrefsPrivate TrgPrefsPrivate;
 

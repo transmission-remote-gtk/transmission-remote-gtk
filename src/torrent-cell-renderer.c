@@ -47,6 +47,7 @@ enum
     P_CONNECTED,
     P_FILECOUNT,
     P_BAR_HEIGHT,
+    P_OWNER,
     P_COMPACT
 };
 
@@ -100,6 +101,8 @@ struct TorrentCellRendererPrivate
     GString          * gstr2;
     int bar_height;
 
+    guint flags;
+    guint fileCount;
     gint64 uploadedEver;
     gint64 sizeWhenDone;
     gint64 totalSize;
@@ -108,22 +111,20 @@ struct TorrentCellRendererPrivate
     gint64 haveUnchecked;
     gint64 upSpeed;
     gint64 downSpeed;
-    gpointer json;
-    gdouble done;
-    gdouble metadataPercentComplete;
-    gdouble ratio;
-    guint flags;
     gint64 peersFromUs;
     gint64 webSeedsToUs;
     gint64 peersToUs;
     gint64 connected;
-    guint fileCount;
     gint64 eta;
     gint64 error;
     gint64 seedRatioMode;
+    gdouble done;
+    gdouble metadataPercentComplete;
+    gdouble ratio;
     gdouble seedRatioLimit;
+    gpointer json;
     TrgClient *client;
-
+    GtkTreeView *owner;
     gboolean compact;
 };
 
@@ -542,20 +543,20 @@ get_text_color( TorrentCellRenderer *r, GtkWidget *widget, GtrColor * setme )
 {
 	struct TorrentCellRendererPrivate *p = r->priv;
 #if GTK_CHECK_VERSION( 3,0,0 )
-
     static const GdkRGBA red = { 1.0, 0, 0, 0 };
+
     if( p->error )
         *setme = red;
     else if( p->flags & TORRENT_FLAG_PAUSED )
         gtk_style_context_get_color( gtk_widget_get_style_context( widget ), GTK_STATE_FLAG_INSENSITIVE, setme );
     else
         gtk_style_context_get_color( gtk_widget_get_style_context( widget ), GTK_STATE_FLAG_NORMAL, setme );
-
 #else
     static const GdkColor red = { 0, 65535, 0, 0 };
+
     if( p->error )
         *setme = red;
-    else if( p->error & TORRENT_FLAG_PAUSED )
+    else if( p->flags & TORRENT_FLAG_PAUSED )
         *setme = gtk_widget_get_style(widget)->text[GTK_STATE_INSENSITIVE];
     else
         *setme = gtk_widget_get_style(widget)->text[GTK_STATE_NORMAL];
@@ -708,6 +709,9 @@ static void torrent_cell_renderer_set_property(GObject * object,
 	case P_CLIENT:
 		p->client = g_value_get_pointer(v);
 		break;
+	case P_OWNER:
+		p->owner = g_value_get_pointer(v);
+		break;
 	default:
 		G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, pspec);
 		break;
@@ -720,18 +724,7 @@ torrent_cell_renderer_get_property( GObject     * object,
                                     GValue      * v,
                                     GParamSpec  * pspec )
 {
-    /*const TorrentCellRenderer * self = TORRENT_CELL_RENDERER( object );
-    struct TorrentCellRendererPrivate * p = self->priv;
-
-    switch( property_id )
-    {
-        case P_TORRENT:        g_value_set_pointer( v, p->tor ); break;
-        case P_UPLOAD_SPEED:   g_value_set_double( v, p->upload_speed_KBps ); break;
-        case P_DOWNLOAD_SPEED: g_value_set_double( v, p->download_speed_KBps ); break;
-        case P_BAR_HEIGHT:     g_value_set_int( v, p->bar_height ); break;
-        case P_COMPACT:        g_value_set_boolean( v, p->compact ); break;
-        default: G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, pspec ); break;
-    }*/
+	G_OBJECT_WARN_INVALID_PROPERTY_ID( object, property_id, pspec );
 }
 
 G_DEFINE_TYPE (TorrentCellRenderer, torrent_cell_renderer, GTK_TYPE_CELL_RENDERER)
@@ -779,6 +772,10 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
                                                           "client",
                                                           G_PARAM_READWRITE ) );
 
+    g_object_class_install_property( gobject_class, P_OWNER,
+                                    g_param_spec_pointer( "owner", NULL,
+                                                          "owner",
+                                                          G_PARAM_READWRITE ) );
 
     g_object_class_install_property( gobject_class, P_RATIO,
                                     g_param_spec_double( "ratio", NULL,
@@ -1131,4 +1128,9 @@ render_full( TorrentCellRenderer   * cell,
 
     /* cleanup */
     g_object_unref( icon );
+}
+
+GtkTreeView *torrent_cell_renderer_get_owner(TorrentCellRenderer *r)
+{
+	return r->priv->owner;
 }
