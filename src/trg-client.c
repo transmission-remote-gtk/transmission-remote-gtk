@@ -159,6 +159,8 @@ TrgClient *trg_client_new(void)
     priv->updateMutex = g_mutex_new();
     priv->configMutex = g_mutex_new();
     priv->tlsKey = g_private_new(NULL);
+    priv->seedRatioLimited = FALSE;
+    priv->seedRatioLimit = 0.00;
 
     priv->pool = g_thread_pool_new((GFunc) dispatch_async_threadfunc, tc,
                                    DISPATCH_POOL_SIZE, TRUE, NULL);

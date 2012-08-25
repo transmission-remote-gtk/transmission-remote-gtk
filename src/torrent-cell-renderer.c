@@ -32,7 +32,6 @@ enum
     P_HAVEVALID,
     P_HAVEUNCHECKED,
     P_ERROR,
-    P_NAME,
     P_SIZEWHENDONE,
     P_TOTALSIZE,
     P_UPLOADED,
@@ -56,8 +55,17 @@ enum
 #define COMPACT_ICON_SIZE GTK_ICON_SIZE_MENU
 #define FULL_ICON_SIZE GTK_ICON_SIZE_DND
 
-typedef cairo_t GtrDrawable;
+#if GTK_CHECK_VERSION( 3, 0, 0 )
+#define FOREGROUND_COLOR_KEY "foreground-rgba"
 typedef GdkRGBA GtrColor;
+typedef cairo_t GtrDrawable;
+typedef GtkRequisition GtrRequisition;
+#else
+#define FOREGROUND_COLOR_KEY "foreground-gdk"
+typedef GdkColor GtrColor;
+typedef GdkWindow GtrDrawable;
+typedef GdkRectangle GtrRequisition;
+#endif
 
 /***
 ****
@@ -105,7 +113,6 @@ struct TorrentCellRendererPrivate
     gdouble metadataPercentComplete;
     gdouble ratio;
     guint flags;
-    const gchar *name;
     gint64 peersFromUs;
     gint64 webSeedsToUs;
     gint64 peersToUs;
@@ -385,7 +392,14 @@ gtr_cell_renderer_get_preferred_size( GtkCellRenderer  * renderer,
                                       GtkRequisition   * minimum_size,
                                       GtkRequisition   * natural_size )
 {
+#if GTK_CHECK_VERSION( 3, 0, 0 )
     gtk_cell_renderer_get_preferred_size( renderer, widget, minimum_size, natural_size );
+#else
+    GtkRequisition r;
+    gtk_cell_renderer_get_size( renderer, widget, NULL, NULL, NULL, &r.width, &r.height );
+    if( minimum_size ) *minimum_size = r;
+    if( natural_size ) *natural_size = r;
+#endif
 }
 
 static void
@@ -446,9 +460,6 @@ get_size_full( TorrentCellRenderer * cell,
     GdkPixbuf * icon;
 
     struct TorrentCellRendererPrivate * p = cell->priv;
-    /*const tr_torrent * tor = p->tor;
-    const tr_stat * st = tr_torrentStatCached( (tr_torrent*)tor );
-    const tr_info * inf = tr_torrentInfo( tor );*/
     GString * gstr_prog = p->gstr1;
     GString * gstr_stat = p->gstr2;
 
@@ -487,7 +498,11 @@ get_size_full( TorrentCellRenderer * cell,
 static void
 torrent_cell_renderer_get_size( GtkCellRenderer     * cell,
                                 GtkWidget           * widget,
+#if GTK_CHECK_VERSION( 3,0,0 )
                                 const GdkRectangle  * cell_area,
+#else
+                                GdkRectangle        * cell_area,
+#endif
                                 gint                * x_offset,
                                 gint                * y_offset,
                                 gint                * width,
@@ -522,19 +537,29 @@ torrent_cell_renderer_get_size( GtkCellRenderer     * cell,
     }
 }
 
-
-#define FOREGROUND_COLOR_KEY "foreground-rgba"
-
 static void
-get_text_color( GtkWidget * w, TorrentCellRenderer *r, GtrColor * setme )
+get_text_color( TorrentCellRenderer *r, GtkWidget *widget, GtrColor * setme )
 {
+	struct TorrentCellRendererPrivate *p = r->priv;
+#if GTK_CHECK_VERSION( 3,0,0 )
+
     static const GdkRGBA red = { 1.0, 0, 0, 0 };
-    if( r->priv->error )
+    if( p->error )
         *setme = red;
-    else if( r->priv->flags & TORRENT_FLAG_PAUSED )
-        gtk_style_context_get_color( gtk_widget_get_style_context( w ), GTK_STATE_FLAG_INSENSITIVE, setme );
+    else if( p->flags & TORRENT_FLAG_PAUSED )
+        gtk_style_context_get_color( gtk_widget_get_style_context( widget ), GTK_STATE_FLAG_INSENSITIVE, setme );
     else
-        gtk_style_context_get_color( gtk_widget_get_style_context( w ), GTK_STATE_FLAG_NORMAL, setme );
+        gtk_style_context_get_color( gtk_widget_get_style_context( widget ), GTK_STATE_FLAG_NORMAL, setme );
+
+#else
+    static const GdkColor red = { 0, 65535, 0, 0 };
+    if( p->error )
+        *setme = red;
+    else if( p->error & TORRENT_FLAG_PAUSED )
+        *setme = gtk_widget_get_style(widget)->text[GTK_STATE_INSENSITIVE];
+    else
+        *setme = gtk_widget_get_style(widget)->text[GTK_STATE_NORMAL];
+#endif
 }
 
 static double
@@ -569,17 +594,26 @@ gtr_cell_renderer_render( GtkCellRenderer       * renderer,
                           const GdkRectangle    * area,
                           GtkCellRendererState    flags)
 {
+#if GTK_CHECK_VERSION( 3, 0, 0 )
     gtk_cell_renderer_render( renderer, drawable, widget, area, area, flags );
+#else
+    gtk_cell_renderer_render( renderer, drawable, widget, area, area, area, flags );
+#endif
 }
-
 
 static void
 torrent_cell_renderer_render( GtkCellRenderer       * cell,
-                              GtrDrawable           * window,
-                              GtkWidget             * widget,
-                              const GdkRectangle    * background_area,
-                              const GdkRectangle    * cell_area,
-                              GtkCellRendererState    flags )
+        GtrDrawable           * window,
+        GtkWidget             * widget,
+#if GTK_CHECK_VERSION( 3,0,0 )
+        const GdkRectangle    * background_area,
+        const GdkRectangle    * cell_area,
+#else
+        GdkRectangle          * background_area,
+        GdkRectangle          * cell_area,
+        GdkRectangle          * expose_area,
+#endif
+        GtkCellRendererState    flags )
 {
     TorrentCellRenderer * self = TORRENT_CELL_RENDERER( cell );
 
@@ -649,9 +683,6 @@ static void torrent_cell_renderer_set_property(GObject * object,
 		break;
 	case P_ERROR:
 		p->error = g_value_get_int64(v);
-		break;
-	case P_NAME:
-		p->name = g_value_get_string(v);
 		break;
 	case P_RATIO:
 		p->ratio = g_value_get_double(v);
@@ -737,12 +768,6 @@ torrent_cell_renderer_class_init( TorrentCellRendererClass * klass )
     gobject_class->set_property = torrent_cell_renderer_set_property;
     gobject_class->get_property = torrent_cell_renderer_get_property;
     gobject_class->dispose = torrent_cell_renderer_dispose;
-
-    g_object_class_install_property( gobject_class, P_NAME,
-                                    g_param_spec_string( "name", NULL,
-                                                          "name",
-                                                          "",
-                                                          G_PARAM_READWRITE ) );
 
     g_object_class_install_property( gobject_class, P_JSON,
                                     g_param_spec_pointer( "json", NULL,
@@ -957,7 +982,7 @@ render_compact( TorrentCellRenderer   * cell,
     g_string_truncate( gstr_stat, 0 );
     getShortStatusString( gstr_stat, cell );
     gtk_cell_renderer_get_padding( GTK_CELL_RENDERER( cell ), &xpad, &ypad );
-    get_text_color( widget, cell, &text_color );
+    get_text_color( cell, widget, &text_color );
 
     fill_area = *background_area;
     fill_area.x += xpad;
@@ -1034,7 +1059,7 @@ render_full( TorrentCellRenderer   * cell,
     g_string_truncate( gstr_stat, 0 );
     getStatusString( gstr_stat, cell );
     gtk_cell_renderer_get_padding( GTK_CELL_RENDERER( cell ), &xpad, &ypad );
-    get_text_color( widget, cell, &text_color );
+    get_text_color( cell, widget, &text_color );
 
     /* get the idealized cell dimensions */
     g_object_set( p->icon_renderer, "pixbuf", icon, NULL );

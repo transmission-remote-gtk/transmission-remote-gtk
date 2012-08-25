@@ -322,7 +322,7 @@ gint64 torrent_get_done_date(JsonObject * t)
 
 const gchar *torrent_get_errorstr(JsonObject * t)
 {
-    return json_object_get_string_member(t, FIELD_ERRORSTR);
+    return json_object_get_string_member(t, FIELD_ERROR_STRING);
 }
 
 gint64 torrent_get_error(JsonObject *t)

@@ -106,6 +106,9 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_top_queue;
     GtkWidget *mb_start_now;
     GtkWidget *mb_queues_seperator;
+    GtkWidget *mb_view_classic;
+    GtkWidget *mb_view_transmission;
+    GtkWidget *mb_view_transmission_compact;
     GtkAccelGroup *accel_group;
     TrgPrefs *prefs;
     TrgMainWindow *main_window;
@@ -326,6 +329,19 @@ trg_menu_bar_accel_add(TrgMenuBar * menu, GtkWidget * item,
 
 }
 
+static void view_menu_radio_item_toggled_cb(GtkCheckMenuItem * w, gpointer data)
+{
+    TrgPrefs *p = TRG_PREFS(data);
+    const gchar *key =
+        (gchar *) g_object_get_data(G_OBJECT(w), G_DATAKEY_CONF_KEY);
+
+    if (gtk_check_menu_item_get_active(w)) {
+    	gint index = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w), "pref-index"));
+    	g_message("active index = %d", index);
+    	trg_prefs_set_int(p, key, index, TRG_PREFS_GLOBAL);
+    }
+}
+
 static void view_menu_item_toggled_cb(GtkCheckMenuItem * w, gpointer data)
 {
     TrgPrefs *p = TRG_PREFS(data);
@@ -344,7 +360,7 @@ view_menu_bar_toggled_dependency_cb(GtkCheckMenuItem * w, gpointer data)
 }
 
 static void
-trg_menu_bar_view_item_update(TrgPrefs * p, gchar * updatedKey,
+trg_menu_bar_view_item_update(TrgPrefs * p, const gchar * updatedKey,
                               gpointer data)
 {
     gchar *key =
@@ -355,8 +371,46 @@ trg_menu_bar_view_item_update(TrgPrefs * p, gchar * updatedKey,
                                                           TRG_PREFS_GLOBAL));
 }
 
-static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs * prefs, gchar * key,
-                                             gchar * label,
+static void
+trg_menu_bar_view_radio_item_update(TrgPrefs * p, const gchar * updatedKey,
+                              gpointer data)
+{
+    const gchar *key =
+        (gchar *) g_object_get_data(G_OBJECT(data), G_DATAKEY_CONF_KEY);
+    gint myIndex = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(data), "pref-index"));
+
+    if (!g_strcmp0(updatedKey, key)) {
+    	gboolean shouldBeActive = trg_prefs_get_int(p, key, TRG_PREFS_GLOBAL) == myIndex;
+    	if (shouldBeActive != gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(data)))
+    		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(data), shouldBeActive);
+    }
+}
+
+static GtkWidget *trg_menu_bar_view_radio_item_new(TrgPrefs * prefs,
+		GSList *group,
+		const gchar * key,
+		gint index,
+		const gchar * label)
+{
+    GtkWidget *w = gtk_radio_menu_item_new_with_label(group, label);
+    g_object_set_data_full(G_OBJECT(w), G_DATAKEY_CONF_KEY, g_strdup(key),
+                           g_free);
+    g_object_set_data(G_OBJECT(w), "pref-index", GINT_TO_POINTER(index));
+
+    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(w),
+                                   trg_prefs_get_int(prefs, key,
+                                                      TRG_PREFS_GLOBAL) == (gint64)index);
+
+    g_signal_connect(w, "toggled",
+                     G_CALLBACK(view_menu_radio_item_toggled_cb), prefs);
+    g_signal_connect(prefs, "pref-changed",
+                     G_CALLBACK(trg_menu_bar_view_radio_item_update), w);
+
+    return w;
+}
+
+static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs * prefs, const gchar * key,
+                                             const gchar * label,
                                              GtkWidget * dependency)
 {
     GtkWidget *w = gtk_check_menu_item_new_with_label(label);
@@ -390,7 +444,20 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
 
     GtkWidget *view = gtk_menu_item_new_with_mnemonic(_("_View"));
     GtkWidget *viewMenu = gtk_menu_new();
+    GSList *group;
+
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), viewMenu);
+
+	priv->mb_view_classic = trg_menu_bar_view_radio_item_new(priv->prefs, NULL, "style", 0, _("Classic"));
+	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_classic);
+	group =  gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (priv->mb_view_classic));
+	priv->mb_view_transmission = trg_menu_bar_view_radio_item_new(priv->prefs, group, "style", 1, _("Transmission"));
+	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_transmission);
+	group =  gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (priv->mb_view_transmission));
+	priv->mb_view_transmission_compact = trg_menu_bar_view_radio_item_new(priv->prefs, group, "style", 2, _("Transmission Compact"));
+	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_transmission_compact);
+
+    priv->mb_view_classic =
 
     priv->mb_view_states =
         trg_menu_bar_view_item_new(priv->prefs,

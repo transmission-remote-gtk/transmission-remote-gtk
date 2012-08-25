@@ -191,7 +191,7 @@ static void setup_classic_layout(TrgClient *tc, TrgTorrentTreeView *tv)
                                                     "connected", TORRENT_COLUMN_PEERS_CONNECTED,
                                                     NULL);
 
-    g_object_set(G_OBJECT(renderer), "client", tv, NULL);
+    g_object_set(G_OBJECT(renderer), "client", tc, NULL);
 
     //gtk_tree_view_column_set_min_width(column, 0);
     gtk_tree_view_column_set_resizable(column, FALSE);

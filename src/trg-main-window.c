@@ -2498,6 +2498,8 @@ TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win)
     return priv->stateSelector;
 }
 
+/* Couldn't find a way to get the width/height on exit, so save the
+ * values of this event for when that happens. */
 static gboolean
 trg_main_window_config_event(TrgMainWindow * win,
                              GdkEvent * event,
