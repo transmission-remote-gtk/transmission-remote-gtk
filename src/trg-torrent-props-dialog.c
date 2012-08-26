@@ -146,15 +146,17 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
 
     priv = TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(dlg);
 
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTv),
-                          TRG_TREE_VIEW_PERSIST_SORT |
-                          TRG_TREE_VIEW_PERSIST_LAYOUT);
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTv),
-                          TRG_TREE_VIEW_PERSIST_SORT |
-                          TRG_TREE_VIEW_PERSIST_LAYOUT);
-    trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTv),
-                          TRG_TREE_VIEW_PERSIST_SORT |
-                          TRG_TREE_VIEW_PERSIST_LAYOUT);
+    if (priv->peersTv) {
+        trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTv),
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
+        trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTv),
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
+        trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTv),
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
+    }
 
     if (res_id != GTK_RESPONSE_OK) {
         gtk_widget_destroy(GTK_WIDGET(dlg));
@@ -275,12 +277,12 @@ static void models_updated(TrgTorrentModel * model, gpointer data)
         (ht, json_array_get_int_element(priv->targetIds, 0), &t, NULL)) {
         trg_files_model_update(priv->filesModel,
                                GTK_TREE_VIEW(priv->filesTv), serial, t,
-                               TORRENT_GET_MODE_FIRST);
+                               TORRENT_GET_MODE_UPDATE);
         trg_peers_model_update(priv->peersModel,
                                TRG_TREE_VIEW(priv->peersTv), serial, t,
-                               TORRENT_GET_MODE_FIRST);
+                               TORRENT_GET_MODE_UPDATE);
         trg_trackers_model_update(priv->trackersModel, serial, t,
-                                  TORRENT_GET_MODE_FIRST);
+                TORRENT_GET_MODE_UPDATE);
     }
 }
 
