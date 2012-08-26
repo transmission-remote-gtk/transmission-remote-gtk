@@ -298,9 +298,9 @@ static void trg_files_model_init(TrgFilesModel * self)
 }
 
 struct MinorUpdateData {
-	GList *filesList;
-	JsonArray *priorities;
-	JsonArray *wanted;
+    GList *filesList;
+    JsonArray *priorities;
+    JsonArray *wanted;
 };
 
 gboolean
@@ -308,7 +308,7 @@ trg_files_model_update_foreach(GtkListStore * model,
                                GtkTreePath * path G_GNUC_UNUSED,
                                GtkTreeIter * iter, gpointer data)
 {
-    struct MinorUpdateData *mud = (struct MinorUpdateData*)data;
+    struct MinorUpdateData *mud = (struct MinorUpdateData *) data;
     JsonObject *file;
     gint id;
 
@@ -430,10 +430,10 @@ trg_files_model_update(TrgFilesModel * model, GtkTreeView * tv,
             trg_files_model_applytree_idlefunc(futd);
         }
     } else {
-    	struct MinorUpdateData mud;
-    	mud.priorities = priorities;
-    	mud.wanted = wanted;
-    	mud.filesList = filesList;
+        struct MinorUpdateData mud;
+        mud.priorities = priorities;
+        mud.wanted = wanted;
+        mud.filesList = filesList;
         gtk_tree_model_foreach(GTK_TREE_MODEL(model),
                                (GtkTreeModelForeachFunc)
                                trg_files_model_update_foreach, &mud);

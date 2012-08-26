@@ -280,7 +280,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
         for (i = 0; proxies[i]; i++) {
             if (g_str_has_prefix(proxies[i], HTTP_URI_PREFIX)
-                    || g_str_has_prefix(proxies[i], HTTPS_URI_PREFIX)) {
+                || g_str_has_prefix(proxies[i], HTTPS_URI_PREFIX)) {
                 g_free(priv->proxy);
                 priv->proxy = proxies[i];
             } else {
@@ -698,18 +698,18 @@ dispatch_async_str(TrgClient * tc, gchar * req,
     return dispatch_async_common(tc, trg_req, callback, data);
 }
 
-gboolean trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer data)
+gboolean trg_client_update_session(TrgClient * tc, GSourceFunc callback,
+                                   gpointer data)
 {
-    return dispatch_async(tc, session_get(), callback,
-            data);
+    return dispatch_async(tc, session_get(), callback, data);
 }
 
-gdouble trg_client_get_seed_ratio_limit(TrgClient *tc)
+gdouble trg_client_get_seed_ratio_limit(TrgClient * tc)
 {
-	return tc->priv->seedRatioLimit;
+    return tc->priv->seedRatioLimit;
 }
 
-gboolean trg_client_get_seed_ratio_limited(TrgClient *tc)
+gboolean trg_client_get_seed_ratio_limited(TrgClient * tc)
 {
-	return tc->priv->seedRatioLimited;
+    return tc->priv->seedRatioLimited;
 }

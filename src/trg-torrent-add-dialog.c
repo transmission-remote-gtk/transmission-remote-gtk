@@ -528,15 +528,17 @@ trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog * d,
     if (nfiles == 1) {
         gchar *file_name = (gchar *) filenames->data;
         if (is_url(file_name) || is_magnet(file_name)) {
-        	if (strlen(file_name) > MAGNET_MAX_LINK_WIDTH) {
-        		gchar *file_name_trunc = g_strndup(file_name, MAGNET_MAX_LINK_WIDTH);
-        		gchar *file_name_trunc_fmt  = g_strdup_printf("%s ...", file_name_trunc);
-        		gtk_button_set_label(chooser, file_name_trunc_fmt);
-        		g_free(file_name_trunc);
-        		g_free(file_name_trunc_fmt);
-        	} else {
-        		gtk_button_set_label(chooser, file_name);
-        	}
+            if (strlen(file_name) > MAGNET_MAX_LINK_WIDTH) {
+                gchar *file_name_trunc =
+                    g_strndup(file_name, MAGNET_MAX_LINK_WIDTH);
+                gchar *file_name_trunc_fmt =
+                    g_strdup_printf("%s ...", file_name_trunc);
+                gtk_button_set_label(chooser, file_name_trunc_fmt);
+                g_free(file_name_trunc);
+                g_free(file_name_trunc_fmt);
+            } else {
+                gtk_button_set_label(chooser, file_name);
+            }
 
             gtk_widget_set_sensitive(priv->file_list, FALSE);
             gtk_widget_set_sensitive(priv->delete_check, FALSE);
@@ -645,24 +647,25 @@ trg_torrent_add_dialog_source_click_cb(GtkWidget * w, gpointer data)
 }
 
 static gboolean
-apply_all_changed_foreachfunc(GtkTreeModel *model,
-        GtkTreePath *path,
-        GtkTreeIter *iter,
-        gpointer data)
+apply_all_changed_foreachfunc(GtkTreeModel * model,
+                              GtkTreePath * path,
+                              GtkTreeIter * iter, gpointer data)
 {
-	GtkComboBox *combo = GTK_COMBO_BOX(data);
-	GtkTreeModel *combo_model = gtk_combo_box_get_model(combo);
-	GtkTreeIter selection_iter;
-	if (gtk_combo_box_get_active_iter(combo, &selection_iter)) {
-		gint column;
-		gint value;
-	    GValue gvalue = { 0 };
-	    g_value_init(&gvalue, G_TYPE_INT);
-		gtk_tree_model_get(combo_model, &selection_iter, 2, &column, 3, &value, -1);
-		g_value_set_int(&gvalue, value);
-		gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, column, &gvalue);
-	}
-	return FALSE;
+    GtkComboBox *combo = GTK_COMBO_BOX(data);
+    GtkTreeModel *combo_model = gtk_combo_box_get_model(combo);
+    GtkTreeIter selection_iter;
+    if (gtk_combo_box_get_active_iter(combo, &selection_iter)) {
+        gint column;
+        gint value;
+        GValue gvalue = { 0 };
+        g_value_init(&gvalue, G_TYPE_INT);
+        gtk_tree_model_get(combo_model, &selection_iter, 2, &column, 3,
+                           &value, -1);
+        g_value_set_int(&gvalue, value);
+        gtk_tree_store_set_value(GTK_TREE_STORE(model), iter, column,
+                                 &gvalue);
+    }
+    return FALSE;
 }
 
 static void
@@ -676,37 +679,49 @@ trg_torrent_add_dialog_apply_all_changed_cb(GtkWidget * w, gpointer data)
     gtk_combo_box_set_active(GTK_COMBO_BOX(w), -1);
 }
 
-static GtkWidget *trg_torrent_add_dialog_apply_all_combo_new(TrgTorrentAddDialog *dialog)
+static GtkWidget
+    *trg_torrent_add_dialog_apply_all_combo_new(TrgTorrentAddDialog *
+                                                dialog)
 {
-	GtkListStore *model = gtk_list_store_new(4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT);
-	GtkWidget *combo = gtk_combo_box_new();
-	GtkTreeIter iter;
-	GtkCellRenderer *renderer;
+    GtkListStore *model =
+        gtk_list_store_new(4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT,
+                           G_TYPE_INT);
+    GtkWidget *combo = gtk_combo_box_new();
+    GtkTreeIter iter;
+    GtkCellRenderer *renderer;
 
-	gtk_list_store_append(model, &iter);
-	gtk_list_store_set(model, &iter, 1, _("High Priority"), 2, FC_PRIORITY, 3, TR_PRI_HIGH, -1);
-	gtk_list_store_append(model, &iter);
-	gtk_list_store_set(model, &iter, 1, _("Normal Priority"), 2, FC_PRIORITY, 3, TR_PRI_NORMAL, -1);
-	gtk_list_store_append(model, &iter);
-	gtk_list_store_set(model, &iter, 1, _("Low Priority"), 2, FC_PRIORITY, 3, TR_PRI_LOW, -1);
-	gtk_list_store_append(model, &iter);
-	gtk_list_store_set(model, &iter, 0, GTK_STOCK_APPLY, 1, _("Download"), 2, FC_ENABLED, 3, TRUE, -1);
-	gtk_list_store_append(model, &iter);
-	gtk_list_store_set(model, &iter, 0, GTK_STOCK_CANCEL, 1, _("Skip"), 2, FC_ENABLED, 3, FALSE, -1);
+    gtk_list_store_append(model, &iter);
+    gtk_list_store_set(model, &iter, 1, _("High Priority"), 2, FC_PRIORITY,
+                       3, TR_PRI_HIGH, -1);
+    gtk_list_store_append(model, &iter);
+    gtk_list_store_set(model, &iter, 1, _("Normal Priority"), 2,
+                       FC_PRIORITY, 3, TR_PRI_NORMAL, -1);
+    gtk_list_store_append(model, &iter);
+    gtk_list_store_set(model, &iter, 1, _("Low Priority"), 2, FC_PRIORITY,
+                       3, TR_PRI_LOW, -1);
+    gtk_list_store_append(model, &iter);
+    gtk_list_store_set(model, &iter, 0, GTK_STOCK_APPLY, 1, _("Download"),
+                       2, FC_ENABLED, 3, TRUE, -1);
+    gtk_list_store_append(model, &iter);
+    gtk_list_store_set(model, &iter, 0, GTK_STOCK_CANCEL, 1, _("Skip"), 2,
+                       FC_ENABLED, 3, FALSE, -1);
 
-	renderer = gtk_cell_renderer_pixbuf_new();
+    renderer = gtk_cell_renderer_pixbuf_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
-    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer, "stock-id", 0);
+    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer,
+                                  "stock-id", 0);
     renderer = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
-    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer, "text", 1);
+    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer, "text",
+                                  1);
 
     gtk_combo_box_set_model(GTK_COMBO_BOX(combo), GTK_TREE_MODEL(model));
     g_signal_connect(combo, "changed",
-                     G_CALLBACK(trg_torrent_add_dialog_apply_all_changed_cb),
+                     G_CALLBACK
+                     (trg_torrent_add_dialog_apply_all_changed_cb),
                      dialog);
 
-	return combo;
+    return combo;
 }
 
 static GObject *trg_torrent_add_dialog_constructor(GType type,
@@ -769,8 +784,7 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
 
     l = gtk_label_new_with_mnemonic(_("_Torrent file:"));
     gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
-    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 0, 1, GTK_FILL,
-                     0, 0, 0);
+    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 0, 1, GTK_FILL, 0, 0, 0);
 
     priv->source_chooser = gtk_button_new();
     gtk_button_set_alignment(GTK_BUTTON(priv->source_chooser), 0.0f, 0.5f);
@@ -786,8 +800,7 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
 
     l = gtk_label_new_with_mnemonic(_("_Destination folder:"));
     gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
-    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 1, 2, GTK_FILL,
-                     0, 0, 0);
+    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 1, 2, GTK_FILL, 0, 0, 0);
 
     priv->dest_combo =
         trg_destination_combo_new(priv->client,
@@ -797,22 +810,21 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     gtk_label_set_mnemonic_widget(GTK_LABEL(l), priv->dest_combo);
 
     gtk_widget_set_size_request(priv->file_list, 466u, 300u);
-    gtk_table_attach_defaults(GTK_TABLE(t), priv->file_list, 0, 2,
-                              2, 3);
+    gtk_table_attach_defaults(GTK_TABLE(t), priv->file_list, 0, 2, 2, 3);
 
     l = gtk_label_new_with_mnemonic(_("Apply to all:"));
     gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
-    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 3, 4, ~0, 0, 0,
-                     0);
+    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 3, 4, ~0, 0, 0, 0);
 
-    applyall_combo = trg_torrent_add_dialog_apply_all_combo_new(TRG_TORRENT_ADD_DIALOG(obj));
-    gtk_table_attach(GTK_TABLE(t), applyall_combo, 1, 2, 3,
-                     4, ~0, 0, 0, 0);
+    applyall_combo =
+        trg_torrent_add_dialog_apply_all_combo_new(TRG_TORRENT_ADD_DIALOG
+                                                   (obj));
+    gtk_table_attach(GTK_TABLE(t), applyall_combo, 1, 2, 3, 4, ~0, 0, 0,
+                     0);
 
     l = gtk_label_new_with_mnemonic(_("Torrent _priority:"));
     gtk_misc_set_alignment(GTK_MISC(l), 0.0f, 0.5f);
-    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 4, 5, ~0, 0, 0,
-                     0);
+    gtk_table_attach(GTK_TABLE(t), l, 0, 1, 4, 5, ~0, 0, 0, 0);
 
     gtk_table_attach(GTK_TABLE(t), priv->priority_combo, 1, 2, 4,
                      5, ~0, 0, 0, 0);

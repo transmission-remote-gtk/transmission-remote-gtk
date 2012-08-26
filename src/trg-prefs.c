@@ -103,7 +103,7 @@ static void trg_prefs_create_defaults(TrgPrefs * p)
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL,
                               TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_SESSION_UPDATE_INTERVAL,
-            TRG_SESSION_INTERVAL_DEFAULT);
+                              TRG_SESSION_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_MINUPDATE_INTERVAL,
                               TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2);
@@ -125,8 +125,8 @@ static GObject *trg_prefs_constructor(GType type,
                                       construct_params)
 {
     GObject *object = G_OBJECT_CLASS
-            (trg_prefs_parent_class)->constructor(type, n_construct_properties,
-                                                  construct_params);
+        (trg_prefs_parent_class)->constructor(type, n_construct_properties,
+                                              construct_params);
     TrgPrefs *prefs = TRG_PREFS(object);
     TrgPrefsPrivate *priv = prefs->priv;
 
@@ -170,7 +170,8 @@ static void trg_prefs_class_init(TrgPrefsClass * klass)
 
 static void trg_prefs_init(TrgPrefs * self)
 {
-    self->priv = G_TYPE_INSTANCE_GET_PRIVATE (self, TRG_TYPE_PREFS, TrgPrefsPrivate);
+    self->priv =
+        G_TYPE_INSTANCE_GET_PRIVATE(self, TRG_TYPE_PREFS, TrgPrefsPrivate);
 }
 
 TrgPrefs *trg_prefs_new(void)

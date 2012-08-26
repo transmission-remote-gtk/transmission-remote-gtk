@@ -126,8 +126,8 @@ static void trg_cell_renderer_file_icon_dispose(GObject * object)
     TrgCellRendererFileIconPrivate *priv =
         TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(object);
     g_free(priv->text);
-    G_OBJECT_CLASS(trg_cell_renderer_file_icon_parent_class)->
-        dispose(object);
+    G_OBJECT_CLASS(trg_cell_renderer_file_icon_parent_class)->dispose
+        (object);
 }
 
 static void

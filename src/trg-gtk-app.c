@@ -103,7 +103,7 @@ trg_gtk_app_command_line(GApplication * application,
     gchar **argv;
 
     if (!windows || !windows->data)
-    	return 1;
+        return 1;
 
     window = TRG_MAIN_WINDOW(windows->data);
     argv = g_application_command_line_get_arguments(cmdline, NULL);

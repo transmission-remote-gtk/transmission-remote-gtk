@@ -130,8 +130,8 @@ GtkTreeModel *trg_sortable_filtered_model_new(GtkTreeSortable *
 }
 
 static GtkTreeSortable
-    *trg_sortable_filtered_model_get_real_sortable(GtkTreeSortable *
-                                                   sortable)
+    * trg_sortable_filtered_model_get_real_sortable(GtkTreeSortable *
+                                                    sortable)
 {
     return
         GTK_TREE_SORTABLE(gtk_tree_model_filter_get_model

@@ -184,8 +184,8 @@ trg_menu_bar_set_property(GObject * object,
         priv->main_window = g_value_get_object(value);
         break;
     case PROP_TORRENT_TREE_VIEW:
-    	priv->torrent_tree_view = g_value_get_object(value);
-    	break;
+        priv->torrent_tree_view = g_value_get_object(value);
+        break;
     }
 }
 
@@ -338,15 +338,18 @@ trg_menu_bar_accel_add(TrgMenuBar * menu, GtkWidget * item,
 
 }
 
-static void view_menu_radio_item_toggled_cb(GtkCheckMenuItem * w, gpointer data)
+static void view_menu_radio_item_toggled_cb(GtkCheckMenuItem * w,
+                                            gpointer data)
 {
     TrgPrefs *p = TRG_PREFS(data);
     const gchar *key =
         (gchar *) g_object_get_data(G_OBJECT(w), G_DATAKEY_CONF_KEY);
 
     if (gtk_check_menu_item_get_active(w)) {
-    	gint index = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w), G_DATAKEY_PREF_VALUE));
-    	trg_prefs_set_int(p, key, index, TRG_PREFS_GLOBAL);
+        gint index =
+            GPOINTER_TO_INT(g_object_get_data
+                            (G_OBJECT(w), G_DATAKEY_PREF_VALUE));
+        trg_prefs_set_int(p, key, index, TRG_PREFS_GLOBAL);
     }
 }
 
@@ -381,33 +384,40 @@ trg_menu_bar_view_item_update(TrgPrefs * p, const gchar * updatedKey,
 
 static void
 trg_menu_bar_view_radio_item_update(TrgPrefs * p, const gchar * updatedKey,
-                              gpointer data)
+                                    gpointer data)
 {
     const gchar *key =
         (gchar *) g_object_get_data(G_OBJECT(data), G_DATAKEY_CONF_KEY);
-    gint myIndex = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(data), G_DATAKEY_PREF_VALUE));
+    gint myIndex =
+        GPOINTER_TO_INT(g_object_get_data
+                        (G_OBJECT(data), G_DATAKEY_PREF_VALUE));
 
     if (!g_strcmp0(updatedKey, key)) {
-    	gboolean shouldBeActive = trg_prefs_get_int(p, key, TRG_PREFS_GLOBAL) == myIndex;
-    	if (shouldBeActive != gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(data)))
-    		gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(data), shouldBeActive);
+        gboolean shouldBeActive =
+            trg_prefs_get_int(p, key, TRG_PREFS_GLOBAL) == myIndex;
+        if (shouldBeActive !=
+            gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(data)))
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(data),
+                                           shouldBeActive);
     }
 }
 
 static GtkWidget *trg_menu_bar_view_radio_item_new(TrgPrefs * prefs,
-		GSList *group,
-		const gchar * key,
-		gint index,
-		const gchar * label)
+                                                   GSList * group,
+                                                   const gchar * key,
+                                                   gint index,
+                                                   const gchar * label)
 {
     GtkWidget *w = gtk_radio_menu_item_new_with_label(group, label);
     g_object_set_data_full(G_OBJECT(w), G_DATAKEY_CONF_KEY, g_strdup(key),
                            g_free);
-    g_object_set_data(G_OBJECT(w), G_DATAKEY_PREF_VALUE, GINT_TO_POINTER(index));
+    g_object_set_data(G_OBJECT(w), G_DATAKEY_PREF_VALUE,
+                      GINT_TO_POINTER(index));
 
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(w),
                                    trg_prefs_get_int(prefs, key,
-                                                      TRG_PREFS_GLOBAL) == (gint64)index);
+                                                     TRG_PREFS_GLOBAL) ==
+                                   (gint64) index);
 
     g_signal_connect(w, "toggled",
                      G_CALLBACK(view_menu_radio_item_toggled_cb), prefs);
@@ -417,7 +427,8 @@ static GtkWidget *trg_menu_bar_view_radio_item_new(TrgPrefs * prefs,
     return w;
 }
 
-static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs * prefs, const gchar * key,
+static GtkWidget *trg_menu_bar_view_item_new(TrgPrefs * prefs,
+                                             const gchar * key,
                                              const gchar * label,
                                              GtkWidget * dependency)
 {
@@ -456,18 +467,38 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
 
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(view), viewMenu);
 
-	priv->mb_view_transmission = trg_menu_bar_view_radio_item_new(priv->prefs, NULL, TRG_PREFS_KEY_STYLE, TRG_STYLE_TR, _("Transmission Style"));
-	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_transmission);
-	group =  gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (priv->mb_view_transmission));
-	priv->mb_view_transmission_compact = trg_menu_bar_view_radio_item_new(priv->prefs, group, TRG_PREFS_KEY_STYLE, TRG_STYLE_TR_COMPACT, _("Transmission Compact Style"));
-	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_transmission_compact);
-	group =  gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (priv->mb_view_transmission_compact));
-	priv->mb_view_classic = trg_menu_bar_view_radio_item_new(priv->prefs, group, TRG_PREFS_KEY_STYLE, TRG_STYLE_CLASSIC, _("Classic Style"));
-	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_classic);
+    priv->mb_view_transmission =
+        trg_menu_bar_view_radio_item_new(priv->prefs, NULL,
+                                         TRG_PREFS_KEY_STYLE, TRG_STYLE_TR,
+                                         _("Transmission Style"));
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+                          priv->mb_view_transmission);
+    group =
+        gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM
+                                      (priv->mb_view_transmission));
+    priv->mb_view_transmission_compact =
+        trg_menu_bar_view_radio_item_new(priv->prefs, group,
+                                         TRG_PREFS_KEY_STYLE,
+                                         TRG_STYLE_TR_COMPACT,
+                                         _("Transmission Compact Style"));
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+                          priv->mb_view_transmission_compact);
+    group =
+        gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM
+                                      (priv->
+                                       mb_view_transmission_compact));
+    priv->mb_view_classic =
+        trg_menu_bar_view_radio_item_new(priv->prefs, group,
+                                         TRG_PREFS_KEY_STYLE,
+                                         TRG_STYLE_CLASSIC,
+                                         _("Classic Style"));
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_classic);
 
-	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
-			trg_tree_view_sort_menu(TRG_TREE_VIEW(priv->torrent_tree_view),
-					_("Sort")));
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+                          trg_tree_view_sort_menu(TRG_TREE_VIEW
+                                                  (priv->
+                                                   torrent_tree_view),
+                                                  _("Sort")));
 
     priv->mb_view_states =
         trg_menu_bar_view_item_new(priv->prefs,
@@ -925,18 +956,16 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
 
     g_object_class_install_property(object_class,
                                     PROP_TORRENT_TREE_VIEW,
-                                    g_param_spec_object("torrent-tree-view",
-                                    		"torrent-tree-view",
-                                    		"torrent-tree-view",
-                                                        TRG_TYPE_TORRENT_TREE_VIEW,
-                                                        G_PARAM_READWRITE |
-                                                        G_PARAM_CONSTRUCT_ONLY
-                                                        |
-                                                        G_PARAM_STATIC_NAME
-                                                        |
-                                                        G_PARAM_STATIC_NICK
-                                                        |
-                                                        G_PARAM_STATIC_BLURB));
+                                    g_param_spec_object
+                                    ("torrent-tree-view",
+                                     "torrent-tree-view",
+                                     "torrent-tree-view",
+                                     TRG_TYPE_TORRENT_TREE_VIEW,
+                                     G_PARAM_READWRITE |
+                                     G_PARAM_CONSTRUCT_ONLY |
+                                     G_PARAM_STATIC_NAME |
+                                     G_PARAM_STATIC_NICK |
+                                     G_PARAM_STATIC_BLURB));
 }
 
 static void trg_menu_bar_init(TrgMenuBar * self)
@@ -944,9 +973,10 @@ static void trg_menu_bar_init(TrgMenuBar * self)
 }
 
 TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win, TrgPrefs * prefs,
-                             TrgTorrentTreeView *ttv, GtkAccelGroup * accel_group)
+                             TrgTorrentTreeView * ttv,
+                             GtkAccelGroup * accel_group)
 {
     return g_object_new(TRG_TYPE_MENU_BAR,
-                        "torrent-tree-view", ttv, "prefs", prefs, "mainwin", win, "accel-group",
-                        accel_group, NULL);
+                        "torrent-tree-view", ttv, "prefs", prefs,
+                        "mainwin", win, "accel-group", accel_group, NULL);
 }

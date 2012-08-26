@@ -379,12 +379,12 @@ trgp_double_special_dependent(GtkWidget * widget, gpointer data)
     gtk_widget_set_sensitive(GTK_WIDGET(data),
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
                                                           (widget))
-                             && gtk_widget_get_sensitive(priv->
-                                                         fullUpdateCheck)
+                             &&
+                             gtk_widget_get_sensitive
+                             (priv->fullUpdateCheck)
                              &&
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (priv->
-                                                           fullUpdateCheck)));
+                                                          (priv->fullUpdateCheck)));
 }
 
 static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)
@@ -427,8 +427,8 @@ static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_row(t, &row, _("Minimised update interval:"), w,
                          NULL);
 
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_SESSION_UPDATE_INTERVAL, 1, INT_MAX, 1,
-                      TRG_PREFS_PROFILE, NULL);
+    w = trgp_spin_new(dlg, TRG_PREFS_KEY_SESSION_UPDATE_INTERVAL, 1,
+                      INT_MAX, 1, TRG_PREFS_PROFILE, NULL);
     hig_workarea_add_row(t, &row, _("Session update interval:"), w, NULL);
 
     hig_workarea_add_section_title(t, &row, _("Torrents"));
@@ -710,27 +710,27 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
 #ifndef HAVE_LIBAPPINDICATOR
     if (!_is_unity) {
 #endif
-    hig_workarea_add_section_title(t, &row, _("System Tray"));
+        hig_workarea_add_section_title(t, &row, _("System Tray"));
 
-    tray = trgp_check_new(dlg, _("Show in system tray"),
-                          TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL,
-                          NULL);
-    g_signal_connect(G_OBJECT(tray), "toggled",
-                     G_CALLBACK(toggle_tray_icon), priv->win);
-    hig_workarea_add_wide_control(t, &row, tray);
+        tray = trgp_check_new(dlg, _("Show in system tray"),
+                              TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL,
+                              NULL);
+        g_signal_connect(G_OBJECT(tray), "toggled",
+                         G_CALLBACK(toggle_tray_icon), priv->win);
+        hig_workarea_add_wide_control(t, &row, tray);
 
-    if (!_is_unity) {
-		w = trgp_check_new(dlg, _("Minimise to system tray"),
-						   TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
-						   TRG_PREFS_GLOBAL, NULL);
-		gtk_widget_set_sensitive(w,
-								 gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-															  (tray)));
-		g_signal_connect(G_OBJECT(tray), "toggled",
-						 G_CALLBACK(toggle_active_arg_is_sensitive), w);
-		hig_workarea_add_wide_control(t, &row, w);
-    }
-
+        if (!_is_unity) {
+            w = trgp_check_new(dlg, _("Minimise to system tray"),
+                               TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
+                               TRG_PREFS_GLOBAL, NULL);
+            gtk_widget_set_sensitive(w,
+                                     gtk_toggle_button_get_active
+                                     (GTK_TOGGLE_BUTTON(tray)));
+            g_signal_connect(G_OBJECT(tray), "toggled",
+                             G_CALLBACK(toggle_active_arg_is_sensitive),
+                             w);
+            hig_workarea_add_wide_control(t, &row, w);
+        }
 #ifndef HAVE_LIBAPPINDICATOR
     }
 #endif

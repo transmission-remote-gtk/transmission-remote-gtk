@@ -82,15 +82,15 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     /*gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(dialog), documenters); */
     gtk_about_dialog_set_translator_credits(GTK_ABOUT_DIALOG(dialog),
                                             "translations kindly contributed by\n\n"
-    										"* Pierre Rudloff (French)\n"
+                                            "* Pierre Rudloff (French)\n"
                                             "* Julian Held (German)\n"
-    										"* Algimantas Margevičius (Lithuanian)\n"
+                                            "* Algimantas Margevičius (Lithuanian)\n"
                                             "* Youn sok Choi (Korean)\n"
                                             "* Piotr (Polish)\n"
                                             "* Y3AVD (Russian)\n"
                                             "* aspidzent (Spanish)\n"
                                             "* Åke Svensson (Swedish)\n"
-    										"* ROR191 (Ukranian)\n");
+                                            "* ROR191 (Ukranian)\n");
 
     g_free(licenseFile);
     g_free(licenseText);

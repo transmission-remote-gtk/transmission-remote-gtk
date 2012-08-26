@@ -493,29 +493,31 @@ int tr_snprintf(char *buf, size_t buflen, const char *fmt, ...)
 gchar *epoch_to_string(gint64 epoch)
 {
 #if GLIB_CHECK_VERSION(2, 26, 00)
-        GDateTime *dt = g_date_time_new_from_unix_local(epoch);
-        gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
-        g_date_time_unref(dt);
-        return timestring;
+    GDateTime *dt = g_date_time_new_from_unix_local(epoch);
+    gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
+    g_date_time_unref(dt);
+    return timestring;
 #else
-        char buf[64];
-        time_t time_val = epoch;
-        struct tm *ts = localtime(&time_val);
-        int wrote = strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ts);
-        return g_strndup(buf, wrote);
+    char buf[64];
+    time_t time_val = epoch;
+    struct tm *ts = localtime(&time_val);
+    int wrote = strftime(buf, sizeof(buf), "%Y-%m-%d %H:%M:%S", ts);
+    return g_strndup(buf, wrote);
 #endif
 }
 
 /* wrap a link in text with a hyperlink, for use in pango markup.
  * with or without any links - a newly allocated string is returned. */
 
-gchar *add_links_to_text(const gchar *original) {
+gchar *add_links_to_text(const gchar * original)
+{
     /* only perform replacement if string doesn't contains links */
     if (!g_regex_match_simple("<a\\s.*>", original, 0, 0)) {
-        GRegex *regex = g_regex_new("(https?://[a-zA-Z0-9_\\-\\./?=]+)", 0, 0,
-                NULL);
+        GRegex *regex =
+            g_regex_new("(https?://[a-zA-Z0-9_\\-\\./?=]+)", 0, 0,
+                        NULL);
         gchar *newText = g_regex_replace(regex, original, -1, 0,
-                "<a href='\\1'>\\1</a>", 0, NULL);
+                                         "<a href='\\1'>\\1</a>", 0, NULL);
         g_regex_unref(regex);
         return newText;
     } else {
@@ -568,13 +570,12 @@ evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
 #endif
 }
 
-char*
-tr_strlsize( char * buf, guint64 bytes, size_t buflen )
+char *tr_strlsize(char *buf, guint64 bytes, size_t buflen)
 {
-    if( !bytes )
-        g_strlcpy( buf, Q_( "None" ), buflen );
+    if (!bytes)
+        g_strlcpy(buf, Q_("None"), buflen);
     else
-        tr_formatter_size_B( buf, bytes, buflen );
+        tr_formatter_size_B(buf, bytes, buflen);
 
     return buf;
 }
@@ -597,38 +598,40 @@ gboolean should_be_minimised(int argc, char *argv[])
 
 GtkWidget *trg_hbox_new(gboolean homogeneous, gint spacing)
 {
-	GtkWidget *box;
+    GtkWidget *box;
 #if GTK_CHECK_VERSION( 3, 0, 0 )
-	box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, spacing);
-	gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
+    box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, spacing);
+    gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
 #else
-	box = gtk_hbox_new(homogeneous, spacing);
+    box = gtk_hbox_new(homogeneous, spacing);
 #endif
-	return box;
+    return box;
 }
 
 GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing)
 {
-	GtkWidget *box;
+    GtkWidget *box;
 #if GTK_CHECK_VERSION( 3, 0, 0 )
-	box = gtk_box_new(GTK_ORIENTATION_VERTICAL, spacing);
-	gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
+    box = gtk_box_new(GTK_ORIENTATION_VERTICAL, spacing);
+    gtk_box_set_homogeneous(GTK_BOX(box), homogeneous);
 #else
-	box = gtk_vbox_new(homogeneous, spacing);
+    box = gtk_vbox_new(homogeneous, spacing);
 #endif
-	return box;
+    return box;
 }
 
 #ifdef WIN32
-gchar *trg_win32_support_path(gchar *file) {
+gchar *trg_win32_support_path(gchar * file)
+{
     gchar *moddir =
         g_win32_get_package_installation_directory_of_module(NULL);
     gchar *path = g_build_filename(moddir, file, NULL);
     g_free(moddir);
-	return path;
+    return path;
 }
 #endif
 
-gboolean is_unity() {
-	return g_strcmp0(g_getenv("XDG_CURRENT_DESKTOP"), "Unity") == 0;
+gboolean is_unity()
+{
+    return g_strcmp0(g_getenv("XDG_CURRENT_DESKTOP"), "Unity") == 0;
 }

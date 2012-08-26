@@ -113,7 +113,8 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     TrgGeneralPanelPrivate *priv;
     gchar buf[32];
     gint sizeOfBuf;
-    gchar *statusString, *fullStatusString, *completedAtString, *comment, *markup;
+    gchar *statusString, *fullStatusString, *completedAtString, *comment,
+        *markup;
     const gchar *errorStr;
     gint64 eta, uploaded, haveValid, completedAt;
     GtkLabel *keyLabel;
@@ -153,10 +154,10 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     }
 
     completedAt = torrent_get_done_date(t);
-    if (completedAt > 0)
-    {
+    if (completedAt > 0) {
         completedAtString = epoch_to_string(completedAt);
-        gtk_label_set_text(GTK_LABEL(priv->gen_completedat_label), completedAtString);
+        gtk_label_set_text(GTK_LABEL(priv->gen_completedat_label),
+                           completedAtString);
         g_free(completedAtString);
     } else {
         gtk_label_set_text(GTK_LABEL(priv->gen_completedat_label), "");
@@ -213,9 +214,11 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), _("N/A"));
     }
 
-    snprintf(buf, sizeof(buf), "%"G_GINT64_FORMAT, seeders >= 0 ? seeders : 0);
+    snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT,
+             seeders >= 0 ? seeders : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_seeders_label), buf);
-    snprintf(buf, sizeof(buf), "%"G_GINT64_FORMAT, leechers >= 0 ? leechers : 0);
+    snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT,
+             leechers >= 0 ? leechers : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_leechers_label), buf);
 }
 
@@ -306,8 +309,8 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
         trg_general_panel_add_label(self, _("Comment"), 2, 4);
 
     priv->gen_completedat_label =
-        trg_general_panel_add_label_with_width(self, _("Completed At"), 0, 5,
-                                               -1);
+        trg_general_panel_add_label_with_width(self, _("Completed At"), 0,
+                                               5, -1);
 
     priv->gen_downloaddir_label =
         trg_general_panel_add_label_with_width(self, _("Location"), 1, 5,

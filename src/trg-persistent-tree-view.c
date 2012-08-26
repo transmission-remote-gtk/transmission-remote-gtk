@@ -54,7 +54,8 @@ struct _TrgPersistentTreeViewPrivate {
     trg_persistent_tree_view_column *addSelect;
 };
 
-static void selection_changed(TrgPersistentTreeView *ptv, GtkTreeSelection * selection)
+static void selection_changed(TrgPersistentTreeView * ptv,
+                              GtkTreeSelection * selection)
 {
     TrgPersistentTreeViewPrivate *priv = GET_PRIVATE(ptv);
     GtkTreeIter iter;
@@ -63,7 +64,8 @@ static void selection_changed(TrgPersistentTreeView *ptv, GtkTreeSelection * sel
     if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
         GtkTreePath *path = gtk_tree_model_get_path(model, &iter);
         gtk_widget_set_sensitive(priv->upButton, gtk_tree_path_prev(path));
-        gtk_widget_set_sensitive(priv->downButton, gtk_tree_model_iter_next(model, &iter));
+        gtk_widget_set_sensitive(priv->downButton,
+                                 gtk_tree_model_iter_next(model, &iter));
         gtk_tree_path_free(path);
         gtk_widget_set_sensitive(priv->delButton, TRUE);
     } else {
@@ -73,7 +75,8 @@ static void selection_changed(TrgPersistentTreeView *ptv, GtkTreeSelection * sel
     }
 }
 
-static void selection_changed_cb(GtkTreeSelection * selection, gpointer data)
+static void selection_changed_cb(GtkTreeSelection * selection,
+                                 gpointer data)
 {
     selection_changed(TRG_PERSISTENT_TREE_VIEW(data), selection);
 }
@@ -163,8 +166,8 @@ static void trg_persistent_tree_view_save(TrgPrefs * prefs, void *wdp)
     GtkTreeModel *model = gtk_tree_view_get_model(priv->tv);
 
     JsonNode *node = trg_prefs_get_value(prefs, wd->key, JSON_NODE_ARRAY,
-                                         wd->
-                                         flags | TRG_PREFS_REPLACENODE);
+                                         wd->flags |
+                                         TRG_PREFS_REPLACENODE);
 
     priv->ja = json_array_new();
 
@@ -207,8 +210,8 @@ trg_persistent_tree_view_column
 }
 
 static GtkTreeView
-    *trg_persistent_tree_view_tree_view_new(TrgPersistentTreeView * ptv,
-                                            GtkTreeModel * model)
+    * trg_persistent_tree_view_tree_view_new(TrgPersistentTreeView * ptv,
+                                             GtkTreeModel * model)
 {
     GtkTreeView *tv = GTK_TREE_VIEW(gtk_tree_view_new_with_model(model));
     GtkTreeSelection *selection;
@@ -253,9 +256,9 @@ static void trg_persistent_tree_view_up_cb(GtkWidget * w, gpointer data)
     if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
         path = gtk_tree_model_get_path(model, &iter);
         if (gtk_tree_path_prev(path) &&
-                gtk_tree_model_get_iter(model, &prevIter, path))
-        {
-            gtk_list_store_move_before(GTK_LIST_STORE(model), &iter, &prevIter);
+            gtk_tree_model_get_iter(model, &prevIter, path)) {
+            gtk_list_store_move_before(GTK_LIST_STORE(model), &iter,
+                                       &prevIter);
             selection_changed(TRG_PERSISTENT_TREE_VIEW(data), selection);
         }
         gtk_tree_path_free(path);
@@ -272,7 +275,8 @@ static void trg_persistent_tree_view_down_cb(GtkWidget * w, gpointer data)
     if (gtk_tree_selection_get_selected(selection, &model, &iter)) {
         nextIter = iter;
         if (gtk_tree_model_iter_next(model, &nextIter)) {
-            gtk_list_store_move_after(GTK_LIST_STORE(model), &iter, &nextIter);
+            gtk_list_store_move_after(GTK_LIST_STORE(model), &iter,
+                                      &nextIter);
             selection_changed(TRG_PERSISTENT_TREE_VIEW(data), selection);
         }
     }
@@ -337,8 +341,8 @@ static void trg_persistent_tree_view_finalize(GObject * object)
     }
     g_slist_free(priv->columns);
     g_free(priv->key);
-    G_OBJECT_CLASS(trg_persistent_tree_view_parent_class)->
-        finalize(object);
+    G_OBJECT_CLASS(trg_persistent_tree_view_parent_class)->finalize
+        (object);
 }
 
 trg_pref_widget_desc
@@ -395,7 +399,7 @@ static GObject *trg_persistent_tree_view_constructor(GType type,
     w = priv->downButton = gtk_button_new_from_stock(GTK_STOCK_GO_DOWN);
     gtk_widget_set_sensitive(w, FALSE);
     g_signal_connect(w, "clicked",
-                         G_CALLBACK(trg_persistent_tree_view_down_cb), object);
+                     G_CALLBACK(trg_persistent_tree_view_down_cb), object);
     gtk_box_pack_start(GTK_BOX(hbox), w, FALSE, FALSE, 4);
 
     priv->tv =

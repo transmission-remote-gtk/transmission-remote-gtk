@@ -139,9 +139,9 @@ gboolean torrent_get_download_limited(JsonObject * t)
     return json_object_get_boolean_member(t, FIELD_DOWNLOAD_LIMITED);
 }
 
-gint64 torrent_get_total_size(JsonObject *t)
+gint64 torrent_get_total_size(JsonObject * t)
 {
-	return json_object_get_int_member(t, FIELD_TOTAL_SIZE);
+    return json_object_get_int_member(t, FIELD_TOTAL_SIZE);
 }
 
 gint64 torrent_get_size_when_done(JsonObject * t)
@@ -308,9 +308,9 @@ gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
     else if (flags & TORRENT_FLAG_CHECKING)
         return g_strdup(GTK_STOCK_REFRESH);
     else if (flags & TORRENT_FLAG_DOWNLOADING_WAIT)
-    	return g_strdup(GTK_STOCK_MEDIA_REWIND);
+        return g_strdup(GTK_STOCK_MEDIA_REWIND);
     else if (flags & TORRENT_FLAG_SEEDING_WAIT)
-    	return g_strdup(GTK_STOCK_MEDIA_FORWARD);
+        return g_strdup(GTK_STOCK_MEDIA_FORWARD);
     else
         return g_strdup(GTK_STOCK_DIALOG_QUESTION);
 }
@@ -325,12 +325,12 @@ const gchar *torrent_get_errorstr(JsonObject * t)
     return json_object_get_string_member(t, FIELD_ERROR_STRING);
 }
 
-gint64 torrent_get_error(JsonObject *t)
+gint64 torrent_get_error(JsonObject * t)
 {
-	if (!json_object_has_member(t, FIELD_ERROR))
-		return 0;
-	else
-		return json_object_get_int_member(t, FIELD_ERROR);
+    if (!json_object_has_member(t, FIELD_ERROR))
+        return 0;
+    else
+        return json_object_get_int_member(t, FIELD_ERROR);
 }
 
 gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags)
@@ -451,8 +451,9 @@ gint64 torrent_get_peers_getting_from_us(JsonObject * args)
     return json_object_get_int_member(args, FIELD_PEERS_GETTING_FROM_US);
 }
 
-gint64 torrent_get_web_seeds_sending_to_us(JsonObject *args) {
-	return json_object_get_int_member(args, FIELD_WEB_SEEDS_SENDING_TO_US);
+gint64 torrent_get_web_seeds_sending_to_us(JsonObject * args)
+{
+    return json_object_get_int_member(args, FIELD_WEB_SEEDS_SENDING_TO_US);
 }
 
 gint64 torrent_get_queue_position(JsonObject * args)

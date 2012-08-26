@@ -129,15 +129,15 @@ trg_status_bar_push_connection_msg(TrgStatusBar * sb, const gchar * msg)
 }
 
 static void
-trg_status_bar_set_connected_label(TrgStatusBar *sb, JsonObject * session,
-        TrgClient *client)
+trg_status_bar_set_connected_label(TrgStatusBar * sb, JsonObject * session,
+                                   TrgClient * client)
 {
     TrgPrefs *prefs = trg_client_get_prefs(client);
     gdouble version = session_get_version(session);
 
     gchar *profileName = trg_prefs_get_string(prefs,
-            TRG_PREFS_KEY_PROFILE_NAME,
-            TRG_PREFS_CONNECTION);
+                                              TRG_PREFS_KEY_PROFILE_NAME,
+                                              TRG_PREFS_CONNECTION);
     gchar *statusMsg =
         g_strdup_printf(_("Connected: %s (Transmission %g)"),
                         profileName,
@@ -246,7 +246,8 @@ trg_status_bar_update(TrgStatusBar * sb,
                       trg_torrent_model_update_stats * stats,
                       TrgClient * client)
 {
-    trg_status_bar_set_connected_label(sb, trg_client_get_session(client), client);
+    trg_status_bar_set_connected_label(sb, trg_client_get_session(client),
+                                       client);
     trg_status_bar_update_speed(sb, stats, client);
 }
 

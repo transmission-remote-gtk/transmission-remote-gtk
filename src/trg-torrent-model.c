@@ -420,7 +420,8 @@ update_torrent_iter(TrgTorrentModel * model,
     JsonObject *lastJson, *pf;
     JsonArray *trackerStats;
     gchar *statusString, *statusIcon, *downloadDir;
-    gint64 downRate, upRate, haveValid, uploaded, downloaded, id, status, lpd;
+    gint64 downRate, upRate, haveValid, uploaded, downloaded, id, status,
+        lpd;
     gchar *firstTrackerHost = NULL;
     gchar *peerSources = NULL;
     gchar *lastDownloadDir = NULL;
@@ -465,15 +466,21 @@ update_torrent_iter(TrgTorrentModel * model,
     if (newFlags & TORRENT_FLAG_ACTIVE) {
         if (lpd >= 0) {
             peerSources =
-                g_strdup_printf("%"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT,
-                                peerfrom_get_trackers(pf),
+                g_strdup_printf("%" G_GINT64_FORMAT " / %" G_GINT64_FORMAT
+                                " / %" G_GINT64_FORMAT " / %"
+                                G_GINT64_FORMAT " / %" G_GINT64_FORMAT
+                                " / %" G_GINT64_FORMAT " / %"
+                                G_GINT64_FORMAT, peerfrom_get_trackers(pf),
                                 peerfrom_get_incoming(pf),
                                 peerfrom_get_ltep(pf),
                                 peerfrom_get_dht(pf), peerfrom_get_pex(pf),
                                 lpd, peerfrom_get_resume(pf));
         } else {
             peerSources =
-                g_strdup_printf("%"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / %"G_GINT64_FORMAT" / N/A / %"G_GINT64_FORMAT,
+                g_strdup_printf("%" G_GINT64_FORMAT " / %" G_GINT64_FORMAT
+                                " / %" G_GINT64_FORMAT " / %"
+                                G_GINT64_FORMAT " / %" G_GINT64_FORMAT
+                                " / N/A / %" G_GINT64_FORMAT,
                                 peerfrom_get_trackers(pf),
                                 peerfrom_get_incoming(pf),
                                 peerfrom_get_ltep(pf),
@@ -483,11 +490,13 @@ update_torrent_iter(TrgTorrentModel * model,
     }
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
-                       TORRENT_COLUMN_FILECOUNT, json_array_get_length(torrent_get_files(t)),
+                       TORRENT_COLUMN_FILECOUNT,
+                       json_array_get_length(torrent_get_files(t)),
                        TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t),
                        TORRENT_COLUMN_NAME, torrent_get_name(t),
                        TORRENT_COLUMN_ERROR, torrent_get_error(t),
-                       TORRENT_COLUMN_SIZEWHENDONE, torrent_get_size_when_done(t),
+                       TORRENT_COLUMN_SIZEWHENDONE,
+                       torrent_get_size_when_done(t),
                        TORRENT_COLUMN_PERCENTDONE,
                        (newFlags & TORRENT_FLAG_CHECKING) ?
                        torrent_get_recheck_progress(t)
@@ -501,7 +510,8 @@ update_torrent_iter(TrgTorrentModel * model,
                        torrent_get_eta(t), TORRENT_COLUMN_UPLOADED,
                        uploaded, TORRENT_COLUMN_DOWNLOADED, downloaded,
                        TORRENT_COLUMN_TOTALSIZE, torrent_get_total_size(t),
-                       TORRENT_COLUMN_HAVE_UNCHECKED, torrent_get_have_unchecked(t),
+                       TORRENT_COLUMN_HAVE_UNCHECKED,
+                       torrent_get_have_unchecked(t),
                        TORRENT_COLUMN_HAVE_VALID, haveValid,
                        TORRENT_COLUMN_FROMPEX, peerfrom_get_pex(pf),
                        TORRENT_COLUMN_FROMDHT, peerfrom_get_dht(pf),
@@ -522,8 +532,10 @@ update_torrent_iter(TrgTorrentModel * model,
                        torrent_get_web_seeds_sending_to_us(t),
                        TORRENT_COLUMN_QUEUE_POSITION,
                        torrent_get_queue_position(t),
-                       TORRENT_COLUMN_SEED_RATIO_LIMIT, torrent_get_seed_ratio_limit(t),
-                       TORRENT_COLUMN_SEED_RATIO_MODE, torrent_get_seed_ratio_mode(t),
+                       TORRENT_COLUMN_SEED_RATIO_LIMIT,
+                       torrent_get_seed_ratio_limit(t),
+                       TORRENT_COLUMN_SEED_RATIO_MODE,
+                       torrent_get_seed_ratio_mode(t),
                        TORRENT_COLUMN_LASTACTIVE,
                        torrent_get_activity_date(t), TORRENT_COLUMN_RATIO,
                        uploaded > 0
