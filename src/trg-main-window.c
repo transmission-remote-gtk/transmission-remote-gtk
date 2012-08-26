@@ -1717,7 +1717,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 
     accel_group = gtk_accel_group_new();
 
-    menuBar = trg_menu_bar_new(win, trg_client_get_prefs(priv->client),
+    menuBar = trg_menu_bar_new(win, trg_client_get_prefs(priv->client), priv->torrentTreeView,
                                accel_group);
 
     g_object_get(menuBar, "disconnect-button", &b_disconnect, "add-button",

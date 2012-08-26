@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include "trg-prefs.h"
+#include "trg-torrent-tree-view.h"
 #include "trg-main-window.h"
 
 G_BEGIN_DECLS
@@ -49,7 +50,7 @@ typedef struct {
 GType trg_menu_bar_get_type(void);
 
 TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win, TrgPrefs * prefs,
-                             GtkAccelGroup * accel_group);
+                             TrgTorrentTreeView *ttv, GtkAccelGroup * accel_group);
 GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, const gchar * text,
                                  const gchar * stock_id,
                                  gboolean sensitive);

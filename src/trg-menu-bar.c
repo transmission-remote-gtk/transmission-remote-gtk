@@ -26,6 +26,8 @@
 
 #include "trg-prefs.h"
 #include "trg-torrent-graph.h"
+#include "trg-tree-view.h"
+#include "trg-torrent-tree-view.h"
 #include "trg-main-window.h"
 #include "trg-menu-bar.h"
 
@@ -54,6 +56,7 @@ enum {
     PROP_QUIT,
     PROP_PREFS,
     PROP_MAIN_WINDOW,
+    PROP_TORRENT_TREE_VIEW,
     PROP_ACCEL_GROUP,
     PROP_DIR_FILTERS,
     PROP_TRACKER_FILTERS,
@@ -114,6 +117,7 @@ struct _TrgMenuBarPrivate {
     GtkAccelGroup *accel_group;
     TrgPrefs *prefs;
     TrgMainWindow *main_window;
+    TrgTorrentTreeView *torrent_tree_view;
 };
 
 void trg_menu_bar_set_supports_queues(TrgMenuBar * mb,
@@ -179,6 +183,9 @@ trg_menu_bar_set_property(GObject * object,
     case PROP_MAIN_WINDOW:
         priv->main_window = g_value_get_object(value);
         break;
+    case PROP_TORRENT_TREE_VIEW:
+    	priv->torrent_tree_view = g_value_get_object(value);
+    	break;
     }
 }
 
@@ -457,6 +464,10 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
 	group =  gtk_radio_menu_item_get_group (GTK_RADIO_MENU_ITEM (priv->mb_view_transmission_compact));
 	priv->mb_view_classic = trg_menu_bar_view_radio_item_new(priv->prefs, group, TRG_PREFS_KEY_STYLE, TRG_STYLE_CLASSIC, _("Classic Style"));
 	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_classic);
+
+	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+			trg_tree_view_sort_menu(TRG_TREE_VIEW(priv->torrent_tree_view),
+					_("Sort")));
 
     priv->mb_view_states =
         trg_menu_bar_view_item_new(priv->prefs,
@@ -912,6 +923,20 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                                         |
                                                         G_PARAM_STATIC_BLURB));
 
+    g_object_class_install_property(object_class,
+                                    PROP_TORRENT_TREE_VIEW,
+                                    g_param_spec_object("torrent-tree-view",
+                                    		"torrent-tree-view",
+                                    		"torrent-tree-view",
+                                                        TRG_TYPE_TORRENT_TREE_VIEW,
+                                                        G_PARAM_READWRITE |
+                                                        G_PARAM_CONSTRUCT_ONLY
+                                                        |
+                                                        G_PARAM_STATIC_NAME
+                                                        |
+                                                        G_PARAM_STATIC_NICK
+                                                        |
+                                                        G_PARAM_STATIC_BLURB));
 }
 
 static void trg_menu_bar_init(TrgMenuBar * self)
@@ -919,9 +944,9 @@ static void trg_menu_bar_init(TrgMenuBar * self)
 }
 
 TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win, TrgPrefs * prefs,
-                             GtkAccelGroup * accel_group)
+                             TrgTorrentTreeView *ttv, GtkAccelGroup * accel_group)
 {
     return g_object_new(TRG_TYPE_MENU_BAR,
-                        "prefs", prefs, "mainwin", win, "accel-group",
+                        "torrent-tree-view", ttv, "prefs", prefs, "mainwin", win, "accel-group",
                         accel_group, NULL);
 }

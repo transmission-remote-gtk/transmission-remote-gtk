@@ -78,28 +78,28 @@ static void trg_torrent_tree_view_init(TrgTorrentTreeView * tttv)
                              _("Connected"), "connected-peers", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_FROMPEX, _("PEX Peers"),
-                             "from-pex", TRG_COLUMN_EXTRA);
+                             "from-pex", TRG_COLUMN_EXTRA | TRG_COLUMN_HIDE_FROM_TOP_MENU);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_FROMDHT, _("DHT Peers"),
-                             "from-dht", TRG_COLUMN_EXTRA);
+                             "from-dht", TRG_COLUMN_EXTRA | TRG_COLUMN_HIDE_FROM_TOP_MENU);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_FROMTRACKERS,
                              _("Tracker Peers"), "from-trackers",
-                             TRG_COLUMN_EXTRA);
+                             TRG_COLUMN_EXTRA | TRG_COLUMN_HIDE_FROM_TOP_MENU);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_FROMLTEP, _("LTEP Peers"),
-                             "from-ltep", TRG_COLUMN_EXTRA);
+                             "from-ltep", TRG_COLUMN_EXTRA | TRG_COLUMN_HIDE_FROM_TOP_MENU);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_FROMRESUME, _("Resumed Peers"),
-                             "from-resume", TRG_COLUMN_EXTRA);
+                             "from-resume", TRG_COLUMN_EXTRA | TRG_COLUMN_HIDE_FROM_TOP_MENU);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO,
                              TORRENT_COLUMN_FROMINCOMING,
                              _("Incoming Peers"), "from-incoming",
-                             TRG_COLUMN_EXTRA);
+                             TRG_COLUMN_EXTRA | TRG_COLUMN_HIDE_FROM_TOP_MENU);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT,
                              TORRENT_COLUMN_PEER_SOURCES,
                              _("Peers T/I/E/H/X/L/R"), "peer-sources",
-                             TRG_COLUMN_EXTRA);
+                             TRG_COLUMN_EXTRA | TRG_COLUMN_HIDE_FROM_TOP_MENU);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED,
                              TORRENT_COLUMN_DOWNSPEED, _("Down Speed"),
                              "down-speed", 0);
@@ -282,7 +282,7 @@ TrgTorrentTreeView *trg_torrent_tree_view_new(TrgClient *tc,
     g_signal_connect(prefs, "pref-changed",
                      G_CALLBACK(trg_torrent_tree_view_pref_changed), obj);
 
-    trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), TRUE);
+    trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), TRG_TREE_VIEW_SORTABLE_PARENT);
 
     return TRG_TORRENT_TREE_VIEW(obj);
 }
