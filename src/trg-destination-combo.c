@@ -352,7 +352,6 @@ static GObject *trg_destination_combo_constructor(GType type,
         }
     }
 
-    trg_client_updatelock(client);
     list = g_hash_table_get_values(trg_client_get_torrent_table(client));
     for (li = list; li; li = g_list_next(li)) {
         rr = (GtkTreeRowReference *) li->data;
@@ -377,8 +376,6 @@ static GObject *trg_destination_combo_constructor(GType type,
             gtk_tree_path_free(path);
         }
     }
-
-    trg_client_updateunlock(client);
 
     for (sli = dirs; sli; sli = g_slist_next(sli))
         trg_destination_combo_insert(GTK_COMBO_BOX(object),

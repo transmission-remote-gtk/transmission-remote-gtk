@@ -56,6 +56,7 @@
 
 enum {
     TMODEL_TORRENT_COMPLETED,
+    TMODEL_UPDATE,
     TMODEL_TORRENT_ADDED,
     TMODEL_STATE_CHANGED,
     TMODEL_SIGNAL_COUNT
@@ -108,6 +109,18 @@ static void trg_torrent_model_class_init(TrgTorrentModelClass * klass)
                                                      g_cclosure_marshal_VOID__POINTER,
                                                      G_TYPE_NONE, 1,
                                                      G_TYPE_POINTER);
+
+    signals[TMODEL_UPDATE] = g_signal_new("update",
+                                          G_TYPE_FROM_CLASS
+                                          (object_class),
+                                          G_SIGNAL_RUN_LAST |
+                                          G_SIGNAL_ACTION,
+                                          G_STRUCT_OFFSET
+                                          (TrgTorrentModelClass,
+                                           update),
+                                          NULL, NULL,
+                                          g_cclosure_marshal_VOID__VOID,
+                                          G_TYPE_NONE, 0);
 
     signals[TMODEL_TORRENT_ADDED] = g_signal_new("torrent-added",
                                                  G_TYPE_FROM_CLASS
@@ -679,7 +692,7 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *
     JsonObject *args, *t;
     GList *li;
     gint64 id;
-    gint64 *idCopy;
+    gint64 serial = trg_client_get_serial(tc);
     JsonArray *removedTorrents;
     GtkTreeIter iter;
     GtkTreePath *path;
@@ -704,10 +717,11 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *
             g_hash_table_lookup(priv->ht, &id);
 
         if (!result) {
+            gint64 *idCopy;
             gtk_list_store_append(GTK_LIST_STORE(model), &iter);
             whatsChanged |= TORRENT_UPDATE_ADDREMOVE;
 
-            update_torrent_iter(model, tc, rpcv, trg_client_get_serial(tc),
+            update_torrent_iter(model, tc, rpcv, serial,
                                 &iter, t, &(priv->stats), &whatsChanged);
 
             path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
@@ -727,7 +741,7 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *
                 if (gtk_tree_model_get_iter(GTK_TREE_MODEL(model), &iter,
                                             path)) {
                     update_torrent_iter(model, tc, rpcv,
-                                        trg_client_get_serial(tc), &iter,
+                                        serial, &iter,
                                         t, &(priv->stats), &whatsChanged);
                 }
                 gtk_tree_path_free(path);
@@ -739,8 +753,7 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *
 
     if (mode == TORRENT_GET_MODE_UPDATE) {
         GList *hitlist =
-            trg_torrent_model_find_removed(GTK_TREE_MODEL(model),
-                                           trg_client_get_serial(tc));
+            trg_torrent_model_find_removed(GTK_TREE_MODEL(model), serial);
         if (hitlist) {
             for (li = hitlist; li; li = g_list_next(li)) {
                 g_hash_table_remove(priv->ht, li->data);
@@ -773,6 +786,8 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *
         g_signal_emit(model, signals[TMODEL_STATE_CHANGED], 0,
                       whatsChanged);
     }
+
+    g_signal_emit(model, signals[TMODEL_UPDATE], 0);
 
     return &(priv->stats);
 }

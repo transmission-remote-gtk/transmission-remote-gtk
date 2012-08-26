@@ -50,7 +50,8 @@ typedef struct {
 GType trg_peers_tree_view_get_type(void);
 
 TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs * prefs,
-                                          TrgPeersModel * model);
+                                          TrgPeersModel * model,
+                                          const gchar *configId);
 
 G_END_DECLS
 #endif                          /* TRG_PEERS_TREE_VIEW_H_ */

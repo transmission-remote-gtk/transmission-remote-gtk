@@ -78,9 +78,9 @@ trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
 
     gboolean editable = is_tracker_edit_supported(tc);
 
-    g_object_set(priv->announceRenderer, "editable", editable, NULL);
-    g_object_set(priv->announceRenderer, "mode",
-                 editable ? GTK_CELL_RENDERER_MODE_EDITABLE :
+    g_object_set(priv->announceRenderer,
+                 "editable", editable,
+                 "mode", editable ? GTK_CELL_RENDERER_MODE_EDITABLE :
                  GTK_CELL_RENDERER_MODE_INERT, NULL);
 }
 
@@ -366,25 +366,27 @@ static gboolean view_onPopupMenu(GtkWidget * treeview, gpointer userdata)
 
 TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model,
                                                 TrgClient * client,
-                                                TrgMainWindow * win)
+                                                TrgMainWindow * win,
+                                                const gchar * configId)
 {
-    GObject *obj = g_object_new(TRG_TYPE_TRACKERS_TREE_VIEW, NULL);
+    GObject *obj = g_object_new(TRG_TYPE_TRACKERS_TREE_VIEW,
+                                "config-id", configId,
+                                "prefs", trg_client_get_prefs(client),
+                                NULL);
+
     TrgTrackersTreeViewPrivate *priv =
         TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(obj);
-
-    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj),
-                            trg_client_get_prefs(client));
-
-    g_signal_connect(obj, "button-press-event",
-                     G_CALLBACK(view_onButtonPressed), NULL);
-    g_signal_connect(obj, "popup-menu", G_CALLBACK(view_onPopupMenu),
-                     NULL);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
     priv->client = client;
     priv->win = win;
 
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
+
+    g_signal_connect(obj, "button-press-event",
+                     G_CALLBACK(view_onButtonPressed), NULL);
+    g_signal_connect(obj, "popup-menu", G_CALLBACK(view_onPopupMenu),
+                     NULL);
 
     return TRG_TRACKERS_TREE_VIEW(obj);
 }

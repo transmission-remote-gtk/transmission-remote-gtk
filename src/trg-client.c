@@ -78,7 +78,6 @@ struct _TrgClientPrivate {
     char *proxy;
     GHashTable *torrentTable;
     GThreadPool *pool;
-    GMutex *updateMutex;
     TrgPrefs *prefs;
     GPrivate *tlsKey;
     gint configSerial;
@@ -156,7 +155,6 @@ TrgClient *trg_client_new(void)
 
     trg_prefs_load(prefs);
 
-    priv->updateMutex = g_mutex_new();
     priv->configMutex = g_mutex_new();
     priv->tlsKey = g_private_new(NULL);
     priv->seedRatioLimited = FALSE;
@@ -400,12 +398,6 @@ gboolean trg_client_is_connected(TrgClient * tc)
     return priv->session != NULL;
 }
 
-void trg_client_updatelock(TrgClient * tc)
-{
-    TrgClientPrivate *priv = tc->priv;
-    g_mutex_lock(priv->updateMutex);
-}
-
 void trg_client_configlock(TrgClient * tc)
 {
     g_mutex_lock(tc->priv->configMutex);
@@ -425,11 +417,6 @@ guint trg_client_inc_failcount(TrgClient * tc)
 void trg_client_reset_failcount(TrgClient * tc)
 {
     tc->priv->failCount = 0;
-}
-
-void trg_client_updateunlock(TrgClient * tc)
-{
-    g_mutex_unlock(tc->priv->updateMutex);
 }
 
 void trg_client_configunlock(TrgClient * tc)

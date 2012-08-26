@@ -151,8 +151,6 @@ GHashTable *trg_client_get_torrent_table(TrgClient * tc);
 JsonObject *trg_client_get_session(TrgClient * tc);
 void trg_client_status_change(TrgClient * tc, gboolean connected);
 gboolean trg_client_is_connected(TrgClient * tc);
-void trg_client_updateunlock(TrgClient * tc);
-void trg_client_updatelock(TrgClient * tc);
 void trg_client_configunlock(TrgClient * tc);
 void trg_client_configlock(TrgClient * tc);
 guint trg_client_inc_failcount(TrgClient * tc);

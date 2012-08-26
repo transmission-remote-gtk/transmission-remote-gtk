@@ -290,6 +290,7 @@ update_selected_torrent_notebook(TrgMainWindow * win, gint mode, gint64 id)
 {
     TrgMainWindowPrivate *priv = win->priv;
     TrgClient *client = priv->client;
+    gint64 serial = trg_client_get_serial(client);
     JsonObject *t;
     GtkTreeIter iter;
 
@@ -299,14 +300,13 @@ update_selected_torrent_notebook(TrgMainWindow * win, gint mode, gint64 id)
         trg_toolbar_torrent_actions_sensitive(priv->toolBar, TRUE);
         trg_menu_bar_torrent_actions_sensitive(priv->menuBar, TRUE);
         trg_general_panel_update(priv->genDetails, t, &iter);
-        trg_trackers_model_update(priv->trackersModel,
-                                  trg_client_get_serial(client), t, mode);
+        trg_trackers_model_update(priv->trackersModel, serial, t, mode);
         trg_files_model_update(priv->filesModel,
                                GTK_TREE_VIEW(priv->filesTreeView),
-                               trg_client_get_serial(client), t, mode);
+                               serial, t, mode);
         trg_peers_model_update(priv->peersModel,
                                TRG_TREE_VIEW(priv->peersTreeView),
-                               trg_client_get_serial(client), t, mode);
+                               serial, t, mode);
     } else {
         trg_main_window_torrent_scrub(win);
     }
@@ -434,6 +434,7 @@ static void open_props_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
 
     dialog = trg_torrent_props_dialog_new(GTK_WINDOW(win),
                                           priv->torrentTreeView,
+                                          priv->torrentModel,
                                           priv->client);
 
     gtk_widget_show_all(GTK_WIDGET(dialog));
@@ -454,7 +455,8 @@ static void add_url_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     TrgMainWindowPrivate *priv = win->priv;
 
     TrgTorrentAddUrlDialog *dlg = trg_torrent_add_url_dialog_new(win,
-                                                                 priv->client);
+                                                                 priv->
+                                                                 client);
     gtk_widget_show_all(GTK_WIDGET(dlg));
 }
 
@@ -980,7 +982,8 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 
     priv->trackersModel = trg_trackers_model_new();
     priv->trackersTreeView =
-        trg_trackers_tree_view_new(priv->trackersModel, priv->client, win);
+        trg_trackers_tree_view_new(priv->trackersModel, priv->client, win,
+                                   NULL);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              my_scrolledwin_new(GTK_WIDGET
                                                 (priv->trackersTreeView)),
@@ -988,14 +991,15 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
 
     priv->filesModel = trg_files_model_new();
     priv->filesTreeView = trg_files_tree_view_new(priv->filesModel, win,
-                                                  priv->client);
+                                                  priv->client, NULL);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              my_scrolledwin_new(GTK_WIDGET
                                                 (priv->filesTreeView)),
                              gtk_label_new(_("Files")));
 
     priv->peersModel = trg_peers_model_new();
-    priv->peersTreeView = trg_peers_tree_view_new(prefs, priv->peersModel);
+    priv->peersTreeView =
+        trg_peers_tree_view_new(prefs, priv->peersModel, NULL);
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              my_scrolledwin_new(GTK_WIDGET
                                                 (priv->peersTreeView)),
@@ -1230,8 +1234,6 @@ static gboolean on_torrent_get(gpointer data, int mode)
         return FALSE;
     }
 
-    trg_client_updatelock(client);
-
     interval =
         gtk_widget_get_visible(GTK_WIDGET(win)) ? trg_prefs_get_int(prefs,
                                                                     TRG_PREFS_KEY_UPDATE_INTERVAL,
@@ -1265,7 +1267,6 @@ static gboolean on_torrent_get(gpointer data, int mode)
                                                   win);
         }
 
-        trg_client_updateunlock(client);
         trg_response_free(response);
 
         return FALSE;
@@ -1310,7 +1311,6 @@ static gboolean on_torrent_get(gpointer data, int mode)
                                               trg_update_torrents_timerfunc,
                                               win);
 
-    trg_client_updateunlock(client);
     trg_response_free(response);
     return FALSE;
 }
@@ -1417,7 +1417,8 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
             matchesTracker = (!json
                               || !torrent_has_tracker(json,
                                                       trg_state_selector_get_url_host_regex
-                                                      (priv->stateSelector),
+                                                      (priv->
+                                                       stateSelector),
                                                       text));
             g_free(text);
             if (matchesTracker)
@@ -2616,10 +2617,10 @@ static GObject *trg_main_window_constructor(GType type,
                                             construct_params)
 {
     TrgMainWindow *self = TRG_MAIN_WINDOW(G_OBJECT_CLASS
-                                          (trg_main_window_parent_class)->constructor
-                                          (type,
-                                           n_construct_properties,
-                                           construct_params));
+                                          (trg_main_window_parent_class)->
+                                          constructor(type,
+                                                      n_construct_properties,
+                                                      construct_params));
     TrgMainWindowPrivate *priv =
         G_TYPE_INSTANCE_GET_PRIVATE(self, TRG_TYPE_MAIN_WINDOW,
                                     TrgMainWindowPrivate);
@@ -2679,7 +2680,8 @@ static GObject *trg_main_window_constructor(GType type,
                                            self, NULL);
 
     priv->torrentTreeView = trg_main_window_torrent_tree_view_new(self,
-                                                                  priv->filteredTorrentModel);
+                                                                  priv->
+                                                                  filteredTorrentModel);
     g_signal_connect(priv->torrentTreeView, "popup-menu",
                      G_CALLBACK(torrent_tv_popup_menu_cb), self);
     g_signal_connect(priv->torrentTreeView, "button-press-event",
@@ -2733,7 +2735,8 @@ static GObject *trg_main_window_constructor(GType type,
                     FALSE, FALSE);
 
     gtk_paned_pack2(GTK_PANED(priv->hpaned), my_scrolledwin_new(GTK_WIDGET
-                                                                (priv->torrentTreeView)),
+                                                                (priv->
+                                                                 torrentTreeView)),
                     TRUE, TRUE);
 
     g_signal_connect(G_OBJECT(priv->stateSelector),

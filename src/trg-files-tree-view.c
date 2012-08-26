@@ -205,13 +205,16 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
 
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
                                           TrgMainWindow * win,
-                                          TrgClient * client)
+                                          TrgClient * client,
+                                          const gchar * configId)
 {
-    GObject *obj = g_object_new(TRG_TYPE_FILES_TREE_VIEW, NULL);
+    GObject *obj = g_object_new(TRG_TYPE_FILES_TREE_VIEW,
+                                "config-id", configId,
+                                "prefs", trg_client_get_prefs(client),
+                                NULL);
+
     TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(obj);
 
-    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj),
-                            trg_client_get_prefs(client));
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
 
     priv->client = client;

@@ -28,6 +28,12 @@
 #include "trg-json-widgets.h"
 #include "requests.h"
 #include "protocol-constants.h"
+#include "trg-peers-model.h"
+#include "trg-peers-tree-view.h"
+#include "trg-files-model.h"
+#include "trg-files-tree-view.h"
+#include "trg-trackers-model.h"
+#include "trg-trackers-tree-view.h"
 #include "trg-torrent-model.h"
 #include "trg-torrent-tree-view.h"
 #include "trg-torrent-props-dialog.h"
@@ -51,6 +57,7 @@ G_DEFINE_TYPE(TrgTorrentPropsDialog, trg_torrent_props_dialog,
 enum {
     PROP_0,
     PROP_TREEVIEW,
+    PROP_TORRENT_MODEL,
     PROP_PARENT_WINDOW,
     PROP_CLIENT
 };
@@ -62,6 +69,7 @@ typedef struct _TrgTorrentPropsDialogPrivate
 
 struct _TrgTorrentPropsDialogPrivate {
     TrgTorrentTreeView *tv;
+    TrgTorrentModel *torrentModel;
     TrgClient *client;
     TrgMainWindow *parent;
     JsonArray *targetIds;
@@ -69,6 +77,13 @@ struct _TrgTorrentPropsDialogPrivate {
     GList *widgets;
 
     GtkWidget *bandwidthPriorityCombo, *seedRatioMode;
+
+    TrgPeersTreeView *peersTv;
+    TrgPeersModel *peersModel;
+    TrgTrackersTreeView *trackersTv;
+    TrgTrackersModel *trackersModel;
+    TrgFilesTreeView *filesTv;
+    TrgFilesModel *filesModel;
 };
 
 static void
@@ -86,6 +101,9 @@ trg_torrent_props_dialog_set_property(GObject * object,
         break;
     case PROP_TREEVIEW:
         priv->tv = g_value_get_object(value);
+        break;
+    case PROP_TORRENT_MODEL:
+        priv->torrentModel = g_value_get_object(value);
         break;
     case PROP_CLIENT:
         priv->client = g_value_get_pointer(value);
@@ -106,6 +124,9 @@ trg_torrent_props_dialog_get_property(GObject * object,
     case PROP_TREEVIEW:
         g_value_set_object(value, priv->tv);
         break;
+    case PROP_TORRENT_MODEL:
+        g_value_set_object(value, priv->torrentModel);
+        break;
     case PROP_PARENT_WINDOW:
         g_value_set_object(value, priv->parent);
         break;
@@ -125,6 +146,16 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
 
     priv = TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(dlg);
 
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTv),
+                          TRG_TREE_VIEW_PERSIST_SORT |
+                          TRG_TREE_VIEW_PERSIST_LAYOUT);
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTv),
+                          TRG_TREE_VIEW_PERSIST_SORT |
+                          TRG_TREE_VIEW_PERSIST_LAYOUT);
+    trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTv),
+                          TRG_TREE_VIEW_PERSIST_SORT |
+                          TRG_TREE_VIEW_PERSIST_LAYOUT);
+
     if (res_id != GTK_RESPONSE_OK) {
         gtk_widget_destroy(GTK_WIDGET(dlg));
         json_array_unref(priv->targetIds);
@@ -136,12 +167,10 @@ trg_torrent_props_response_cb(GtkDialog * dlg, gint res_id,
 
     json_object_set_int_member(args, FIELD_SEED_RATIO_MODE,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
-                                                        (priv->
-                                                         seedRatioMode)));
+                                                        (priv->seedRatioMode)));
     json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
                                gtk_combo_box_get_active(GTK_COMBO_BOX
-                                                        (priv->
-                                                         bandwidthPriorityCombo))
+                                                        (priv->bandwidthPriorityCombo))
                                - 1);
 
     trg_json_widgets_save(priv->widgets, args);
@@ -234,6 +263,27 @@ static GtkWidget *trg_props_limitsPage(TrgTorrentPropsDialog * win,
     return t;
 }
 
+static void models_updated(TrgTorrentModel * model, gpointer data)
+{
+    TrgTorrentPropsDialogPrivate *priv =
+        TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(data);
+    GHashTable *ht = get_torrent_table(model);
+    gint64 serial = trg_client_get_serial(priv->client);
+    JsonObject *t;
+
+    if (get_torrent_data
+        (ht, json_array_get_int_element(priv->targetIds, 0), &t, NULL)) {
+        trg_files_model_update(priv->filesModel,
+                               GTK_TREE_VIEW(priv->filesTv), serial, t,
+                               TORRENT_GET_MODE_FIRST);
+        trg_peers_model_update(priv->peersModel,
+                               TRG_TREE_VIEW(priv->peersTv), serial, t,
+                               TORRENT_GET_MODE_FIRST);
+        trg_trackers_model_update(priv->trackersModel, serial, t,
+                                  TORRENT_GET_MODE_FIRST);
+    }
+}
+
 static GObject *trg_torrent_props_dialog_constructor(GType type,
                                                      guint
                                                      n_construct_properties,
@@ -245,6 +295,8 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     JsonObject *json;
     GtkTreeSelection *selection;
     gint rowCount;
+    gint64 style;
+    TrgPrefs *prefs;
     GtkWidget *notebook, *contentvbox;
 
     object = G_OBJECT_CLASS
@@ -253,6 +305,10 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
                                                              construct_params);
 
     priv = TRG_TORRENT_PROPS_DIALOG_GET_PRIVATE(object);
+
+    prefs = trg_client_get_prefs(priv->client);
+    style =
+        trg_prefs_get_int(prefs, TRG_PREFS_KEY_STYLE, TRG_PREFS_GLOBAL);
 
     selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->tv));
     rowCount = gtk_tree_selection_count_selected_rows(selection);
@@ -295,10 +351,69 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
                              (TRG_TORRENT_PROPS_DIALOG(object), json),
                              gtk_label_new(_("Limits")));
 
+    if (style != TRG_STYLE_CLASSIC && rowCount == 1) {
+        gint64 serial = trg_client_get_serial(priv->client);
+
+        priv->filesModel = trg_files_model_new();
+        priv->filesTv =
+            trg_files_tree_view_new(priv->filesModel, priv->parent,
+                                    priv->client,
+                                    "TrgFilesTreeView-dialog");
+        trg_files_model_update(priv->filesModel,
+                               GTK_TREE_VIEW(priv->filesTv), serial, json,
+                               TORRENT_GET_MODE_FIRST);
+        gtk_widget_set_sensitive(GTK_WIDGET(priv->filesTv), TRUE);
+
+        priv->peersModel = trg_peers_model_new();
+        priv->peersTv =
+            trg_peers_tree_view_new(prefs, priv->peersModel,
+                                    "TrgPeersTreeView-dialog");
+        trg_peers_model_update(priv->peersModel,
+                               TRG_TREE_VIEW(priv->peersTv), serial, json,
+                               TORRENT_GET_MODE_FIRST);
+        gtk_widget_set_sensitive(GTK_WIDGET(priv->peersTv), TRUE);
+
+        priv->trackersModel = trg_trackers_model_new();
+        priv->trackersTv =
+            trg_trackers_tree_view_new(priv->trackersModel, priv->client,
+                                       priv->parent,
+                                       "TrgTrackersTreeView-dialog");
+        trg_trackers_tree_view_new_connection(priv->trackersTv,
+                                              priv->client);
+        trg_trackers_model_update(priv->trackersModel, serial, json,
+                                  TORRENT_GET_MODE_FIRST);
+        gtk_widget_set_sensitive(GTK_WIDGET(priv->trackersTv), TRUE);
+
+        gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+                                 my_scrolledwin_new(GTK_WIDGET
+                                                    (priv->filesTv)),
+                                 gtk_label_new(_("Files")));
+
+        gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+                                 my_scrolledwin_new(GTK_WIDGET
+                                                    (priv->peersTv)),
+                                 gtk_label_new(_("Peers")));
+
+        gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+                                 my_scrolledwin_new(GTK_WIDGET
+                                                    (priv->trackersTv)),
+                                 gtk_label_new(_("Trackers")));
+
+        g_object_unref(priv->trackersModel);
+        g_object_unref(priv->filesModel);
+        g_object_unref(priv->peersModel);
+
+        g_signal_connect_object(priv->torrentModel, "update",
+                                G_CALLBACK
+                                (models_updated), object, G_CONNECT_AFTER);
+    }
+
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 
     contentvbox = gtk_dialog_get_content_area(GTK_DIALOG(object));
     gtk_box_pack_start(GTK_BOX(contentvbox), notebook, TRUE, TRUE, 0);
+
+    gtk_window_set_default_size(GTK_WINDOW(object), 500, 500);
 
     return object;
 }
@@ -321,6 +436,19 @@ trg_torrent_props_dialog_class_init(TrgTorrentPropsDialogClass * klass)
                                      "TrgTorrentTreeView",
                                      "TrgTorrentTreeView",
                                      TRG_TYPE_TORRENT_TREE_VIEW,
+                                     G_PARAM_READWRITE |
+                                     G_PARAM_CONSTRUCT_ONLY |
+                                     G_PARAM_STATIC_NAME |
+                                     G_PARAM_STATIC_NICK |
+                                     G_PARAM_STATIC_BLURB));
+
+    g_object_class_install_property(object_class,
+                                    PROP_TORRENT_MODEL,
+                                    g_param_spec_object
+                                    ("torrent-model",
+                                     "TrgTorrentModel",
+                                     "TrgTorrentModel",
+                                     TRG_TYPE_TORRENT_MODEL,
                                      G_PARAM_READWRITE |
                                      G_PARAM_CONSTRUCT_ONLY |
                                      G_PARAM_STATIC_NAME |
@@ -359,10 +487,13 @@ trg_torrent_props_dialog_init(TrgTorrentPropsDialog * self G_GNUC_UNUSED)
 TrgTorrentPropsDialog *trg_torrent_props_dialog_new(GtkWindow * window,
                                                     TrgTorrentTreeView *
                                                     treeview,
+                                                    TrgTorrentModel *
+                                                    torrentModel,
                                                     TrgClient * client)
 {
     return g_object_new(TRG_TYPE_TORRENT_PROPS_DIALOG,
-                        "parent-window", window,
                         "torrent-tree-view", treeview,
+                        "torrent-model", torrentModel,
+                        "parent-window", window,
                         "trg-client", client, NULL);
 }

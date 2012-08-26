@@ -680,8 +680,8 @@ trg_torrent_add_dialog_apply_all_changed_cb(GtkWidget * w, gpointer data)
 }
 
 static GtkWidget
-    *trg_torrent_add_dialog_apply_all_combo_new(TrgTorrentAddDialog *
-                                                dialog)
+    * trg_torrent_add_dialog_apply_all_combo_new(TrgTorrentAddDialog *
+                                                 dialog)
 {
     GtkListStore *model =
         gtk_list_store_new(4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT,

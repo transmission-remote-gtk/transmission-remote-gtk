@@ -72,10 +72,13 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
 }
 
 TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs * prefs,
-                                          TrgPeersModel * model)
+                                          TrgPeersModel * model,
+                                          const gchar * configId)
 {
-    GObject *obj = g_object_new(TRG_TYPE_PEERS_TREE_VIEW, NULL);
-    trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), prefs);
+    GObject *obj = g_object_new(TRG_TYPE_PEERS_TREE_VIEW,
+                                "config-id", configId,
+                                "prefs", prefs, NULL);
+
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), 0x00);
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));

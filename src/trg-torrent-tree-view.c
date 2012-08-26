@@ -201,9 +201,9 @@ trg_torrent_tree_view_renderer_pref_changed(TrgPrefs * p,
     if (!g_strcmp0(updatedKey, TRG_PREFS_KEY_STYLE)) {
         GtkTreeView *tv =
             torrent_cell_renderer_get_owner(TORRENT_CELL_RENDERER(data));
-        gboolean compact =
-            trg_prefs_get_int(p, TRG_PREFS_KEY_STYLE,
-                              TRG_PREFS_GLOBAL) == TRG_STYLE_TR_COMPACT;
+        gboolean compact = trg_prefs_get_int(p, TRG_PREFS_KEY_STYLE,
+                                             TRG_PREFS_GLOBAL) ==
+            TRG_STYLE_TR_COMPACT;
         g_object_set(G_OBJECT(data), "compact", GINT_TO_POINTER(compact),
                      NULL);
 #if GTK_CHECK_VERSION( 3,0,0 )

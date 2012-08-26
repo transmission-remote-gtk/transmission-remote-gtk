@@ -45,6 +45,7 @@ typedef struct {
     GtkListStoreClass parent_class;
     void (*torrent_completed) (TrgTorrentModel * model,
                                GtkTreeIter * iter, gpointer data);
+    void (*update) (TrgTorrentModel * model, gpointer data);
     void (*torrent_added) (TrgTorrentModel * model,
                            GtkTreeIter * iter, gpointer data);
 
