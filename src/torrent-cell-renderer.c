@@ -248,9 +248,11 @@ static char *getShortTransferString(TorrentCellRenderer * r,
     const gboolean haveDown = haveMeta && priv->peersToUs > 0;
 
     if (haveDown)
-        tr_formatter_speed_KBps(downStr, priv->downSpeed/speed_K, sizeof(downStr));
+        tr_formatter_speed_KBps(downStr, priv->downSpeed / speed_K,
+                                sizeof(downStr));
     if (haveUp)
-        tr_formatter_speed_KBps(upStr, priv->upSpeed/speed_K, sizeof(upStr));
+        tr_formatter_speed_KBps(upStr, priv->upSpeed / speed_K,
+                                sizeof(upStr));
 
     if (haveDown && haveUp)
         /* 1==down arrow, 2==down speed, 3==up arrow, 4==down speed */
@@ -340,7 +342,8 @@ static void getStatusString(GString * gstr, TorrentCellRenderer * r)
                                     priv->connected + priv->webSeedsToUs),
                                    priv->connected + priv->webSeedsToUs,
                                    tr_strlpercent(buf,
-                                                  priv->metadataPercentComplete,
+                                                  priv->
+                                                  metadataPercentComplete,
                                                   sizeof(buf)));
         }
     } else if (priv->flags & TORRENT_FLAG_SEEDING) {

@@ -455,8 +455,7 @@ static void add_url_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
     TrgMainWindowPrivate *priv = win->priv;
 
     TrgTorrentAddUrlDialog *dlg = trg_torrent_add_url_dialog_new(win,
-                                                                 priv->
-                                                                 client);
+                                                                 priv->client);
     gtk_widget_show_all(GTK_WIDGET(dlg));
 }
 
@@ -1417,8 +1416,7 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
             matchesTracker = (!json
                               || !torrent_has_tracker(json,
                                                       trg_state_selector_get_url_host_regex
-                                                      (priv->
-                                                       stateSelector),
+                                                      (priv->stateSelector),
                                                       text));
             g_free(text);
             if (matchesTracker)
@@ -2617,10 +2615,10 @@ static GObject *trg_main_window_constructor(GType type,
                                             construct_params)
 {
     TrgMainWindow *self = TRG_MAIN_WINDOW(G_OBJECT_CLASS
-                                          (trg_main_window_parent_class)->
-                                          constructor(type,
-                                                      n_construct_properties,
-                                                      construct_params));
+                                          (trg_main_window_parent_class)->constructor
+                                          (type,
+                                           n_construct_properties,
+                                           construct_params));
     TrgMainWindowPrivate *priv =
         G_TYPE_INSTANCE_GET_PRIVATE(self, TRG_TYPE_MAIN_WINDOW,
                                     TrgMainWindowPrivate);
@@ -2680,8 +2678,7 @@ static GObject *trg_main_window_constructor(GType type,
                                            self, NULL);
 
     priv->torrentTreeView = trg_main_window_torrent_tree_view_new(self,
-                                                                  priv->
-                                                                  filteredTorrentModel);
+                                                                  priv->filteredTorrentModel);
     g_signal_connect(priv->torrentTreeView, "popup-menu",
                      G_CALLBACK(torrent_tv_popup_menu_cb), self);
     g_signal_connect(priv->torrentTreeView, "button-press-event",
@@ -2735,8 +2732,7 @@ static GObject *trg_main_window_constructor(GType type,
                     FALSE, FALSE);
 
     gtk_paned_pack2(GTK_PANED(priv->hpaned), my_scrolledwin_new(GTK_WIDGET
-                                                                (priv->
-                                                                 torrentTreeView)),
+                                                                (priv->torrentTreeView)),
                     TRUE, TRUE);
 
     g_signal_connect(G_OBJECT(priv->stateSelector),
