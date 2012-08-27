@@ -127,7 +127,8 @@ else
   if test x$enable_gtk2 = xyes; then
     TRG_GTK2_CONFIGURE()
   else
-    TRG_GTK3_CONFIGURE([TRG_GTK2_CONFIGURE()])
+    dnl TRG_GTK3_CONFIGURE([TRG_GTK2_CONFIGURE()])
+    TRG_GTK2_CONFIGURE()
   fi
 fi
 

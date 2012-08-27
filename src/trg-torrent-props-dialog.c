@@ -303,7 +303,6 @@ static void info_page_update(TrgTorrentPropsDialog * dialog,
         activityDate, error;
     gchar *statusString;
     guint flags;
-    //const gchar * creator;
     const gchar *str;
 
     char buf[512];
@@ -465,29 +464,30 @@ static GtkWidget *trg_props_limits_page_new(TrgTorrentPropsDialog * win,
     return t;
 }
 
-static void models_updated(TrgTorrentModel * model, gpointer data)
-{
+static void models_updated(TrgTorrentModel * model, gpointer data) {
     TrgTorrentPropsDialogPrivate *priv = GET_PRIVATE(data);
     GHashTable *ht = get_torrent_table(model);
     gint64 serial = trg_client_get_serial(priv->client);
-    JsonObject *t;
+    JsonObject *t = NULL;
     GtkTreeIter iter;
+    gboolean exists = get_torrent_data(ht,
+            json_array_get_int_element(priv->targetIds, 0), &t, &iter);
 
-    if (get_torrent_data
-        (ht, json_array_get_int_element(priv->targetIds, 0), &t, &iter)
-        && t != priv->lastJson) {
-        trg_files_model_update(priv->filesModel,
-                               GTK_TREE_VIEW(priv->filesTv), serial, t,
-                               TORRENT_GET_MODE_UPDATE);
-        trg_peers_model_update(priv->peersModel,
-                               TRG_TREE_VIEW(priv->peersTv), serial, t,
-                               TORRENT_GET_MODE_UPDATE);
+    if (exists && priv->lastJson != t) {
+        trg_files_model_update(priv->filesModel, GTK_TREE_VIEW(priv->filesTv),
+                serial, t, TORRENT_GET_MODE_UPDATE);
+        trg_peers_model_update(priv->peersModel, TRG_TREE_VIEW(priv->peersTv),
+                serial, t, TORRENT_GET_MODE_UPDATE);
         trg_trackers_model_update(priv->trackersModel, serial, t,
-                                  TORRENT_GET_MODE_UPDATE);
+                TORRENT_GET_MODE_UPDATE);
         info_page_update(TRG_TORRENT_PROPS_DIALOG(data), t, model, &iter);
-
-        priv->lastJson = t;
     }
+
+    gtk_widget_set_sensitive(GTK_WIDGET(priv->filesTv), exists);
+    gtk_widget_set_sensitive(GTK_WIDGET(priv->trackersTv), exists);
+    gtk_widget_set_sensitive(GTK_WIDGET(priv->peersTv), exists);
+
+    priv->lastJson = t;
 }
 
 static GObject *trg_torrent_props_dialog_constructor(GType type,
