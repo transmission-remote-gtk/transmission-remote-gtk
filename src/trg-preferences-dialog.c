@@ -394,7 +394,7 @@ static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
 
     GtkWidget *w, *activeOnly, *t;
-    gint row = 0;
+    guint row = 0;
 
     t = hig_workarea_create();
 
@@ -592,7 +592,7 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
     TrgPersistentTreeView *ptv;
     GtkListStore *model;
     trg_pref_widget_desc *wd;
-    gint row = 0;
+    guint row = 0;
 
     t = hig_workarea_create();
 
@@ -629,7 +629,7 @@ static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog * dlg)
     TrgPersistentTreeView *ptv;
     GtkListStore *model;
     trg_pref_widget_desc *wd;
-    gint row = 0;
+    guint row = 0;
 
     t = hig_workarea_create();
 
@@ -665,7 +665,7 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
 
     GtkWidget *w, *dep, *t, *tray;
-    gint row = 0;
+    guint row = 0;
     gboolean _is_unity = is_unity();
 
     t = hig_workarea_create();
@@ -760,7 +760,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
 
     GtkWidget *w, *t, *frame, *frameHbox, *profileLabel;
     GtkWidget *profileButtonsHbox;
-    gint row = 0;
+    guint row = 0;
 
     t = hig_workarea_create();
 

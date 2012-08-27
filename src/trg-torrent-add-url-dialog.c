@@ -109,7 +109,7 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
     TrgTorrentAddUrlDialogPrivate *priv =
         TRG_TORRENT_ADD_URL_DIALOG_GET_PRIVATE(self);
     GtkWidget *w, *t, *contentvbox;
-    gint row = 0;
+    guint row = 0;
 
     contentvbox = gtk_dialog_get_content_area(GTK_DIALOG(self));
 

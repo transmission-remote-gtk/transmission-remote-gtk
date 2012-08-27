@@ -298,7 +298,7 @@ static GtkWidget *trg_rprefs_bandwidthPage(TrgRemotePrefsDialog * win,
     TrgRemotePrefsDialogPrivate *priv =
         TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
     GtkWidget *w, *tb, *t;
-    gint row = 0;
+    guint row = 0;
 
     t = hig_workarea_create();
 
@@ -353,7 +353,7 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
     TrgRemotePrefsDialogPrivate *priv =
         TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
     GtkWidget *w, *tb, *t;
-    gint row = 0;
+    guint row = 0;
 
     t = hig_workarea_create();
 
@@ -509,7 +509,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
 
     GtkWidget *w, *tb, *t;
     const gchar *stringValue;
-    gint row = 0;
+    guint row = 0;
 
     t = hig_workarea_create();
 
@@ -596,7 +596,7 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
         TRG_REMOTE_PREFS_DIALOG_GET_PRIVATE(win);
 
     GtkWidget *w, *tb, *t;
-    gint row = 0;
+    guint row = 0;
     gint64 cache_size_mb;
 
     t = hig_workarea_create();

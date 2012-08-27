@@ -538,7 +538,7 @@ trg_tree_view_add_column_after(TrgTreeView * tv,
     gtk_tree_view_column_set_reorderable(column, TRUE);
     gtk_tree_view_column_set_sort_column_id(column, desc->model_column);
 
-    if (width >= 0) {
+    if (width > 0) {
         gtk_tree_view_column_set_sizing(column,
                                         GTK_TREE_VIEW_COLUMN_FIXED);
         gtk_tree_view_column_set_fixed_width(column, width);

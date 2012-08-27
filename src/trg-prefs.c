@@ -69,22 +69,14 @@ static void
 trg_prefs_get_property(GObject * object, guint property_id,
                        GValue * value, GParamSpec * pspec)
 {
-    switch (property_id) {
-    default:
-        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
-        break;
-    }
+    G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 }
 
 static void
 trg_prefs_set_property(GObject * object, guint property_id,
                        const GValue * value, GParamSpec * pspec)
 {
-    switch (property_id) {
-    default:
-        G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
-        break;
-    }
+    G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
 }
 
 static void trg_prefs_dispose(GObject * object)

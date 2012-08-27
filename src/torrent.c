@@ -333,6 +333,21 @@ gint64 torrent_get_error(JsonObject * t)
         return json_object_get_int_member(t, FIELD_ERROR);
 }
 
+const gchar *torrent_get_creator(JsonObject *t)
+{
+    return json_object_get_string_member(t, FIELD_CREATOR);
+}
+
+gint64 torrent_get_date_created(JsonObject *t)
+{
+    return json_object_get_int_member(t, FIELD_DATE_CREATED);
+}
+
+const gchar *torrent_get_hash(JsonObject *t)
+{
+    return json_object_get_string_member(t, FIELD_HASH_STRING);
+}
+
 gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags)
 {
     if (rpcv >= NEW_STATUS_RPC_VERSION) {

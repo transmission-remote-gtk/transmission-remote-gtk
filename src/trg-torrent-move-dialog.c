@@ -103,7 +103,7 @@ static GObject *trg_torrent_move_dialog_constructor(GType type,
     gchar *msg;
 
     GtkWidget *w, *t;
-    gint row = 0;
+    guint row = 0;
 
     t = hig_workarea_create();
 

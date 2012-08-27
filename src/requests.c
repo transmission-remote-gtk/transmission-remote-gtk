@@ -191,9 +191,10 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_LEFT_UNTIL_DONE);
     json_array_add_string_element(fields, FIELD_ANNOUNCE_URL);
     json_array_add_string_element(fields, FIELD_ERROR_STRING);
-    json_array_add_string_element(fields, FIELD_SWARM_SPEED);
     json_array_add_string_element(fields, FIELD_TRACKER_STATS);
+    json_array_add_string_element(fields, FIELD_DATE_CREATED);
     json_array_add_string_element(fields, FIELD_DOWNLOAD_DIR);
+    json_array_add_string_element(fields, FIELD_CREATOR);
     json_array_add_string_element(fields, FIELD_HASH_STRING);
     json_array_add_string_element(fields, FIELD_DONE_DATE);
     json_array_add_string_element(fields, FIELD_HONORS_SESSION_LIMITS);

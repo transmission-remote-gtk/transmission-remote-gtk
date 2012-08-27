@@ -59,6 +59,9 @@ const gchar *torrent_get_comment(JsonObject * t);
 gint64 torrent_get_have_unchecked(JsonObject * t);
 gint64 torrent_get_have_valid(JsonObject * t);
 gint64 torrent_get_status(JsonObject * t);
+const gchar *torrent_get_creator(JsonObject *t);
+gint64 torrent_get_date_created(JsonObject *t);
+const gchar *torrent_get_hash(JsonObject *t);
 gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags);
 gchar *torrent_get_status_icon(gint64 rpcv, guint flags);
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
