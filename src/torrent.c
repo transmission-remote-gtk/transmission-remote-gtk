@@ -220,11 +220,11 @@ gint64 torrent_get_activity_date(JsonObject * t)
 
 guint32
 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
-                  gint64 downRate, gint64 upRate)
+                  gint64 fileCount, gint64 downRate, gint64 upRate)
 {
     guint32 flags = 0;
 
-    if (torrent_get_is_finished(t) == TRUE)
+    if (fileCount > 0 && torrent_get_is_finished(t) == TRUE)
         flags |= TORRENT_FLAG_COMPLETE;
     else
         flags |= TORRENT_FLAG_INCOMPLETE;
@@ -250,8 +250,8 @@ torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
             if (!(flags & TORRENT_FLAG_COMPLETE))
                 flags |= TORRENT_FLAG_DOWNLOADING;
 
-            /* if (torrent_get_metadata_percent_complete(t) < 100)
-             *    flags |= TORRENT_FLAG_DOWNLOADING_METADATA; */
+            if (fileCount <= 0)
+                flags |= TORRENT_FLAG_DOWNLOADING_METADATA;
 
             flags |= TORRENT_FLAG_ACTIVE;
             break;
@@ -283,6 +283,7 @@ torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
             flags |= TORRENT_FLAG_CHECKING;
             break;
         }
+
         if (downRate > 0 || upRate > 0)
             flags |= TORRENT_FLAG_ACTIVE;
     }
@@ -297,8 +298,8 @@ gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
 {
     if (flags & TORRENT_FLAG_ERROR)
         return g_strdup(GTK_STOCK_DIALOG_WARNING);
-    /*else if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
-     *    return g_strdup(GTK_STOCK_FIND); */
+    else if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
+         return g_strdup(GTK_STOCK_FIND);
     else if (flags & TORRENT_FLAG_DOWNLOADING)
         return g_strdup(GTK_STOCK_GO_DOWN);
     else if (flags & TORRENT_FLAG_PAUSED)
@@ -353,10 +354,10 @@ gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags)
     if (rpcv >= NEW_STATUS_RPC_VERSION) {
         switch (value) {
         case TR_STATUS_DOWNLOAD:
-            /*if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
-               return g_strdup(_("Metadata Downloading"));
-               else */
-            return g_strdup(_("Downloading"));
+            if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
+                return g_strdup(_("Metadata Downloading"));
+            else
+                return g_strdup(_("Downloading"));
         case TR_STATUS_DOWNLOAD_WAIT:
             return g_strdup(_("Queued download"));
         case TR_STATUS_CHECK_WAIT:
@@ -373,10 +374,10 @@ gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags)
     } else {
         switch (value) {
         case OLD_STATUS_DOWNLOADING:
-            /*if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
-               return g_strdup(_("Metadata Downloading"));
-               else */
-            return g_strdup(_("Downloading"));
+            if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
+                return g_strdup(_("Metadata Downloading"));
+            else
+                return g_strdup(_("Downloading"));
         case OLD_STATUS_PAUSED:
             return g_strdup(_("Paused"));
         case OLD_STATUS_SEEDING:

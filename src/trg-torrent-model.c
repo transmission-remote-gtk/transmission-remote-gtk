@@ -433,8 +433,7 @@ update_torrent_iter(TrgTorrentModel * model,
     JsonObject *lastJson, *pf;
     JsonArray *trackerStats;
     gchar *statusString, *statusIcon, *downloadDir;
-    gint64 downRate, upRate, haveValid, uploaded, downloaded, id, status,
-        lpd;
+    gint64 downRate, upRate, haveValid, uploaded, downloaded, id, status, lpd, fileCount;
     gchar *firstTrackerHost = NULL;
     gchar *peerSources = NULL;
     gchar *lastDownloadDir = NULL;
@@ -454,7 +453,8 @@ update_torrent_iter(TrgTorrentModel * model,
 
     id = torrent_get_id(t);
     status = torrent_get_status(t);
-    newFlags = torrent_get_flags(t, rpcv, status, downRate, upRate);
+    fileCount = json_array_get_length(torrent_get_files(t));
+    newFlags = torrent_get_flags(t, rpcv, status, fileCount, downRate, upRate);
     statusString = torrent_get_status_string(rpcv, status, newFlags);
     statusIcon = torrent_get_status_icon(rpcv, newFlags);
     pf = torrent_get_peersfrom(t);
@@ -504,7 +504,7 @@ update_torrent_iter(TrgTorrentModel * model,
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        TORRENT_COLUMN_FILECOUNT,
-                       json_array_get_length(torrent_get_files(t)),
+                       fileCount,
                        TORRENT_COLUMN_DONE_DATE, torrent_get_done_date(t),
                        TORRENT_COLUMN_NAME, torrent_get_name(t),
                        TORRENT_COLUMN_ERROR, torrent_get_error(t),
