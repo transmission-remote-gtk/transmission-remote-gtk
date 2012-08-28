@@ -170,8 +170,7 @@ static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
     trg_json_widgets_save(priv->widgets, args);
     trg_json_widget_desc_list_free(priv->widgets);
 
-    dispatch_async(priv->client, request, on_generic_interactive_action,
-            priv->parent);
+    dispatch_async(priv->client, request, on_generic_interactive_action, priv->parent);
 
     gtk_widget_destroy(GTK_WIDGET(dialog) );
 }
@@ -326,7 +325,7 @@ static void info_page_update(TrgTorrentPropsDialog * dialog,
         gint64 dateCreated = torrent_get_date_created(t);
         gchar *dateStr = epoch_to_string(dateCreated);
 
-        if (!creator)
+        if (!creator || strlen(creator) <= 0)
             g_snprintf(buf, sizeof(buf), _("Created on %1$s"), dateStr);
         else
             g_snprintf(buf, sizeof(buf), _("Created by %1$s on %2$s"),
@@ -356,7 +355,7 @@ static void info_page_update(TrgTorrentPropsDialog * dialog,
         tr_strltime_long(buf, eta, sizeof(buf));
         gtk_label_set_text(GTK_LABEL(priv->eta_lb), buf);
     } else {
-        gtk_label_set_text(GTK_LABEL(priv->eta_lb), _("Unknown"));
+        gtk_label_set_text(GTK_LABEL(priv->eta_lb), "");
     }
 
     gtk_label_set_text(GTK_LABEL(priv->hash_lb), torrent_get_hash(t));
