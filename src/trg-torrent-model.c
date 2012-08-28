@@ -574,6 +574,7 @@ update_torrent_iter(TrgTorrentModel * model,
         json_object_unref(lastJson);
 
     if ((lastFlags & TORRENT_FLAG_DOWNLOADING)
+        && (!(newFlags & TORRENT_FLAG_DOWNLOADING))
         && (newFlags & TORRENT_FLAG_COMPLETE))
         g_signal_emit(model, signals[TMODEL_TORRENT_COMPLETED], 0, iter);
 
