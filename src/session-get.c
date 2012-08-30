@@ -22,6 +22,7 @@
 #include <json-glib/json-glib.h>
 
 #include "protocol-constants.h"
+#include "json.h"
 #include "session-get.h"
 
 /* Just some functions to get fields out of a session-get response. */
@@ -169,7 +170,7 @@ gint64 session_get_cache_size_mb(JsonObject * s)
 
 gdouble session_get_seed_ratio_limit(JsonObject * s)
 {
-    return json_object_get_double_member(s, SGET_SEED_RATIO_LIMIT);
+    return json_node_really_get_double(json_object_get_member(s, SGET_SEED_RATIO_LIMIT));
 }
 
 gboolean session_get_start_added_torrents(JsonObject * s)

@@ -126,7 +126,7 @@ gint64 torrent_get_seed_ratio_mode(JsonObject * t)
 
 gdouble torrent_get_seed_ratio_limit(JsonObject * t)
 {
-    return json_object_get_double_member(t, FIELD_SEED_RATIO_LIMIT);
+    return json_node_really_get_double(json_object_get_member(t, FIELD_SEED_RATIO_LIMIT));
 }
 
 gint64 torrent_get_download_limit(JsonObject * t)
