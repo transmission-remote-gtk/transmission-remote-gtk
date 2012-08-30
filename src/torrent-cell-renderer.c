@@ -1190,7 +1190,7 @@ render_full(TorrentCellRenderer * cell,
     gtr_cell_renderer_render(p->text_renderer, window, widget, &prog_area,
                              flags);
     g_object_set(p->progress_renderer, "value", (gint) percentDone,
-                 /*"text", "", */ "sensitive", sensitive, NULL);
+                 "text", "", "sensitive", sensitive, NULL);
     gtr_cell_renderer_render(p->progress_renderer, window, widget,
                              &prct_area, flags);
     g_object_set(p->text_renderer, "text", gstr_stat->str,
