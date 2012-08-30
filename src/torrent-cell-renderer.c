@@ -160,7 +160,7 @@ static void getProgressString(GString * gstr, TorrentCellRenderer * r)
                                            sizeof(buf2)),
                                tr_strlpercent(buf3, p->done,
                                               sizeof(buf3)));
-    } else if (isSeed) {
+    } else if (!isSeed) { /* Partial seed */
         if (hasSeedRatio) {
             g_string_append_printf(gstr,
                                    _
