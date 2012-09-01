@@ -434,7 +434,8 @@ update_torrent_iter(TrgTorrentModel * model,
     JsonArray *trackerStats;
     gchar *statusString, *statusIcon, *downloadDir;
     gint64 downRate, upRate, haveValid, uploaded, downloaded, id, status,
-        lpd, fileCount;
+        lpd;
+    guint fileCount;
     gchar *firstTrackerHost = NULL;
     gchar *peerSources = NULL;
     gchar *lastDownloadDir = NULL;
