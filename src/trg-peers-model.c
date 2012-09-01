@@ -95,35 +95,48 @@ find_existing_peer_item(TrgPeersModel * model, JsonObject * p,
     return pi.found;
 }
 
-static void
-resolved_dns_cb(GObject * source_object, GAsyncResult * res, gpointer data)
-{
-    GtkTreeRowReference *treeRef;
-    GtkTreeModel *model;
-    GtkTreePath *path;
+struct ResolvedDnsIdleData {
+    GtkTreeRowReference *rowRef;
+    gchar *rdns;
+};
 
-    treeRef = (GtkTreeRowReference *) data;
-    model = gtk_tree_row_reference_get_model(treeRef);
-    path = gtk_tree_row_reference_get_path(treeRef);
+static gboolean resolved_dns_idle_cb(gpointer data) {
+    struct ResolvedDnsIdleData *idleData = data;
+    GtkTreeModel *model = gtk_tree_row_reference_get_model(idleData->rowRef);
+    GtkTreePath *path = gtk_tree_row_reference_get_path(idleData->rowRef);
 
-    if (path != NULL) {
-        gchar *rdns =
-            g_resolver_lookup_by_address_finish(G_RESOLVER(source_object),
-                                                res, NULL);
-        if (rdns != NULL) {
-            GtkTreeIter iter;
-            if (gtk_tree_model_get_iter(model, &iter, path) == TRUE) {
-                gdk_threads_enter();
-                gtk_list_store_set(GTK_LIST_STORE(model), &iter,
-                                   PEERSCOL_HOST, rdns, -1);
-                gdk_threads_leave();
-            }
-            g_free(rdns);
+    if (path != NULL ) {
+        GtkTreeIter iter;
+        if (gtk_tree_model_get_iter(model, &iter, path) == TRUE) {
+            gtk_list_store_set(GTK_LIST_STORE(model), &iter, PEERSCOL_HOST,
+                    idleData->rdns, -1);
         }
         gtk_tree_path_free(path);
     }
 
-    gtk_tree_row_reference_free(treeRef);
+    gtk_tree_row_reference_free(idleData->rowRef);
+    g_free(idleData->rdns);
+    g_free(idleData);
+
+    return FALSE;
+}
+
+static void resolved_dns_cb(GObject * source_object, GAsyncResult * res,
+        gpointer data) {
+
+    gchar *rdns = g_resolver_lookup_by_address_finish(G_RESOLVER(source_object),
+            res, NULL );
+    GtkTreeRowReference *rowRef = data;
+
+    if (rdns != NULL) {
+        struct ResolvedDnsIdleData *idleData =
+                g_new(struct ResolvedDnsIdleData, 1);
+        idleData->rdns = rdns;
+        idleData->rowRef = rowRef;
+        g_idle_add(resolved_dns_idle_cb, idleData);
+    } else {
+        gtk_tree_row_reference_free(rowRef);
+    }
 }
 
 void
