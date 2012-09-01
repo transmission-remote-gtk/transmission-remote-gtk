@@ -44,7 +44,7 @@
 #define FIELD_TRACKER_STATS          "trackerStats"
 #define FIELD_DOWNLOAD_DIR      "downloadDir"
 #define FIELD_HASH_STRING       "hashString"
-#define FIELD_SWARM_SPEED     g  "swarmSpeed"
+//#define FIELD_SWARM_SPEED       "swarmSpeed"
 #define FIELD_NAME				"name"
 #define FIELD_SIZEWHENDONE		"sizeWhenDone"
 #define FIELD_STATUS			"status"

@@ -192,7 +192,7 @@ static void trg_torrent_model_ref_free(gpointer data)
         JsonObject *json;
         if (gtk_tree_model_get_iter(model, &iter, path)) {
             gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json,
-                               -1);
+                               1);
             json_object_unref(json);
             g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
                               GINT_TO_POINTER(TRUE));
@@ -296,7 +296,7 @@ trg_torrent_model_reload_dir_aliases_foreachfunc(GtkTreeModel * model,
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
                        TORRENT_COLUMN_DOWNLOADDIR_SHORT, shortDownloadDir,
-                       -1);
+                       1);
 
     g_free(downloadDir);
     g_free(shortDownloadDir);
@@ -433,7 +433,8 @@ update_torrent_iter(TrgTorrentModel * model,
     JsonObject *lastJson, *pf;
     JsonArray *trackerStats;
     gchar *statusString, *statusIcon, *downloadDir;
-    gint64 downRate, upRate, haveValid, uploaded, downloaded, id, status, lpd, fileCount;
+    gint64 downRate, upRate, haveValid, uploaded, downloaded, id, status,
+        lpd, fileCount;
     gchar *firstTrackerHost = NULL;
     gchar *peerSources = NULL;
     gchar *lastDownloadDir = NULL;
@@ -454,7 +455,8 @@ update_torrent_iter(TrgTorrentModel * model,
     id = torrent_get_id(t);
     status = torrent_get_status(t);
     fileCount = json_array_get_length(torrent_get_files(t));
-    newFlags = torrent_get_flags(t, rpcv, status, fileCount, downRate, upRate);
+    newFlags =
+        torrent_get_flags(t, rpcv, status, fileCount, downRate, upRate);
     statusString = torrent_get_status_string(rpcv, status, newFlags);
     statusIcon = torrent_get_status_icon(rpcv, newFlags);
     pf = torrent_get_peersfrom(t);
@@ -501,6 +503,55 @@ update_torrent_iter(TrgTorrentModel * model,
                                 peerfrom_get_resume(pf));
         }
     }
+#ifdef DEBUG
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon, -1);
+    gtk_list_store_set(ls, iter,
+                       TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
+    gtk_list_store_set(ls, iter,
+                       TORRENT_COLUMN_SIZEWHENDONE,
+                       torrent_get_size_when_done(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PERCENTDONE,
+                       (newFlags & TORRENT_FLAG_CHECKING) ?
+                       torrent_get_recheck_progress(t)
+                       : torrent_get_percent_done(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_STATUS, statusString, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNSPEED, downRate, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FLAGS, newFlags, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPSPEED, upRate, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ETA, torrent_get_eta(t),
+                       -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPLOADED, uploaded, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADED, downloaded,
+                       -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_RATIO, uploaded > 0
+                       && downloaded >
+                       0 ? (double) uploaded / (double) downloaded : 0,
+                       -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ID, id, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_JSON, t, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_UPDATESERIAL, serial, -1);
+    gtk_list_store_set(ls, iter,
+                       TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
+                       -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR, downloadDir,
+                       -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY,
+                       torrent_get_bandwidth_priority(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_TOTALSIZE,
+                       torrent_get_total_size(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_HAVE_UNCHECKED,
+                       torrent_get_have_unchecked(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_METADATAPERCENTCOMPLETE,
+                       torrent_get_metadata_percent_complete(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_WEB_SEEDS_TO_US,
+                       torrent_get_web_seeds_sending_to_us(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_SEED_RATIO_LIMIT,
+                       torrent_get_seed_ratio_limit(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_SEED_RATIO_MODE,
+                       torrent_get_seed_ratio_mode(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_FILECOUNT, fileCount, -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_HAVE_VALID, haveValid, -1);
+#else
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon,
                        TORRENT_COLUMN_ADDED, torrent_get_added_date(t),
                        TORRENT_COLUMN_FILECOUNT,
@@ -561,6 +612,7 @@ update_torrent_iter(TrgTorrentModel * model,
                        TORRENT_COLUMN_TRACKERHOST,
                        firstTrackerHost ? firstTrackerHost : "",
                        TORRENT_COLUMN_UPDATESERIAL, serial, -1);
+#endif
 
     if (!lastDownloadDir || g_strcmp0(downloadDir, lastDownloadDir)) {
         gchar *shortDownloadDir = shorten_download_dir(tc, downloadDir);
