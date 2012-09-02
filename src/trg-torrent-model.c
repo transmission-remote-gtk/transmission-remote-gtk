@@ -543,6 +543,10 @@ update_torrent_iter(TrgTorrentModel * model,
                        torrent_get_have_unchecked(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_METADATAPERCENTCOMPLETE,
                        torrent_get_metadata_percent_complete(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_TO_US,
+            torrent_get_peers_sending_to_us(t), -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_FROM_US,
+            torrent_get_peers_getting_from_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_WEB_SEEDS_TO_US,
                        torrent_get_web_seeds_sending_to_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_SEED_RATIO_LIMIT,
