@@ -96,6 +96,7 @@ struct _TrgTorrentPropsDialogPrivate {
     GtkWidget *privacy_lb;
     GtkWidget *origin_lb;
     GtkTextBuffer *comment_buffer;
+    gboolean show_details;
 };
 
 static void trg_torrent_props_dialog_set_property(GObject * object,
@@ -171,6 +172,14 @@ static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
     trg_json_widget_desc_list_free(priv->widgets);
 
     dispatch_async(priv->client, request, on_generic_interactive_action, priv->parent);
+
+    if (priv->show_details) {
+        TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+        gint width, height;
+        gtk_window_get_size (GTK_WINDOW(dialog), &width, &height);
+        trg_prefs_set_int(prefs, "dialog-width", width, TRG_PREFS_GLOBAL);
+        trg_prefs_set_int(prefs, "dialog-height", height, TRG_PREFS_GLOBAL);
+    }
 
     gtk_widget_destroy(GTK_WIDGET(dialog) );
 }
@@ -503,9 +512,11 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
         gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->tv));
     gint rowCount = gtk_tree_selection_count_selected_rows(selection);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
-    gboolean showDetails = trg_prefs_get_int(prefs, TRG_PREFS_KEY_STYLE,
+    priv->show_details = trg_prefs_get_int(prefs, TRG_PREFS_KEY_STYLE,
                                              TRG_PREFS_GLOBAL) !=
         TRG_STYLE_CLASSIC && rowCount == 1;
+
+    gint64 width, height;
 
     JsonObject *json;
     GtkTreeIter iter;
@@ -543,7 +554,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     notebook = gtk_notebook_new();
 
-    if (showDetails) {
+    if (priv->show_details) {
         gint64 serial = trg_client_get_serial(priv->client);
 
         /* Information */
@@ -619,7 +630,18 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     contentvbox = gtk_dialog_get_content_area(GTK_DIALOG(object));
     gtk_box_pack_start(GTK_BOX(contentvbox), notebook, TRUE, TRUE, 0);
 
-    gtk_window_set_default_size(window, 500, 500);
+    if (priv->show_details) {
+        TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+        if ((width = trg_prefs_get_int(prefs, "dialog-width", TRG_PREFS_GLOBAL)) <= 0
+                || (height = trg_prefs_get_int(prefs, "dialog-height", TRG_PREFS_GLOBAL)) <= 0) {
+            width = 700;
+            height = 600;
+        }
+    } else {
+        width = height = 500;
+    }
+
+    gtk_window_set_default_size(window, width, height);
 
     return object;
 }
