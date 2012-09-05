@@ -294,8 +294,7 @@ trg_torrent_model_reload_dir_aliases_foreachfunc(GtkTreeModel * model,
         shorten_download_dir((TrgClient *) gdata, downloadDir);
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-                       TORRENT_COLUMN_DOWNLOADDIR_SHORT, shortDownloadDir,
-                       1);
+                       TORRENT_COLUMN_DOWNLOADDIR_SHORT, shortDownloadDir, -1);
 
     g_free(downloadDir);
     g_free(shortDownloadDir);
