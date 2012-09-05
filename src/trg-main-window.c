@@ -1357,6 +1357,11 @@ static gboolean trg_session_update_timerfunc(gpointer data)
 
 static gboolean trg_update_torrents_timerfunc(gpointer data)
 {
+    /* Check if the TrgMainWindow* has already been destroyed
+     * and, in that case, stop polling the server. */
+    if (!TRG_IS_MAIN_WINDOW (data))
+      return FALSE;
+
     TrgMainWindow *win = TRG_MAIN_WINDOW(data);
     TrgMainWindowPrivate *priv = win->priv;
     TrgClient *tc = priv->client;
