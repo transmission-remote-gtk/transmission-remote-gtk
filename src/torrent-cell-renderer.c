@@ -160,7 +160,7 @@ static void getProgressString(GString * gstr, TorrentCellRenderer * r)
                                            sizeof(buf2)),
                                tr_strlpercent(buf3, p->done,
                                               sizeof(buf3)));
-    } else if (!isSeed) { /* Partial seed */
+    } else if (!isSeed) {       /* Partial seed */
         if (hasSeedRatio) {
             g_string_append_printf(gstr,
                                    _
@@ -342,8 +342,7 @@ static void getStatusString(GString * gstr, TorrentCellRenderer * r)
                                     priv->connected + priv->webSeedsToUs),
                                    priv->connected + priv->webSeedsToUs,
                                    tr_strlpercent(buf,
-                                                  priv->
-                                                  metadataPercentComplete,
+                                                  priv->metadataPercentComplete,
                                                   sizeof(buf)));
         }
     } else if (priv->flags & TORRENT_FLAG_SEEDING) {

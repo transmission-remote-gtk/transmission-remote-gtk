@@ -50,7 +50,8 @@ GType trg_torrent_props_dialog_get_type(void);
 TrgTorrentPropsDialog *trg_torrent_props_dialog_new(GtkWindow * window,
                                                     TrgTorrentTreeView *
                                                     treeview,
-                                                    TrgTorrentModel *torrentModel,
+                                                    TrgTorrentModel *
+                                                    torrentModel,
                                                     TrgClient * client);
 
 G_END_DECLS

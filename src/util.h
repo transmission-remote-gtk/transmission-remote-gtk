@@ -55,7 +55,7 @@ GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex * rx, const gchar * uri);
 gchar *make_error_message(JsonObject * response, int status);
 void trg_error_dialog(GtkWindow * parent, trg_response * response);
-gchar *add_links_to_text(const gchar *original);
+gchar *add_links_to_text(const gchar * original);
 
 void
 tr_formatter_size_init(unsigned int kilo,
@@ -84,8 +84,7 @@ size_t tr_strlcpy(char *dst, const void *src, size_t siz);
 double tr_truncd(double x, int decimal_places);
 int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
                      va_list ap);
-char*
-tr_strlsize( char * buf, guint64 bytes, size_t buflen );
+char *tr_strlsize(char *buf, guint64 bytes, size_t buflen);
 void rm_trailing_slashes(gchar * str);
 void trg_widget_set_visible(GtkWidget * w, gboolean visible);
 gchar *trg_base64encode(const gchar * filename);
@@ -101,7 +100,7 @@ GtkWidget *trg_hbox_new(gboolean homogeneous, gint spacing);
 gboolean is_unity();
 
 #ifdef WIN32
-gchar *trg_win32_support_path(gchar *file);
+gchar *trg_win32_support_path(gchar * file);
 #endif
 
 #endif                          /* UTIL_H_ */

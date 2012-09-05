@@ -384,7 +384,8 @@ trgp_double_special_dependent(GtkWidget * widget, gpointer data)
                              (priv->fullUpdateCheck)
                              &&
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
-                                                          (priv->fullUpdateCheck)));
+                                                          (priv->
+                                                           fullUpdateCheck)));
 }
 
 static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog * dlg)

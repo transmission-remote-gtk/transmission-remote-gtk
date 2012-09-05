@@ -100,16 +100,18 @@ struct ResolvedDnsIdleData {
     gchar *rdns;
 };
 
-static gboolean resolved_dns_idle_cb(gpointer data) {
+static gboolean resolved_dns_idle_cb(gpointer data)
+{
     struct ResolvedDnsIdleData *idleData = data;
-    GtkTreeModel *model = gtk_tree_row_reference_get_model(idleData->rowRef);
+    GtkTreeModel *model =
+        gtk_tree_row_reference_get_model(idleData->rowRef);
     GtkTreePath *path = gtk_tree_row_reference_get_path(idleData->rowRef);
 
-    if (path != NULL ) {
+    if (path != NULL) {
         GtkTreeIter iter;
         if (gtk_tree_model_get_iter(model, &iter, path) == TRUE) {
             gtk_list_store_set(GTK_LIST_STORE(model), &iter, PEERSCOL_HOST,
-                    idleData->rdns, -1);
+                               idleData->rdns, -1);
         }
         gtk_tree_path_free(path);
     }
@@ -122,15 +124,17 @@ static gboolean resolved_dns_idle_cb(gpointer data) {
 }
 
 static void resolved_dns_cb(GObject * source_object, GAsyncResult * res,
-        gpointer data) {
+                            gpointer data)
+{
 
-    gchar *rdns = g_resolver_lookup_by_address_finish(G_RESOLVER(source_object),
-            res, NULL );
+    gchar *rdns =
+        g_resolver_lookup_by_address_finish(G_RESOLVER(source_object),
+                                            res, NULL);
     GtkTreeRowReference *rowRef = data;
 
     if (rdns != NULL) {
         struct ResolvedDnsIdleData *idleData =
-                g_new(struct ResolvedDnsIdleData, 1);
+            g_new(struct ResolvedDnsIdleData, 1);
         idleData->rdns = rdns;
         idleData->rowRef = rowRef;
         g_idle_add(resolved_dns_idle_cb, idleData);

@@ -91,14 +91,14 @@ trg_column_description *trg_tree_view_reg_column(TrgTreeView * tv,
                                                  gint type,
                                                  gint model_column,
                                                  const gchar * header,
-                                                 const gchar * id, guint flags);
+                                                 const gchar * id,
+                                                 guint flags);
 void trg_tree_view_setup_columns(TrgTreeView * tv);
 void trg_tree_view_set_prefs(TrgTreeView * tv, TrgPrefs * prefs);
 void trg_tree_view_persist(TrgTreeView * tv, guint flags);
-void trg_tree_view_remove_all_columns(TrgTreeView *tv);
-void trg_tree_view_restore_sort(TrgTreeView * tv,
-                                guint flags);
-GtkWidget *trg_tree_view_sort_menu(TrgTreeView *tv, const gchar *label);
+void trg_tree_view_remove_all_columns(TrgTreeView * tv);
+void trg_tree_view_restore_sort(TrgTreeView * tv, guint flags);
+GtkWidget *trg_tree_view_sort_menu(TrgTreeView * tv, const gchar * label);
 gboolean trg_tree_view_is_column_showing(TrgTreeView * tv, gint index);
 
 #endif                          /* _TRG_TREE_VIEW_H_ */

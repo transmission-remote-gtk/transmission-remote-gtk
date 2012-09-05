@@ -44,7 +44,7 @@
 #define TORRENT_ADD_FLAG_PAUSED        (1 << 0) /* 0x01 */
 #define TORRENT_ADD_FLAG_DELETE        (1 << 1) /* 0x02 */
 
-gint64 torrent_get_total_size(JsonObject *t);
+gint64 torrent_get_total_size(JsonObject * t);
 gint64 torrent_get_size_when_done(JsonObject * t);
 const gchar *torrent_get_name(JsonObject * t);
 gint64 torrent_get_rate_down(JsonObject * t);
@@ -53,19 +53,20 @@ gint64 torrent_get_eta(JsonObject * t);
 gint64 torrent_get_uploaded(JsonObject * t);
 gint64 torrent_get_downloaded(JsonObject * t);
 const gchar *torrent_get_errorstr(JsonObject * t);
-gint64 torrent_get_error(JsonObject *t);
+gint64 torrent_get_error(JsonObject * t);
 const gchar *torrent_get_download_dir(JsonObject * t);
 const gchar *torrent_get_comment(JsonObject * t);
 gint64 torrent_get_have_unchecked(JsonObject * t);
 gint64 torrent_get_have_valid(JsonObject * t);
 gint64 torrent_get_status(JsonObject * t);
-const gchar *torrent_get_creator(JsonObject *t);
-gint64 torrent_get_date_created(JsonObject *t);
-const gchar *torrent_get_hash(JsonObject *t);
+const gchar *torrent_get_creator(JsonObject * t);
+gint64 torrent_get_date_created(JsonObject * t);
+const gchar *torrent_get_hash(JsonObject * t);
 gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags);
 gchar *torrent_get_status_icon(gint64 rpcv, guint flags);
 guint32 torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
-                          gint64 fileCount, gint64 downRate, gint64 upRate);
+                          gint64 fileCount, gint64 downRate,
+                          gint64 upRate);
 JsonArray *torrent_get_peers(JsonObject * t);
 JsonObject *torrent_get_peersfrom(JsonObject * t);
 JsonArray *torrent_get_tracker_stats(JsonObject * t);
@@ -75,7 +76,7 @@ gint64 torrent_get_id(JsonObject * t);
 JsonArray *torrent_get_files(JsonObject * args);
 gint64 torrent_get_peers_getting_from_us(JsonObject * args);
 gint64 torrent_get_peers_sending_to_us(JsonObject * args);
-gint64 torrent_get_web_seeds_sending_to_us(JsonObject *args);
+gint64 torrent_get_web_seeds_sending_to_us(JsonObject * args);
 gint64 torrent_get_peers_connected(JsonObject * args);
 gdouble torrent_get_percent_done(JsonObject * t);
 gdouble torrent_get_recheck_progress(JsonObject * t);

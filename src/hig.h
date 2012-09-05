@@ -22,22 +22,23 @@
 
 GtkWidget *hig_workarea_create(void);
 
-void hig_workarea_add_section_divider(GtkWidget * table, guint *row);
+void hig_workarea_add_section_divider(GtkWidget * table, guint * row);
 
 void hig_workarea_add_section_title_widget(GtkWidget * t,
-                                           guint *row, GtkWidget * w);
+                                           guint * row, GtkWidget * w);
 
 void hig_workarea_add_section_title(GtkWidget * table,
-                                    guint *row, const char *section_title);
+                                    guint * row,
+                                    const char *section_title);
 
 void hig_workarea_add_wide_tall_control(GtkWidget * table,
-                                        guint *row, GtkWidget * w);
+                                        guint * row, GtkWidget * w);
 
 void hig_workarea_add_wide_control(GtkWidget * table,
-                                   guint *row, GtkWidget * w);
+                                   guint * row, GtkWidget * w);
 
 GtkWidget *hig_workarea_add_wide_checkbutton(GtkWidget * table,
-                                             guint *row,
+                                             guint * row,
                                              const char *mnemonic_string,
                                              gboolean is_active);
 
@@ -51,25 +52,25 @@ void hig_workarea_add_control(GtkWidget * table,
                               guint row, GtkWidget * control);
 
 GtkWidget *hig_workarea_add_tall_row(GtkWidget * table,
-                                     guint *row,
+                                     guint * row,
                                      const char *mnemonic_string,
                                      GtkWidget * control,
                                      GtkWidget *
                                      mnemonic_or_null_for_control);
 
 GtkWidget *hig_workarea_add_row(GtkWidget * table,
-                                guint *row,
+                                guint * row,
                                 const char *mnemonic_string,
                                 GtkWidget * control,
                                 GtkWidget * mnemonic_or_null_for_control);
 
 void hig_workarea_add_row_w(GtkWidget * table,
-                            guint *row,
+                            guint * row,
                             GtkWidget * label,
                             GtkWidget * control,
                             GtkWidget * mnemonic_or_null_for_control);
 
-void hig_workarea_finish(GtkWidget * table, guint *row);
+void hig_workarea_finish(GtkWidget * table, guint * row);
 
 void hig_message_dialog_set_text(GtkMessageDialog * dialog,
                                  const char *primary,

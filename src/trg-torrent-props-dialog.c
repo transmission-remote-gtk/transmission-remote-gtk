@@ -56,7 +56,7 @@ G_DEFINE_TYPE(TrgTorrentPropsDialog, trg_torrent_props_dialog,
               GTK_TYPE_DIALOG)
 enum {
     PROP_0, PROP_TREEVIEW, PROP_TORRENT_MODEL, PROP_PARENT_WINDOW,
-        PROP_CLIENT
+    PROP_CLIENT
 };
 
 #define GET_PRIVATE(o) \
@@ -133,7 +133,7 @@ static void trg_torrent_props_dialog_get_property(GObject * object,
 }
 
 static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
-        gpointer data G_GNUC_UNUSED)
+                                          gpointer data G_GNUC_UNUSED)
 {
     TrgTorrentPropsDialogPrivate *priv = GET_PRIVATE(dialog);
     JsonNode *request;
@@ -141,17 +141,20 @@ static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
 
     if (priv->peersTv)
         trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTv),
-                TRG_TREE_VIEW_PERSIST_SORT | TRG_TREE_VIEW_PERSIST_LAYOUT);
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
     if (priv->filesTv)
         trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTv),
-                TRG_TREE_VIEW_PERSIST_SORT | TRG_TREE_VIEW_PERSIST_LAYOUT);
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
 
     if (priv->trackersTv)
         trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTv),
-                TRG_TREE_VIEW_PERSIST_SORT | TRG_TREE_VIEW_PERSIST_LAYOUT);
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
 
     if (res_id != GTK_RESPONSE_OK) {
-        gtk_widget_destroy(GTK_WIDGET(dialog) );
+        gtk_widget_destroy(GTK_WIDGET(dialog));
         json_array_unref(priv->targetIds);
         return;
     }
@@ -160,28 +163,29 @@ static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
     args = node_get_arguments(request);
 
     json_object_set_int_member(args, FIELD_SEED_RATIO_MODE,
-            gtk_combo_box_get_active(GTK_COMBO_BOX
-            (priv->
-                    seedRatioMode) ));
+                               gtk_combo_box_get_active(GTK_COMBO_BOX
+                                                        (priv->seedRatioMode)));
     json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
-            gtk_combo_box_get_active(GTK_COMBO_BOX
-            (priv->
-                    bandwidthPriorityCombo) ) - 1);
+                               gtk_combo_box_get_active(GTK_COMBO_BOX
+                                                        (priv->bandwidthPriorityCombo))
+                               - 1);
 
     trg_json_widgets_save(priv->widgets, args);
     trg_json_widget_desc_list_free(priv->widgets);
 
-    dispatch_async(priv->client, request, on_generic_interactive_action, priv->parent);
+    dispatch_async(priv->client, request, on_generic_interactive_action,
+                   priv->parent);
 
     if (priv->show_details) {
         TrgPrefs *prefs = trg_client_get_prefs(priv->client);
         gint width, height;
-        gtk_window_get_size (GTK_WINDOW(dialog), &width, &height);
+        gtk_window_get_size(GTK_WINDOW(dialog), &width, &height);
         trg_prefs_set_int(prefs, "dialog-width", width, TRG_PREFS_GLOBAL);
-        trg_prefs_set_int(prefs, "dialog-height", height, TRG_PREFS_GLOBAL);
+        trg_prefs_set_int(prefs, "dialog-height", height,
+                          TRG_PREFS_GLOBAL);
     }
 
-    gtk_widget_destroy(GTK_WIDGET(dialog) );
+    gtk_widget_destroy(GTK_WIDGET(dialog));
 }
 
 static void seed_ratio_mode_changed_cb(GtkWidget * w, gpointer data)
@@ -467,22 +471,28 @@ static GtkWidget *trg_props_limits_page_new(TrgTorrentPropsDialog * win,
     return t;
 }
 
-static void models_updated(TrgTorrentModel * model, gpointer data) {
+static void models_updated(TrgTorrentModel * model, gpointer data)
+{
     TrgTorrentPropsDialogPrivate *priv = GET_PRIVATE(data);
     GHashTable *ht = get_torrent_table(model);
     gint64 serial = trg_client_get_serial(priv->client);
     JsonObject *t = NULL;
     GtkTreeIter iter;
     gboolean exists = get_torrent_data(ht,
-            json_array_get_int_element(priv->targetIds, 0), &t, &iter);
+                                       json_array_get_int_element(priv->
+                                                                  targetIds,
+                                                                  0), &t,
+                                       &iter);
 
     if (exists && priv->lastJson != t) {
-        trg_files_model_update(priv->filesModel, GTK_TREE_VIEW(priv->filesTv),
-                serial, t, TORRENT_GET_MODE_UPDATE);
-        trg_peers_model_update(priv->peersModel, TRG_TREE_VIEW(priv->peersTv),
-                serial, t, TORRENT_GET_MODE_UPDATE);
+        trg_files_model_update(priv->filesModel,
+                               GTK_TREE_VIEW(priv->filesTv), serial, t,
+                               TORRENT_GET_MODE_UPDATE);
+        trg_peers_model_update(priv->peersModel,
+                               TRG_TREE_VIEW(priv->peersTv), serial, t,
+                               TORRENT_GET_MODE_UPDATE);
         trg_trackers_model_update(priv->trackersModel, serial, t,
-                TORRENT_GET_MODE_UPDATE);
+                                  TORRENT_GET_MODE_UPDATE);
         info_page_update(TRG_TORRENT_PROPS_DIALOG(data), t, model, &iter);
     }
 
@@ -513,7 +523,7 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     gint rowCount = gtk_tree_selection_count_selected_rows(selection);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     priv->show_details = trg_prefs_get_int(prefs, TRG_PREFS_KEY_STYLE,
-                                             TRG_PREFS_GLOBAL) !=
+                                           TRG_PREFS_GLOBAL) !=
         TRG_STYLE_CLASSIC && rowCount == 1;
 
     gint64 width, height;
@@ -632,8 +642,12 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
 
     if (priv->show_details) {
         TrgPrefs *prefs = trg_client_get_prefs(priv->client);
-        if ((width = trg_prefs_get_int(prefs, "dialog-width", TRG_PREFS_GLOBAL)) <= 0
-                || (height = trg_prefs_get_int(prefs, "dialog-height", TRG_PREFS_GLOBAL)) <= 0) {
+        if ((width =
+             trg_prefs_get_int(prefs, "dialog-width",
+                               TRG_PREFS_GLOBAL)) <= 0
+            || (height =
+                trg_prefs_get_int(prefs, "dialog-height",
+                                  TRG_PREFS_GLOBAL)) <= 0) {
             width = 700;
             height = 600;
         }

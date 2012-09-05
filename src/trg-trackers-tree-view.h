@@ -53,7 +53,7 @@ GType trg_trackers_tree_view_get_type(void);
 TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model,
                                                 TrgClient * client,
                                                 TrgMainWindow * win,
-                                                const gchar *configId);
+                                                const gchar * configId);
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
                                            TrgClient * tc);
 

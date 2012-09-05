@@ -32,22 +32,20 @@ typedef struct TorrentCellRenderer TorrentCellRenderer;
 
 typedef struct TorrentCellRendererClass TorrentCellRendererClass;
 
-struct TorrentCellRenderer
-{
+struct TorrentCellRenderer {
     GtkCellRenderer parent;
 
-    /*< private >*/
-    struct TorrentCellRendererPrivate * priv;
+    /*< private > */
+    struct TorrentCellRendererPrivate *priv;
 };
 
-struct TorrentCellRendererClass
-{
+struct TorrentCellRendererClass {
     GtkCellRendererClass parent;
 };
 
-GType torrent_cell_renderer_get_type( void ) G_GNUC_CONST;
+GType torrent_cell_renderer_get_type(void) G_GNUC_CONST;
 
-GtkCellRenderer * torrent_cell_renderer_new( void );
-GtkTreeView *torrent_cell_renderer_get_owner(TorrentCellRenderer *r);
+GtkCellRenderer *torrent_cell_renderer_new(void);
+GtkTreeView *torrent_cell_renderer_get_owner(TorrentCellRenderer * r);
 
-#endif /* GTR_TORRENT_CELL_RENDERER_H */
+#endif                          /* GTR_TORRENT_CELL_RENDERER_H */

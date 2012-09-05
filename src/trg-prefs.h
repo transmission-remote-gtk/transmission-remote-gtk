@@ -88,9 +88,9 @@
 #define TRG_PREFS_REPLACENODE (1 << 5)  /* 0x16 */
 
 enum {
-	TRG_STYLE_TR = 0,
-	TRG_STYLE_CLASSIC,
-	TRG_STYLE_TR_COMPACT
+    TRG_STYLE_TR = 0,
+    TRG_STYLE_CLASSIC,
+    TRG_STYLE_TR_COMPACT
 };
 
 typedef struct _TrgPrefsPrivate TrgPrefsPrivate;

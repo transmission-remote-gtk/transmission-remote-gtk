@@ -485,8 +485,7 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
                           priv->mb_view_transmission_compact);
     group =
         gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM
-                                      (priv->
-                                       mb_view_transmission_compact));
+                                      (priv->mb_view_transmission_compact));
     priv->mb_view_classic =
         trg_menu_bar_view_radio_item_new(priv->prefs, group,
                                          TRG_PREFS_KEY_STYLE,
@@ -496,8 +495,7 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
 
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
                           trg_tree_view_sort_menu(TRG_TREE_VIEW
-                                                  (priv->
-                                                   torrent_tree_view),
+                                                  (priv->torrent_tree_view),
                                                   _("Sort")));
 
     priv->mb_view_states =

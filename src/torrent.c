@@ -126,7 +126,9 @@ gint64 torrent_get_seed_ratio_mode(JsonObject * t)
 
 gdouble torrent_get_seed_ratio_limit(JsonObject * t)
 {
-    return json_node_really_get_double(json_object_get_member(t, FIELD_SEED_RATIO_LIMIT));
+    return
+        json_node_really_get_double(json_object_get_member
+                                    (t, FIELD_SEED_RATIO_LIMIT));
 }
 
 gint64 torrent_get_download_limit(JsonObject * t)
@@ -299,7 +301,7 @@ gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
     if (flags & TORRENT_FLAG_ERROR)
         return g_strdup(GTK_STOCK_DIALOG_WARNING);
     else if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
-         return g_strdup(GTK_STOCK_FIND);
+        return g_strdup(GTK_STOCK_FIND);
     else if (flags & TORRENT_FLAG_DOWNLOADING)
         return g_strdup(GTK_STOCK_GO_DOWN);
     else if (flags & TORRENT_FLAG_PAUSED)

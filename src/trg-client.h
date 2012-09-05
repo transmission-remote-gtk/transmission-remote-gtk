@@ -158,9 +158,10 @@ guint trg_client_get_failcount(TrgClient * tc);
 void trg_client_reset_failcount(TrgClient * tc);
 void trg_client_inc_serial(TrgClient * tc);
 void trg_client_inc_connid(TrgClient * tc);
-gboolean trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer data);
-gboolean trg_client_get_seed_ratio_limited(TrgClient *tc);
-gdouble trg_client_get_seed_ratio_limit(TrgClient *tc);
+gboolean trg_client_update_session(TrgClient * tc, GSourceFunc callback,
+                                   gpointer data);
+gboolean trg_client_get_seed_ratio_limited(TrgClient * tc);
+gdouble trg_client_get_seed_ratio_limit(TrgClient * tc);
 
 G_END_DECLS
 #endif                          /* _TRG_CLIENT_H_ */

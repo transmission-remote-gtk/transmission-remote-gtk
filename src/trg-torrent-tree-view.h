@@ -50,7 +50,7 @@ typedef struct {
 
 GType trg_torrent_tree_view_get_type(void);
 
-TrgTorrentTreeView *trg_torrent_tree_view_new(TrgClient *tc,
+TrgTorrentTreeView *trg_torrent_tree_view_new(TrgClient * tc,
                                               GtkTreeModel * model);
 JsonArray *build_json_id_array(TrgTorrentTreeView * tv);
 

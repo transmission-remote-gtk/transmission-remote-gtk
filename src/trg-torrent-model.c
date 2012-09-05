@@ -191,7 +191,8 @@ static void trg_torrent_model_ref_free(gpointer data)
         GtkTreeIter iter;
         JsonObject *json;
         if (gtk_tree_model_get_iter(model, &iter, path)) {
-            gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json, -1);
+            gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json,
+                               -1);
             json_object_unref(json);
             g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
                               GINT_TO_POINTER(TRUE));
@@ -294,7 +295,8 @@ trg_torrent_model_reload_dir_aliases_foreachfunc(GtkTreeModel * model,
         shorten_download_dir((TrgClient *) gdata, downloadDir);
 
     gtk_list_store_set(GTK_LIST_STORE(model), iter,
-                       TORRENT_COLUMN_DOWNLOADDIR_SHORT, shortDownloadDir, -1);
+                       TORRENT_COLUMN_DOWNLOADDIR_SHORT, shortDownloadDir,
+                       -1);
 
     g_free(downloadDir);
     g_free(shortDownloadDir);
@@ -543,9 +545,9 @@ update_torrent_iter(TrgTorrentModel * model,
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_METADATAPERCENTCOMPLETE,
                        torrent_get_metadata_percent_complete(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_TO_US,
-            torrent_get_peers_sending_to_us(t), -1);
+                       torrent_get_peers_sending_to_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_FROM_US,
-            torrent_get_peers_getting_from_us(t), -1);
+                       torrent_get_peers_getting_from_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_WEB_SEEDS_TO_US,
                        torrent_get_web_seeds_sending_to_us(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_SEED_RATIO_LIMIT,

@@ -1,3 +1,14 @@
+* Wed Sep 5 2012 1.1
+- new Transmission display style
+- handle downloading metadata state better, don't make incorrect completion
+notifications
+- win32: build reverted to GTK2 because of empty progress bar in GTK3
+- use g_idle_add instead of gdk_thread_enter/leave for reverse DNS
+- fix compilation error for debian
+- issue 210: fix crash when encountering empty benc dict in .torrent
+- fix concurrency issue when populating large files model and changing
+- translation updates from launchpad
+
 * Fri Jun 29 2012 1.0.2
 - win32: update to gtk3 (also fixes blank tray icon)
 - win32: GeoIP support

@@ -50,7 +50,8 @@ typedef struct {
 GType trg_menu_bar_get_type(void);
 
 TrgMenuBar *trg_menu_bar_new(TrgMainWindow * win, TrgPrefs * prefs,
-                             TrgTorrentTreeView *ttv, GtkAccelGroup * accel_group);
+                             TrgTorrentTreeView * ttv,
+                             GtkAccelGroup * accel_group);
 GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, const gchar * text,
                                  const gchar * stock_id,
                                  gboolean sensitive);

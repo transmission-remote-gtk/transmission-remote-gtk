@@ -56,7 +56,7 @@ GType trg_files_tree_view_get_type(void);
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
                                           TrgMainWindow * win,
                                           TrgClient * client,
-                                          const gchar *configId);
+                                          const gchar * configId);
 
 void
 trg_files_tree_view_renderPriority(GtkTreeViewColumn *
