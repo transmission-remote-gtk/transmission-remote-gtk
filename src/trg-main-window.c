@@ -421,7 +421,11 @@ destroy_window(TrgMainWindow * win, gpointer data G_GNUC_UNUSED)
                           TRG_TREE_VIEW_PERSIST_LAYOUT);
     trg_prefs_save(prefs);
 
+#if ! GTK_CHECK_VERSION( 3, 0, 0 )
     gtk_main_quit();
+#else
+    g_application_quit (g_application_get_default ());
+#endif
 }
 
 static void open_props_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
