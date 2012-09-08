@@ -596,20 +596,25 @@ void connect_cb(GtkWidget * w, gpointer data)
 
         switch (populate_result) {
         case TRG_NO_HOSTNAME_SET:
-            msg = _("No hostname set");
+            msg = _("No host specified. Set it in the preferences dialog.");
             break;
         default:
             msg = _("Unknown error getting settings");
             break;
         }
 
-        dialog = gtk_message_dialog_new(GTK_WINDOW(data),
-                                        GTK_DIALOG_DESTROY_WITH_PARENT,
-                                        GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-                                        "%s", msg);
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
+	dialog = gtk_message_dialog_new(GTK_WINDOW(data),
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					(populate_result == TRG_NO_HOSTNAME_SET) ? GTK_MESSAGE_INFO : GTK_MESSAGE_ERROR, 
+					GTK_BUTTONS_OK,
+					"%s", msg);
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
         reset_connect_args(TRG_MAIN_WINDOW(data));
+
+	if (populate_result == TRG_NO_HOSTNAME_SET)
+	  open_local_prefs_cb (NULL, win);
+
         return;
     }
 
