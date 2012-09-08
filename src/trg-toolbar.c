@@ -188,12 +188,13 @@ static GObject *trg_toolbar_constructor(GType type,
 
     gtk_toolbar_set_icon_size(GTK_TOOLBAR(obj),
                               GTK_ICON_SIZE_LARGE_TOOLBAR);
-    gtk_toolbar_set_style(GTK_TOOLBAR(obj), GTK_TOOLBAR_ICONS);
+    gtk_toolbar_set_style(GTK_TOOLBAR(obj), GTK_TOOLBAR_BOTH_HORIZ);
 
     priv->tb_connect =
         GTK_WIDGET(gtk_menu_tool_button_new_from_stock(GTK_STOCK_CONNECT));
     gtk_tool_item_set_tooltip_text(GTK_TOOL_ITEM(priv->tb_connect),
                                    _("Connect"));
+    gtk_tool_item_set_is_important (GTK_TOOL_ITEM (priv->tb_connect), TRUE);
     menu =
         trg_menu_bar_file_connect_menu_new(priv->main_window, priv->prefs);
     gtk_menu_tool_button_set_menu(GTK_MENU_TOOL_BUTTON(priv->tb_connect),
