@@ -305,6 +305,8 @@ GtkWidget *my_scrolledwin_new(GtkWidget * child)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_win),
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(scrolled_win), 
+					 GTK_SHADOW_ETCHED_IN);
     gtk_container_add(GTK_CONTAINER(scrolled_win), child);
     return scrolled_win;
 }

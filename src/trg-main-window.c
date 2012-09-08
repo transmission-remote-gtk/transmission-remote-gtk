@@ -421,7 +421,11 @@ destroy_window(TrgMainWindow * win, gpointer data G_GNUC_UNUSED)
                           TRG_TREE_VIEW_PERSIST_LAYOUT);
     trg_prefs_save(prefs);
 
+#if ! GTK_CHECK_VERSION( 3, 0, 0 )
     gtk_main_quit();
+#else
+    g_application_quit (g_application_get_default ());
+#endif
 }
 
 static void open_props_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
@@ -1358,6 +1362,11 @@ static gboolean trg_session_update_timerfunc(gpointer data)
 
 static gboolean trg_update_torrents_timerfunc(gpointer data)
 {
+    /* Check if the TrgMainWindow* has already been destroyed
+     * and, in that case, stop polling the server. */
+    if (!TRG_IS_MAIN_WINDOW (data))
+      return FALSE;
+
     TrgMainWindow *win = TRG_MAIN_WINDOW(data);
     TrgMainWindowPrivate *priv = win->priv;
     TrgClient *tc = priv->client;
