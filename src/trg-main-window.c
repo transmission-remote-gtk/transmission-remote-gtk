@@ -597,20 +597,25 @@ void connect_cb(GtkWidget * w, gpointer data)
 
         switch (populate_result) {
         case TRG_NO_HOSTNAME_SET:
-            msg = _("No hostname set");
+            msg = _("No host specified. Set it in the preferences dialog.");
             break;
         default:
             msg = _("Unknown error getting settings");
             break;
         }
 
-        dialog = gtk_message_dialog_new(GTK_WINDOW(data),
-                                        GTK_DIALOG_DESTROY_WITH_PARENT,
-                                        GTK_MESSAGE_ERROR, GTK_BUTTONS_OK,
-                                        "%s", msg);
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
+	dialog = gtk_message_dialog_new(GTK_WINDOW(data),
+					GTK_DIALOG_DESTROY_WITH_PARENT,
+					(populate_result == TRG_NO_HOSTNAME_SET) ? GTK_MESSAGE_INFO : GTK_MESSAGE_ERROR, 
+					GTK_BUTTONS_OK,
+					"%s", msg);
+	gtk_dialog_run(GTK_DIALOG(dialog));
+	gtk_widget_destroy(dialog);
         reset_connect_args(TRG_MAIN_WINDOW(data));
+
+	if (populate_result == TRG_NO_HOSTNAME_SET)
+	  open_local_prefs_cb (NULL, win);
+
         return;
     }
 
@@ -2636,6 +2641,7 @@ static GObject *trg_main_window_constructor(GType type,
     GtkWidget *w;
     GtkWidget *outerVbox;
     GtkWidget *toolbarHbox;
+    GtkWidget *outerAlignment;
     GtkIconTheme *theme;
     gint width, height, pos;
     gboolean tray;
@@ -2698,8 +2704,15 @@ static GObject *trg_main_window_constructor(GType type,
     g_signal_connect(priv->torrentTreeView, "row-activated",
                      G_CALLBACK(torrent_tv_onRowActivated), self);
 
-    outerVbox = trg_vbox_new(FALSE, 0);
-    gtk_container_add(GTK_CONTAINER(self), outerVbox);
+    outerVbox = trg_vbox_new(FALSE, 6);
+
+    /* Create a GtkAlignment to hold the outerVbox making possible
+     * some padding. */
+    outerAlignment = gtk_alignment_new (0.5f, 0.5f, 1.0f, 1.0f);
+    gtk_alignment_set_padding (GTK_ALIGNMENT (outerAlignment), 0, 0, 6, 6);
+    gtk_container_add (GTK_CONTAINER (outerAlignment), outerVbox);
+
+    gtk_container_add(GTK_CONTAINER(self), outerAlignment);
 
     priv->menuBar = trg_main_window_menu_bar_new(self);
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(priv->menuBar),
@@ -2891,3 +2904,4 @@ TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart)
     return g_object_new(TRG_TYPE_MAIN_WINDOW, "trg-client", tc,
                         "min-on-start", minonstart, NULL);
 }
+
