@@ -597,7 +597,7 @@ void connect_cb(GtkWidget * w, gpointer data)
 
         switch (populate_result) {
         case TRG_NO_HOSTNAME_SET:
-            msg = _("No host specified. Set it in the preferences dialog.");
+            msg = _("No hostname set");
             break;
         default:
             msg = _("Unknown error getting settings");
@@ -2704,7 +2704,7 @@ static GObject *trg_main_window_constructor(GType type,
     g_signal_connect(priv->torrentTreeView, "row-activated",
                      G_CALLBACK(torrent_tv_onRowActivated), self);
 
-    outerVbox = trg_vbox_new(FALSE, 6);
+    outerVbox = trg_vbox_new(FALSE, 2);
 
     /* Create a GtkAlignment to hold the outerVbox making possible
      * some padding. */
