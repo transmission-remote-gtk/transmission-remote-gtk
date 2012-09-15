@@ -96,47 +96,7 @@ Section $(NAME_SecTransmissionRemoteGTK) SecTransmissionRemoteGTK
   
   ; Put file there
   File ".libs\transmission-remote-gtk.exe"
-  
-  #SetOutPath $INSTDIR\etc\gtk-2.0
-  
-  #File "C:\MinGW\msys\1.0\etc\gtk-2.0\gtkrc"
-  
-  #SetOutPath $INSTDIR\share\themes\MS-Windows\gtk-2.0
-  
-  #File "C:\MinGW\msys\1.0\share\themes\MS-Windows\gtk-2.0\gtkrc"
-  
-  SetOutPath $INSTDIR\share\locale\uk\LC_MESSAGES
-  
-  File "C:\MinGW\msys\1.0\lib\locale\uk\LC_MESSAGES\transmission-remote-gtk.mo"
-  
-  SetOutPath $INSTDIR\share\locale\fr\LC_MESSAGES
-  
-  File "C:\MinGW\msys\1.0\lib\locale\fr\LC_MESSAGES\transmission-remote-gtk.mo"
-
-  SetOutPath $INSTDIR\share\locale\ru\LC_MESSAGES
-  
-  File "C:\MinGW\msys\1.0\lib\locale\ru\LC_MESSAGES\transmission-remote-gtk.mo"
-
-  SetOutPath $INSTDIR\share\locale\pl\LC_MESSAGES
-
-  File "C:\MinGW\msys\1.0\lib\locale\pl\LC_MESSAGES\transmission-remote-gtk.mo"
-
-  SetOutPath $INSTDIR\share\locale\ko\LC_MESSAGES
-
-  File "C:\MinGW\msys\1.0\lib\locale\ko\LC_MESSAGES\transmission-remote-gtk.mo"
-
-  SetOutPath $INSTDIR\share\locale\es\LC_MESSAGES
-
-  File "C:\MinGW\msys\1.0\lib\locale\es\LC_MESSAGES\transmission-remote-gtk.mo"
-
-  SetOutPath $INSTDIR\share\locale\de\LC_MESSAGES
-
-  File "C:\MinGW\msys\1.0\lib\locale\de\LC_MESSAGES\transmission-remote-gtk.mo"
-
-  SetOutPath $INSTDIR\share\locale\lt\LC_MESSAGES
-
-  File "C:\MinGW\msys\1.0\lib\locale\lt\LC_MESSAGES\transmission-remote-gtk.mo"
-
+    
   SetOutPath $INSTDIR\share\icons\hicolor\scalable\apps
 
   File "C:\MinGW\msys\1.0\share\icons\hicolor\scalable\apps\transmission-remote-gtk.svg"
@@ -160,23 +120,6 @@ Section $(NAME_SecTransmissionRemoteGTK) SecTransmissionRemoteGTK
   SetOutPath $INSTDIR\share\icons\hicolor\16x16\apps
 
   File "C:\MinGW\msys\1.0\share\icons\hicolor\16x16\apps\transmission-remote-gtk.png"
-
-  SetOutPath $INSTDIR\lib\gtk-2.0\2.10.0\engines
-	
-  File "C:\MinGW\msys\1.0\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
-  File "C:\MinGW\msys\1.0\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
-	
-  SetOutPath $INSTDIR\lib\gtk-2.0\modules
-	
-  File "C:\MinGW\msys\1.0\lib\gtk-2.0\modules\libgail.dll" 
-	
-  SetOutPath $INSTDIR\etc\gtk-2.0
-  
-  File "C:\MinGW\msys\1.0\etc\gtk-2.0\gtkrc"
-  
-  SetOutPath $INSTDIR\share\themes\MS-Windows\gtk-2.0
-  
-  File "C:\MinGW\msys\1.0\share\themes\MS-Windows\gtk-2.0\gtkrc" 
   
   !ifndef PORTABLE
   ; Write the installation path into the registry
@@ -250,97 +193,98 @@ Section $(NAME_SecGlibGtkEtc) SecGlibGtkEtc
   File "C:\MinGW\msys\1.0\bin\libstdc++-6.dll"
   File "C:\MinGW\msys\1.0\bin\libgcc_s_sjlj-1.dll"
   File "C:\MinGW\msys\1.0\bin\libgcc_s_dw2-1.dll"
-    
-  #SetOutPath $INSTDIR\lib\gtk-2.0\2.10.0\engines
+
+  SetOutPath $INSTDIR\lib\gtk-2.0\2.10.0\engines
 	
-  #File "C:\MinGW\msys\1.0\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
-  #File "C:\MinGW\msys\1.0\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
+  File "C:\MinGW\msys\1.0\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
+  File "C:\MinGW\msys\1.0\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
+	
+  SetOutPath $INSTDIR\lib\gtk-2.0\modules
+	
+  File "C:\MinGW\msys\1.0\lib\gtk-2.0\modules\libgail.dll" 
+	
+  SetOutPath $INSTDIR\etc\gtk-2.0
   
-  #SetOutPath $INSTDIR\lib\gtk-2.0\modules
+  File "C:\MinGW\msys\1.0\etc\gtk-2.0\gtkrc"
   
-  #File "C:\MinGW\msys\1.0\lib\gtk-2.0\modules\libgail.dll"
+  SetOutPath $INSTDIR\share\themes\MS-Windows\gtk-2.0
   
-  #SetOutPath $INSTDIR\share\locale\lt\LC_MESSAGES
+  File "C:\MinGW\msys\1.0\share\themes\MS-Windows\gtk-2.0\gtkrc" 
   
-  #File "C:\MinGW\share\locale\lt\LC_MESSAGES\gtk20.mo"
-  #File "C:\MinGW\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
-  #File "C:\MinGW\share\locale\lt\LC_MESSAGES\glib20.mo"
-  #File "C:\MinGW\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
-  #File "C:\MinGW\share\locale\lt\LC_MESSAGES\atk10.mo"
-  
-  #SetOutPath $INSTDIR\share\locale\uk\LC_MESSAGES
-  
-  #File "C:\MinGW\share\locale\uk\LC_MESSAGES\libiconv.mo"
-  #File "C:\MinGW\share\locale\uk\LC_MESSAGES\gtk20.mo"
-  #File "C:\MinGW\share\locale\uk\LC_MESSAGES\gtk20-properties.mo"
-  #File "C:\MinGW\share\locale\uk\LC_MESSAGES\glib20.mo"
-  #File "C:\MinGW\share\locale\uk\LC_MESSAGES\gettext-tools.mo"
-  #File "C:\MinGW\share\locale\uk\LC_MESSAGES\gettext-runtime.mo"
-  #File "C:\MinGW\share\locale\uk\LC_MESSAGES\gdk-pixbuf.mo"
-  #File "C:\MinGW\share\locale\uk\LC_MESSAGES\atk10.mo"
-  
-  SetOutPath $INSTDIR\share\locale\fr\LC_MESSAGES
-  
-  File "C:\MinGW\msys\1.0\share\locale\fr\LC_MESSAGES\gtk20.mo"
-  File "C:\MinGW\msys\1.0\share\locale\fr\LC_MESSAGES\gtk20-properties.mo"
-  #File "C:\MinGW\share\locale\fr\LC_MESSAGES\glib20.mo"
-  File "C:\MinGW\share\locale\fr\LC_MESSAGES\gettext-runtime.mo"
-  #File "C:\MinGW\share\locale\fr\LC_MESSAGES\gdk-pixbuf.mo"
-  #File "C:\MinGW\share\locale\fr\LC_MESSAGES\atk10.mo"
-  
-  SetOutPath $INSTDIR\share\locale\ru\LC_MESSAGES
-  
-  File "C:\MinGW\share\locale\ru\LC_MESSAGES\libiconv.mo"
-  #File "C:\MinGW\share\locale\ru\LC_MESSAGES\gtk20.mo"
-  #File "C:\MinGW\share\locale\ru\LC_MESSAGES\gtk20-properties.mo"
-  #File "C:\MinGW\share\locale\ru\LC_MESSAGES\glib20.mo"
-  File "C:\MinGW\share\locale\ru\LC_MESSAGES\gettext-tools.mo"
-  File "C:\MinGW\share\locale\ru\LC_MESSAGES\gettext-runtime.mo"
-  #File "C:\MinGW\share\locale\ru\LC_MESSAGES\gdk-pixbuf.mo"
-  #File "C:\MinGW\share\locale\ru\LC_MESSAGES\atk10.mo"
+  SetOutPath $INSTDIR\share\locale\ca\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\ca\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\ca\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\ca\LC_MESSAGES\*.mo"
 
-  SetOutPath $INSTDIR\share\locale\pl\LC_MESSAGES
-
-  File "C:\MinGW\share\locale\pl\LC_MESSAGES\libiconv.mo"
-  #File "C:\MinGW\share\locale\pl\LC_MESSAGES\gtk20.mo"
-  #File "C:\MinGW\share\locale\pl\LC_MESSAGES\gtk20-properties.mo"
-  #File "C:\MinGW\share\locale\pl\LC_MESSAGES\glib20.mo"
-  File "C:\MinGW\share\locale\pl\LC_MESSAGES\gettext-tools.mo"
-  File "C:\MinGW\share\locale\pl\LC_MESSAGES\gettext-runtime.mo"
-  #File "C:\MinGW\share\locale\pl\LC_MESSAGES\gdk-pixbuf.mo"
-  #File "C:\MinGW\share\locale\pl\LC_MESSAGES\atk10.mo"
-
-  SetOutPath $INSTDIR\share\locale\ko\LC_MESSAGES
-
-  #File "C:\MinGW\share\locale\ko\LC_MESSAGES\gtk20.mo"
-  #File "C:\MinGW\share\locale\ko\LC_MESSAGES\gtk20-properties.mo"
-  #File "C:\MinGW\share\locale\ko\LC_MESSAGES\glib20.mo"
-  File "C:\MinGW\share\locale\ko\LC_MESSAGES\gettext-tools.mo"
-  File "C:\MinGW\share\locale\ko\LC_MESSAGES\gettext-runtime.mo"
-  #File "C:\MinGW\share\locale\ko\LC_MESSAGES\gdk-pixbuf.mo"
-  #File "C:\MinGW\share\locale\ko\LC_MESSAGES\atk10.mo"
-
-  SetOutPath $INSTDIR\share\locale\es\LC_MESSAGES
-
-  File "C:\MinGW\share\locale\es\LC_MESSAGES\libiconv.mo"
-  #File "C:\MinGW\share\locale\es\LC_MESSAGES\gtk20.mo"
-  #File "C:\MinGW\share\locale\es\LC_MESSAGES\gtk20-properties.mo"
-  #File "C:\MinGW\share\locale\es\LC_MESSAGES\glib20.mo"
-  File "C:\MinGW\share\locale\es\LC_MESSAGES\gettext-tools.mo"
-  File "C:\MinGW\share\locale\es\LC_MESSAGES\gettext-runtime.mo"
-  #File "C:\MinGW\share\locale\es\LC_MESSAGES\gdk-pixbuf.mo"
-  #File "C:\MinGW\share\locale\es\LC_MESSAGES\atk10.mo"
+  SetOutPath $INSTDIR\share\locale\cs\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\cs\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\cs\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\cs\LC_MESSAGES\*.mo"
 
   SetOutPath $INSTDIR\share\locale\de\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\de\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\de\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\de\LC_MESSAGES\*.mo"
 
-  File "C:\MinGW\share\locale\de\LC_MESSAGES\libiconv.mo"
-  #File "C:\MinGW\share\locale\de\LC_MESSAGES\gtk20.mo"
-  #File "C:\MinGW\share\locale\de\LC_MESSAGES\gtk20-properties.mo"
-  #File "C:\MinGW\share\locale\de\LC_MESSAGES\glib20.mo"
-  File "C:\MinGW\share\locale\de\LC_MESSAGES\gettext-tools.mo"
-  File "C:\MinGW\share\locale\de\LC_MESSAGES\gettext-runtime.mo"
-  #File "C:\MinGW\share\locale\de\LC_MESSAGES\gdk-pixbuf.mo"
-  #File "C:\MinGW\share\locale\de\LC_MESSAGES\atk10.mo"
+  SetOutPath $INSTDIR\share\locale\es\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\es\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\es\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\es\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\fr\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\fr\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\fr\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\fr\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\it\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\it\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\it\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\it\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\ko\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\ko\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\ko\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\ko\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\lt\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\lt\LC_MESSAGES\*.mo"
+  #File "C:\MinGW\share\locale\lt\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\lt\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\pl\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\pl\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\pl\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\pl\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\pt_BR\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\pt_BR\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\pt_BR\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\pt_BR\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\ru\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\ru\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\ru\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\ru\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\sv\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\sv\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\sv\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\sv\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\tr\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\tr\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\tr\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\tr\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\uk\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\uk\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\uk\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\uk\LC_MESSAGES\*.mo"
+
+  SetOutPath $INSTDIR\share\locale\zh_TW\LC_MESSAGES
+  File /x dos2unix.mo "C:\MinGW\msys\1.0\share\locale\zh_TW\LC_MESSAGES\*.mo"
+  File /x gcc.mo /x cpplib.mo "C:\MinGW\share\locale\zh_TW\LC_MESSAGES\*.mo"
+  File "C:\MinGW\msys\1.0\lib\locale\zh_TW\LC_MESSAGES\*.mo"
 
   SetOutPath $INSTDIR\share\icons\hicolor
 
@@ -403,21 +347,21 @@ Section "Uninstall"
 ;!endif
 
   ; Remove files and uninstaller
-  Delete "$INSTDIR\COPYING.txt"
-  Delete "$INSTDIR\README.txt"
-  Delete "$INSTDIR\AUTHORS.txt"  
-  Delete "$INSTDIR\ChangeLog.txt"
-  Delete "$INSTDIR\GeoIP.dat"
-  Delete "$INSTDIR\GeoIPv6.dat"
-  Delete "$INSTDIR\uninstall.exe"
-  Delete "$INSTDIR\bin\transmission-remote-gtk.exe"
+  Delete "$INSTDIR\AUTHORS.TXT"
   Delete "$INSTDIR\bin\freetype6.dll"
+  Delete "$INSTDIR\bin\gspawn-win32-helper-console.exe"
+  Delete "$INSTDIR\bin\gspawn-win32-helper.exe"
   Delete "$INSTDIR\bin\intl.dll"
   Delete "$INSTDIR\bin\libatk-1.0-0.dll"
   Delete "$INSTDIR\bin\libcairo-2.dll"
+  Delete "$INSTDIR\bin\libcairo-gobject-2.dll"
+  Delete "$INSTDIR\bin\libcrypto-8.dll"
   Delete "$INSTDIR\bin\libcurl-4.dll"
   Delete "$INSTDIR\bin\libexpat-1.dll"
+  Delete "$INSTDIR\bin\libffi-5.dll"
   Delete "$INSTDIR\bin\libfontconfig-1.dll"
+  Delete "$INSTDIR\bin\libgcc_s_dw2-1.dll"
+  Delete "$INSTDIR\bin\libgcc_s_sjlj-1.dll"
   Delete "$INSTDIR\bin\libgdk-win32-2.0-0.dll"
   Delete "$INSTDIR\bin\libgdk_pixbuf-2.0-0.dll"
   Delete "$INSTDIR\bin\libgio-2.0-0.dll"
@@ -425,35 +369,30 @@ Section "Uninstall"
   Delete "$INSTDIR\bin\libgmodule-2.0-0.dll"
   Delete "$INSTDIR\bin\libgobject-2.0-0.dll"
   Delete "$INSTDIR\bin\libgthread-2.0-0.dll"
+  Delete "$INSTDIR\bin\libgtk-win32-2.0-0.dll"
+  Delete "$INSTDIR\bin\libiconv-2.dll"
+  Delete "$INSTDIR\bin\libintl-8.dll"
   Delete "$INSTDIR\bin\libjson-glib-1.0-0.dll"
+  Delete "$INSTDIR\bin\libmodman.dll"
   Delete "$INSTDIR\bin\libpango-1.0-0.dll"
   Delete "$INSTDIR\bin\libpangocairo-1.0-0.dll"
   Delete "$INSTDIR\bin\libpangoft2-1.0-0.dll"
   Delete "$INSTDIR\bin\libpangowin32-1.0-0.dll"
   Delete "$INSTDIR\bin\libpng14-14.dll"
-  Delete "$INSTDIR\bin\intl.dll"
-  Delete "$INSTDIR\bin\libintl-8.dll"
-  Delete "$INSTDIR\bin\libiconv-2.dll"
-  Delete "$INSTDIR\bin\zlib1.dll"
-  Delete "$INSTDIR\bin\libgtk-win32-2.0-0.dll"
-  Delete "$INSTDIR\bin\libffi-5.dll"
-  Delete "$INSTDIR\bin\libcairo-gobject-2.dll"
-  Delete "$INSTDIR\bin\libcrypto-8.dll"
-  Delete "$INSTDIR\bin\libssl-8.dll"
- 
   Delete "$INSTDIR\bin\libproxy.dll"
-  Delete "$INSTDIR\bin\libmodman.dll"
+  Delete "$INSTDIR\bin\libssl-8.dll"
   Delete "$INSTDIR\bin\libstdc++-6.dll"
-  Delete "$INSTDIR\bin\libgcc_s_sjlj-1.dll"
-  Delete "$INSTDIR\bin\libgcc_s_dw2-1.dll"
-  
-  Delete "$INSTDIR\bin\gspawn-win32-helper-console.exe"
-  Delete "$INSTDIR\bin\gspawn-win32-helper.exe"
-  #Delete "$INSTDIR\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
-  #Delete "$INSTDIR\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
-  #Delete "$INSTDIR\lib\gtk-2.0\modules\libgail.dll"
-  #Delete "$INSTDIR\etc\gtk-2.0\gtkrc"
-
+  Delete "$INSTDIR\bin\transmission-remote-gtk.exe"
+  Delete "$INSTDIR\bin\zlib1.dll"
+  Delete "$INSTDIR\ChangeLog.TXT"
+  Delete "$INSTDIR\COPYING.TXT"
+  Delete "$INSTDIR\etc\gtk-2.0\gtkrc"
+  Delete "$INSTDIR\GeoIP.dat"
+  Delete "$INSTDIR\GeoIPv6.dat"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\engines\libpixmap.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\2.10.0\engines\libwimp.dll"
+  Delete "$INSTDIR\lib\gtk-2.0\modules\libgail.dll"
+  Delete "$INSTDIR\README.TXT"
   Delete "$INSTDIR\share\icons\hicolor\16x16\apps\transmission-remote-gtk.png"
   Delete "$INSTDIR\share\icons\hicolor\22x22\apps\transmission-remote-gtk.png"
   Delete "$INSTDIR\share\icons\hicolor\24x24\apps\transmission-remote-gtk.png"
@@ -462,88 +401,139 @@ Section "Uninstall"
   Delete "$INSTDIR\share\icons\hicolor\icon-theme.cache"
   Delete "$INSTDIR\share\icons\hicolor\index.theme"
   Delete "$INSTDIR\share\icons\hicolor\scalable\apps\transmission-remote-gtk.svg"
-  #Delete "$INSTDIR\share\locale\de\LC_MESSAGES\atk10.mo"
-  #Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\ca\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\cs\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gdk-pixbuf.mo"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gettext-runtime.mo"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gettext-tools.mo"
-  #Delete "$INSTDIR\share\locale\de\LC_MESSAGES\glib20.mo"
-  #Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gtk20-properties.mo"
-  #Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\de\LC_MESSAGES\gtk20.mo"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\libiconv.mo"
   Delete "$INSTDIR\share\locale\de\LC_MESSAGES\transmission-remote-gtk.mo"
-  #Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\atk10.mo"
-  #Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
-  #Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\glib20.mo"
-  #Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
-  #Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gtk20.mo"
-  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\transmission-remote-gtk.mo"
-  #Delete "$INSTDIR\share\locale\es\LC_MESSAGES\atk10.mo"
-  #Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\es\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gdk-pixbuf.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gettext-runtime.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gettext-tools.mo"
-  #Delete "$INSTDIR\share\locale\es\LC_MESSAGES\glib20.mo"
-  #Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gtk20-properties.mo"
-  #Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\es\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\es\LC_MESSAGES\gtk20.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\libiconv.mo"
   Delete "$INSTDIR\share\locale\es\LC_MESSAGES\transmission-remote-gtk.mo"
-  #Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\atk10.mo"
-  #Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gdk-pixbuf.mo"
-  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gettext-runtime.mo"
-  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gettext-tools.mo"
-  #Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\glib20.mo"
-  #Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gtk20-properties.mo"
-  #Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gtk20.mo"
-  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\transmission-remote-gtk.mo"
-  #Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\atk10.mo"
-  #Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gdk-pixbuf.mo"
-  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gettext-runtime.mo"
-  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gettext-tools.mo"
-  #Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\glib20.mo"
-  #Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gtk20-properties.mo"
-  #Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gtk20.mo"
-  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\libiconv.mo"
-  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\transmission-remote-gtk.mo"
-  #Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\atk10.mo"
-  #Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gdk-pixbuf.mo"
-  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gettext-runtime.mo"
-  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gettext-tools.mo"
-  #Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\glib20.mo"
-  #Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gtk20-properties.mo"
-  #Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gtk20.mo"
-  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\libiconv.mo"
-  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\transmission-remote-gtk.mo"
-  #Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\atk10.mo"
-  #Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\gdk-pixbuf.mo"
   Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\gettext-runtime.mo"
-  #Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\glib20.mo"
   Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\gtk20-properties.mo"
   Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\libiconv.mo"
   Delete "$INSTDIR\share\locale\fr\LC_MESSAGES\transmission-remote-gtk.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\atk10.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gdk-pixbuf.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gettext-runtime.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gettext-tools.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\glib20.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gtk20-properties.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gtk20.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\libiconv.mo"
-  #Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\transmission-remote-gtk.mo"
-  #Delete "$INSTDIR\share\themes\MS-Windows\gtk-2.0\gtkrc"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Script.pod"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Script.pm"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Maketext\TPJ13.pod"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Maketext\GutsLoader.pm"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Maketext\Guts.pm"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Maketext.pod"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Maketext.pm"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Language.pod"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Language.pm"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Currency.pod"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Currency.pm"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Country.pod"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Country.pm"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Constants.pod"
-  Delete "$INSTDIR\share\perl5\5.8\Locale\Constants.pm"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\it\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\ko\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\lt\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\pl\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\pt_BR\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\ru\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\sv\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\tr\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\uk\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\atk10.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\gdk-pixbuf.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\gettext-runtime.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\gettext-tools.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\glib20.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\gtk20-properties.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\gtk20.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\libiconv.mo"
+  Delete "$INSTDIR\share\locale\zh_TW\LC_MESSAGES\transmission-remote-gtk.mo"
+  Delete "$INSTDIR\share\themes\MS-Windows\gtk-2.0\gtkrc"
+  Delete "$INSTDIR\uninstall.exe"
   
   ; Remove shortcuts, if any
   !insertmacro MUI_STARTMENU_GETFOLDER Application $StartMenuFolder
@@ -557,25 +547,39 @@ Section "Uninstall"
 !endif
 
   ; Remove directories used
-  #RMDir "$INSTDIR\share\themes\MS-Windows\gtk-2.0"
-  #RMDir "$INSTDIR\share\themes\MS-Windows"
+  RMDir "$INSTDIR\share\themes\MS-Windows\gtk-2.0"
+  RMDir "$INSTDIR\share\themes\MS-Windows"
   RMDir "$INSTDIR\share\themes"
-  #RMDir "$INSTDIR\share\locale\uk\LC_MESSAGES"
-  #RMDir "$INSTDIR\share\locale\uk"
-  RMDir "$INSTDIR\share\locale\fr\LC_MESSAGES"
-  RMDir "$INSTDIR\share\locale\fr"
+  RMDir "$INSTDIR\share\locale\zh_TW\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\zh_TW"
+  RMDir "$INSTDIR\share\locale\uk\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\uk"
+  RMDir "$INSTDIR\share\locale\tr\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\tr"
+  RMDir "$INSTDIR\share\locale\sv\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\sv"
   RMDir "$INSTDIR\share\locale\ru\LC_MESSAGES"
   RMDir "$INSTDIR\share\locale\ru"
+  RMDir "$INSTDIR\share\locale\pt_BR\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\pt_BR"
   RMDir "$INSTDIR\share\locale\pl\LC_MESSAGES"
   RMDir "$INSTDIR\share\locale\pl"
+  RMDir "$INSTDIR\share\locale\lt\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\lt"
   RMDir "$INSTDIR\share\locale\ko\LC_MESSAGES"
   RMDir "$INSTDIR\share\locale\ko"
+  RMDir "$INSTDIR\share\locale\it\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\it"
+  RMDir "$INSTDIR\share\locale\fr\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\fr"
   RMDir "$INSTDIR\share\locale\es\LC_MESSAGES"
   RMDir "$INSTDIR\share\locale\es"
   RMDir "$INSTDIR\share\locale\de\LC_MESSAGES"
   RMDir "$INSTDIR\share\locale\de"
-  RMDir "$INSTDIR\share\locale\lt\LC_MESSAGES"
-  RMDir "$INSTDIR\share\locale\lt"
+  RMDir "$INSTDIR\share\locale\cs\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\cs"
+  RMDir "$INSTDIR\share\locale\ca\LC_MESSAGES"
+  RMDir "$INSTDIR\share\locale\ca"
   RMDir "$INSTDIR\share\locale"
   RMDir "$INSTDIR\share\icons\hicolor\scalable\apps"
   RMDir "$INSTDIR\share\icons\hicolor\scalable"
@@ -591,18 +595,14 @@ Section "Uninstall"
   RMDir "$INSTDIR\share\icons\hicolor\16x16"
   RMDir "$INSTDIR\share\icons\hicolor"
   RMDir "$INSTDIR\share\icons"
-  RMDir "$INSTDIR\share\perl5\5.8\Locale\Maketext"
-  RMDir "$INSTDIR\share\perl5\5.8\Locale"
-  RMDir "$INSTDIR\share\perl5\5.8"
-  RMDir "$INSTDIR\share\perl5"
   RMDir "$INSTDIR\share"
-  #RMDir "$INSTDIR\etc\gtk-2.0"
-  RMDir "$INSTDIR\etc"
-  #RMDir "$INSTDIR\lib\gtk-2.0\modules"
-  #RMDir "$INSTDIR\lib\gtk-2.0\2.10.0\engines"
-  #RMDir "$INSTDIR\lib\gtk-2.0\2.10.0"
-  #RMDir "$INSTDIR\lib\gtk-2.0"
+  RMDir "$INSTDIR\lib\gtk-2.0\modules"
+  RMDir "$INSTDIR\lib\gtk-2.0\2.10.0\engines"
+  RMDir "$INSTDIR\lib\gtk-2.0\2.10.0"
+  RMDir "$INSTDIR\lib\gtk-2.0"
   RMDir "$INSTDIR\lib"
+  RMDir "$INSTDIR\etc\gtk-2.0"
+  RMDir "$INSTDIR\etc"
   RMDir "$INSTDIR\bin"
   RMDir "$INSTDIR"
   
