@@ -136,45 +136,6 @@ static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
                                           gpointer data G_GNUC_UNUSED)
 {
     TrgTorrentPropsDialogPrivate *priv = GET_PRIVATE(dialog);
-    JsonNode *request;
-    JsonObject *args;
-
-    if (priv->peersTv)
-        trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTv),
-                              TRG_TREE_VIEW_PERSIST_SORT |
-                              TRG_TREE_VIEW_PERSIST_LAYOUT);
-    if (priv->filesTv)
-        trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTv),
-                              TRG_TREE_VIEW_PERSIST_SORT |
-                              TRG_TREE_VIEW_PERSIST_LAYOUT);
-
-    if (priv->trackersTv)
-        trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTv),
-                              TRG_TREE_VIEW_PERSIST_SORT |
-                              TRG_TREE_VIEW_PERSIST_LAYOUT);
-
-    if (res_id != GTK_RESPONSE_OK) {
-        gtk_widget_destroy(GTK_WIDGET(dialog));
-        json_array_unref(priv->targetIds);
-        return;
-    }
-
-    request = torrent_set(priv->targetIds);
-    args = node_get_arguments(request);
-
-    json_object_set_int_member(args, FIELD_SEED_RATIO_MODE,
-                               gtk_combo_box_get_active(GTK_COMBO_BOX
-                                                        (priv->seedRatioMode)));
-    json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
-                               gtk_combo_box_get_active(GTK_COMBO_BOX
-                                                        (priv->bandwidthPriorityCombo))
-                               - 1);
-
-    trg_json_widgets_save(priv->widgets, args);
-    trg_json_widget_desc_list_free(priv->widgets);
-
-    dispatch_async(priv->client, request, on_generic_interactive_action,
-                   priv->parent);
 
     if (priv->show_details) {
         TrgPrefs *prefs = trg_client_get_prefs(priv->client);
@@ -183,6 +144,36 @@ static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
         trg_prefs_set_int(prefs, "dialog-width", width, TRG_PREFS_GLOBAL);
         trg_prefs_set_int(prefs, "dialog-height", height,
                           TRG_PREFS_GLOBAL);
+
+        trg_tree_view_persist(TRG_TREE_VIEW(priv->peersTv),
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
+        trg_tree_view_persist(TRG_TREE_VIEW(priv->filesTv),
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
+        trg_tree_view_persist(TRG_TREE_VIEW(priv->trackersTv),
+                              TRG_TREE_VIEW_PERSIST_SORT |
+                              TRG_TREE_VIEW_PERSIST_LAYOUT);
+    }
+
+    if (res_id != GTK_RESPONSE_OK) {
+        json_array_unref(priv->targetIds);
+    } else {
+        JsonNode *request = torrent_set(priv->targetIds);
+        JsonObject *args = node_get_arguments(request);
+
+        json_object_set_int_member(args, FIELD_SEED_RATIO_MODE,
+                gtk_combo_box_get_active(GTK_COMBO_BOX
+                (priv->seedRatioMode) ));
+        json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
+                gtk_combo_box_get_active(GTK_COMBO_BOX
+                (priv->bandwidthPriorityCombo) ) - 1);
+
+        trg_json_widgets_save(priv->widgets, args);
+        trg_json_widget_desc_list_free(priv->widgets);
+
+        dispatch_async(priv->client, request, on_generic_interactive_action,
+                priv->parent);
     }
 
     gtk_widget_destroy(GTK_WIDGET(dialog));
