@@ -1,0 +1,1485 @@
+# Czech translation for transmission-remote-gtk
+# Copyright (c) 2012 Rosetta Contributors and Canonical Ltd 2012
+# This file is distributed under the same license as the transmission-remote-gtk package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2012.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: transmission-remote-gtk\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-09-05 22:09+0100\n"
+"PO-Revision-Date: 2012-09-08 09:16+0000\n"
+"Last-Translator: Jan Žárský <jan.zarsky@gmail.com>\n"
+"Language-Team: Czech <cs@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2012-09-15 09:28+0000\n"
+"X-Generator: Launchpad (build 15944)\n"
+
+#: src/torrent.c:360 src/torrent.c:380
+msgid "Metadata Downloading"
+msgstr ""
+
+#: src/torrent.c:362 src/torrent.c:382 src/trg-state-selector.c:658
+msgid "Downloading"
+msgstr "Stahuje se"
+
+#: src/torrent.c:364
+msgid "Queued download"
+msgstr ""
+
+#: src/torrent.c:366 src/torrent.c:390
+msgid "Waiting To Check"
+msgstr "Čekání na kontrolu"
+
+#: src/torrent.c:368 src/torrent.c:388 src/trg-state-selector.c:684
+msgid "Checking"
+msgstr "Kontrola"
+
+#: src/torrent.c:370
+msgid "Queued seed"
+msgstr ""
+
+#: src/torrent.c:372 src/torrent.c:386 src/trg-remote-prefs-dialog.c:360
+#: src/trg-state-selector.c:665 src/trg-torrent-props-dialog.c:447
+msgid "Seeding"
+msgstr "Sdílení"
+
+#: src/torrent.c:374 src/torrent.c:384 src/torrent-cell-renderer.c:285
+#: src/trg-state-selector.c:672
+msgid "Paused"
+msgstr "Pozastaveno"
+
+#: src/torrent.c:394
+msgid "Unknown"
+msgstr "Neznámý"
+
+#: src/torrent-cell-renderer.c:157
+#, c-format
+msgid "%1$s of %2$s (%3$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:167
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s Goal: %6$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:183
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:200
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:214
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:230
+msgid "Remaining time unknown"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:235
+#, c-format
+msgid "%s remaining"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:259
+#, c-format
+msgid "%1$s %2$s, %3$s %4$s"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:263 src/torrent-cell-renderer.c:266
+#, c-format
+msgid "%1$s %2$s"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:270
+msgid "Idle"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:284
+msgid "Finished"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:287
+msgid "Queued for verification"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:289
+msgid "Queued for download"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:291
+msgid "Queued for seeding"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:294
+#, c-format
+msgid "Verifying data (%1$s tested)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:302
+#, c-format
+msgid "Ratio %s"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:332
+#, c-format
+msgid "Downloading from %1$li of %2$li connected peer"
+msgid_plural "Downloading from %1$li of %2$li connected peers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/torrent-cell-renderer.c:340
+#, c-format
+msgid "Downloading metadata from %1$li peer (%2$s done)"
+msgid_plural "Downloading metadata from %1$li peers (%2$s done)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/torrent-cell-renderer.c:351
+#, c-format
+msgid "Seeding to %1$li of %2$li connected peer"
+msgid_plural "Seeding to %1$li of %2$li connected peers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/trg-about-window.c:74
+msgid "A remote client to transmission-daemon."
+msgstr "Vzdálený klient k transmission-daemon."
+
+#: src/trg-cell-renderer-priority.c:74 src/trg-main-window.c:2011
+#: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:416
+msgid "Low"
+msgstr "Nízká"
+
+#: src/trg-cell-renderer-priority.c:76 src/trg-main-window.c:2007
+#: src/trg-torrent-add-dialog.c:451 src/trg-torrent-props-dialog.c:418
+msgid "High"
+msgstr "Vysoká"
+
+#: src/trg-cell-renderer-priority.c:78 src/trg-main-window.c:2009
+#: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:417
+msgid "Normal"
+msgstr "Normální"
+
+#: src/trg-cell-renderer-priority.c:80
+msgid "Mixed"
+msgstr "Smíšená"
+
+#: src/trg-files-tree-view.c:185 src/trg-general-panel.c:280
+#: src/trg-torrent-add-dialog.c:348 src/trg-torrent-tree-view.c:52
+msgid "Name"
+msgstr "Jméno"
+
+#: src/trg-files-tree-view.c:189 src/trg-general-panel.c:283
+#: src/trg-torrent-add-dialog.c:366 src/trg-torrent-tree-view.c:57
+msgid "Size"
+msgstr "Velikost"
+
+#: src/trg-files-tree-view.c:191 src/trg-peers-tree-view.c:65
+msgid "Progress"
+msgstr "Postup"
+
+#: src/trg-files-tree-view.c:193 src/trg-files-tree-view-common.c:69
+#: src/trg-torrent-add-dialog.c:379 src/trg-torrent-add-dialog.c:703
+msgid "Download"
+msgstr "Stáhnout"
+
+#: src/trg-files-tree-view.c:195 src/trg-main-window.c:2000
+#: src/trg-torrent-add-dialog.c:395 src/trg-torrent-tree-view.c:145
+msgid "Priority"
+msgstr "Priorita"
+
+#: src/trg-files-tree-view-common.c:50 src/trg-torrent-add-dialog.c:694
+msgid "High Priority"
+msgstr "Vysoká priorita"
+
+#: src/trg-files-tree-view-common.c:54 src/trg-torrent-add-dialog.c:697
+msgid "Normal Priority"
+msgstr "Normální priorita"
+
+#: src/trg-files-tree-view-common.c:58 src/trg-torrent-add-dialog.c:700
+msgid "Low Priority"
+msgstr "Nízká priorita"
+
+#: src/trg-files-tree-view-common.c:77 src/trg-torrent-add-dialog.c:706
+msgid "Skip"
+msgstr "Přeskočit"
+
+#: src/trg-files-tree-view-common.c:84
+msgid "Expand All"
+msgstr "Rozbalit vše"
+
+#: src/trg-files-tree-view-common.c:89
+msgid "Collapse All"
+msgstr "Sbalit vše"
+
+#: src/trg-general-panel.c:153 src/trg-general-panel.c:214
+msgid "N/A"
+msgstr "Neznáme"
+
+#: src/trg-general-panel.c:168
+msgid "(Private)"
+msgstr "(Soukromé)"
+
+#: src/trg-general-panel.c:168
+msgid "(Public)"
+msgstr "(Veřejné)"
+
+#: src/trg-general-panel.c:202 src/trg-main-window.c:1097
+#: src/trg-main-window.c:1505 src/trg-main-window.c:2135
+#: src/trg-state-selector.c:538 src/trg-torrent-add-url-dialog.c:67
+#: src/util.c:331
+msgid "Error"
+msgstr "Chyba"
+
+#: src/trg-general-panel.c:285 src/trg-torrent-tree-view.c:123
+msgid "ETA"
+msgstr "ETA"
+
+#: src/trg-general-panel.c:287 src/trg-torrent-tree-view.c:151
+msgid "Completed"
+msgstr "Dokončeno"
+
+#: src/trg-general-panel.c:290
+msgid "Seeders"
+msgstr "Protějšky"
+
+#: src/trg-general-panel.c:292
+msgid "Rate Down"
+msgstr ""
+
+#: src/trg-general-panel.c:294 src/trg-torrent-tree-view.c:128
+msgid "Downloaded"
+msgstr "Staženo"
+
+#: src/trg-general-panel.c:297 src/trg-torrent-tree-view.c:70
+msgid "Leechers"
+msgstr "Stahující"
+
+#: src/trg-general-panel.c:299
+msgid "Rate Up"
+msgstr ""
+
+#: src/trg-general-panel.c:301 src/trg-torrent-tree-view.c:125
+msgid "Uploaded"
+msgstr "Odesláno"
+
+#: src/trg-general-panel.c:304 src/trg-torrent-tree-view.c:63
+msgid "Status"
+msgstr "Stav"
+
+#: src/trg-general-panel.c:306 src/trg-torrent-tree-view.c:131
+msgid "Ratio"
+msgstr "Poměr"
+
+#: src/trg-general-panel.c:309
+msgid "Comment"
+msgstr "Komentář"
+
+#: src/trg-general-panel.c:312
+msgid "Completed At"
+msgstr "Dokončeno v"
+
+#: src/trg-general-panel.c:316 src/trg-torrent-tree-view.c:139
+msgid "Location"
+msgstr "Umístění"
+
+#: src/trg-main-window.c:363
+msgid "This torrent has completed."
+msgstr "Tento torrent je dokončený."
+
+#: src/trg-main-window.c:375
+msgid "This torrent has been added."
+msgstr "Tento torrent byl přidán."
+
+#: src/trg-main-window.c:596
+msgid "No hostname set"
+msgstr ""
+
+#: src/trg-main-window.c:599
+msgid "Unknown error getting settings"
+msgstr ""
+
+#: src/trg-main-window.c:614
+msgid "Connecting..."
+msgstr "Připojování..."
+
+#: src/trg-main-window.c:873
+#, c-format
+msgid "<big><b>Remove torrent \"%s\"?</b></big>"
+msgstr "<big><b>Odstranit torrent \"%s\"?</b></big>"
+
+#: src/trg-main-window.c:874
+#, c-format
+msgid "<big><b>Remove %d torrents?</b></big>"
+msgstr "<big><b>Odstranit %d torrentů?</b></big>"
+
+#: src/trg-main-window.c:896
+#, c-format
+msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
+msgstr "<big><b>Odstranit a smazat torrent \"%s\"?</b></big>"
+
+#: src/trg-main-window.c:898
+#, c-format
+msgid "<big><b>Remove and delete %d torrents?</b></big>"
+msgstr "<big><b>Odstranit a smazat %d torrentů?</b></big>"
+
+#: src/trg-main-window.c:981 src/trg-preferences-dialog.c:897
+#: src/trg-remote-prefs-dialog.c:693
+msgid "General"
+msgstr "Obecné"
+
+#: src/trg-main-window.c:990 src/trg-torrent-props-dialog.c:622
+msgid "Trackers"
+msgstr "Trackery"
+
+#: src/trg-main-window.c:998 src/trg-torrent-props-dialog.c:591
+msgid "Files"
+msgstr "Soubory"
+
+#: src/trg-main-window.c:1006 src/trg-remote-prefs-dialog.c:399
+#: src/trg-torrent-props-dialog.c:465 src/trg-torrent-props-dialog.c:605
+#: src/trg-trackers-tree-view.c:190
+msgid "Peers"
+msgstr "Peery"
+
+#: src/trg-main-window.c:1089
+#, c-format
+msgid "This application supports Transmission %g and later, you have %g."
+msgstr "Tato aplikace podporuje Transmission %g a novější, vy máte %g."
+
+#: src/trg-main-window.c:1155 src/trg-status-bar.c:74 src/trg-status-bar.c:104
+msgid "Disconnected"
+msgstr "Odpojeno"
+
+#: src/trg-main-window.c:1200
+#, c-format
+msgid "%d Downloading @ %s"
+msgstr ""
+
+#: src/trg-main-window.c:1207
+#, c-format
+msgid "%d Seeding @ %s"
+msgstr ""
+
+#: src/trg-main-window.c:1258
+#, c-format
+msgid "Request %d/%d failed: %s"
+msgstr "Požadavek %d/%d selhal: %s"
+
+#: src/trg-main-window.c:2055
+msgid "No Limit"
+msgstr "Bez omezení"
+
+#: src/trg-main-window.c:2156 src/trg-menu-bar.c:675 src/trg-toolbar.c:223
+msgid "Properties"
+msgstr "Vlastnosti"
+
+#: src/trg-main-window.c:2159 src/trg-toolbar.c:216
+msgid "Resume"
+msgstr "Pokračovat"
+
+#: src/trg-main-window.c:2162 src/trg-toolbar.c:219
+msgid "Pause"
+msgstr "Pozastavit"
+
+#: src/trg-main-window.c:2165
+msgid "Verify"
+msgstr "Ověřit"
+
+#: src/trg-main-window.c:2168
+msgid "Re-announce"
+msgstr ""
+
+#: src/trg-main-window.c:2171 src/trg-torrent-move-dialog.c:119
+#: src/trg-torrent-move-dialog.c:126
+msgid "Move"
+msgstr "Přesunout"
+
+#: src/trg-main-window.c:2174 src/trg-menu-bar.c:706 src/trg-toolbar.c:227
+msgid "Remove"
+msgstr "Odstranit"
+
+#: src/trg-main-window.c:2177
+msgid "Remove & Delete"
+msgstr "Odstranit a smazat"
+
+#: src/trg-main-window.c:2201 src/trg-preferences-dialog.c:907
+msgid "Actions"
+msgstr "Akce"
+
+#: src/trg-main-window.c:2230 src/trg-menu-bar.c:722
+msgid "Start Now"
+msgstr "Začít teď"
+
+#: src/trg-main-window.c:2233 src/trg-menu-bar.c:727
+msgid "Move Up Queue"
+msgstr ""
+
+#: src/trg-main-window.c:2236 src/trg-menu-bar.c:734
+msgid "Move Down Queue"
+msgstr ""
+
+#: src/trg-main-window.c:2239 src/trg-menu-bar.c:741
+msgid "Bottom Of Queue"
+msgstr ""
+
+#: src/trg-main-window.c:2242 src/trg-menu-bar.c:745
+msgid "Top Of Queue"
+msgstr ""
+
+#: src/trg-main-window.c:2251 src/trg-main-window.c:2334
+msgid "Down Limit"
+msgstr "Limit stahování"
+
+#: src/trg-main-window.c:2256 src/trg-main-window.c:2338
+msgid "Up Limit"
+msgstr "Limit odesílání"
+
+#: src/trg-main-window.c:2285 src/trg-main-window.c:2292
+#: src/trg-remote-prefs-dialog.c:497
+msgid "Updating..."
+msgstr "Aktualizace..."
+
+#: src/trg-main-window.c:2306 src/trg-menu-bar.c:634 src/trg-toolbar.c:196
+msgid "Connect"
+msgstr "Připojit"
+
+#: src/trg-main-window.c:2313 src/trg-toolbar.c:206
+msgid "Disconnect"
+msgstr "Odpojit"
+
+#: src/trg-main-window.c:2317 src/trg-toolbar.c:209
+#: src/trg-trackers-tree-view.c:284 src/trg-trackers-tree-view.c:311
+msgid "Add"
+msgstr "Přidat"
+
+#: src/trg-main-window.c:2321
+msgid "Add from URL"
+msgstr "Přidat z URL"
+
+#: src/trg-main-window.c:2325
+msgid "Resume All"
+msgstr "Pokračovat ve všem"
+
+#: src/trg-main-window.c:2329
+msgid "Pause All"
+msgstr "Pozastavit vše"
+
+#: src/trg-main-window.c:2345
+msgid "Quit"
+msgstr "Ukončit"
+
+#: src/trg-main-window.c:2459 src/trg-menu-bar.c:536
+msgid "Graph"
+msgstr "Graf"
+
+#: src/trg-main-window.c:2647
+msgid "Transmission Remote"
+msgstr "Transmission Remote"
+
+#: src/trg-menu-bar.c:464
+msgid "_View"
+msgstr "_Zobrazit"
+
+#: src/trg-menu-bar.c:473
+msgid "Transmission Style"
+msgstr ""
+
+#: src/trg-menu-bar.c:483
+msgid "Transmission Compact Style"
+msgstr ""
+
+#: src/trg-menu-bar.c:493
+msgid "Classic Style"
+msgstr ""
+
+#: src/trg-menu-bar.c:499
+msgid "Sort"
+msgstr ""
+
+#: src/trg-menu-bar.c:504 src/trg-preferences-dialog.c:675
+msgid "State selector"
+msgstr ""
+
+#: src/trg-menu-bar.c:510 src/trg-preferences-dialog.c:682
+msgid "Directory filters"
+msgstr "Filter adresářů"
+
+#: src/trg-menu-bar.c:519 src/trg-preferences-dialog.c:689
+msgid "Tracker filters"
+msgstr "Filter trackerů"
+
+#: src/trg-menu-bar.c:528 src/trg-preferences-dialog.c:696
+msgid "Torrent Details"
+msgstr "Detaily torrentu"
+
+#: src/trg-menu-bar.c:542
+msgid "_Statistics"
+msgstr "_Statistiky"
+
+#: src/trg-menu-bar.c:554
+msgid "_Options"
+msgstr "_Volby"
+
+#: src/trg-menu-bar.c:560
+msgid "_Local Preferences"
+msgstr "_Místní nastavení"
+
+#: src/trg-menu-bar.c:567
+msgid "_Remote Preferences"
+msgstr ""
+
+#: src/trg-menu-bar.c:627
+msgid "_File"
+msgstr "_Soubor"
+
+#: src/trg-menu-bar.c:640
+msgid "_Disconnect"
+msgstr "_Odpojit"
+
+#: src/trg-menu-bar.c:646
+msgid "_Add"
+msgstr "_Přidat"
+
+#: src/trg-menu-bar.c:651
+msgid "Add from _URL"
+msgstr "Přidat z _URL"
+
+#: src/trg-menu-bar.c:657
+msgid "_Quit"
+msgstr "_Ukončit"
+
+#: src/trg-menu-bar.c:668
+msgid "_Torrent"
+msgstr "_Torrent"
+
+#: src/trg-menu-bar.c:680
+msgid "_Resume"
+msgstr "Pok_račovat"
+
+#: src/trg-menu-bar.c:685
+msgid "_Pause"
+msgstr "_Pozastavit"
+
+#: src/trg-menu-bar.c:690
+msgid "_Verify"
+msgstr "_Ověřit"
+
+#: src/trg-menu-bar.c:696
+msgid "Re-_announce"
+msgstr ""
+
+#: src/trg-menu-bar.c:701
+msgid "_Move"
+msgstr "_Přesunout"
+
+#: src/trg-menu-bar.c:712
+msgid "Remove and Delete"
+msgstr "Odstranit a smazat"
+
+#: src/trg-menu-bar.c:753
+msgid "_Resume All"
+msgstr "Pokračovat ve všem"
+
+#: src/trg-menu-bar.c:759
+msgid "_Pause All"
+msgstr "_Pozastavit vše"
+
+#: src/trg-menu-bar.c:771
+msgid "_Help"
+msgstr "_Nápověda"
+
+#: src/trg-menu-bar.c:777
+msgid "_About"
+msgstr "_O aplikaci"
+
+#: src/trg-peers-tree-view.c:50
+msgid "IP"
+msgstr "IP"
+
+#: src/trg-peers-tree-view.c:54 src/trg-trackers-tree-view.c:209
+msgid "Host"
+msgstr "Hostitel"
+
+#: src/trg-peers-tree-view.c:58
+msgid "Country"
+msgstr "Země"
+
+#: src/trg-peers-tree-view.c:61 src/trg-torrent-tree-view.c:117
+msgid "Down Speed"
+msgstr "Rychlost stahování"
+
+#: src/trg-peers-tree-view.c:63 src/trg-torrent-tree-view.c:120
+msgid "Up Speed"
+msgstr "Rychlost odesílání"
+
+#: src/trg-peers-tree-view.c:67
+msgid "Flags"
+msgstr "Příznaky"
+
+#: src/trg-peers-tree-view.c:69
+msgid "Client"
+msgstr "Klient"
+
+#: src/trg-preferences-dialog.c:401
+msgid "Updates"
+msgstr "Aktualizace"
+
+#: src/trg-preferences-dialog.c:403
+msgid "Update active torrents only"
+msgstr "Aktualizovat pouze aktivní torrenty"
+
+#: src/trg-preferences-dialog.c:410
+msgid "Full update every (?) updates"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:424
+msgid "Update interval:"
+msgstr "Interval aktualizace:"
+
+#: src/trg-preferences-dialog.c:428
+msgid "Minimised update interval:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:433
+msgid "Session update interval:"
+msgstr "Interval aktualizace sezení:"
+
+#: src/trg-preferences-dialog.c:435
+msgid "Torrents"
+msgstr "Torrenty"
+
+#: src/trg-preferences-dialog.c:437
+msgid "Start paused"
+msgstr "Začátek pozastaven"
+
+#: src/trg-preferences-dialog.c:441
+msgid "Options dialog on add"
+msgstr "Zobrazit dialog možností při přidání"
+
+#: src/trg-preferences-dialog.c:446 src/trg-torrent-add-dialog.c:776
+msgid "Delete local .torrent file after adding"
+msgstr "Smazat lokální soubor .torrent po přidání"
+
+#: src/trg-preferences-dialog.c:599
+msgid "Commands"
+msgstr "Příkazy"
+
+#: src/trg-preferences-dialog.c:609 src/trg-preferences-dialog.c:647
+msgid "Label"
+msgstr "Popisek"
+
+#: src/trg-preferences-dialog.c:612
+msgid "Command"
+msgstr "Příkaz"
+
+#: src/trg-preferences-dialog.c:637
+msgid "Remote Download Directories"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:650
+msgid "Directory"
+msgstr "Adresář"
+
+#: src/trg-preferences-dialog.c:673 src/trg-preferences-dialog.c:902
+msgid "View"
+msgstr "Zobrazit"
+
+#: src/trg-preferences-dialog.c:704
+msgid "Show graph"
+msgstr "Zobrazit graf"
+
+#: src/trg-preferences-dialog.c:714
+msgid "System Tray"
+msgstr "Systémová část panelu"
+
+#: src/trg-preferences-dialog.c:716
+msgid "Show in system tray"
+msgstr "Zobrazit v systémové části panelu"
+
+#: src/trg-preferences-dialog.c:724
+msgid "Minimise to system tray"
+msgstr "Minimalizovat do systémové části panelu"
+
+#: src/trg-preferences-dialog.c:740
+msgid "Notifications"
+msgstr "Oznámení"
+
+#: src/trg-preferences-dialog.c:742
+msgid "Torrent added notifications"
+msgstr "Oznámení o přidání torrentu"
+
+#: src/trg-preferences-dialog.c:746
+msgid "Torrent complete notifications"
+msgstr "Oznámení o dokončení torrentu"
+
+#: src/trg-preferences-dialog.c:773
+msgid "Profile: "
+msgstr "Profil: "
+
+#: src/trg-preferences-dialog.c:799
+msgid "Name:"
+msgstr "Jméno:"
+
+#: src/trg-preferences-dialog.c:807 src/trg-preferences-dialog.c:892
+msgid "Connection"
+msgstr "Připojení"
+
+#: src/trg-preferences-dialog.c:810
+msgid "Host:"
+msgstr "Hostitel:"
+
+#: src/trg-preferences-dialog.c:814
+msgid "Port:"
+msgstr "Port:"
+
+#: src/trg-preferences-dialog.c:817
+msgid "Username:"
+msgstr "Uživatelské jméno:"
+
+#: src/trg-preferences-dialog.c:821
+msgid "Password:"
+msgstr "Heslo:"
+
+#: src/trg-preferences-dialog.c:823
+msgid "Automatically connect"
+msgstr "Připojit automaticky"
+
+#: src/trg-preferences-dialog.c:829
+msgid "SSL"
+msgstr "SSL"
+
+#: src/trg-preferences-dialog.c:836
+msgid "Timeout:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:840
+msgid "Retries:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:881 src/trg-toolbar.c:238
+msgid "Local Preferences"
+msgstr "Místní předvolby"
+
+#: src/trg-preferences-dialog.c:912
+msgid "Directories"
+msgstr "Adresáře"
+
+#: src/trg-remote-prefs-dialog.c:305
+msgid "Bandwidth limits"
+msgstr "Limity šířky pásma"
+
+#: src/trg-remote-prefs-dialog.c:309
+msgid "Down Limit (KiB/s)"
+msgstr "Limit stahování (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:316
+msgid "Up Limit (KiB/s)"
+msgstr "Limit odesílání (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:321
+msgid "Alternate limits"
+msgstr "Náhradní limity:"
+
+#: src/trg-remote-prefs-dialog.c:326
+msgid "Alternate speed limits active"
+msgstr "Náhradní rychlostní limity aktivní"
+
+#: src/trg-remote-prefs-dialog.c:333
+msgid "Alternate time range"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:340
+msgid "Alternate down limit (KiB/s)"
+msgstr "Náhradní limit stahování (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:345
+msgid "Alternate up limit (KiB/s)"
+msgstr "Náhradní limit odesílání (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:364
+msgid "Seed ratio limit"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:371
+msgid "Queues"
+msgstr "Fronty"
+
+#: src/trg-remote-prefs-dialog.c:375
+msgid "Download queue size"
+msgstr "Velikost fronty stahování"
+
+#: src/trg-remote-prefs-dialog.c:383
+msgid "Seed queue size"
+msgstr "Velikost fronty seedování"
+
+#: src/trg-remote-prefs-dialog.c:391
+msgid "Ignore stalled (minutes)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:404
+msgid "Global peer limit"
+msgstr "Globální limit počtu peerů"
+
+#: src/trg-remote-prefs-dialog.c:409
+msgid "Per torrent peer limit"
+msgstr "Limit počtu peerů na torrent"
+
+#: src/trg-remote-prefs-dialog.c:422
+msgid "Retest"
+msgstr "Znovu otestovat"
+
+#: src/trg-remote-prefs-dialog.c:433
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+msgstr ""
+"Port je <span font_weight=\"bold\" fgcolor=\"darkgreen\">otevřený</span>"
+
+#: src/trg-remote-prefs-dialog.c:437
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+msgstr "Port je <span font_weight=\"bold\" fgcolor=\"red\">zavřený</span>"
+
+#: src/trg-remote-prefs-dialog.c:453 src/trg-remote-prefs-dialog.c:522
+msgid "Port test"
+msgstr "Test portu"
+
+#: src/trg-remote-prefs-dialog.c:454
+msgid "Testing..."
+msgstr "Testování..."
+
+#: src/trg-remote-prefs-dialog.c:469 src/trg-remote-prefs-dialog.c:577
+msgid "Update"
+msgstr "Aktualizace"
+
+#: src/trg-remote-prefs-dialog.c:474 src/trg-remote-prefs-dialog.c:568
+#, c-format
+msgid "Blocklist (%ld entries)"
+msgstr "Seznam blokovaných (%ld položek)"
+
+#: src/trg-remote-prefs-dialog.c:516 src/trg-remote-prefs-dialog.c:698
+msgid "Connections"
+msgstr "Připojení"
+
+#: src/trg-remote-prefs-dialog.c:520
+msgid "Peer port"
+msgstr "Port peeru"
+
+#: src/trg-remote-prefs-dialog.c:523
+msgid "Test"
+msgstr "Vyzkoušet"
+
+#: src/trg-remote-prefs-dialog.c:527
+msgid "Required"
+msgstr "Požadováno"
+
+#: src/trg-remote-prefs-dialog.c:528
+msgid "Preferred"
+msgstr "Preferováno"
+
+#: src/trg-remote-prefs-dialog.c:529
+msgid "Tolerated"
+msgstr "Tolerováno"
+
+#: src/trg-remote-prefs-dialog.c:540
+msgid "Encryption"
+msgstr "Šifrování"
+
+#: src/trg-remote-prefs-dialog.c:544
+msgid "Random peer port on start"
+msgstr "Náhodný port peeru na začátku"
+
+#: src/trg-remote-prefs-dialog.c:549
+msgid "Peer port forwarding"
+msgstr "Přesměrování portu peeru"
+
+#: src/trg-remote-prefs-dialog.c:552
+msgid "Protocol"
+msgstr "Protokol"
+
+#: src/trg-remote-prefs-dialog.c:555
+msgid "Peer exchange (PEX)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:559
+msgid "Distributed Hash Table (DHT)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:563
+msgid "Local peer discovery"
+msgstr "Objevování lokálních peerů"
+
+#: src/trg-remote-prefs-dialog.c:566
+msgid "Blocklist"
+msgstr "Seznam blokovaných"
+
+#: src/trg-remote-prefs-dialog.c:586
+msgid "Blocklist URL:"
+msgstr "URL seznamu blokovaných:"
+
+#: src/trg-remote-prefs-dialog.c:604
+msgid "Environment"
+msgstr "Prostředí"
+
+#: src/trg-remote-prefs-dialog.c:608
+msgid "Download directory"
+msgstr "Adresář pro stahování"
+
+#: src/trg-remote-prefs-dialog.c:612
+msgid "Incomplete download dir"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:619
+msgid "Torrent done script"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:628
+msgid "Cache size (MiB)"
+msgstr "Velikost cache (MiB)"
+
+#: src/trg-remote-prefs-dialog.c:631
+msgid "Behavior"
+msgstr "Chování"
+
+#: src/trg-remote-prefs-dialog.c:635
+msgid "Rename partial files"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:640
+msgid "Trash original torrent files"
+msgstr "Vyhodit do koše originální soubory torrentu"
+
+#: src/trg-remote-prefs-dialog.c:645
+msgid "Start added torrents"
+msgstr "Spustit přidané torrenty"
+
+#: src/trg-remote-prefs-dialog.c:671 src/trg-toolbar.c:242
+msgid "Remote Preferences"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:703 src/trg-torrent-props-dialog.c:409
+msgid "Bandwidth"
+msgstr "Šířka pásma"
+
+#: src/trg-remote-prefs-dialog.c:708 src/trg-torrent-props-dialog.c:636
+msgid "Limits"
+msgstr "Limity"
+
+#: src/trg-state-selector.c:656
+msgid "All"
+msgstr "Vše"
+
+#: src/trg-state-selector.c:661 src/trg-state-selector.c:731
+msgid "Queue Down"
+msgstr "Posunout dolů"
+
+#: src/trg-state-selector.c:668 src/trg-state-selector.c:735
+msgid "Queue Up"
+msgstr "Posunout nahoru"
+
+#: src/trg-state-selector.c:675
+msgid "Complete"
+msgstr "Dokončený"
+
+#: src/trg-state-selector.c:678
+msgid "Incomplete"
+msgstr "Nedokončený"
+
+#: src/trg-state-selector.c:681
+msgid "Active"
+msgstr "Aktivní"
+
+#: src/trg-stats-dialog.c:275
+msgid "Statistics"
+msgstr "Statistiky"
+
+#: src/trg-stats-dialog.c:294
+msgid "Version"
+msgstr "Verze"
+
+#: src/trg-stats-dialog.c:296
+msgid "Download Total"
+msgstr "Celkem staženo"
+
+#: src/trg-stats-dialog.c:298
+msgid "Upload Total"
+msgstr "Celkem posláno"
+
+#: src/trg-stats-dialog.c:300
+msgid "Files Added"
+msgstr "Přidáno souborů"
+
+#: src/trg-stats-dialog.c:302
+msgid "Session Count"
+msgstr "Počet sezení"
+
+#: src/trg-stats-dialog.c:304
+msgid "Time Active"
+msgstr ""
+
+#: src/trg-stats-dialog.c:309
+msgid "Statistic"
+msgstr "Statistika"
+
+#: src/trg-stats-dialog.c:311
+msgid "Session"
+msgstr "Sezení"
+
+#: src/trg-stats-dialog.c:314
+msgid "Cumulative"
+msgstr "Souhrnně"
+
+#: src/trg-status-bar.c:142
+#, c-format
+msgid "Connected: %s (Transmission %g)"
+msgstr ""
+
+#: src/trg-status-bar.c:160
+msgid "Updating torrents..."
+msgstr "Aktualizace torrentů..."
+
+#: src/trg-status-bar.c:173
+#, c-format
+msgid "Free space: %s"
+msgstr "Volné místo: %s"
+
+#: src/trg-status-bar.c:185
+msgid "Disable alternate speed limits"
+msgstr "Zakázat náhradní rychlostní limity"
+
+#: src/trg-status-bar.c:186
+msgid "Enable alternate speed limits"
+msgstr "Povolit náhradní rychlostní limity"
+
+#: src/trg-status-bar.c:223 src/trg-status-bar.c:230
+#, c-format
+msgid " (Limit: %s)"
+msgstr " (Limit: %s)"
+
+#: src/trg-status-bar.c:235
+#, c-format
+msgid "Down: %s%s, Up: %s%s"
+msgstr "Stahování: %s%s, Odesílání: %s%s"
+
+#: src/trg-toolbar.c:231
+msgid "Remove with data"
+msgstr "Odstranit s daty"
+
+#: src/trg-torrent-add-dialog.c:460
+msgid "Torrent files"
+msgstr "Soubory torrentu"
+
+#: src/trg-torrent-add-dialog.c:465
+msgid "All files"
+msgstr "Všechny soubory"
+
+#: src/trg-torrent-add-dialog.c:497
+msgid ""
+"Unable to parse torrent file. File preferences unavailable, but you can "
+"still try uploading it."
+msgstr ""
+"Nelze analyzovat souboru torrentu. Předvolby souboru nejsou dostupné, ale "
+"pořád ho můžete zkusit odeslat."
+
+#: src/trg-torrent-add-dialog.c:510
+#, c-format
+msgid "Unable to open torrent file: %s"
+msgstr "Nelze otevřít soubor torrentu: %s"
+
+#: src/trg-torrent-add-dialog.c:576
+msgid "(None)"
+msgstr "(Žádný)"
+
+#: src/trg-torrent-add-dialog.c:578
+msgid "(Multiple)"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:601
+msgid "Add a Torrent"
+msgstr "Přidat torrent"
+
+#: src/trg-torrent-add-dialog.c:744
+msgid "Add Torrent"
+msgstr "Přidat torrent"
+
+#: src/trg-torrent-add-dialog.c:769
+msgid "Start _paused"
+msgstr "Spuštění pozastaveno"
+
+#: src/trg-torrent-add-dialog.c:785
+msgid "_Torrent file:"
+msgstr "Soubor _torrent:"
+
+#: src/trg-torrent-add-dialog.c:801
+msgid "_Destination folder:"
+msgstr "_Cílová složka:"
+
+#: src/trg-torrent-add-dialog.c:815
+msgid "Apply to all:"
+msgstr "Použít na vše:"
+
+#: src/trg-torrent-add-dialog.c:825
+msgid "Torrent _priority:"
+msgstr "_Priorita torrentu:"
+
+#: src/trg-torrent-add-dialog.c:926
+msgid "Show _options dialog"
+msgstr "Zobrazit _okno s možnostmi"
+
+#: src/trg-torrent-add-url-dialog.c:61
+msgid ""
+"You are trying to add a magnet torrent, but DHT is disabled. Distributed "
+"Hash Table (DHT) should be enabled in remote settings."
+msgstr ""
+"Pokoušíte se přidat magnet torrent, ale DHT je zakázáno. Distributed Hash "
+"Table (DHT) lze povolit v nastavení"
+
+#: src/trg-torrent-add-url-dialog.c:120
+msgid "URL:"
+msgstr "URL:"
+
+#: src/trg-torrent-add-url-dialog.c:123
+msgid "Start Paused"
+msgstr "Spuštění pozastaveno"
+
+#: src/trg-torrent-add-url-dialog.c:126
+msgid "Add torrent from URL"
+msgstr "Přidat torrent z URL"
+
+#: src/trg-torrent-graph.c:410
+msgid "Total Uploading"
+msgstr ""
+
+#: src/trg-torrent-graph.c:418
+msgid "Total Downloading"
+msgstr ""
+
+#: src/trg-torrent-model.c:407
+msgid "Default"
+msgstr "Výchozí"
+
+#: src/trg-torrent-move-dialog.c:116 src/trg-torrent-props-dialog.c:260
+msgid "Location:"
+msgstr "Umístění:"
+
+#: src/trg-torrent-move-dialog.c:163
+#, c-format
+msgid "Move %s"
+msgstr "Přesunout %s"
+
+#: src/trg-torrent-move-dialog.c:165
+#, c-format
+msgid "Move %d torrents"
+msgstr "Přesunout %d torrentů"
+
+#: src/trg-torrent-props-dialog.c:206
+msgid "Activity"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:211
+msgid "Torrent size:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:216
+msgid "Have:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:221
+msgid "Downloaded:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:226
+msgid "Uploaded:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:231
+msgid "State:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:236
+msgid "Running time:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:241
+msgid "Remaining time:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:246
+msgid "Last activity:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:251
+msgid "Error:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:255
+msgid "Details"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:266
+msgid "Hash:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:272
+msgid "Privacy:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:278
+msgid "Origin:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:295
+msgid "Comment:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:330
+msgid "Private to this tracker -- DHT and PEX disabled"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:332
+msgid "Public torrent"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:342
+#, c-format
+msgid "Created on %1$s"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:344
+#, c-format
+msgid "Created by %1$s on %2$s"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:376
+msgid "No errors"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:380
+msgid "Active now"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:413
+msgid "Honor global limits"
+msgstr "Dodržovat globální limity"
+
+#: src/trg-torrent-props-dialog.c:423
+msgid "Torrent priority:"
+msgstr "Priorita torrentu:"
+
+#: src/trg-torrent-props-dialog.c:429
+msgid "Queue Position:"
+msgstr "Pozice ve frontě:"
+
+#: src/trg-torrent-props-dialog.c:434
+msgid "Limit download speed (KiB/s)"
+msgstr "Limit rychlosti stahování (KiB/s)"
+
+#: src/trg-torrent-props-dialog.c:442
+msgid "Limit upload speed (KiB/s)"
+msgstr "Limit rychlosti odesílání (KiB/s)"
+
+#: src/trg-torrent-props-dialog.c:450
+msgid "Use global settings"
+msgstr "Použít globální nastavení"
+
+#: src/trg-torrent-props-dialog.c:451
+msgid "Stop seeding at ratio"
+msgstr "Přestat sdílet při poměru"
+
+#: src/trg-torrent-props-dialog.c:452
+msgid "Seed regardless of ratio"
+msgstr "Sdílet bez ohledu na poměr"
+
+#: src/trg-torrent-props-dialog.c:455
+msgid "Seed ratio mode:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:463
+msgid "Seed ratio limit:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:469
+msgid "Peer limit:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:542
+#, c-format
+msgid "Multiple (%d) torrent properties"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:574
+msgid "Information"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:60
+msgid "Done"
+msgstr "Dokončeno"
+
+#: src/trg-torrent-tree-view.c:65
+msgid "Seeds"
+msgstr "Seedy"
+
+#: src/trg-torrent-tree-view.c:67
+msgid "Sending"
+msgstr "Odesílání"
+
+#: src/trg-torrent-tree-view.c:73
+msgid "Downloads"
+msgstr "Stažené"
+
+#: src/trg-torrent-tree-view.c:76
+msgid "Receiving"
+msgstr "Příjem"
+
+#: src/trg-torrent-tree-view.c:80
+msgid "Connected"
+msgstr "Připojeno"
+
+#: src/trg-torrent-tree-view.c:82
+msgid "PEX Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:87
+msgid "DHT Peers"
+msgstr "DHT peery"
+
+#: src/trg-torrent-tree-view.c:93
+msgid "Tracker Peers"
+msgstr "Peery trackeru"
+
+#: src/trg-torrent-tree-view.c:97
+msgid "LTEP Peers"
+msgstr "LTEP peery"
+
+#: src/trg-torrent-tree-view.c:102
+msgid "Resumed Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:108
+msgid "Incoming Peers"
+msgstr "Příchozí peery"
+
+#: src/trg-torrent-tree-view.c:113
+msgid "Peers T/I/E/H/X/L/R"
+msgstr "Peery T/I/E/H/X/L/R"
+
+#: src/trg-torrent-tree-view.c:133
+msgid "Added"
+msgstr "Přidáno"
+
+#: src/trg-torrent-tree-view.c:136
+msgid "First Tracker"
+msgstr "První tracker"
+
+#: src/trg-torrent-tree-view.c:142
+msgid "ID"
+msgstr "ID"
+
+#: src/trg-torrent-tree-view.c:148
+msgid "Queue Position"
+msgstr "Pozice ve frontě"
+
+#: src/trg-torrent-tree-view.c:154
+msgid "Last Active"
+msgstr "Poslední aktivní"
+
+#: src/trg-trackers-tree-view.c:168
+msgid "Tier"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:174
+msgid "Announce URL"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:192
+msgid "Seeder Count"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:195
+msgid "Leecher Count"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:199
+msgid "Last Announce"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:202
+msgid "Last Result"
+msgstr "Poslední výsledek"
+
+#: src/trg-trackers-tree-view.c:204
+msgid "Scrape URL"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:206
+msgid "Last Scrape"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:305
+msgid "Delete"
+msgstr "Smazat"
+
+#: src/trg-tree-view.c:269
+msgid "Ascending"
+msgstr ""
+
+#: src/trg-tree-view.c:279
+msgid "Descending"
+msgstr ""
+
+#: src/util.c:340
+msgid "JSON decoding error."
+msgstr ""
+
+#: src/util.c:345
+msgid "Server responded, but with no result."
+msgstr "Server odpověděl, ale bez výsledku."
+
+#: src/util.c:349
+#, c-format
+msgid "Request failed with HTTP code %d"
+msgstr "Požadavek selhal s HTTP kódem %d"
+
+#: src/util.c:383
+msgid "None"
+msgstr "Žádný"
+
+#: src/util.c:429
+#, c-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d den"
+msgstr[1] ""
+msgstr[2] "%d dní"
+
+#: src/util.c:430
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d hodina"
+msgstr[1] "%d hodiny"
+msgstr[2] "%d hodin"
+
+#: src/util.c:432
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minuta"
+msgstr[1] "%d minuty"
+msgstr[2] "%d minut"
+
+#: src/util.c:435
+#, c-format
+msgid "%ld second"
+msgid_plural "%ld seconds"
+msgstr[0] "%ld sekunda"
+msgstr[1] "%ld sekundy"
+msgstr[2] "%ld sekund"
