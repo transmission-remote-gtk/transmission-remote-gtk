@@ -3,7 +3,7 @@ msgstr ""
 "Project-Id-Version: transmission-remote-gui\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2012-09-05 22:09+0100\n"
-"PO-Revision-Date: 2012-05-23 06:27+0000\n"
+"PO-Revision-Date: 2012-09-30 10:07+0000\n"
 "Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -11,13 +11,13 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Launchpad-Export-Date: 2012-09-15 09:28+0000\n"
-"X-Generator: Launchpad (build 15944)\n"
+"X-Launchpad-Export-Date: 2012-12-10 16:20+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 "Language: ru\n"
 
 #: src/torrent.c:360 src/torrent.c:380
 msgid "Metadata Downloading"
-msgstr ""
+msgstr "Скачивание метаданных"
 
 #: src/torrent.c:362 src/torrent.c:382 src/trg-state-selector.c:658
 msgid "Downloading"
@@ -56,97 +56,101 @@ msgstr "Неизвестный"
 #: src/torrent-cell-renderer.c:157
 #, c-format
 msgid "%1$s of %2$s (%3$s)"
-msgstr ""
+msgstr "%1$s of %2$s (%3$s)"
 
 #: src/torrent-cell-renderer.c:167
 #, c-format
 msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s Goal: %6$s)"
 msgstr ""
+"%1$s из  %2$s  (%3$s), роздано %4$s (рейтинг: %5$s, целевой рейтинг: %6$s)"
 
 #: src/torrent-cell-renderer.c:183
 #, c-format
 msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s)"
-msgstr ""
+msgstr "%1$s из %2$s (%3$s), отдано %4$s (рейтинг: %5$s)"
 
 #: src/torrent-cell-renderer.c:200
 #, c-format
 msgid "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)"
-msgstr ""
+msgstr "%1$s, роздано %2$s (рейтинг: %3$s, целевой рейтинг: %4$s)"
 
 #: src/torrent-cell-renderer.c:214
 #, c-format
 msgid "%1$s, uploaded %2$s (Ratio: %3$s)"
-msgstr ""
+msgstr "%1$s, роздано %2$s (рейтинг: %3$s)"
 
 #: src/torrent-cell-renderer.c:230
 msgid "Remaining time unknown"
-msgstr ""
+msgstr "Оставшееся время неизвестно"
 
 #: src/torrent-cell-renderer.c:235
 #, c-format
 msgid "%s remaining"
-msgstr ""
+msgstr "осталось %s"
 
 #: src/torrent-cell-renderer.c:259
 #, c-format
 msgid "%1$s %2$s, %3$s %4$s"
-msgstr ""
+msgstr "%1$s %2$s, %3$s %4$s"
 
 #: src/torrent-cell-renderer.c:263 src/torrent-cell-renderer.c:266
 #, c-format
 msgid "%1$s %2$s"
-msgstr ""
+msgstr "%1$s %2$s"
 
 #: src/torrent-cell-renderer.c:270
 msgid "Idle"
-msgstr ""
+msgstr "Бездействие"
 
 #: src/torrent-cell-renderer.c:284
 msgid "Finished"
-msgstr ""
+msgstr "Завершён"
 
 #: src/torrent-cell-renderer.c:287
 msgid "Queued for verification"
-msgstr ""
+msgstr "В очереди на проверку"
 
 #: src/torrent-cell-renderer.c:289
 msgid "Queued for download"
-msgstr ""
+msgstr "Поставлено в очередь на загрузку"
 
 #: src/torrent-cell-renderer.c:291
 msgid "Queued for seeding"
-msgstr ""
+msgstr "Поставлено в очередь для раздачи"
 
 #: src/torrent-cell-renderer.c:294
 #, c-format
 msgid "Verifying data (%1$s tested)"
-msgstr ""
+msgstr "Проверка данных (%1$s проверено)"
 
 #: src/torrent-cell-renderer.c:302
 #, c-format
 msgid "Ratio %s"
-msgstr ""
+msgstr "Рейтинг %s"
 
 #: src/torrent-cell-renderer.c:332
 #, c-format
 msgid "Downloading from %1$li of %2$li connected peer"
 msgid_plural "Downloading from %1$li of %2$li connected peers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Скачивание от %1$li из %2$li подключенного пира"
+msgstr[1] "Скачивание от %1$li из %2$li подключенных пиров"
+msgstr[2] "Скачивание от %1$li из %2$li подключенных пиров"
 
 #: src/torrent-cell-renderer.c:340
 #, c-format
 msgid "Downloading metadata from %1$li peer (%2$s done)"
 msgid_plural "Downloading metadata from %1$li peers (%2$s done)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Скачивание метаданных от %1$li пира (%2$s выполнено)"
+msgstr[1] "Скачивание метаданных от %1$li пиров (%2$s выполнено)"
+msgstr[2] "Скачивание метаданных от %1$li пиров (%2$s выполнено)"
 
 #: src/torrent-cell-renderer.c:351
 #, c-format
 msgid "Seeding to %1$li of %2$li connected peer"
 msgid_plural "Seeding to %1$li of %2$li connected peers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Отдача %1$li из %2$li подключенного пира"
+msgstr[1] "Отдача %1$li из %2$li подключенных пиров"
+msgstr[2] "Отдача %1$li из %2$li подключенных пиров"
 
 #: src/trg-about-window.c:74
 msgid "A remote client to transmission-daemon."
@@ -491,19 +495,19 @@ msgstr "_Вид"
 
 #: src/trg-menu-bar.c:473
 msgid "Transmission Style"
-msgstr ""
+msgstr "Стиль Transmission"
 
 #: src/trg-menu-bar.c:483
 msgid "Transmission Compact Style"
-msgstr ""
+msgstr "Компактный стиль Transmission"
 
 #: src/trg-menu-bar.c:493
 msgid "Classic Style"
-msgstr ""
+msgstr "Классический стиль"
 
 #: src/trg-menu-bar.c:499
 msgid "Sort"
-msgstr ""
+msgstr "Сортировка"
 
 #: src/trg-menu-bar.c:504 src/trg-preferences-dialog.c:675
 msgid "State selector"
@@ -651,7 +655,7 @@ msgstr "Интервал обновлений при свернутом окне
 
 #: src/trg-preferences-dialog.c:433
 msgid "Session update interval:"
-msgstr ""
+msgstr "Интервал обновления сессии:"
 
 #: src/trg-preferences-dialog.c:435
 msgid "Torrents"
@@ -1121,7 +1125,7 @@ msgstr "_Путь загрузки:"
 
 #: src/trg-torrent-add-dialog.c:815
 msgid "Apply to all:"
-msgstr ""
+msgstr "Применить ко всем:"
 
 #: src/trg-torrent-add-dialog.c:825
 msgid "Torrent _priority:"
@@ -1179,89 +1183,89 @@ msgstr "Переместить %d торрента(ов)"
 
 #: src/trg-torrent-props-dialog.c:206
 msgid "Activity"
-msgstr ""
+msgstr "Активность"
 
 #: src/trg-torrent-props-dialog.c:211
 msgid "Torrent size:"
-msgstr ""
+msgstr "Размер торрента:"
 
 #: src/trg-torrent-props-dialog.c:216
 msgid "Have:"
-msgstr ""
+msgstr "Загружено:"
 
 #: src/trg-torrent-props-dialog.c:221
 msgid "Downloaded:"
-msgstr ""
+msgstr "Загружено:"
 
 #: src/trg-torrent-props-dialog.c:226
 msgid "Uploaded:"
-msgstr ""
+msgstr "Передано:"
 
 #: src/trg-torrent-props-dialog.c:231
 msgid "State:"
-msgstr ""
+msgstr "Состояние:"
 
 #: src/trg-torrent-props-dialog.c:236
 msgid "Running time:"
-msgstr ""
+msgstr "Длительность:"
 
 #: src/trg-torrent-props-dialog.c:241
 msgid "Remaining time:"
-msgstr ""
+msgstr "Оставшееся время:"
 
 #: src/trg-torrent-props-dialog.c:246
 msgid "Last activity:"
-msgstr ""
+msgstr "Последняя активность:"
 
 #: src/trg-torrent-props-dialog.c:251
 msgid "Error:"
-msgstr ""
+msgstr "Ошибка:"
 
 #: src/trg-torrent-props-dialog.c:255
 msgid "Details"
-msgstr ""
+msgstr "Подробности"
 
 #: src/trg-torrent-props-dialog.c:266
 msgid "Hash:"
-msgstr ""
+msgstr "Хеш:"
 
 #: src/trg-torrent-props-dialog.c:272
 msgid "Privacy:"
-msgstr ""
+msgstr "Конфиденциальность:"
 
 #: src/trg-torrent-props-dialog.c:278
 msgid "Origin:"
-msgstr ""
+msgstr "Происхождение:"
 
 #: src/trg-torrent-props-dialog.c:295
 msgid "Comment:"
-msgstr ""
+msgstr "Комментарий:"
 
 #: src/trg-torrent-props-dialog.c:330
 msgid "Private to this tracker -- DHT and PEX disabled"
-msgstr ""
+msgstr "Только для этого трекера — DHT и PEX отключены"
 
 #: src/trg-torrent-props-dialog.c:332
 msgid "Public torrent"
-msgstr ""
+msgstr "Публичный торрент"
 
 #: src/trg-torrent-props-dialog.c:342
 #, c-format
 msgid "Created on %1$s"
-msgstr ""
+msgstr "Создано %1$s"
 
 #: src/trg-torrent-props-dialog.c:344
 #, c-format
 msgid "Created by %1$s on %2$s"
-msgstr ""
+msgstr "Создан %1$s %2$s"
 
 #: src/trg-torrent-props-dialog.c:376
 msgid "No errors"
-msgstr ""
+msgstr "Нет ошибок"
 
 #: src/trg-torrent-props-dialog.c:380
 msgid "Active now"
-msgstr ""
+msgstr "Активен сейчас"
 
 #: src/trg-torrent-props-dialog.c:413
 msgid "Honor global limits"
@@ -1314,7 +1318,7 @@ msgstr "Свойства нескольких (%d) торрентов"
 
 #: src/trg-torrent-props-dialog.c:574
 msgid "Information"
-msgstr ""
+msgstr "Информация"
 
 #: src/trg-torrent-tree-view.c:60
 msgid "Done"
@@ -1426,11 +1430,11 @@ msgstr "Удалить"
 
 #: src/trg-tree-view.c:269
 msgid "Ascending"
-msgstr ""
+msgstr "По возрастанию"
 
 #: src/trg-tree-view.c:279
 msgid "Descending"
-msgstr ""
+msgstr "По убыванию"
 
 #: src/util.c:340
 msgid "JSON decoding error."

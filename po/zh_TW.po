@@ -8,15 +8,15 @@ msgstr ""
 "Project-Id-Version: transmission-remote-gtk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2012-09-05 22:09+0100\n"
-"PO-Revision-Date: 2012-09-10 03:15+0000\n"
-"Last-Translator: Wei Hsiang Hung <weihsiang.hung@gmail.com>\n"
+"PO-Revision-Date: 2012-10-22 07:06+0000\n"
+"Last-Translator: Walter Cheuk <wwycheuk@gmail.com>\n"
 "Language-Team: Chinese (Traditional) <zh_TW@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Launchpad-Export-Date: 2012-09-15 09:28+0000\n"
-"X-Generator: Launchpad (build 15944)\n"
+"X-Launchpad-Export-Date: 2012-12-10 16:20+0000\n"
+"X-Generator: Launchpad (build 16341)\n"
 
 #: src/torrent.c:360 src/torrent.c:380
 msgid "Metadata Downloading"
@@ -74,12 +74,12 @@ msgstr ""
 #: src/torrent-cell-renderer.c:200
 #, c-format
 msgid "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)"
-msgstr "%1$s，已上傳 %2$s (比率：%3$s 目標：%4$s)"
+msgstr "%1$s，已上傳 %2$s (分享率：%3$s 目標：%4$s)"
 
 #: src/torrent-cell-renderer.c:214
 #, c-format
 msgid "%1$s, uploaded %2$s (Ratio: %3$s)"
-msgstr "%1$s，已上傳 %2$s（比率：%3$s）"
+msgstr "%1$s，已上傳 %2$s（分享率：%3$s）"
 
 #: src/torrent-cell-renderer.c:230
 msgid "Remaining time unknown"
@@ -123,18 +123,18 @@ msgstr "排隊等候作種"
 #: src/torrent-cell-renderer.c:294
 #, c-format
 msgid "Verifying data (%1$s tested)"
-msgstr "正在檢驗資料（%1$s 已檢驗）"
+msgstr "正在校驗資料（%1$s 已檢驗）"
 
 #: src/torrent-cell-renderer.c:302
 #, c-format
 msgid "Ratio %s"
-msgstr "比率 %s"
+msgstr "分享率 %s"
 
 #: src/torrent-cell-renderer.c:332
 #, c-format
 msgid "Downloading from %1$li of %2$li connected peer"
 msgid_plural "Downloading from %1$li of %2$li connected peers"
-msgstr[0] "正在從 %2$li 個中的 %1$li 個已連接的用戶下載"
+msgstr[0] "正在從 %2$li 個中的 %1$li 個已連線的用戶下載"
 
 #: src/torrent-cell-renderer.c:340
 #, c-format
@@ -147,7 +147,7 @@ msgstr[1] ""
 #, c-format
 msgid "Seeding to %1$li of %2$li connected peer"
 msgid_plural "Seeding to %1$li of %2$li connected peers"
-msgstr[0] "正在做種給 %2$li 個中的 %1$li 個已連接用戶"
+msgstr[0] "正在做種給 %2$li 個中的 %1$li 個已連線用戶"
 
 #: src/trg-about-window.c:74
 msgid "A remote client to transmission-daemon."
@@ -161,12 +161,12 @@ msgstr "低"
 #: src/trg-cell-renderer-priority.c:76 src/trg-main-window.c:2007
 #: src/trg-torrent-add-dialog.c:451 src/trg-torrent-props-dialog.c:418
 msgid "High"
-msgstr ""
+msgstr "高"
 
 #: src/trg-cell-renderer-priority.c:78 src/trg-main-window.c:2009
 #: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:417
 msgid "Normal"
-msgstr ""
+msgstr "一般"
 
 #: src/trg-cell-renderer-priority.c:80
 msgid "Mixed"
@@ -175,38 +175,38 @@ msgstr ""
 #: src/trg-files-tree-view.c:185 src/trg-general-panel.c:280
 #: src/trg-torrent-add-dialog.c:348 src/trg-torrent-tree-view.c:52
 msgid "Name"
-msgstr ""
+msgstr "名稱"
 
 #: src/trg-files-tree-view.c:189 src/trg-general-panel.c:283
 #: src/trg-torrent-add-dialog.c:366 src/trg-torrent-tree-view.c:57
 msgid "Size"
-msgstr ""
+msgstr "大小"
 
 #: src/trg-files-tree-view.c:191 src/trg-peers-tree-view.c:65
 msgid "Progress"
-msgstr ""
+msgstr "進度"
 
 #: src/trg-files-tree-view.c:193 src/trg-files-tree-view-common.c:69
 #: src/trg-torrent-add-dialog.c:379 src/trg-torrent-add-dialog.c:703
 msgid "Download"
-msgstr ""
+msgstr "下載"
 
 #: src/trg-files-tree-view.c:195 src/trg-main-window.c:2000
 #: src/trg-torrent-add-dialog.c:395 src/trg-torrent-tree-view.c:145
 msgid "Priority"
-msgstr ""
+msgstr "優先權"
 
 #: src/trg-files-tree-view-common.c:50 src/trg-torrent-add-dialog.c:694
 msgid "High Priority"
-msgstr ""
+msgstr "高優先權"
 
 #: src/trg-files-tree-view-common.c:54 src/trg-torrent-add-dialog.c:697
 msgid "Normal Priority"
-msgstr ""
+msgstr "一般優先權"
 
 #: src/trg-files-tree-view-common.c:58 src/trg-torrent-add-dialog.c:700
 msgid "Low Priority"
-msgstr ""
+msgstr "低優先權"
 
 #: src/trg-files-tree-view-common.c:77 src/trg-torrent-add-dialog.c:706
 msgid "Skip"
@@ -241,31 +241,31 @@ msgstr ""
 
 #: src/trg-general-panel.c:285 src/trg-torrent-tree-view.c:123
 msgid "ETA"
-msgstr ""
+msgstr "預估剩餘時間"
 
 #: src/trg-general-panel.c:287 src/trg-torrent-tree-view.c:151
 msgid "Completed"
-msgstr ""
+msgstr "已完成"
 
 #: src/trg-general-panel.c:290
 msgid "Seeders"
-msgstr ""
+msgstr "種子數"
 
 #: src/trg-general-panel.c:292
 msgid "Rate Down"
-msgstr ""
+msgstr "下載速率"
 
 #: src/trg-general-panel.c:294 src/trg-torrent-tree-view.c:128
 msgid "Downloaded"
-msgstr ""
+msgstr "已下載"
 
 #: src/trg-general-panel.c:297 src/trg-torrent-tree-view.c:70
 msgid "Leechers"
-msgstr ""
+msgstr "下載數"
 
 #: src/trg-general-panel.c:299
 msgid "Rate Up"
-msgstr ""
+msgstr "上傳速率"
 
 #: src/trg-general-panel.c:301 src/trg-torrent-tree-view.c:125
 msgid "Uploaded"
@@ -273,23 +273,23 @@ msgstr ""
 
 #: src/trg-general-panel.c:304 src/trg-torrent-tree-view.c:63
 msgid "Status"
-msgstr ""
+msgstr "狀態"
 
 #: src/trg-general-panel.c:306 src/trg-torrent-tree-view.c:131
 msgid "Ratio"
-msgstr ""
+msgstr "分享率"
 
 #: src/trg-general-panel.c:309
 msgid "Comment"
-msgstr ""
+msgstr "備註"
 
 #: src/trg-general-panel.c:312
 msgid "Completed At"
-msgstr ""
+msgstr "完成時間"
 
 #: src/trg-general-panel.c:316 src/trg-torrent-tree-view.c:139
 msgid "Location"
-msgstr ""
+msgstr "位置"
 
 #: src/trg-main-window.c:363
 msgid "This torrent has completed."
@@ -309,7 +309,7 @@ msgstr ""
 
 #: src/trg-main-window.c:614
 msgid "Connecting..."
-msgstr ""
+msgstr "正在連線..."
 
 #: src/trg-main-window.c:873
 #, c-format
@@ -334,7 +334,7 @@ msgstr ""
 #: src/trg-main-window.c:981 src/trg-preferences-dialog.c:897
 #: src/trg-remote-prefs-dialog.c:693
 msgid "General"
-msgstr ""
+msgstr "一般"
 
 #: src/trg-main-window.c:990 src/trg-torrent-props-dialog.c:622
 msgid "Trackers"
@@ -357,7 +357,7 @@ msgstr ""
 
 #: src/trg-main-window.c:1155 src/trg-status-bar.c:74 src/trg-status-bar.c:104
 msgid "Disconnected"
-msgstr ""
+msgstr "已斷線"
 
 #: src/trg-main-window.c:1200
 #, c-format
@@ -388,15 +388,15 @@ msgstr ""
 
 #: src/trg-main-window.c:2162 src/trg-toolbar.c:219
 msgid "Pause"
-msgstr ""
+msgstr "暫停"
 
 #: src/trg-main-window.c:2165
 msgid "Verify"
-msgstr ""
+msgstr "校驗"
 
 #: src/trg-main-window.c:2168
 msgid "Re-announce"
-msgstr ""
+msgstr "重新發佈"
 
 #: src/trg-main-window.c:2171 src/trg-torrent-move-dialog.c:119
 #: src/trg-torrent-move-dialog.c:126
@@ -450,20 +450,20 @@ msgstr ""
 
 #: src/trg-main-window.c:2306 src/trg-menu-bar.c:634 src/trg-toolbar.c:196
 msgid "Connect"
-msgstr ""
+msgstr "連線"
 
 #: src/trg-main-window.c:2313 src/trg-toolbar.c:206
 msgid "Disconnect"
-msgstr ""
+msgstr "斷線"
 
 #: src/trg-main-window.c:2317 src/trg-toolbar.c:209
 #: src/trg-trackers-tree-view.c:284 src/trg-trackers-tree-view.c:311
 msgid "Add"
-msgstr ""
+msgstr "加入"
 
 #: src/trg-main-window.c:2321
 msgid "Add from URL"
-msgstr ""
+msgstr "從網址加入"
 
 #: src/trg-main-window.c:2325
 msgid "Resume All"
@@ -471,11 +471,11 @@ msgstr ""
 
 #: src/trg-main-window.c:2329
 msgid "Pause All"
-msgstr ""
+msgstr "全部暫停"
 
 #: src/trg-main-window.c:2345
 msgid "Quit"
-msgstr ""
+msgstr "結束"
 
 #: src/trg-main-window.c:2459 src/trg-menu-bar.c:536
 msgid "Graph"
@@ -527,7 +527,7 @@ msgstr ""
 
 #: src/trg-menu-bar.c:554
 msgid "_Options"
-msgstr "選項(_O)"
+msgstr "選項 （_O）"
 
 #: src/trg-menu-bar.c:560
 msgid "_Local Preferences"
@@ -543,19 +543,19 @@ msgstr "檔案(_F)"
 
 #: src/trg-menu-bar.c:640
 msgid "_Disconnect"
-msgstr ""
+msgstr "切斷連線(_D)"
 
 #: src/trg-menu-bar.c:646
 msgid "_Add"
-msgstr ""
+msgstr "加入（_A）"
 
 #: src/trg-menu-bar.c:651
 msgid "Add from _URL"
-msgstr ""
+msgstr "從網址加入（_U）"
 
 #: src/trg-menu-bar.c:657
 msgid "_Quit"
-msgstr ""
+msgstr "結束〈_Q〉"
 
 #: src/trg-menu-bar.c:668
 msgid "_Torrent"
@@ -567,15 +567,15 @@ msgstr ""
 
 #: src/trg-menu-bar.c:685
 msgid "_Pause"
-msgstr ""
+msgstr "暫停(_P)"
 
 #: src/trg-menu-bar.c:690
 msgid "_Verify"
-msgstr ""
+msgstr "校驗〈_V〉"
 
 #: src/trg-menu-bar.c:696
 msgid "Re-_announce"
-msgstr ""
+msgstr "重新發佈〈_A〉"
 
 #: src/trg-menu-bar.c:701
 msgid "_Move"
@@ -591,11 +591,11 @@ msgstr ""
 
 #: src/trg-menu-bar.c:759
 msgid "_Pause All"
-msgstr ""
+msgstr "暫停全部(_P)"
 
 #: src/trg-menu-bar.c:771
 msgid "_Help"
-msgstr "說明 (_H)"
+msgstr "說明 （_H）"
 
 #: src/trg-menu-bar.c:777
 msgid "_About"
@@ -683,7 +683,7 @@ msgstr ""
 
 #: src/trg-preferences-dialog.c:637
 msgid "Remote Download Directories"
-msgstr ""
+msgstr "遠端下載目錄"
 
 #: src/trg-preferences-dialog.c:650
 msgid "Directory"
@@ -727,11 +727,11 @@ msgstr ""
 
 #: src/trg-preferences-dialog.c:799
 msgid "Name:"
-msgstr ""
+msgstr "名稱："
 
 #: src/trg-preferences-dialog.c:807 src/trg-preferences-dialog.c:892
 msgid "Connection"
-msgstr ""
+msgstr "連線"
 
 #: src/trg-preferences-dialog.c:810
 msgid "Host:"
@@ -743,7 +743,7 @@ msgstr ""
 
 #: src/trg-preferences-dialog.c:817
 msgid "Username:"
-msgstr ""
+msgstr "使用者名稱："
 
 #: src/trg-preferences-dialog.c:821
 msgid "Password:"
@@ -751,7 +751,7 @@ msgstr ""
 
 #: src/trg-preferences-dialog.c:823
 msgid "Automatically connect"
-msgstr ""
+msgstr "自動連線"
 
 #: src/trg-preferences-dialog.c:829
 msgid "SSL"
@@ -807,7 +807,7 @@ msgstr ""
 
 #: src/trg-remote-prefs-dialog.c:364
 msgid "Seed ratio limit"
-msgstr ""
+msgstr "種子分享率限制"
 
 #: src/trg-remote-prefs-dialog.c:371
 msgid "Queues"
@@ -815,7 +815,7 @@ msgstr ""
 
 #: src/trg-remote-prefs-dialog.c:375
 msgid "Download queue size"
-msgstr ""
+msgstr "下載佇列大小"
 
 #: src/trg-remote-prefs-dialog.c:383
 msgid "Seed queue size"
@@ -864,7 +864,7 @@ msgstr ""
 
 #: src/trg-remote-prefs-dialog.c:516 src/trg-remote-prefs-dialog.c:698
 msgid "Connections"
-msgstr ""
+msgstr "連線"
 
 #: src/trg-remote-prefs-dialog.c:520
 msgid "Peer port"
@@ -928,11 +928,11 @@ msgstr ""
 
 #: src/trg-remote-prefs-dialog.c:608
 msgid "Download directory"
-msgstr ""
+msgstr "下載目錄"
 
 #: src/trg-remote-prefs-dialog.c:612
 msgid "Incomplete download dir"
-msgstr ""
+msgstr "未完成下載目錄"
 
 #: src/trg-remote-prefs-dialog.c:619
 msgid "Torrent done script"
@@ -940,7 +940,7 @@ msgstr "種子完成後要執行的腳本"
 
 #: src/trg-remote-prefs-dialog.c:628
 msgid "Cache size (MiB)"
-msgstr ""
+msgstr "快取大小〈 MiB〉"
 
 #: src/trg-remote-prefs-dialog.c:631
 msgid "Behavior"
@@ -984,15 +984,15 @@ msgstr ""
 
 #: src/trg-state-selector.c:675
 msgid "Complete"
-msgstr ""
+msgstr "完成"
 
 #: src/trg-state-selector.c:678
 msgid "Incomplete"
-msgstr ""
+msgstr "未完成"
 
 #: src/trg-state-selector.c:681
 msgid "Active"
-msgstr ""
+msgstr "活動中"
 
 #: src/trg-stats-dialog.c:275
 msgid "Statistics"
@@ -1004,11 +1004,11 @@ msgstr ""
 
 #: src/trg-stats-dialog.c:296
 msgid "Download Total"
-msgstr ""
+msgstr "總計下載"
 
 #: src/trg-stats-dialog.c:298
 msgid "Upload Total"
-msgstr ""
+msgstr "總計上傳"
 
 #: src/trg-stats-dialog.c:300
 msgid "Files Added"
@@ -1037,7 +1037,7 @@ msgstr ""
 #: src/trg-status-bar.c:142
 #, c-format
 msgid "Connected: %s (Transmission %g)"
-msgstr ""
+msgstr "已連線：%s 〈Transmission %g〉"
 
 #: src/trg-status-bar.c:160
 msgid "Updating torrents..."
@@ -1099,11 +1099,11 @@ msgstr ""
 
 #: src/trg-torrent-add-dialog.c:601
 msgid "Add a Torrent"
-msgstr "新增種子"
+msgstr "加入種子"
 
 #: src/trg-torrent-add-dialog.c:744
 msgid "Add Torrent"
-msgstr "新增種子"
+msgstr "加入種子"
 
 #: src/trg-torrent-add-dialog.c:769
 msgid "Start _paused"
@@ -1111,7 +1111,7 @@ msgstr ""
 
 #: src/trg-torrent-add-dialog.c:785
 msgid "_Torrent file:"
-msgstr "種子檔案(_T):"
+msgstr "種子檔案（_T）："
 
 #: src/trg-torrent-add-dialog.c:801
 msgid "_Destination folder:"
@@ -1123,11 +1123,11 @@ msgstr ""
 
 #: src/trg-torrent-add-dialog.c:825
 msgid "Torrent _priority:"
-msgstr "種子優先序(_P)："
+msgstr "種子優先權(_P)："
 
 #: src/trg-torrent-add-dialog.c:926
 msgid "Show _options dialog"
-msgstr "顯示選項對話窗(_O)"
+msgstr "顯示選項對話窗（_O）"
 
 #: src/trg-torrent-add-url-dialog.c:61
 msgid ""
@@ -1149,11 +1149,11 @@ msgstr "從網址加入種子"
 
 #: src/trg-torrent-graph.c:410
 msgid "Total Uploading"
-msgstr ""
+msgstr "總計上傳速度"
 
 #: src/trg-torrent-graph.c:418
 msgid "Total Downloading"
-msgstr ""
+msgstr "總計下載速度"
 
 #: src/trg-torrent-model.c:407
 msgid "Default"
@@ -1161,7 +1161,7 @@ msgstr ""
 
 #: src/trg-torrent-move-dialog.c:116 src/trg-torrent-props-dialog.c:260
 msgid "Location:"
-msgstr ""
+msgstr "位置："
 
 #: src/trg-torrent-move-dialog.c:163
 #, c-format
@@ -1187,7 +1187,7 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:221
 msgid "Downloaded:"
-msgstr ""
+msgstr "已下載："
 
 #: src/trg-torrent-props-dialog.c:226
 msgid "Uploaded:"
@@ -1215,7 +1215,7 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:255
 msgid "Details"
-msgstr ""
+msgstr "詳細資訊"
 
 #: src/trg-torrent-props-dialog.c:266
 msgid "Hash:"
@@ -1231,7 +1231,7 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:295
 msgid "Comment:"
-msgstr ""
+msgstr "備註"
 
 #: src/trg-torrent-props-dialog.c:330
 msgid "Private to this tracker -- DHT and PEX disabled"
@@ -1265,7 +1265,7 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:423
 msgid "Torrent priority:"
-msgstr "種子優先序"
+msgstr "種子優先權"
 
 #: src/trg-torrent-props-dialog.c:429
 msgid "Queue Position:"
@@ -1273,7 +1273,7 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:434
 msgid "Limit download speed (KiB/s)"
-msgstr ""
+msgstr "限制下載速度〈(KiB/s〉"
 
 #: src/trg-torrent-props-dialog.c:442
 msgid "Limit upload speed (KiB/s)"
@@ -1289,7 +1289,7 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:452
 msgid "Seed regardless of ratio"
-msgstr ""
+msgstr "持續作種"
 
 #: src/trg-torrent-props-dialog.c:455
 msgid "Seed ratio mode:"
@@ -1334,7 +1334,7 @@ msgstr ""
 
 #: src/trg-torrent-tree-view.c:80
 msgid "Connected"
-msgstr ""
+msgstr "已連線"
 
 #: src/trg-torrent-tree-view.c:82
 msgid "PEX Peers"
@@ -1366,7 +1366,7 @@ msgstr ""
 
 #: src/trg-torrent-tree-view.c:133
 msgid "Added"
-msgstr ""
+msgstr "已加入"
 
 #: src/trg-torrent-tree-view.c:136
 msgid "First Tracker"
@@ -1390,7 +1390,7 @@ msgstr ""
 
 #: src/trg-trackers-tree-view.c:174
 msgid "Announce URL"
-msgstr ""
+msgstr "發布網址"
 
 #: src/trg-trackers-tree-view.c:192
 msgid "Seeder Count"
@@ -1398,15 +1398,15 @@ msgstr ""
 
 #: src/trg-trackers-tree-view.c:195
 msgid "Leecher Count"
-msgstr ""
+msgstr "下載數"
 
 #: src/trg-trackers-tree-view.c:199
 msgid "Last Announce"
-msgstr ""
+msgstr "最後發佈"
 
 #: src/trg-trackers-tree-view.c:202
 msgid "Last Result"
-msgstr ""
+msgstr "最後結果"
 
 #: src/trg-trackers-tree-view.c:204
 msgid "Scrape URL"
