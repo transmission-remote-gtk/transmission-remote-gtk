@@ -91,6 +91,7 @@ static void trg_prefs_create_defaults(TrgPrefs * p)
 
     trg_prefs_add_default_string(p, TRG_PREFS_KEY_PROFILE_NAME,
                                  _(TRG_PROFILE_NAME_DEFAULT));
+    trg_prefs_add_default_string(p, TRG_PREFS_KEY_RPC_URL_PATH, "/transmission/rpc");
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_PORT, 9091);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL,
                               TRG_INTERVAL_DEFAULT);

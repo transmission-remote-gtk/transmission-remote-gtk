@@ -30,6 +30,7 @@
 #define TRG_SESSION_INTERVAL_DEFAULT 60
 #define TRG_PROFILE_NAME_DEFAULT   "Default"
 
+#define TRG_PREFS_KEY_RPC_URL_PATH "rpc-url-path"
 #define TRG_PREFS_KEY_PROFILE_ID    "profile-id"
 #define TRG_PREFS_KEY_PROFILES    "profiles"
 #define TRG_PREFS_KEY_PROFILE_NAME   "profile-name"

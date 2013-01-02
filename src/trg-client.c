@@ -222,7 +222,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
     TrgPrefs *prefs = priv->prefs;
 
     gint port;
-    gchar *host;
+    gchar *host, *path;
 #ifdef HAVE_LIBPROXY
     pxProxyFactory *pf = NULL;
 #endif
@@ -245,6 +245,8 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     host = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME,
                                 TRG_PREFS_CONNECTION);
+    path = trg_prefs_get_string(prefs, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_CONNECTION);
+
     if (!host || strlen(host) < 1) {
         g_free(host);
         g_mutex_unlock(priv->configMutex);
@@ -257,10 +259,12 @@ int trg_client_populate_with_settings(TrgClient * tc)
     priv->ssl = FALSE;
 #endif
 
-    priv->url = g_strdup_printf("%s://%s:%d/transmission/rpc",
+
+    priv->url = g_strdup_printf("%s://%s:%d%s",
                                 priv->ssl ? HTTPS_URI_PREFIX :
-                                HTTP_URI_PREFIX, host, port);
+                                HTTP_URI_PREFIX, host, port, path);
     g_free(host);
+    g_free(path);
 
     priv->username = trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME,
                                           TRG_PREFS_CONNECTION);

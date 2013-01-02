@@ -812,6 +812,8 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     w = trgp_spin_new(dlg, TRG_PREFS_KEY_PORT, 1, 65535, 1,
                       TRG_PREFS_PROFILE, NULL);
     hig_workarea_add_row(t, &row, _("Port:"), w, NULL);
+    w = trgp_entry_new(dlg, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_PROFILE);
+    hig_workarea_add_row(t, &row, _("RPC URL Path:"), w, NULL);
 
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
     hig_workarea_add_row(t, &row, _("Username:"), w, NULL);
