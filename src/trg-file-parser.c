@@ -50,7 +50,7 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
             parentList = g_list_prepend(parentList, lastIter);
 
     li = parentList;
-    lastIter = NULL;
+    lastIter = top;
 
     /* Iterate over the path list which contains each file/directory
      * component of the path in order.
@@ -77,11 +77,7 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
             target_node = g_new0(trg_files_tree_node, 1);
             target_node->name = g_strdup(path_el_node->val.s);
             target_node->parent = lastIter;
-
-            if (lastIter)
-                trg_files_tree_node_add_child(lastIter, target_node);
-            else
-                trg_files_tree_node_add_child(top, target_node);
+            trg_files_tree_node_add_child(lastIter, target_node);
         }
 
         if (isFile) {
