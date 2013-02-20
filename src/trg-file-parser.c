@@ -70,7 +70,7 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
             }
         }
 
-        if (!target_node && lastIter && lastIter->childrenHash)
+        if (!target_node && lastIter && lastIter->childrenHash && !isFile)
           target_node = g_hash_table_lookup(lastIter->childrenHash, path_el_node->val.s);
 
         if (!target_node) {
