@@ -1,6 +1,6 @@
 /*
  * transmission-remote-gtk - A GTK RPC client to Transmission
- * Copyright (C) 2011  Alan Fitton
+ * Copyright (C) 2011-2013  Alan Fitton
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,7 +20,7 @@
 #ifndef TRG_FILES_TREE_H_
 #define TRG_FILES_TREE_H_
 
-#include <glib-object.h>
+#include <glib.h>
 #include <json-glib/json-glib.h>
 
 #include "trg-files-tree.h"
@@ -30,12 +30,14 @@ typedef struct {
     gint64 length;
     gint64 bytesCompleted;
     GList *children;
+    GHashTable *childrenHash;
     gint index;
     gpointer parent;
     gint priority;
     gint enabled;
 } trg_files_tree_node;
 
+void trg_files_tree_node_add_child(trg_files_tree_node* node, trg_files_tree_node* child);
 void trg_files_tree_node_free(trg_files_tree_node * node);
 
 #endif                          /* TRG_FILES_MODEL_H_ */

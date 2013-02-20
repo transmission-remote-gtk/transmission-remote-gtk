@@ -1,6 +1,6 @@
 /*
  * transmission-remote-gtk - A GTK RPC client to Transmission
- * Copyright (C) 2011  Alan Fitton
+ * Copyright (C) 2011-2013  Alan Fitton
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -192,6 +192,9 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
             }
         }
 
+        if (!target_node && lastIter && lastIter->childrenHash)
+          target_node = g_hash_table_lookup(lastIter->childrenHash, path_el);
+
         /* Node needs creating */
 
         if (!target_node) {
@@ -201,11 +204,10 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
 
             /* Under the parent of the last iteration. */
             if (lastIter)
-                lastIter->children =
-                    g_list_append(lastIter->children, target_node);
+                trg_files_tree_node_add_child(lastIter, target_node);
             /* None set, so under the top node. */
             else
-                top->children = g_list_append(top->children, target_node);
+                trg_files_tree_node_add_child(top, target_node);
         }
 
         lastIter = target_node;

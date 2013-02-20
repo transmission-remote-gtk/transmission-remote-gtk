@@ -1,6 +1,6 @@
 /*
  * transmission-remote-gtk - A GTK RPC client to Transmission
- * Copyright (C) 2011  Alan Fitton
+ * Copyright (C) 2011-2013  Alan Fitton
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -60,8 +60,7 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
         trg_files_tree_node *target_node = NULL;
 
         if (li && !isFile) {
-            trg_files_tree_node *lastPathNode =
-                (trg_files_tree_node *) li->data;
+            trg_files_tree_node *lastPathNode = (trg_files_tree_node *) li->data;
 
             if (!g_strcmp0(lastPathNode->name, path_el_node->val.s)) {
                 target_node = lastPathNode;
@@ -71,16 +70,18 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
             }
         }
 
+        if (!target_node && lastIter && lastIter->childrenHash)
+          target_node = g_hash_table_lookup(lastIter->childrenHash, path_el_node->val.s);
+
         if (!target_node) {
             target_node = g_new0(trg_files_tree_node, 1);
             target_node->name = g_strdup(path_el_node->val.s);
             target_node->parent = lastIter;
 
             if (lastIter)
-                lastIter->children =
-                    g_list_append(lastIter->children, target_node);
+                trg_files_tree_node_add_child(lastIter, target_node);
             else
-                top->children = g_list_append(top->children, target_node);
+                trg_files_tree_node_add_child(top, target_node);
         }
 
         if (isFile) {

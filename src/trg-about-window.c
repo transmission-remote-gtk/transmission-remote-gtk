@@ -1,6 +1,6 @@
 /*
  * transmission-remote-gtk - A GTK RPC client to Transmission
- * Copyright (C) 2011  Alan Fitton
+ * Copyright (C) 2011-2013  Alan Fitton
 
  * This program is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,7 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
     gtk_about_dialog_set_version(GTK_ABOUT_DIALOG(dialog),
                                  PACKAGE_VERSION);
     gtk_about_dialog_set_copyright(GTK_ABOUT_DIALOG(dialog),
-                                   "(C) 2011 Alan Fitton");
+                                   "(C) 2011-2013 Alan Fitton");
     gtk_about_dialog_set_comments(GTK_ABOUT_DIALOG(dialog),
                                   _
                                   ("A remote client to transmission-daemon."));
