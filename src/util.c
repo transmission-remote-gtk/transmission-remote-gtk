@@ -305,8 +305,8 @@ GtkWidget *my_scrolledwin_new(GtkWidget * child)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_win),
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
-    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(scrolled_win), 
-					 GTK_SHADOW_ETCHED_IN);
+    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(scrolled_win),
+                                        GTK_SHADOW_ETCHED_IN);
     gtk_container_add(GTK_CONTAINER(scrolled_win), child);
     return scrolled_win;
 }
@@ -513,18 +513,33 @@ gchar *epoch_to_string(gint64 epoch)
 
 gchar *add_links_to_text(const gchar * original)
 {
-    /* only perform replacement if string doesn't contains links */
-    if (!g_regex_match_simple("<a\\s.*>", original, 0, 0)) {
-        GRegex *regex =
-            g_regex_new("(https?://[a-zA-Z0-9_\\-\\./?=]+)", 0, 0,
-                        NULL);
-        gchar *newText = g_regex_replace(regex, original, -1, 0,
-                                         "<a href='\\1'>\\1</a>", 0, NULL);
-        g_regex_unref(regex);
-        return newText;
-    } else {
-        return g_strdup(original);
+    /* return if original already contains links */
+    if (g_regex_match_simple("<a\\s.*>", original, 0, 0)) {
+      return g_strdup(original);
     }
+
+    gchar *newText, *url, *link;
+    GMatchInfo *match_info;
+    GRegex *regex =
+      g_regex_new("(https?://[a-zA-Z0-9_\\-\\./?=&]+)", 0, 0, NULL);
+
+    // extract url and build escaped link
+    g_regex_match(regex, original, 0, &match_info);
+    url = g_match_info_fetch(match_info, 1);
+
+    if(url) {
+      link = g_markup_printf_escaped("<a href='%s'>%s</a>", url, url);
+      newText = g_regex_replace(regex, original, -1, 0, link,
+                                       0, NULL);
+      g_free(url);
+      g_free(link);
+    } else {
+      newText = g_strdup(original);
+    }
+
+    g_regex_unref(regex);
+    g_match_info_unref(match_info);
+    return newText;
 }
 
 size_t tr_strlcpy(char *dst, const void *src, size_t siz)

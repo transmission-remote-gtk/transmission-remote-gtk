@@ -181,10 +181,8 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
                        torrent_get_download_dir(t));
 
     comment = add_links_to_text(torrent_get_comment(t));
-    markup = g_markup_printf_escaped("%s", comment);
-    gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), markup);
+    gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
     g_free(comment);
-    g_free(markup);
 
     errorStr = torrent_get_errorstr(t);
     keyLabel =
