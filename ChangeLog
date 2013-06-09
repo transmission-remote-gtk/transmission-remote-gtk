@@ -2,7 +2,7 @@
 - fix file lists relying on being sorted (sometimes they are not) to fix
 the tree being messed up with duplicate directories.
 - fix using markup in comment.
-- translations updated from launchpad.
+- translations updated from launchpad. (NEW: Latvian, Sinhalese)
 
 * Wed Sep 5 2012 1.1
 - new Transmission display style
