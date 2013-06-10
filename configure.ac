@@ -95,9 +95,9 @@ if test x$enable_debug = xyes; then
 fi
 
 AC_ARG_ENABLE(gtk3, [AS_HELP_STRING(--enable-gtk3,
-                                     [enable gtk3 support])])
+                                     [use gtk3 support (now default, left for compatability)])])
 AC_ARG_ENABLE(gtk2, [AS_HELP_STRING(--enable-gtk2,
-                                     [enable gtk2 support])])
+                                     [use old gtk2 support])])
 
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
@@ -122,15 +122,10 @@ if test x$with_libunique != xno; then
 fi
 ])
 
-if test x$enable_gtk3 = xyes; then
-  TRG_GTK3_CONFIGURE([])
+if test x$enable_gtk2 = xyes; then
+  TRG_GTK2_CONFIGURE([])
 else
-  if test x$enable_gtk2 = xyes; then
-    TRG_GTK2_CONFIGURE()
-  else
-    dnl TRG_GTK3_CONFIGURE([TRG_GTK2_CONFIGURE()])
-    TRG_GTK2_CONFIGURE()
-  fi
+  TRG_GTK3_CONFIGURE()
 fi
 
 PKG_CHECK_MODULES([libcurl], [libcurl])
