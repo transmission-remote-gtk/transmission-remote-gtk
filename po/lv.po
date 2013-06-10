@@ -1,0 +1,1482 @@
+# Latvian translation for transmission-remote-gtk
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the transmission-remote-gtk package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: transmission-remote-gtk\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-09-05 22:09+0100\n"
+"PO-Revision-Date: 2013-06-03 09:33+0000\n"
+"Last-Translator: sieks <sieks@inbox.lv>\n"
+"Language-Team: Latvian <lv@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n != 0 ? 1 : 2;\n"
+"X-Launchpad-Export-Date: 2013-06-09 22:28+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
+
+#: src/torrent.c:360 src/torrent.c:380
+msgid "Metadata Downloading"
+msgstr ""
+
+#: src/torrent.c:362 src/torrent.c:382 src/trg-state-selector.c:658
+msgid "Downloading"
+msgstr "Lejupielādē"
+
+#: src/torrent.c:364
+msgid "Queued download"
+msgstr ""
+
+#: src/torrent.c:366 src/torrent.c:390
+msgid "Waiting To Check"
+msgstr ""
+
+#: src/torrent.c:368 src/torrent.c:388 src/trg-state-selector.c:684
+msgid "Checking"
+msgstr "Pārbauda"
+
+#: src/torrent.c:370
+msgid "Queued seed"
+msgstr ""
+
+#: src/torrent.c:372 src/torrent.c:386 src/trg-remote-prefs-dialog.c:360
+#: src/trg-state-selector.c:665 src/trg-torrent-props-dialog.c:447
+msgid "Seeding"
+msgstr "Dod"
+
+#: src/torrent.c:374 src/torrent.c:384 src/torrent-cell-renderer.c:285
+#: src/trg-state-selector.c:672
+msgid "Paused"
+msgstr "Apturēts"
+
+#: src/torrent.c:394
+msgid "Unknown"
+msgstr "Nezināms"
+
+#: src/torrent-cell-renderer.c:157
+#, c-format
+msgid "%1$s of %2$s (%3$s)"
+msgstr "%1$s no %2$s (%3$s)"
+
+#: src/torrent-cell-renderer.c:167
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s Goal: %6$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:183
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:200
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:214
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s)"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:230
+msgid "Remaining time unknown"
+msgstr "Atlikušais laiks nav zināms"
+
+#: src/torrent-cell-renderer.c:235
+#, c-format
+msgid "%s remaining"
+msgstr "%s atlicis"
+
+#: src/torrent-cell-renderer.c:259
+#, c-format
+msgid "%1$s %2$s, %3$s %4$s"
+msgstr "%1$s %2$s, %3$s %4$s"
+
+#: src/torrent-cell-renderer.c:263 src/torrent-cell-renderer.c:266
+#, c-format
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#: src/torrent-cell-renderer.c:270
+msgid "Idle"
+msgstr "Nenodarbināts"
+
+#: src/torrent-cell-renderer.c:284
+msgid "Finished"
+msgstr "Pabeigts"
+
+#: src/torrent-cell-renderer.c:287
+msgid "Queued for verification"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:289
+msgid "Queued for download"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:291
+msgid "Queued for seeding"
+msgstr ""
+
+#: src/torrent-cell-renderer.c:294
+#, c-format
+msgid "Verifying data (%1$s tested)"
+msgstr "Pārbauda datus (%1$s pārbaudīti)"
+
+#: src/torrent-cell-renderer.c:302
+#, c-format
+msgid "Ratio %s"
+msgstr "Attiecība %s"
+
+#: src/torrent-cell-renderer.c:332
+#, c-format
+msgid "Downloading from %1$li of %2$li connected peer"
+msgid_plural "Downloading from %1$li of %2$li connected peers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/torrent-cell-renderer.c:340
+#, c-format
+msgid "Downloading metadata from %1$li peer (%2$s done)"
+msgid_plural "Downloading metadata from %1$li peers (%2$s done)"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/torrent-cell-renderer.c:351
+#, c-format
+msgid "Seeding to %1$li of %2$li connected peer"
+msgid_plural "Seeding to %1$li of %2$li connected peers"
+msgstr[0] ""
+msgstr[1] ""
+
+#: src/trg-about-window.c:74
+msgid "A remote client to transmission-daemon."
+msgstr ""
+
+#: src/trg-cell-renderer-priority.c:74 src/trg-main-window.c:2011
+#: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:416
+msgid "Low"
+msgstr "Zema"
+
+#: src/trg-cell-renderer-priority.c:76 src/trg-main-window.c:2007
+#: src/trg-torrent-add-dialog.c:451 src/trg-torrent-props-dialog.c:418
+msgid "High"
+msgstr "Augsta"
+
+#: src/trg-cell-renderer-priority.c:78 src/trg-main-window.c:2009
+#: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:417
+msgid "Normal"
+msgstr "Normāla"
+
+#: src/trg-cell-renderer-priority.c:80
+msgid "Mixed"
+msgstr "Jaukts"
+
+#: src/trg-files-tree-view.c:185 src/trg-general-panel.c:280
+#: src/trg-torrent-add-dialog.c:348 src/trg-torrent-tree-view.c:52
+msgid "Name"
+msgstr "Nosaukums"
+
+#: src/trg-files-tree-view.c:189 src/trg-general-panel.c:283
+#: src/trg-torrent-add-dialog.c:366 src/trg-torrent-tree-view.c:57
+msgid "Size"
+msgstr "Izmērs"
+
+#: src/trg-files-tree-view.c:191 src/trg-peers-tree-view.c:65
+msgid "Progress"
+msgstr "Progress"
+
+#: src/trg-files-tree-view.c:193 src/trg-files-tree-view-common.c:69
+#: src/trg-torrent-add-dialog.c:379 src/trg-torrent-add-dialog.c:703
+msgid "Download"
+msgstr "Lejupielāde"
+
+#: src/trg-files-tree-view.c:195 src/trg-main-window.c:2000
+#: src/trg-torrent-add-dialog.c:395 src/trg-torrent-tree-view.c:145
+msgid "Priority"
+msgstr "Prioritāte"
+
+#: src/trg-files-tree-view-common.c:50 src/trg-torrent-add-dialog.c:694
+msgid "High Priority"
+msgstr "Augsta prioritāte"
+
+#: src/trg-files-tree-view-common.c:54 src/trg-torrent-add-dialog.c:697
+msgid "Normal Priority"
+msgstr "Normāla prioritāte"
+
+#: src/trg-files-tree-view-common.c:58 src/trg-torrent-add-dialog.c:700
+msgid "Low Priority"
+msgstr "Zema prioritāte"
+
+#: src/trg-files-tree-view-common.c:77 src/trg-torrent-add-dialog.c:706
+msgid "Skip"
+msgstr "Izlaist"
+
+#: src/trg-files-tree-view-common.c:84
+msgid "Expand All"
+msgstr "Rādīt visu"
+
+#: src/trg-files-tree-view-common.c:89
+msgid "Collapse All"
+msgstr "Sakļaut visu"
+
+#: src/trg-general-panel.c:153 src/trg-general-panel.c:214
+msgid "N/A"
+msgstr "Nav pieejams"
+
+#: src/trg-general-panel.c:168
+msgid "(Private)"
+msgstr "Privāts"
+
+#: src/trg-general-panel.c:168
+msgid "(Public)"
+msgstr "Publisks"
+
+#: src/trg-general-panel.c:202 src/trg-main-window.c:1097
+#: src/trg-main-window.c:1505 src/trg-main-window.c:2135
+#: src/trg-state-selector.c:538 src/trg-torrent-add-url-dialog.c:67
+#: src/util.c:331
+msgid "Error"
+msgstr "Kļūda"
+
+#: src/trg-general-panel.c:285 src/trg-torrent-tree-view.c:123
+msgid "ETA"
+msgstr "Atlikušais laiks"
+
+#: src/trg-general-panel.c:287 src/trg-torrent-tree-view.c:151
+msgid "Completed"
+msgstr "Pabeigts"
+
+#: src/trg-general-panel.c:290
+msgid "Seeders"
+msgstr "Devēji"
+
+#: src/trg-general-panel.c:292
+msgid "Rate Down"
+msgstr ""
+
+#: src/trg-general-panel.c:294 src/trg-torrent-tree-view.c:128
+msgid "Downloaded"
+msgstr "Lejupielādēts"
+
+#: src/trg-general-panel.c:297 src/trg-torrent-tree-view.c:70
+msgid "Leechers"
+msgstr "Ņēmēji"
+
+#: src/trg-general-panel.c:299
+msgid "Rate Up"
+msgstr ""
+
+#: src/trg-general-panel.c:301 src/trg-torrent-tree-view.c:125
+msgid "Uploaded"
+msgstr "Augšupielādēts"
+
+#: src/trg-general-panel.c:304 src/trg-torrent-tree-view.c:63
+msgid "Status"
+msgstr "Statuss"
+
+#: src/trg-general-panel.c:306 src/trg-torrent-tree-view.c:131
+msgid "Ratio"
+msgstr "Attiecība"
+
+#: src/trg-general-panel.c:309
+msgid "Comment"
+msgstr "Komentārs"
+
+#: src/trg-general-panel.c:312
+msgid "Completed At"
+msgstr "Pabeigts"
+
+#: src/trg-general-panel.c:316 src/trg-torrent-tree-view.c:139
+msgid "Location"
+msgstr "Atrašanās vieta"
+
+#: src/trg-main-window.c:363
+msgid "This torrent has completed."
+msgstr "Šis torrents ir pabeigts"
+
+#: src/trg-main-window.c:375
+msgid "This torrent has been added."
+msgstr "Šis torrents tika pievienots"
+
+#: src/trg-main-window.c:596
+msgid "No hostname set"
+msgstr ""
+
+#: src/trg-main-window.c:599
+msgid "Unknown error getting settings"
+msgstr ""
+
+#: src/trg-main-window.c:614
+msgid "Connecting..."
+msgstr "Savienojas"
+
+#: src/trg-main-window.c:873
+#, c-format
+msgid "<big><b>Remove torrent \"%s\"?</b></big>"
+msgstr "<big><b>Noņemt torrentu \"%s\"?</b></big>"
+
+#: src/trg-main-window.c:874
+#, c-format
+msgid "<big><b>Remove %d torrents?</b></big>"
+msgstr "<big><b>Noņemt %d torrentus?</b></big>"
+
+#: src/trg-main-window.c:896
+#, c-format
+msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
+msgstr "<big><b>Noņemt un dzēst torentu \"%s\"?</b></big>"
+
+#: src/trg-main-window.c:898
+#, c-format
+msgid "<big><b>Remove and delete %d torrents?</b></big>"
+msgstr "<big><b>Noņemt un dzēst %d torrentus?</b></big>"
+
+#: src/trg-main-window.c:981 src/trg-preferences-dialog.c:897
+#: src/trg-remote-prefs-dialog.c:693
+msgid "General"
+msgstr "Galvenā"
+
+#: src/trg-main-window.c:990 src/trg-torrent-props-dialog.c:622
+msgid "Trackers"
+msgstr "Trakeri"
+
+#: src/trg-main-window.c:998 src/trg-torrent-props-dialog.c:591
+msgid "Files"
+msgstr "Faili"
+
+#: src/trg-main-window.c:1006 src/trg-remote-prefs-dialog.c:399
+#: src/trg-torrent-props-dialog.c:465 src/trg-torrent-props-dialog.c:605
+#: src/trg-trackers-tree-view.c:190
+msgid "Peers"
+msgstr "Dalībnieki"
+
+#: src/trg-main-window.c:1089
+#, c-format
+msgid "This application supports Transmission %g and later, you have %g."
+msgstr ""
+"Šī aplikācija atbalsta Transmission %g un jaunāku, Jūs izmantojat %g."
+
+#: src/trg-main-window.c:1155 src/trg-status-bar.c:74 src/trg-status-bar.c:104
+msgid "Disconnected"
+msgstr "Atvienots"
+
+#: src/trg-main-window.c:1200
+#, c-format
+msgid "%d Downloading @ %s"
+msgstr "%d Lejupielādē @ %s"
+
+#: src/trg-main-window.c:1207
+#, c-format
+msgid "%d Seeding @ %s"
+msgstr "%d Augšupielādē @ %s"
+
+#: src/trg-main-window.c:1258
+#, c-format
+msgid "Request %d/%d failed: %s"
+msgstr ""
+
+#: src/trg-main-window.c:2055
+msgid "No Limit"
+msgstr "Nav ierobežojuma"
+
+#: src/trg-main-window.c:2156 src/trg-menu-bar.c:675 src/trg-toolbar.c:223
+msgid "Properties"
+msgstr "Īpašības"
+
+#: src/trg-main-window.c:2159 src/trg-toolbar.c:216
+msgid "Resume"
+msgstr "Atsākt"
+
+#: src/trg-main-window.c:2162 src/trg-toolbar.c:219
+msgid "Pause"
+msgstr "Pauze"
+
+#: src/trg-main-window.c:2165
+msgid "Verify"
+msgstr "Pārbaudīt"
+
+#: src/trg-main-window.c:2168
+msgid "Re-announce"
+msgstr ""
+
+#: src/trg-main-window.c:2171 src/trg-torrent-move-dialog.c:119
+#: src/trg-torrent-move-dialog.c:126
+msgid "Move"
+msgstr "Pārvietot"
+
+#: src/trg-main-window.c:2174 src/trg-menu-bar.c:706 src/trg-toolbar.c:227
+msgid "Remove"
+msgstr "Noņemt"
+
+#: src/trg-main-window.c:2177
+msgid "Remove & Delete"
+msgstr "Noņemt un Dzēst"
+
+#: src/trg-main-window.c:2201 src/trg-preferences-dialog.c:907
+msgid "Actions"
+msgstr "Darbības"
+
+#: src/trg-main-window.c:2230 src/trg-menu-bar.c:722
+msgid "Start Now"
+msgstr "Sākt tūlīt"
+
+#: src/trg-main-window.c:2233 src/trg-menu-bar.c:727
+msgid "Move Up Queue"
+msgstr ""
+
+#: src/trg-main-window.c:2236 src/trg-menu-bar.c:734
+msgid "Move Down Queue"
+msgstr ""
+
+#: src/trg-main-window.c:2239 src/trg-menu-bar.c:741
+msgid "Bottom Of Queue"
+msgstr "Rindas apakšpusē"
+
+#: src/trg-main-window.c:2242 src/trg-menu-bar.c:745
+msgid "Top Of Queue"
+msgstr "Rindas augšpusē"
+
+#: src/trg-main-window.c:2251 src/trg-main-window.c:2334
+msgid "Down Limit"
+msgstr "Zemākais ierobežojums"
+
+#: src/trg-main-window.c:2256 src/trg-main-window.c:2338
+msgid "Up Limit"
+msgstr "Augšējais ierobežojums"
+
+#: src/trg-main-window.c:2285 src/trg-main-window.c:2292
+#: src/trg-remote-prefs-dialog.c:497
+msgid "Updating..."
+msgstr "Augšupielādē..."
+
+#: src/trg-main-window.c:2306 src/trg-menu-bar.c:634 src/trg-toolbar.c:196
+msgid "Connect"
+msgstr "Savienoties"
+
+#: src/trg-main-window.c:2313 src/trg-toolbar.c:206
+msgid "Disconnect"
+msgstr "Atslēgties"
+
+#: src/trg-main-window.c:2317 src/trg-toolbar.c:209
+#: src/trg-trackers-tree-view.c:284 src/trg-trackers-tree-view.c:311
+msgid "Add"
+msgstr "Pievienot"
+
+#: src/trg-main-window.c:2321
+msgid "Add from URL"
+msgstr ""
+
+#: src/trg-main-window.c:2325
+msgid "Resume All"
+msgstr "Turpināt Visus"
+
+#: src/trg-main-window.c:2329
+msgid "Pause All"
+msgstr "Pauzēt visus"
+
+#: src/trg-main-window.c:2345
+msgid "Quit"
+msgstr "Iziet"
+
+#: src/trg-main-window.c:2459 src/trg-menu-bar.c:536
+msgid "Graph"
+msgstr "Grafiks"
+
+#: src/trg-main-window.c:2647
+msgid "Transmission Remote"
+msgstr ""
+
+#: src/trg-menu-bar.c:464
+msgid "_View"
+msgstr "_Skats"
+
+#: src/trg-menu-bar.c:473
+msgid "Transmission Style"
+msgstr "Transmission Skats"
+
+#: src/trg-menu-bar.c:483
+msgid "Transmission Compact Style"
+msgstr "Transmission Kompaktais skats"
+
+#: src/trg-menu-bar.c:493
+msgid "Classic Style"
+msgstr "Klasiskais skats"
+
+#: src/trg-menu-bar.c:499
+msgid "Sort"
+msgstr "Kārtot"
+
+#: src/trg-menu-bar.c:504 src/trg-preferences-dialog.c:675
+msgid "State selector"
+msgstr ""
+
+#: src/trg-menu-bar.c:510 src/trg-preferences-dialog.c:682
+msgid "Directory filters"
+msgstr ""
+
+#: src/trg-menu-bar.c:519 src/trg-preferences-dialog.c:689
+msgid "Tracker filters"
+msgstr ""
+
+#: src/trg-menu-bar.c:528 src/trg-preferences-dialog.c:696
+msgid "Torrent Details"
+msgstr "Torrenta papildus informācija"
+
+#: src/trg-menu-bar.c:542
+msgid "_Statistics"
+msgstr "_Statistika"
+
+#: src/trg-menu-bar.c:554
+msgid "_Options"
+msgstr "_Opcijas"
+
+#: src/trg-menu-bar.c:560
+msgid "_Local Preferences"
+msgstr ""
+
+#: src/trg-menu-bar.c:567
+msgid "_Remote Preferences"
+msgstr ""
+
+#: src/trg-menu-bar.c:627
+msgid "_File"
+msgstr "_Fails"
+
+#: src/trg-menu-bar.c:640
+msgid "_Disconnect"
+msgstr "_Atvienot"
+
+#: src/trg-menu-bar.c:646
+msgid "_Add"
+msgstr "_Pievienot"
+
+#: src/trg-menu-bar.c:651
+msgid "Add from _URL"
+msgstr ""
+
+#: src/trg-menu-bar.c:657
+msgid "_Quit"
+msgstr "_Iziet"
+
+#: src/trg-menu-bar.c:668
+msgid "_Torrent"
+msgstr "_Torrents"
+
+#: src/trg-menu-bar.c:680
+msgid "_Resume"
+msgstr "_Turpināt"
+
+#: src/trg-menu-bar.c:685
+msgid "_Pause"
+msgstr "_Pauzēt"
+
+#: src/trg-menu-bar.c:690
+msgid "_Verify"
+msgstr "_Pārbaudīt"
+
+#: src/trg-menu-bar.c:696
+msgid "Re-_announce"
+msgstr ""
+
+#: src/trg-menu-bar.c:701
+msgid "_Move"
+msgstr "_Pārvietot"
+
+#: src/trg-menu-bar.c:712
+msgid "Remove and Delete"
+msgstr "Noņemt un Dzēst"
+
+#: src/trg-menu-bar.c:753
+msgid "_Resume All"
+msgstr "_Turpināt Visus"
+
+#: src/trg-menu-bar.c:759
+msgid "_Pause All"
+msgstr "_Pauzēt Visus"
+
+#: src/trg-menu-bar.c:771
+msgid "_Help"
+msgstr "_Palīdzība"
+
+#: src/trg-menu-bar.c:777
+msgid "_About"
+msgstr "_Par"
+
+#: src/trg-peers-tree-view.c:50
+msgid "IP"
+msgstr "IP"
+
+#: src/trg-peers-tree-view.c:54 src/trg-trackers-tree-view.c:209
+msgid "Host"
+msgstr ""
+
+#: src/trg-peers-tree-view.c:58
+msgid "Country"
+msgstr "Valsts"
+
+#: src/trg-peers-tree-view.c:61 src/trg-torrent-tree-view.c:117
+msgid "Down Speed"
+msgstr "Lejupielādes ātrums"
+
+#: src/trg-peers-tree-view.c:63 src/trg-torrent-tree-view.c:120
+msgid "Up Speed"
+msgstr "Augšupielādes ātrums"
+
+#: src/trg-peers-tree-view.c:67
+msgid "Flags"
+msgstr ""
+
+#: src/trg-peers-tree-view.c:69
+msgid "Client"
+msgstr "Klients"
+
+#: src/trg-preferences-dialog.c:401
+msgid "Updates"
+msgstr "Atjauninājumi"
+
+#: src/trg-preferences-dialog.c:403
+msgid "Update active torrents only"
+msgstr "Atjaunināt tikai aktīvos torrentus"
+
+#: src/trg-preferences-dialog.c:410
+msgid "Full update every (?) updates"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:424
+msgid "Update interval:"
+msgstr "Atjaunošanas intervāls"
+
+#: src/trg-preferences-dialog.c:428
+msgid "Minimised update interval:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:433
+msgid "Session update interval:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:435
+msgid "Torrents"
+msgstr "Torrenti"
+
+#: src/trg-preferences-dialog.c:437
+msgid "Start paused"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:441
+msgid "Options dialog on add"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:446 src/trg-torrent-add-dialog.c:776
+msgid "Delete local .torrent file after adding"
+msgstr "Dzēst lokālo .torrent failu pēc pievienošanas"
+
+#: src/trg-preferences-dialog.c:599
+msgid "Commands"
+msgstr "Komandas"
+
+#: src/trg-preferences-dialog.c:609 src/trg-preferences-dialog.c:647
+msgid "Label"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:612
+msgid "Command"
+msgstr "Komanda"
+
+#: src/trg-preferences-dialog.c:637
+msgid "Remote Download Directories"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:650
+msgid "Directory"
+msgstr "Mape"
+
+#: src/trg-preferences-dialog.c:673 src/trg-preferences-dialog.c:902
+msgid "View"
+msgstr "Skats"
+
+#: src/trg-preferences-dialog.c:704
+msgid "Show graph"
+msgstr "Rādīt grafiku"
+
+#: src/trg-preferences-dialog.c:714
+msgid "System Tray"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:716
+msgid "Show in system tray"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:724
+msgid "Minimise to system tray"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:740
+msgid "Notifications"
+msgstr "Paziņojumi"
+
+#: src/trg-preferences-dialog.c:742
+msgid "Torrent added notifications"
+msgstr "Torrents pievienots paziņojums"
+
+#: src/trg-preferences-dialog.c:746
+msgid "Torrent complete notifications"
+msgstr "Torrents pabeigts paziņojums"
+
+#: src/trg-preferences-dialog.c:773
+msgid "Profile: "
+msgstr "Profils: "
+
+#: src/trg-preferences-dialog.c:799
+msgid "Name:"
+msgstr "Nosaukums:"
+
+#: src/trg-preferences-dialog.c:807 src/trg-preferences-dialog.c:892
+msgid "Connection"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:810
+msgid "Host:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:814
+msgid "Port:"
+msgstr "Ports"
+
+#: src/trg-preferences-dialog.c:817
+msgid "Username:"
+msgstr "Lietotāja vārds"
+
+#: src/trg-preferences-dialog.c:821
+msgid "Password:"
+msgstr "Parole"
+
+#: src/trg-preferences-dialog.c:823
+msgid "Automatically connect"
+msgstr "Automātiski pieslēgties"
+
+#: src/trg-preferences-dialog.c:829
+msgid "SSL"
+msgstr "SSL"
+
+#: src/trg-preferences-dialog.c:836
+msgid "Timeout:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:840
+msgid "Retries:"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:881 src/trg-toolbar.c:238
+msgid "Local Preferences"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:912
+msgid "Directories"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:305
+msgid "Bandwidth limits"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:309
+msgid "Down Limit (KiB/s)"
+msgstr "Lejupielādes ierobežojums (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:316
+msgid "Up Limit (KiB/s)"
+msgstr "Augšupielādes ierobežojums (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:321
+msgid "Alternate limits"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:326
+msgid "Alternate speed limits active"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:333
+msgid "Alternate time range"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:340
+msgid "Alternate down limit (KiB/s)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:345
+msgid "Alternate up limit (KiB/s)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:364
+msgid "Seed ratio limit"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:371
+msgid "Queues"
+msgstr "Rindas"
+
+#: src/trg-remote-prefs-dialog.c:375
+msgid "Download queue size"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:383
+msgid "Seed queue size"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:391
+msgid "Ignore stalled (minutes)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:404
+msgid "Global peer limit"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:409
+msgid "Per torrent peer limit"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:422
+msgid "Retest"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:433
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+msgstr ""
+"Ports ir<span font_weight=\"bold\" fgcolor=\"darkgreen\">atvērts</span>"
+
+#: src/trg-remote-prefs-dialog.c:437
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+msgstr "Ports ir <span font_weight=\"bold\" fgcolor=\"red\">aizvērts</span>"
+
+#: src/trg-remote-prefs-dialog.c:453 src/trg-remote-prefs-dialog.c:522
+msgid "Port test"
+msgstr "Porta tests"
+
+#: src/trg-remote-prefs-dialog.c:454
+msgid "Testing..."
+msgstr "Testē..."
+
+#: src/trg-remote-prefs-dialog.c:469 src/trg-remote-prefs-dialog.c:577
+msgid "Update"
+msgstr "Atjaunināt"
+
+#: src/trg-remote-prefs-dialog.c:474 src/trg-remote-prefs-dialog.c:568
+#, c-format
+msgid "Blocklist (%ld entries)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:516 src/trg-remote-prefs-dialog.c:698
+msgid "Connections"
+msgstr "Savienojumi"
+
+#: src/trg-remote-prefs-dialog.c:520
+msgid "Peer port"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:523
+msgid "Test"
+msgstr "Tests"
+
+#: src/trg-remote-prefs-dialog.c:527
+msgid "Required"
+msgstr "Nepieciešams"
+
+#: src/trg-remote-prefs-dialog.c:528
+msgid "Preferred"
+msgstr "Ieteicams"
+
+#: src/trg-remote-prefs-dialog.c:529
+msgid "Tolerated"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:540
+msgid "Encryption"
+msgstr "Šifrēšana"
+
+#: src/trg-remote-prefs-dialog.c:544
+msgid "Random peer port on start"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:549
+msgid "Peer port forwarding"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:552
+msgid "Protocol"
+msgstr "Protokols"
+
+#: src/trg-remote-prefs-dialog.c:555
+msgid "Peer exchange (PEX)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:559
+msgid "Distributed Hash Table (DHT)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:563
+msgid "Local peer discovery"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:566
+msgid "Blocklist"
+msgstr "Bloķēšanas saraksts"
+
+#: src/trg-remote-prefs-dialog.c:586
+msgid "Blocklist URL:"
+msgstr "Bloķēšanas saraksta URL:"
+
+#: src/trg-remote-prefs-dialog.c:604
+msgid "Environment"
+msgstr "Vide"
+
+#: src/trg-remote-prefs-dialog.c:608
+msgid "Download directory"
+msgstr "Lejupielādes mape"
+
+#: src/trg-remote-prefs-dialog.c:612
+msgid "Incomplete download dir"
+msgstr "Nepabeigto lejupielāžu mape"
+
+#: src/trg-remote-prefs-dialog.c:619
+msgid "Torrent done script"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:628
+msgid "Cache size (MiB)"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:631
+msgid "Behavior"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:635
+msgid "Rename partial files"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:640
+msgid "Trash original torrent files"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:645
+msgid "Start added torrents"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:671 src/trg-toolbar.c:242
+msgid "Remote Preferences"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:703 src/trg-torrent-props-dialog.c:409
+msgid "Bandwidth"
+msgstr ""
+
+#: src/trg-remote-prefs-dialog.c:708 src/trg-torrent-props-dialog.c:636
+msgid "Limits"
+msgstr "Ierobežojumi"
+
+#: src/trg-state-selector.c:656
+msgid "All"
+msgstr "Visi"
+
+#: src/trg-state-selector.c:661 src/trg-state-selector.c:731
+msgid "Queue Down"
+msgstr ""
+
+#: src/trg-state-selector.c:668 src/trg-state-selector.c:735
+msgid "Queue Up"
+msgstr ""
+
+#: src/trg-state-selector.c:675
+msgid "Complete"
+msgstr "Pabeigts"
+
+#: src/trg-state-selector.c:678
+msgid "Incomplete"
+msgstr "Nepabeigts"
+
+#: src/trg-state-selector.c:681
+msgid "Active"
+msgstr "Aktīvs"
+
+#: src/trg-stats-dialog.c:275
+msgid "Statistics"
+msgstr "Statistika"
+
+#: src/trg-stats-dialog.c:294
+msgid "Version"
+msgstr "Versija"
+
+#: src/trg-stats-dialog.c:296
+msgid "Download Total"
+msgstr "Pavisam lejupielādēts"
+
+#: src/trg-stats-dialog.c:298
+msgid "Upload Total"
+msgstr "Pavisam augšupielādēts"
+
+#: src/trg-stats-dialog.c:300
+msgid "Files Added"
+msgstr "Pievienoti faili"
+
+#: src/trg-stats-dialog.c:302
+msgid "Session Count"
+msgstr ""
+
+#: src/trg-stats-dialog.c:304
+msgid "Time Active"
+msgstr ""
+
+#: src/trg-stats-dialog.c:309
+msgid "Statistic"
+msgstr "Statistika"
+
+#: src/trg-stats-dialog.c:311
+msgid "Session"
+msgstr "Sesija"
+
+#: src/trg-stats-dialog.c:314
+msgid "Cumulative"
+msgstr ""
+
+#: src/trg-status-bar.c:142
+#, c-format
+msgid "Connected: %s (Transmission %g)"
+msgstr ""
+
+#: src/trg-status-bar.c:160
+msgid "Updating torrents..."
+msgstr "Atjauno torrentus..."
+
+#: src/trg-status-bar.c:173
+#, c-format
+msgid "Free space: %s"
+msgstr "Brīva vieta: %s"
+
+#: src/trg-status-bar.c:185
+msgid "Disable alternate speed limits"
+msgstr ""
+
+#: src/trg-status-bar.c:186
+msgid "Enable alternate speed limits"
+msgstr ""
+
+#: src/trg-status-bar.c:223 src/trg-status-bar.c:230
+#, c-format
+msgid " (Limit: %s)"
+msgstr " (Limits: %s)"
+
+#: src/trg-status-bar.c:235
+#, c-format
+msgid "Down: %s%s, Up: %s%s"
+msgstr "Lejup: %s%s, Augšup: %s%s"
+
+#: src/trg-toolbar.c:231
+msgid "Remove with data"
+msgstr "Dzēst ar informāciju"
+
+#: src/trg-torrent-add-dialog.c:460
+msgid "Torrent files"
+msgstr "Torrentu faili"
+
+#: src/trg-torrent-add-dialog.c:465
+msgid "All files"
+msgstr "Visi faili"
+
+#: src/trg-torrent-add-dialog.c:497
+msgid ""
+"Unable to parse torrent file. File preferences unavailable, but you can "
+"still try uploading it."
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:510
+#, c-format
+msgid "Unable to open torrent file: %s"
+msgstr "Nevar atvērt torrenta failu: %s"
+
+#: src/trg-torrent-add-dialog.c:576
+msgid "(None)"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:578
+msgid "(Multiple)"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:601
+msgid "Add a Torrent"
+msgstr "Pievienot torrentu"
+
+#: src/trg-torrent-add-dialog.c:744
+msgid "Add Torrent"
+msgstr "Pievienot torrentu"
+
+#: src/trg-torrent-add-dialog.c:769
+msgid "Start _paused"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:785
+msgid "_Torrent file:"
+msgstr "_Torrenta fails:"
+
+#: src/trg-torrent-add-dialog.c:801
+msgid "_Destination folder:"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:815
+msgid "Apply to all:"
+msgstr ""
+
+#: src/trg-torrent-add-dialog.c:825
+msgid "Torrent _priority:"
+msgstr "Torrenta_prioritāte:"
+
+#: src/trg-torrent-add-dialog.c:926
+msgid "Show _options dialog"
+msgstr ""
+
+#: src/trg-torrent-add-url-dialog.c:61
+msgid ""
+"You are trying to add a magnet torrent, but DHT is disabled. Distributed "
+"Hash Table (DHT) should be enabled in remote settings."
+msgstr ""
+
+#: src/trg-torrent-add-url-dialog.c:120
+msgid "URL:"
+msgstr "Saite:"
+
+#: src/trg-torrent-add-url-dialog.c:123
+msgid "Start Paused"
+msgstr ""
+
+#: src/trg-torrent-add-url-dialog.c:126
+msgid "Add torrent from URL"
+msgstr "Pievienot torrentu no saites:"
+
+#: src/trg-torrent-graph.c:410
+msgid "Total Uploading"
+msgstr "Pavisam augšupielādēts"
+
+#: src/trg-torrent-graph.c:418
+msgid "Total Downloading"
+msgstr "Pavisam lejupielādēts"
+
+#: src/trg-torrent-model.c:407
+msgid "Default"
+msgstr "Noklusētais"
+
+#: src/trg-torrent-move-dialog.c:116 src/trg-torrent-props-dialog.c:260
+msgid "Location:"
+msgstr "Atrāšanās vieta:"
+
+#: src/trg-torrent-move-dialog.c:163
+#, c-format
+msgid "Move %s"
+msgstr ""
+
+#: src/trg-torrent-move-dialog.c:165
+#, c-format
+msgid "Move %d torrents"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:206
+msgid "Activity"
+msgstr "Aktivitāte"
+
+#: src/trg-torrent-props-dialog.c:211
+msgid "Torrent size:"
+msgstr "Torrenta izmērs:"
+
+#: src/trg-torrent-props-dialog.c:216
+msgid "Have:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:221
+msgid "Downloaded:"
+msgstr "Lejupielādēts:"
+
+#: src/trg-torrent-props-dialog.c:226
+msgid "Uploaded:"
+msgstr "Augšupielādēts:"
+
+#: src/trg-torrent-props-dialog.c:231
+msgid "State:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:236
+msgid "Running time:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:241
+msgid "Remaining time:"
+msgstr "Atlikušais laiks:"
+
+#: src/trg-torrent-props-dialog.c:246
+msgid "Last activity:"
+msgstr "Pēdējā aktivitāte:"
+
+#: src/trg-torrent-props-dialog.c:251
+msgid "Error:"
+msgstr "Kļūda:"
+
+#: src/trg-torrent-props-dialog.c:255
+msgid "Details"
+msgstr "Sīkāk"
+
+#: src/trg-torrent-props-dialog.c:266
+msgid "Hash:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:272
+msgid "Privacy:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:278
+msgid "Origin:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:295
+msgid "Comment:"
+msgstr "Komentārs:"
+
+#: src/trg-torrent-props-dialog.c:330
+msgid "Private to this tracker -- DHT and PEX disabled"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:332
+msgid "Public torrent"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:342
+#, c-format
+msgid "Created on %1$s"
+msgstr "Izveidots %1$s"
+
+#: src/trg-torrent-props-dialog.c:344
+#, c-format
+msgid "Created by %1$s on %2$s"
+msgstr "Izveidojis %1$s  %2$s"
+
+#: src/trg-torrent-props-dialog.c:376
+msgid "No errors"
+msgstr "Nav kļūdu"
+
+#: src/trg-torrent-props-dialog.c:380
+msgid "Active now"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:413
+msgid "Honor global limits"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:423
+msgid "Torrent priority:"
+msgstr "Torrenta prioritāte:"
+
+#: src/trg-torrent-props-dialog.c:429
+msgid "Queue Position:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:434
+msgid "Limit download speed (KiB/s)"
+msgstr "Ierobežot lejupielādes ātrumu (KiB/s)"
+
+#: src/trg-torrent-props-dialog.c:442
+msgid "Limit upload speed (KiB/s)"
+msgstr "Ierobežot augšupielādes ātrumu (KiB/s)"
+
+#: src/trg-torrent-props-dialog.c:450
+msgid "Use global settings"
+msgstr "Lietot globālos iestatījumus"
+
+#: src/trg-torrent-props-dialog.c:451
+msgid "Stop seeding at ratio"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:452
+msgid "Seed regardless of ratio"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:455
+msgid "Seed ratio mode:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:463
+msgid "Seed ratio limit:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:469
+msgid "Peer limit:"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:542
+#, c-format
+msgid "Multiple (%d) torrent properties"
+msgstr ""
+
+#: src/trg-torrent-props-dialog.c:574
+msgid "Information"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:60
+msgid "Done"
+msgstr "Pabeigts"
+
+#: src/trg-torrent-tree-view.c:65
+msgid "Seeds"
+msgstr "Devēji"
+
+#: src/trg-torrent-tree-view.c:67
+msgid "Sending"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:73
+msgid "Downloads"
+msgstr "Lejupielādes"
+
+#: src/trg-torrent-tree-view.c:76
+msgid "Receiving"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:80
+msgid "Connected"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:82
+msgid "PEX Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:87
+msgid "DHT Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:93
+msgid "Tracker Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:97
+msgid "LTEP Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:102
+msgid "Resumed Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:108
+msgid "Incoming Peers"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:113
+msgid "Peers T/I/E/H/X/L/R"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:133
+msgid "Added"
+msgstr "Pievienots"
+
+#: src/trg-torrent-tree-view.c:136
+msgid "First Tracker"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:142
+msgid "ID"
+msgstr "ID"
+
+#: src/trg-torrent-tree-view.c:148
+msgid "Queue Position"
+msgstr ""
+
+#: src/trg-torrent-tree-view.c:154
+msgid "Last Active"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:168
+msgid "Tier"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:174
+msgid "Announce URL"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:192
+msgid "Seeder Count"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:195
+msgid "Leecher Count"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:199
+msgid "Last Announce"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:202
+msgid "Last Result"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:204
+msgid "Scrape URL"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:206
+msgid "Last Scrape"
+msgstr ""
+
+#: src/trg-trackers-tree-view.c:305
+msgid "Delete"
+msgstr "Dzēst"
+
+#: src/trg-tree-view.c:269
+msgid "Ascending"
+msgstr "Augoši"
+
+#: src/trg-tree-view.c:279
+msgid "Descending"
+msgstr "Dilstoši"
+
+#: src/util.c:340
+msgid "JSON decoding error."
+msgstr ""
+
+#: src/util.c:345
+msgid "Server responded, but with no result."
+msgstr ""
+
+#: src/util.c:349
+#, c-format
+msgid "Request failed with HTTP code %d"
+msgstr ""
+
+#: src/util.c:383
+msgid "None"
+msgstr "Nav"
+
+#: src/util.c:429
+#, c-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d diena"
+msgstr[1] "%d dienas"
+msgstr[2] "%d dienas"
+
+#: src/util.c:430
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d stunda"
+msgstr[1] "%d stundas"
+msgstr[2] "%d stundas"
+
+#: src/util.c:432
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d minūte"
+msgstr[1] "%d minūtes"
+msgstr[2] "%d minūtes"
+
+#: src/util.c:435
+#, c-format
+msgid "%ld second"
+msgid_plural "%ld seconds"
+msgstr[0] "%ld sekunde"
+msgstr[1] "%ld sekundes"
+msgstr[2] "%ld sekundes"

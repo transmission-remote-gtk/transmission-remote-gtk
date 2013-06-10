@@ -1,0 +1,1482 @@
+# Sinhalese translation for transmission-remote-gtk
+# Copyright (c) 2013 Rosetta Contributors and Canonical Ltd 2013
+# This file is distributed under the same license as the transmission-remote-gtk package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2013.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: transmission-remote-gtk\n"
+"Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
+"POT-Creation-Date: 2012-09-05 22:09+0100\n"
+"PO-Revision-Date: 2013-06-02 10:45+0000\n"
+"Last-Translator: nisalup <nisalup@gmail.com>\n"
+"Language-Team: Sinhalese <si@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Launchpad-Export-Date: 2013-06-09 22:28+0000\n"
+"X-Generator: Launchpad (build 16667)\n"
+
+#: src/torrent.c:360 src/torrent.c:380
+msgid "Metadata Downloading"
+msgstr "පශ්ච දත්ත (Metadata)"
+
+#: src/torrent.c:362 src/torrent.c:382 src/trg-state-selector.c:658
+msgid "Downloading"
+msgstr "බාගත වෙමින්"
+
+#: src/torrent.c:364
+msgid "Queued download"
+msgstr "පෝලිම්ගත බාගතකිරීම්"
+
+#: src/torrent.c:366 src/torrent.c:390
+msgid "Waiting To Check"
+msgstr "පරීක්ෂාව සඳහා පොරොත්තුවෙන්"
+
+#: src/torrent.c:368 src/torrent.c:388 src/trg-state-selector.c:684
+msgid "Checking"
+msgstr "පිරික්සමින්"
+
+#: src/torrent.c:370
+msgid "Queued seed"
+msgstr "පෝලිම්ගත seeds"
+
+#: src/torrent.c:372 src/torrent.c:386 src/trg-remote-prefs-dialog.c:360
+#: src/trg-state-selector.c:665 src/trg-torrent-props-dialog.c:447
+msgid "Seeding"
+msgstr "seed වෙමින්"
+
+#: src/torrent.c:374 src/torrent.c:384 src/torrent-cell-renderer.c:285
+#: src/trg-state-selector.c:672
+msgid "Paused"
+msgstr "විරාමයක් දී ඇත"
+
+#: src/torrent.c:394
+msgid "Unknown"
+msgstr "නාඳුනන"
+
+#: src/torrent-cell-renderer.c:157
+#, c-format
+msgid "%1$s of %2$s (%3$s)"
+msgstr "%2$s න් %1$s (%3$s)"
+
+#: src/torrent-cell-renderer.c:167
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s Goal: %6$s)"
+msgstr "%2$s න් %1$s (%3$s), උඩුගත කරන ලද %4$s (අනුපාතය: %5$s ඉලක්කය: %6$s)"
+
+#: src/torrent-cell-renderer.c:183
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s)"
+msgstr "%2$s  න් %1$s(%3$s), උඩුගත කරන ලද %4$s (අනුපාතය: %5$s)"
+
+#: src/torrent-cell-renderer.c:200
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)"
+msgstr "%1$s, උඩුගත කරන ලද  %2$s (අනුපාතය: %3$s ඉලක්කය: %4$s)"
+
+#: src/torrent-cell-renderer.c:214
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s)"
+msgstr "%1$s, උඩුගත කරන ලද %2$s (අනුපාතය: %3$s)"
+
+#: src/torrent-cell-renderer.c:230
+msgid "Remaining time unknown"
+msgstr "ඉතිරිව ඇති කාලය නොදනී"
+
+#: src/torrent-cell-renderer.c:235
+#, c-format
+msgid "%s remaining"
+msgstr "%s ඉතිරිව ඇත"
+
+#: src/torrent-cell-renderer.c:259
+#, c-format
+msgid "%1$s %2$s, %3$s %4$s"
+msgstr "%1$s %2$s, %3$s %4$s"
+
+#: src/torrent-cell-renderer.c:263 src/torrent-cell-renderer.c:266
+#, c-format
+msgid "%1$s %2$s"
+msgstr "%1$s %2$s"
+
+#: src/torrent-cell-renderer.c:270
+msgid "Idle"
+msgstr "අක්‍රිය"
+
+#: src/torrent-cell-renderer.c:284
+msgid "Finished"
+msgstr "අවසන්"
+
+#: src/torrent-cell-renderer.c:287
+msgid "Queued for verification"
+msgstr "තහවුරු කිරීම සඳහා පෝලිම්ගත කර ඇත"
+
+#: src/torrent-cell-renderer.c:289
+msgid "Queued for download"
+msgstr "බාගතකිරීම  සඳහා පෝලිම්ගත කර ඇත"
+
+#: src/torrent-cell-renderer.c:291
+msgid "Queued for seeding"
+msgstr "seed කිරීම  සඳහා පෝලිම්ගත කර ඇත"
+
+#: src/torrent-cell-renderer.c:294
+#, c-format
+msgid "Verifying data (%1$s tested)"
+msgstr "දත්ත සත්‍යාපනය කරමින් (%1$s ක් පරීක්ශා කරන ලදී)"
+
+#: src/torrent-cell-renderer.c:302
+#, c-format
+msgid "Ratio %s"
+msgstr "අනුපාතය %s"
+
+#: src/torrent-cell-renderer.c:332
+#, c-format
+msgid "Downloading from %1$li of %2$li connected peer"
+msgid_plural "Downloading from %1$li of %2$li connected peers"
+msgstr[0] "%2$li ක් වූ සමබන්ධිත peer එකෙන් %1$li භාගත කරමින්"
+msgstr[1] "%2$li ක් වූ සමබන්ධිත peer වලින් %1$li භාගත කරමින්"
+
+#: src/torrent-cell-renderer.c:340
+#, c-format
+msgid "Downloading metadata from %1$li peer (%2$s done)"
+msgid_plural "Downloading metadata from %1$li peers (%2$s done)"
+msgstr[0] "%1$li peer වලින් පශ්චදත්ත බාගත කරමින් (%2$s සම්පූර්ණයි)"
+msgstr[1] "%1$li peers වලින් පශ්චදත්ත බාගත කරමින් (%2$s සම්පූර්ණයි)"
+
+#: src/torrent-cell-renderer.c:351
+#, c-format
+msgid "Seeding to %1$li of %2$li connected peer"
+msgid_plural "Seeding to %1$li of %2$li connected peers"
+msgstr[0] "සම්බන්ධිත peer %2$li න් %1$li කට seed කරමින්"
+msgstr[1] "සම්බන්ධිත peers %2$li න් %1$li කට seed කරමින්"
+
+#: src/trg-about-window.c:74
+msgid "A remote client to transmission-daemon."
+msgstr "සේවාලාභියාගෙන් සම්ප්‍රේශණ ක්‍රමවේදය"
+
+#: src/trg-cell-renderer-priority.c:74 src/trg-main-window.c:2011
+#: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:416
+msgid "Low"
+msgstr "අඩු"
+
+#: src/trg-cell-renderer-priority.c:76 src/trg-main-window.c:2007
+#: src/trg-torrent-add-dialog.c:451 src/trg-torrent-props-dialog.c:418
+msgid "High"
+msgstr "ඉහල"
+
+#: src/trg-cell-renderer-priority.c:78 src/trg-main-window.c:2009
+#: src/trg-torrent-add-dialog.c:450 src/trg-torrent-props-dialog.c:417
+msgid "Normal"
+msgstr "සාමාන්‍ය"
+
+#: src/trg-cell-renderer-priority.c:80
+msgid "Mixed"
+msgstr "මිශ්‍ර"
+
+#: src/trg-files-tree-view.c:185 src/trg-general-panel.c:280
+#: src/trg-torrent-add-dialog.c:348 src/trg-torrent-tree-view.c:52
+msgid "Name"
+msgstr "නම"
+
+#: src/trg-files-tree-view.c:189 src/trg-general-panel.c:283
+#: src/trg-torrent-add-dialog.c:366 src/trg-torrent-tree-view.c:57
+msgid "Size"
+msgstr "ප්‍රමාණය"
+
+#: src/trg-files-tree-view.c:191 src/trg-peers-tree-view.c:65
+msgid "Progress"
+msgstr "ප්‍රගතිය"
+
+#: src/trg-files-tree-view.c:193 src/trg-files-tree-view-common.c:69
+#: src/trg-torrent-add-dialog.c:379 src/trg-torrent-add-dialog.c:703
+msgid "Download"
+msgstr "බාගත කරන්න"
+
+#: src/trg-files-tree-view.c:195 src/trg-main-window.c:2000
+#: src/trg-torrent-add-dialog.c:395 src/trg-torrent-tree-view.c:145
+msgid "Priority"
+msgstr "ප්‍රමුඛතාව"
+
+#: src/trg-files-tree-view-common.c:50 src/trg-torrent-add-dialog.c:694
+msgid "High Priority"
+msgstr "වැඩි ප්‍රමුඛතාව"
+
+#: src/trg-files-tree-view-common.c:54 src/trg-torrent-add-dialog.c:697
+msgid "Normal Priority"
+msgstr "සාමාන්‍ය ප්‍රමුඛතාව"
+
+#: src/trg-files-tree-view-common.c:58 src/trg-torrent-add-dialog.c:700
+msgid "Low Priority"
+msgstr "අඩු ප්‍රමුඛතාව"
+
+#: src/trg-files-tree-view-common.c:77 src/trg-torrent-add-dialog.c:706
+msgid "Skip"
+msgstr "නොසලකා හරින්න"
+
+#: src/trg-files-tree-view-common.c:84
+msgid "Expand All"
+msgstr "සියල්ල දිගහරින්න"
+
+#: src/trg-files-tree-view-common.c:89
+msgid "Collapse All"
+msgstr "සියල්ල හකුළන්න"
+
+#: src/trg-general-panel.c:153 src/trg-general-panel.c:214
+msgid "N/A"
+msgstr "ලබාගත නොහැක"
+
+#: src/trg-general-panel.c:168
+msgid "(Private)"
+msgstr "(පෞද්ගලික)"
+
+#: src/trg-general-panel.c:168
+msgid "(Public)"
+msgstr "(පොදු)"
+
+#: src/trg-general-panel.c:202 src/trg-main-window.c:1097
+#: src/trg-main-window.c:1505 src/trg-main-window.c:2135
+#: src/trg-state-selector.c:538 src/trg-torrent-add-url-dialog.c:67
+#: src/util.c:331
+msgid "Error"
+msgstr "දෝශය"
+
+#: src/trg-general-panel.c:285 src/trg-torrent-tree-view.c:123
+msgid "ETA"
+msgstr "ඉතිරිව ඇති කාලය"
+
+#: src/trg-general-panel.c:287 src/trg-torrent-tree-view.c:151
+msgid "Completed"
+msgstr "අවසන් කරන ලදී"
+
+#: src/trg-general-panel.c:290
+msgid "Seeders"
+msgstr "සීඩර්"
+
+#: src/trg-general-panel.c:292
+msgid "Rate Down"
+msgstr "අනුපාතය පහලට"
+
+#: src/trg-general-panel.c:294 src/trg-torrent-tree-view.c:128
+msgid "Downloaded"
+msgstr "බාගත්"
+
+#: src/trg-general-panel.c:297 src/trg-torrent-tree-view.c:70
+msgid "Leechers"
+msgstr "ලීචර්"
+
+#: src/trg-general-panel.c:299
+msgid "Rate Up"
+msgstr "අනුපාතය ඉහලට"
+
+#: src/trg-general-panel.c:301 src/trg-torrent-tree-view.c:125
+msgid "Uploaded"
+msgstr "උඩුගත කළ"
+
+#: src/trg-general-panel.c:304 src/trg-torrent-tree-view.c:63
+msgid "Status"
+msgstr "තත්වය"
+
+#: src/trg-general-panel.c:306 src/trg-torrent-tree-view.c:131
+msgid "Ratio"
+msgstr "අනුපාතය"
+
+#: src/trg-general-panel.c:309
+msgid "Comment"
+msgstr "ප්‍රතිචාරය"
+
+#: src/trg-general-panel.c:312
+msgid "Completed At"
+msgstr "සම්පූර්ණ කරන ලද්දේ"
+
+#: src/trg-general-panel.c:316 src/trg-torrent-tree-view.c:139
+msgid "Location"
+msgstr "පිහිටීම"
+
+#: src/trg-main-window.c:363
+msgid "This torrent has completed."
+msgstr "මෙම ටොරන්ටුව සම්පූර්ණ වී ඇත"
+
+#: src/trg-main-window.c:375
+msgid "This torrent has been added."
+msgstr "මෙම ටොරන්ටුව එකතු කර ඇත"
+
+#: src/trg-main-window.c:596
+msgid "No hostname set"
+msgstr "Hostname එකක් පත්කර නැත"
+
+#: src/trg-main-window.c:599
+msgid "Unknown error getting settings"
+msgstr "සැකසුම් ලබාගැනීමේදී දෝශයක්"
+
+#: src/trg-main-window.c:614
+msgid "Connecting..."
+msgstr "සම්බන්ධ වෙමින්..."
+
+#: src/trg-main-window.c:873
+#, c-format
+msgid "<big><b>Remove torrent \"%s\"?</b></big>"
+msgstr "%s ටොරන්ටුව අයින් කරන්නද?"
+
+#: src/trg-main-window.c:874
+#, c-format
+msgid "<big><b>Remove %d torrents?</b></big>"
+msgstr "ටොරන්ටු %d අයින් කරන්නද?"
+
+#: src/trg-main-window.c:896
+#, c-format
+msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
+msgstr "<big><b> \"%s\" ටොරන්ටුව ඉවත් කර මකා දමන්න? </b></big>"
+
+#: src/trg-main-window.c:898
+#, c-format
+msgid "<big><b>Remove and delete %d torrents?</b></big>"
+msgstr "<big><b>\"%d\" ටොරන්ටු ඉවත් කර මකා දමන්න?</b></big>"
+
+#: src/trg-main-window.c:981 src/trg-preferences-dialog.c:897
+#: src/trg-remote-prefs-dialog.c:693
+msgid "General"
+msgstr "පොදු"
+
+#: src/trg-main-window.c:990 src/trg-torrent-props-dialog.c:622
+msgid "Trackers"
+msgstr "ට්‍රැකර් (tracker)"
+
+#: src/trg-main-window.c:998 src/trg-torrent-props-dialog.c:591
+msgid "Files"
+msgstr "ගොනු"
+
+#: src/trg-main-window.c:1006 src/trg-remote-prefs-dialog.c:399
+#: src/trg-torrent-props-dialog.c:465 src/trg-torrent-props-dialog.c:605
+#: src/trg-trackers-tree-view.c:190
+msgid "Peers"
+msgstr "පියර් (peer) සම්බන්ධතා"
+
+#: src/trg-main-window.c:1089
+#, c-format
+msgid "This application supports Transmission %g and later, you have %g."
+msgstr ""
+"මෙම මෘදුකාංගය වැඩකරන්නේ සම්ප්‍රේෂණය  %g ට වැඩිවිට පමණි. ඔබගේ සම්ප්‍රේෂණය %g "
+"පමණකි."
+
+#: src/trg-main-window.c:1155 src/trg-status-bar.c:74 src/trg-status-bar.c:104
+msgid "Disconnected"
+msgstr "විසන්ධි විය"
+
+#: src/trg-main-window.c:1200
+#, c-format
+msgid "%d Downloading @ %s"
+msgstr "%d බාගත වෙමින් %s ට"
+
+#: src/trg-main-window.c:1207
+#, c-format
+msgid "%d Seeding @ %s"
+msgstr "%d  සීඩ් කරමින් %s වේගයෙන්"
+
+#: src/trg-main-window.c:1258
+#, c-format
+msgid "Request %d/%d failed: %s"
+msgstr "%d/%d ඉල්ලීම අසාර්ථක විය: %s"
+
+#: src/trg-main-window.c:2055
+msgid "No Limit"
+msgstr "සීමාවක් නොමැත"
+
+#: src/trg-main-window.c:2156 src/trg-menu-bar.c:675 src/trg-toolbar.c:223
+msgid "Properties"
+msgstr "ගුණ"
+
+#: src/trg-main-window.c:2159 src/trg-toolbar.c:216
+msgid "Resume"
+msgstr "ඉදිරියට ගෙනයන්න"
+
+#: src/trg-main-window.c:2162 src/trg-toolbar.c:219
+msgid "Pause"
+msgstr "විරාමය"
+
+#: src/trg-main-window.c:2165
+msgid "Verify"
+msgstr "තහවුරු කරන්න"
+
+#: src/trg-main-window.c:2168
+msgid "Re-announce"
+msgstr "නැවත නිවේදනය කරන්න"
+
+#: src/trg-main-window.c:2171 src/trg-torrent-move-dialog.c:119
+#: src/trg-torrent-move-dialog.c:126
+msgid "Move"
+msgstr "ගෙනයන්න"
+
+#: src/trg-main-window.c:2174 src/trg-menu-bar.c:706 src/trg-toolbar.c:227
+msgid "Remove"
+msgstr "ඉවත් කරන්න"
+
+#: src/trg-main-window.c:2177
+msgid "Remove & Delete"
+msgstr "ඉවත් කර මකා දමන්න"
+
+#: src/trg-main-window.c:2201 src/trg-preferences-dialog.c:907
+msgid "Actions"
+msgstr "ක්‍රියා"
+
+#: src/trg-main-window.c:2230 src/trg-menu-bar.c:722
+msgid "Start Now"
+msgstr "දැන් අරඹන්න"
+
+#: src/trg-main-window.c:2233 src/trg-menu-bar.c:727
+msgid "Move Up Queue"
+msgstr "පෝලිමේ ඉහලට යවන්න"
+
+#: src/trg-main-window.c:2236 src/trg-menu-bar.c:734
+msgid "Move Down Queue"
+msgstr "පෝලිමේ පහලට යවන්න"
+
+#: src/trg-main-window.c:2239 src/trg-menu-bar.c:741
+msgid "Bottom Of Queue"
+msgstr "පෝලිමේ පහලටම යවන්න"
+
+#: src/trg-main-window.c:2242 src/trg-menu-bar.c:745
+msgid "Top Of Queue"
+msgstr "පෝලිමේ මුලටම යවන්න"
+
+#: src/trg-main-window.c:2251 src/trg-main-window.c:2334
+msgid "Down Limit"
+msgstr "බාගත සීමාව"
+
+#: src/trg-main-window.c:2256 src/trg-main-window.c:2338
+msgid "Up Limit"
+msgstr "උඩුගත සීමාව"
+
+#: src/trg-main-window.c:2285 src/trg-main-window.c:2292
+#: src/trg-remote-prefs-dialog.c:497
+msgid "Updating..."
+msgstr "යාවත්කාළීන කරමින්..."
+
+#: src/trg-main-window.c:2306 src/trg-menu-bar.c:634 src/trg-toolbar.c:196
+msgid "Connect"
+msgstr "සම්බන්ධ කරන්න"
+
+#: src/trg-main-window.c:2313 src/trg-toolbar.c:206
+msgid "Disconnect"
+msgstr "විසන්ධි කරන්න"
+
+#: src/trg-main-window.c:2317 src/trg-toolbar.c:209
+#: src/trg-trackers-tree-view.c:284 src/trg-trackers-tree-view.c:311
+msgid "Add"
+msgstr "එක් කරන්න"
+
+#: src/trg-main-window.c:2321
+msgid "Add from URL"
+msgstr "යොමුවකින් එක්කරන්න"
+
+#: src/trg-main-window.c:2325
+msgid "Resume All"
+msgstr "සියල්ල නැවත අරඹන්න"
+
+#: src/trg-main-window.c:2329
+msgid "Pause All"
+msgstr "සියල්ල මදකට නවත්වන්න"
+
+#: src/trg-main-window.c:2345
+msgid "Quit"
+msgstr "ඉවත් වන්න"
+
+#: src/trg-main-window.c:2459 src/trg-menu-bar.c:536
+msgid "Graph"
+msgstr "ප්‍රස්ථාරය"
+
+#: src/trg-main-window.c:2647
+msgid "Transmission Remote"
+msgstr "දුරස්ථ සම්ප්‍රේශක පාලකය"
+
+#: src/trg-menu-bar.c:464
+msgid "_View"
+msgstr "_පෙන්වන්න"
+
+#: src/trg-menu-bar.c:473
+msgid "Transmission Style"
+msgstr "සම්ප්‍රේශක රටාව"
+
+#: src/trg-menu-bar.c:483
+msgid "Transmission Compact Style"
+msgstr "සම්ප්‍රේශන සංයුක්ත ක්‍රමය"
+
+#: src/trg-menu-bar.c:493
+msgid "Classic Style"
+msgstr "සම්භාව්‍ය ක්‍රමය"
+
+#: src/trg-menu-bar.c:499
+msgid "Sort"
+msgstr "වර්‍ග කිරීම"
+
+#: src/trg-menu-bar.c:504 src/trg-preferences-dialog.c:675
+msgid "State selector"
+msgstr "ස්වභාවය තෝරන්නා (State selector)"
+
+#: src/trg-menu-bar.c:510 src/trg-preferences-dialog.c:682
+msgid "Directory filters"
+msgstr "නාමාවලි පෙරන"
+
+#: src/trg-menu-bar.c:519 src/trg-preferences-dialog.c:689
+msgid "Tracker filters"
+msgstr "ට්‍රැකර්(tracker) පෙරන"
+
+#: src/trg-menu-bar.c:528 src/trg-preferences-dialog.c:696
+msgid "Torrent Details"
+msgstr "ටොරන්ට්  විස්තර"
+
+#: src/trg-menu-bar.c:542
+msgid "_Statistics"
+msgstr "_සංඛ්‍යාලේඛන"
+
+#: src/trg-menu-bar.c:554
+msgid "_Options"
+msgstr "_විකල්ප"
+
+#: src/trg-menu-bar.c:560
+msgid "_Local Preferences"
+msgstr "_ප්‍රාදේශීය අභිරුචි"
+
+#: src/trg-menu-bar.c:567
+msgid "_Remote Preferences"
+msgstr "_දුරස්ථ අභිරුචි"
+
+#: src/trg-menu-bar.c:627
+msgid "_File"
+msgstr "_ගොනුව"
+
+#: src/trg-menu-bar.c:640
+msgid "_Disconnect"
+msgstr "_විසන්ධි කරන්න"
+
+#: src/trg-menu-bar.c:646
+msgid "_Add"
+msgstr "_එක් කරන්න"
+
+#: src/trg-menu-bar.c:651
+msgid "Add from _URL"
+msgstr "_URL වලින් එකතු කරන්න"
+
+#: src/trg-menu-bar.c:657
+msgid "_Quit"
+msgstr "_ඉවත් වෙන්න"
+
+#: src/trg-menu-bar.c:668
+msgid "_Torrent"
+msgstr "ටොරන්ට්"
+
+#: src/trg-menu-bar.c:680
+msgid "_Resume"
+msgstr "_යලි අරඹන්න"
+
+#: src/trg-menu-bar.c:685
+msgid "_Pause"
+msgstr "_විරාමය"
+
+#: src/trg-menu-bar.c:690
+msgid "_Verify"
+msgstr "තහවුරු කරන්න"
+
+#: src/trg-menu-bar.c:696
+msgid "Re-_announce"
+msgstr "නැවත _නිවේදනය කරන්න"
+
+#: src/trg-menu-bar.c:701
+msgid "_Move"
+msgstr "_ගෙනයන්න"
+
+#: src/trg-menu-bar.c:712
+msgid "Remove and Delete"
+msgstr "ඉවත් කර මකා දමන්න"
+
+#: src/trg-menu-bar.c:753
+msgid "_Resume All"
+msgstr "_සියල්ල නැවත අරඹන්න"
+
+#: src/trg-menu-bar.c:759
+msgid "_Pause All"
+msgstr "_සියල්ල මඳකට නවතන්න"
+
+#: src/trg-menu-bar.c:771
+msgid "_Help"
+msgstr "_උදවු"
+
+#: src/trg-menu-bar.c:777
+msgid "_About"
+msgstr "_පිළිබඳ"
+
+#: src/trg-peers-tree-view.c:50
+msgid "IP"
+msgstr "_අන්තර්ජාල ප්‍රෝටොකෝල් (IP)"
+
+#: src/trg-peers-tree-view.c:54 src/trg-trackers-tree-view.c:209
+msgid "Host"
+msgstr "ධාරකය"
+
+#: src/trg-peers-tree-view.c:58
+msgid "Country"
+msgstr "රට"
+
+#: src/trg-peers-tree-view.c:61 src/trg-torrent-tree-view.c:117
+msgid "Down Speed"
+msgstr "බාගත වේගය"
+
+#: src/trg-peers-tree-view.c:63 src/trg-torrent-tree-view.c:120
+msgid "Up Speed"
+msgstr "උඩගත වේගය"
+
+#: src/trg-peers-tree-view.c:67
+msgid "Flags"
+msgstr "සංකේත"
+
+#: src/trg-peers-tree-view.c:69
+msgid "Client"
+msgstr "සේවාලාභියා"
+
+#: src/trg-preferences-dialog.c:401
+msgid "Updates"
+msgstr "යාවත්කාලීන"
+
+#: src/trg-preferences-dialog.c:403
+msgid "Update active torrents only"
+msgstr "ක්‍රියාකාරී ටොරන්ට් පමණක් යාවත්කාලීන කරන්න"
+
+#: src/trg-preferences-dialog.c:410
+msgid "Full update every (?) updates"
+msgstr "සෑම යාවත්කාලීන කිරීම් (?) කට වරක් සම්පූර්ණයෙන් යාවත්කාලීන කරන්න"
+
+#: src/trg-preferences-dialog.c:424
+msgid "Update interval:"
+msgstr "යාවත්කාලීන කාල පරතරය:"
+
+#: src/trg-preferences-dialog.c:428
+msgid "Minimised update interval:"
+msgstr "අවම කරන ලද යාවත්කාලීන කාල පරතරය:"
+
+#: src/trg-preferences-dialog.c:433
+msgid "Session update interval:"
+msgstr "සැසියක යාවත්කාලීන කාල පරතරය:"
+
+#: src/trg-preferences-dialog.c:435
+msgid "Torrents"
+msgstr "ටොරන්ටු"
+
+#: src/trg-preferences-dialog.c:437
+msgid "Start paused"
+msgstr "ඇරඹුම මඳකට නවතන ලදී"
+
+#: src/trg-preferences-dialog.c:441
+msgid "Options dialog on add"
+msgstr "එකතු කිරීමේදී විකල්ප සංවාදයක්"
+
+#: src/trg-preferences-dialog.c:446 src/trg-torrent-add-dialog.c:776
+msgid "Delete local .torrent file after adding"
+msgstr "එකතු කල පසු ප්‍රාදේශීය .torrent ගොනුව ඉවත් කරන්න"
+
+#: src/trg-preferences-dialog.c:599
+msgid "Commands"
+msgstr "විධාන"
+
+#: src/trg-preferences-dialog.c:609 src/trg-preferences-dialog.c:647
+msgid "Label"
+msgstr "ලේබලය"
+
+#: src/trg-preferences-dialog.c:612
+msgid "Command"
+msgstr "විධානය"
+
+#: src/trg-preferences-dialog.c:637
+msgid "Remote Download Directories"
+msgstr "දුරස්ථ බාගත කිරීම් නාමාවලි"
+
+#: src/trg-preferences-dialog.c:650
+msgid "Directory"
+msgstr "නාමාවලිය"
+
+#: src/trg-preferences-dialog.c:673 src/trg-preferences-dialog.c:902
+msgid "View"
+msgstr "නරඹන්න"
+
+#: src/trg-preferences-dialog.c:704
+msgid "Show graph"
+msgstr "ප්‍රස්ථාරය පෙන්වන්න"
+
+#: src/trg-preferences-dialog.c:714
+msgid "System Tray"
+msgstr "පද්ධති තැටිය"
+
+#: src/trg-preferences-dialog.c:716
+msgid "Show in system tray"
+msgstr "පද්ධති තැටියේ පෙන්වන්න"
+
+#: src/trg-preferences-dialog.c:724
+msgid "Minimise to system tray"
+msgstr "පද්ධති තැටියට අවමායනය කරන්න"
+
+#: src/trg-preferences-dialog.c:740
+msgid "Notifications"
+msgstr "නිවේදන"
+
+#: src/trg-preferences-dialog.c:742
+msgid "Torrent added notifications"
+msgstr "ටොරන්ට් එකතු වූ බව කියැවෙන නිවේදන"
+
+#: src/trg-preferences-dialog.c:746
+msgid "Torrent complete notifications"
+msgstr "ටොරන්ට් සම්පූර්ණ වූ බව කියැවෙන නිවේදන"
+
+#: src/trg-preferences-dialog.c:773
+msgid "Profile: "
+msgstr "පැතිකඩ "
+
+#: src/trg-preferences-dialog.c:799
+msgid "Name:"
+msgstr "නම:"
+
+#: src/trg-preferences-dialog.c:807 src/trg-preferences-dialog.c:892
+msgid "Connection"
+msgstr "සම්බන්ධතාවය"
+
+#: src/trg-preferences-dialog.c:810
+msgid "Host:"
+msgstr "ධාරකය:"
+
+#: src/trg-preferences-dialog.c:814
+msgid "Port:"
+msgstr "පේනුව:"
+
+#: src/trg-preferences-dialog.c:817
+msgid "Username:"
+msgstr "පරිශීලක නාමය:"
+
+#: src/trg-preferences-dialog.c:821
+msgid "Password:"
+msgstr "මුරපදය:"
+
+#: src/trg-preferences-dialog.c:823
+msgid "Automatically connect"
+msgstr "ස්වයංක්‍රීයව සම්බන්ධ වන්න"
+
+#: src/trg-preferences-dialog.c:829
+msgid "SSL"
+msgstr "SSL"
+
+#: src/trg-preferences-dialog.c:836
+msgid "Timeout:"
+msgstr "කල් ඉකුත්වීම:"
+
+#: src/trg-preferences-dialog.c:840
+msgid "Retries:"
+msgstr "නැවත උත්සාහ කිරීම්:"
+
+#: src/trg-preferences-dialog.c:881 src/trg-toolbar.c:238
+msgid "Local Preferences"
+msgstr "ප්‍රාදේශිය අභිරුචි"
+
+#: src/trg-preferences-dialog.c:912
+msgid "Directories"
+msgstr "නාමාවලි"
+
+#: src/trg-remote-prefs-dialog.c:305
+msgid "Bandwidth limits"
+msgstr "කලාප පළල සීමා"
+
+#: src/trg-remote-prefs-dialog.c:309
+msgid "Down Limit (KiB/s)"
+msgstr "බාගත කිරීම් සීමා (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:316
+msgid "Up Limit (KiB/s)"
+msgstr "උඩුගත කිරීම් සීමා"
+
+#: src/trg-remote-prefs-dialog.c:321
+msgid "Alternate limits"
+msgstr "විකල්ප සීමා"
+
+#: src/trg-remote-prefs-dialog.c:326
+msgid "Alternate speed limits active"
+msgstr "විකල්ප වේග සීමා සක්‍රිය කර ඇත"
+
+#: src/trg-remote-prefs-dialog.c:333
+msgid "Alternate time range"
+msgstr "විකල්ප කාල පරාසය"
+
+#: src/trg-remote-prefs-dialog.c:340
+msgid "Alternate down limit (KiB/s)"
+msgstr "විකල්ප බාගත කිරීම් සීමා (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:345
+msgid "Alternate up limit (KiB/s)"
+msgstr "විකල්ප උඩු කිරීම් සීමා (KiB/s)"
+
+#: src/trg-remote-prefs-dialog.c:364
+msgid "Seed ratio limit"
+msgstr "සීඩ් (Seed) අනුපාත සීමා"
+
+#: src/trg-remote-prefs-dialog.c:371
+msgid "Queues"
+msgstr "පෝලිම"
+
+#: src/trg-remote-prefs-dialog.c:375
+msgid "Download queue size"
+msgstr "පෝලිමේ ප්‍රමාණය බාගත කරන්න"
+
+#: src/trg-remote-prefs-dialog.c:383
+msgid "Seed queue size"
+msgstr "පෝලිමේ ප්‍රමාණය සීඩ්(Seed) කරන්න"
+
+#: src/trg-remote-prefs-dialog.c:391
+msgid "Ignore stalled (minutes)"
+msgstr "නැවතුනු ඒවා නොසලකා හරින්න (විනාඩි )"
+
+#: src/trg-remote-prefs-dialog.c:404
+msgid "Global peer limit"
+msgstr "ලෝකව්‍යාප්ත පියර්(Peer) සීමාව"
+
+#: src/trg-remote-prefs-dialog.c:409
+msgid "Per torrent peer limit"
+msgstr "ටොරන්ට් එකකට පියර් ගණන් සීමාව"
+
+#: src/trg-remote-prefs-dialog.c:422
+msgid "Retest"
+msgstr "නැවත පරීක්ශා කරන්න"
+
+#: src/trg-remote-prefs-dialog.c:433
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+msgstr "පේනුව <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+
+#: src/trg-remote-prefs-dialog.c:437
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+msgstr "පේනුව <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+
+#: src/trg-remote-prefs-dialog.c:453 src/trg-remote-prefs-dialog.c:522
+msgid "Port test"
+msgstr "පේනු පරීක්ශාව"
+
+#: src/trg-remote-prefs-dialog.c:454
+msgid "Testing..."
+msgstr "පිරික්සමින්..."
+
+#: src/trg-remote-prefs-dialog.c:469 src/trg-remote-prefs-dialog.c:577
+msgid "Update"
+msgstr "යාවත්කාලීන කරන්න"
+
+#: src/trg-remote-prefs-dialog.c:474 src/trg-remote-prefs-dialog.c:568
+#, c-format
+msgid "Blocklist (%ld entries)"
+msgstr "අවහිර අරන ලද  ( %ld  කි )"
+
+#: src/trg-remote-prefs-dialog.c:516 src/trg-remote-prefs-dialog.c:698
+msgid "Connections"
+msgstr "සම්බන්ධතා"
+
+#: src/trg-remote-prefs-dialog.c:520
+msgid "Peer port"
+msgstr "පියර් (Peer) පේනුව"
+
+#: src/trg-remote-prefs-dialog.c:523
+msgid "Test"
+msgstr "පිරික්සුම"
+
+#: src/trg-remote-prefs-dialog.c:527
+msgid "Required"
+msgstr "අවශ්‍යයි"
+
+#: src/trg-remote-prefs-dialog.c:528
+msgid "Preferred"
+msgstr "වරණිත"
+
+#: src/trg-remote-prefs-dialog.c:529
+msgid "Tolerated"
+msgstr "ඉවසන ලද"
+
+#: src/trg-remote-prefs-dialog.c:540
+msgid "Encryption"
+msgstr "ගුප්ත කේතනය"
+
+#: src/trg-remote-prefs-dialog.c:544
+msgid "Random peer port on start"
+msgstr "ආරම්භයේදී අභිමත පියර් පේනුවක් ඇත"
+
+#: src/trg-remote-prefs-dialog.c:549
+msgid "Peer port forwarding"
+msgstr "පියර් පේනු ප්‍රේරණය"
+
+#: src/trg-remote-prefs-dialog.c:552
+msgid "Protocol"
+msgstr "ප්‍රොටෝකෝලය"
+
+#: src/trg-remote-prefs-dialog.c:555
+msgid "Peer exchange (PEX)"
+msgstr "පියර් හුවමාරුව (PEX)"
+
+#: src/trg-remote-prefs-dialog.c:559
+msgid "Distributed Hash Table (DHT)"
+msgstr "ව්‍යාප්ත හැශ් වගුව"
+
+#: src/trg-remote-prefs-dialog.c:563
+msgid "Local peer discovery"
+msgstr "ප්‍රාදේශීය පියර් (peer) හඳුනාගැනීම"
+
+#: src/trg-remote-prefs-dialog.c:566
+msgid "Blocklist"
+msgstr "අවහිර කල ලේඛනය"
+
+#: src/trg-remote-prefs-dialog.c:586
+msgid "Blocklist URL:"
+msgstr "අවහිර කල ලේඛනයේ විද්‍යුත් යොමුව:"
+
+#: src/trg-remote-prefs-dialog.c:604
+msgid "Environment"
+msgstr "පරිසරය"
+
+#: src/trg-remote-prefs-dialog.c:608
+msgid "Download directory"
+msgstr "බාගත කිරීම් නාමාවලිය:"
+
+#: src/trg-remote-prefs-dialog.c:612
+msgid "Incomplete download dir"
+msgstr "අසම්පූර්ණ බාගත කිරීම් නාමාවලිය:"
+
+#: src/trg-remote-prefs-dialog.c:619
+msgid "Torrent done script"
+msgstr "ටොරන්ට් කරන ලද අත්පත"
+
+#: src/trg-remote-prefs-dialog.c:628
+msgid "Cache size (MiB)"
+msgstr "කෑශ් (Cache) මතකය (MiB)"
+
+#: src/trg-remote-prefs-dialog.c:631
+msgid "Behavior"
+msgstr "හැසිරීම"
+
+#: src/trg-remote-prefs-dialog.c:635
+msgid "Rename partial files"
+msgstr "පාර්ශවික ගොනු නැවත නම් කරන්න"
+
+#: src/trg-remote-prefs-dialog.c:640
+msgid "Trash original torrent files"
+msgstr "මුල් ටොරන්ට් ගොනුව මකා දමන්න"
+
+#: src/trg-remote-prefs-dialog.c:645
+msgid "Start added torrents"
+msgstr "එකතු කල ටොරන්ට් ආරම්භ කරන්න"
+
+#: src/trg-remote-prefs-dialog.c:671 src/trg-toolbar.c:242
+msgid "Remote Preferences"
+msgstr "දුරස්ථ අභිරුචි"
+
+#: src/trg-remote-prefs-dialog.c:703 src/trg-torrent-props-dialog.c:409
+msgid "Bandwidth"
+msgstr "කලාප පරාසය (Bandwidth)"
+
+#: src/trg-remote-prefs-dialog.c:708 src/trg-torrent-props-dialog.c:636
+msgid "Limits"
+msgstr "සීමා"
+
+#: src/trg-state-selector.c:656
+msgid "All"
+msgstr "සියල්ල"
+
+#: src/trg-state-selector.c:661 src/trg-state-selector.c:731
+msgid "Queue Down"
+msgstr "පෝලිමේ පහලට"
+
+#: src/trg-state-selector.c:668 src/trg-state-selector.c:735
+msgid "Queue Up"
+msgstr "පෝලිමේ ඉහලට"
+
+#: src/trg-state-selector.c:675
+msgid "Complete"
+msgstr "සම්පූර්ණයි"
+
+#: src/trg-state-selector.c:678
+msgid "Incomplete"
+msgstr "අසම්පූර්ණයි"
+
+#: src/trg-state-selector.c:681
+msgid "Active"
+msgstr "සක්‍රීයයි"
+
+#: src/trg-stats-dialog.c:275
+msgid "Statistics"
+msgstr "සංඛ්‍යාලේඛන"
+
+#: src/trg-stats-dialog.c:294
+msgid "Version"
+msgstr "වෙලුම"
+
+#: src/trg-stats-dialog.c:296
+msgid "Download Total"
+msgstr "බාගතකිරීම් එකතුව"
+
+#: src/trg-stats-dialog.c:298
+msgid "Upload Total"
+msgstr "උපගතකිරීම් එකතුව"
+
+#: src/trg-stats-dialog.c:300
+msgid "Files Added"
+msgstr "ගොනු එකතු කරන ලදී"
+
+#: src/trg-stats-dialog.c:302
+msgid "Session Count"
+msgstr "සැසියේ ගණන් කිරීම"
+
+#: src/trg-stats-dialog.c:304
+msgid "Time Active"
+msgstr "සක්‍රිය කාලය"
+
+#: src/trg-stats-dialog.c:309
+msgid "Statistic"
+msgstr "සංඛ්‍යා විස්තර"
+
+#: src/trg-stats-dialog.c:311
+msgid "Session"
+msgstr "සැසිය"
+
+#: src/trg-stats-dialog.c:314
+msgid "Cumulative"
+msgstr "සමුච්චිත"
+
+#: src/trg-status-bar.c:142
+#, c-format
+msgid "Connected: %s (Transmission %g)"
+msgstr "සම්බන්ධිතයි: %s ( සම්ප්‍රේශණය %g )"
+
+#: src/trg-status-bar.c:160
+msgid "Updating torrents..."
+msgstr "ටොරන්ට් යාවත්කාලීන කරමින්..."
+
+#: src/trg-status-bar.c:173
+#, c-format
+msgid "Free space: %s"
+msgstr "හිස් ඉඩ ප්‍රමාණය: %s"
+
+#: src/trg-status-bar.c:185
+msgid "Disable alternate speed limits"
+msgstr "විකල්ප වේග සීමා අක්‍රිය කරන්න"
+
+#: src/trg-status-bar.c:186
+msgid "Enable alternate speed limits"
+msgstr "විකල්ප වේග සීමා සක්‍රිය කරන්න"
+
+#: src/trg-status-bar.c:223 src/trg-status-bar.c:230
+#, c-format
+msgid " (Limit: %s)"
+msgstr " (සීමාව: %s)"
+
+#: src/trg-status-bar.c:235
+#, c-format
+msgid "Down: %s%s, Up: %s%s"
+msgstr "බාගත: %s%s, උඩුගත: %s%s"
+
+#: src/trg-toolbar.c:231
+msgid "Remove with data"
+msgstr "දත්ත සමඟ මකා දමන්න"
+
+#: src/trg-torrent-add-dialog.c:460
+msgid "Torrent files"
+msgstr "ටොරන්ට් ගොනු"
+
+#: src/trg-torrent-add-dialog.c:465
+msgid "All files"
+msgstr "සියලු ගොනු"
+
+#: src/trg-torrent-add-dialog.c:497
+msgid ""
+"Unable to parse torrent file. File preferences unavailable, but you can "
+"still try uploading it."
+msgstr ""
+"ටොරන්ට් ගොනුව කියවීමට නොහැකියි. ගොනු වල අභිරුචි නොමැත. උඩුගත කිරීමට උත්සාහ "
+"කරන්න."
+
+#: src/trg-torrent-add-dialog.c:510
+#, c-format
+msgid "Unable to open torrent file: %s"
+msgstr "%s ටොරන්ට් ගොනුව විවෘත කල නොහැකියි."
+
+#: src/trg-torrent-add-dialog.c:576
+msgid "(None)"
+msgstr "(කිසිවක් නැත)"
+
+#: src/trg-torrent-add-dialog.c:578
+msgid "(Multiple)"
+msgstr "(බහු)"
+
+#: src/trg-torrent-add-dialog.c:601
+msgid "Add a Torrent"
+msgstr "ටොරන්ටුවක් එකතු කරන්න"
+
+#: src/trg-torrent-add-dialog.c:744
+msgid "Add Torrent"
+msgstr "ටොරන්ට් එකතු කරන්න"
+
+#: src/trg-torrent-add-dialog.c:769
+msgid "Start _paused"
+msgstr "ආරම්භය_මඳකට නවත්වන ලදී"
+
+#: src/trg-torrent-add-dialog.c:785
+msgid "_Torrent file:"
+msgstr "_ටොරන්ට් ගොනුව:"
+
+#: src/trg-torrent-add-dialog.c:801
+msgid "_Destination folder:"
+msgstr "ඉලක්ක ගොනුව"
+
+#: src/trg-torrent-add-dialog.c:815
+msgid "Apply to all:"
+msgstr "සැමට අදාල කරන්න"
+
+#: src/trg-torrent-add-dialog.c:825
+msgid "Torrent _priority:"
+msgstr "ටොරන්ට්_ප්‍රමුඛතාව :"
+
+#: src/trg-torrent-add-dialog.c:926
+msgid "Show _options dialog"
+msgstr "පෙන්වන්න_විකල්ප දෙබස්"
+
+#: src/trg-torrent-add-url-dialog.c:61
+msgid ""
+"You are trying to add a magnet torrent, but DHT is disabled. Distributed "
+"Hash Table (DHT) should be enabled in remote settings."
+msgstr ""
+"ඔබ උත්සාහ කරන්නේ කාන්දම් ටොරන්ටුවක්(magnet torrent) එක්කිරීමටයි, නමුත් DHT "
+"අබල කර ඇත. දුරස්ථ සැකසුම් වල ව්‍යාප්ති හැශ් වගු(DHT) සක්‍රීය කරන්න."
+
+#: src/trg-torrent-add-url-dialog.c:120
+msgid "URL:"
+msgstr "සම්බන්දකය (URL):"
+
+#: src/trg-torrent-add-url-dialog.c:123
+msgid "Start Paused"
+msgstr "ආරම්භය මඳකට නවත්වන ලදී"
+
+#: src/trg-torrent-add-url-dialog.c:126
+msgid "Add torrent from URL"
+msgstr "විද්‍යුත් යොමුවකින් ටොරන්ටුව එකතු කරන්න"
+
+#: src/trg-torrent-graph.c:410
+msgid "Total Uploading"
+msgstr "උඩුගත දත්ත එකතුව"
+
+#: src/trg-torrent-graph.c:418
+msgid "Total Downloading"
+msgstr "බාගත දත්ත එකතුව"
+
+#: src/trg-torrent-model.c:407
+msgid "Default"
+msgstr "පුරුදු ආකාරය"
+
+#: src/trg-torrent-move-dialog.c:116 src/trg-torrent-props-dialog.c:260
+msgid "Location:"
+msgstr "ස්ථානය:"
+
+#: src/trg-torrent-move-dialog.c:163
+#, c-format
+msgid "Move %s"
+msgstr "%s ගෙන යන්න"
+
+#: src/trg-torrent-move-dialog.c:165
+#, c-format
+msgid "Move %d torrents"
+msgstr "ටොරන්ටු %d ගෙන යන්න"
+
+#: src/trg-torrent-props-dialog.c:206
+msgid "Activity"
+msgstr "ක්‍රියාකාරිත්වය"
+
+#: src/trg-torrent-props-dialog.c:211
+msgid "Torrent size:"
+msgstr "ටොරන්ට් විශාලත්වය:"
+
+#: src/trg-torrent-props-dialog.c:216
+msgid "Have:"
+msgstr "තිබේ:"
+
+#: src/trg-torrent-props-dialog.c:221
+msgid "Downloaded:"
+msgstr "බාගන්න ලද:"
+
+#: src/trg-torrent-props-dialog.c:226
+msgid "Uploaded:"
+msgstr "උඩුගත:"
+
+#: src/trg-torrent-props-dialog.c:231
+msgid "State:"
+msgstr "තත්වය:"
+
+#: src/trg-torrent-props-dialog.c:236
+msgid "Running time:"
+msgstr "ධාවනය වන කාලය:"
+
+#: src/trg-torrent-props-dialog.c:241
+msgid "Remaining time:"
+msgstr "ඉතිරිව ඇති කාලය:"
+
+#: src/trg-torrent-props-dialog.c:246
+msgid "Last activity:"
+msgstr "අවසාන ක්රියාකාරකම:"
+
+#: src/trg-torrent-props-dialog.c:251
+msgid "Error:"
+msgstr "දෝෂය:"
+
+#: src/trg-torrent-props-dialog.c:255
+msgid "Details"
+msgstr "තොරතුරු"
+
+#: src/trg-torrent-props-dialog.c:266
+msgid "Hash:"
+msgstr "හෑශ්:"
+
+#: src/trg-torrent-props-dialog.c:272
+msgid "Privacy:"
+msgstr "පෞද්ගලිකත්වය:"
+
+#: src/trg-torrent-props-dialog.c:278
+msgid "Origin:"
+msgstr "මූලය:"
+
+#: src/trg-torrent-props-dialog.c:295
+msgid "Comment:"
+msgstr "සටහන්:"
+
+#: src/trg-torrent-props-dialog.c:330
+msgid "Private to this tracker -- DHT and PEX disabled"
+msgstr "මෙම ටොරන්ටුව සඳහා පුද්ගලිකයි: DHT, PEX අක්‍රීය කර ඇත"
+
+#: src/trg-torrent-props-dialog.c:332
+msgid "Public torrent"
+msgstr "පොදු ටොරන්ට්"
+
+#: src/trg-torrent-props-dialog.c:342
+#, c-format
+msgid "Created on %1$s"
+msgstr "නිර්මාණය කරන ලද්දේ: %1$s"
+
+#: src/trg-torrent-props-dialog.c:344
+#, c-format
+msgid "Created by %1$s on %2$s"
+msgstr "නිර්මාණය කරන ලද්දේ: %1$s  %2$s  දීය"
+
+#: src/trg-torrent-props-dialog.c:376
+msgid "No errors"
+msgstr "දෝශ නොමැත"
+
+#: src/trg-torrent-props-dialog.c:380
+msgid "Active now"
+msgstr "දැන් ක්රියාකාරී"
+
+#: src/trg-torrent-props-dialog.c:413
+msgid "Honor global limits"
+msgstr "විශ්ව සීමා වලට ගරු කරන්න"
+
+#: src/trg-torrent-props-dialog.c:423
+msgid "Torrent priority:"
+msgstr "ටොරන්ට් ප්‍රමුඛතාව:"
+
+#: src/trg-torrent-props-dialog.c:429
+msgid "Queue Position:"
+msgstr "පෝලිමේ පිහිටීම:"
+
+#: src/trg-torrent-props-dialog.c:434
+msgid "Limit download speed (KiB/s)"
+msgstr "සීමාකල භාගත වේගය (KiB/s)"
+
+#: src/trg-torrent-props-dialog.c:442
+msgid "Limit upload speed (KiB/s)"
+msgstr "භාගත වේගය සීමාකරන්න (KiB/s)"
+
+#: src/trg-torrent-props-dialog.c:450
+msgid "Use global settings"
+msgstr "විශ්වීය සැකසුම් භාවිත කරන්න"
+
+#: src/trg-torrent-props-dialog.c:451
+msgid "Stop seeding at ratio"
+msgstr "සීඩ් කිරීම නවත්වන අනුපාතය"
+
+#: src/trg-torrent-props-dialog.c:452
+msgid "Seed regardless of ratio"
+msgstr "අනුපාතය නොසලකා සීඩ් කිරීම"
+
+#: src/trg-torrent-props-dialog.c:455
+msgid "Seed ratio mode:"
+msgstr "අනුපාතයට සීඩ් කිරීම:"
+
+#: src/trg-torrent-props-dialog.c:463
+msgid "Seed ratio limit:"
+msgstr "සීඩ් කිරීමේ අනුපාතයේ සීමාව"
+
+#: src/trg-torrent-props-dialog.c:469
+msgid "Peer limit:"
+msgstr "පියර් සීමාව:"
+
+#: src/trg-torrent-props-dialog.c:542
+#, c-format
+msgid "Multiple (%d) torrent properties"
+msgstr "බහු (%d) ටොරන්ටු වල ගතිගුණ"
+
+#: src/trg-torrent-props-dialog.c:574
+msgid "Information"
+msgstr "තොරතුරු"
+
+#: src/trg-torrent-tree-view.c:60
+msgid "Done"
+msgstr "අවසන්"
+
+#: src/trg-torrent-tree-view.c:65
+msgid "Seeds"
+msgstr "ප්‍රභවයන්"
+
+#: src/trg-torrent-tree-view.c:67
+msgid "Sending"
+msgstr "යවමින්"
+
+#: src/trg-torrent-tree-view.c:73
+msgid "Downloads"
+msgstr "බාගත කිරීම්"
+
+#: src/trg-torrent-tree-view.c:76
+msgid "Receiving"
+msgstr "ලැබෙමින්"
+
+#: src/trg-torrent-tree-view.c:80
+msgid "Connected"
+msgstr "සම්බන්ධ විය"
+
+#: src/trg-torrent-tree-view.c:82
+msgid "PEX Peers"
+msgstr "PEX පියර්"
+
+#: src/trg-torrent-tree-view.c:87
+msgid "DHT Peers"
+msgstr "DHT පියර්"
+
+#: src/trg-torrent-tree-view.c:93
+msgid "Tracker Peers"
+msgstr "ට්‍රැකර් පියර්"
+
+#: src/trg-torrent-tree-view.c:97
+msgid "LTEP Peers"
+msgstr "LTEP පියර්"
+
+#: src/trg-torrent-tree-view.c:102
+msgid "Resumed Peers"
+msgstr "නැවත අරඹන ලද පියර්"
+
+#: src/trg-torrent-tree-view.c:108
+msgid "Incoming Peers"
+msgstr "ඇතුලට එන පියර්"
+
+#: src/trg-torrent-tree-view.c:113
+msgid "Peers T/I/E/H/X/L/R"
+msgstr "පියර් T/I/E/H/X/L/R"
+
+#: src/trg-torrent-tree-view.c:133
+msgid "Added"
+msgstr "එක් කල"
+
+#: src/trg-torrent-tree-view.c:136
+msgid "First Tracker"
+msgstr "පලමු ට්‍රැකරය"
+
+#: src/trg-torrent-tree-view.c:142
+msgid "ID"
+msgstr "ID"
+
+#: src/trg-torrent-tree-view.c:148
+msgid "Queue Position"
+msgstr "පෝලිමේ පිහිටීම"
+
+#: src/trg-torrent-tree-view.c:154
+msgid "Last Active"
+msgstr "අස්වසන් වරට සක්‍රීය"
+
+#: src/trg-trackers-tree-view.c:168
+msgid "Tier"
+msgstr "තට්ටුව"
+
+#: src/trg-trackers-tree-view.c:174
+msgid "Announce URL"
+msgstr "URL යොමුව නිවේදනය"
+
+#: src/trg-trackers-tree-view.c:192
+msgid "Seeder Count"
+msgstr "සීඩර් ගණනය"
+
+#: src/trg-trackers-tree-view.c:195
+msgid "Leecher Count"
+msgstr "ලීචර් ගණනය"
+
+#: src/trg-trackers-tree-view.c:199
+msgid "Last Announce"
+msgstr "අවසන් නිවේදනය"
+
+#: src/trg-trackers-tree-view.c:202
+msgid "Last Result"
+msgstr "අවසන් ප්‍රතිඵලය"
+
+#: src/trg-trackers-tree-view.c:204
+msgid "Scrape URL"
+msgstr "සූරන විද්‍යුත් යොමුව"
+
+#: src/trg-trackers-tree-view.c:206
+msgid "Last Scrape"
+msgstr "අවසාන සීරුම"
+
+#: src/trg-trackers-tree-view.c:305
+msgid "Delete"
+msgstr "මකා දමන්න"
+
+#: src/trg-tree-view.c:269
+msgid "Ascending"
+msgstr "ආරෝහණ"
+
+#: src/trg-tree-view.c:279
+msgid "Descending"
+msgstr "අවරෝහණ"
+
+#: src/util.c:340
+msgid "JSON decoding error."
+msgstr "JSON විකේතන දෝශය"
+
+#: src/util.c:345
+msgid "Server responded, but with no result."
+msgstr "සර්වරය පිලිතුරු දෙයි, ප්‍රතිඵලයක් නොමැත."
+
+#: src/util.c:349
+#, c-format
+msgid "Request failed with HTTP code %d"
+msgstr "ඉල්ලීම අසමත්ය, දෝශ පනිවුඩයේ කේත අංකය: %d"
+
+#: src/util.c:383
+msgid "None"
+msgstr "නොමැත"
+
+#: src/util.c:429
+#, c-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "දින %d"
+msgstr[1] "දින %d"
+
+#: src/util.c:430
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "පැය %d"
+msgstr[1] "පැය %d ක්"
+
+#: src/util.c:432
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "විනාඩි %d ක්"
+msgstr[1] "විනාඩි %d යි"
+
+#: src/util.c:435
+#, c-format
+msgid "%ld second"
+msgid_plural "%ld seconds"
+msgstr[0] "තත්පර %ld යි"
+msgstr[1] "තත්පර %ld යි"
