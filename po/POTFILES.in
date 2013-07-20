@@ -6,6 +6,7 @@ src/remote-exec.c
 src/requests.c
 src/session-get.c
 src/torrent.c
+src/torrent-cell-renderer.c
 src/trg-about-window.c
 src/trg-cell-renderer-epoch.c
 src/trg-cell-renderer-eta.c
