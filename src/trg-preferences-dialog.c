@@ -831,6 +831,10 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     w = trgp_check_new(dlg, _("SSL"), TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE,
                        NULL);
     hig_workarea_add_wide_control(t, &row, w);
+    w = trgp_check_new(dlg, _("Validate SSL Certificate"), TRG_PREFS_KEY_SSL_VALIDATE, TRG_PREFS_PROFILE,
+                       w);
+    hig_workarea_add_wide_control(t, &row, w);
+
 #endif
 
     w = trgp_spin_new(dlg, TRG_PREFS_KEY_TIMEOUT, 1, 3600, 1,

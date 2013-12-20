@@ -141,6 +141,7 @@ gchar *trg_client_get_session_id(TrgClient * tc);
 void trg_client_set_session_id(TrgClient * tc, gchar * session_id);
 #ifndef CURL_NO_SSL
 gboolean trg_client_get_ssl(TrgClient * tc);
+gboolean trg_client_get_ssl_validate(TrgClient * tc);
 #endif
 gchar *trg_client_get_proxy(TrgClient * tc);
 gint64 trg_client_get_serial(TrgClient * tc);

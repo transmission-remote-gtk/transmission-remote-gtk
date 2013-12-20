@@ -71,6 +71,7 @@ struct _TrgClientPrivate {
     gint64 updateSerial;
     JsonObject *session;
     gboolean ssl;
+    gboolean ssl_validate;
     gdouble version;
     char *url;
     char *username;
@@ -255,6 +256,9 @@ int trg_client_populate_with_settings(TrgClient * tc)
 #ifndef CURL_NO_SSL
     priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL,
                                    TRG_PREFS_CONNECTION);
+    priv->ssl_validate = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL_VALIDATE,
+                                   TRG_PREFS_CONNECTION);
+
 #else
     priv->ssl = FALSE;
 #endif
@@ -377,6 +381,11 @@ gboolean trg_client_get_ssl(TrgClient * tc)
 {
     return tc->priv->ssl;
 }
+
+gboolean trg_client_get_ssl_validate(TrgClient * tc)
+{
+    return tc->priv->ssl_validate;
+}
 #endif
 
 gchar *trg_client_get_proxy(TrgClient * tc)
@@ -485,8 +494,11 @@ static void trg_tls_update(TrgClient * tc, trg_tls * tls, gint serial)
     curl_easy_setopt(tls->curl, CURLOPT_URL, trg_client_get_url(tc));
 
 #ifndef CURL_NO_SSL
-    if (trg_client_get_ssl(tc))
+    if (trg_client_get_ssl(tc) && !trg_client_get_ssl_validate(tc)) {
+
+        curl_easy_setopt(tls->curl, CURLOPT_SSL_VERIFYHOST, 0);
         curl_easy_setopt(tls->curl, CURLOPT_SSL_VERIFYPEER, 0);
+    }
 #endif
 
     proxy = trg_client_get_proxy(tc);
