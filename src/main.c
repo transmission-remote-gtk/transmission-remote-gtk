@@ -32,11 +32,8 @@
 #include <json-glib/json-glib.h>
 #include <fontconfig/fontconfig.h>
 
-#if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
-#include <unique/unique.h>
-#elif GTK_CHECK_VERSION( 3, 0, 0 )
 #include "trg-gtk-app.h"
-#elif WIN32
+#if WIN32
 #include "win32-mailslot.h"
 #endif
 
@@ -44,105 +41,16 @@
 #include "trg-client.h"
 #include "util.h"
 
-/* Handle arguments and start the main window. Unfortunately, there's three
- * different ways to achieve a unique instance and pass arguments around. :(
+/* Handle arguments and start the main window.
  *
- * 1) libunique - GTK2 (non-win32). deprecated in GTK3 for GtkApplication.
- * 2) GtkApplication - replaces libunique, GTK3 only, and non-win32.
- * 3) win32 API mailslots.
+ * either GtkApplication - replaces libunique, GTK3 only, and non-win32.
+ * or win32 API mailslots.
+ *
+ * win32 could possibly run from GtkApplication now, mailslots were needed
+ * for GTK2 (support removed).
  */
 
-/*
- * libunique.
- */
-
-#if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
-
-enum {
-    COMMAND_0,
-    COMMAND_ADD
-};
-
-static UniqueResponse
-message_received_cb(UniqueApp * app G_GNUC_UNUSED,
-                    gint command,
-                    UniqueMessageData * message,
-                    guint time_, gpointer user_data)
-{
-    TrgMainWindow *win;
-    UniqueResponse res;
-    gchar **uris;
-
-    win = TRG_MAIN_WINDOW(user_data);
-
-    switch (command) {
-    case UNIQUE_ACTIVATE:
-        gtk_window_set_screen(GTK_WINDOW(user_data),
-                              unique_message_data_get_screen(message));
-        gtk_window_present_with_time(GTK_WINDOW(user_data), time_);
-        res = UNIQUE_RESPONSE_OK;
-        break;
-    case COMMAND_ADD:
-        uris = unique_message_data_get_uris(message);
-        res =
-            trg_add_from_filename(win,
-                                  uris) ? UNIQUE_RESPONSE_OK :
-            UNIQUE_RESPONSE_FAIL;
-        break;
-    default:
-        res = UNIQUE_RESPONSE_OK;
-        break;
-    }
-
-    return res;
-}
-
-static gint
-trg_libunique_init(TrgClient * client, int argc,
-                   gchar * argv[], gchar ** args)
-{
-    UniqueApp *app = unique_app_new_with_commands("uk.org.eth0.trg", NULL,
-                                                  "add", COMMAND_ADD,
-                                                  NULL);
-    TrgMainWindow *window;
-
-    if (unique_app_is_running(app)) {
-        UniqueCommand command;
-        UniqueResponse response;
-        UniqueMessageData *message;
-
-        if (args) {
-            command = COMMAND_ADD;
-            message = unique_message_data_new();
-            unique_message_data_set_uris(message, args);
-            g_strfreev(args);
-        } else {
-            command = UNIQUE_ACTIVATE;
-            message = NULL;
-        }
-
-        response = unique_app_send_message(app, command, message);
-        unique_message_data_free(message);
-
-        if (response != UNIQUE_RESPONSE_OK)
-            return EXIT_FAILURE;
-    } else {
-        window =
-            trg_main_window_new(client, should_be_minimised(argc, argv));
-        g_signal_connect(app, "message-received",
-                         G_CALLBACK(message_received_cb), window);
-
-        trg_main_window_set_start_args(window, args);
-        auto_connect_if_required(window);
-        gtk_main();
-    }
-
-    g_object_unref(app);
-
-    return EXIT_SUCCESS;
-}
-
-#elif !WIN32 && GTK_CHECK_VERSION( 3, 0, 0 )
+#if !WIN32
 
 /* GtkApplication - the replacement for libunique.
  * This is implemented in trg-gtk-app.c
@@ -216,7 +124,7 @@ static void trg_cleanup()
     curl_global_cleanup();
 }
 
-#if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
+#if WIN32
 
 static gchar **convert_args(int argc, char *argv[])
 {
@@ -261,7 +169,7 @@ static gchar **convert_args(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
-#if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
+#if WIN32
     gchar **args;
 #endif
     gint exitCode = EXIT_SUCCESS;
@@ -271,7 +179,7 @@ int main(int argc, char *argv[])
     g_thread_init(NULL);
     gtk_init(&argc, &argv);
 
-#if WIN32 || !GTK_CHECK_VERSION( 3, 0, 0 )
+#if WIN32
     args = convert_args(argc, argv);
 #endif
 
@@ -286,13 +194,7 @@ int main(int argc, char *argv[])
     exitCode = trg_win32_init(client, argc, argv, args);
 #else
     trg_non_win32_init();
-#if !GTK_CHECK_VERSION( 3, 0, 0 ) && HAVE_LIBUNIQUE
-    exitCode = trg_libunique_init(client, argc, argv, args);
-#elif GTK_CHECK_VERSION( 3, 0, 0 )
     exitCode = trg_gtkapp_init(client, argc, argv);
-#else
-    exitCode = trg_simple_init(client, argc, argv, args);
-#endif
 #endif
 
     trg_cleanup();

@@ -206,11 +206,7 @@ trg_torrent_tree_view_renderer_pref_changed(TrgPrefs * p,
             TRG_STYLE_TR_COMPACT;
         g_object_set(G_OBJECT(data), "compact", GINT_TO_POINTER(compact),
                      NULL);
-#if GTK_CHECK_VERSION( 3,0,0 )
         g_signal_emit_by_name(tv, "style-updated", NULL, NULL);
-#else
-        g_signal_emit_by_name(tv, "style-set", NULL, NULL);
-#endif
     }
 }
 

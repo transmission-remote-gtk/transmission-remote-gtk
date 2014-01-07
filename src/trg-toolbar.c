@@ -243,10 +243,6 @@ static GObject *trg_toolbar_constructor(GType type,
         trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Remote Preferences"),
                              &position, GTK_STOCK_NETWORK, FALSE);
 
-#if !GTK_CHECK_VERSION( 3, 0, 0 )
-    gtk_toolbar_set_tooltips(GTK_TOOLBAR(obj), TRUE);
-#endif
-
     g_signal_connect(G_OBJECT(priv->prefs), "pref-profile-changed",
                      G_CALLBACK(trg_toolbar_refresh_menu), obj);
 

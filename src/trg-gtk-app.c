@@ -19,8 +19,6 @@
 
 #include <gtk/gtk.h>
 
-#if GTK_CHECK_VERSION( 3, 0, 0 )
-
 #include "trg-main-window.h"
 #include "trg-gtk-app.h"
 #include "util.h"
@@ -227,5 +225,3 @@ TrgGtkApp *trg_gtk_app_new(TrgClient * client)
                         "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
                         "trg-client", client, NULL);
 }
-
-#endif

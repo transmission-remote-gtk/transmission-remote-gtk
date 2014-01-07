@@ -20,9 +20,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <gdk/gdkkeysyms.h>
-#if GTK_CHECK_VERSION( 3, 0, 0 )
 #include <gdk/gdkkeysyms-compat.h>
-#endif
 
 #include "trg-prefs.h"
 #include "trg-torrent-graph.h"

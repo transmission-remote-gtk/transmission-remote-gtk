@@ -431,11 +431,7 @@ GtkWidget *gtr_file_list_new(GtkTreeStore ** store)
 
 static GtkWidget *gtr_dialog_get_content_area(GtkDialog * dialog)
 {
-#if GTK_CHECK_VERSION( 2,14,0 )
     return gtk_dialog_get_content_area(dialog);
-#else
-    return dialog->vbox;
-#endif
 }
 
 static void gtr_dialog_set_content(GtkDialog * dialog, GtkWidget * content)

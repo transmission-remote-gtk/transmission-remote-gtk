@@ -31,9 +31,7 @@
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 #include <gdk/gdkkeysyms.h>
-#if GTK_CHECK_VERSION( 3, 0, 0 )
 #include <gdk/gdkkeysyms-compat.h>
-#endif
 #include <curl/curl.h>
 #ifdef HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
@@ -421,7 +419,7 @@ destroy_window(TrgMainWindow * win, gpointer data G_GNUC_UNUSED)
                           TRG_TREE_VIEW_PERSIST_LAYOUT);
     trg_prefs_save(prefs);
 
-#if ! GTK_CHECK_VERSION( 3, 0, 0 )
+#if WIN32
     gtk_main_quit();
 #else
     g_application_quit (g_application_get_default ());
@@ -2738,13 +2736,8 @@ static GObject *trg_main_window_constructor(GType type,
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(toolbarHbox), FALSE,
                        FALSE, 0);
 
-#if GTK_CHECK_VERSION( 3, 0, 0 )
     priv->hpaned = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
     priv->vpaned = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
-#else
-    priv->vpaned = gtk_vpaned_new();
-    priv->hpaned = gtk_hpaned_new();
-#endif
 
     gtk_box_pack_start(GTK_BOX(outerVbox), priv->vpaned, TRUE, TRUE, 0);
     gtk_paned_pack1(GTK_PANED(priv->vpaned), priv->hpaned, TRUE, TRUE);
