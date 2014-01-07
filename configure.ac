@@ -94,7 +94,6 @@ fi
 
 AC_ARG_ENABLE(gtk3, [AS_HELP_STRING(--enable-gtk3,
                                      [use gtk3 support (now default, left for compatability)])])
-                                     [use old gtk2 support])])
 
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
