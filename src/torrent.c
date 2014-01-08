@@ -299,23 +299,23 @@ torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
 gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
 {
     if (flags & TORRENT_FLAG_ERROR)
-        return g_strdup(GTK_STOCK_DIALOG_WARNING);
+        return g_strdup("dialog-warning");
     else if (flags & TORRENT_FLAG_DOWNLOADING_METADATA)
-        return g_strdup(GTK_STOCK_FIND);
+        return g_strdup("edit-find");
     else if (flags & TORRENT_FLAG_DOWNLOADING)
-        return g_strdup(GTK_STOCK_GO_DOWN);
+        return g_strdup("go-down");
     else if (flags & TORRENT_FLAG_PAUSED)
-        return g_strdup(GTK_STOCK_MEDIA_PAUSE);
+        return g_strdup("media-playback-pause");
     else if (flags & TORRENT_FLAG_SEEDING)
-        return g_strdup(GTK_STOCK_GO_UP);
+        return g_strdup("go-up");
     else if (flags & TORRENT_FLAG_CHECKING)
-        return g_strdup(GTK_STOCK_REFRESH);
+        return g_strdup("view-refresh");
     else if (flags & TORRENT_FLAG_DOWNLOADING_WAIT)
-        return g_strdup(GTK_STOCK_MEDIA_REWIND);
+        return g_strdup("media-seek-backward");
     else if (flags & TORRENT_FLAG_SEEDING_WAIT)
-        return g_strdup(GTK_STOCK_MEDIA_FORWARD);
+        return g_strdup("media-seek-forward");
     else
-        return g_strdup(GTK_STOCK_DIALOG_QUESTION);
+        return g_strdup("dialog-question");
 }
 
 gint64 torrent_get_done_date(JsonObject * t)

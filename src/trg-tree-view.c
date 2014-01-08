@@ -496,8 +496,8 @@ trg_tree_view_add_column_after(TrgTreeView * tv,
                                             "wanted-value",
                                             desc->model_column, NULL);
         break;
-    case TRG_COLTYPE_STOCKICONTEXT:
-        column = trg_tree_view_icontext_column_new(desc, "stock-id");
+    case TRG_COLTYPE_ICONTEXT:
+        column = trg_tree_view_icontext_column_new(desc, "icon-name");
         break;
     case TRG_COLTYPE_FILEICONTEXT:
         column = trg_tree_view_fileicontext_column_new(desc);

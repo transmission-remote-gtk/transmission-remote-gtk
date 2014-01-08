@@ -176,7 +176,11 @@ int main(int argc, char *argv[])
     TrgClient *client;
 
     g_type_init();
+
+#if !GLIB_CHECK_VERSION(2, 32, 0)
     g_thread_init(NULL);
+#endif
+
     gtk_init(&argc, &argv);
 
 #if WIN32

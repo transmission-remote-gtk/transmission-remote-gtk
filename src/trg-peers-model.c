@@ -190,7 +190,7 @@ trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
             }
 #endif
             gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
-                               PEERSCOL_ICON, GTK_STOCK_NETWORK,
+                               PEERSCOL_ICON, "network-workgroup",
                                PEERSCOL_IP, address,
 #ifdef HAVE_GEOIP
                                PEERSCOL_COUNTRY, country ? country : "",
