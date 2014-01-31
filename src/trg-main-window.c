@@ -2639,7 +2639,7 @@ static GObject *trg_main_window_constructor(GType type,
     GtkWidget *w;
     GtkWidget *outerVbox;
     GtkWidget *toolbarHbox;
-    GtkWidget *outerAlignment;
+    //GtkWidget *outerAlignment;
     GtkIconTheme *theme;
     gint width, height, pos;
     gboolean tray;
@@ -2706,11 +2706,11 @@ static GObject *trg_main_window_constructor(GType type,
 
     /* Create a GtkAlignment to hold the outerVbox making possible
      * some padding. */
-    outerAlignment = gtk_alignment_new (0.5f, 0.5f, 1.0f, 1.0f);
-    gtk_alignment_set_padding (GTK_ALIGNMENT (outerAlignment), 0, 0, 6, 6);
-    gtk_container_add (GTK_CONTAINER (outerAlignment), outerVbox);
+    //outerAlignment = gtk_alignment_new (0.5f, 0.5f, 1.0f, 1.0f);
+    //gtk_alignment_set_padding (GTK_ALIGNMENT (outerAlignment), 0, 0, 0, 0);
+    //gtk_container_add (GTK_CONTAINER (outerAlignment), outerVbox);
 
-    gtk_container_add(GTK_CONTAINER(self), outerAlignment);
+    gtk_container_add(GTK_CONTAINER(self), outerVbox);
 
     priv->menuBar = trg_main_window_menu_bar_new(self);
     gtk_box_pack_start(GTK_BOX(outerVbox), GTK_WIDGET(priv->menuBar),
