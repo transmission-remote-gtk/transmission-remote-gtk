@@ -2702,7 +2702,7 @@ static GObject *trg_main_window_constructor(GType type,
     g_signal_connect(priv->torrentTreeView, "row-activated",
                      G_CALLBACK(torrent_tv_onRowActivated), self);
 
-    outerVbox = trg_vbox_new(FALSE, 2);
+    outerVbox = trg_vbox_new(FALSE, 0);
 
     /* Create a GtkAlignment to hold the outerVbox making possible
      * some padding. */
