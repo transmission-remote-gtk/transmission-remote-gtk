@@ -75,10 +75,11 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
 }
 
 static void trg_peers_tree_view_column_added(TrgTreeView *tv, const gchar *id) {
+	TrgPeersModel *model = TRG_PEERS_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(tv)));
 	if (!g_strcmp0(id, "city")) {
-
+		trg_peers_model_add_city_column(model);
 	} else if (!g_strcmp0(id, "country")) {
-
+		trg_peers_model_add_country_column(model);
 	}
 }
 

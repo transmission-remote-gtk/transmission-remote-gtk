@@ -84,6 +84,8 @@ enum {
 void trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
                             gint64 updateSerial, JsonObject * t,
                             gboolean first);
+void trg_peers_model_add_city_column(TrgPeersModel *model);
+void trg_peers_model_add_country_column(TrgPeersModel *model);
 
 #endif                          /* TRG_PEERS_MODEL_H_ */
 

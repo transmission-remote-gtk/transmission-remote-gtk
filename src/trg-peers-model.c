@@ -145,6 +145,18 @@ static void resolved_dns_cb(GObject * source_object, GAsyncResult * res,
     }
 }
 
+/* for handling v4 or v6 addresses. string is owned by GeoIP, should not be freed. */
+static const gchar* lookup_country(TrgPeersModel *model, const gchar *address) {
+	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+
+	if (strchr(address, ':') && priv->geoipv6)
+		return GeoIP_country_name_by_addr_v6(priv->geoipv6, address);
+	else if (priv->geoip)
+		return GeoIP_country_name_by_addr(priv->geoip, address);
+	else
+		return NULL;
+}
+
 void
 trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
                        gint64 updateSerial, JsonObject * t, gint mode)
@@ -185,15 +197,8 @@ trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
             address = peer_get_address(peer);
 #ifdef HAVE_GEOIP
             if (address) {       /* just in case address wasn't set */
-            	if (doGeoLookup) {
-					if (strchr(address, ':') && priv->geoipv6)
-						country =
-							GeoIP_country_name_by_addr_v6(priv->geoipv6,
-														  address);
-					else if (priv->geoip)
-						country =
-							GeoIP_country_name_by_addr(priv->geoip, address);
-            	}
+            	if (doGeoLookup)
+            		country = lookup_country(model, address);
             	if (doGeoCityLookup)
             		city = GeoIP_record_by_addr(priv->geoipcity, address);
             }
@@ -308,6 +313,46 @@ static void trg_peers_model_init(TrgPeersModel * self)
     g_free(geoip_db_path);
     g_free(geoip_v6_db_path);
 #endif
+}
+
+static gboolean trg_peers_model_add_city_foreach(GtkTreeModel *model,
+        GtkTreePath *path,
+        GtkTreeIter *iter,
+        gpointer data) {
+	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+	gchar *address = NULL;
+	GeoIPRecord *record = NULL;
+
+	gtk_tree_model_get(GTK_TREE_MODEL(model), iter, PEERSCOL_IP, &address, -1);
+	record = GeoIP_record_by_addr(priv->geoipcity, address);
+
+	if (record) {
+		gtk_list_store_set(GTK_LIST_STORE(model), iter, PEERSCOL_CITY, record->city, -1);
+		GeoIPRecord_delete(record);
+	}
+
+	g_free(address);
+
+	return FALSE;
+}
+
+void trg_peers_model_add_city_column(TrgPeersModel *model) {
+	gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_peers_model_add_city_foreach, NULL);
+}
+
+static gboolean trg_peers_model_add_country_foreach(GtkTreeModel *model,
+        GtkTreePath *path,
+        GtkTreeIter *iter,
+        gpointer data) {
+	gchar *address = NULL;
+	gtk_tree_model_get(GTK_TREE_MODEL(model), iter, PEERSCOL_IP, &address, -1);
+	gtk_list_store_set(GTK_LIST_STORE(model), iter, PEERSCOL_COUNTRY, lookup_country(TRG_PEERS_MODEL(model), address), -1);
+	g_free(address);
+	return FALSE;
+}
+
+void trg_peers_model_add_country_column(TrgPeersModel *model) {
+	gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_peers_model_add_country_foreach, NULL);
 }
 
 TrgPeersModel *trg_peers_model_new()
