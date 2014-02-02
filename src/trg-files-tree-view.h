@@ -38,12 +38,12 @@ G_BEGIN_DECLS
   (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_FILES_TREE_VIEW))
 #define TRG_FILES_TREE_VIEW_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_FILES_TREE_VIEW, TrgFilesTreeViewClass))
-    typedef struct {
-    GtkTreeView parent;
+typedef struct {
+    TrgTreeView parent;
 } TrgFilesTreeView;
 
 typedef struct {
-    GtkTreeViewClass parent_class;
+    TrgTreeViewClass parent_class;
 } TrgFilesTreeViewClass;
 
 enum {

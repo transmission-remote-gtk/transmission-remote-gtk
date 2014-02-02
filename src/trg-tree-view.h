@@ -42,6 +42,7 @@ G_BEGIN_DECLS
 
 typedef struct {
     GtkTreeViewClass parent_class;
+    void (*column_added) (TrgTreeView * tv, const gchar *id);
 } TrgTreeViewClass;
 
 GType trg_tree_view_get_type(void);

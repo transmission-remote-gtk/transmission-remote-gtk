@@ -69,6 +69,7 @@ enum {
     PEERSCOL_IP,
 #if HAVE_GEOIP
     PEERSCOL_COUNTRY,
+    PEERSCOL_CITY,
 #endif
     PEERSCOL_HOST,
     PEERSCOL_FLAGS,
@@ -88,3 +89,4 @@ void trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
 
 #define TRG_GEOIP_DATABASE "/usr/share/GeoIP/GeoIP.dat"
 #define TRG_GEOIPV6_DATABASE "/usr/share/GeoIP/GeoIPv6.dat"
+#define TRG_GEOIP_CITY_DATABASE "/usr/share/GeoIP/GeoLiteCity.dat"

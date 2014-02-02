@@ -56,6 +56,9 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
 #ifdef HAVE_GEOIP
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_COUNTRY,
                              _("Country"), "country", 0);
+    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_CITY,
+                             _("City"), "city", 0);
+
 #endif
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_DOWNSPEED,
                              _("Down Speed"), "down-speed", 0);
@@ -71,6 +74,14 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), PEERSCOL_HOST);
 }
 
+static void trg_peers_tree_view_column_added(TrgTreeView *tv, const gchar *id) {
+	if (!g_strcmp0(id, "city")) {
+
+	} else if (!g_strcmp0(id, "country")) {
+
+	}
+}
+
 TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs * prefs,
                                           TrgPeersModel * model,
                                           const gchar * configId)
@@ -82,6 +93,8 @@ TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs * prefs,
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), 0x00);
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
+
+    g_signal_connect(obj, "column-added", G_CALLBACK(trg_peers_tree_view_column_added), NULL);
 
     return TRG_PEERS_TREE_VIEW(obj);
 }

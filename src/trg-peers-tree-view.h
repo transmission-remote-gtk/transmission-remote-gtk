@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #ifndef TRG_PEERS_TREE_VIEW_H_
 #define TRG_PEERS_TREE_VIEW_H_
 
@@ -40,11 +39,11 @@ G_BEGIN_DECLS
 #define TRG_PEERS_TREE_VIEW_GET_CLASS(obj) \
   (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_PEERS_TREE_VIEW, TrgPeersTreeViewClass))
     typedef struct {
-    GtkTreeView parent;
+    TrgTreeView parent;
 } TrgPeersTreeView;
 
 typedef struct {
-    GtkTreeViewClass parent_class;
+    TrgTreeViewClass parent_class;
 } TrgPeersTreeViewClass;
 
 GType trg_peers_tree_view_get_type(void);

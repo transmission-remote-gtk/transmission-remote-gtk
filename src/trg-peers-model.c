@@ -28,6 +28,7 @@
 #include <glib/gstdio.h>
 #ifdef HAVE_GEOIP
 #include <GeoIP.h>
+#include <GeoIPCity.h>
 #endif
 
 #include "trg-tree-view.h"
@@ -46,6 +47,7 @@ typedef struct _TrgPeersModelPrivate TrgPeersModelPrivate;
 struct _TrgPeersModelPrivate {
     GeoIP *geoip;
     GeoIP *geoipv6;
+    GeoIP *geoipcity;
 };
 #endif
 
@@ -151,6 +153,8 @@ trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
     TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
     gboolean doGeoLookup =
         trg_tree_view_is_column_showing(tv, PEERSCOL_COUNTRY);
+    gboolean doGeoCityLookup =
+        trg_tree_view_is_column_showing(tv, PEERSCOL_CITY);
 #endif
 
     gboolean doHostLookup =
@@ -171,6 +175,7 @@ trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
         const gchar *address = NULL, *flagStr;
 #ifdef HAVE_GEOIP
         const gchar *country = NULL;
+        GeoIPRecord *city = NULL;
 #endif
 
         if (mode == TORRENT_GET_MODE_FIRST
@@ -179,14 +184,18 @@ trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
 
             address = peer_get_address(peer);
 #ifdef HAVE_GEOIP
-            if (address && doGeoLookup) {       /* just in case address wasn't set */
-                if (strchr(address, ':') && priv->geoipv6)
-                    country =
-                        GeoIP_country_name_by_addr_v6(priv->geoipv6,
-                                                      address);
-                else if (priv->geoip)
-                    country =
-                        GeoIP_country_name_by_addr(priv->geoip, address);
+            if (address) {       /* just in case address wasn't set */
+            	if (doGeoLookup) {
+					if (strchr(address, ':') && priv->geoipv6)
+						country =
+							GeoIP_country_name_by_addr_v6(priv->geoipv6,
+														  address);
+					else if (priv->geoip)
+						country =
+							GeoIP_country_name_by_addr(priv->geoip, address);
+            	}
+            	if (doGeoCityLookup)
+            		city = GeoIP_record_by_addr(priv->geoipcity, address);
             }
 #endif
             gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
@@ -194,6 +203,7 @@ trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
                                PEERSCOL_IP, address,
 #ifdef HAVE_GEOIP
                                PEERSCOL_COUNTRY, country ? country : "",
+                               PEERSCOL_CITY, city ? city->city : "",
 #endif
                                PEERSCOL_CLIENT, peer_get_client_name(peer),
                                -1);
@@ -202,6 +212,9 @@ trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
         } else {
             isNew = FALSE;
         }
+
+        if (city)
+        	GeoIPRecord_delete(city);
 
         flagStr = peer_get_flagstr(peer);
         gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
@@ -244,6 +257,7 @@ static void trg_peers_model_init(TrgPeersModel * self)
     TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(self);
     gchar *geoip_db_path = NULL;
     gchar *geoip_v6_db_path = NULL;
+    gchar *geoip_city_db_path = NULL;
 #endif
 
     GType column_types[PEERSCOL_COLUMNS];
@@ -252,6 +266,7 @@ static void trg_peers_model_init(TrgPeersModel * self)
     column_types[PEERSCOL_IP] = G_TYPE_STRING;
 #ifdef HAVE_GEOIP
     column_types[PEERSCOL_COUNTRY] = G_TYPE_STRING;
+    column_types[PEERSCOL_CITY] = G_TYPE_STRING;
 #endif
     column_types[PEERSCOL_HOST] = G_TYPE_STRING;
     column_types[PEERSCOL_FLAGS] = G_TYPE_STRING;
@@ -268,9 +283,11 @@ static void trg_peers_model_init(TrgPeersModel * self)
 #ifdef WIN32
     geoip_db_path = trg_win32_support_path("GeoIP.dat");
     geoip_v6_db_path = trg_win32_support_path("GeoIPv6.dat");
+    geoip_city_db_path = trg_win32_support_path("GeoLiteCity.dat");
 #else
     geoip_db_path = g_strdup(TRG_GEOIP_DATABASE);
     geoip_v6_db_path = g_strdup(TRG_GEOIPV6_DATABASE);
+    geoip_city_db_path = g_strdup(TRG_GEOIP_CITY_DATABASE);
 #endif
 
     if (g_file_test(geoip_db_path, G_FILE_TEST_EXISTS) == TRUE)
@@ -281,6 +298,13 @@ static void trg_peers_model_init(TrgPeersModel * self)
         priv->geoipv6 = GeoIP_open(geoip_v6_db_path,
                                    GEOIP_STANDARD | GEOIP_CHECK_CACHE);
 
+    if (g_file_test(geoip_city_db_path, G_FILE_TEST_EXISTS) == TRUE) {
+        priv->geoipcity = GeoIP_open(geoip_city_db_path,
+                                   GEOIP_STANDARD | GEOIP_CHECK_CACHE);
+        GeoIP_set_charset(priv->geoipcity, GEOIP_CHARSET_UTF8);
+    }
+
+    g_free(geoip_city_db_path);
     g_free(geoip_db_path);
     g_free(geoip_v6_db_path);
 #endif

@@ -49,6 +49,12 @@ enum {
     PROP_0, PROP_PREFS, PROP_CONFIGID
 };
 
+enum {
+	SIGNAL_COLUMN_ADDED, SIGNAL_COUNT
+};
+
+static guint signals[SIGNAL_COUNT] = { 0 };
+
 G_DEFINE_TYPE(TrgTreeView, trg_tree_view, GTK_TYPE_TREE_VIEW)
 #define TRG_TREE_VIEW_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_TREE_VIEW, TrgTreeViewPrivate))
@@ -215,6 +221,8 @@ trg_tree_view_user_add_column_cb(GtkWidget * w,
         TRG_TREE_VIEW(gtk_tree_view_column_get_tree_view(col));
 
     trg_tree_view_add_column_after(tv, desc, -1, col);
+
+    g_signal_emit(tv, signals[SIGNAL_COLUMN_ADDED], 0, desc->id);
 }
 
 static void trg_tree_view_sort_menu_item_toggled(GtkCheckMenuItem * w,
@@ -771,6 +779,16 @@ static void trg_tree_view_class_init(TrgTreeViewClass * klass)
                                      G_PARAM_STATIC_NAME |
                                      G_PARAM_STATIC_NICK |
                                      G_PARAM_STATIC_BLURB));
+
+    signals[SIGNAL_COLUMN_ADDED] =
+        g_signal_new("column-added",
+                     G_TYPE_FROM_CLASS(object_class),
+                     G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
+                     G_STRUCT_OFFSET(TrgTreeViewClass,
+                                     column_added), NULL,
+                     NULL, g_cclosure_marshal_VOID__STRING,
+                     G_TYPE_NONE, 1, G_TYPE_STRING);
+
 }
 
 static void trg_tree_view_init(TrgTreeView * tv)
