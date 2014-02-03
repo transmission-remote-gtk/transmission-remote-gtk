@@ -97,3 +97,4 @@ gboolean trg_peers_model_has_country_db(TrgPeersModel *model);
 #define TRG_GEOIP_DATABASE "/usr/share/GeoIP/GeoIP.dat"
 #define TRG_GEOIPV6_DATABASE "/usr/share/GeoIP/GeoIPv6.dat"
 #define TRG_GEOIP_CITY_DATABASE "/usr/share/GeoIP/GeoLiteCity.dat"
+#define TRG_GEOIP_CITY_ALT_DATABASE "/usr/share/GeoIP/GeoIPCity.dat"

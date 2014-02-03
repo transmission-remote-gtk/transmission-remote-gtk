@@ -263,6 +263,7 @@ static void trg_peers_model_init(TrgPeersModel * self)
     gchar *geoip_db_path = NULL;
     gchar *geoip_v6_db_path = NULL;
     gchar *geoip_city_db_path = NULL;
+    gchar *geoip_city_alt_db_path = NULL;
 #endif
 
     GType column_types[PEERSCOL_COLUMNS];
@@ -289,10 +290,12 @@ static void trg_peers_model_init(TrgPeersModel * self)
     geoip_db_path = trg_win32_support_path("GeoIP.dat");
     geoip_v6_db_path = trg_win32_support_path("GeoIPv6.dat");
     geoip_city_db_path = trg_win32_support_path("GeoLiteCity.dat");
+    geoip_city_alt_db_path = trg_win32_support_path("GeoIPCity.dat");
 #else
     geoip_db_path = g_strdup(TRG_GEOIP_DATABASE);
     geoip_v6_db_path = g_strdup(TRG_GEOIPV6_DATABASE);
     geoip_city_db_path = g_strdup(TRG_GEOIP_CITY_DATABASE);
+    geoip_city_alt_db_path = g_strdup(TRG_GEOIP_CITY_ALT_DATABASE);
 #endif
 
     if (g_file_test(geoip_db_path, G_FILE_TEST_EXISTS) == TRUE)
@@ -303,13 +306,18 @@ static void trg_peers_model_init(TrgPeersModel * self)
         priv->geoipv6 = GeoIP_open(geoip_v6_db_path,
                                    GEOIP_STANDARD | GEOIP_CHECK_CACHE);
 
-    if (g_file_test(geoip_city_db_path, G_FILE_TEST_EXISTS) == TRUE) {
+    if (g_file_test(geoip_city_db_path, G_FILE_TEST_EXISTS) == TRUE)
         priv->geoipcity = GeoIP_open(geoip_city_db_path,
                                    GEOIP_STANDARD | GEOIP_CHECK_CACHE);
-        GeoIP_set_charset(priv->geoipcity, GEOIP_CHARSET_UTF8);
-    }
+    else if (g_file_test(geoip_city_alt_db_path, G_FILE_TEST_EXISTS) == TRUE)
+        priv->geoipcity = GeoIP_open(geoip_city_alt_db_path,
+                                   GEOIP_STANDARD | GEOIP_CHECK_CACHE);
+
+    if (priv->geoipcity)
+    	GeoIP_set_charset(priv->geoipcity, GEOIP_CHARSET_UTF8);
 
     g_free(geoip_city_db_path);
+    g_free(geoip_city_alt_db_path);
     g_free(geoip_db_path);
     g_free(geoip_v6_db_path);
 #endif
