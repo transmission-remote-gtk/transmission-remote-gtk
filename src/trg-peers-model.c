@@ -336,8 +336,21 @@ static gboolean trg_peers_model_add_city_foreach(GtkTreeModel *model,
 	return FALSE;
 }
 
+#if HAVE_GEOIP
+gboolean trg_peers_model_has_city_db(TrgPeersModel *model) {
+	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+	return priv->geoipcity != NULL;
+}
+
+gboolean trg_peers_model_has_country_db(TrgPeersModel *model) {
+	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+	return priv->geoip != NULL;
+}
+
 void trg_peers_model_add_city_column(TrgPeersModel *model) {
-	gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_peers_model_add_city_foreach, NULL);
+	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+	if (priv->geoipcity)
+		gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_peers_model_add_city_foreach, NULL);
 }
 
 static gboolean trg_peers_model_add_country_foreach(GtkTreeModel *model,
@@ -345,15 +358,22 @@ static gboolean trg_peers_model_add_country_foreach(GtkTreeModel *model,
         GtkTreeIter *iter,
         gpointer data) {
 	gchar *address = NULL;
+
 	gtk_tree_model_get(GTK_TREE_MODEL(model), iter, PEERSCOL_IP, &address, -1);
 	gtk_list_store_set(GTK_LIST_STORE(model), iter, PEERSCOL_COUNTRY, lookup_country(TRG_PEERS_MODEL(model), address), -1);
+
 	g_free(address);
+
 	return FALSE;
 }
 
 void trg_peers_model_add_country_column(TrgPeersModel *model) {
-	gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_peers_model_add_country_foreach, NULL);
+	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
+	if (priv->geoip)
+		gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_peers_model_add_country_foreach, NULL);
 }
+#endif
+
 
 TrgPeersModel *trg_peers_model_new()
 {

@@ -40,7 +40,11 @@ trg_peers_tree_view_class_init(TrgPeersTreeViewClass * klass G_GNUC_UNUSED)
 {
 }
 
-static void trg_peers_tree_view_init(TrgPeersTreeView * self)
+static void trg_peers_tree_view_init(TrgPeersTreeView * self) {
+
+}
+
+static void trg_peers_tree_view_setup_columns(TrgPeersTreeView * self, TrgPeersModel *model)
 {
     TrgTreeView *ttv = TRG_TREE_VIEW(self);
     trg_column_description *desc;
@@ -54,11 +58,13 @@ static void trg_peers_tree_view_init(TrgPeersTreeView * self)
                              _("Host"), "host", 0);
 
 #ifdef HAVE_GEOIP
-    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_COUNTRY,
-                             _("Country"), "country", 0);
-    trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_CITY,
-                             _("City"), "city", 0);
+    if (trg_peers_model_has_country_db(model))
+		trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_COUNTRY,
+								 _("Country"), "country", 0);
 
+    if (trg_peers_model_has_city_db(model))
+		trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_CITY,
+								 _("City"), "city", 0);
 #endif
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_DOWNSPEED,
                              _("Down Speed"), "down-speed", 0);
@@ -90,6 +96,8 @@ TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs * prefs,
     GObject *obj = g_object_new(TRG_TYPE_PEERS_TREE_VIEW,
                                 "config-id", configId,
                                 "prefs", prefs, NULL);
+
+    trg_peers_tree_view_setup_columns(TRG_PEERS_TREE_VIEW(obj), model);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), 0x00);

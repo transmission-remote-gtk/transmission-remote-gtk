@@ -84,8 +84,13 @@ enum {
 void trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
                             gint64 updateSerial, JsonObject * t,
                             gboolean first);
+
+#if HAVE_GEOIP
 void trg_peers_model_add_city_column(TrgPeersModel *model);
 void trg_peers_model_add_country_column(TrgPeersModel *model);
+gboolean trg_peers_model_has_city_db(TrgPeersModel *model);
+gboolean trg_peers_model_has_country_db(TrgPeersModel *model);
+#endif
 
 #endif                          /* TRG_PEERS_MODEL_H_ */
 
