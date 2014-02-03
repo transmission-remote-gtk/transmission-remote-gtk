@@ -133,15 +133,14 @@ trg_status_bar_set_connected_label(TrgStatusBar * sb, JsonObject * session,
                                    TrgClient * client)
 {
     TrgPrefs *prefs = trg_client_get_prefs(client);
-    gdouble version = session_get_version(session);
 
     gchar *profileName = trg_prefs_get_string(prefs,
                                               TRG_PREFS_KEY_PROFILE_NAME,
                                               TRG_PREFS_CONNECTION);
     gchar *statusMsg =
-        g_strdup_printf(_("Connected: %s (Transmission %g)"),
+        g_strdup_printf(_("Connected: %s :: Transmission %s"),
                         profileName,
-                        version);
+                        session_get_version_string(session));
 
     trg_status_bar_push_connection_msg(sb, statusMsg);
 
