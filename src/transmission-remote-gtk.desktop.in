@@ -8,4 +8,4 @@ TryExec=transmission-remote-gtk
 Type=Application
 MimeType=application/x-bittorrent;x-scheme-handler/magnet;
 Categories=Network;FileTransfer;P2P;GTK;
-_Keywords=p2p;bittorrent;transmission;rpc
+Keywords=p2p;bittorrent;transmission;rpc
