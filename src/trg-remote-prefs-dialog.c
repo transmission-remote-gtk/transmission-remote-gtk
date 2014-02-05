@@ -435,8 +435,8 @@ static gboolean on_port_tested(gpointer data)
                 gtk_label_set_markup(GTK_LABEL(priv->port_test_label),
                                      _
                                      ("Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"));
-        } else {
-            trg_error_dialog(GTK_WINDOW(data), response);
+        } else if (GTK_IS_WINDOW(data)) {
+          trg_error_dialog(GTK_WINDOW(data), response);
         }
     }
 
