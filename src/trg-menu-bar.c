@@ -49,6 +49,7 @@ enum {
     PROP_LOCAL_PREFS_BUTTON,
     PROP_ABOUT_BUTTON,
     PROP_VIEW_STATS_BUTTON,
+    PROP_VIEW_RSS_BUTTON,
     PROP_VIEW_STATES_BUTTON,
     PROP_VIEW_NOTEBOOK_BUTTON,
     PROP_QUIT,
@@ -96,6 +97,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_view_states;
     GtkWidget *mb_view_notebook;
     GtkWidget *mb_view_stats;
+    GtkWidget *mb_view_rss;
     GtkWidget *mb_about;
     GtkWidget *mb_quit;
     GtkWidget *mb_directory_filters;
@@ -140,6 +142,7 @@ void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
     gtk_widget_set_sensitive(priv->mb_disconnect, connected);
     gtk_widget_set_sensitive(priv->mb_remote_prefs, connected);
     gtk_widget_set_sensitive(priv->mb_view_stats, connected);
+    gtk_widget_set_sensitive(priv->mb_view_rss, connected);
     gtk_widget_set_sensitive(priv->mb_resume_all, connected);
     gtk_widget_set_sensitive(priv->mb_pause_all, connected);
 }
@@ -272,6 +275,9 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
         break;
     case PROP_VIEW_STATS_BUTTON:
         g_value_set_object(value, priv->mb_view_stats);
+        break;
+    case PROP_VIEW_RSS_BUTTON:
+        g_value_set_object(value, priv->mb_view_rss);
         break;
     case PROP_QUIT:
         g_value_set_object(value, priv->mb_quit);
@@ -542,6 +548,12 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
     gtk_widget_set_sensitive(priv->mb_view_stats, FALSE);
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_stats);
 
+    priv->mb_view_rss =
+        gtk_menu_item_new_with_mnemonic(_("_RSS"));
+    //trg_menu_bar_accel_add(mb, priv->mb_view_rss, GDK_F7, 0);
+    gtk_widget_set_sensitive(priv->mb_view_rss, FALSE);
+    gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_rss);
+
     return view;
 }
 
@@ -578,7 +590,7 @@ trg_menu_bar_file_connect_item_new(TrgMainWindow * win,
 {
     GtkWidget *item = gtk_check_menu_item_new_with_label(text);
 
-    gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), checked);
+    gtk_check_menu_item_set_active( GTK_CHECK_MENU_ITEM(item), checked);
     g_object_set_data(G_OBJECT(item), "profile", profile);
     gtk_check_menu_item_set_draw_as_radio(GTK_CHECK_MENU_ITEM(item), TRUE);
 
@@ -870,6 +882,9 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
     trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_STATS_BUTTON,
                                      "view-stats-button",
                                      "View stats button");
+    trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_RSS_BUTTON,
+                                     "view-rss-button",
+                                     "View rss button");
     trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_STATES_BUTTON,
                                      "view-states-button",
                                      "View states Button");

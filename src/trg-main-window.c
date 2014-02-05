@@ -73,6 +73,7 @@
 #include "trg-menu-bar.h"
 #include "trg-status-bar.h"
 #include "trg-stats-dialog.h"
+#include "trg-rss-dialog.h"
 #include "trg-remote-prefs-dialog.h"
 #include "trg-preferences-dialog.h"
 
@@ -924,6 +925,19 @@ static void view_stats_toggled_cb(GtkWidget * w, gpointer data)
     }
 }
 
+static void view_rss_toggled_cb(GtkWidget * w, gpointer data)
+{
+    TrgMainWindow *win = TRG_MAIN_WINDOW(data);
+    TrgMainWindowPrivate *priv = win->priv;
+
+    if (trg_client_is_connected(priv->client)) {
+        TrgRssDialog *dlg =
+            trg_rss_dialog_get_instance(TRG_MAIN_WINDOW(data));
+
+        gtk_widget_show_all(GTK_WIDGET(dlg));
+    }
+}
+
 static void
 view_states_toggled_cb(GtkCheckMenuItem * w, TrgMainWindow * win)
 {
@@ -1731,7 +1745,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 
     GObject *b_disconnect, *b_add, *b_resume, *b_pause, *b_verify,
         *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs,
-        *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
+        *b_about, *b_view_states, *b_view_notebook, *b_view_stats, *b_view_rss,
         *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
         *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_up_queue,
         *b_down_queue, *b_top_queue, *b_bottom_queue,
@@ -1762,7 +1776,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                  "view-states-button", &b_view_states, "view-stats-button",
                  &b_view_stats, "about-button", &b_about, "quit-button",
                  &b_quit, "dir-filters", &b_dir_filters, "tracker-filters",
-                 &b_tracker_filters,
+                 &b_tracker_filters, "view-rss-button", &b_view_rss,
 #if TRG_WITH_GRAPH
                  "show-graph", &b_show_graph,
 #endif
@@ -1810,6 +1824,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                      G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
                      G_CALLBACK(view_stats_toggled_cb), win);
+    g_signal_connect(b_view_rss, "activate",
+                     G_CALLBACK(view_rss_toggled_cb), win);
 #if TRG_WITH_GRAPH
     g_signal_connect(b_show_graph, "toggled",
                      G_CALLBACK(trg_main_window_toggle_graph_cb), win);
