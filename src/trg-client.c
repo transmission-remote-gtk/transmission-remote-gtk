@@ -82,6 +82,7 @@ struct _TrgClientPrivate {
     TrgPrefs *prefs;
     GPrivate *tlsKey;
     gint configSerial;
+    guint http_class;
     GMutex *configMutex;
     gboolean seedRatioLimited;
     gdouble seedRatioLimit;
@@ -443,6 +444,8 @@ void trg_response_free(trg_response * response)
 {
     if (response->obj)
         json_object_unref(response->obj);
+    if (response->raw)
+    	g_free(response->raw);
     g_free(response);
 }
 
@@ -483,61 +486,20 @@ header_callback(void *ptr, size_t size, size_t nmemb, void *data)
     return (nmemb * size);
 }
 
-static void trg_tls_update(TrgClient * tc, trg_tls * tls, gint serial)
-{
-    gchar *proxy;
-
-    curl_easy_setopt(tls->curl, CURLOPT_PASSWORD,
-                     trg_client_get_password(tc));
-    curl_easy_setopt(tls->curl, CURLOPT_USERNAME,
-                     trg_client_get_username(tc));
-    curl_easy_setopt(tls->curl, CURLOPT_URL, trg_client_get_url(tc));
-
-#ifndef CURL_NO_SSL
-    if (trg_client_get_ssl(tc) && !trg_client_get_ssl_validate(tc)) {
-
-        curl_easy_setopt(tls->curl, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_easy_setopt(tls->curl, CURLOPT_SSL_VERIFYPEER, 0);
-    }
-#endif
-
-    proxy = trg_client_get_proxy(tc);
-    if (proxy) {
-        curl_easy_setopt(tls->curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-        curl_easy_setopt(tls->curl, CURLOPT_PROXY, proxy);
-    }
-
-    tls->serial = serial;
-}
-
 trg_tls *trg_tls_new(TrgClient * tc)
 {
     trg_tls *tls = g_new0(trg_tls, 1);
 
     tls->curl = curl_easy_init();
-    curl_easy_setopt(tls->curl, CURLOPT_USERAGENT, PACKAGE_NAME);
-    curl_easy_setopt(tls->curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-    curl_easy_setopt(tls->curl, CURLOPT_WRITEFUNCTION,
-                     &http_receive_callback);
-    curl_easy_setopt(tls->curl, CURLOPT_HEADERFUNCTION, &header_callback);
-    curl_easy_setopt(tls->curl, CURLOPT_WRITEHEADER, (void *) tc);
-
     tls->serial = -1;
 
     return tls;
 }
 
-static int
-trg_http_perform_inner(TrgClient * tc, gchar * reqstr,
-                       trg_response * response, gboolean recurse)
-{
-    TrgClientPrivate *priv = tc->priv;
-    TrgPrefs *prefs = trg_client_get_prefs(tc);
-    gpointer threadLocalStorage = g_private_get(priv->tlsKey);
-    trg_tls *tls;
-    long httpCode = 0;
-    gchar *session_id;
-    struct curl_slist *headers = NULL;
+static trg_tls *get_tls(TrgClient *tc) {
+	TrgClientPrivate *priv = tc->priv;
+	gpointer threadLocalStorage = g_private_get(priv->tlsKey);
+	trg_tls *tls;
 
     if (!threadLocalStorage) {
         tls = trg_tls_new(tc);
@@ -546,36 +508,95 @@ trg_http_perform_inner(TrgClient * tc, gchar * reqstr,
         tls = (trg_tls *) threadLocalStorage;
     }
 
+    return tls;
+}
+
+static CURL* get_curl(TrgClient *tc, guint http_class)
+{
+	TrgClientPrivate *priv = tc->priv;
+	TrgPrefs *prefs = trg_client_get_prefs(tc);
+	trg_tls *tls = get_tls(tc);
+	CURL *curl = tls->curl;
+	struct curl_slist *headers = NULL;
+	gchar *session_id = NULL;
+
     g_mutex_lock(priv->configMutex);
 
-    if (priv->configSerial > tls->serial)
-        trg_tls_update(tc, tls, priv->configSerial);
+    if (priv->configSerial > tls->serial || http_class != priv->http_class) {
+    	gchar *proxy;
 
-    session_id = trg_client_get_session_id(tc);
-    if (session_id) {
-        headers = curl_slist_append(NULL, session_id);
-        curl_easy_setopt(tls->curl, CURLOPT_HTTPHEADER, headers);
+        curl_easy_reset(curl);
+
+        curl_easy_setopt(curl, CURLOPT_USERAGENT, PACKAGE_NAME);
+        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
+                         &http_receive_callback);
+
+        if (http_class == HTTP_CLASS_TRANSMISSION) {
+        	curl_easy_setopt(curl, CURLOPT_WRITEHEADER, (void *) tc);
+        	curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+        	curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, &header_callback);
+            curl_easy_setopt(curl, CURLOPT_PASSWORD,
+                             trg_client_get_password(tc));
+            curl_easy_setopt(curl, CURLOPT_USERNAME,
+                             trg_client_get_username(tc));
+            curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
+        }
+
+    #ifndef CURL_NO_SSL
+        if (trg_client_get_ssl(tc) && !trg_client_get_ssl_validate(tc)) {
+
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
+            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
+        }
+    #endif
+
+        proxy = trg_client_get_proxy(tc);
+        if (proxy) {
+            curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
+            curl_easy_setopt(curl, CURLOPT_PROXY, proxy);
+        }
+
+        tls->serial = priv->configSerial;
+        priv->http_class = http_class;
     }
 
-    curl_easy_setopt(tls->curl, CURLOPT_TIMEOUT,
-                     (long) trg_prefs_get_int(prefs, TRG_PREFS_KEY_TIMEOUT,
-                                              TRG_PREFS_CONNECTION));
+    if (http_class == HTTP_CLASS_TRANSMISSION) {
+		session_id = trg_client_get_session_id(tc);
+		if (session_id) {
+			headers = curl_slist_append(NULL, session_id);
+			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+		}
+
+		curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
+    }
+
+	curl_easy_setopt(curl, CURLOPT_TIMEOUT,
+					 (long) trg_prefs_get_int(prefs, TRG_PREFS_KEY_TIMEOUT,
+											  TRG_PREFS_CONNECTION));
 
     g_mutex_unlock(priv->configMutex);
+
+    return curl;
+
+}
+
+static int
+trg_http_perform_inner(TrgClient * tc, gchar * reqstr,
+                       trg_response * response, gboolean recurse)
+{
+    CURL* curl = get_curl(tc, HTTP_CLASS_TRANSMISSION);
+
+    long httpCode = 0;
 
     response->size = 0;
     response->raw = NULL;
 
-    curl_easy_setopt(tls->curl, CURLOPT_POSTFIELDS, reqstr);
-    curl_easy_setopt(tls->curl, CURLOPT_WRITEDATA, (void *) response);
-    response->status = curl_easy_perform(tls->curl);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, reqstr);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) response);
 
-    if (session_id) {
-        g_free(session_id);
-        curl_slist_free_all(headers);
-    }
+    response->status = curl_easy_perform(curl);
 
-    curl_easy_getinfo(tls->curl, CURLINFO_RESPONSE_CODE, &httpCode);
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
     if (response->status == CURLE_OK) {
         if (httpCode == HTTP_CONFLICT && recurse == TRUE)
@@ -603,6 +624,29 @@ trg_response *dispatch(TrgClient * tc, JsonNode * req)
         g_debug("=>(OUTgoing)=>: %s", serialized);
 #endif
     return dispatch_str(tc, serialized);
+}
+
+trg_response *dispatch_public_http(TrgClient *tc, const gchar *url) {
+	trg_response *response = g_new0(trg_response, 1);
+
+    CURL* curl = get_curl(tc, HTTP_CLASS_PUBLIC);
+
+    long httpCode = 0;
+
+    response->size = 0;
+    response->raw = NULL;
+
+	curl_easy_setopt(curl, CURLOPT_URL, url);
+
+    response->status = curl_easy_perform(curl);
+
+    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+
+    if (response->status == CURLE_OK && httpCode != HTTP_OK) {
+      response->status = (-httpCode) - 100;
+    }
+
+	return response;
 }
 
 trg_response *dispatch_str(TrgClient * tc, gchar * req)
@@ -645,6 +689,8 @@ static void dispatch_async_threadfunc(trg_request * req, TrgClient * tc)
 
     if (req->str)
         rsp = dispatch_str(tc, req->str);
+    else if (req->url)
+    	rsp = dispatch_public_http(tc, req->url);
     else
         rsp = dispatch(tc, req->node);
 
@@ -699,6 +745,13 @@ dispatch_async_str(TrgClient * tc, gchar * req,
     trg_req->str = req;
 
     return dispatch_async_common(tc, trg_req, callback, data);
+}
+
+gboolean async_http_request(TrgClient *tc, gchar *url, GSourceFunc callback, gpointer data) {
+	trg_request *trg_req = g_new0(trg_request, 1);
+	trg_req->url = url;
+
+	return dispatch_async_common(tc, trg_req, callback, data);
 }
 
 gboolean trg_client_update_session(TrgClient * tc, GSourceFunc callback,
