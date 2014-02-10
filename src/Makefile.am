@@ -105,7 +105,8 @@ transmission_remote_gtk_SOURCES = \
 	  trg-client.c \
 	  trg-main-window.c \
 	  main.c \
-	  trg-rss-dialog.c \
+	  trg-rss-window.c \
+	  trg-rss-model.c \
 	  $(NULL)
 
 transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS) $(libappindicator_LIBS) $(rssglib_LIBS)

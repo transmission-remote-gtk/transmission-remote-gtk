@@ -73,7 +73,7 @@
 #include "trg-menu-bar.h"
 #include "trg-status-bar.h"
 #include "trg-stats-dialog.h"
-#include "trg-rss-dialog.h"
+#include "trg-rss-window.h"
 #include "trg-remote-prefs-dialog.h"
 #include "trg-preferences-dialog.h"
 
@@ -931,10 +931,10 @@ static void view_rss_toggled_cb(GtkWidget * w, gpointer data)
     TrgMainWindowPrivate *priv = win->priv;
 
     if (trg_client_is_connected(priv->client)) {
-        TrgRssDialog *dlg =
-            trg_rss_dialog_get_instance(TRG_MAIN_WINDOW(data));
+        TrgRssWindow *rss =
+            trg_rss_window_get_instance(TRG_MAIN_WINDOW(data), priv->client);
 
-        gtk_widget_show_all(GTK_WIDGET(dlg));
+        gtk_widget_show_all(GTK_WIDGET(rss));
     }
 }
 

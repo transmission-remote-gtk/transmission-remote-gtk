@@ -126,6 +126,7 @@ int trg_http_perform(TrgClient * client, gchar * reqstr,
 /* stuff that used to be in dispatch.c */
 trg_response *dispatch(TrgClient * client, JsonNode * req);
 trg_response *dispatch_str(TrgClient * client, gchar * req);
+trg_response *dispatch_public_http(TrgClient *tc, trg_request *req);
 gboolean dispatch_async(TrgClient * client, JsonNode * req,
                         GSourceFunc callback, gpointer data);
 gboolean async_http_request(TrgClient *tc, gchar *url, GSourceFunc callback, gpointer data);

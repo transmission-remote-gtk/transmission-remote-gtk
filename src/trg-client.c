@@ -517,8 +517,6 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 	TrgPrefs *prefs = trg_client_get_prefs(tc);
 	trg_tls *tls = get_tls(tc);
 	CURL *curl = tls->curl;
-	struct curl_slist *headers = NULL;
-	gchar *session_id = NULL;
 
     g_mutex_lock(priv->configMutex);
 
@@ -530,6 +528,7 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
         curl_easy_setopt(curl, CURLOPT_USERAGENT, PACKAGE_NAME);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
                          &http_receive_callback);
+        //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
 
         if (http_class == HTTP_CLASS_TRANSMISSION) {
         	curl_easy_setopt(curl, CURLOPT_WRITEHEADER, (void *) tc);
@@ -561,12 +560,6 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
     }
 
     if (http_class == HTTP_CLASS_TRANSMISSION) {
-		session_id = trg_client_get_session_id(tc);
-		if (session_id) {
-			headers = curl_slist_append(NULL, session_id);
-			curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-		}
-
 		curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
     }
 
@@ -586,6 +579,8 @@ trg_http_perform_inner(TrgClient * tc, gchar * reqstr,
 {
     CURL* curl = get_curl(tc, HTTP_CLASS_TRANSMISSION);
 
+	struct curl_slist *headers = NULL;
+	gchar *session_id = NULL;
     long httpCode = 0;
 
     response->size = 0;
@@ -594,9 +589,20 @@ trg_http_perform_inner(TrgClient * tc, gchar * reqstr,
     curl_easy_setopt(curl, CURLOPT_POSTFIELDS, reqstr);
     curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) response);
 
+	session_id = trg_client_get_session_id(tc);
+	if (session_id) {
+		headers = curl_slist_append(NULL, session_id);
+		curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+	}
+
     response->status = curl_easy_perform(curl);
 
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
+
+    if (session_id) {
+        g_free(session_id);
+        curl_slist_free_all(headers);
+    }
 
     if (response->status == CURLE_OK) {
         if (httpCode == HTTP_CONFLICT && recurse == TRUE)
@@ -626,7 +632,7 @@ trg_response *dispatch(TrgClient * tc, JsonNode * req)
     return dispatch_str(tc, serialized);
 }
 
-trg_response *dispatch_public_http(TrgClient *tc, const gchar *url) {
+trg_response *dispatch_public_http(TrgClient *tc, trg_request *req) {
 	trg_response *response = g_new0(trg_response, 1);
 
     CURL* curl = get_curl(tc, HTTP_CLASS_PUBLIC);
@@ -636,9 +642,13 @@ trg_response *dispatch_public_http(TrgClient *tc, const gchar *url) {
     response->size = 0;
     response->raw = NULL;
 
-	curl_easy_setopt(curl, CURLOPT_URL, url);
+	curl_easy_setopt(curl, CURLOPT_URL, req->url);
+	curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) response);
 
     response->status = curl_easy_perform(curl);
+
+    g_free(req->url);
+    req->url = NULL;
 
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
@@ -690,7 +700,7 @@ static void dispatch_async_threadfunc(trg_request * req, TrgClient * tc)
     if (req->str)
         rsp = dispatch_str(tc, req->str);
     else if (req->url)
-    	rsp = dispatch_public_http(tc, req->url);
+    	rsp = dispatch_public_http(tc, req);
     else
         rsp = dispatch(tc, req->node);
 
@@ -749,7 +759,7 @@ dispatch_async_str(TrgClient * tc, gchar * req,
 
 gboolean async_http_request(TrgClient *tc, gchar *url, GSourceFunc callback, gpointer data) {
 	trg_request *trg_req = g_new0(trg_request, 1);
-	trg_req->url = url;
+	trg_req->url = g_strdup(url);
 
 	return dispatch_async_common(tc, trg_req, callback, data);
 }
