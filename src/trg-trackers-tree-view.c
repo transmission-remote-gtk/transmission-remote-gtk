@@ -66,7 +66,7 @@ static gboolean on_trackers_update(gpointer data)
     trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model), TRUE);
 
     response->cb_data = priv->win;
-    return on_generic_interactive_action(data);
+    return on_generic_interactive_action_response(data);
 }
 
 void

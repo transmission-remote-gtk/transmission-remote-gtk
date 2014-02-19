@@ -76,6 +76,7 @@
 #include "trg-rss-window.h"
 #include "trg-remote-prefs-dialog.h"
 #include "trg-preferences-dialog.h"
+#include "upload.h"
 
 /* The rather large main window class, which glues everything together. */
 
@@ -480,7 +481,7 @@ static void pause_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_pause(build_json_id_array
                                      (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void pause_all_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
@@ -489,7 +490,7 @@ static void pause_all_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
 
     if (trg_client_is_connected(priv->client))
         dispatch_async(priv->client, torrent_pause(NULL),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
@@ -505,10 +506,14 @@ gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
         return EXIT_SUCCESS;
     }
 
-    if (uris)
-        for (i = 0; uris[i]; i++)
-            if (uris[i])
+    if (uris) {
+        for (i = 0; uris[i]; i++) {
+        	if (is_minimised_arg(uris[i]))
+        		g_free(uris[i]);
+        	else if (uris[i])
                 filesList = g_slist_append(filesList, uris[i]);
+        }
+    }
 
     g_free(uris);
 
@@ -518,20 +523,20 @@ gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
     if (trg_prefs_get_bool(prefs, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG,
                            TRG_PREFS_GLOBAL)) {
         TrgTorrentAddDialog *dialog =
-            trg_torrent_add_dialog_new(win, client,
+            trg_torrent_add_dialog_new_from_filenames(win, client,
                                        filesList);
 
         gtk_widget_show_all(GTK_WIDGET(dialog));
     } else {
-        struct add_torrent_threadfunc_args *args =
-            g_new0(struct add_torrent_threadfunc_args, 1);
-        args->list = filesList;
-        args->cb_data = win;
-        args->client = client;
-        args->extraArgs = FALSE;
-        args->flags = trg_prefs_get_add_flags(prefs);
+        trg_upload *upload = g_new0(trg_upload, 1);
 
-        launch_add_thread(args);
+        upload->list = filesList;
+        upload->main_window = win;
+        upload->client = client;
+        upload->extra_args = FALSE;
+        upload->flags = trg_prefs_get_add_flags(prefs);
+
+        trg_do_upload(upload);
     }
 
     return EXIT_SUCCESS;
@@ -543,7 +548,7 @@ static void resume_all_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
 
     if (trg_client_is_connected(priv->client))
         dispatch_async(priv->client, torrent_start(NULL),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void resume_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
@@ -554,7 +559,7 @@ static void resume_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_start(build_json_id_array
                                      (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void disconnect_cb(GtkWidget * w G_GNUC_UNUSED, gpointer data)
@@ -713,7 +718,7 @@ static void reannounce_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_reannounce(build_json_id_array
                                           (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void verify_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
@@ -724,7 +729,7 @@ static void verify_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_verify(build_json_id_array
                                       (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void start_now_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
@@ -735,7 +740,7 @@ static void start_now_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_start_now(build_json_id_array
                                          (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void up_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
@@ -746,7 +751,7 @@ static void up_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_queue_move_up(build_json_id_array
                                              (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void top_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
@@ -757,7 +762,7 @@ static void top_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_queue_move_top(build_json_id_array
                                               (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void
@@ -769,7 +774,7 @@ bottom_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_queue_move_bottom(build_json_id_array
                                                  (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static void down_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
@@ -780,7 +785,7 @@ static void down_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         dispatch_async(priv->client,
                        torrent_queue_move_down(build_json_id_array
                                                (priv->torrentTreeView)),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
 }
 
 static gint
@@ -882,7 +887,7 @@ static void remove_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
                               _("<big><b>Remove %d torrents?</b></big>"),
                               GTK_STOCK_REMOVE) == GTK_RESPONSE_ACCEPT)
         dispatch_async(priv->client, torrent_remove(ids, FALSE),
-                       on_generic_interactive_action, win);
+                       on_generic_interactive_action_response, win);
     else
         json_array_unref(ids);
 }
@@ -1584,13 +1589,10 @@ gboolean on_delete_complete(gpointer data)
         trg_client_update_session(priv->client, on_session_get,
                                   response->cb_data);
 
-    return on_generic_interactive_action(data);
+    return on_generic_interactive_action_response(data);
 }
 
-gboolean on_generic_interactive_action(gpointer data)
-{
-    trg_response *response = (trg_response *) data;
-    TrgMainWindow *win = TRG_MAIN_WINDOW(response->cb_data);
+void on_generic_interactive_action(TrgMainWindow *win, trg_response *response) {
     TrgMainWindowPrivate *priv = win->priv;
     TrgClient *tc = priv->client;
 
@@ -1610,6 +1612,15 @@ gboolean on_generic_interactive_action(gpointer data)
     }
 
     trg_response_free(response);
+}
+
+gboolean on_generic_interactive_action_response(gpointer data)
+{
+    trg_response *response = (trg_response *) data;
+    TrgMainWindow *win = TRG_MAIN_WINDOW(response->cb_data);
+
+    on_generic_interactive_action(win, response);
+
     return FALSE;
 }
 
@@ -1944,7 +1955,7 @@ static void set_limit_cb(GtkWidget * w, TrgMainWindow * win)
     json_object_set_boolean_member(args, enabledKey, speed >= 0);
 
     if (limitIds)
-        dispatch_async(priv->client, req, on_generic_interactive_action,
+        dispatch_async(priv->client, req, on_generic_interactive_action_response,
                        win);
     else
         dispatch_async(priv->client, req, on_session_set, win);
@@ -1969,7 +1980,7 @@ static void set_priority_cb(GtkWidget * w, TrgMainWindow * win)
 
     json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY, priority);
 
-    dispatch_async(priv->client, req, on_generic_interactive_action, win);
+    dispatch_async(priv->client, req, on_generic_interactive_action_response, win);
 }
 
 static GtkWidget *limit_item_new(TrgMainWindow * win, GtkWidget * menu,

@@ -442,11 +442,15 @@ void trg_client_configunlock(TrgClient * tc)
 
 void trg_response_free(trg_response * response)
 {
-    if (response->obj)
-        json_object_unref(response->obj);
-    if (response->raw)
-    	g_free(response->raw);
-    g_free(response);
+	if (response) {
+		if (response->obj)
+			json_object_unref(response->obj);
+
+		if (response->raw)
+			g_free(response->raw);
+
+		g_free(response);
+	}
 }
 
 static size_t
@@ -557,10 +561,6 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 
         tls->serial = priv->configSerial;
         priv->http_class = http_class;
-    }
-
-    if (http_class == HTTP_CLASS_TRANSMISSION) {
-		curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
     }
 
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT,

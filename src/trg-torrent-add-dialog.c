@@ -45,9 +45,10 @@
 #include "torrent.h"
 #include "json.h"
 #include "protocol-constants.h"
+#include "upload.h"
 
 enum {
-    PROP_0, PROP_FILENAME, PROP_PARENT, PROP_CLIENT
+    PROP_0, PROP_FILENAME, PROP_PARENT, PROP_CLIENT, PROP_RESPONSE
 };
 
 enum {
@@ -63,6 +64,7 @@ struct _TrgTorrentAddDialogPrivate {
     TrgClient *client;
     TrgMainWindow *parent;
     GSList *filenames;
+    trg_response *response;
     GtkWidget *source_chooser;
     GtkWidget *dest_combo;
     GtkWidget *priority_combo;
@@ -112,65 +114,6 @@ trg_torrent_add_dialog_get_property(GObject * object,
     case PROP_PARENT:
         g_value_set_object(value, priv->parent);
         break;
-    }
-}
-
-static void
-add_set_common_args(JsonObject * args, gint priority, gchar * dir)
-{
-    json_object_set_string_member(args, FIELD_FILE_DOWNLOAD_DIR, dir);
-    json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY,
-                               (gint64) priority);
-}
-
-static gpointer add_files_threadfunc(gpointer data)
-{
-    struct add_torrent_threadfunc_args *files_thread_data =
-        (struct add_torrent_threadfunc_args *) data;
-
-    GSList *li;
-
-    for (li = files_thread_data->list; li; li = g_slist_next(li)) {
-        gchar *fileName = (gchar *) li->data;
-        JsonNode *request =
-            torrent_add(fileName, files_thread_data->flags);
-        JsonObject *args;
-        trg_response *response;
-
-        if (!request)
-            continue;
-
-        args = node_get_arguments(request);
-
-        if (files_thread_data->extraArgs)
-            add_set_common_args(args, files_thread_data->priority,
-                                files_thread_data->dir);
-
-        response = dispatch(files_thread_data->client, request);
-        response->cb_data = files_thread_data->cb_data;
-        g_idle_add(on_generic_interactive_action, response);
-    }
-
-    g_str_slist_free(files_thread_data->list);
-
-    if (files_thread_data->extraArgs)
-        g_free(files_thread_data->dir);
-
-    g_free(files_thread_data);
-
-    return NULL;
-}
-
-void launch_add_thread(struct add_torrent_threadfunc_args *args)
-{
-    GError *error = NULL;
-    g_thread_create(add_files_threadfunc, args, FALSE, &error);
-
-    if (error) {
-        g_error("thread creation error: %s", error->message);
-        g_error_free(error);
-        g_str_slist_free(args->list);
-        g_free(args);
     }
 }
 
@@ -226,32 +169,17 @@ trg_torrent_add_response_cb(GtkDialog * dlg, gint res_id, gpointer data)
             trg_destination_combo_get_dir(TRG_DESTINATION_COMBO
                                           (priv->dest_combo));
 
-        if (g_slist_length(priv->filenames) == 1) {
-            JsonNode *req =
-                torrent_add((gchar *) priv->filenames->data, flags);
-            if (req) {
-                JsonObject *args = node_get_arguments(req);
-                gtk_tree_model_foreach(GTK_TREE_MODEL(priv->store),
-                                       add_file_indexes_foreachfunc, args);
-                add_set_common_args(args, priority, dir);
-                dispatch_async(priv->client, req,
-                               on_generic_interactive_action,
-                               priv->parent);
-            }
-            g_str_slist_free(priv->filenames);
-        } else {
-            struct add_torrent_threadfunc_args *args =
-                g_new(struct add_torrent_threadfunc_args, 1);
-            args->list = priv->filenames;
-            args->cb_data = priv->parent;
-            args->client = priv->client;
-            args->dir = g_strdup(dir);
-            args->priority = priority;
-            args->flags = flags;
-            args->extraArgs = TRUE;
+        trg_upload *upload = g_new0(trg_upload, 1);
 
-            launch_add_thread(args);
-        }
+        upload->list = priv->filenames;
+        upload->main_window = priv->parent;
+        upload->client = priv->client;
+        upload->dir = dir;
+        upload->priority = priority;
+        upload->flags = flags;
+        upload->extra_args = TRUE;
+
+        trg_do_upload(upload);
 
         trg_destination_combo_save_selection(TRG_DESTINATION_COMBO
                                              (priv->dest_combo));
@@ -868,6 +796,21 @@ trg_torrent_add_dialog_class_init(TrgTorrentAddDialogClass * klass)
                                                          G_PARAM_STATIC_BLURB));
 
     g_object_class_install_property(object_class,
+                                    PROP_RESPONSE,
+                                    g_param_spec_pointer("response",
+                                                         "response",
+                                                         "response",
+                                                         G_PARAM_READWRITE
+                                                         |
+                                                         G_PARAM_CONSTRUCT_ONLY
+                                                         |
+                                                         G_PARAM_STATIC_NAME
+                                                         |
+                                                         G_PARAM_STATIC_NICK
+                                                         |
+                                                         G_PARAM_STATIC_BLURB));
+
+    g_object_class_install_property(object_class,
                                     PROP_CLIENT,
                                     g_param_spec_pointer("client",
                                                          "client",
@@ -902,12 +845,21 @@ static void trg_torrent_add_dialog_init(TrgTorrentAddDialog * self)
 {
 }
 
-TrgTorrentAddDialog *trg_torrent_add_dialog_new(TrgMainWindow * parent,
+TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_filenames(TrgMainWindow * parent,
                                                 TrgClient * client,
                                                 GSList * filenames)
 {
     return g_object_new(TRG_TYPE_TORRENT_ADD_DIALOG, "filenames",
                         filenames, "parent", parent, "client", client,
+                        NULL);
+}
+
+TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_response(TrgMainWindow * parent,
+                                                TrgClient * client,
+                                                trg_response *response)
+{
+    return g_object_new(TRG_TYPE_TORRENT_ADD_DIALOG, "response",
+                        response, "parent", parent, "client", client,
                         NULL);
 }
 
@@ -937,22 +889,21 @@ void trg_torrent_add_dialog(TrgMainWindow * win, TrgClient * client)
                                                 prefs);
 
         if (showOptions) {
-            TrgTorrentAddDialog *dialog = trg_torrent_add_dialog_new(win,
+            TrgTorrentAddDialog *dialog = trg_torrent_add_dialog_new_from_filenames(win,
                                                                      client,
                                                                      l);
 
             gtk_widget_show_all(GTK_WIDGET(dialog));
         } else {
-            struct add_torrent_threadfunc_args *args =
-                g_new0(struct add_torrent_threadfunc_args, 1);
+        	trg_upload *upload = g_new0(trg_upload, 1);
 
-            args->list = l;
-            args->cb_data = win;
-            args->client = client;
-            args->extraArgs = FALSE;
-            args->flags = trg_prefs_get_add_flags(prefs);
+            upload->list = l;
+            upload->main_window = win;
+            upload->client = client;
+            upload->extra_args = FALSE;
+            upload->flags = trg_prefs_get_add_flags(prefs);
 
-            launch_add_thread(args);
+            trg_do_upload(upload);
         }
     }
 

@@ -45,10 +45,8 @@ typedef struct {
 	TrgRssModel *model;
 	gchar *feed_id;
 	gchar *feed_url;
-	gint status;
-	RssParser *parser;
-	gboolean success;
 	GError *error;
+	trg_response *response;
 } feed_update;
 
 static void feed_update_free(feed_update *update) {
@@ -58,61 +56,52 @@ static void feed_update_free(feed_update *update) {
 	g_free(update->feed_id);
 	g_free(update->feed_url);
 
-	if (update->parser)
-		g_object_unref(update->parser);
-
 	g_free(update);
-}
-
-static gboolean on_rss_receive_idle(gpointer data) {
-	feed_update *update = (feed_update*) data;
-	TrgRssModel *model = update->model;
-	TrgRssModelPrivate *priv = TRG_RSS_MODEL_GET_PRIVATE(model);
-
-	if (update->success) {
-		RssDocument *doc = rss_parser_get_document(update->parser);
-		GtkTreeIter iter;
-		GList *list, *tmp;
-		gchar *title;
-
-		list = rss_document_get_items(doc);
-
-		for (tmp = list; tmp != NULL; tmp = tmp->next) {
-			RssItem *item = (RssItem*) tmp->data;
-			const gchar *guid = rss_item_get_guid(item);
-			if (g_hash_table_lookup(priv->table, guid) != (void*) 1) {
-				gtk_list_store_append(GTK_LIST_STORE(model), &iter);
-				gtk_list_store_set(GTK_LIST_STORE(model), &iter, RSSCOL_ID,
-						guid, RSSCOL_TITLE, rss_item_get_title(item),
-						RSSCOL_LINK, rss_item_get_link(item), -1);
-				g_hash_table_insert(priv->table, g_strdup(guid), (void*) 1);
-			}
-		}
-
-		g_list_free(list);
-		g_object_unref(doc);
-	}
-
-	feed_update_free(update);
-
-	return FALSE;
 }
 
 static gboolean on_rss_receive(gpointer data) {
 	trg_response *response = (trg_response *) data;
 	feed_update *update = (feed_update*) response->cb_data;
-
-	update->status = response->status;
+	TrgRssModel *model = update->model;
+	TrgRssModelPrivate *priv = TRG_RSS_MODEL_GET_PRIVATE(model);
 
 	if (response->status == CURLE_OK) {
-		update->parser = rss_parser_new();
-		update->success = rss_parser_load_from_data(update->parser,
-				response->raw, response->size, &(update->error));
+		RssParser* parser = rss_parser_new();
+		GError *error = NULL;
+		if (rss_parser_load_from_data(parser, response->raw,
+				response->size, &error)) {
+			RssDocument *doc = rss_parser_get_document(parser);
+			GtkTreeIter iter;
+			GList *list, *tmp;
+			gchar *title;
+
+			list = rss_document_get_items(doc);
+
+			for (tmp = list; tmp != NULL; tmp = tmp->next) {
+				RssItem *item = (RssItem*) tmp->data;
+				const gchar *guid = rss_item_get_guid(item);
+				if (g_hash_table_lookup(priv->table, guid) != (void*) 1) {
+					gtk_list_store_append(GTK_LIST_STORE(model), &iter);
+					gtk_list_store_set(GTK_LIST_STORE(model), &iter, RSSCOL_ID,
+							guid, RSSCOL_TITLE, rss_item_get_title(item),
+							RSSCOL_LINK, rss_item_get_link(item), RSSCOL_FEED,
+							update->feed_id, RSSCOL_PUBDATE,
+							rss_item_get_pub_date(item), -1);
+					g_hash_table_insert(priv->table, g_strdup(guid), (void*) 1);
+				}
+			}
+
+			g_list_free(list);
+			g_object_unref(doc);
+			g_object_unref(parser);
+		} else {
+			g_error_free(error);
+			g_message("parse error?");
+		}
 	}
 
-	g_idle_add(on_rss_receive_idle, update);
-
 	trg_response_free(response);
+	feed_update_free(update);
 
 	return FALSE;
 }
@@ -126,7 +115,8 @@ void trg_rss_model_update(TrgRssModel * model) {
 	if (!feeds)
 		return;
 
-	for (li = json_array_get_elements(feeds); li != NULL; li = g_list_next(li)) {
+	for (li = json_array_get_elements(feeds); li != NULL;
+			li = g_list_next(li)) {
 		JsonObject *feed = json_node_get_object((JsonNode *) li->data);
 		const gchar *url = json_object_get_string_member(feed, "url");
 		const gchar *id = json_object_get_string_member(feed, "id");
@@ -174,11 +164,10 @@ static GObject *trg_rss_model_constructor(GType type,
 	return obj;
 }
 
-static void trg_rss_model_dispose(GObject * object)
-{
+static void trg_rss_model_dispose(GObject * object) {
 	TrgRssModelPrivate *priv = TRG_RSS_MODEL_GET_PRIVATE(object);
 	g_hash_table_destroy(priv->table);
-    G_OBJECT_CLASS(trg_rss_model_parent_class)->dispose(object);
+	G_OBJECT_CLASS(trg_rss_model_parent_class)->dispose(object);
 }
 
 static void trg_rss_model_class_init(TrgRssModelClass * klass) {
@@ -199,12 +188,13 @@ static void trg_rss_model_class_init(TrgRssModelClass * klass) {
 }
 
 static void trg_rss_model_init(TrgRssModel * self) {
-	//TrgRssModelPrivate *priv = TRG_RSS_MODEL_GET_PRIVATE(self);
 	GType column_types[RSSCOL_COLUMNS];
 
 	column_types[RSSCOL_ID] = G_TYPE_STRING;
 	column_types[RSSCOL_TITLE] = G_TYPE_STRING;
 	column_types[RSSCOL_LINK] = G_TYPE_STRING;
+	column_types[RSSCOL_FEED] = G_TYPE_STRING;
+	column_types[RSSCOL_PUBDATE] = G_TYPE_STRING;
 
 	gtk_list_store_set_column_types(GTK_LIST_STORE(self), RSSCOL_COLUMNS,
 			column_types);

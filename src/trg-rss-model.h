@@ -57,6 +57,8 @@ enum {
     RSSCOL_ID,
     RSSCOL_TITLE,
     RSSCOL_LINK,
+    RSSCOL_FEED,
+    RSSCOL_PUBDATE,
     RSSCOL_COLUMNS
 };
 

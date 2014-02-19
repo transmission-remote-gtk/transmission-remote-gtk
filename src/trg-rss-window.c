@@ -23,7 +23,9 @@
 
 #include "trg-rss-window.h"
 #include "trg-rss-model.h"
+#include "trg-torrent-add-dialog.h"
 #include "trg-client.h"
+#include "upload.h"
 #include "util.h"
 
 G_DEFINE_TYPE(TrgRssWindow, trg_rss_window,
@@ -84,15 +86,59 @@ trg_rss_window_set_property(GObject * object,
     }
 }
 
-static void
-trg_rss_window_response_cb(GtkDialog * dlg, gint res_id,
-                             gpointer data G_GNUC_UNUSED)
-{
-    TrgRssWindowPrivate *priv =
-        TRG_RSS_WINDOW_GET_PRIVATE(dlg);
+static gboolean on_torrent_receive(gpointer data) {
+	trg_response *response = (trg_response *) data;
+	TrgRssWindow *win = TRG_RSS_WINDOW(response->cb_data);
+	TrgRssWindowPrivate *priv = TRG_RSS_WINDOW_GET_PRIVATE(response->cb_data);
+	TrgClient *client = priv->client;
+	TrgPrefs *prefs = trg_client_get_prefs(client);
+	TrgMainWindow *main_win = priv->parent;
 
-    gtk_widget_destroy(GTK_WIDGET(dlg));
-    instance = NULL;
+	if (response->status == CURLE_OK) {
+	    if (trg_prefs_get_bool(prefs, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG,
+	                           TRG_PREFS_GLOBAL)) {
+	        /*TrgTorrentAddDialog *dialog =
+	            trg_torrent_add_dialog_new_from_filenames(main_win, client,
+	                                       filesList);
+	        gtk_widget_show_all(GTK_WIDGET(dialog));*/
+	    } else {
+	        trg_upload *upload = g_new0(trg_upload, 1);
+
+	        upload->upload_response = response;
+	        upload->main_window = main_win;
+	        upload->client = client;
+	        upload->extra_args = FALSE;
+	        upload->flags = trg_prefs_get_add_flags(prefs);
+
+	        trg_do_upload(upload);
+	    }
+	} else {
+		trg_error_dialog(GTK_WINDOW(win), response);
+		trg_response_free(response);
+	}
+
+	return FALSE;
+}
+
+static void
+rss_item_activated(GtkTreeView * treeview,
+                          GtkTreePath * path,
+                          GtkTreeViewColumn *
+                          col G_GNUC_UNUSED, gpointer userdata)
+{
+	TrgRssWindow *win = TRG_RSS_WINDOW(userdata);
+	TrgRssWindowPrivate *priv = TRG_RSS_WINDOW_GET_PRIVATE(win);
+	GtkTreeModel *model = gtk_tree_view_get_model(treeview);
+	GtkTreeIter iter;
+	gchar *link;
+
+	gtk_tree_model_get_iter(model, &iter, path);
+
+	gtk_tree_model_get(model, &iter, RSSCOL_LINK, &link, -1);
+
+	async_http_request(priv->client, link, on_torrent_receive, userdata);
+
+	g_free(link);
 }
 
 static GObject *trg_rss_window_constructor(GType type,
@@ -105,7 +151,7 @@ static GObject *trg_rss_window_constructor(GType type,
     TrgRssWindowPrivate *priv;
     TrgRssModel *model;
     GtkTreeView *view;
-    GtkWidget *vbox, *toolbar, *contentbox;
+    GtkWidget *vbox, *toolbar;
     GtkToolItem *item;
 
     object = G_OBJECT_CLASS
@@ -120,10 +166,14 @@ static GObject *trg_rss_window_constructor(GType type,
     view = GTK_TREE_VIEW(gtk_tree_view_new());
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(model));
     gtk_tree_view_insert_column_with_attributes(view, -1, "Title", gtk_cell_renderer_text_new(), "text", RSSCOL_TITLE, NULL);
+    gtk_tree_view_insert_column_with_attributes(view, -1, "Feed", gtk_cell_renderer_text_new(), "text", RSSCOL_FEED, NULL);
+    gtk_tree_view_insert_column_with_attributes(view, -1, "Published", gtk_cell_renderer_text_new(), "text", RSSCOL_PUBDATE, NULL);
+    gtk_tree_view_insert_column_with_attributes(view, -1, "URL", gtk_cell_renderer_text_new(), "text", RSSCOL_LINK, NULL);
 
-    gtk_window_set_title(GTK_WINDOW(object), _("RSS Viewer"));
+    g_signal_connect(view, "row-activated",
+                      G_CALLBACK(rss_item_activated), object);
 
-    //contentbox = gtk_dialog_get_content_area(GTK_DIALOG(object));
+    gtk_window_set_title(GTK_WINDOW(object), _("RSS Feeds"));
 
     toolbar = gtk_toolbar_new();
 
