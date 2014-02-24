@@ -17,9 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -601,7 +599,7 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
     model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 
     ptv = trg_persistent_tree_view_new(priv->prefs, model,
-                                       TRG_PREFS_KEY_EXEC_COMMANDS);
+                                       TRG_PREFS_KEY_EXEC_COMMANDS, TRG_PREFS_PROFILE);
     trg_persistent_tree_view_set_add_select(ptv,
                                             trg_persistent_tree_view_add_column
                                             (ptv, 0,
@@ -621,6 +619,46 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
     return t;
 }
 
+#ifdef HAVE_RSSGLIB
+static GtkWidget *trg_prefs_rss_page(TrgPreferencesDialog * dlg) {
+    TrgPreferencesDialogPrivate *priv =
+        TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
+    GtkWidget *t;
+    guint row = 0;
+    TrgPersistentTreeView *ptv;
+    trg_pref_widget_desc *wd;
+    GtkListStore *model;
+
+    t = hig_workarea_create();
+
+    hig_workarea_add_section_title(t, &row,
+                                   _("RSS Feeds"));
+
+    model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+
+    ptv = trg_persistent_tree_view_new(priv->prefs, model,
+                                       TRG_PREFS_KEY_RSS, TRG_PREFS_GLOBAL);
+    trg_persistent_tree_view_set_add_select(ptv,
+                                            trg_persistent_tree_view_add_column
+                                            (ptv, 0,
+                                             TRG_PREFS_RSS_SUBKEY_ID,
+                                             _("Name")));
+    trg_persistent_tree_view_add_column(ptv, 1,
+                                        TRG_PREFS_RSS_SUBKEY_URL,
+                                        _("URL"));
+
+    wd = trg_persistent_tree_view_get_widget_desc(ptv);
+    trg_pref_widget_refresh(dlg, wd);
+    priv->widgets = g_list_append(priv->widgets, wd);
+
+    gtk_table_attach(GTK_TABLE(t), GTK_WIDGET(ptv), 1, 2, row, row + 1,
+                     GTK_EXPAND | GTK_SHRINK | GTK_FILL,
+                     GTK_FILL | GTK_EXPAND | GTK_SHRINK, 0, 0);
+
+    return t;
+}
+#endif
+
 static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog * dlg)
 {
     TrgPreferencesDialogPrivate *priv =
@@ -639,7 +677,7 @@ static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog * dlg)
     model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 
     ptv = trg_persistent_tree_view_new(priv->prefs, model,
-                                       TRG_PREFS_KEY_DESTINATIONS);
+                                       TRG_PREFS_KEY_DESTINATIONS, TRG_PREFS_GLOBAL);
     trg_persistent_tree_view_set_add_select(ptv,
                                             trg_persistent_tree_view_add_column
                                             (ptv, 0,
@@ -916,6 +954,13 @@ static GObject *trg_preferences_dialog_constructor(GType type,
                              trg_prefs_dirsPage(TRG_PREFERENCES_DIALOG
                                                 (object)),
                              gtk_label_new(_("Directories")));
+
+#ifdef HAVE_RSSGLIB
+    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
+                             trg_prefs_rss_page(TRG_PREFERENCES_DIALOG
+                                                (object)),
+                             gtk_label_new(_("RSS Feeds")));
+#endif
 
     gtk_container_set_border_width(GTK_CONTAINER(notebook), GUI_PAD);
 

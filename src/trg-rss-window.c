@@ -17,6 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "config.h"
+
+#ifdef HAVE_RSSGLIB
+
 #include <gtk/gtk.h>
 #include <glib/gi18n.h>
 #include <rss-glib/rss-glib.h>
@@ -141,6 +145,34 @@ rss_item_activated(GtkTreeView * treeview,
 	g_free(link);
 }
 
+static void *trg_rss_on_get_error(TrgRssModel *model, rss_get_error *error, gpointer data) {
+	GtkWindow *win = GTK_WINDOW(data);
+	gchar *msg = g_strdup_printf(_("Error while fetching RSS feed \"%s\": %s"), error->feed_id, curl_easy_strerror(error->error_code));
+    GtkWidget *dialog = gtk_message_dialog_new(win,
+                                               GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_ERROR,
+                                               GTK_BUTTONS_OK,
+                                               msg);
+    g_free(msg);
+    gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
+static void *trg_rss_on_parse_error(TrgRssModel *model, rss_parse_error *error, gpointer data) {
+	GtkWindow *win = GTK_WINDOW(data);
+	gchar *msg = g_strdup_printf(_("Error parsing RSS feed \"%s\": %s"), error->feed_id, error->error->message);
+    GtkWidget *dialog = gtk_message_dialog_new(win,
+                                               GTK_DIALOG_MODAL,
+                                               GTK_MESSAGE_ERROR,
+                                               GTK_BUTTONS_OK,
+                                               msg);
+    g_free(msg);
+    gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+    gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
+}
+
 static GObject *trg_rss_window_constructor(GType type,
                                                     guint
                                                     n_construct_properties,
@@ -161,6 +193,12 @@ static GObject *trg_rss_window_constructor(GType type,
     priv = TRG_RSS_WINDOW_GET_PRIVATE(object);
 
     model = trg_rss_model_new(priv->client);
+
+    g_signal_connect(model, "get-error",
+                      G_CALLBACK(trg_rss_on_get_error), NULL);
+    g_signal_connect(model, "parse-error",
+                      G_CALLBACK(trg_rss_on_parse_error), NULL);
+
     trg_rss_model_update(model);
 
     view = GTK_TREE_VIEW(gtk_tree_view_new());
@@ -260,3 +298,5 @@ TrgRssWindow *trg_rss_window_get_instance(TrgMainWindow *parent, TrgClient *clie
 
     return TRG_RSS_WINDOW(instance);
 }
+
+#endif

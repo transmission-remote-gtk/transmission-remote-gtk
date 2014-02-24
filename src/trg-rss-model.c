@@ -17,6 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#include "config.h"
+
+#ifdef HAVE_RSSGLIB
+
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 #include <rss-glib/rss-glib.h>
@@ -30,6 +34,12 @@
 enum {
 	PROP_0, PROP_CLIENT
 };
+
+enum {
+	SIGNAL_GET_ERROR, SIGNAL_PARSE_ERROR, SIGNAL_COUNT
+};
+
+static guint signals[SIGNAL_COUNT] = { 0 };
 
 G_DEFINE_TYPE(TrgRssModel, trg_rss_model, GTK_TYPE_LIST_STORE)
 #define TRG_RSS_MODEL_GET_PRIVATE(o) \
@@ -95,9 +105,23 @@ static gboolean on_rss_receive(gpointer data) {
 			g_object_unref(doc);
 			g_object_unref(parser);
 		} else {
+			rss_parse_error perror;
+			perror.error = error;
+			perror.feed_id = update->feed_id;
+
+		    g_signal_emit(model, signals[SIGNAL_PARSE_ERROR], 0,
+		                  &perror);
+
+		    g_message("parse error: %s", error->message);
 			g_error_free(error);
-			g_message("parse error?");
 		}
+	} else {
+		rss_get_error get_error;
+		get_error.error_code = response->status;
+		get_error.feed_id = update->feed_id;
+
+	    g_signal_emit(model, signals[SIGNAL_GET_ERROR], 0,
+	                  &get_error);
 	}
 
 	trg_response_free(response);
@@ -185,6 +209,32 @@ static void trg_rss_model_class_init(TrgRssModelClass * klass) {
 					G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY
 							| G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
 							| G_PARAM_STATIC_BLURB));
+
+    signals[SIGNAL_GET_ERROR] = g_signal_new("get-error",
+                                                     G_TYPE_FROM_CLASS
+                                                     (object_class),
+                                                     G_SIGNAL_RUN_LAST |
+                                                     G_SIGNAL_ACTION,
+                                                     G_STRUCT_OFFSET
+                                                     (TrgRssModelClass,
+                                                      get_error),
+                                                     NULL, NULL,
+                                                     g_cclosure_marshal_VOID__POINTER,
+                                                     G_TYPE_NONE, 1,
+                                                     G_TYPE_POINTER);
+
+    signals[SIGNAL_PARSE_ERROR] = g_signal_new("parse-error",
+                                                     G_TYPE_FROM_CLASS
+                                                     (object_class),
+                                                     G_SIGNAL_RUN_LAST |
+                                                     G_SIGNAL_ACTION,
+                                                     G_STRUCT_OFFSET
+                                                     (TrgRssModelClass,
+                                                      parse_error),
+                                                     NULL, NULL,
+                                                     g_cclosure_marshal_VOID__POINTER,
+                                                     G_TYPE_NONE, 1,
+                                                     G_TYPE_POINTER);
 }
 
 static void trg_rss_model_init(TrgRssModel * self) {
@@ -203,3 +253,5 @@ static void trg_rss_model_init(TrgRssModel * self) {
 TrgRssModel *trg_rss_model_new(TrgClient *client) {
 	return g_object_new(TRG_TYPE_RSS_MODEL, "client", client, NULL);
 }
+
+#endif

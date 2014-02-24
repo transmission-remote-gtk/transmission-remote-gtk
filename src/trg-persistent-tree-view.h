@@ -57,7 +57,7 @@ typedef struct {
 
 TrgPersistentTreeView *trg_persistent_tree_view_new(TrgPrefs * prefs,
                                                     GtkListStore * model,
-                                                    const gchar * key);
+                                                    const gchar * key, gint conf_flags);
 
 trg_pref_widget_desc
     * trg_persistent_tree_view_get_widget_desc(TrgPersistentTreeView *

@@ -17,9 +17,7 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <stdlib.h>
 #include <string.h>
@@ -73,7 +71,9 @@
 #include "trg-menu-bar.h"
 #include "trg-status-bar.h"
 #include "trg-stats-dialog.h"
+#ifdef HAVE_RSSGLIB
 #include "trg-rss-window.h"
+#endif
 #include "trg-remote-prefs-dialog.h"
 #include "trg-preferences-dialog.h"
 #include "upload.h"
@@ -930,6 +930,7 @@ static void view_stats_toggled_cb(GtkWidget * w, gpointer data)
     }
 }
 
+#ifdef HAVE_RSSGLIB
 static void view_rss_toggled_cb(GtkWidget * w, gpointer data)
 {
     TrgMainWindow *win = TRG_MAIN_WINDOW(data);
@@ -942,6 +943,7 @@ static void view_rss_toggled_cb(GtkWidget * w, gpointer data)
         gtk_widget_show_all(GTK_WIDGET(rss));
     }
 }
+#endif
 
 static void
 view_states_toggled_cb(GtkCheckMenuItem * w, TrgMainWindow * win)
@@ -1756,12 +1758,15 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 
     GObject *b_disconnect, *b_add, *b_resume, *b_pause, *b_verify,
         *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs,
-        *b_about, *b_view_states, *b_view_notebook, *b_view_stats, *b_view_rss,
+        *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
         *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
         *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_up_queue,
         *b_down_queue, *b_top_queue, *b_bottom_queue,
 #if TRG_WITH_GRAPH
     *b_show_graph,
+#endif
+#ifdef HAVE_RSSGLIB
+    *b_view_rss,
 #endif
     *b_start_now;
 
@@ -1787,9 +1792,12 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                  "view-states-button", &b_view_states, "view-stats-button",
                  &b_view_stats, "about-button", &b_about, "quit-button",
                  &b_quit, "dir-filters", &b_dir_filters, "tracker-filters",
-                 &b_tracker_filters, "view-rss-button", &b_view_rss,
+                 &b_tracker_filters,
 #if TRG_WITH_GRAPH
                  "show-graph", &b_show_graph,
+#endif
+#ifdef HAVE_RSSGLIB
+                 "view-rss-button", &b_view_rss,
 #endif
                  "up-queue", &b_up_queue, "down-queue", &b_down_queue,
                  "top-queue", &b_top_queue, "bottom-queue",
@@ -1835,8 +1843,10 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                      G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
                      G_CALLBACK(view_stats_toggled_cb), win);
+#ifdef HAVE_RSSGLIB
     g_signal_connect(b_view_rss, "activate",
                      G_CALLBACK(view_rss_toggled_cb), win);
+#endif
 #if TRG_WITH_GRAPH
     g_signal_connect(b_show_graph, "toggled",
                      G_CALLBACK(trg_main_window_toggle_graph_cb), win);

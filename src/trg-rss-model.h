@@ -20,6 +20,10 @@
 #ifndef TRG_RSS_MODEL_H_
 #define TRG_RSS_MODEL_H_
 
+#include "config.h"
+
+#ifdef HAVE_RSSGLIB
+
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
 
@@ -43,7 +47,21 @@ G_BEGIN_DECLS
 } TrgRssModel;
 
 typedef struct {
+	gchar *feed_id;
+	gint error_code;
+} rss_get_error;
+
+typedef struct {
+	GError *error;
+	gchar *feed_id;
+} rss_parse_error;
+
+typedef struct {
     GtkListStoreClass parent_class;
+    void (*get_error) (TrgRssModel * model,
+                               rss_get_error *error);
+    void (*parse_error) (TrgRssModel * model,
+                               rss_parse_error *error);
 } TrgRssModelClass;
 
 GType trg_rss_model_get_type(void);
@@ -61,5 +79,7 @@ enum {
     RSSCOL_PUBDATE,
     RSSCOL_COLUMNS
 };
+
+#endif
 
 #endif                          /* TRG_RSS_MODEL_H_ */

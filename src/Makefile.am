@@ -105,8 +105,8 @@ transmission_remote_gtk_SOURCES = \
 	  trg-client.c \
 	  trg-main-window.c \
 	  main.c \
-	  trg-rss-window.c \
 	  trg-rss-model.c \
+	  trg-rss-window.c \
 	  upload.c \
 	  $(NULL)
 

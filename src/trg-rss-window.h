@@ -20,6 +20,10 @@
 #ifndef TRG_RSS_WINDOW_H_
 #define TRG_RSS_WINDOW_H_
 
+#include "config.h"
+
+#ifdef HAVE_RSSGLIB
+
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
@@ -50,4 +54,7 @@ GType trg_rss_window_get_type(void);
 TrgRssWindow *trg_rss_window_get_instance(TrgMainWindow *parent, TrgClient *client);
 
 G_END_DECLS
+
+#endif
+
 #endif                          /* TRG_RSS_WINDOW_H_ */

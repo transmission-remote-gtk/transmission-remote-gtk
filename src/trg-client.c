@@ -563,11 +563,17 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
         priv->http_class = http_class;
     }
 
+    if (http_class == HTTP_CLASS_TRANSMISSION)
+    	curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
+
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT,
 					 (long) trg_prefs_get_int(prefs, TRG_PREFS_KEY_TIMEOUT,
 											  TRG_PREFS_CONNECTION));
 
     g_mutex_unlock(priv->configMutex);
+
+    /* Headers are set on each use, then freed, so make sure invalid headers aren't still around. */
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, NULL);
 
     return curl;
 
