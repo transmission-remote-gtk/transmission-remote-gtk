@@ -532,7 +532,7 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
         curl_easy_setopt(curl, CURLOPT_USERAGENT, PACKAGE_NAME);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
                          &http_receive_callback);
-        //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
 
         if (http_class == HTTP_CLASS_TRANSMISSION) {
         	curl_easy_setopt(curl, CURLOPT_WRITEHEADER, (void *) tc);

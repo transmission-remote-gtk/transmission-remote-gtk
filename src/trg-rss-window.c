@@ -145,9 +145,14 @@ rss_item_activated(GtkTreeView * treeview,
 	g_free(link);
 }
 
-static void *trg_rss_on_get_error(TrgRssModel *model, rss_get_error *error, gpointer data) {
+static void trg_rss_on_get_error(TrgRssModel *model, rss_get_error *error, gpointer data) {
 	GtkWindow *win = GTK_WINDOW(data);
-	gchar *msg = g_strdup_printf(_("Error while fetching RSS feed \"%s\": %s"), error->feed_id, curl_easy_strerror(error->error_code));
+	gchar *msg;
+	if (error->error_code <= -100) {
+		msg = g_strdup_printf(_("Request failed with HTTP code %d"), -(error->error_code + 100));
+	} else {
+		msg = g_strdup(curl_easy_strerror(error->error_code));
+	}
     GtkWidget *dialog = gtk_message_dialog_new(win,
                                                GTK_DIALOG_MODAL,
                                                GTK_MESSAGE_ERROR,
@@ -159,7 +164,7 @@ static void *trg_rss_on_get_error(TrgRssModel *model, rss_get_error *error, gpoi
     gtk_widget_destroy(dialog);
 }
 
-static void *trg_rss_on_parse_error(TrgRssModel *model, rss_parse_error *error, gpointer data) {
+static void trg_rss_on_parse_error(TrgRssModel *model, rss_parse_error *error, gpointer data) {
 	GtkWindow *win = GTK_WINDOW(data);
 	gchar *msg = g_strdup_printf(_("Error parsing RSS feed \"%s\": %s"), error->feed_id, error->error->message);
     GtkWidget *dialog = gtk_message_dialog_new(win,
@@ -183,7 +188,7 @@ static GObject *trg_rss_window_constructor(GType type,
     TrgRssWindowPrivate *priv;
     TrgRssModel *model;
     GtkTreeView *view;
-    GtkWidget *vbox, *toolbar;
+    GtkWidget *vbox;
     GtkToolItem *item;
 
     object = G_OBJECT_CLASS
@@ -213,18 +218,18 @@ static GObject *trg_rss_window_constructor(GType type,
 
     gtk_window_set_title(GTK_WINDOW(object), _("RSS Feeds"));
 
-    toolbar = gtk_toolbar_new();
+    /*toolbar = gtk_toolbar_new();
 
     item = gtk_tool_button_new_from_stock(GTK_STOCK_PREFERENCES);
     gtk_widget_set_sensitive(GTK_WIDGET(item), TRUE);
     gtk_tool_item_set_tooltip_text(item, "Configure");
-    gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);
+    gtk_toolbar_insert(GTK_TOOLBAR(toolbar), item, 0);*/
 
     vbox = trg_vbox_new(FALSE, 0);
 
-    gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(toolbar),
-                           FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(view),
+    /*gtk_box_pack_start(GTK_BOX(vbox), GTK_WIDGET(toolbar),
+                           FALSE, FALSE, 0);*/
+    gtk_box_pack_start(GTK_BOX(vbox), my_scrolledwin_new(GTK_WIDGET(view)),
                            TRUE, TRUE, 0);
 
     gtk_container_add(GTK_CONTAINER(object), vbox);
