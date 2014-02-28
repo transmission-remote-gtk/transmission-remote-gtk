@@ -445,8 +445,6 @@ get_size_compact(TorrentCellRenderer * cell,
     g_object_unref(icon);
 }
 
-#define MAX3(a,b,c) MAX(a,MAX(b,c))
-
 static void
 get_size_full(TorrentCellRenderer * cell,
               GtkWidget * widget, gint * width, gint * height)

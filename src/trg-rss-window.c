@@ -27,6 +27,7 @@
 
 #include "trg-rss-window.h"
 #include "trg-rss-model.h"
+#include "trg-rss-cell-renderer.h"
 #include "trg-torrent-add-dialog.h"
 #include "trg-client.h"
 #include "upload.h"
@@ -189,7 +190,7 @@ static GObject *trg_rss_window_constructor(GType type,
     TrgRssModel *model;
     GtkTreeView *view;
     GtkWidget *vbox;
-    GtkToolItem *item;
+    //GtkToolItem *item;
 
     object = G_OBJECT_CLASS
         (trg_rss_window_parent_class)->constructor(type,
@@ -207,11 +208,13 @@ static GObject *trg_rss_window_constructor(GType type,
     trg_rss_model_update(model);
 
     view = GTK_TREE_VIEW(gtk_tree_view_new());
+    gtk_tree_view_set_headers_visible(view, FALSE);
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(model));
-    gtk_tree_view_insert_column_with_attributes(view, -1, "Title", gtk_cell_renderer_text_new(), "text", RSSCOL_TITLE, NULL);
+    /*gtk_tree_view_insert_column_with_attributes(view, -1, "Title", gtk_cell_renderer_text_new(), "text", RSSCOL_TITLE, NULL);
     gtk_tree_view_insert_column_with_attributes(view, -1, "Feed", gtk_cell_renderer_text_new(), "text", RSSCOL_FEED, NULL);
     gtk_tree_view_insert_column_with_attributes(view, -1, "Published", gtk_cell_renderer_text_new(), "text", RSSCOL_PUBDATE, NULL);
-    gtk_tree_view_insert_column_with_attributes(view, -1, "URL", gtk_cell_renderer_text_new(), "text", RSSCOL_LINK, NULL);
+    gtk_tree_view_insert_column_with_attributes(view, -1, "URL", gtk_cell_renderer_text_new(), "text", RSSCOL_LINK, NULL);*/
+    gtk_tree_view_insert_column_with_attributes(view, -1, NULL, trg_rss_cell_renderer_new(), "title", RSSCOL_TITLE, "feed", RSSCOL_FEED, "published", RSSCOL_PUBDATE, NULL);
 
     g_signal_connect(view, "row-activated",
                       G_CALLBACK(rss_item_activated), object);
@@ -236,6 +239,8 @@ static GObject *trg_rss_window_constructor(GType type,
 
     /*g_signal_connect(object, "response",
                      G_CALLBACK(trg_rss_window_response_cb), NULL);*/
+
+    gtk_widget_set_size_request(GTK_WIDGET(object), 500, 300);
 
     return object;
 }
