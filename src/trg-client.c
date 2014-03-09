@@ -532,7 +532,7 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
         curl_easy_setopt(curl, CURLOPT_USERAGENT, PACKAGE_NAME);
         curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION,
                          &http_receive_callback);
-        curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
+        //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
 
         if (http_class == HTTP_CLASS_TRANSMISSION) {
         	curl_easy_setopt(curl, CURLOPT_WRITEHEADER, (void *) tc);
@@ -633,7 +633,7 @@ trg_response *dispatch(TrgClient * tc, JsonNode * req)
     json_node_free(req);
 #ifdef DEBUG
     if (g_getenv("TRG_SHOW_OUTGOING"))
-        g_debug("=>(OUTgoing)=>: %s", serialized);
+        g_message("=>(OUTgoing)=>: %s", serialized);
 #endif
     return dispatch_str(tc, serialized);
 }

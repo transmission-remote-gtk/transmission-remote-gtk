@@ -49,6 +49,7 @@ typedef struct _TrgRssModelPrivate TrgRssModelPrivate;
 struct _TrgRssModelPrivate {
 	TrgClient *client;
 	GHashTable *table;
+	guint index;
 };
 
 typedef struct {
@@ -245,7 +246,7 @@ static void trg_rss_model_init(TrgRssModel * self) {
 	column_types[RSSCOL_LINK] = G_TYPE_STRING;
 	column_types[RSSCOL_FEED] = G_TYPE_STRING;
 	column_types[RSSCOL_PUBDATE] = G_TYPE_STRING;
-	column_types[RSSCOL_SENSITIVE] = G_TYPE_BOOLEAN;
+	column_types[RSSCOL_UPLOADED] = G_TYPE_BOOLEAN;
 
 	gtk_list_store_set_column_types(GTK_LIST_STORE(self), RSSCOL_COLUMNS,
 			column_types);

@@ -58,6 +58,7 @@ struct _TrgPreferencesDialogPrivate {
     GtkWidget *profileNameEntry;
     GtkWidget *fullUpdateCheck;
     GList *widgets;
+    GtkWidget *notebook;
 };
 
 static GObject *instance = NULL;
@@ -928,7 +929,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     g_signal_connect(G_OBJECT(object), "response",
                      G_CALLBACK(trg_preferences_response_cb), NULL);
 
-    notebook = gtk_notebook_new();
+    notebook = priv->notebook = gtk_notebook_new();
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_serverPage(TRG_PREFERENCES_DIALOG
@@ -967,6 +968,11 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_box_pack_start(GTK_BOX(contentvbox), notebook, TRUE, TRUE, 0);
 
     return object;
+}
+
+void trg_preferences_dialog_set_page(TrgPreferencesDialog *pref_dlg, guint page) {
+	TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(pref_dlg);
+	gtk_notebook_set_current_page(GTK_NOTEBOOK(priv->notebook), page);
 }
 
 static void trg_preferences_dialog_init(TrgPreferencesDialog * pref_dlg)

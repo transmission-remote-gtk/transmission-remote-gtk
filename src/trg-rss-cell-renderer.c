@@ -14,7 +14,8 @@
 enum {
     PROP_TITLE = 1,
     PROP_FEED,
-    PROP_PUBLISHED
+    PROP_PUBLISHED,
+    PROP_UPLOADED
 };
 
 #define SMALL_SCALE 0.9
@@ -34,6 +35,7 @@ struct TrgRssCellRendererPrivate {
     gchar *title;
     gchar *published;
     gchar *feed;
+    gboolean uploaded;
 };
 
 static void
@@ -74,6 +76,9 @@ static void trg_rss_cell_renderer_set_property(GObject * object,
     case PROP_FEED:
     	g_free(p->feed);
     	p->feed = g_value_dup_string(v);
+    	break;
+    case PROP_UPLOADED:
+    	p->uploaded = g_value_get_boolean(v);
     	break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -243,6 +248,19 @@ trg_rss_cell_renderer_class_init(TrgRssCellRendererClass * klass)
                                                         |
                                                         G_PARAM_STATIC_BLURB));
 
+    g_object_class_install_property(gobject_class,
+                                    PROP_UPLOADED,
+                                    g_param_spec_boolean("uploaded",
+                                                        "uploaded",
+                                                        "Uploaded",
+                                                        FALSE,
+                                                        G_PARAM_READWRITE |
+                                                        G_PARAM_STATIC_NAME
+                                                        |
+                                                        G_PARAM_STATIC_NICK
+                                                        |
+                                                        G_PARAM_STATIC_BLURB));
+
     /*g_object_class_install_property(gobject_class, P_BAR_HEIGHT,
                                     g_param_spec_int("bar-height", NULL,
                                                      "Bar Height",
@@ -281,15 +299,12 @@ static void
 get_text_color(TrgRssCellRenderer * r, GtkWidget * widget,
                GtrColor * setme)
 {
-    /*struct TrgRssCellRendererPrivate *p = r->priv;
-    static const GdkRGBA red = { 1.0, 0, 0, 0 };
+    struct TrgRssCellRendererPrivate *p = r->priv;
 
-    if (p->error)
-        *setme = red;
-    else if (p->flags & TORRENT_FLAG_PAUSED)
+    if (p->uploaded)
         gtk_style_context_get_color(gtk_widget_get_style_context(widget),
                                     GTK_STATE_FLAG_INSENSITIVE, setme);
-    else*/
+    else
         gtk_style_context_get_color(gtk_widget_get_style_context(widget),
                                     GTK_STATE_FLAG_NORMAL, setme);
 }

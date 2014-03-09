@@ -397,7 +397,7 @@ gchar *trg_destination_combo_get_dir(TrgDestinationCombo * combo)
 
         if (type == DEST_LABEL) {
             gtk_tree_model_get(model, &iter, DEST_COLUMN_DIR, &value, -1);
-            return value;
+            return g_strdup(value);
         }
     }
 

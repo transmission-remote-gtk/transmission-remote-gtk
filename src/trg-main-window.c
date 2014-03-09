@@ -941,6 +941,7 @@ static void view_rss_toggled_cb(GtkWidget * w, gpointer data)
             trg_rss_window_get_instance(TRG_MAIN_WINDOW(data), priv->client);
 
         gtk_widget_show_all(GTK_WIDGET(rss));
+        gtk_window_present(GTK_WINDOW(rss));
     }
 }
 #endif

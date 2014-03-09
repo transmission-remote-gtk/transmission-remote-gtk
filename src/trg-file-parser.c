@@ -134,32 +134,11 @@ static trg_files_tree_node *trg_parse_torrent_file_nodes(be_node *
     return top_node;
 }
 
-trg_torrent_file *trg_parse_torrent_file(const gchar * filename)
-{
-    GError *error = NULL;
-    GMappedFile *mf;
-    be_node *top_node, *info_node, *name_node;
-    trg_torrent_file *ret = NULL;
+trg_torrent_file *trg_parse_torrent_data(const gchar *data, gsize length) {
+	trg_torrent_file *ret = NULL;
+	be_node *top_node, *info_node, *name_node;
 
-    if (!g_file_test(filename, G_FILE_TEST_IS_REGULAR)) {
-        g_message("%s does not exist", filename);
-        return NULL;
-    }
-
-    mf = g_mapped_file_new(filename, FALSE, &error);
-
-    if (error) {
-        g_error("%s", error->message);
-        g_error_free(error);
-        g_mapped_file_unref(mf);
-        return NULL;
-    } else {
-        top_node =
-            be_decoden(g_mapped_file_get_contents(mf),
-                       g_mapped_file_get_length(mf));
-    }
-
-    g_mapped_file_unref(mf);
+    top_node = be_decoden(data, length);
 
     if (!top_node) {
         return NULL;
@@ -197,5 +176,32 @@ trg_torrent_file *trg_parse_torrent_file(const gchar * filename)
 
   out:
     be_free(top_node);
+    return ret;
+}
+
+trg_torrent_file *trg_parse_torrent_file(const gchar * filename)
+{
+    GError *error = NULL;
+    trg_torrent_file *ret = NULL;
+    GMappedFile *mf;
+
+    if (!g_file_test(filename, G_FILE_TEST_IS_REGULAR)) {
+        g_message("%s does not exist", filename);
+        return NULL;
+    }
+
+    mf = g_mapped_file_new(filename, FALSE, &error);
+
+    if (error) {
+        g_error("%s", error->message);
+        g_error_free(error);
+        g_mapped_file_unref(mf);
+        return NULL;
+    } else {
+        ret = trg_parse_torrent_data(g_mapped_file_get_contents(mf), g_mapped_file_get_length(mf));
+    }
+
+    g_mapped_file_unref(mf);
+
     return ret;
 }
