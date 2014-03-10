@@ -100,15 +100,18 @@ static gboolean upload_complete_searchfunc(GtkTreeModel *model,
                                                          gpointer data) {
 	trg_upload *upload = (trg_upload*)data;
 	gchar *item_guid = NULL;
+	gboolean stop = FALSE;
 
 	gtk_tree_model_get(model, iter, RSSCOL_ID, &item_guid, -1);
 
 	if (!g_strcmp0(item_guid, upload->uid)) {
 		gtk_list_store_set(GTK_LIST_STORE(model), iter, RSSCOL_UPLOADED, TRUE, -1);
-		return TRUE;
+		stop = TRUE;
 	}
 
-	return FALSE;
+	g_free(item_guid);
+
+	return stop;
 }
 
 static gboolean on_upload_complete(gpointer data) {
