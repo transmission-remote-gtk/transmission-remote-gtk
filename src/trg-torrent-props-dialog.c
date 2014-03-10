@@ -172,7 +172,7 @@ static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
         trg_json_widgets_save(priv->widgets, args);
         trg_json_widget_desc_list_free(priv->widgets);
 
-        dispatch_async(priv->client, request, on_generic_interactive_action,
+        dispatch_async(priv->client, request, on_generic_interactive_action_response,
                 priv->parent);
     }
 

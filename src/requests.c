@@ -227,7 +227,22 @@ JsonNode *torrent_add_url(const gchar * url, gboolean paused)
     return root;
 }
 
-JsonNode *torrent_add(gchar * target, gint flags)
+JsonNode *torrent_add_from_response(trg_response *response, gint flags) {
+    JsonNode *root = base_request(METHOD_TORRENT_ADD);
+    JsonObject *args = node_get_arguments(root);
+    gchar *encoded = g_base64_encode((guchar *)response->raw, response->size);
+
+    json_object_set_string_member(args, PARAM_METAINFO,
+                                  encoded);
+    g_free(encoded);
+
+    json_object_set_boolean_member(args, PARAM_PAUSED,
+                                   (flags & TORRENT_ADD_FLAG_PAUSED));
+
+    return root;
+}
+
+JsonNode *torrent_add_from_file(gchar * target, gint flags)
 {
     JsonNode *root;
     JsonObject *args;

@@ -73,6 +73,8 @@ AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
 
 AC_ARG_WITH([libnotify], AC_HELP_STRING([--without-libnotify], [disable libnotify]))
 have_libnotify=no
+AC_ARG_WITH([librssglib], AC_HELP_STRING([--without-rssglib], [disable rssglib support]))
+have_librssglib=no
 AC_ARG_WITH([libproxy], AC_HELP_STRING([--without-libproxy], [disable libproxy]))
 have_libproxy=no
 AC_ARG_WITH([libappindicator], AC_HELP_STRING([--without-libappindicator], [disable libappindicator]))
@@ -80,6 +82,10 @@ have_libappindicator=no
 
 if test x$with_libnotify != xno; then
   PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
+fi
+
+if test x$with_librssglib != xno; then
+  PKG_CHECK_MODULES([rssglib], [rss-glib-1.0], AC_DEFINE(HAVE_RSSGLIB, 1, [Define if rss-glib is available]), AC_MSG_WARN([rss-glib is required for RSS viewer functionality]))
 fi
 
 if test x$with_libproxy != xno; then

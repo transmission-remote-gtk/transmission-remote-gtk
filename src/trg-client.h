@@ -57,6 +57,9 @@
 #define FAIL_RESPONSE_UNSUCCESSFUL -3
 #define DISPATCH_POOL_SIZE 3
 
+#define HTTP_CLASS_TRANSMISSION 0
+#define HTTP_CLASS_PUBLIC 1
+
 typedef struct {
     int status;
     int size;
@@ -69,6 +72,7 @@ typedef struct {
     gint connid;
     JsonNode *node;
     gchar *str;
+    gchar *url;
     GSourceFunc callback;
     gpointer cb_data;
 } trg_request;
@@ -109,6 +113,7 @@ typedef struct {
      * We lock updating (and checking for updates) with priv->configMutex
      */
     int serial;
+    guint client_class;
     CURL *curl;
 } trg_tls;
 
@@ -121,8 +126,11 @@ int trg_http_perform(TrgClient * client, gchar * reqstr,
 /* stuff that used to be in dispatch.c */
 trg_response *dispatch(TrgClient * client, JsonNode * req);
 trg_response *dispatch_str(TrgClient * client, gchar * req);
+trg_response *dispatch_public_http(TrgClient *tc, trg_request *req);
 gboolean dispatch_async(TrgClient * client, JsonNode * req,
                         GSourceFunc callback, gpointer data);
+gboolean async_http_request(TrgClient *tc, gchar *url, GSourceFunc callback, gpointer data);
+
 /* end dispatch.c*/
 
 GType trg_client_get_type(void);

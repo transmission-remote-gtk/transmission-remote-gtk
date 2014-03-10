@@ -33,6 +33,7 @@
 #define TRG_PREFS_KEY_RPC_URL_PATH "rpc-url-path"
 #define TRG_PREFS_KEY_PROFILE_ID    "profile-id"
 #define TRG_PREFS_KEY_PROFILES    "profiles"
+#define TRG_PREFS_KEY_RSS    "rss"
 #define TRG_PREFS_KEY_PROFILE_NAME   "profile-name"
 #define TRG_PREFS_KEY_HOSTNAME      "hostname"
 #define TRG_PREFS_KEY_PORT          "port"
@@ -78,6 +79,9 @@
 #define TRG_PREFS_KEY_EXEC_COMMANDS "exec-commands"
 #define TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD "cmd"
 #define TRG_PREFS_KEY_DESTINATIONS "destinations"
+#define TRG_PREFS_KEY_RSS "rss"
+#define TRG_PREFS_RSS_SUBKEY_ID "id"
+#define TRG_PREFS_RSS_SUBKEY_URL "url"
 #define TRG_PREFS_KEY_LAST_MOVE_DESTINATION "last-move-destination"
 #define TRG_PREFS_KEY_LAST_ADD_DESTINATION "last-add-destination"
 #define TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR "dir"
@@ -139,6 +143,7 @@ gboolean trg_prefs_get_bool(TrgPrefs * p, const gchar * key, int flags);
 JsonObject *trg_prefs_get_profile(TrgPrefs * p);
 JsonObject *trg_prefs_get_connection(TrgPrefs * p);
 JsonArray *trg_prefs_get_profiles(TrgPrefs * p);
+JsonArray *trg_prefs_get_rss(TrgPrefs *p);
 void trg_prefs_set_connection(TrgPrefs * p, JsonObject * profile);
 gint trg_prefs_get_profile_id(TrgPrefs * p);
 void trg_prefs_del_profile(TrgPrefs * p, JsonObject * profile);

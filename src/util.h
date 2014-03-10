@@ -32,6 +32,7 @@
 #define trg_strlpercent(a, b) tr_strlpercent(a, b, sizeof(a))
 #define trg_strlsize(a, b) tr_formatter_size_B(a, b, sizeof(a))
 #define trg_strlratio(a, b) tr_strlratio(a, b, sizeof(a))
+#define MAX3(a,b,c) MAX(a,MAX(b,c))
 
 #define TR_RATIO_NA  -1
 #define TR_RATIO_INF -2

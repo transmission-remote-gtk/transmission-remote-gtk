@@ -37,7 +37,7 @@ typedef struct _TrgPersistentTreeViewPrivate
  TrgPersistentTreeViewPrivate;
 
 enum {
-    PROP_0, PROP_PREFS, PROP_KEY, PROP_MODEL
+    PROP_0, PROP_PREFS, PROP_KEY, PROP_MODEL, PROP_CONF_FLAGS
 };
 
 struct _TrgPersistentTreeViewPrivate {
@@ -52,6 +52,7 @@ struct _TrgPersistentTreeViewPrivate {
     trg_pref_widget_desc *wd;
     GtkTreeModel *model;
     trg_persistent_tree_view_column *addSelect;
+    gint conf_flags;
 };
 
 static void selection_changed(TrgPersistentTreeView * ptv,
@@ -322,6 +323,9 @@ trg_persistent_tree_view_set_property(GObject * object,
     case PROP_MODEL:
         priv->model = g_value_get_object(value);
         break;
+    case PROP_CONF_FLAGS:
+    	priv->conf_flags = g_value_get_int(value);
+    	break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
         break;
@@ -411,7 +415,7 @@ static GObject *trg_persistent_tree_view_constructor(GType type,
     gtk_box_pack_start(GTK_BOX(object), hbox, FALSE, FALSE, 4);
 
     priv->wd = trg_pref_widget_desc_new(GTK_WIDGET(priv->tv), priv->key,
-                                        TRG_PREFS_PROFILE);
+                                        priv->conf_flags);
     priv->wd->widget = GTK_WIDGET(object);
     priv->wd->saveFunc = &trg_persistent_tree_view_save;
     priv->wd->refreshFunc = &trg_persistent_tree_view_refresh;
@@ -462,6 +466,19 @@ trg_persistent_tree_view_class_init(TrgPersistentTreeViewClass * klass)
                                                         G_PARAM_STATIC_BLURB));
 
     g_object_class_install_property(object_class,
+                                    PROP_CONF_FLAGS,
+                                    g_param_spec_int("conf-flags",
+                                                     "Conf Flags",
+                                                     "Conf Flags",
+                                                     INT_MIN,
+                                                     INT_MAX,
+                                                     TRG_PREFS_PROFILE,
+                                                     G_PARAM_READWRITE |
+                                                     G_PARAM_STATIC_NAME |
+                                                     G_PARAM_STATIC_NICK |
+                                                     G_PARAM_STATIC_BLURB));
+
+    g_object_class_install_property(object_class,
                                     PROP_MODEL,
                                     g_param_spec_object("persistent-model",
                                                         "Persistent Model",
@@ -483,12 +500,12 @@ static void trg_persistent_tree_view_init(TrgPersistentTreeView * self)
 
 TrgPersistentTreeView *trg_persistent_tree_view_new(TrgPrefs * prefs,
                                                     GtkListStore * model,
-                                                    const gchar * key)
+                                                    const gchar * key, gint conf_flags)
 {
     GObject *obj =
         g_object_new(TRG_TYPE_PERSISTENT_TREE_VIEW, "prefs", prefs,
                      "conf-key", key, "persistent-model",
-                     model,
+                     model, "conf-flags", conf_flags,
                      NULL);
 
     return TRG_PERSISTENT_TREE_VIEW(obj);

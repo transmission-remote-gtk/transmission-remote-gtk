@@ -340,7 +340,7 @@ gchar *make_error_message(JsonObject * response, int status)
 {
     if (status == FAIL_JSON_DECODE) {
         return g_strdup(_("JSON decoding error."));
-    } else if (status == FAIL_RESPONSE_UNSUCCESSFUL) {
+    } else if (response && status == FAIL_RESPONSE_UNSUCCESSFUL) {
         const gchar *resultStr =
             json_object_get_string_member(response, "result");
         if (resultStr == NULL)

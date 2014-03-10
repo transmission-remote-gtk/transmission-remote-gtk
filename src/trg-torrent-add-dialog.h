@@ -24,6 +24,7 @@
 #include <gtk/gtk.h>
 
 #include "trg-client.h"
+#include "upload.h"
 #include "trg-main-window.h"
 
 G_BEGIN_DECLS
@@ -46,28 +47,15 @@ typedef struct {
     GtkDialogClass parent_class;
 } TrgTorrentAddDialogClass;
 
-/* Use synchronous dispatch() in our dedicated thread function.
- * This means torrents are added in sequence, instead of dispatch_async()
- * working concurrently for each upload.
- */
-
-struct add_torrent_threadfunc_args {
-    GSList *list;
-    TrgClient *client;
-    gpointer cb_data;
-    guint flags;
-    gchar *dir;
-    gint priority;
-    gboolean extraArgs;
-};
-
 GType trg_torrent_add_dialog_get_type(void);
 
-TrgTorrentAddDialog *trg_torrent_add_dialog_new(TrgMainWindow * win,
+TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_filenames(TrgMainWindow * parent,
                                                 TrgClient * client,
                                                 GSList * filenames);
+TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_upload(TrgMainWindow * parent,
+                                                TrgClient * client,
+                                                trg_upload *upload);
 void trg_torrent_add_dialog(TrgMainWindow * win, TrgClient * client);
-void launch_add_thread(struct add_torrent_threadfunc_args *args);
 
 G_END_DECLS
 #endif                          /* TRG_TORRENT_ADD_DIALOG_H_ */

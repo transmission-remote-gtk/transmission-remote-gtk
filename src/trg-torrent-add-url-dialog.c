@@ -90,7 +90,7 @@ trg_torrent_add_url_response_cb(TrgTorrentAddUrlDialog * dlg, gint res_id,
                             gtk_toggle_button_get_active
                             (GTK_TOGGLE_BUTTON(priv->startCheck)));
         dispatch_async(priv->client, request,
-                       on_generic_interactive_action, data);
+                       on_generic_interactive_action_response, data);
     }
 
     gtk_widget_destroy(GTK_WIDGET(dlg));
