@@ -182,7 +182,7 @@ rss_item_activated(GtkTreeView * treeview,
 
 	upload->uid = uid;
 
-	async_http_request(priv->client, link, on_torrent_receive, upload);
+	async_http_request(priv->client, link, NULL, on_torrent_receive, upload);
 
 	g_free(link);
 }

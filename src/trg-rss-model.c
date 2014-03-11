@@ -154,7 +154,7 @@ void trg_rss_model_update(TrgRssModel * model) {
 		update->feed_id = g_strdup(id);
 		update->model = model;
 
-		async_http_request(priv->client, update->feed_url, on_rss_receive,
+		async_http_request(priv->client, update->feed_url, NULL, on_rss_receive,
 				update);
 	}
 

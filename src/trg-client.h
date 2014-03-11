@@ -71,10 +71,11 @@ typedef struct {
 typedef struct {
     gint connid;
     JsonNode *node;
-    gchar *str;
+    gchar *body;
     gchar *url;
     GSourceFunc callback;
     gpointer cb_data;
+    gchar *cookie;
 } trg_request;
 
 typedef struct _TrgClientPrivate TrgClientPrivate;
@@ -119,17 +120,16 @@ typedef struct {
 
 /* stuff that used to be in http.h */
 void trg_response_free(trg_response * response);
-int trg_http_perform(TrgClient * client, gchar * reqstr,
-                     trg_response * reqrsp);
+int trg_http_perform(TrgClient * tc, trg_request *request, trg_response * rsp);
+
 /* end http.h*/
 
 /* stuff that used to be in dispatch.c */
-trg_response *dispatch(TrgClient * client, JsonNode * req);
-trg_response *dispatch_str(TrgClient * client, gchar * req);
+trg_response *dispatch(TrgClient * tc, trg_request *req);
 trg_response *dispatch_public_http(TrgClient *tc, trg_request *req);
 gboolean dispatch_async(TrgClient * client, JsonNode * req,
                         GSourceFunc callback, gpointer data);
-gboolean async_http_request(TrgClient *tc, gchar *url, GSourceFunc callback, gpointer data);
+gboolean async_http_request(TrgClient *tc, gchar *url, const gchar *cookie, GSourceFunc callback, gpointer data);
 
 /* end dispatch.c*/
 
