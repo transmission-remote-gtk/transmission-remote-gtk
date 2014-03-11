@@ -56,6 +56,7 @@ typedef struct {
 	TrgRssModel *model;
 	gchar *feed_id;
 	gchar *feed_url;
+	gchar *feed_cookie;
 	GError *error;
 	trg_response *response;
 } feed_update;
@@ -66,6 +67,7 @@ static void feed_update_free(feed_update *update) {
 
 	g_free(update->feed_id);
 	g_free(update->feed_url);
+	g_free(update->feed_cookie);
 
 	g_free(update);
 }
@@ -96,7 +98,7 @@ static gboolean on_rss_receive(gpointer data) {
 					gtk_list_store_set(GTK_LIST_STORE(model), &iter, RSSCOL_ID,
 							guid, RSSCOL_TITLE, rss_item_get_title(item),
 							RSSCOL_LINK, rss_item_get_link(item), RSSCOL_FEED,
-							update->feed_id, RSSCOL_PUBDATE,
+							update->feed_id, RSSCOL_COOKIE, update->feed_cookie, RSSCOL_PUBDATE,
 							rss_item_get_pub_date(item), -1);
 					g_hash_table_insert(priv->table, g_strdup(guid), (void*) 1);
 				}
@@ -135,28 +137,42 @@ void trg_rss_model_update(TrgRssModel * model) {
 	TrgRssModelPrivate *priv = TRG_RSS_MODEL_GET_PRIVATE(model);
 	TrgPrefs *prefs = trg_client_get_prefs(priv->client);
 	JsonArray *feeds = trg_prefs_get_rss(prefs);
+	GRegex *cookie_regex;
 	GList *li;
 
 	if (!feeds)
 		return;
 
+	cookie_regex = g_regex_new("(.*):COOKIE:(.*)", 0, 0, NULL);
+
 	for (li = json_array_get_elements(feeds); li != NULL;
 			li = g_list_next(li)) {
 		JsonObject *feed = json_node_get_object((JsonNode *) li->data);
-		const gchar *url = json_object_get_string_member(feed, "url");
+		const gchar *feed_url = json_object_get_string_member(feed, "url");
 		const gchar *id = json_object_get_string_member(feed, "id");
+		feed_update *update;
+		GMatchInfo *match;
 
-		if (!url || !id)
+		if (!feed_url || !id)
 			continue;
 
-		feed_update *update = g_new0(feed_update, 1);
-		update->feed_url = g_strdup(url);
+		update = g_new0(feed_update, 1);
 		update->feed_id = g_strdup(id);
 		update->model = model;
 
-		async_http_request(priv->client, update->feed_url, NULL, on_rss_receive,
+		if (g_regex_match (cookie_regex, feed_url, 0, &match)) {
+			update->feed_url = g_match_info_fetch(match, 1);
+			update->feed_cookie = g_match_info_fetch(match, 2);
+			g_match_info_free(match);
+		} else {
+			update->feed_url = g_strdup(feed_url);
+		}
+
+		async_http_request(priv->client, update->feed_url, update->feed_cookie, on_rss_receive,
 				update);
 	}
+
+	g_regex_unref(cookie_regex);
 
 	/*trg_model_remove_removed(GTK_LIST_STORE(model),
 	 RSSCOL_UPDATESERIAL, updateSerial);*/
@@ -244,6 +260,7 @@ static void trg_rss_model_init(TrgRssModel * self) {
 	column_types[RSSCOL_ID] = G_TYPE_STRING;
 	column_types[RSSCOL_TITLE] = G_TYPE_STRING;
 	column_types[RSSCOL_LINK] = G_TYPE_STRING;
+	column_types[RSSCOL_COOKIE] = G_TYPE_STRING;
 	column_types[RSSCOL_FEED] = G_TYPE_STRING;
 	column_types[RSSCOL_PUBDATE] = G_TYPE_STRING;
 	column_types[RSSCOL_UPLOADED] = G_TYPE_BOOLEAN;

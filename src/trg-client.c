@@ -784,7 +784,9 @@ dispatch_async_str(TrgClient * tc, gchar * body,
 gboolean async_http_request(TrgClient *tc, gchar *url, const gchar *cookie, GSourceFunc callback, gpointer data) {
 	trg_request *trg_req = g_new0(trg_request, 1);
 	trg_req->url = g_strdup(url);
-	trg_req->cookie = g_strdup(cookie);
+
+	if (cookie)
+		trg_req->cookie = g_strdup(cookie);
 
 	return dispatch_async_common(tc, trg_req, callback, data);
 }

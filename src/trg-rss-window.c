@@ -166,7 +166,7 @@ rss_item_activated(GtkTreeView * treeview,
 	GtkTreeModel *model = gtk_tree_view_get_model(treeview);
 	trg_upload *upload = g_new0(trg_upload, 1);
 	GtkTreeIter iter;
-	gchar *link, *uid;
+	gchar *link, *uid, *cookie;
 
     //upload->upload_response = response;
     upload->main_window = priv->parent;
@@ -178,12 +178,13 @@ rss_item_activated(GtkTreeView * treeview,
 
 	gtk_tree_model_get_iter(model, &iter, path);
 
-	gtk_tree_model_get(model, &iter, RSSCOL_LINK, &link, RSSCOL_ID, &uid, -1);
+	gtk_tree_model_get(model, &iter, RSSCOL_LINK, &link, RSSCOL_ID, &uid, RSSCOL_COOKIE, &cookie, -1);
 
 	upload->uid = uid;
 
-	async_http_request(priv->client, link, NULL, on_torrent_receive, upload);
+	async_http_request(priv->client, link, cookie, on_torrent_receive, upload);
 
+	g_free(cookie);
 	g_free(link);
 }
 
