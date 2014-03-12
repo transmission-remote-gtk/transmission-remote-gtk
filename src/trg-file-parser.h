@@ -26,3 +26,4 @@ typedef struct {
 
 void trg_torrent_file_free(trg_torrent_file * t);
 trg_torrent_file *trg_parse_torrent_file(const gchar * filename);
+trg_torrent_file *trg_parse_torrent_data(const gchar *data, gsize length);

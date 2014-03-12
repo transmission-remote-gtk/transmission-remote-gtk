@@ -613,9 +613,7 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
     trg_pref_widget_refresh(dlg, wd);
     priv->widgets = g_list_append(priv->widgets, wd);
 
-    gtk_table_attach(GTK_TABLE(t), GTK_WIDGET(ptv), 1, 2, row, row + 1,
-                     GTK_EXPAND | GTK_SHRINK | GTK_FILL,
-                     GTK_FILL | GTK_EXPAND | GTK_SHRINK, 0, 0);
+    hig_workarea_add_wide_tall_control(t, &row, GTK_WIDGET(ptv));
 
     return t;
 }
@@ -652,9 +650,7 @@ static GtkWidget *trg_prefs_rss_page(TrgPreferencesDialog * dlg) {
     trg_pref_widget_refresh(dlg, wd);
     priv->widgets = g_list_append(priv->widgets, wd);
 
-    gtk_table_attach(GTK_TABLE(t), GTK_WIDGET(ptv), 1, 2, row, row + 1,
-                     GTK_EXPAND | GTK_SHRINK | GTK_FILL,
-                     GTK_FILL | GTK_EXPAND | GTK_SHRINK, 0, 0);
+    hig_workarea_add_wide_tall_control(t, &row, GTK_WIDGET(ptv));
 
     return t;
 }
@@ -691,9 +687,7 @@ static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog * dlg)
     trg_pref_widget_refresh(dlg, wd);
     priv->widgets = g_list_append(priv->widgets, wd);
 
-    gtk_table_attach(GTK_TABLE(t), GTK_WIDGET(ptv), 1, 2, row, row + 1,
-                     GTK_EXPAND | GTK_SHRINK | GTK_FILL,
-                     GTK_FILL | GTK_EXPAND | GTK_SHRINK, 0, 0);
+    hig_workarea_add_wide_tall_control(t, &row, GTK_WIDGET(ptv));
 
     return t;
 }
@@ -838,10 +832,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_row(t, &row, _("Name:"), priv->profileNameEntry,
                          NULL);
 
-    gtk_table_attach(GTK_TABLE(t), profileButtonsHbox, 1, 2, row, row + 1,
-                     GTK_EXPAND | GTK_SHRINK, 0, 0, 0);
-
-    row++;
+    hig_workarea_add_wide_control(t, &row, profileButtonsHbox);
 
     hig_workarea_add_section_title(t, &row, _("Connection"));
 
@@ -890,6 +881,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     gtk_box_pack_start(GTK_BOX(frameHbox), priv->profileComboBox, FALSE,
                        FALSE, 4);
     gtk_frame_set_label_widget(GTK_FRAME(frame), frameHbox);
+    gtk_container_set_border_width(GTK_CONTAINER(frame), 5);
     gtk_container_add(GTK_CONTAINER(frame), t);
 
     return frame;
