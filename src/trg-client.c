@@ -80,10 +80,10 @@ struct _TrgClientPrivate {
     GHashTable *torrentTable;
     GThreadPool *pool;
     TrgPrefs *prefs;
-    GPrivate *tlsKey;
+    GPrivate tlsKey;
     gint configSerial;
     guint http_class;
-    GMutex *configMutex;
+    GMutex configMutex;
     gboolean seedRatioLimited;
     gdouble seedRatioLimit;
 };
@@ -157,8 +157,8 @@ TrgClient *trg_client_new(void)
 
     trg_prefs_load(prefs);
 
-    priv->configMutex = g_mutex_new();
-    priv->tlsKey = g_private_new(NULL);
+    g_mutex_init(&priv->configMutex);
+    //priv->tlsKey = g_private_new(NULL);
     priv->seedRatioLimited = FALSE;
     priv->seedRatioLimit = 0.00;
 
@@ -229,7 +229,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
     pxProxyFactory *pf = NULL;
 #endif
 
-    g_mutex_lock(priv->configMutex);
+    g_mutex_lock(&priv->configMutex);
 
     trg_prefs_set_connection(prefs, trg_prefs_get_profile(prefs));
 
@@ -251,7 +251,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     if (!host || strlen(host) < 1) {
         g_free(host);
-        g_mutex_unlock(priv->configMutex);
+        g_mutex_unlock(&priv->configMutex);
         return TRG_NO_HOSTNAME_SET;
     }
 #ifndef CURL_NO_SSL
@@ -301,7 +301,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
 #endif
 
     priv->configSerial++;
-    g_mutex_unlock(priv->configMutex);
+    g_mutex_unlock(&priv->configMutex);
     return 0;
 }
 
@@ -330,14 +330,14 @@ void trg_client_set_session_id(TrgClient * tc, gchar * session_id)
 {
     TrgClientPrivate *priv = tc->priv;
 
-    g_mutex_lock(priv->configMutex);
+    g_mutex_lock(&priv->configMutex);
 
     if (priv->session_id)
         g_free(priv->session_id);
 
     priv->session_id = session_id;
 
-    g_mutex_unlock(priv->configMutex);
+    g_mutex_unlock(&priv->configMutex);
 }
 
 void trg_client_status_change(TrgClient * tc, gboolean connected)
@@ -349,9 +349,9 @@ void trg_client_status_change(TrgClient * tc, gboolean connected)
             json_object_unref(priv->session);
             priv->session = NULL;
         }
-        g_mutex_lock(priv->configMutex);
+        g_mutex_lock(&priv->configMutex);
         trg_prefs_set_connection(priv->prefs, NULL);
-        g_mutex_unlock(priv->configMutex);
+        g_mutex_unlock(&priv->configMutex);
     }
 }
 
@@ -414,7 +414,7 @@ gboolean trg_client_is_connected(TrgClient * tc)
 
 void trg_client_configlock(TrgClient * tc)
 {
-    g_mutex_lock(tc->priv->configMutex);
+    g_mutex_lock(&tc->priv->configMutex);
 }
 
 guint trg_client_get_failcount(TrgClient * tc)
@@ -435,7 +435,7 @@ void trg_client_reset_failcount(TrgClient * tc)
 
 void trg_client_configunlock(TrgClient * tc)
 {
-    g_mutex_unlock(tc->priv->configMutex);
+    g_mutex_unlock(&tc->priv->configMutex);
 }
 
 /* formerly http.c */
@@ -502,12 +502,12 @@ trg_tls *trg_tls_new(TrgClient * tc)
 
 static trg_tls *get_tls(TrgClient *tc) {
 	TrgClientPrivate *priv = tc->priv;
-	gpointer threadLocalStorage = g_private_get(priv->tlsKey);
+	gpointer threadLocalStorage = g_private_get(&priv->tlsKey);
 	trg_tls *tls;
 
     if (!threadLocalStorage) {
         tls = trg_tls_new(tc);
-        g_private_set(priv->tlsKey, tls);
+        g_private_set(&priv->tlsKey, tls);
     } else {
         tls = (trg_tls *) threadLocalStorage;
     }
@@ -522,7 +522,7 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 	trg_tls *tls = get_tls(tc);
 	CURL *curl = tls->curl;
 
-    g_mutex_lock(priv->configMutex);
+    g_mutex_lock(&priv->configMutex);
 
     if (priv->configSerial > tls->serial || http_class != priv->http_class) {
     	gchar *proxy;
@@ -573,7 +573,7 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 					 (long) trg_prefs_get_int(prefs, TRG_PREFS_KEY_TIMEOUT,
 											  TRG_PREFS_CONNECTION));
 
-    g_mutex_unlock(priv->configMutex);
+    g_mutex_unlock(&priv->configMutex);
 
     /* Headers are set on each use, then freed, so make sure invalid headers aren't still around. */
     curl_easy_setopt(curl, CURLOPT_HTTPHEADER, NULL);
