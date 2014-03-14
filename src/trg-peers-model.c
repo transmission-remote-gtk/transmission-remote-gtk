@@ -145,6 +145,7 @@ static void resolved_dns_cb(GObject * source_object, GAsyncResult * res,
     }
 }
 
+#ifdef HAVE_GEOIP
 /* for handling v4 or v6 addresses. string is owned by GeoIP, should not be freed. */
 static const gchar* lookup_country(TrgPeersModel *model, const gchar *address) {
 	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
@@ -156,6 +157,7 @@ static const gchar* lookup_country(TrgPeersModel *model, const gchar *address) {
 	else
 		return NULL;
 }
+#endif
 
 void
 trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
@@ -218,8 +220,10 @@ trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
             isNew = FALSE;
         }
 
+#ifdef HAVE_GEOIP
         if (city)
         	GeoIPRecord_delete(city);
+#endif
 
         flagStr = peer_get_flagstr(peer);
         gtk_list_store_set(GTK_LIST_STORE(model), &peerIter,
@@ -323,6 +327,7 @@ static void trg_peers_model_init(TrgPeersModel * self)
 #endif
 }
 
+#ifdef HAVE_GEOIP
 static gboolean trg_peers_model_add_city_foreach(GtkTreeModel *model,
         GtkTreePath *path,
         GtkTreeIter *iter,
@@ -344,7 +349,6 @@ static gboolean trg_peers_model_add_city_foreach(GtkTreeModel *model,
 	return FALSE;
 }
 
-#if HAVE_GEOIP
 gboolean trg_peers_model_has_city_db(TrgPeersModel *model) {
 	TrgPeersModelPrivate *priv = TRG_PEERS_MODEL_GET_PRIVATE(model);
 	return priv->geoipcity != NULL;
