@@ -409,7 +409,9 @@ store_add_node(GtkTreeStore * store, GtkTreeIter * parent,
                            1, FC_INDEX, node->index,
                            FC_PRIORITY, TR_PRI_NORMAL,
                            FC_SIZE, node->length, -1);
-        *n_files = *n_files + 1;
+
+        if (!node->children)
+            *n_files = *n_files + 1;
     }
 
     for (li = node->children; li; li = g_list_next(li))
