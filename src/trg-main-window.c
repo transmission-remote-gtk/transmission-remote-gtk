@@ -71,7 +71,7 @@
 #include "trg-menu-bar.h"
 #include "trg-status-bar.h"
 #include "trg-stats-dialog.h"
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
 #include "trg-rss-window.h"
 #endif
 #include "trg-remote-prefs-dialog.h"
@@ -930,7 +930,7 @@ static void view_stats_toggled_cb(GtkWidget * w, gpointer data)
     }
 }
 
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
 static void view_rss_toggled_cb(GtkWidget * w, gpointer data)
 {
     TrgMainWindow *win = TRG_MAIN_WINDOW(data);
@@ -1766,7 +1766,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 #if TRG_WITH_GRAPH
     *b_show_graph,
 #endif
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
     *b_view_rss,
 #endif
     *b_start_now;
@@ -1797,7 +1797,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 #if TRG_WITH_GRAPH
                  "show-graph", &b_show_graph,
 #endif
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
                  "view-rss-button", &b_view_rss,
 #endif
                  "up-queue", &b_up_queue, "down-queue", &b_down_queue,
@@ -1844,7 +1844,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                      G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
                      G_CALLBACK(view_stats_toggled_cb), win);
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
     g_signal_connect(b_view_rss, "activate",
                      G_CALLBACK(view_rss_toggled_cb), win);
 #endif

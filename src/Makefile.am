@@ -44,7 +44,7 @@ desktop_DATA = transmission-remote-gtk.desktop
 endif
 
 bin_PROGRAMS = transmission-remote-gtk
-INCLUDES = -std=c99 -Wall -I.. -Wno-overflow -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS) $(rssglib_CFLAGS)
+AM_CFLAGS = -std=c99 -Wall -I.. -Wno-overflow -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS) $(mrss_CFLAGS) -I../extern
 		
 transmission_remote_gtk_SOURCES = \
 	  trg-cell-renderer-speed.c \
@@ -105,13 +105,16 @@ transmission_remote_gtk_SOURCES = \
 	  trg-client.c \
 	  trg-main-window.c \
 	  main.c \
-	  trg-rss-model.c \
-	  trg-rss-window.c \
-	  trg-rss-cell-renderer.c \
 	  upload.c \
 	  $(NULL)
 
-transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS) $(libappindicator_LIBS) $(rssglib_LIBS)
+transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS) $(libappindicator_LIBS)
+
+if HAVE_RSS
+transmission_remote_gtk_LDFLAGS += $(mrss_LIBS) ../extern/rss-glib/librss.la
+
+transmission_remote_gtk_SOURCES += trg-rss-model.c trg-rss-window.c trg-rss-cell-renderer.c
+endif
 
 if WIN32
 .rc.o:
@@ -122,7 +125,7 @@ if WIN32
 CFLAGS += -mms-bitfields -mwin32 -mwindows
 LDFLAGS += -Wl,--allow-multiple-definition -lws2_32 -lintl
 transmission_remote_gtk_SOURCES += win32.rc win32-mailslot.c
-INCLUDES += -O2
+AM_CFLAGS += -O2
 else
 %.1: %.pod
 	        pod2man --release="" --center="Transmission Remote GTK" $< > $@

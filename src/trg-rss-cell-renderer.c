@@ -1,6 +1,6 @@
 #include "config.h"
 
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
 
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>

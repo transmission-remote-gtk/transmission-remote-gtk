@@ -21,12 +21,11 @@ AC_PREREQ(2.63)
 
 AC_INIT(transmission-remote-gtk, 1.1.1, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
-AM_INIT_AUTOMAKE(AC_PACKAGE_NAME, AC_PACKAGE_VERSION)
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+#m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
 
 AC_PROG_CC
 AM_PROG_CC_C_O
@@ -73,8 +72,8 @@ AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
 
 AC_ARG_WITH([libnotify], AC_HELP_STRING([--without-libnotify], [disable libnotify]))
 have_libnotify=no
-AC_ARG_WITH([librssglib], AC_HELP_STRING([--without-rssglib], [disable rssglib support]))
-have_librssglib=no
+AC_ARG_WITH([libmrss], AC_HELP_STRING([--without-libmrss], [disable RSS support]))
+have_libmrss=no
 AC_ARG_WITH([libproxy], AC_HELP_STRING([--without-libproxy], [disable libproxy]))
 have_libproxy=no
 AC_ARG_WITH([libappindicator], AC_HELP_STRING([--without-libappindicator], [disable libappindicator]))
@@ -84,13 +83,25 @@ if test x$with_libnotify != xno; then
   PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
 fi
 
-if test x$with_librssglib != xno; then
-  PKG_CHECK_MODULES([rssglib], [rss-glib-1.0], AC_DEFINE(HAVE_RSSGLIB, 1, [Define if rss-glib is available]), AC_MSG_WARN([rss-glib is required for RSS viewer functionality]))
-fi
-
+#if test x$with_librssglib != xno; then
+#  PKG_CHECK_MODULES([rssglib], [rss-glib-1.0], AC_DEFINE(HAVE_RSSGLIB, 1, [Define if rss-glib is available]), AC_MSG_WARN([rss-glib is required for RSS viewer functionality]))
+#fi
+#
 if test x$with_libproxy != xno; then
   PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
 fi
+
+if test x$with_libmrss != xno; then
+  PKG_CHECK_MODULES([mrss], [mrss >= 0.18], [ have_libmrss="yes" ], [ have_libmrss="no" ])
+fi
+
+if test x$have_libmrss == xyes; then
+  AC_DEFINE(HAVE_RSS, 1, [Define if RSS features available])
+else
+  AC_MSG_WARN([libmrss is required for RSS reader])
+fi
+
+AM_CONDITIONAL([HAVE_RSS], [test x$have_libmrss == xyes ])
 
 AC_ARG_ENABLE(debug, [AS_HELP_STRING(--enable-debug,
                                      [enable debugging])])
@@ -126,4 +137,6 @@ TRG_GTK3_CONFIGURE()
 PKG_CHECK_MODULES([libcurl], [libcurl])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
 
-AC_OUTPUT([Makefile po/Makefile.in src/Makefile])
+#AM_PATH_GLIB_2_0
+
+AC_OUTPUT([Makefile po/Makefile.in src/Makefile extern/Makefile extern/rss-glib/Makefile])

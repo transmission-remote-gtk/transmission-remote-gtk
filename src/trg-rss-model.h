@@ -22,7 +22,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
 
 #include <glib-object.h>
 #include <json-glib/json-glib.h>

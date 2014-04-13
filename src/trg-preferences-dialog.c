@@ -618,7 +618,7 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
     return t;
 }
 
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
 static GtkWidget *trg_prefs_rss_page(TrgPreferencesDialog * dlg) {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
@@ -948,7 +948,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
                                                 (object)),
                              gtk_label_new(_("Directories")));
 
-#ifdef HAVE_RSSGLIB
+#ifdef HAVE_RSS
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_rss_page(TRG_PREFERENCES_DIALOG
                                                 (object)),
