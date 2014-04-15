@@ -6,7 +6,7 @@ AM_CFLAGS = \
 	-DLIBDIR=\""$(libdir)"\" 	\
 	-DG_LOG_DOMAIN=\"Rss\" 		\
         $(gtk_CFLAGS) \
-	$(MRSS_CFLAGS)			\
+	$(mrss_CFLAGS)			\
 	$(NULL)
 
 source_h = \
@@ -30,7 +30,7 @@ source_c = \
 
 noinst_LTLIBRARIES = librss.la
 
-librss_la_LIBADD = $(MRSS_LIBS)
+librss_la_LIBADD = $(mrss_LIBS)
 librss_la_SOURCES = \
 	$(source_c) \
 	$(source_h) \
