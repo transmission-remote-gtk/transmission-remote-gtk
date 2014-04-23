@@ -536,6 +536,10 @@ update_torrent_iter(TrgTorrentModel * model,
                        -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_DOWNLOADDIR, downloadDir,
                        -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_PEERS_CONNECTED, torrent_get_peers_connected(t),
+                       -1);
+    gtk_list_store_set(ls, iter, TORRENT_COLUMN_ETA, torrent_get_eta(t),
+                       -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_BANDWIDTH_PRIORITY,
                        torrent_get_bandwidth_priority(t), -1);
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_TOTALSIZE,
