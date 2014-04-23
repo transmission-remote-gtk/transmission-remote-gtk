@@ -504,7 +504,7 @@ update_torrent_iter(TrgTorrentModel * model,
                                 peerfrom_get_resume(pf));
         }
     }
-#ifdef DEBUG
+#ifdef TRG_DEBUG
     gtk_list_store_set(ls, iter, TORRENT_COLUMN_ICON, statusIcon, -1);
     gtk_list_store_set(ls, iter,
                        TORRENT_COLUMN_NAME, torrent_get_name(t), -1);
