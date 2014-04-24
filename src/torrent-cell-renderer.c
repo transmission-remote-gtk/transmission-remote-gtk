@@ -322,16 +322,16 @@ static void getStatusString(GString * gstr, TorrentCellRenderer * r)
         if (priv->fileCount > 0) {
             g_string_append_printf(gstr,
                                    ngettext
-                                   ("Downloading from %1$li of %2$li connected peer",
-                                    "Downloading from %1$li of %2$li connected peers",
+                                   ("Downloading from %1$lli of %2$lli connected peer",
+                                    "Downloading from %1$lli of %2$lli connected peers",
                                     priv->webSeedsToUs + priv->peersToUs),
                                    priv->webSeedsToUs + priv->peersToUs,
                                    priv->webSeedsToUs + priv->connected);
         } else {
             g_string_append_printf(gstr,
                                    ngettext
-                                   ("Downloading metadata from %1$li peer (%2$s done)",
-                                    "Downloading metadata from %1$li peers (%2$s done)",
+                                   ("Downloading metadata from %1$lli peer (%2$s done)",
+                                    "Downloading metadata from %1$lli peers (%2$s done)",
                                     priv->connected + priv->webSeedsToUs),
                                    priv->connected + priv->webSeedsToUs,
                                    tr_strlpercent(buf,
@@ -341,8 +341,8 @@ static void getStatusString(GString * gstr, TorrentCellRenderer * r)
     } else if (priv->flags & TORRENT_FLAG_SEEDING) {
         g_string_append_printf(gstr,
                                ngettext
-                               ("Seeding to %1$li of %2$li connected peer",
-                                "Seeding to %1$li of %2$li connected peers",
+                               ("Seeding to %1$lli of %2$lli connected peer",
+                                "Seeding to %1$lli of %2$lli connected peers",
                                 priv->connected), priv->peersFromUs,
                                priv->connected);
     }
