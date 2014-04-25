@@ -527,6 +527,7 @@ gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris)
                                        filesList);
 
         gtk_widget_show_all(GTK_WIDGET(dialog));
+        gtk_window_present(GTK_WINDOW(dialog));
     } else {
         trg_upload *upload = g_new0(trg_upload, 1);
 

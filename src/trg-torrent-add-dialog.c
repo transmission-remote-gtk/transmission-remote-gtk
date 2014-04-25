@@ -908,8 +908,8 @@ void trg_torrent_add_dialog(TrgMainWindow * win, TrgClient * client)
             TrgTorrentAddDialog *dialog = trg_torrent_add_dialog_new_from_filenames(win,
                                                                      client,
                                                                      l);
-
             gtk_widget_show_all(GTK_WIDGET(dialog));
+            gtk_window_present(GTK_WINDOW(dialog));
         } else {
         	trg_upload *upload = g_new0(trg_upload, 1);
 
