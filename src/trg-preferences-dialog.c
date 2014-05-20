@@ -600,7 +600,7 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
     model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
 
     ptv = trg_persistent_tree_view_new(priv->prefs, model,
-                                       TRG_PREFS_KEY_EXEC_COMMANDS, TRG_PREFS_PROFILE);
+                                       TRG_PREFS_KEY_EXEC_COMMANDS, TRG_PREFS_CONNECTION);
     trg_persistent_tree_view_set_add_select(ptv,
                                             trg_persistent_tree_view_add_column
                                             (ptv, 0,

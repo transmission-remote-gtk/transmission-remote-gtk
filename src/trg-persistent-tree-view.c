@@ -474,6 +474,7 @@ trg_persistent_tree_view_class_init(TrgPersistentTreeViewClass * klass)
                                                      INT_MAX,
                                                      TRG_PREFS_PROFILE,
                                                      G_PARAM_READWRITE |
+                                                     G_PARAM_CONSTRUCT_ONLY |
                                                      G_PARAM_STATIC_NAME |
                                                      G_PARAM_STATIC_NICK |
                                                      G_PARAM_STATIC_BLURB));
