@@ -33,7 +33,7 @@ public_icons = \
         $(NULL)
 
 if !WIN32
-EXTRA_DIST = transmission-remote-gtk.desktop.in transmission-remote-gtk.pod
+EXTRA_DIST = transmission-remote-gtk.desktop.in transmission-remote-gtk.pod transmission-remote-gtk.appdata.xml
 CLEANFILES = transmission-remote-gtk.desktop transmission-remote-gtk.1
 
 man_MANS = transmission-remote-gtk.1
@@ -41,6 +41,8 @@ man_MANS = transmission-remote-gtk.1
 desktopdir = $(datadir)/applications
 desktop_DATA = transmission-remote-gtk.desktop
 
+appdatadir = $(datadir)/appdata
+appdata_DATA = transmission-remote-gtk.appdata.xml
 endif
 
 bin_PROGRAMS = transmission-remote-gtk
