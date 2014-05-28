@@ -5,7 +5,7 @@
  <metadata_license>CC0-1.0</metadata_license>
  <project_license>GPL-2.0</project_license>
  <name>Transmission Remote</name>
- <summary>Remotely control transmission</summary>
+ <summary>Remotely manage the Transmission BitTorrent client</summary>
  <description>
   <p>
     transmission-remote-gtk allows you to remotely manage the Transmission BitTorrent client using its RPC interface. 
