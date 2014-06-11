@@ -1,4 +1,17 @@
-* Sun Jun 9 2012 1.1.1
+* Wed Jun 11 2014 1.2
+- A basic RSS reader which uses libmrss.
+- Fix some 32bit platforms reporting 0 connected peers and unknown ETA.
+- Resolve some GTK deprecations.
+- Fix a crash in port test callback.
+- Fix decimal marker in status bar version.
+- Support for GeoIPCity.dat.
+- Fix a crash when removing lots of columns (something changed in GTK).
+- Optional and non-default support for validating SSL certs.
+- Remove all GTK2 support.
+- Allow alt-speed limits to override global speed limits in the statusbar
+display.
+
+* Sun Jun 9 2013 1.1.1
 - fix file lists relying on being sorted (sometimes they are not) to fix
 the tree being messed up with duplicate directories.
 - fix using markup in comment.
