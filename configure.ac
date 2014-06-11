@@ -19,7 +19,7 @@ dnl
 
 AC_PREREQ(2.63)
 
-AC_INIT(transmission-remote-gtk, 1.1.1, alan@eth0.org.uk)
+AC_INIT(transmission-remote-gtk, 1.2, alan@eth0.org.uk)
 AC_CONFIG_SRCDIR(src)
 AM_INIT_AUTOMAKE([foreign])
 AC_CONFIG_HEADERS([config.h])
