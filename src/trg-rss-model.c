@@ -86,7 +86,6 @@ static gboolean on_rss_receive(gpointer data) {
 			RssDocument *doc = rss_parser_get_document(parser);
 			GtkTreeIter iter;
 			GList *list, *tmp;
-			gchar *title;
 
 			list = rss_document_get_items(doc);
 
