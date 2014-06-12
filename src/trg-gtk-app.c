@@ -142,7 +142,7 @@ test_local_cmdline(GApplication * application,
     argv = *arguments;
     shift_args(argv, 0);
 
-    i = 1;
+    i = 0;
     while (argv[i]) {
         if (is_minimised_arg(argv[i])) {
             shift_args(argv, i);
@@ -176,6 +176,7 @@ static void trg_gtk_app_class_init(TrgGtkAppClass * klass)
     object_class->dispose = trg_gtk_app_dispose;
     object_class->finalize = trg_gtk_app_finalize;
     app_class->local_command_line = test_local_cmdline;
+    //app_class->command_line = trg_gtk_app_command_line;
 
     g_object_class_install_property(object_class,
                                     PROP_CLIENT,
