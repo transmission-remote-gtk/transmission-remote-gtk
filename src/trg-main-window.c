@@ -2539,7 +2539,7 @@ void trg_main_window_add_status_icon(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = win->priv;
 #ifdef HAVE_LIBAPPINDICATOR
-    if (is_unity() && (priv->appIndicator =
+    if (priv->appIndicator =
                        app_indicator_new(PACKAGE_NAME, PACKAGE_NAME,
                                          APP_INDICATOR_CATEGORY_APPLICATION_STATUS)))
     {
@@ -2549,7 +2549,7 @@ void trg_main_window_add_status_icon(TrgMainWindow * win)
                                trg_status_icon_view_menu(win, NULL));
     } else {
 #else
-    if (!is_unity()) {
+    if (1) {
 #endif
         priv->statusIcon =
             gtk_status_icon_new_from_icon_name(PACKAGE_NAME);
