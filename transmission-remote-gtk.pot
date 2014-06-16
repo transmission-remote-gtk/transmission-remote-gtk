@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2014-06-11 23:20+0100\n"
+"POT-Creation-Date: 2014-06-14 20:45+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -335,7 +335,7 @@ msgstr ""
 msgid "<big><b>Remove and delete %d torrents?</b></big>"
 msgstr ""
 
-#: src/trg-main-window.c:1011 src/trg-preferences-dialog.c:934
+#: src/trg-main-window.c:1011 src/trg-preferences-dialog.c:931
 #: src/trg-remote-prefs-dialog.c:693
 msgid "General"
 msgstr ""
@@ -415,7 +415,7 @@ msgstr ""
 msgid "Remove & Delete"
 msgstr ""
 
-#: src/trg-main-window.c:2252 src/trg-preferences-dialog.c:944
+#: src/trg-main-window.c:2252 src/trg-preferences-dialog.c:941
 msgid "Actions"
 msgstr ""
 
@@ -509,19 +509,19 @@ msgstr ""
 msgid "Sort"
 msgstr ""
 
-#: src/trg-menu-bar.c:518 src/trg-preferences-dialog.c:708
+#: src/trg-menu-bar.c:518 src/trg-preferences-dialog.c:709
 msgid "State selector"
 msgstr ""
 
-#: src/trg-menu-bar.c:524 src/trg-preferences-dialog.c:715
+#: src/trg-menu-bar.c:524 src/trg-preferences-dialog.c:716
 msgid "Directory filters"
 msgstr ""
 
-#: src/trg-menu-bar.c:533 src/trg-preferences-dialog.c:722
+#: src/trg-menu-bar.c:533 src/trg-preferences-dialog.c:723
 msgid "Tracker filters"
 msgstr ""
 
-#: src/trg-menu-bar.c:542 src/trg-preferences-dialog.c:729
+#: src/trg-menu-bar.c:542 src/trg-preferences-dialog.c:730
 msgid "Torrent Details"
 msgstr ""
 
@@ -693,7 +693,7 @@ msgstr ""
 msgid "Command"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:634 src/trg-preferences-dialog.c:955
+#: src/trg-preferences-dialog.c:634 src/trg-preferences-dialog.c:952
 #: src/trg-rss-window.c:272
 msgid "RSS Feeds"
 msgstr ""
@@ -710,95 +710,99 @@ msgstr ""
 msgid "Directory"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:706 src/trg-preferences-dialog.c:939
+#: src/trg-preferences-dialog.c:707 src/trg-preferences-dialog.c:936
 msgid "View"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:737
+#: src/trg-preferences-dialog.c:738
 msgid "Show graph"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:747
+#: src/trg-preferences-dialog.c:745
 msgid "System Tray"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:749
+#: src/trg-preferences-dialog.c:748
+msgid "Show in system tray (needs whitelisting in unity)"
+msgstr ""
+
+#: src/trg-preferences-dialog.c:750
 msgid "Show in system tray"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:757
+#: src/trg-preferences-dialog.c:760
 msgid "Minimise to system tray"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:773
+#: src/trg-preferences-dialog.c:770
 msgid "Notifications"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:775
+#: src/trg-preferences-dialog.c:772
 msgid "Torrent added notifications"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:779
+#: src/trg-preferences-dialog.c:776
 msgid "Torrent complete notifications"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:806
+#: src/trg-preferences-dialog.c:803
 msgid "Profile: "
 msgstr ""
 
-#: src/trg-preferences-dialog.c:832
+#: src/trg-preferences-dialog.c:829
 msgid "Name:"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:837 src/trg-preferences-dialog.c:929
+#: src/trg-preferences-dialog.c:834 src/trg-preferences-dialog.c:926
 msgid "Connection"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:840
+#: src/trg-preferences-dialog.c:837
 msgid "Host:"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:844
+#: src/trg-preferences-dialog.c:841
 msgid "Port:"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:846
+#: src/trg-preferences-dialog.c:843
 msgid "RPC URL Path:"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:849
+#: src/trg-preferences-dialog.c:846
 msgid "Username:"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:853
+#: src/trg-preferences-dialog.c:850
 msgid "Password:"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:855
+#: src/trg-preferences-dialog.c:852
 msgid "Automatically connect"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:861
+#: src/trg-preferences-dialog.c:858
 msgid "SSL"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:864
+#: src/trg-preferences-dialog.c:861
 msgid "Validate SSL Certificate"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:872
+#: src/trg-preferences-dialog.c:869
 msgid "Timeout:"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:876
+#: src/trg-preferences-dialog.c:873
 msgid "Retries:"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:918 src/trg-toolbar.c:239
+#: src/trg-preferences-dialog.c:915 src/trg-toolbar.c:239
 msgid "Local Preferences"
 msgstr ""
 
-#: src/trg-preferences-dialog.c:949
+#: src/trg-preferences-dialog.c:946
 msgid "Directories"
 msgstr ""
 
