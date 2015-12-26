@@ -1,7 +1,0 @@
-#!/usr/bin/make -f
-# -*- makefile -*-
-
-%:
-	dh $@ --with autoreconf
-
-override_dh_auto_test: ;
