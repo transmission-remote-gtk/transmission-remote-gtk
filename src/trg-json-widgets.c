@@ -117,16 +117,6 @@ GtkWidget *trg_json_widget_entry_new(GList ** wl, JsonObject * obj,
     return w;
 }
 
-void
-trg_json_widget_time_save(GtkWidget * widget, JsonObject * obj,
-                          gchar * key)
-{
-
-    json_object_set_double_member(obj, key,
-                                  gtk_spin_button_get_value(GTK_SPIN_BUTTON
-                                                            (widget)));
-}
-
 GtkWidget *trg_json_widget_spin_new(GList ** wl, JsonObject * obj,
                                     const gchar * key,
                                     GtkWidget * toggleDep, gdouble min,

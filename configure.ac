@@ -126,20 +126,22 @@ AX_APPEND_COMPILE_FLAGS([ \
 	-fPIC \
 	-Wall \
 	-Wextra \
-	-Wconversion \
 	-Winline \
 	-Wno-padded \
 	-Wno-unused-parameter \
 	-Wstrict-prototypes \
 	-Wmissing-prototypes \
+	-Werror=format=2 \
 	-Werror=implicit-function-declaration \
 	-Werror=pointer-arith \
 	-Werror=init-self \
 	-Werror=format-security \
 	-Werror=missing-include-dirs \
 	-Werror=date-time \
+	-Wno-conversion \
+	-Wno-sign-compare \
 ])
-dnl	-Werror=format=2 \
+dnl TODO: Fix last two hidden warnings
 
 
 AC_CONFIG_FILES([

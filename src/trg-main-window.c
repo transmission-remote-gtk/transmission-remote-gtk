@@ -2539,9 +2539,9 @@ void trg_main_window_add_status_icon(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = win->priv;
 #ifdef HAVE_LIBAPPINDICATOR
-    if (priv->appIndicator =
+    if ((priv->appIndicator =
                        app_indicator_new(PACKAGE_NAME, PACKAGE_NAME,
-                                         APP_INDICATOR_CATEGORY_APPLICATION_STATUS))
+                                         APP_INDICATOR_CATEGORY_APPLICATION_STATUS)))
     {
         app_indicator_set_status(priv->appIndicator,
                                  APP_INDICATOR_STATUS_ACTIVE);

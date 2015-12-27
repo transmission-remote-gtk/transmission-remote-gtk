@@ -490,7 +490,7 @@ header_callback(void *ptr, size_t size, size_t nmemb, void *data)
     return (nmemb * size);
 }
 
-trg_tls *trg_tls_new(TrgClient * tc)
+static trg_tls *trg_tls_new(TrgClient * tc)
 {
     trg_tls *tls = g_new0(trg_tls, 1);
 
@@ -627,7 +627,7 @@ int trg_http_perform(TrgClient * tc, trg_request *request, trg_response * rsp)
     return trg_http_perform_inner(tc, request, rsp, TRUE);
 }
 
-void trg_request_free(trg_request *req) {
+static void trg_request_free(trg_request *req) {
 	g_free(req->body);
 	g_free(req->url);
 	g_free(req->cookie);
@@ -767,16 +767,6 @@ dispatch_async(TrgClient * tc, JsonNode * req,
 {
     trg_request *trg_req = g_new0(trg_request, 1);
     trg_req->node = req;
-
-    return dispatch_async_common(tc, trg_req, callback, data);
-}
-
-gboolean
-dispatch_async_str(TrgClient * tc, gchar * body,
-                   GSourceFunc callback, gpointer data)
-{
-    trg_request *trg_req = g_new0(trg_request, 1);
-    trg_req->body = body;
 
     return dispatch_async_common(tc, trg_req, callback, data);
 }

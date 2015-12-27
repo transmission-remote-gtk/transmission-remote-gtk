@@ -74,7 +74,7 @@ typedef struct {
 
 GType trg_torrent_model_get_type(void);
 
-TrgTorrentModel *trg_torrent_model_new();
+TrgTorrentModel *trg_torrent_model_new(void);
 
 G_END_DECLS
     gboolean

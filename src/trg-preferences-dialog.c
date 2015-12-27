@@ -859,7 +859,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
                        NULL);
     hig_workarea_add_wide_control(t, &row, w);
     w = trgp_check_new(dlg, _("Validate SSL Certificate"), TRG_PREFS_KEY_SSL_VALIDATE, TRG_PREFS_PROFILE,
-                       w);
+                       GTK_TOGGLE_BUTTON(w));
     hig_workarea_add_wide_control(t, &row, w);
 
 #endif

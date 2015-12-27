@@ -143,7 +143,7 @@ trg_toolbar_install_widget_prop(GObjectClass * class, guint propId,
                                                         G_PARAM_STATIC_BLURB));
 }
 
-GtkWidget *trg_toolbar_item_new(TrgToolbar * toolbar,
+static GtkWidget *trg_toolbar_item_new(TrgToolbar * toolbar,
                                 gchar * text,
                                 int *index, gchar * icon,
                                 gboolean sensitive)

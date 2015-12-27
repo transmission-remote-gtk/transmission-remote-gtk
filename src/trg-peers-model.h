@@ -56,7 +56,7 @@ typedef struct {
 
 GType trg_peers_model_get_type(void);
 
-TrgPeersModel *trg_peers_model_new();
+TrgPeersModel *trg_peers_model_new(void);
 
 G_END_DECLS struct peerAndIter {
     const gchar *ip;

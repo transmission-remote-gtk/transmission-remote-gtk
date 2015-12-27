@@ -62,31 +62,23 @@ view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                           gtk_separator_menu_item_new());
 
-    menuitem = gtk_image_menu_item_new_with_label(GTK_STOCK_APPLY);
-    gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(menuitem), TRUE);
-    gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
-                                              (menuitem), TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(menuitem), _("Download"));
+    menuitem = gtk_menu_item_new_with_label(_("Download"));
     g_signal_connect(menuitem, "activate", wanted_cb, treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
-    menuitem = gtk_image_menu_item_new_with_label(GTK_STOCK_CANCEL);
-    gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(menuitem), TRUE);
-    gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
-                                              (menuitem), TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(menuitem), _("Skip"));
+    menuitem = gtk_menu_item_new_with_label(_("Skip"));
     g_signal_connect(menuitem, "activate", unwanted_cb, treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                           gtk_separator_menu_item_new());
 
-    menuitem = gtk_image_menu_item_new_with_label(_("Expand All"));
+    menuitem = gtk_menu_item_new_with_label(_("Expand All"));
     g_signal_connect(menuitem, "activate", G_CALLBACK(expand_all_cb),
                      treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);
 
-    menuitem = gtk_image_menu_item_new_with_label(_("Collapse All"));
+    menuitem = gtk_menu_item_new_with_label(_("Collapse All"));
     g_signal_connect(menuitem, "activate", G_CALLBACK(collapse_all_cb),
                      treeview);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), menuitem);

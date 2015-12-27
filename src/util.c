@@ -640,7 +640,7 @@ gchar *trg_win32_support_path(gchar * file)
 }
 #endif
 
-gboolean is_unity()
+gboolean is_unity(void)
 {
     return g_strcmp0(g_getenv("XDG_CURRENT_DESKTOP"), "Unity") == 0;
 }

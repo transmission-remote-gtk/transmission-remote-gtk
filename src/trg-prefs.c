@@ -172,7 +172,7 @@ TrgPrefs *trg_prefs_new(void)
     return g_object_new(TRG_TYPE_PREFS, NULL);
 }
 
-static JsonObject *trg_prefs_new_profile_object()
+static JsonObject *trg_prefs_new_profile_object(void)
 {
     return json_object_new();
 }
@@ -493,7 +493,7 @@ JsonObject *trg_prefs_get_root(TrgPrefs * p)
     return priv->userObj;
 }
 
-void trg_prefs_empty_init(TrgPrefs * p)
+static void trg_prefs_empty_init(TrgPrefs * p)
 {
     TrgPrefsPrivate *priv = p->priv;
     JsonArray *profiles = json_array_new();

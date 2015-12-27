@@ -19,6 +19,7 @@
 
 #include <gtk/gtk.h>
 
+#include "trg-icons.h"
 #include "icon-turtle.h"
 
 typedef struct {

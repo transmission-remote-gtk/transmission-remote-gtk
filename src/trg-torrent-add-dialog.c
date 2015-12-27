@@ -238,7 +238,7 @@ onViewButtonPressed(GtkWidget * w, GdkEventButton * event, gpointer gdata)
                                                    (set_unwanted), gdata);
 }
 
-GtkWidget *gtr_file_list_new(GtkTreeStore ** store)
+static GtkWidget *gtr_file_list_new(GtkTreeStore ** store)
 {
     int size;
     int width;
@@ -256,7 +256,6 @@ GtkWidget *gtr_file_list_new(GtkTreeStore ** store)
     /* create the view */
     view = gtk_tree_view_new();
     tree_view = GTK_TREE_VIEW(view);
-    gtk_tree_view_set_rules_hint(tree_view, TRUE);
     gtk_container_set_border_width(GTK_CONTAINER(view), GUI_PAD_BIG);
     g_signal_connect(view, "button-press-event",
                      G_CALLBACK(onViewButtonPressed), view);
@@ -374,7 +373,7 @@ static void gtr_dialog_set_content(GtkDialog * dialog, GtkWidget * content)
     gtk_widget_show_all(content);
 }
 
-GtkWidget *gtr_priority_combo_new(void)
+static GtkWidget *gtr_priority_combo_new(void)
 {
     return gtr_combo_box_new_enum(_("Low"), TR_PRI_LOW, _("Normal"),
                                   TR_PRI_NORMAL, _("High"), TR_PRI_HIGH,

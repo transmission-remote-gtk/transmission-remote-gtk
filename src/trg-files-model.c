@@ -299,7 +299,7 @@ struct MinorUpdateData {
     JsonArray *wanted;
 };
 
-gboolean
+static gboolean
 trg_files_model_update_foreach(GtkListStore * model,
                                GtkTreePath * path G_GNUC_UNUSED,
                                GtkTreeIter * iter, gpointer data)

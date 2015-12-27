@@ -100,7 +100,7 @@ gdouble json_double_to_progress(JsonNode * n)
 
 gdouble json_node_really_get_double(JsonNode * node)
 {
-    GValue a = { 0 };
+    GValue a = G_VALUE_INIT;
 
     json_node_get_value(node, &a);
     switch (G_VALUE_TYPE(&a)) {

@@ -147,7 +147,7 @@ gtk_combo_box_entry_active_changed(GtkComboBox * combo_box,
                                             (combo_box));
 
         if (entry) {
-            GValue value = { 0, };
+            GValue value = G_VALUE_INIT;
             guint type;
 
             model = gtk_combo_box_get_model(combo_box);
@@ -205,7 +205,7 @@ struct findDupeArg {
     gboolean isDupe;
 };
 
-gboolean
+static gboolean
 trg_destination_combo_insert_check_dupe_foreach(GtkTreeModel * model,
                                                 GtkTreePath *
                                                 path G_GNUC_UNUSED,

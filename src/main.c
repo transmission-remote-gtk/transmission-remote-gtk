@@ -113,13 +113,13 @@ trg_simple_init(TrgClient * client, int argc, char *argv[], gchar ** args)
 /* Win32 mailslots. I've implemented this in win32-mailslot.c */
 
 #if !WIN32
-static void trg_non_win32_init()
+static void trg_non_win32_init(void)
 {
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 }
 #endif
 
-static void trg_cleanup()
+static void trg_cleanup(void)
 {
     curl_global_cleanup();
 }

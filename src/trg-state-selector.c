@@ -163,7 +163,7 @@ trg_state_selector_update_dynamic_filter(GtkTreeModel * model,
     GtkTreeIter iter;
     GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
     gint64 oldSerial;
-    GValue gvalue = { 0 };
+    GValue gvalue = G_VALUE_INIT;
     gint oldCount;
 
     gtk_tree_model_get_iter(model, &iter, path);
@@ -511,7 +511,7 @@ static void
 trg_state_selector_update_stat(GtkTreeRowReference * rr, gint count)
 {
     if (rr) {
-        GValue gvalue = { 0 };
+        GValue gvalue = G_VALUE_INIT;
         GtkTreeIter iter;
         GtkTreePath *path = gtk_tree_row_reference_get_path(rr);
         GtkTreeModel *model = gtk_tree_row_reference_get_model(rr);

@@ -59,7 +59,7 @@ static void trg_peers_model_class_init(TrgPeersModelClass *
 #endif
 }
 
-gboolean
+static gboolean
 find_existing_peer_item_foreachfunc(GtkTreeModel * model,
                                     GtkTreePath *
                                     path G_GNUC_UNUSED,
@@ -80,7 +80,7 @@ find_existing_peer_item_foreachfunc(GtkTreeModel * model,
     return pi->found;
 }
 
-gboolean
+static gboolean
 find_existing_peer_item(TrgPeersModel * model, JsonObject * p,
                         GtkTreeIter * iter)
 {

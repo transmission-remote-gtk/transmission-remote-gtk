@@ -671,7 +671,7 @@ GHashTable *get_torrent_table(TrgTorrentModel * model)
     return priv->ht;
 }
 
-gboolean
+static gboolean
 trg_model_find_removed_foreachfunc(GtkTreeModel * model,
                                    GtkTreePath *
                                    path G_GNUC_UNUSED,
@@ -692,7 +692,7 @@ trg_model_find_removed_foreachfunc(GtkTreeModel * model,
     return FALSE;
 }
 
-GList *trg_torrent_model_find_removed(GtkTreeModel * model,
+static GList *trg_torrent_model_find_removed(GtkTreeModel * model,
                                       gint64 currentSerial)
 {
     struct TrgModelRemoveData args;
