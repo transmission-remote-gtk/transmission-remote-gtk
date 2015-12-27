@@ -202,7 +202,7 @@ static void trg_rss_on_get_error(TrgRssModel *model, rss_get_error *error, gpoin
                                                GTK_DIALOG_MODAL,
                                                GTK_MESSAGE_ERROR,
                                                GTK_BUTTONS_OK,
-                                               msg);
+                                               "%s", msg);
     g_free(msg);
     gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
     gtk_dialog_run(GTK_DIALOG(dialog));
@@ -216,7 +216,7 @@ static void trg_rss_on_parse_error(TrgRssModel *model, rss_parse_error *error, g
                                                GTK_DIALOG_MODAL,
                                                GTK_MESSAGE_ERROR,
                                                GTK_BUTTONS_OK,
-                                               msg);
+                                               "%s", msg);
     g_free(msg);
     gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
     gtk_dialog_run(GTK_DIALOG(dialog));

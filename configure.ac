@@ -37,6 +37,7 @@ AC_PROG_INSTALL
 
 LT_PREREQ([2.2.0])
 LT_INIT
+LT_LIB_M
 IT_PROG_INTLTOOL([0.50.1])
 PKG_PROG_PKG_CONFIG([0.28])
 DESKTOP_FILE
@@ -46,7 +47,7 @@ GETTEXT_PACKAGE=AC_PACKAGE_NAME
 AC_SUBST(GETTEXT_PACKAGE)
 AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Gettext package name])
 
-
+dnl ---- win32 ----
 case "${host_os}" in
         *mingw32*) WIN32="yes" ;;
         *cygwin*) WIN32="yes" ;;
@@ -54,71 +55,84 @@ case "${host_os}" in
         	CPPFLAGS="$CPPFLAGS -I/usr/local/include" ;;
         *) WIN32="no" ;;
 esac
-
 AM_CONDITIONAL([WIN32], test "$WIN32" = "yes")
-#if WIN32
-CFLAGS="$CFLAGS -IC:/MinGW/msys/1.0/include"
-#endif
 
-AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
-have_libgeoip=no
-AS_IF([test x$with_libgeoip != xno], [
-	AC_CHECK_HEADER([GeoIP.h],[have_geoip=yes],[have_geoip=no])
-])
-AS_IF([test "x$have_geoip" = "xyes"], [
-	AC_DEFINE(HAVE_GEOIP, 1, [GeoIP Support.])
-	GEOIP_LIBS="-lGeoIP"
-	AC_SUBST([GEOIP_LIBS])
-])
-AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
 
-AC_ARG_WITH([libnotify], AC_HELP_STRING([--without-libnotify], [disable libnotify]))
-have_libnotify=no
-AC_ARG_WITH([libmrss], AC_HELP_STRING([--without-libmrss], [disable RSS support]))
-have_libmrss=no
-AC_ARG_WITH([libproxy], AC_HELP_STRING([--without-libproxy], [disable libproxy]))
-have_libproxy=no
-AC_ARG_WITH([libappindicator], AC_HELP_STRING([--without-libappindicator], [disable libappindicator]))
-have_libappindicator=no
-
-AS_IF([test x$with_libnotify != xno], [
-	PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
-])
-
-#if test x$with_librssglib != xno; then
-#  PKG_CHECK_MODULES([rssglib], [rss-glib-1.0], AC_DEFINE(HAVE_RSSGLIB, 1, [Define if rss-glib is available]), AC_MSG_WARN([rss-glib is required for RSS viewer functionality]))
-#fi
-#
-AS_IF([test x$with_libproxy != xno], [
-	PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
-])
-
-AS_IF([test x$with_libmrss != xno], [
-	PKG_CHECK_MODULES([mrss], [mrss >= 0.18], [ have_libmrss="yes" ], [ have_libmrss="no" ])
-])
-
-AS_IF([test x$have_libmrss == xyes], [
-	AC_DEFINE(HAVE_RSS, 1, [Define if RSS features available])
-], [
-	AC_MSG_WARN([libmrss is required for RSS reader])
-])
-
-AM_CONDITIONAL([HAVE_RSS], [test x$have_libmrss == xyes ])
-
+dnl ---- required deps ----
 AC_DEFINE([GLIB_VERSION_MIN_REQUIRED], [GLIB_VERSION_2_44], [Dont warn using older APIs])
 AC_DEFINE([GLIB_VERSION_MAX_ALLOWED], [GLIB_VERSION_2_44], [Prevents using newer APIs])
 
-PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
-PKG_CHECK_MODULES([gthread], [gthread-2.0])
-PKG_CHECK_MODULES([libcurl], [libcurl])
-PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.44])
-PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.16], [
-	AS_IF([test x$with_libappindicator != xno], [
-		PKG_CHECK_MODULES([libappindicator], [appindicator3-0.1],
-			AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
+PKG_CHECK_MODULES([TRG], [
+	json-glib-1.0 >= 0.8
+	gthread-2.0
+	libcurl
+	gio-2.0 >= 2.44
+	gtk+-3.0 >= 3.16
+])
+
+
+dnl ---- optional deps ----
+AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
+have_geoip=no
+AS_IF([test x$with_libgeoip != xno], [
+	PKG_CHECK_MODULES([GEOIP], [geoip], [
+		have_geoip="yes"
+	], [
+		AC_MSG_WARN([libgeoip not found])
+	])
+])
+AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
+
+
+AC_ARG_WITH([libnotify], AC_HELP_STRING([--without-libnotify], [disable libnotify]))
+have_libnotify=no
+AS_IF([test x$with_libnotify != xno], [
+	PKG_CHECK_MODULES([NOTIFY], [libnotify], [
+		have_libnotify=yes
+		AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available])
+	], [
+		AC_MSG_WARN([libnotify is required for popup desktop notifications])
 	])
 ])
 
+
+AC_ARG_WITH([libmrss], AC_HELP_STRING([--without-libmrss], [disable RSS support]))
+have_libmrss=no
+AS_IF([test x$with_libmrss != xno], [
+	PKG_CHECK_MODULES([MRSS], [mrss >= 0.18], [
+		have_libmrss="yes"
+		AC_DEFINE(HAVE_RSS, 1, [Define if RSS features available])
+	], [
+		AC_MSG_WARN([libmrss is required for RSS reader])
+	])
+])
+AM_CONDITIONAL([HAVE_RSS], [test x$have_libmrss == xyes ])
+
+
+AC_ARG_WITH([libproxy], AC_HELP_STRING([--without-libproxy], [disable libproxy]))
+have_libproxy=no
+AS_IF([test x$with_libproxy != xno], [
+	PKG_CHECK_MODULES([PROXY], [libproxy-1.0], [
+		have_libproxy=yes
+		AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available])
+	], [
+		AC_MSG_WARN([libproxy is required for HTTP proxy support])
+	])
+])
+
+
+AC_ARG_WITH([libappindicator], AC_HELP_STRING([--without-libappindicator], [disable libappindicator]))
+have_libappindicator=no
+AS_IF([test x$with_libappindicator != xno], [
+	PKG_CHECK_MODULES([APPINDICATOR], [appindicator3-0.1], [
+		AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available])
+	], [
+		AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator])
+	])
+])
+
+
+dnl ---- build flags ----
 AX_APPEND_COMPILE_FLAGS([ \
 	-std=gnu99 \
 	-funsigned-char \
@@ -164,7 +178,7 @@ echo "
 	prefix ........: $prefix
 	debug .........: $enable_debug
 
-	geoip .........: $have_libgeoip
+	geoip .........: $have_geoip
 	libnotify .....: $have_libnotify
 	libmrss .......: $have_libmrss
 	libproxy ......: $have_libproxy

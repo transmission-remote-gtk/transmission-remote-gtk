@@ -17,15 +17,7 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
-if !WIN32
-EXTRA_DIST = transmission-remote-gtk.pod
-CLEANFILES = transmission-remote-gtk.1
-
-man_MANS = transmission-remote-gtk.1
-endif
-
 bin_PROGRAMS = transmission-remote-gtk
-AM_CFLAGS = -DLOCALEDIR=\""$(localedir)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS) $(mrss_CFLAGS) -I$(top_srcdir)/extern
 
 transmission_remote_gtk_SOURCES = \
 	  trg-cell-renderer-speed.c \
@@ -150,10 +142,29 @@ noinst_HEADERS = \
 	  protocol-constants.h \
 	  icon-turtle.h
 
-transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS) $(libappindicator_LIBS)
+transmission_remote_gtk_CPPFLAGS = \
+	-DLOCALEDIR=\""$(localedir)"\" \
+	-I$(top_srcdir)/extern
+
+transmission_remote_gtk_CFLAGS = \
+	$(TRG_CFLAGS) \
+	$(GEOIP_CFLAGS) \
+	$(NOTIFY_CFLAGS) \
+	$(MRSS_CFLAGS) \
+	$(APPINDICATOR_CFLAGS) \
+	$(PROXY_CFLAGS)
+
+transmission_remote_gtk_LDFLAGS = \
+	$(LIBM) \
+	$(TRG_LIBS) \
+	$(GEOIP_LIBS) \
+	$(NOTIFY_LIBS) \
+	$(PROXY_LIBS) \
+	$(APPINDICATOR_LIBS) \
+	$(MRSS_CFLAGS)
 
 if HAVE_RSS
-transmission_remote_gtk_LDFLAGS += $(mrss_LIBS) $(top_srcdir)/extern/rss-glib/librss.la
+transmission_remote_gtk_LDFLAGS += $(top_srcdir)/extern/rss-glib/librss.la
 
 transmission_remote_gtk_SOURCES += trg-rss-model.c trg-rss-window.c trg-rss-cell-renderer.c
 noinst_HEADERS += trg-rss-model.h trg-rss-window.h trg-rss-cell-renderer.h
@@ -165,12 +176,16 @@ if WIN32
 %.o : %.rc
 	windres $^ -o $@
 
-CFLAGS += -mms-bitfields -mwin32 -mwindows
-LDFLAGS += -Wl,--allow-multiple-definition -lws2_32 -lintl
+transmission_remote_gtk_CFLAGS += -mms-bitfields -mwin32 -mwindows
+transmission_remote_gtk_LDFLAGS += -Wl,--allow-multiple-definition -lws2_32 -lintl
 transmission_remote_gtk_SOURCES += win32.rc win32-mailslot.c
-AM_CFLAGS += -O2
 else
 %.1: %.pod
 	        pod2man --release="" --center="Transmission Remote GTK" $< > $@
+
+EXTRA_DIST = transmission-remote-gtk.pod
+CLEANFILES = transmission-remote-gtk.1
+
+man_MANS = transmission-remote-gtk.1
 endif
 
