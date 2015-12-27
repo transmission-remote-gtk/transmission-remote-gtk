@@ -17,35 +17,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef TRG_CELL_RENDERER_COUNTER_H_
-#define TRG_CELL_RENDERER_COUNTER_H_
+#pragma once
 
-#include <glib-object.h>
 #include <gtk/gtk.h>
 
 G_BEGIN_DECLS
-#define TRG_TYPE_CELL_RENDERER_COUNTER trg_cell_renderer_counter_get_type()
-#define TRG_CELL_RENDERER_COUNTER(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_CELL_RENDERER_COUNTER, TrgCellRendererCounter))
-#define TRG_CELL_RENDERER_COUNTER_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_CELL_RENDERER_COUNTER, TrgCellRendererCounterClass))
-#define TRG_IS_CELL_RENDERER_COUNTER(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_CELL_RENDERER_COUNTER))
-#define TRG_IS_CELL_RENDERER_COUNTER_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_CELL_RENDERER_COUNTER))
-#define TRG_CELL_RENDERER_COUNTER_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_CELL_RENDERER_COUNTER, TrgCellRendererCounterClass))
-    typedef struct {
-    GtkCellRendererText parent;
-} TrgCellRendererCounter;
 
-typedef struct {
-    GtkCellRendererTextClass parent_class;
-} TrgCellRendererCounterClass;
-
-GType trg_cell_renderer_counter_get_type(void);
+#define TRG_TYPE_CELL_RENDERER_COUNTER (trg_cell_renderer_counter_get_type())
+G_DECLARE_FINAL_TYPE (TrgCellRendererCounter, trg_cell_renderer_counter, TRG, CELL_RENDERER_COUNTER, GtkCellRendererText)
 
 GtkCellRenderer *trg_cell_renderer_counter_new(void);
 
 G_END_DECLS
-#endif                          /* TRG_CELL_RENDERER_COUNTER_H_ */
+

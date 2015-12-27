@@ -21,27 +21,32 @@
 #include "config.h"
 #endif
 
-#include <stdint.h>
 #include <gtk/gtk.h>
 
 #include "trg-cell-renderer-counter.h"
-#include "util.h"
 
-enum {
-    PROP_0, PROP_STATE_LABEL, PROP_STATE_COUNT
+enum
+{
+	PROP_0,
+	PROP_STATE_LABEL,
+	PROP_STATE_COUNT,
+	N_PROPS,
 };
 
-G_DEFINE_TYPE(TrgCellRendererCounter, trg_cell_renderer_counter,
-              GTK_TYPE_CELL_RENDERER_TEXT)
-#define TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CELL_RENDERER_COUNTER, TrgCellRendererCounterPrivate))
-typedef struct _TrgCellRendererCounterPrivate
- TrgCellRendererCounterPrivate;
+struct _TrgCellRendererCounter
+{
+	GtkCellRendererText parent;
+};
 
-struct _TrgCellRendererCounterPrivate {
-    gint count;
+typedef struct
+{
+	gint count;
     gchar *originalLabel;
-};
+} TrgCellRendererCounterPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE(TrgCellRendererCounter, trg_cell_renderer_counter,
+              GTK_TYPE_CELL_RENDERER_TEXT)
+
 
 static void trg_cell_renderer_counter_get_property(GObject * object,
                                                    guint property_id,
@@ -49,7 +54,7 @@ static void trg_cell_renderer_counter_get_property(GObject * object,
                                                    GParamSpec * pspec)
 {
     TrgCellRendererCounterPrivate *priv =
-        TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(object);
+        trg_cell_renderer_counter_get_instance_private(TRG_CELL_RENDERER_COUNTER(object));
     switch (property_id) {
     case PROP_STATE_COUNT:
         g_value_set_int(value, priv->count);
@@ -63,7 +68,7 @@ static void trg_cell_renderer_counter_get_property(GObject * object,
 static void trg_cell_renderer_counter_refresh(TrgCellRendererCounter * cr)
 {
     TrgCellRendererCounterPrivate *priv =
-        TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(cr);
+        trg_cell_renderer_counter_get_instance_private(cr);
     if (priv->originalLabel && priv->count > 0) {
         gchar *counterLabel =
             g_strdup_printf("%s <span size=\"small\">(%d)</span>",
@@ -83,7 +88,7 @@ trg_cell_renderer_counter_set_property(GObject * object,
                                        GParamSpec * pspec)
 {
     TrgCellRendererCounterPrivate *priv =
-        TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(object);
+        trg_cell_renderer_counter_get_instance_private(TRG_CELL_RENDERER_COUNTER(object));
 
     if (property_id == PROP_STATE_LABEL) {
         g_free(priv->originalLabel);
@@ -105,10 +110,9 @@ trg_cell_renderer_counter_set_property(GObject * object,
 static void trg_cell_renderer_counter_dispose(GObject * object)
 {
     TrgCellRendererCounterPrivate *priv =
-        TRG_CELL_RENDERER_COUNTER_GET_PRIVATE(object);
+        trg_cell_renderer_counter_get_instance_private(TRG_CELL_RENDERER_COUNTER(object));
     g_free(priv->originalLabel);
-    G_OBJECT_CLASS(trg_cell_renderer_counter_parent_class)->dispose
-        (object);
+    G_OBJECT_CLASS(trg_cell_renderer_counter_parent_class)->dispose(object);
 }
 
 static void
@@ -129,9 +133,7 @@ trg_cell_renderer_counter_class_init(TrgCellRendererCounterClass * klass)
                                                      INT_MAX,
                                                      -1,
                                                      G_PARAM_READWRITE |
-                                                     G_PARAM_STATIC_NAME |
-                                                     G_PARAM_STATIC_NICK |
-                                                     G_PARAM_STATIC_BLURB));
+                                                     G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_property(object_class,
                                     PROP_STATE_LABEL,
@@ -140,13 +142,7 @@ trg_cell_renderer_counter_class_init(TrgCellRendererCounterClass * klass)
                                                         "State Label",
                                                         NULL,
                                                         G_PARAM_READWRITE |
-                                                        G_PARAM_STATIC_NAME
-                                                        |
-                                                        G_PARAM_STATIC_NICK
-                                                        |
-                                                        G_PARAM_STATIC_BLURB));
-
-    g_type_class_add_private(klass, sizeof(TrgCellRendererCounterPrivate));
+                                                        G_PARAM_STATIC_STRINGS));
 }
 
 static void trg_cell_renderer_counter_init(TrgCellRendererCounter * self)
@@ -155,7 +151,5 @@ static void trg_cell_renderer_counter_init(TrgCellRendererCounter * self)
 
 GtkCellRenderer *trg_cell_renderer_counter_new(void)
 {
-    return
-        GTK_CELL_RENDERER(g_object_new
-                          (TRG_TYPE_CELL_RENDERER_COUNTER, NULL));
+    return g_object_new (TRG_TYPE_CELL_RENDERER_COUNTER, NULL);
 }

@@ -17,13 +17,10 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef MAIN_WINDOW_H_
-#define MAIN_WINDOW_H_
+#pragma once
 
-#include <glib.h>
-#include <glib-object.h>
-#include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
+#include <gtk/gtk.h>
 
 #include "trg-torrent-model.h"
 #include "trg-peers-model.h"
@@ -34,32 +31,13 @@
 #include "trg-client.h"
 
 G_BEGIN_DECLS
-#define TRG_TYPE_MAIN_WINDOW trg_main_window_get_type()
-#define TRG_MAIN_WINDOW(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_MAIN_WINDOW, TrgMainWindow))
-#define TRG_MAIN_WINDOW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_MAIN_WINDOW, TrgMainWindowClass))
-#define TRG_IS_MAIN_WINDOW(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_MAIN_WINDOW))
-#define TRG_IS_MAIN_WINDOW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_MAIN_WINDOW))
-#define TRG_MAIN_WINDOW_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_MAIN_WINDOW, TrgMainWindowClass))
-typedef struct _TrgMainWindowPrivate TrgMainWindowPrivate;
 
-typedef struct {
-    GtkWindow parent;
-    TrgMainWindowPrivate *priv;
-} TrgMainWindow;
-
-typedef struct {
-    GtkWindowClass parent_class;
-} TrgMainWindowClass;
+#define TRG_TYPE_MAIN_WINDOW (trg_main_window_get_type())
+G_DECLARE_FINAL_TYPE (TrgMainWindow, trg_main_window, TRG, MAIN_WINDOW, GtkApplicationWindow)
 
 #define TORRENT_COMPLETE_NOTIFY_TMOUT 8000
 #define TORRENT_ADD_NOTIFY_TMOUT 3000
 
-GType trg_main_window_get_type(void);
 gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
 gboolean on_session_set(gpointer data);
 gboolean on_delete_complete(gpointer data);
@@ -80,9 +58,4 @@ void trg_main_window_notebook_set_visible(TrgMainWindow * win,
 void connect_cb(GtkWidget * w, gpointer data);
 void trg_main_window_reload_dir_aliases(TrgMainWindow * win);
 
-#if !GTK_CHECK_VERSION(2, 21, 1)
-#define gdk_drag_context_get_actions(context) context->actions
-#endif
-
 G_END_DECLS
-#endif                          /* MAIN_WINDOW_H_ */

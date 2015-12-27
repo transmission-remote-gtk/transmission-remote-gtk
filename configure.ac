@@ -139,6 +139,7 @@ AX_APPEND_COMPILE_FLAGS([ \
 	-Werror=date-time \
 	-Wno-conversion \
 	-Wno-sign-compare \
+	-Wno-deprecated-declarations \
 ])
 dnl TODO: Fix last two hidden warnings
 
