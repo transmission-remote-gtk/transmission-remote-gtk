@@ -103,11 +103,14 @@ AS_IF([test x$have_libmrss == xyes], [
 
 AM_CONDITIONAL([HAVE_RSS], [test x$have_libmrss == xyes ])
 
+AC_DEFINE([GLIB_VERSION_MIN_REQUIRED], [GLIB_VERSION_2_44], [Dont warn using older APIs])
+AC_DEFINE([GLIB_VERSION_MAX_ALLOWED], [GLIB_VERSION_2_44], [Prevents using newer APIs])
+
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
 PKG_CHECK_MODULES([libcurl], [libcurl])
-PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
-PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [
+PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.44])
+PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.16], [
 	AS_IF([test x$with_libappindicator != xno], [
 		PKG_CHECK_MODULES([libappindicator], [appindicator3-0.1],
 			AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
