@@ -13,6 +13,10 @@
 /* This cell renderer has been modified heavily to work with the
  * TrgTorrentModel instead of libtransmission. */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <gtk/gtk.h>
 #include <gdk/gdk.h>
 #include <glib/gi18n.h>

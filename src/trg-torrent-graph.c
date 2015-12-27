@@ -27,6 +27,11 @@
  * on this widget but with some improvements I didn't do.
  */
 
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include "trg-torrent-graph.h"
 
 #if TRG_WITH_GRAPH

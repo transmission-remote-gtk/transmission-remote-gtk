@@ -20,6 +20,11 @@
 /* This is the stuff common between both files trees, built up before
  * populating the model.
  */
+
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <stdlib.h>
 #include <string.h>
 

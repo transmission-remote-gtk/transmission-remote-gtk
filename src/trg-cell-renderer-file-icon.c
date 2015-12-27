@@ -17,12 +17,12 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#include <stdint.h>
-#include <gtk/gtk.h>
-
 #ifdef HAVE_CONFIG_H
 #include "config.h"
 #endif
+
+#include <stdint.h>
+#include <gtk/gtk.h>
 
 #include "trg-cell-renderer-file-icon.h"
 #include "util.h"

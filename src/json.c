@@ -17,12 +17,15 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
+#ifdef HAVE_CONFIG_H
+#include "config.h"
+#endif
+
 #include <glib-object.h>
 #include <glib/gprintf.h>
 #include <json-glib/json-glib.h>
 #include <gtk/gtk.h>
 
-#include "config.h"
 #include "protocol-constants.h"
 #include "requests.h"
 #include "json.h"

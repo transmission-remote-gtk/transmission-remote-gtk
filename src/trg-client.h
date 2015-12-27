@@ -22,10 +22,6 @@
 #ifndef _TRG_CLIENT_H_
 #define _TRG_CLIENT_H_
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
-
 #include <curl/curl.h>
 #include <curl/easy.h>
 

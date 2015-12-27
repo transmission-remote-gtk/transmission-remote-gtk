@@ -20,8 +20,6 @@
 #ifndef TRG_RSS_MODEL_H_
 #define TRG_RSS_MODEL_H_
 
-#include "config.h"
-
 #ifdef HAVE_RSS
 
 #include <glib-object.h>
