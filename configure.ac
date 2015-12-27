@@ -17,26 +17,33 @@ dnl with this program; if not, write to the Free Software Foundation, Inc.,
 dnl 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 dnl
 
-AC_PREREQ(2.63)
+AC_PREREQ([2.69])
 
-AC_INIT(transmission-remote-gtk, 1.2, alan@eth0.org.uk)
-AC_CONFIG_SRCDIR(src)
-AM_INIT_AUTOMAKE([foreign])
+AC_INIT([transmission-remote-gtk], [1.2], [alan@eth0.org.uk])
+AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
 
-m4_ifdef([AM_SILENT_RULES],[AM_SILENT_RULES([yes])])
+AM_INIT_AUTOMAKE([1.12 tar-pax dist-xz no-dist-gzip subdir-objects no-define foreign -Wall -Wno-portability])
+AM_SILENT_RULES([yes])
+AM_MAINTAINER_MODE([enable])
+
+AX_IS_RELEASE([git-directory])
+AX_CHECK_ENABLE_DEBUG([yes], [G_ENABLE_DEBUG], [DEBUG G_DISABLE_ASSERT G_DISABLE_CHECKS G_DISABLE_CAST_CHECKS])
 
 AC_PROG_CC
-AM_PROG_CC_C_O
-
+AC_PROG_CC_C99
 AC_PROG_INSTALL
-LT_INIT
-IT_PROG_INTLTOOL([0.35.0])
-PKG_PROG_PKG_CONFIG
 
-AC_CHECK_HEADERS([stdlib.h string.h])
-AC_TYPE_SIZE_T
+LT_PREREQ([2.2.0])
+LT_INIT
+IT_PROG_INTLTOOL([0.50.1])
+PKG_PROG_PKG_CONFIG([0.28])
+
+GETTEXT_PACKAGE=AC_PACKAGE_NAME
+AC_SUBST(GETTEXT_PACKAGE)
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [Gettext package name])
+
 
 case "${host_os}" in
         *mingw32*) WIN32="yes" ;;
@@ -53,21 +60,18 @@ CFLAGS="$CFLAGS -IC:/MinGW/msys/1.0/include"
 
 trglicense='${docdir}-$(PACKAGE_VERSION)/COPYING'
 AC_SUBST(trglicense)
-GETTEXT_PACKAGE=AC_PACKAGE_NAME
-AC_SUBST(GETTEXT_PACKAGE)
-AC_DEFINE(GETTEXT_PACKAGE, "AC_PACKAGE_NAME", [foo])
-AC_DEFINE_DIR([LOCALEDIR], [datarootdir/locale], [gettext catalogs])
+
 
 AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
 have_libgeoip=no
-if test x$with_libgeoip != xno; then
-  AC_CHECK_HEADER([GeoIP.h],[have_geoip=yes],[have_geoip=no])
-fi
-if test "x$have_geoip" = "xyes"; then
-  AC_DEFINE(HAVE_GEOIP, 1, [GeoIP Support.])
-  GEOIP_LIBS="-lGeoIP"
-  AC_SUBST([GEOIP_LIBS])
-fi
+AS_IF([test x$with_libgeoip != xno], [
+	AC_CHECK_HEADER([GeoIP.h],[have_geoip=yes],[have_geoip=no])
+])
+AS_IF([test "x$have_geoip" = "xyes"], [
+	AC_DEFINE(HAVE_GEOIP, 1, [GeoIP Support.])
+	GEOIP_LIBS="-lGeoIP"
+	AC_SUBST([GEOIP_LIBS])
+])
 AM_CONDITIONAL([HAVE_GEOIP], [test "x$have_geoip" = "xyes"])
 
 AC_ARG_WITH([libnotify], AC_HELP_STRING([--without-libnotify], [disable libnotify]))
@@ -79,64 +83,84 @@ have_libproxy=no
 AC_ARG_WITH([libappindicator], AC_HELP_STRING([--without-libappindicator], [disable libappindicator]))
 have_libappindicator=no
 
-if test x$with_libnotify != xno; then
-  PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
-fi
+AS_IF([test x$with_libnotify != xno], [
+	PKG_CHECK_MODULES([notify], [libnotify], AC_DEFINE(HAVE_LIBNOTIFY, 1, [Define if libnotify is available]), AC_MSG_WARN([libnotify is required for popup desktop notifications]))
+])
 
 #if test x$with_librssglib != xno; then
 #  PKG_CHECK_MODULES([rssglib], [rss-glib-1.0], AC_DEFINE(HAVE_RSSGLIB, 1, [Define if rss-glib is available]), AC_MSG_WARN([rss-glib is required for RSS viewer functionality]))
 #fi
 #
-if test x$with_libproxy != xno; then
-  PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
-fi
+AS_IF([test x$with_libproxy != xno], [
+	PKG_CHECK_MODULES([libproxy], [libproxy-1.0], AC_DEFINE(HAVE_LIBPROXY, 1, [Define if libproxy is available]), AC_MSG_WARN([libproxy is required for HTTP proxy support]))
+])
 
-if test x$with_libmrss != xno; then
-  PKG_CHECK_MODULES([mrss], [mrss >= 0.18], [ have_libmrss="yes" ], [ have_libmrss="no" ])
-fi
+AS_IF([test x$with_libmrss != xno], [
+	PKG_CHECK_MODULES([mrss], [mrss >= 0.18], [ have_libmrss="yes" ], [ have_libmrss="no" ])
+])
 
-if test x$have_libmrss == xyes; then
-  AC_DEFINE(HAVE_RSS, 1, [Define if RSS features available])
-else
-  AC_MSG_WARN([libmrss is required for RSS reader])
-fi
+AS_IF([test x$have_libmrss == xyes], [
+	AC_DEFINE(HAVE_RSS, 1, [Define if RSS features available])
+], [
+	AC_MSG_WARN([libmrss is required for RSS reader])
+])
 
 AM_CONDITIONAL([HAVE_RSS], [test x$have_libmrss == xyes ])
 
-AC_ARG_ENABLE(debug, [AS_HELP_STRING(--enable-debug,
-                                     [enable debugging])])
-if test x$enable_debug = xyes; then
-    AC_DEFINE([DEBUG], [],  [enable debugging])
-fi
-
-AC_ARG_ENABLE(gtk3, [AS_HELP_STRING(--enable-gtk3,
-                                     [use gtk3 support (now default, left for compatability)])])
-
 PKG_CHECK_MODULES([jsonglib], [json-glib-1.0 >= 0.8])
 PKG_CHECK_MODULES([gthread], [gthread-2.0])
-
-AC_DEFUN([TRG_GTK3_CONFIGURE], [
-AC_MSG_NOTICE([attempting gtk-3.0 build])
-PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [
-if test x$with_libappindicator != xno; then
-PKG_CHECK_MODULES([libappindicator], [appindicator3-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
-fi
-], [$1])
-])
-
-#AC_DEFUN([TRG_GTK2_CONFIGURE], [
-#AC_MSG_NOTICE([attempting gtk-2.0 build])
-#PKG_CHECK_MODULES([gtk], [gtk+-2.0 >= 2.16])
-#if test x$with_libappindicator != xno; then
-#  PKG_CHECK_MODULES([libappindicator], [appindicator-0.1], AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
-#fi
-#])
-
-TRG_GTK3_CONFIGURE()
-
 PKG_CHECK_MODULES([libcurl], [libcurl])
 PKG_CHECK_MODULES([gio], [gio-2.0 >= 2.22])
+PKG_CHECK_MODULES([gtk], [gtk+-3.0 >= 3.00], [
+	AS_IF([test x$with_libappindicator != xno], [
+		PKG_CHECK_MODULES([libappindicator], [appindicator3-0.1],
+			AC_DEFINE(HAVE_LIBAPPINDICATOR, 1, [Define if libappindicator is available]), AC_MSG_WARN([Ubuntu Unity users should consider building with libappindicator]))
+	])
+])
 
-#AM_PATH_GLIB_2_0
+AX_APPEND_COMPILE_FLAGS([ \
+	-std=gnu99 \
+	-funsigned-char \
+	-fstack-protector-strong \
+	-fPIE \
+	-fPIC \
+	-Wall \
+	-Wextra \
+	-Wconversion \
+	-Winline \
+	-Wno-padded \
+	-Wno-unused-parameter \
+	-Wstrict-prototypes \
+	-Wmissing-prototypes \
+	-Werror=implicit-function-declaration \
+	-Werror=pointer-arith \
+	-Werror=init-self \
+	-Werror=format-security \
+	-Werror=missing-include-dirs \
+	-Werror=date-time \
+])
+dnl	-Werror=format=2 \
 
-AC_OUTPUT([Makefile po/Makefile.in src/Makefile extern/Makefile extern/rss-glib/Makefile])
+
+AC_CONFIG_FILES([
+	Makefile
+	po/Makefile.in
+	src/Makefile
+	extern/Makefile
+	extern/rss-glib/Makefile
+])
+
+AC_OUTPUT
+
+echo "
+	$PACKAGE $VERSION
+
+	prefix ........: $prefix
+	debug .........: $enable_debug
+
+	geoip .........: $have_libgeoip
+	libnotify .....: $have_libnotify
+	libmrss .......: $have_libmrss
+	libproxy ......: $have_libproxy
+	libappindicator: $have_libappindicator
+"

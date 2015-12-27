@@ -46,7 +46,7 @@ appdata_DATA = transmission-remote-gtk.appdata.xml
 endif
 
 bin_PROGRAMS = transmission-remote-gtk
-AM_CFLAGS = -std=c99 -Wall -I.. -Wno-overflow -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS) $(mrss_CFLAGS) -I../extern
+AM_CFLAGS = -DLOCALEDIR=\""$(localedir)"\" -DTRGLICENSE=\""$(trglicense)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS) $(mrss_CFLAGS) -I$(top_srcdir)/extern
 		
 transmission_remote_gtk_SOURCES = \
 	  trg-cell-renderer-speed.c \
