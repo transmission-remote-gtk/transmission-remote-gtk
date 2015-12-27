@@ -58,10 +58,6 @@ AM_CONDITIONAL([WIN32], test "$WIN32" = "yes")
 CFLAGS="$CFLAGS -IC:/MinGW/msys/1.0/include"
 #endif
 
-trglicense='${docdir}-$(PACKAGE_VERSION)/COPYING'
-AC_SUBST(trglicense)
-
-
 AC_ARG_WITH([libgeoip], AC_HELP_STRING([--without-libgeoip], [disable GeoIP support]))
 have_libgeoip=no
 AS_IF([test x$with_libgeoip != xno], [

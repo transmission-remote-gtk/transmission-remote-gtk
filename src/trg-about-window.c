@@ -23,24 +23,14 @@
 
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
-#include <json-glib/json-glib.h>
 
 #include "trg-about-window.h"
-#include "util.h"
 
 GtkWidget *trg_about_window_new(GtkWindow * parent)
 {
     GtkWidget *dialog;
     GdkPixbuf *logo;
-    gchar *licenseText = NULL;
     const gchar *trgAuthors[] = { "Alan Fitton <alan@eth0.org.uk>", NULL };
-    gchar *licenseFile;
-
-#ifdef WIN32
-    licenseFile = trg_win32_support_path("COPYING.TXT");
-#else
-    licenseFile = g_strdup(TRGLICENSE);
-#endif
 
     dialog = gtk_about_dialog_new();
     gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
@@ -56,12 +46,7 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
         g_object_unref(logo);
     }
 
-    if (g_file_get_contents(licenseFile, &licenseText, NULL, NULL)) {
-        gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog),
-                                     licenseText);
-    } else {
-        gtk_about_dialog_set_license(GTK_ABOUT_DIALOG(dialog), "GPL2");
-    }
+	gtk_about_dialog_set_license_type (GTK_ABOUT_DIALOG(dialog), GTK_LICENSE_GPL_2_0);
 
     gtk_about_dialog_set_program_name(GTK_ABOUT_DIALOG(dialog),
                                       PACKAGE_NAME);
@@ -92,8 +77,6 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
                                             "* Åke Svensson (Swedish)\n"
                                             "* ROR191 (Ukranian)\n");
 
-    g_free(licenseFile);
-    g_free(licenseText);
 
     return dialog;
 }
