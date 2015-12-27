@@ -1,4 +1,5 @@
 [type: gettext/ini]data/transmission-remote-gtk.desktop.in
+[type: gettext/xml]data/transmission-remote-gtk.appdata.xml.in
 src/bencode.c
 src/hig.c
 src/json.c

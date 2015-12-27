@@ -7,15 +7,15 @@
  <name>Transmission Remote</name>
  <summary>Remotely manage the Transmission BitTorrent client</summary>
  <description>
-  <p>
+  <_p>
     transmission-remote-gtk allows you to remotely manage the Transmission BitTorrent client using its RPC interface. 
-  </p>
-  <p>Features</p>
+  </_p>
+  <_p>Features</_p>
   <ul>
-    <li>Remotely add (file/url), start, stop, remove, remove and delete, verify, reannounce torrents.</li>
-    <li>Works as a .torrent handler (eg. from a web browser).</li>
-    <li>Set torrent properties such as speed, seed, peer limits, file priorities, add/edit/remove trackers.</li>
-    <li>Change remote settings like global limits, download directory, and connectivity preferences.</li>
+    <_li>Remotely add (file/url), start, stop, remove, remove and delete, verify, reannounce torrents.</_li>
+    <_li>Works as a .torrent handler (eg. from a web browser).</_li>
+    <_li>Set torrent properties such as speed, seed, peer limits, file priorities, add/edit/remove trackers.</_li>
+    <_li>Change remote settings like global limits, download directory, and connectivity preferences.</_li>
   </ul>
  </description>
  <screenshots>

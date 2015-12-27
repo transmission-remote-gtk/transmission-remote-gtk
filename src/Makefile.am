@@ -18,15 +18,10 @@
 #
 
 if !WIN32
-EXTRA_DIST = transmission-remote-gtk.pod transmission-remote-gtk.appdata.xml
+EXTRA_DIST = transmission-remote-gtk.pod
 CLEANFILES = transmission-remote-gtk.1
 
 man_MANS = transmission-remote-gtk.1
-
-
-
-appdatadir = $(datadir)/appdata
-appdata_DATA = transmission-remote-gtk.appdata.xml
 endif
 
 bin_PROGRAMS = transmission-remote-gtk
