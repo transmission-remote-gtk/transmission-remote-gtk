@@ -19,7 +19,7 @@
 
 ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = foreign
-SUBDIRS = extern src po 
+SUBDIRS = extern src po data
 
 DISTCLEANFILES = \
 	intltool-extract \

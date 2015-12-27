@@ -150,6 +150,8 @@ AC_CONFIG_FILES([
 	src/Makefile
 	extern/Makefile
 	extern/rss-glib/Makefile
+	data/Makefile
+	data/icons/Makefile
 ])
 
 AC_OUTPUT
