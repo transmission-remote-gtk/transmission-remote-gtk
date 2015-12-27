@@ -18,13 +18,12 @@
 #
 
 if !WIN32
-EXTRA_DIST = transmission-remote-gtk.desktop.in transmission-remote-gtk.pod transmission-remote-gtk.appdata.xml
-CLEANFILES = transmission-remote-gtk.desktop transmission-remote-gtk.1
+EXTRA_DIST = transmission-remote-gtk.pod transmission-remote-gtk.appdata.xml
+CLEANFILES = transmission-remote-gtk.1
 
 man_MANS = transmission-remote-gtk.1
 
-desktopdir = $(datadir)/applications
-desktop_DATA = transmission-remote-gtk.desktop
+
 
 appdatadir = $(datadir)/appdata
 appdata_DATA = transmission-remote-gtk.appdata.xml
@@ -32,7 +31,7 @@ endif
 
 bin_PROGRAMS = transmission-remote-gtk
 AM_CFLAGS = -DLOCALEDIR=\""$(localedir)"\" $(libcurl_CFLAGS) $(jsonglib_CFLAGS) $(gthread_CFLAGS) $(gtk_CFLAGS) $(gio_CFLAGS) $(notify_CFLAGS) $(libproxy_CFLAGS) $(libappindicator_CFLAGS) $(mrss_CFLAGS) -I$(top_srcdir)/extern
-		
+
 transmission_remote_gtk_SOURCES = \
 	  trg-cell-renderer-speed.c \
 	  trg-cell-renderer-counter.c \
@@ -118,6 +117,3 @@ else
 	        pod2man --release="" --center="Transmission Remote GTK" $< > $@
 endif
 
-
-transmission-remote-gtk.desktop: transmission-remote-gtk.desktop.in
-	sed -e 's,@bindir\@,$(bindir),g' <transmission-remote-gtk.desktop.in > $@

@@ -1,3 +1,4 @@
+[type: gettext/ini]data/transmission-remote-gtk.desktop.in
 src/bencode.c
 src/hig.c
 src/json.c
@@ -21,6 +22,7 @@ src/trg-file-parser.c
 src/trg-files-model.c
 src/trg-files-tree-view.c
 src/trg-general-panel.c
+src/trg-gtk-app.c
 src/trg-json-widgets.c
 src/trg-main-window.c
 src/trg-menu-bar.c
