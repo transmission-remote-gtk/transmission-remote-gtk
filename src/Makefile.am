@@ -86,15 +86,77 @@ transmission_remote_gtk_SOURCES = \
 	  trg-client.c \
 	  trg-main-window.c \
 	  main.c \
-	  upload.c \
-	  $(NULL)
+	  upload.c
+
+noinst_HEADERS = \
+	  trg-cell-renderer-speed.h \
+	  trg-cell-renderer-counter.h \
+	  trg-cell-renderer-size.h \
+	  trg-cell-renderer-ratio.h \
+	  trg-cell-renderer-eta.h \
+	  trg-cell-renderer-priority.h \
+	  trg-cell-renderer-wanted.h \
+	  trg-cell-renderer-file-icon.h \
+	  trg-cell-renderer-epoch.h \
+	  trg-cell-renderer-numgteqthan.h \
+	  torrent-cell-renderer.h \
+	  trg-remote-prefs-dialog.h \
+	  trg-torrent-props-dialog.h \
+	  trg-torrent-add-url-dialog.h \
+	  trg-torrent-add-dialog.h \
+	  trg-torrent-move-dialog.h \
+	  trg-preferences-dialog.h \
+	  trg-stats-dialog.h \
+	  trg-about-window.h \
+	  trg-destination-combo.h \
+	  trg-state-selector.h \
+	  trg-general-panel.h \
+	  trg-torrent-graph.h \
+	  trg-icons.h \
+	  icons.h \
+	  trg-toolbar.h \
+	  trg-menu-bar.h \
+	  trg-status-bar.h \
+	  trg-file-parser.h \
+	  trg-json-widgets.h \
+	  trg-model.h \
+	  trg-sortable-filtered-model.h \
+	  trg-files-tree.h \
+	  trg-files-model.h \
+	  trg-files-tree-view-common.h \
+	  trg-files-tree-view.h \
+	  trg-files-model-common.h \
+	  trg-trackers-model.h \
+	  trg-trackers-tree-view.h \
+	  trg-peers-model.h \
+	  trg-peers-tree-view.h \
+	  trg-torrent-model.h \
+	  trg-torrent-tree-view.h \
+	  trg-persistent-tree-view.h \
+	  trg-tree-view.h \
+	  util.h \
+	  hig.h \
+	  bencode.h \
+	  trg-prefs.h \
+	  remote-exec.h \
+	  trg-gtk-app.h \
+	  requests.h \
+	  torrent.h \
+	  session-get.h \
+	  json.h \
+	  trg-client.h \
+	  trg-main-window.h \
+	  upload.h \
+	  protocol-constants.h \
+	  icon-turtle.h
 
 transmission_remote_gtk_LDFLAGS = -lm $(jsonglib_LIBS) $(gtk_LIBS) $(gthread_LIBS) $(GEOIP_LIBS) $(gio_LIBS) $(notify_LIBS) $(libproxy_LIBS) $(libcurl_LIBS) $(libappindicator_LIBS)
 
 if HAVE_RSS
-transmission_remote_gtk_LDFLAGS += $(mrss_LIBS) ../extern/rss-glib/librss.la
+transmission_remote_gtk_LDFLAGS += $(mrss_LIBS) $(top_srcdir)/extern/rss-glib/librss.la
 
 transmission_remote_gtk_SOURCES += trg-rss-model.c trg-rss-window.c trg-rss-cell-renderer.c
+noinst_HEADERS += trg-rss-model.h trg-rss-window.h trg-rss-cell-renderer.h
 endif
 
 if WIN32
