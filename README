@@ -18,7 +18,7 @@ BUILDING
 
   Building from git clone:
     
-    $ git clone https://code.google.com/p/transmission-remote-gtk/
+    $ git clone https://github.com/ajf8/transmission-remote-gtk.git
     $ ./autogen.sh
     $ ./configure
     $ make
