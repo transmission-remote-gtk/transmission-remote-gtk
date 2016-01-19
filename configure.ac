@@ -28,6 +28,11 @@ AM_INIT_AUTOMAKE([1.12 tar-pax dist-xz no-dist-gzip subdir-objects no-define for
 AM_SILENT_RULES([yes])
 AM_MAINTAINER_MODE([enable])
 
+AC_DEFUN([TRG_CHECK_MACRO], [m4_ifndef([$1], [m4_fatal([macro ]$1[ is not defined. Is ]$2[ installed?])])])
+
+TRG_CHECK_MACRO([AX_IS_RELEASE], [autoconf-archive])
+TRG_CHECK_MACRO([APPSTREAM_XML], [appstream-glib])
+
 AX_IS_RELEASE([git-directory])
 AX_CHECK_ENABLE_DEBUG([yes], [G_ENABLE_DEBUG], [DEBUG G_DISABLE_ASSERT G_DISABLE_CHECKS G_DISABLE_CAST_CHECKS])
 
