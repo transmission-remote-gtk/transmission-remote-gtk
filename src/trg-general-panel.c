@@ -216,10 +216,10 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
         gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), _("N/A"));
     }
 
-    snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT,
+    g_snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT,
              seeders >= 0 ? seeders : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_seeders_label), buf);
-    snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT,
+    g_snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT,
              leechers >= 0 ? leechers : 0);
     gtk_label_set_text(GTK_LABEL(priv->gen_leechers_label), buf);
 }

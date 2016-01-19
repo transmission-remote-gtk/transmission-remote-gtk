@@ -79,12 +79,7 @@ char *tr_strratio(char *buf, size_t buflen, double ratio,
 char *tr_strlratio(char *buf, double ratio, size_t buflen);
 char *gtr_localtime(time_t time);
 char *gtr_localtime2(char *buf, time_t time, size_t buflen);
-int tr_snprintf(char *buf, size_t buflen, const char *fmt, ...);
-int tr_snprintf(char *buf, size_t buflen, const char *fmt, ...);
-size_t tr_strlcpy(char *dst, const void *src, size_t siz);
 double tr_truncd(double x, int decimal_places);
-int evutil_vsnprintf(char *buf, size_t buflen, const char *format,
-                     va_list ap);
 char *tr_strlsize(char *buf, guint64 bytes, size_t buflen);
 void rm_trailing_slashes(gchar * str);
 void trg_widget_set_visible(GtkWidget * w, gboolean visible);

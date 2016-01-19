@@ -113,7 +113,7 @@ static char *formatter_get_size_str(const struct formatter_units *u,
         precision = 2;
     else
         precision = 1;
-    tr_snprintf(buf, buflen, "%.*f %s", precision, value, units);
+    g_snprintf(buf, buflen, "%.*f %s", precision, value, units);
     return buf;
 }
 
@@ -151,19 +151,19 @@ char *tr_formatter_speed_KBps(char *buf, double KBps, size_t buflen)
     double speed = KBps;
 
     if (speed <= 999.95)        /* 0.0 KB to 999.9 KB */
-        tr_snprintf(buf, buflen, "%d %s", (int) speed,
+        g_snprintf(buf, buflen, "%d %s", (int) speed,
                     speed_units.units[TR_FMT_KB].name);
     else {
         speed /= K;
         if (speed <= 99.995)    /* 0.98 MB to 99.99 MB */
-            tr_snprintf(buf, buflen, "%.2f %s", speed,
+            g_snprintf(buf, buflen, "%.2f %s", speed,
                         speed_units.units[TR_FMT_MB].name);
         else if (speed <= 999.95)       /* 100.0 MB to 999.9 MB */
-            tr_snprintf(buf, buflen, "%.1f %s", speed,
+            g_snprintf(buf, buflen, "%.1f %s", speed,
                         speed_units.units[TR_FMT_MB].name);
         else {
             speed /= K;
-            tr_snprintf(buf, buflen, "%.1f %s", speed,
+            g_snprintf(buf, buflen, "%.1f %s", speed,
                         speed_units.units[TR_FMT_GB].name);
         }
     }
@@ -367,7 +367,7 @@ char *tr_strlpercent(char *buf, double x, size_t buflen)
     else
         precision = 0;
 
-    tr_snprintf(buf, buflen, "%.*f%%", precision, tr_truncd(x, precision));
+    g_snprintf(buf, buflen, "%.*f%%", precision, tr_truncd(x, precision));
     return buf;
 }
 
@@ -382,15 +382,15 @@ char *tr_strratio(char *buf, size_t buflen, double ratio,
                   const char *infinity)
 {
     if ((int) ratio == TR_RATIO_NA)
-        tr_strlcpy(buf, _("None"), buflen);
+        g_strlcpy(buf, _("None"), buflen);
     else if ((int) ratio == TR_RATIO_INF)
-        tr_strlcpy(buf, infinity, buflen);
+        g_strlcpy(buf, infinity, buflen);
     else if (ratio < 10.0)
-        tr_snprintf(buf, buflen, "%.2f", tr_truncd(ratio, 2));
+        g_snprintf(buf, buflen, "%.2f", tr_truncd(ratio, 2));
     else if (ratio < 100.0)
-        tr_snprintf(buf, buflen, "%.1f", tr_truncd(ratio, 1));
+        g_snprintf(buf, buflen, "%.1f", tr_truncd(ratio, 1));
     else
-        tr_snprintf(buf, buflen, "%'.0f", ratio);
+        g_snprintf(buf, buflen, "%'.0f", ratio);
     return buf;
 }
 
@@ -481,17 +481,6 @@ char *gtr_localtime2(char *buf, time_t time, size_t buflen)
     return buf;
 }
 
-int tr_snprintf(char *buf, size_t buflen, const char *fmt, ...)
-{
-    int len;
-    va_list args;
-
-    va_start(args, fmt);
-    len = evutil_vsnprintf(buf, buflen, fmt, args);
-    va_end(args);
-    return len;
-}
-
 gchar *epoch_to_string(gint64 epoch)
 {
     GDateTime *dt = g_date_time_new_from_unix_local(epoch);
@@ -532,51 +521,6 @@ gchar *add_links_to_text(const gchar * original)
     g_regex_unref(regex);
     g_match_info_unref(match_info);
     return newText;
-}
-
-size_t tr_strlcpy(char *dst, const void *src, size_t siz)
-{
-#ifdef HAVE_STRLCPY
-    return strlcpy(dst, src, siz);
-#else
-    char *d = dst;
-    const char *s = src;
-    size_t n = siz;
-
-    /* Copy as many bytes as will fit */
-    if (n != 0) {
-        while (--n != 0) {
-            if ((*d++ = *s++) == '\0')
-                break;
-        }
-    }
-
-    /* Not enough room in dst, add NUL and traverse rest of src */
-    if (n == 0) {
-        if (siz != 0)
-            *d = '\0';          /* NUL-terminate dst */
-        while (*s++);
-    }
-
-    return s - (char *) src - 1;        /* count does not include NUL */
-#endif
-}
-
-int
-evutil_vsnprintf(char *buf, size_t buflen, const char *format, va_list ap)
-{
-#ifdef _MSC_VER
-    int r = _vsnprintf(buf, buflen, format, ap);
-    buf[buflen - 1] = '\0';
-    if (r >= 0)
-        return r;
-    else
-        return _vscprintf(format, ap);
-#else
-    int r = vsnprintf(buf, buflen, format, ap);
-    buf[buflen - 1] = '\0';
-    return r;
-#endif
 }
 
 char *tr_strlsize(char *buf, guint64 bytes, size_t buflen)
