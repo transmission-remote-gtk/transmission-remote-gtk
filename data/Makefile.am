@@ -11,3 +11,5 @@ appdata_XML = $(appdata_in_files:.xml.in=.xml)
 @APPSTREAM_XML_RULES@
 
 EXTRA_DIST = $(desktop_in_files) $(appdata_in_files)
+
+DISTCLEANFILES = $(desktop_FILES) $(appdata_XML)

@@ -34,8 +34,14 @@ AC_DEFUN([DESKTOP_FILE],
                 AC_SUBST([DESKTOP_FILE_VALIDATE])])],
         [have_desktop_validate=no])
 
-  AC_PATH_PROG([UPDATE_DESKTOP_DATABASE], [update-desktop-database])
-  AS_IF([test "x$UPDATE_DESKTOP_DATABASE" != "x"], [AC_SUBST([UPDATE_DESKTOP_DATABASE])])
+  AC_ARG_ENABLE([desktop-database-update],
+                [AS_HELP_STRING([--disable-desktop-database-update],
+                                [Disable generating the desktop database, useful for packaging])])
+
+  AS_IF([test "x$enable_desktop_database_update" != "xno"], [
+      AC_PATH_PROG([UPDATE_DESKTOP_DATABASE], [update-desktop-database])
+      AS_IF([test "x$UPDATE_DESKTOP_DATABASE" != "x"], [AC_SUBST([UPDATE_DESKTOP_DATABASE])])
+  ])
 
   AC_PATH_PROG([DESKTOP_FILE_INSTALL], [desktop-file-install])
   AS_IF([test "x$DESKTOP_FILE_INSTALL" != "x"], [AC_SUBST([DESKTOP_FILE_INSTALL])])
@@ -70,7 +76,7 @@ install-desktop-file: $(desktop_FILES)
 	if test -n "$^"; then \
 		test -z "$(desktopfiledir)" || $(MKDIR_P) "$(DESTDIR)$(desktopfiledir)"; \
 		if test -n "$(DESKTOP_FILE_INSTALL)"; then \
-			$(DESKTOP_FILE_INSTALL) --dir="$(DESTDIR)$(desktopfiledir)" --mode=644 --rebuild-mime-info-cache $^; \
+			$(DESKTOP_FILE_INSTALL) --dir="$(DESTDIR)$(desktopfiledir)" --mode=644 $^; \
 		else \
 			$(INSTALL_DATA) $^ "$(DESTDIR)$(desktopfiledir)"; \
 		fi; \
