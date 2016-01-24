@@ -181,7 +181,7 @@ transmission_remote_gtk_LDFLAGS += -Wl,--allow-multiple-definition -lws2_32 -lin
 transmission_remote_gtk_SOURCES += win32.rc win32-mailslot.c
 else
 %.1: %.pod
-	        pod2man --release="" --center="Transmission Remote GTK" $< > $@
+	        $(POD2MAN) --release="" --center="Transmission Remote GTK" $< > $@
 
 EXTRA_DIST = transmission-remote-gtk.pod
 CLEANFILES = transmission-remote-gtk.1
