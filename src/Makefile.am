@@ -164,7 +164,7 @@ transmission_remote_gtk_LDFLAGS = \
 	$(MRSS_CFLAGS)
 
 if HAVE_RSS
-transmission_remote_gtk_LDFLAGS += $(top_srcdir)/extern/rss-glib/librss.la
+transmission_remote_gtk_LDFLAGS += ${top_builddir}/extern/rss-glib/librss.la
 
 transmission_remote_gtk_SOURCES += trg-rss-model.c trg-rss-window.c trg-rss-cell-renderer.c
 noinst_HEADERS += trg-rss-model.h trg-rss-window.h trg-rss-cell-renderer.h
