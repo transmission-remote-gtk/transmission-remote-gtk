@@ -65,6 +65,7 @@ enum {
     PROP_ACCEL_GROUP,
     PROP_DIR_FILTERS,
     PROP_TRACKER_FILTERS,
+    PROP_DIRECTORIES_FIRST,
 #if TRG_WITH_GRAPH
     PROP_VIEW_SHOW_GRAPH,
 #endif
@@ -110,6 +111,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_quit;
     GtkWidget *mb_directory_filters;
     GtkWidget *mb_tracker_filters;
+    GtkWidget *mb_directory_first;
 #if TRG_WITH_GRAPH
     GtkWidget *mb_view_graph;
 #endif
@@ -300,6 +302,9 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
     case PROP_TRACKER_FILTERS:
         g_value_set_object(value, priv->mb_tracker_filters);
         break;
+	case PROP_DIRECTORIES_FIRST:
+		g_value_set_object(value, priv->mb_directory_first);
+		break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
         break;
@@ -537,6 +542,14 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
     trg_menu_bar_accel_add(mb, priv->mb_tracker_filters, GDK_F4, 0);
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
                           priv->mb_tracker_filters);
+
+	priv->mb_directory_first =
+		trg_menu_bar_view_item_new(priv->prefs,
+									TRG_PREFS_KEY_DIRECTORIES_FIRST,
+									_("Directories first"),
+									priv->mb_view_states);
+	gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu),
+							priv->mb_directory_first);
 
     priv->mb_view_notebook =
         trg_menu_bar_view_item_new(priv->prefs,
@@ -921,6 +934,8 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "dir-filters", "Dir Filters");
     trg_menu_bar_install_widget_prop(object_class, PROP_TRACKER_FILTERS,
                                      "tracker-filters", "Tracker Filters");
+	trg_menu_bar_install_widget_prop(object_class, PROP_DIRECTORIES_FIRST,
+									 TRG_PREFS_KEY_DIRECTORIES_FIRST, "Directories first");
 #if TRG_WITH_GRAPH
     trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_SHOW_GRAPH,
                                      "show-graph", "Show Graph");

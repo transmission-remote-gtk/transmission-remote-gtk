@@ -330,6 +330,13 @@ static void toggle_filter_trackers(GtkToggleButton * w, gpointer win)
                                          gtk_toggle_button_get_active(w));
 }
 
+static void toggle_directories_first(GtkToggleButton * w, gpointer win){
+	TrgStateSelector *selector =
+		trg_main_window_get_state_selector(TRG_MAIN_WINDOW(win));
+	trg_state_selector_set_directories_first(selector,
+											gtk_toggle_button_get_active(w));
+}
+
 #if TRG_WITH_GRAPH
 static void toggle_graph(GtkToggleButton * w, gpointer win)
 {
@@ -728,6 +735,13 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
     g_signal_connect(G_OBJECT(w), "toggled",
                      G_CALLBACK(toggle_filter_trackers), priv->win);
     hig_workarea_add_wide_control(t, &row, w);
+
+	w = trgp_check_new(dlg, _("Directories first"),
+						TRG_PREFS_KEY_DIRECTORIES_FIRST, TRG_PREFS_GLOBAL,
+						GTK_TOGGLE_BUTTON(dep));
+	g_signal_connect(G_OBJECT(w), "toggled",
+					 G_CALLBACK(toggle_directories_first), priv->win);
+	hig_workarea_add_wide_control(t, &row, w);
 
     w = trgp_check_new(dlg, _("Torrent Details"),
                        TRG_PREFS_KEY_SHOW_NOTEBOOK, TRG_PREFS_GLOBAL,

@@ -680,6 +680,16 @@ main_window_toggle_filter_trackers(GtkCheckMenuItem * w, gpointer data)
                                              (w));
 }
 
+static void
+main_window_toggle_directories_first(GtkCheckMenuItem * w, gpointer data){
+	TrgMainWindow *win = TRG_MAIN_WINDOW(data);
+	TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
+
+	if (gtk_widget_is_sensitive(GTK_WIDGET(w)))
+		trg_state_selector_set_directories_first(priv->stateSelector,
+											gtk_check_menu_item_get_active(w));
+}
+
 static TrgToolbar *trg_main_window_toolbar_new(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
@@ -1767,8 +1777,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
         *b_remove, *b_delete, *b_props, *b_local_prefs, *b_remote_prefs,
         *b_about, *b_view_states, *b_view_notebook, *b_view_stats,
         *b_add_url, *b_quit, *b_move, *b_reannounce, *b_pause_all,
-        *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_up_queue,
-        *b_down_queue, *b_top_queue, *b_bottom_queue,
+        *b_resume_all, *b_dir_filters, *b_tracker_filters, *b_directories_first,
+        *b_up_queue, *b_down_queue, *b_top_queue, *b_bottom_queue,
 #if TRG_WITH_GRAPH
     *b_show_graph,
 #endif
@@ -1799,7 +1809,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                  "view-states-button", &b_view_states, "view-stats-button",
                  &b_view_stats, "about-button", &b_about, "quit-button",
                  &b_quit, "dir-filters", &b_dir_filters, "tracker-filters",
-                 &b_tracker_filters,
+                 &b_tracker_filters, TRG_PREFS_KEY_DIRECTORIES_FIRST, &b_directories_first,
 #if TRG_WITH_GRAPH
                  "show-graph", &b_show_graph,
 #endif
@@ -1846,6 +1856,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                      G_CALLBACK(main_window_toggle_filter_dirs), win);
     g_signal_connect(b_tracker_filters, "toggled",
                      G_CALLBACK(main_window_toggle_filter_trackers), win);
+	g_signal_connect(b_directories_first, "toggled",
+					 G_CALLBACK(main_window_toggle_directories_first), win);
     g_signal_connect(b_view_states, "toggled",
                      G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
