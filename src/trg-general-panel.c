@@ -63,6 +63,7 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_down_rate_label;
     GtkLabel *gen_up_rate_label;
     GtkLabel *gen_ratio_label;
+    GtkLabel *gen_limit_label;
     GtkLabel *gen_completedat_label;
     GtkLabel *gen_downloaddir_label;
     GtkLabel *gen_comment_label;
@@ -87,6 +88,7 @@ void trg_general_panel_clear(TrgGeneralPanel * panel)
     gtk_label_clear(priv->gen_down_rate_label);
     gtk_label_clear(priv->gen_up_rate_label);
     gtk_label_clear(priv->gen_ratio_label);
+    gtk_label_clear(priv->gen_limit_label);
     gtk_label_clear(priv->gen_completedat_label);
     gtk_label_clear(priv->gen_downloaddir_label);
     gtk_label_clear(priv->gen_comment_label);
@@ -156,6 +158,9 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     } else {
         gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), _("N/A"));
     }
+
+	trg_strlratio(buf, torrent_get_seed_ratio_limit(t));
+	gtk_label_set_text(GTK_LABEL(priv->gen_limit_label), buf);
 
     completedAt = torrent_get_done_date(t);
     if (completedAt > 0) {
@@ -278,48 +283,47 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
     g_object_set(G_OBJECT(self), "n-columns",
                  TRG_GENERAL_PANEL_COLUMNS_TOTAL, "n-rows", 7, NULL);
 
-    priv->gen_name_label =
-        trg_general_panel_add_label_with_width(self, _("Name"), 0, 0, -1);
+	priv->gen_name_label =
+		trg_general_panel_add_label_with_width(self, _("Name"), 0, 0, -1);
 
-    priv->gen_size_label =
-        trg_general_panel_add_label(self, _("Size"), 0, 1);
-    priv->gen_eta_label =
-        trg_general_panel_add_label(self, _("ETA"), 1, 1);
-    priv->gen_completed_label =
-        trg_general_panel_add_label(self, _("Completed"), 2, 1);
+	priv->gen_size_label =
+		trg_general_panel_add_label(self, _("Size"), 0, 1);
+	priv->gen_down_rate_label =
+		trg_general_panel_add_label(self, _("Rate Down"), 1, 1);
+	priv->gen_completed_label =
+		trg_general_panel_add_label(self, _("Completed"), 2, 1);
 
-    priv->gen_seeders_label =
-        trg_general_panel_add_label(self, _("Seeders"), 0, 2);
-    priv->gen_down_rate_label =
-        trg_general_panel_add_label(self, _("Rate Down"), 1, 2);
-    priv->gen_downloaded_label =
-        trg_general_panel_add_label(self, _("Downloaded"), 2, 2);
+	priv->gen_eta_label =
+		trg_general_panel_add_label(self, _("ETA"), 0, 2);
+	priv->gen_up_rate_label =
+		trg_general_panel_add_label(self, _("Rate Up"), 1, 2);
+	priv->gen_downloaded_label =
+		trg_general_panel_add_label(self, _("Downloaded"), 2, 2);
 
-    priv->gen_leechers_label =
-        trg_general_panel_add_label(self, _("Leechers"), 0, 3);
-    priv->gen_up_rate_label =
-        trg_general_panel_add_label(self, _("Rate Up"), 1, 3);
-    priv->gen_uploaded_label =
-        trg_general_panel_add_label(self, _("Uploaded"), 2, 3);
+	priv->gen_seeders_label =
+		trg_general_panel_add_label(self, _("Seeders"), 0, 3);
+	priv->gen_ratio_label =
+		trg_general_panel_add_label(self, _("Ratio"), 1, 3);
+	priv->gen_uploaded_label =
+		trg_general_panel_add_label(self, _("Uploaded"), 2, 3);
 
-    priv->gen_status_label =
-        trg_general_panel_add_label(self, _("Status"), 0, 4);
-    priv->gen_ratio_label =
-        trg_general_panel_add_label(self, _("Ratio"), 1, 4);
+	priv->gen_leechers_label =
+		trg_general_panel_add_label(self, _("Leechers"), 0, 4);
+	priv->gen_limit_label =
+		trg_general_panel_add_label(self, _("Ratio limit"), 1, 4);
+	priv->gen_completedat_label =
+		trg_general_panel_add_label(self, _("Completed At"), 2, 4);
 
-    priv->gen_comment_label =
-        trg_general_panel_add_label(self, _("Comment"), 2, 4);
+	priv->gen_status_label =
+		trg_general_panel_add_label(self, _("Status"), 0, 5);
+	priv->gen_downloaddir_label =
+		trg_general_panel_add_label_with_width(self, _("Location"), 1, 5, -1);
 
-    priv->gen_completedat_label =
-        trg_general_panel_add_label_with_width(self, _("Completed At"), 0,
-                                               5, -1);
+	priv->gen_comment_label =
+		trg_general_panel_add_label(self, _("Comment"), 0, 6);
 
-    priv->gen_downloaddir_label =
-        trg_general_panel_add_label_with_width(self, _("Location"), 1, 5,
-                                               -1);
-
-    priv->gen_error_label =
-        trg_general_panel_add_label_with_width(self, "", 0, 6, -1);
+	priv->gen_error_label =
+		trg_general_panel_add_label_with_width(self, "", 0, 7, -1);
 
     for (i = 0; i < TRG_GENERAL_PANEL_COLUMNS_TOTAL; i++)
         gtk_table_set_col_spacing(GTK_TABLE(self), i,
