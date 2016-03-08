@@ -2242,8 +2242,8 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove"),
                           GTK_STOCK_REMOVE, TRUE, G_CALLBACK(remove_cb),
                           win);
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove & Delete"),
-                          GTK_STOCK_CLEAR, TRUE, G_CALLBACK(delete_cb),
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove and delete data"),
+                          GTK_STOCK_DELETE, TRUE, G_CALLBACK(delete_cb),
                           win);
 
     cmds = trg_prefs_get_array(prefs, TRG_PREFS_KEY_EXEC_COMMANDS,

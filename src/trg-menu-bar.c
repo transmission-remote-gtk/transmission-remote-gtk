@@ -746,7 +746,7 @@ static GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar * menu)
 
     priv->mb_delete =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              _("Remove and Delete"), GTK_STOCK_CLEAR,
+                              _("Remove and delete data"), GTK_STOCK_DELETE,
                               FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_delete, GDK_Delete,
                            GDK_SHIFT_MASK);
