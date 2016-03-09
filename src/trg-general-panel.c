@@ -31,6 +31,7 @@
 #include "util.h"
 #include "trg-general-panel.h"
 #include "trg-torrent-model.h"
+#include "protocol-constants.h"
 
 #define TRG_GENERAL_PANEL_WIDTH_FROM_KEY    20
 #define TRG_GENERAL_PANEL_WIDTH_FROM_VALUE  60
@@ -57,6 +58,7 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_seeders_label;
     GtkLabel *gen_leechers_label;
     GtkLabel *gen_status_label;
+    GtkLabel *gen_priority_label;
     GtkLabel *gen_eta_label;
     GtkLabel *gen_downloaded_label;
     GtkLabel *gen_uploaded_label;
@@ -83,6 +85,7 @@ void trg_general_panel_clear(TrgGeneralPanel * panel)
     gtk_label_clear(priv->gen_seeders_label);
     gtk_label_clear(priv->gen_leechers_label);
     gtk_label_clear(priv->gen_status_label);
+    gtk_label_clear(priv->gen_priority_label);
     gtk_label_clear(priv->gen_eta_label);
     gtk_label_clear(priv->gen_downloaded_label);
     gtk_label_clear(priv->gen_uploaded_label);
@@ -185,6 +188,20 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
                        fullStatusString);
     g_free(fullStatusString);
     g_free(statusString);
+
+	g_snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT, torrent_get_bandwidth_priority(t));
+	
+	switch(torrent_get_bandwidth_priority(t)){
+		case TR_PRI_LOW:
+			gtk_label_set_text(GTK_LABEL(priv->gen_priority_label), _("Low"));
+			break;
+		case TR_PRI_NORMAL:
+			gtk_label_set_text(GTK_LABEL(priv->gen_priority_label), _("Normal"));
+			break;
+		case TR_PRI_HIGH:
+			gtk_label_set_text(GTK_LABEL(priv->gen_priority_label), _("High"));
+			break;
+	}
 
     trg_strlpercent(buf, torrent_get_percent_done(t));
     gtk_label_set_text(GTK_LABEL(priv->gen_completed_label), buf);
@@ -322,8 +339,10 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
 
 	priv->gen_status_label =
 		trg_general_panel_add_label(self, _("Status"), 0, 5);
+	priv->gen_priority_label =
+		trg_general_panel_add_label(self, _("Priority"), 1, 5);
 	priv->gen_completedat_label =
-		trg_general_panel_add_label(self, _("Completed At"), 1, 5);
+		trg_general_panel_add_label(self, _("Completed At"), 2, 5);
 
 	priv->gen_downloaddir_label =
 		trg_general_panel_add_label_with_width(self, _("Location"), 0, 6, -1);
