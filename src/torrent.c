@@ -180,6 +180,11 @@ gint64 torrent_get_uploaded(JsonObject * t)
     return json_object_get_int_member(t, FIELD_UPLOADEDEVER);
 }
 
+gint64 torrent_get_corrupted(JsonObject * t)
+{
+    return json_object_get_int_member(t, FIELD_CORRUPTEVER);
+}
+
 gint64 torrent_get_have_valid(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_HAVEVALID);

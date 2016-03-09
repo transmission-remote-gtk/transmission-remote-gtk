@@ -60,6 +60,7 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_eta_label;
     GtkLabel *gen_downloaded_label;
     GtkLabel *gen_uploaded_label;
+    GtkLabel *gen_corrupted_label;
     GtkLabel *gen_down_rate_label;
     GtkLabel *gen_up_rate_label;
     GtkLabel *gen_ratio_label;
@@ -85,6 +86,7 @@ void trg_general_panel_clear(TrgGeneralPanel * panel)
     gtk_label_clear(priv->gen_eta_label);
     gtk_label_clear(priv->gen_downloaded_label);
     gtk_label_clear(priv->gen_uploaded_label);
+    gtk_label_clear(priv->gen_corrupted_label);
     gtk_label_clear(priv->gen_down_rate_label);
     gtk_label_clear(priv->gen_up_rate_label);
     gtk_label_clear(priv->gen_ratio_label);
@@ -122,7 +124,7 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     gchar *statusString, *fullStatusString, *completedAtString, *comment,
         *markup;
     const gchar *errorStr;
-    gint64 eta, uploaded, haveValid, completedAt;
+    gint64 eta, uploaded, corrupted, haveValid, completedAt;
     GtkLabel *keyLabel;
     gint64 seeders = 0, leechers = 0;
 
@@ -143,6 +145,10 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
 
     trg_strlspeed(buf, torrent_get_rate_up(t) / disk_K);
     gtk_label_set_text(GTK_LABEL(priv->gen_up_rate_label), buf);
+
+	corrupted = torrent_get_corrupted(t);
+	trg_strlsize(buf, corrupted);
+	gtk_label_set_text(GTK_LABEL(priv->gen_corrupted_label), buf);
 
     uploaded = torrent_get_uploaded(t);
     trg_strlsize(buf, uploaded);
@@ -311,19 +317,22 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
 		trg_general_panel_add_label(self, _("Leechers"), 0, 4);
 	priv->gen_limit_label =
 		trg_general_panel_add_label(self, _("Ratio limit"), 1, 4);
-	priv->gen_completedat_label =
-		trg_general_panel_add_label(self, _("Completed At"), 2, 4);
+	priv->gen_corrupted_label =
+		trg_general_panel_add_label(self, _("Corrupted"), 2, 4);
 
 	priv->gen_status_label =
 		trg_general_panel_add_label(self, _("Status"), 0, 5);
+	priv->gen_completedat_label =
+		trg_general_panel_add_label(self, _("Completed At"), 1, 5);
+
 	priv->gen_downloaddir_label =
-		trg_general_panel_add_label_with_width(self, _("Location"), 1, 5, -1);
+		trg_general_panel_add_label_with_width(self, _("Location"), 0, 6, -1);
 
 	priv->gen_comment_label =
-		trg_general_panel_add_label(self, _("Comment"), 0, 6);
+		trg_general_panel_add_label(self, _("Comment"), 0, 7);
 
 	priv->gen_error_label =
-		trg_general_panel_add_label_with_width(self, "", 0, 7, -1);
+		trg_general_panel_add_label_with_width(self, "", 0, 8, -1);
 
     for (i = 0; i < TRG_GENERAL_PANEL_COLUMNS_TOTAL; i++)
         gtk_table_set_col_spacing(GTK_TABLE(self), i,

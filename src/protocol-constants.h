@@ -56,6 +56,7 @@
 #define FIELD_ETA				"eta"
 #define FIELD_UPLOADEDEVER		"uploadedEver"
 #define FIELD_DOWNLOADEDEVER	"downloadedEver"
+#define FIELD_CORRUPTEVER		"corruptEver"
 #define FIELD_HAVEVALID			"haveValid"
 #define FIELD_HAVEUNCHECKED		"haveUnchecked"
 #define FIELD_PERCENTDONE		"percentDone"
