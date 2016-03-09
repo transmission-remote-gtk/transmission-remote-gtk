@@ -60,7 +60,7 @@ struct _TrgStatsDialogPrivate {
     TrgMainWindow *parent;
     GtkWidget *tv;
     GtkListStore *model;
-    GtkTreeRowReference *rr_up, *rr_down, *rr_files_added,
+    GtkTreeRowReference *rr_down, *rr_up, *rr_ratio, *rr_files_added,
         *rr_session_count, *rr_active, *rr_version;
 };
 
@@ -160,8 +160,7 @@ update_int_stat(JsonObject * args, GtkTreeRowReference * rr,
 }
 
 static void
-update_size_stat(JsonObject * args, GtkTreeRowReference * rr,
-                 gchar * jsonKey)
+update_size_stat(JsonObject * args, GtkTreeRowReference * rr, gchar * jsonKey)
 {
     gchar session_val[32];
     gchar cumulat_val[32];
@@ -172,6 +171,23 @@ update_size_stat(JsonObject * args, GtkTreeRowReference * rr,
     trg_strlsize(session_val,
                  json_object_get_int_member(get_session_arg(args),
                                             jsonKey));
+
+    update_statistic(rr, session_val, cumulat_val);
+}
+
+static void
+update_ratio_stat(JsonObject * args, GtkTreeRowReference * rr, gchar * jsonKeyA, gchar * jsonKeyB)
+{
+	gchar session_val[32];
+	gchar cumulat_val[32];
+
+	trg_strlratio(session_val, 
+				  json_object_get_double_member(get_session_arg(args), jsonKeyA) /
+				  json_object_get_double_member(get_session_arg(args), jsonKeyB) );
+
+	trg_strlratio(cumulat_val, 
+				  json_object_get_double_member(get_cumulat_arg(args), jsonKeyA) /
+				  json_object_get_double_member(get_cumulat_arg(args), jsonKeyB) );
 
     update_statistic(rr, session_val, cumulat_val);
 }
@@ -218,6 +234,7 @@ static gboolean on_stats_reply(gpointer data)
 
         update_size_stat(args, priv->rr_up, "uploadedBytes");
         update_size_stat(args, priv->rr_down, "downloadedBytes");
+        update_ratio_stat(args, priv->rr_ratio, "uploadedBytes", "downloadedBytes");
         update_int_stat(args, priv->rr_files_added, "filesAdded");
         update_int_stat(args, priv->rr_session_count, "sessionCount");
         update_time_stat(args, priv->rr_active, "secondsActive");
@@ -300,6 +317,8 @@ static GObject *trg_stats_dialog_constructor(GType type,
         stats_dialog_add_statistic(priv->model, _("Download Total"));
     priv->rr_up =
         stats_dialog_add_statistic(priv->model, _("Upload Total"));
+    priv->rr_ratio =
+        stats_dialog_add_statistic(priv->model, _("Ratio"));
     priv->rr_files_added =
         stats_dialog_add_statistic(priv->model, _("Files Added"));
     priv->rr_session_count =
