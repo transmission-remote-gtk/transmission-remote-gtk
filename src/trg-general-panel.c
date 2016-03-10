@@ -122,10 +122,8 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
                          GtkTreeIter * iter)
 {
     TrgGeneralPanelPrivate *priv;
-    gchar buf[32];
-    gint sizeOfBuf;
-    gchar *statusString, *fullStatusString, *completedAtString, *comment,
-        *markup;
+    gchar buf[32], buf1[32]; //TODO: do it better
+    gchar *statusString, *fullStatusString, *completedAtString, *speed, *comment, *markup;
     const gchar *errorStr;
     gint64 eta, uploaded, corrupted, haveValid, completedAt;
     GtkLabel *keyLabel;
@@ -138,16 +136,26 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
                        TORRENT_COLUMN_LEECHERS, &leechers,
                        TORRENT_COLUMN_STATUS, &statusString, -1);
 
-    sizeOfBuf = sizeof(buf);
-
     trg_strlsize(buf, torrent_get_size_when_done(t));
     gtk_label_set_text(GTK_LABEL(priv->gen_size_label), buf);
 
-    trg_strlspeed(buf, torrent_get_rate_down(t) / disk_K);
-    gtk_label_set_text(GTK_LABEL(priv->gen_down_rate_label), buf);
+	trg_strlspeed(buf, torrent_get_rate_down(t) / disk_K);
+	if (torrent_get_download_limited(t)){
+		trg_strlspeed(buf1, torrent_get_download_limit(t));
+		speed = g_strdup_printf("%s [%s]", buf, buf1);
+	} else
+		speed = g_strdup_printf("%s", buf);
+    gtk_label_set_text(GTK_LABEL(priv->gen_down_rate_label), speed);
+    g_free(speed);
 
-    trg_strlspeed(buf, torrent_get_rate_up(t) / disk_K);
-    gtk_label_set_text(GTK_LABEL(priv->gen_up_rate_label), buf);
+	trg_strlspeed(buf, torrent_get_rate_up(t) / disk_K);
+    if (torrent_get_upload_limited(t)){
+		trg_strlspeed(buf1, torrent_get_upload_limit(t));
+		speed = g_strdup_printf("%s [%s]", buf, buf1);	
+	} else
+		speed = g_strdup_printf("%s", buf);
+    gtk_label_set_text(GTK_LABEL(priv->gen_up_rate_label), speed);
+	g_free(speed);
 
 	corrupted = torrent_get_corrupted(t);
 	trg_strlsize(buf, corrupted);
@@ -189,8 +197,6 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     g_free(fullStatusString);
     g_free(statusString);
 
-	g_snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT, torrent_get_bandwidth_priority(t));
-	
 	switch(torrent_get_bandwidth_priority(t)){
 		case TR_PRI_LOW:
 			gtk_label_set_text(GTK_LABEL(priv->gen_priority_label), _("Low"));
@@ -238,7 +244,7 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     }
 
     if ((eta = torrent_get_eta(t)) > 0) {
-        tr_strltime_long(buf, eta, sizeOfBuf);
+        tr_strltime_long(buf, eta, sizeof(buf));
         gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), buf);
     } else {
         gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), _("N/A"));
