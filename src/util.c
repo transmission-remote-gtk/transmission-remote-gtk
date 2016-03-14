@@ -483,6 +483,8 @@ char *gtr_localtime2(char *buf, time_t time, size_t buflen)
 
 gchar *epoch_to_string(gint64 epoch)
 {
+	if(epoch == 0)
+		return g_strdup(_("N/A"));
     GDateTime *dt = g_date_time_new_from_unix_local(epoch);
     gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
     g_date_time_unref(dt);
