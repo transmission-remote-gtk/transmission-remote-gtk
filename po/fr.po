@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: transmission-remote-gtk\n"
 "Report-Msgid-Bugs-To: FULL NAME <EMAIL@ADDRESS>\n"
 "POT-Creation-Date: 2013-06-09 23:41+0100\n"
-"PO-Revision-Date: 2016-05-09 20:08+0000\n"
+"PO-Revision-Date: 2016-05-09 19:34+0200\n"
 "Last-Translator: Thibaut Selingue <thibaut.selingue@gmail.com>\n"
 "Language-Team: French <fr@li.org>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Launchpad-Export-Date: 2014-06-12 07:44+0000\n"
-"X-Generator: Launchpad (build 17045)\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Language: fr\n"
 
 #: src/torrent.c:360 src/torrent.c:380
 msgid "Metadata Downloading"
@@ -134,21 +135,22 @@ msgstr "Ratio %s"
 #, c-format
 msgid "Downloading from %1$li of %2$li connected peer"
 msgid_plural "Downloading from %1$li of %2$li connected peers"
-msgstr[0] "Téléchargement depuis %1$li sur %2$li pairs connectés"
+msgstr[0] "Téléchargement depuis %1$li sur %2$li pair connecté"
+msgstr[1] "Téléchargement depuis %1$li sur %2$li pairs connectés"
 
 #: src/torrent-cell-renderer.c:340
 #, c-format
 msgid "Downloading metadata from %1$li peer (%2$s done)"
 msgid_plural "Downloading metadata from %1$li peers (%2$s done)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Téléchargement des métadonnées depuis %1$li pair (%2$s terminé)"
+msgstr[1] "Téléchargement des métadonnées depuis %1$li pairs (%2$s terminé)"
 
 #: src/torrent-cell-renderer.c:351
 #, c-format
 msgid "Seeding to %1$li of %2$li connected peer"
 msgid_plural "Seeding to %1$li of %2$li connected peers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Envoi à %1$li sur %2$li pair connecté"
+msgstr[1] "Envoi à %1$li sur %2$li pairs connectés"
 
 #: src/trg-about-window.c:74
 msgid "A remote client to transmission-daemon."
@@ -492,15 +494,15 @@ msgstr "_Affichage"
 
 #: src/trg-menu-bar.c:473
 msgid "Transmission Style"
-msgstr ""
+msgstr "Style Transmission"
 
 #: src/trg-menu-bar.c:483
 msgid "Transmission Compact Style"
-msgstr ""
+msgstr "Style Transmission Compact"
 
 #: src/trg-menu-bar.c:493
 msgid "Classic Style"
-msgstr ""
+msgstr "Style Classique"
 
 #: src/trg-menu-bar.c:499
 msgid "Sort"
