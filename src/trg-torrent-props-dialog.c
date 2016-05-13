@@ -333,11 +333,15 @@ static void info_page_update(TrgTorrentPropsDialog * dialog,
         gint64 dateCreated = torrent_get_date_created(t);
         gchar *dateStr = epoch_to_string(dateCreated);
 
-        if (!creator || strlen(creator) <= 0)
-            g_snprintf(buf, sizeof(buf), _("Created on %1$s"), dateStr);
-        else
-            g_snprintf(buf, sizeof(buf), _("Created by %1$s on %2$s"),
-                       creator, dateStr);
+        if (creator && strlen(creator) > 0 && dateCreated > 0)
+			g_snprintf(buf, sizeof(buf), _("Created by %1$s on %2$s"),
+						creator, dateStr);
+		else if (dateCreated > 0)
+			g_snprintf(buf, sizeof(buf), _("Created on %1$s"), dateStr);
+		else if (creator && strlen(creator) > 0)
+			g_snprintf(buf, sizeof(buf), _("Created by %1$s"), creator);
+		else
+			g_strlcpy(buf, _("N/A"), sizeof(buf));
 
         g_free(dateStr);
         gtk_label_set_text(GTK_LABEL(priv->origin_lb), buf);

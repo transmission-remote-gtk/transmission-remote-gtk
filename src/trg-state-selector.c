@@ -53,6 +53,7 @@ struct _TrgStateSelectorPrivate {
     guint flag;
     gboolean showDirs;
     gboolean showTrackers;
+    gboolean dirsFirst;
     TrgClient *client;
     TrgPrefs *prefs;
     GHashTable *trackers;
@@ -360,10 +361,13 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged)
                                                              updateSerial);
                     g_free(announceHost);
                 } else {
-                    trg_state_selector_insert(s, priv->n_categories,
-                                              g_hash_table_size
-                                              (priv->trackers),
-                                              announceHost, &iter);
+					if (priv->dirsFirst){
+							trg_state_selector_insert(s, priv->n_categories +
+										g_hash_table_size(priv->directories), -1, announceHost, &iter);
+					} else {
+						trg_state_selector_insert(s, priv->n_categories,
+										g_hash_table_size(priv->trackers), announceHost, &iter);
+					}
                     gtk_list_store_set(GTK_LIST_STORE(model), &iter,
                                        STATE_SELECTOR_ICON,
                                        GTK_STOCK_NETWORK,
@@ -394,11 +398,13 @@ void trg_state_selector_update(TrgStateSelector * s, guint whatsChanged)
                                                           *) result,
                                                          updateSerial);
             } else {
-                trg_state_selector_insert(s,
-                                          priv->n_categories +
-                                          g_hash_table_size
-                                          (priv->trackers), -1, dir,
-                                          &iter);
+                if (priv->dirsFirst){
+					trg_state_selector_insert(s, priv->n_categories,
+								g_hash_table_size(priv->directories), dir, &iter);
+				} else {
+					trg_state_selector_insert(s, priv->n_categories +
+									g_hash_table_size(priv->trackers), -1, dir, &iter);
+				}
                 gtk_list_store_set(GTK_LIST_STORE(model), &iter,
                                    STATE_SELECTOR_ICON,
                                    GTK_STOCK_DIRECTORY,
@@ -468,6 +474,15 @@ trg_state_selector_set_show_trackers(TrgStateSelector * s, gboolean show)
         g_hash_table_remove_all(priv->trackers);
     else
         trg_state_selector_update(s, TORRENT_UPDATE_ADDREMOVE);
+}
+
+void
+trg_state_selector_set_directories_first(TrgStateSelector * s, gboolean _dirsFirst){
+	TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
+	priv->dirsFirst = _dirsFirst;
+	g_hash_table_remove_all(priv->directories);
+	g_hash_table_remove_all(priv->trackers);
+	trg_state_selector_update(s, TORRENT_UPDATE_ADDREMOVE);
 }
 
 static void
@@ -719,6 +734,9 @@ static GObject *trg_state_selector_constructor(GType type,
     priv->showTrackers =
         trg_prefs_get_bool(priv->prefs, TRG_PREFS_KEY_FILTER_TRACKERS,
                            TRG_PREFS_GLOBAL);
+	priv->dirsFirst =
+		trg_prefs_get_bool(priv->prefs, TRG_PREFS_KEY_DIRECTORIES_FIRST,
+							TRG_PREFS_GLOBAL);
 
     return object;
 }

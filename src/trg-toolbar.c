@@ -233,8 +233,8 @@ static GObject *trg_toolbar_constructor(GType type,
                              GTK_STOCK_REMOVE, FALSE);
 
     priv->tb_delete =
-        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Remove with data"),
-                             &position, GTK_STOCK_CLEAR, FALSE);
+        trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Remove and delete data"),
+                             &position, GTK_STOCK_DELETE, FALSE);
 
     separator = gtk_separator_tool_item_new();
     gtk_toolbar_insert(GTK_TOOLBAR(obj), separator, position++);

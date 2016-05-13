@@ -51,6 +51,7 @@ gint64 torrent_get_rate_down(JsonObject * t);
 gint64 torrent_get_rate_up(JsonObject * t);
 gint64 torrent_get_eta(JsonObject * t);
 gint64 torrent_get_uploaded(JsonObject * t);
+gint64 torrent_get_corrupted(JsonObject * t);
 gint64 torrent_get_downloaded(JsonObject * t);
 const gchar *torrent_get_errorstr(JsonObject * t);
 gint64 torrent_get_error(JsonObject * t);

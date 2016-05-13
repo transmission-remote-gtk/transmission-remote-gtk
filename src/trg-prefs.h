@@ -56,6 +56,7 @@
 #define TRG_PREFS_KEY_SHOW_GRAPH    "show-graph"
 #define TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE  "system-tray-minimise"
 #define TRG_PREFS_KEY_FILTER_TRACKERS  "filter-trackers"
+#define TRG_PREFS_KEY_DIRECTORIES_FIRST  "directories-first"
 #define TRG_PREFS_KEY_FILTER_DIRS  "filter-dirs"
 #define TRG_PREFS_KEY_SHOW_STATE_SELECTOR "show-state-selector"
 #define TRG_PREFS_KEY_SHOW_NOTEBOOK "show-notebook"
