@@ -162,6 +162,7 @@ AX_APPEND_COMPILE_FLAGS([ \
 	-Wno-conversion \
 	-Wno-sign-compare \
 	-Wno-deprecated-declarations \
+	-Wno-error=format-nonliteral \
 ])
 dnl TODO: Fix last two hidden warnings
 
