@@ -166,6 +166,9 @@ AX_APPEND_COMPILE_FLAGS([ \
 ])
 dnl TODO: Fix last two hidden warnings
 
+AS_IF([test "$enable_debug" = "no"], [
+	AX_APPEND_COMPILE_FLAGS([-O2])
+])
 
 AC_CONFIG_FILES([
 	Makefile
