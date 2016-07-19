@@ -170,6 +170,12 @@ AS_IF([test "$enable_debug" = "no"], [
 	AX_APPEND_COMPILE_FLAGS([-O2])
 ])
 
+AX_APPEND_LINK_FLAGS([ \
+	-pie \
+	-Wl,-z,relro \
+	-Wl,-z,now \
+])
+
 AC_CONFIG_FILES([
 	Makefile
 	po/Makefile.in
