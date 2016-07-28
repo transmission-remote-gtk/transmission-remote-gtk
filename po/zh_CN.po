@@ -1,0 +1,1630 @@
+# Chinese (Simplified) translation for transmission-remote-gtk
+# Copyright (c) 2016 Rosetta Contributors and Canonical Ltd 2016
+# This file is distributed under the same license as the transmission-remote-gtk package.
+# Boyuan Yang <073plan@gmail.com>, 2016.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: transmission-remote-gtk\n"
+"Report-Msgid-Bugs-To: Alan Fitton <alan@eth0.org.uk>\n"
+"POT-Creation-Date: 2016-07-19 18:02+0000\n"
+"PO-Revision-Date: 2016-07-28 22:12+0800\n"
+"Last-Translator: Boyuan Yang <073plan@gmail.com>\n"
+"Language-Team: Chinese (Simplified) <i18n-zh@googlegroups.com>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Launchpad-Export-Date: 2016-07-28 13:52+0000\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Language: zh_CN\n"
+
+#: ../data/transmission-remote-gtk.desktop.in.h:1 ../src/trg-main-window.c:2717
+msgid "Transmission Remote"
+msgstr "Transmission 远程管理工具"
+
+#: ../data/transmission-remote-gtk.desktop.in.h:2
+msgid "Remotely manage the Transmission BitTorrent client"
+msgstr "远程管理 Transmission BT 下载客户端"
+
+#: ../data/transmission-remote-gtk.appdata.xml.in.h:1
+msgid ""
+"transmission-remote-gtk allows you to remotely manage the Transmission "
+"BitTorrent client using its RPC interface."
+msgstr ""
+"transmission-remote-gtk 让您能够使用 Transmission BT 下载客户端的 RPC 接口进"
+"行远程管理。"
+
+#: ../data/transmission-remote-gtk.appdata.xml.in.h:2
+msgid "Features"
+msgstr "功能"
+
+#: ../data/transmission-remote-gtk.appdata.xml.in.h:3
+msgid ""
+"Remotely add (file/url), start, stop, remove, remove and delete, verify, "
+"reannounce torrents."
+msgstr ""
+"远程添加（文件/URL）、启动、停止、删除任务、删除任务和文件、校验、重发布种"
+"子。"
+
+#: ../data/transmission-remote-gtk.appdata.xml.in.h:4
+msgid "Works as a .torrent handler (eg. from a web browser)."
+msgstr "作为 .torrent 文件处理程序（例如，经由网页浏览器调用）。"
+
+#: ../data/transmission-remote-gtk.appdata.xml.in.h:5
+msgid ""
+"Set torrent properties such as speed, seed, peer limits, file priorities, "
+"add/edit/remove trackers."
+msgstr ""
+"设置种子属性，例如速度、做种、节点限制、文件属性、添加/编辑/删除 tracker 服务"
+"器。"
+
+#: ../data/transmission-remote-gtk.appdata.xml.in.h:6
+msgid ""
+"Change remote settings like global limits, download directory, and "
+"connectivity preferences."
+msgstr "更改远程设置，例如全局限制、下载目录以及连接首选项。"
+
+#: ../src/torrent.c:369 ../src/torrent.c:389
+msgid "Metadata Downloading"
+msgstr "正在下载元信息"
+
+#: ../src/torrent.c:371 ../src/torrent.c:391 ../src/trg-state-selector.c:677
+msgid "Downloading"
+msgstr "正在下载"
+
+#: ../src/torrent.c:373
+msgid "Queued download"
+msgstr "已列队的下载"
+
+#: ../src/torrent.c:375 ../src/torrent.c:399
+msgid "Waiting To Check"
+msgstr "等待检查"
+
+#: ../src/torrent.c:377 ../src/torrent.c:397 ../src/trg-state-selector.c:703
+msgid "Checking"
+msgstr "正在检查"
+
+#: ../src/torrent.c:379
+msgid "Queued seed"
+msgstr "已列队的种子"
+
+#: ../src/torrent.c:381 ../src/torrent.c:395
+#: ../src/trg-remote-prefs-dialog.c:364 ../src/trg-state-selector.c:684
+#: ../src/trg-torrent-props-dialog.c:446
+msgid "Seeding"
+msgstr "做种中"
+
+#: ../src/torrent.c:383 ../src/torrent.c:393 ../src/torrent-cell-renderer.c:282
+#: ../src/trg-state-selector.c:691
+msgid "Paused"
+msgstr "已暂停"
+
+#: ../src/torrent.c:403
+msgid "Unknown"
+msgstr "未知"
+
+#. %1$s is how much we've got,
+#. %2$s is how much we'll have when done,
+#. %3$s%% is a percentage of the two
+#: ../src/torrent-cell-renderer.c:154
+#, c-format
+msgid "%1$s of %2$s (%3$s)"
+msgstr ""
+
+#: ../src/torrent-cell-renderer.c:164
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s Goal: %6$s)"
+msgstr ""
+
+#: ../src/torrent-cell-renderer.c:180
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s)"
+msgstr ""
+
+#: ../src/torrent-cell-renderer.c:197
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)"
+msgstr "%1$s，已上传 %2$s (分享比率：%3$s 目标：%4$s)"
+
+#. %1$s is the torrent's total size,
+#. %2$s is how much we've uploaded,
+#. %3$s is our upload-to-download ratio
+#: ../src/torrent-cell-renderer.c:211
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s)"
+msgstr "%1$s, 已上传 %2$s (分享比率: %3$s)"
+
+#: ../src/torrent-cell-renderer.c:227
+msgid "Remaining time unknown"
+msgstr "剩余时间未知"
+
+#. time remaining
+#: ../src/torrent-cell-renderer.c:232
+#, c-format
+msgid "%s remaining"
+msgstr "剩余时间 %s"
+
+#. 1==down arrow, 2==down speed, 3==up arrow, 4==down speed
+#: ../src/torrent-cell-renderer.c:256
+#, c-format
+msgid "%1$s %2$s, %3$s %4$s"
+msgstr "%1$s %2$s，%3$s %4$s"
+
+#. bandwidth speed + unicode arrow
+#: ../src/torrent-cell-renderer.c:260 ../src/torrent-cell-renderer.c:263
+#, c-format
+msgid "%1$s %2$s"
+msgstr ""
+
+#: ../src/torrent-cell-renderer.c:267
+msgid "Idle"
+msgstr "空闲"
+
+#: ../src/torrent-cell-renderer.c:281
+msgid "Finished"
+msgstr "已完成"
+
+#: ../src/torrent-cell-renderer.c:284
+msgid "Queued for verification"
+msgstr "已加入校验队列"
+
+#: ../src/torrent-cell-renderer.c:286
+msgid "Queued for download"
+msgstr "已加入下载队列"
+
+#: ../src/torrent-cell-renderer.c:288
+msgid "Queued for seeding"
+msgstr "已加入做种队列"
+
+#: ../src/torrent-cell-renderer.c:291
+#, c-format
+msgid "Verifying data (%1$s tested)"
+msgstr "正在校验数据 (%1$s 已检查)"
+
+#: ../src/torrent-cell-renderer.c:299
+#, c-format
+msgid "Ratio %s"
+msgstr "分享比率 %s"
+
+#: ../src/torrent-cell-renderer.c:313
+#, c-format
+msgid "Tracker gave a warning: \"%s\""
+msgstr "Tracker 给出一个警告：%s"
+
+#: ../src/torrent-cell-renderer.c:314
+#, c-format
+msgid "Tracker gave an error: \"%s\""
+msgstr "Tracker 给出一个错误：%s"
+
+#: ../src/torrent-cell-renderer.c:315
+#, c-format
+msgid "Error: %s"
+msgstr "错误：%s"
+
+#: ../src/torrent-cell-renderer.c:329
+msgid "Downloading from %1$"
+msgid_plural "Downloading from %1$"
+msgstr[0] "正在从 %1$ 下载"
+
+#: ../src/torrent-cell-renderer.c:337
+msgid "Downloading metadata from %1$"
+msgid_plural "Downloading metadata from %1$"
+msgstr[0] "正在从 %1$ 下载元信息"
+
+#: ../src/torrent-cell-renderer.c:348
+msgid "Seeding to %1$"
+msgid_plural "Seeding to %1$"
+msgstr[0] "正在为 %1$ 做种"
+
+#: ../src/trg-about-window.c:59
+msgid "A remote client to transmission-daemon."
+msgstr "一个 transmission-daemon 的远程客户端。"
+
+#: ../src/trg-cell-renderer-priority.c:78 ../src/trg-general-panel.c:202
+#: ../src/trg-main-window.c:2079 ../src/trg-torrent-add-dialog.c:382
+#: ../src/trg-torrent-props-dialog.c:415
+msgid "Low"
+msgstr "低"
+
+#: ../src/trg-cell-renderer-priority.c:80 ../src/trg-general-panel.c:208
+#: ../src/trg-main-window.c:2075 ../src/trg-torrent-add-dialog.c:383
+#: ../src/trg-torrent-props-dialog.c:417
+msgid "High"
+msgstr "高"
+
+#: ../src/trg-cell-renderer-priority.c:82 ../src/trg-general-panel.c:205
+#: ../src/trg-main-window.c:2077 ../src/trg-torrent-add-dialog.c:382
+#: ../src/trg-torrent-props-dialog.c:416
+msgid "Normal"
+msgstr "正常"
+
+#: ../src/trg-cell-renderer-priority.c:84
+msgid "Mixed"
+msgstr "混合"
+
+#: ../src/trg-files-tree-view.c:189 ../src/trg-general-panel.c:316
+#: ../src/trg-preferences-dialog.c:653 ../src/trg-torrent-add-dialog.c:284
+#: ../src/trg-torrent-tree-view.c:56
+msgid "Name"
+msgstr "名称"
+
+#. add "size" column
+#: ../src/trg-files-tree-view.c:193 ../src/trg-general-panel.c:319
+#: ../src/trg-torrent-add-dialog.c:302 ../src/trg-torrent-tree-view.c:61
+msgid "Size"
+msgstr "大小"
+
+#: ../src/trg-files-tree-view.c:195 ../src/trg-peers-tree-view.c:74
+msgid "Progress"
+msgstr "进度"
+
+#. add "enabled" column
+#: ../src/trg-files-tree-view.c:197 ../src/trg-torrent-add-dialog.c:315
+#: ../src/trg-torrent-add-dialog.c:665 ../src/trg-files-tree-view-common.c:69
+msgid "Download"
+msgstr "下载"
+
+#. add priority column
+#: ../src/trg-files-tree-view.c:199 ../src/trg-general-panel.c:349
+#: ../src/trg-main-window.c:2068 ../src/trg-torrent-add-dialog.c:331
+#: ../src/trg-torrent-tree-view.c:149
+msgid "Priority"
+msgstr "优先级"
+
+#: ../src/trg-general-panel.c:176 ../src/trg-general-panel.c:250
+#: ../src/trg-torrent-props-dialog.c:344 ../src/util.c:487
+msgid "N/A"
+msgstr "不适用"
+
+#: ../src/trg-general-panel.c:194
+msgid "(Private)"
+msgstr "（私有）"
+
+#: ../src/trg-general-panel.c:194
+msgid "(Public)"
+msgstr "（公共）"
+
+#: ../src/trg-general-panel.c:238 ../src/trg-main-window.c:1142
+#: ../src/trg-main-window.c:1555 ../src/trg-main-window.c:2203
+#: ../src/trg-rss-window.c:207 ../src/trg-rss-window.c:221
+#: ../src/trg-state-selector.c:557 ../src/trg-torrent-add-url-dialog.c:71
+#: ../src/util.c:333
+msgid "Error"
+msgstr "错误"
+
+#: ../src/trg-general-panel.c:321
+msgid "Rate Down"
+msgstr ""
+
+#: ../src/trg-general-panel.c:323 ../src/trg-torrent-tree-view.c:155
+msgid "Completed"
+msgstr "已完成"
+
+#: ../src/trg-general-panel.c:326 ../src/trg-torrent-tree-view.c:127
+msgid "ETA"
+msgstr "估计剩余时间"
+
+#: ../src/trg-general-panel.c:328
+msgid "Rate Up"
+msgstr ""
+
+#: ../src/trg-general-panel.c:330 ../src/trg-torrent-tree-view.c:132
+msgid "Downloaded"
+msgstr "已下载"
+
+#: ../src/trg-general-panel.c:333
+msgid "Seeders"
+msgstr "做种者"
+
+#: ../src/trg-general-panel.c:335 ../src/trg-stats-dialog.c:321
+#: ../src/trg-torrent-tree-view.c:135
+msgid "Ratio"
+msgstr "分享率"
+
+#: ../src/trg-general-panel.c:337 ../src/trg-torrent-tree-view.c:129
+msgid "Uploaded"
+msgstr "已上传"
+
+#: ../src/trg-general-panel.c:340 ../src/trg-torrent-tree-view.c:74
+msgid "Leechers"
+msgstr "吸血鬼"
+
+#: ../src/trg-general-panel.c:342
+msgid "Ratio limit"
+msgstr "分享比率限制"
+
+#: ../src/trg-general-panel.c:344
+msgid "Corrupted"
+msgstr "已损坏"
+
+#: ../src/trg-general-panel.c:347 ../src/trg-torrent-tree-view.c:67
+msgid "Status"
+msgstr "状态"
+
+#: ../src/trg-general-panel.c:351
+msgid "Completed At"
+msgstr "完成于"
+
+#: ../src/trg-general-panel.c:354 ../src/trg-torrent-tree-view.c:143
+msgid "Location"
+msgstr "位置"
+
+#: ../src/trg-general-panel.c:357
+msgid "Comment"
+msgstr "注释"
+
+#: ../src/trg-gtk-app.c:183 ../src/trg-peers-tree-view.c:78
+msgid "Client"
+msgstr "客户端"
+
+#: ../src/trg-gtk-app.c:192
+msgid "Min On Start"
+msgstr "启动时最小化"
+
+#: ../src/trg-main-window.c:368
+msgid "This torrent has completed."
+msgstr "这个种子已经完成。"
+
+#: ../src/trg-main-window.c:380
+msgid "This torrent has been added."
+msgstr "这个种子已被添加。"
+
+#: ../src/trg-main-window.c:610
+msgid "No hostname set"
+msgstr "未设置主机名"
+
+#: ../src/trg-main-window.c:613
+msgid "Unknown error getting settings"
+msgstr "获取配置时发生未知错误"
+
+#: ../src/trg-main-window.c:633
+msgid "Connecting..."
+msgstr "正在连接…"
+
+#: ../src/trg-main-window.c:902
+#, c-format
+msgid "<big><b>Remove torrent \"%s\"?</b></big>"
+msgstr "<big><b>移除种子“%s”？</b></big>"
+
+#: ../src/trg-main-window.c:903
+#, c-format
+msgid "<big><b>Remove %d torrents?</b></big>"
+msgstr "<big><b>移除 %d 个种子？</b></big>"
+
+#: ../src/trg-main-window.c:925
+#, c-format
+msgid "<big><b>Remove and delete torrent \"%s\"?</b></big>"
+msgstr "<big><b>是否移除项目并删除种子“%s”？</b></big>"
+
+#: ../src/trg-main-window.c:927
+#, c-format
+msgid "<big><b>Remove and delete %d torrents?</b></big>"
+msgstr "<big><b>是否移除这些项目并删除这 %d 个种子？</b></big>"
+
+#: ../src/trg-main-window.c:1026 ../src/trg-preferences-dialog.c:947
+#: ../src/trg-remote-prefs-dialog.c:697
+msgid "General"
+msgstr "通用"
+
+#: ../src/trg-main-window.c:1035 ../src/trg-torrent-props-dialog.c:621
+msgid "Trackers"
+msgstr "Trackers"
+
+#: ../src/trg-main-window.c:1043 ../src/trg-torrent-props-dialog.c:590
+msgid "Files"
+msgstr "文件"
+
+#: ../src/trg-main-window.c:1051 ../src/trg-remote-prefs-dialog.c:403
+#: ../src/trg-torrent-props-dialog.c:464 ../src/trg-torrent-props-dialog.c:604
+#: ../src/trg-trackers-tree-view.c:194
+msgid "Peers"
+msgstr "节点"
+
+#: ../src/trg-main-window.c:1134
+#, c-format
+msgid "This application supports Transmission %g and later, you have %g."
+msgstr "本应用程序只支持 Transmission %g 或更新版本，但是您正在使用 %g。"
+
+#: ../src/trg-main-window.c:1200 ../src/trg-status-bar.c:78
+#: ../src/trg-status-bar.c:108
+msgid "Disconnected"
+msgstr "连接已断开"
+
+#: ../src/trg-main-window.c:1245
+#, c-format
+msgid "%d Downloading @ %s"
+msgstr ""
+
+#: ../src/trg-main-window.c:1252
+#, c-format
+msgid "%d Seeding @ %s"
+msgstr ""
+
+#: ../src/trg-main-window.c:1303
+#, c-format
+msgid "Request %d/%d failed: %s"
+msgstr ""
+
+#: ../src/trg-main-window.c:2123
+msgid "No Limit"
+msgstr "无限制"
+
+#: ../src/trg-main-window.c:2224 ../src/trg-menu-bar.c:712
+#: ../src/trg-toolbar.c:228
+msgid "Properties"
+msgstr "属性"
+
+#: ../src/trg-main-window.c:2227 ../src/trg-toolbar.c:221
+msgid "Resume"
+msgstr "继续"
+
+#: ../src/trg-main-window.c:2230 ../src/trg-toolbar.c:224
+msgid "Pause"
+msgstr "暂停"
+
+#: ../src/trg-main-window.c:2233
+msgid "Verify"
+msgstr "校验"
+
+#: ../src/trg-main-window.c:2236
+msgid "Re-announce"
+msgstr "重发布"
+
+#: ../src/trg-main-window.c:2239 ../src/trg-torrent-move-dialog.c:122
+#: ../src/trg-torrent-move-dialog.c:129
+msgid "Move"
+msgstr "移动"
+
+#: ../src/trg-main-window.c:2242 ../src/trg-menu-bar.c:743
+#: ../src/trg-toolbar.c:232
+msgid "Remove"
+msgstr "移除"
+
+#: ../src/trg-main-window.c:2245 ../src/trg-menu-bar.c:749
+#: ../src/trg-toolbar.c:236
+msgid "Remove and delete data"
+msgstr "移除并删除数据"
+
+#: ../src/trg-main-window.c:2269 ../src/trg-preferences-dialog.c:957
+msgid "Actions"
+msgstr "操作"
+
+#: ../src/trg-main-window.c:2298 ../src/trg-menu-bar.c:759
+msgid "Start Now"
+msgstr "现在开始"
+
+#: ../src/trg-main-window.c:2301 ../src/trg-menu-bar.c:764
+msgid "Move Up Queue"
+msgstr "向上移动"
+
+#: ../src/trg-main-window.c:2304 ../src/trg-menu-bar.c:771
+msgid "Move Down Queue"
+msgstr "向下移动"
+
+#: ../src/trg-main-window.c:2307 ../src/trg-menu-bar.c:778
+msgid "Bottom Of Queue"
+msgstr "移至队列底部"
+
+#: ../src/trg-main-window.c:2310 ../src/trg-menu-bar.c:782
+msgid "Top Of Queue"
+msgstr "移至队列顶部"
+
+#: ../src/trg-main-window.c:2319 ../src/trg-main-window.c:2402
+msgid "Down Limit"
+msgstr "下载限速"
+
+#: ../src/trg-main-window.c:2324 ../src/trg-main-window.c:2406
+msgid "Up Limit"
+msgstr "上传限速"
+
+#: ../src/trg-main-window.c:2353 ../src/trg-main-window.c:2360
+#: ../src/trg-remote-prefs-dialog.c:501
+msgid "Updating..."
+msgstr "正在更新.…"
+
+#: ../src/trg-main-window.c:2374 ../src/trg-menu-bar.c:671
+#: ../src/trg-toolbar.c:200
+msgid "Connect"
+msgstr "连接"
+
+#: ../src/trg-main-window.c:2381 ../src/trg-toolbar.c:211
+msgid "Disconnect"
+msgstr "断开连接"
+
+#: ../src/trg-main-window.c:2385 ../src/trg-toolbar.c:214
+#: ../src/trg-trackers-tree-view.c:288 ../src/trg-trackers-tree-view.c:315
+msgid "Add"
+msgstr "添加"
+
+#: ../src/trg-main-window.c:2389
+msgid "Add from URL"
+msgstr "从 URL 添加"
+
+#: ../src/trg-main-window.c:2393
+msgid "Resume All"
+msgstr "全部继续"
+
+#: ../src/trg-main-window.c:2397
+msgid "Pause All"
+msgstr "全部暂停"
+
+#: ../src/trg-main-window.c:2413
+msgid "Quit"
+msgstr "退出"
+
+#: ../src/trg-main-window.c:2527 ../src/trg-menu-bar.c:565
+msgid "Graph"
+msgstr "图表"
+
+#: ../src/trg-menu-bar.c:485
+msgid "_View"
+msgstr "查看(_V)"
+
+#: ../src/trg-menu-bar.c:494
+msgid "Transmission Style"
+msgstr "Transmission 风格"
+
+#: ../src/trg-menu-bar.c:504
+msgid "Transmission Compact Style"
+msgstr "Transmission 紧凑风格"
+
+#: ../src/trg-menu-bar.c:514
+msgid "Classic Style"
+msgstr "经典风格"
+
+#: ../src/trg-menu-bar.c:520
+msgid "Sort"
+msgstr "排序"
+
+#: ../src/trg-menu-bar.c:525 ../src/trg-preferences-dialog.c:718
+msgid "State selector"
+msgstr ""
+
+#: ../src/trg-menu-bar.c:531 ../src/trg-preferences-dialog.c:725
+msgid "Directory filters"
+msgstr "目录过滤器"
+
+#: ../src/trg-menu-bar.c:540 ../src/trg-preferences-dialog.c:732
+msgid "Tracker filters"
+msgstr "Tracker 过滤器"
+
+#: ../src/trg-menu-bar.c:549 ../src/trg-preferences-dialog.c:739
+msgid "Directories first"
+msgstr ""
+
+#: ../src/trg-menu-bar.c:557 ../src/trg-preferences-dialog.c:746
+msgid "Torrent Details"
+msgstr "种子细节"
+
+#: ../src/trg-menu-bar.c:571
+msgid "_Statistics"
+msgstr "统计信息(_S)"
+
+#: ../src/trg-menu-bar.c:578
+msgid "_RSS"
+msgstr "简易信息聚合(_R)"
+
+#: ../src/trg-menu-bar.c:591
+msgid "_Options"
+msgstr "选项(_O)"
+
+#: ../src/trg-menu-bar.c:597
+msgid "_Local Preferences"
+msgstr "本地首选项(_L)"
+
+#: ../src/trg-menu-bar.c:604
+msgid "_Remote Preferences"
+msgstr "远程首选项(_R)"
+
+#: ../src/trg-menu-bar.c:664
+msgid "_File"
+msgstr "文件(_F)"
+
+#: ../src/trg-menu-bar.c:677
+msgid "_Disconnect"
+msgstr "断开连接(_D)"
+
+#: ../src/trg-menu-bar.c:683
+msgid "_Add"
+msgstr "添加(_A)"
+
+#: ../src/trg-menu-bar.c:688
+msgid "Add from _URL"
+msgstr "从 URL 添加(_U)"
+
+#: ../src/trg-menu-bar.c:694
+msgid "_Quit"
+msgstr "退出(_Q)"
+
+#: ../src/trg-menu-bar.c:705
+msgid "_Torrent"
+msgstr "种子(_T)"
+
+#: ../src/trg-menu-bar.c:717
+msgid "_Resume"
+msgstr "续传(_R)"
+
+#: ../src/trg-menu-bar.c:722
+msgid "_Pause"
+msgstr "暂停(_P)"
+
+#: ../src/trg-menu-bar.c:727
+msgid "_Verify"
+msgstr "校验(_V)"
+
+#: ../src/trg-menu-bar.c:733
+msgid "Re-_announce"
+msgstr "重发布(_A)"
+
+#: ../src/trg-menu-bar.c:738
+msgid "_Move"
+msgstr "移动(_M)"
+
+#: ../src/trg-menu-bar.c:790
+msgid "_Resume All"
+msgstr "全部继续(_R)"
+
+#: ../src/trg-menu-bar.c:796
+msgid "_Pause All"
+msgstr "全部暂停(_P)"
+
+#: ../src/trg-menu-bar.c:808
+msgid "_Help"
+msgstr "帮助(_H)"
+
+#: ../src/trg-menu-bar.c:814
+msgid "_About"
+msgstr "关于(_A)"
+
+#: ../src/trg-peers-tree-view.c:54
+msgid "IP"
+msgstr ""
+
+#: ../src/trg-peers-tree-view.c:58 ../src/trg-trackers-tree-view.c:213
+msgid "Host"
+msgstr "主机"
+
+#: ../src/trg-peers-tree-view.c:63
+msgid "Country"
+msgstr "国家"
+
+#: ../src/trg-peers-tree-view.c:67
+msgid "City"
+msgstr "城市"
+
+#: ../src/trg-peers-tree-view.c:70 ../src/trg-torrent-tree-view.c:121
+msgid "Down Speed"
+msgstr "下载速度"
+
+#: ../src/trg-peers-tree-view.c:72 ../src/trg-torrent-tree-view.c:124
+msgid "Up Speed"
+msgstr "上传速度"
+
+#: ../src/trg-peers-tree-view.c:76
+msgid "Flags"
+msgstr ""
+
+#: ../src/trg-preferences-dialog.c:409
+msgid "Updates"
+msgstr "信息更新"
+
+#: ../src/trg-preferences-dialog.c:411
+msgid "Update active torrents only"
+msgstr "只更新活跃种子的信息"
+
+#: ../src/trg-preferences-dialog.c:418
+msgid "Full update every (?) updates"
+msgstr "每（？）次更新进行一次完整更新"
+
+#: ../src/trg-preferences-dialog.c:432
+msgid "Update interval:"
+msgstr "更新间隔："
+
+#: ../src/trg-preferences-dialog.c:436
+msgid "Minimised update interval:"
+msgstr "最小化时的更新间隔："
+
+#: ../src/trg-preferences-dialog.c:441
+msgid "Session update interval:"
+msgstr "会话更新间隔："
+
+#: ../src/trg-preferences-dialog.c:443
+msgid "Torrents"
+msgstr "种子"
+
+#: ../src/trg-preferences-dialog.c:445
+msgid "Start paused"
+msgstr "将新添加任务置为暂停状态"
+
+#: ../src/trg-preferences-dialog.c:449
+msgid "Options dialog on add"
+msgstr "为新添加任务打开选项对话框"
+
+#: ../src/trg-preferences-dialog.c:454 ../src/trg-torrent-add-dialog.c:737
+msgid "Delete local .torrent file after adding"
+msgstr "添加后删除本地 .torrent 文件"
+
+#: ../src/trg-preferences-dialog.c:607
+msgid "Commands"
+msgstr "命令"
+
+#: ../src/trg-preferences-dialog.c:617 ../src/trg-preferences-dialog.c:691
+msgid "Label"
+msgstr "标签"
+
+#: ../src/trg-preferences-dialog.c:620
+msgid "Command"
+msgstr "命令"
+
+#: ../src/trg-preferences-dialog.c:643 ../src/trg-preferences-dialog.c:968
+#: ../src/trg-rss-window.c:274
+msgid "RSS Feeds"
+msgstr "RSS Feeds"
+
+#: ../src/trg-preferences-dialog.c:656
+msgid "URL"
+msgstr ""
+
+#: ../src/trg-preferences-dialog.c:681
+msgid "Remote Download Directories"
+msgstr "远程下载目录"
+
+#: ../src/trg-preferences-dialog.c:694
+msgid "Directory"
+msgstr "目录"
+
+#: ../src/trg-preferences-dialog.c:716 ../src/trg-preferences-dialog.c:952
+msgid "View"
+msgstr "视图"
+
+#: ../src/trg-preferences-dialog.c:754
+msgid "Show graph"
+msgstr "显示图表"
+
+#: ../src/trg-preferences-dialog.c:761
+msgid "System Tray"
+msgstr "系统托盘"
+
+#: ../src/trg-preferences-dialog.c:764
+msgid "Show in system tray (needs whitelisting in unity)"
+msgstr "在系统托盘中显示（需要在 unity 中具有白名单）"
+
+#: ../src/trg-preferences-dialog.c:766
+msgid "Show in system tray"
+msgstr "在系统托盘显示"
+
+#: ../src/trg-preferences-dialog.c:776
+msgid "Minimise to system tray"
+msgstr "最小化至系统托盘"
+
+#: ../src/trg-preferences-dialog.c:786
+msgid "Notifications"
+msgstr "通知"
+
+#: ../src/trg-preferences-dialog.c:788
+msgid "Torrent added notifications"
+msgstr "种子添加通知"
+
+#: ../src/trg-preferences-dialog.c:792
+msgid "Torrent complete notifications"
+msgstr "种子完成通知"
+
+#: ../src/trg-preferences-dialog.c:819
+msgid "Profile: "
+msgstr "配置文件： "
+
+#: ../src/trg-preferences-dialog.c:845
+msgid "Name:"
+msgstr "名称："
+
+#: ../src/trg-preferences-dialog.c:850 ../src/trg-preferences-dialog.c:942
+msgid "Connection"
+msgstr "连接"
+
+#: ../src/trg-preferences-dialog.c:853
+msgid "Host:"
+msgstr "主机："
+
+#: ../src/trg-preferences-dialog.c:857
+msgid "Port:"
+msgstr "端口："
+
+#: ../src/trg-preferences-dialog.c:859
+msgid "RPC URL Path:"
+msgstr "RPC URL 路径："
+
+#: ../src/trg-preferences-dialog.c:862
+msgid "Username:"
+msgstr "用户名："
+
+#: ../src/trg-preferences-dialog.c:866
+msgid "Password:"
+msgstr "密码："
+
+#: ../src/trg-preferences-dialog.c:868
+msgid "Automatically connect"
+msgstr "自动连接"
+
+#: ../src/trg-preferences-dialog.c:874
+msgid "SSL"
+msgstr "SSL"
+
+#: ../src/trg-preferences-dialog.c:877
+msgid "Validate SSL Certificate"
+msgstr "验证 SSL 证书"
+
+#: ../src/trg-preferences-dialog.c:885
+msgid "Timeout:"
+msgstr "超时："
+
+#: ../src/trg-preferences-dialog.c:889
+msgid "Retries:"
+msgstr "重试次数："
+
+#: ../src/trg-preferences-dialog.c:931 ../src/trg-toolbar.c:243
+msgid "Local Preferences"
+msgstr "本地首选项"
+
+#: ../src/trg-preferences-dialog.c:962
+msgid "Directories"
+msgstr "目录"
+
+#: ../src/trg-remote-prefs-dialog.c:309
+msgid "Bandwidth limits"
+msgstr "带宽限制"
+
+#: ../src/trg-remote-prefs-dialog.c:313
+msgid "Down Limit (KiB/s)"
+msgstr "下行限制 (KiB/s)"
+
+#: ../src/trg-remote-prefs-dialog.c:320
+msgid "Up Limit (KiB/s)"
+msgstr "上行限制 (KiB/s)"
+
+#: ../src/trg-remote-prefs-dialog.c:325
+msgid "Alternate limits"
+msgstr "临时限制"
+
+#: ../src/trg-remote-prefs-dialog.c:330
+msgid "Alternate speed limits active"
+msgstr "启用临时速度限制"
+
+#: ../src/trg-remote-prefs-dialog.c:337
+msgid "Alternate time range"
+msgstr "临时限制时间范围"
+
+#: ../src/trg-remote-prefs-dialog.c:344
+msgid "Alternate down limit (KiB/s)"
+msgstr "临时下载限制 (KiB/s)"
+
+#: ../src/trg-remote-prefs-dialog.c:349
+msgid "Alternate up limit (KiB/s)"
+msgstr "临时上传限制 (KiB/s)"
+
+#: ../src/trg-remote-prefs-dialog.c:368
+msgid "Seed ratio limit"
+msgstr "种子分享比率限制"
+
+#: ../src/trg-remote-prefs-dialog.c:375
+msgid "Queues"
+msgstr "队列"
+
+#: ../src/trg-remote-prefs-dialog.c:379
+msgid "Download queue size"
+msgstr "下载队列大小"
+
+#: ../src/trg-remote-prefs-dialog.c:387
+msgid "Seed queue size"
+msgstr "做种队列大小"
+
+#: ../src/trg-remote-prefs-dialog.c:395
+msgid "Ignore stalled (minutes)"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:408
+msgid "Global peer limit"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:413
+msgid "Per torrent peer limit"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:426
+msgid "Retest"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:437
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:441
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:457 ../src/trg-remote-prefs-dialog.c:526
+msgid "Port test"
+msgstr "端口测试"
+
+#: ../src/trg-remote-prefs-dialog.c:458
+msgid "Testing..."
+msgstr "正在测试…"
+
+#: ../src/trg-remote-prefs-dialog.c:473 ../src/trg-remote-prefs-dialog.c:581
+msgid "Update"
+msgstr "更新"
+
+#: ../src/trg-remote-prefs-dialog.c:478 ../src/trg-remote-prefs-dialog.c:572
+#, c-format
+msgid "Blocklist (%ld entries)"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:520 ../src/trg-remote-prefs-dialog.c:702
+msgid "Connections"
+msgstr "连接"
+
+#: ../src/trg-remote-prefs-dialog.c:524
+msgid "Peer port"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:527
+msgid "Test"
+msgstr "测试"
+
+#: ../src/trg-remote-prefs-dialog.c:531
+msgid "Required"
+msgstr "必需"
+
+#: ../src/trg-remote-prefs-dialog.c:532
+msgid "Preferred"
+msgstr "偏好"
+
+#: ../src/trg-remote-prefs-dialog.c:533
+msgid "Tolerated"
+msgstr "容忍"
+
+#: ../src/trg-remote-prefs-dialog.c:544
+msgid "Encryption"
+msgstr "加密"
+
+#: ../src/trg-remote-prefs-dialog.c:548
+msgid "Random peer port on start"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:553
+msgid "Peer port forwarding"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:556
+msgid "Protocol"
+msgstr "协议"
+
+#: ../src/trg-remote-prefs-dialog.c:559
+msgid "Peer exchange (PEX)"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:563
+msgid "Distributed Hash Table (DHT)"
+msgstr "分布式哈希表（DHT）"
+
+#: ../src/trg-remote-prefs-dialog.c:567
+msgid "Local peer discovery"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:570
+msgid "Blocklist"
+msgstr "黑名单"
+
+#: ../src/trg-remote-prefs-dialog.c:590
+msgid "Blocklist URL:"
+msgstr ""
+
+#: ../src/trg-remote-prefs-dialog.c:608
+msgid "Environment"
+msgstr "运行环境"
+
+#: ../src/trg-remote-prefs-dialog.c:612
+msgid "Download directory"
+msgstr "下载目录"
+
+#: ../src/trg-remote-prefs-dialog.c:616
+msgid "Incomplete download dir"
+msgstr "未完成下载目录"
+
+#: ../src/trg-remote-prefs-dialog.c:623
+msgid "Torrent done script"
+msgstr "种子完成后运行脚本"
+
+#: ../src/trg-remote-prefs-dialog.c:632
+msgid "Cache size (MiB)"
+msgstr "缓存大小 (MiB)"
+
+#: ../src/trg-remote-prefs-dialog.c:635
+msgid "Behavior"
+msgstr "行为"
+
+#: ../src/trg-remote-prefs-dialog.c:639
+msgid "Rename partial files"
+msgstr "重命名部分完成的文件"
+
+#: ../src/trg-remote-prefs-dialog.c:644
+msgid "Trash original torrent files"
+msgstr "删除原始种子文件"
+
+#: ../src/trg-remote-prefs-dialog.c:649
+msgid "Start added torrents"
+msgstr "添加种子后立即开始任务"
+
+#: ../src/trg-remote-prefs-dialog.c:675 ../src/trg-toolbar.c:247
+msgid "Remote Preferences"
+msgstr "远程首选项"
+
+#: ../src/trg-remote-prefs-dialog.c:707 ../src/trg-torrent-props-dialog.c:408
+msgid "Bandwidth"
+msgstr "带宽"
+
+#: ../src/trg-remote-prefs-dialog.c:712 ../src/trg-torrent-props-dialog.c:635
+msgid "Limits"
+msgstr "限制"
+
+#: ../src/trg-rss-window.c:197 ../src/util.c:351
+#, c-format
+msgid "Request failed with HTTP code %d"
+msgstr ""
+
+#: ../src/trg-rss-window.c:214
+#, c-format
+msgid "Error parsing RSS feed \"%s\": %s"
+msgstr ""
+
+#: ../src/trg-state-selector.c:675
+msgid "All"
+msgstr "全部"
+
+#: ../src/trg-state-selector.c:680 ../src/trg-state-selector.c:753
+msgid "Queue Down"
+msgstr ""
+
+#: ../src/trg-state-selector.c:687 ../src/trg-state-selector.c:757
+msgid "Queue Up"
+msgstr ""
+
+#: ../src/trg-state-selector.c:694
+msgid "Complete"
+msgstr "已完成"
+
+#: ../src/trg-state-selector.c:697
+msgid "Incomplete"
+msgstr "未完成"
+
+#: ../src/trg-state-selector.c:700
+msgid "Active"
+msgstr "活跃"
+
+#: ../src/trg-stats-dialog.c:296
+msgid "Statistics"
+msgstr "统计信息"
+
+#: ../src/trg-stats-dialog.c:315
+msgid "Version"
+msgstr "版本"
+
+#: ../src/trg-stats-dialog.c:317
+msgid "Download Total"
+msgstr "下载总计"
+
+#: ../src/trg-stats-dialog.c:319
+msgid "Upload Total"
+msgstr "上传总计"
+
+#: ../src/trg-stats-dialog.c:323
+msgid "Files Added"
+msgstr "文件已添加"
+
+#: ../src/trg-stats-dialog.c:325
+msgid "Session Count"
+msgstr ""
+
+#: ../src/trg-stats-dialog.c:327
+msgid "Time Active"
+msgstr ""
+
+#: ../src/trg-stats-dialog.c:332
+msgid "Statistic"
+msgstr ""
+
+#: ../src/trg-stats-dialog.c:334
+msgid "Session"
+msgstr "会话"
+
+#: ../src/trg-stats-dialog.c:337
+msgid "Cumulative"
+msgstr ""
+
+#: ../src/trg-status-bar.c:145
+#, c-format
+msgid "Connected: %s :: Transmission %s"
+msgstr "已连接：%s :: Transmission %s"
+
+#: ../src/trg-status-bar.c:163
+msgid "Updating torrents..."
+msgstr ""
+
+#: ../src/trg-status-bar.c:176
+#, c-format
+msgid "Free space: %s"
+msgstr "可用空间：%s"
+
+#: ../src/trg-status-bar.c:188
+msgid "Disable alternate speed limits"
+msgstr ""
+
+#: ../src/trg-status-bar.c:189
+msgid "Enable alternate speed limits"
+msgstr ""
+
+#: ../src/trg-status-bar.c:226 ../src/trg-status-bar.c:233
+#, c-format
+msgid " (Limit: %s)"
+msgstr "（限制：%s）"
+
+#: ../src/trg-status-bar.c:238
+#, c-format
+msgid "Down: %s%s, Up: %s%s"
+msgstr "下载：%s%s，上传：%s%s"
+
+#: ../src/trg-torrent-add-dialog.c:392
+msgid "Torrent files"
+msgstr "种子文件"
+
+#: ../src/trg-torrent-add-dialog.c:397
+msgid "All files"
+msgstr "所有文件"
+
+#: ../src/trg-torrent-add-dialog.c:432
+msgid ""
+"Unable to parse torrent file. File preferences unavailable, but you can "
+"still try uploading it."
+msgstr ""
+
+#: ../src/trg-torrent-add-dialog.c:445
+#, c-format
+msgid "Unable to open torrent file: %s"
+msgstr ""
+
+#: ../src/trg-torrent-add-dialog.c:538
+msgid "(None)"
+msgstr "（无）"
+
+#: ../src/trg-torrent-add-dialog.c:540
+msgid "(Multiple)"
+msgstr ""
+
+#: ../src/trg-torrent-add-dialog.c:563
+msgid "Add a Torrent"
+msgstr "添加一个种子"
+
+#: ../src/trg-torrent-add-dialog.c:656 ../src/trg-files-tree-view-common.c:54
+msgid "High Priority"
+msgstr "高优先级"
+
+#: ../src/trg-torrent-add-dialog.c:659 ../src/trg-files-tree-view-common.c:58
+msgid "Normal Priority"
+msgstr "普通优先级"
+
+#: ../src/trg-torrent-add-dialog.c:662 ../src/trg-files-tree-view-common.c:62
+msgid "Low Priority"
+msgstr "低优先级"
+
+#: ../src/trg-torrent-add-dialog.c:668 ../src/trg-files-tree-view-common.c:73
+msgid "Skip"
+msgstr "跳过"
+
+#. window
+#: ../src/trg-torrent-add-dialog.c:707
+msgid "Add Torrent"
+msgstr "添加种子"
+
+#: ../src/trg-torrent-add-dialog.c:730
+msgid "Start _paused"
+msgstr "启动已暂停的任务(_P)"
+
+#: ../src/trg-torrent-add-dialog.c:747
+msgid "_Torrent file:"
+msgstr "种子文件(_T)："
+
+#: ../src/trg-torrent-add-dialog.c:766
+msgid "_Destination folder:"
+msgstr "目标文件夹(_D)："
+
+#: ../src/trg-torrent-add-dialog.c:775
+msgid "Apply to all:"
+msgstr ""
+
+#: ../src/trg-torrent-add-dialog.c:777
+msgid "Torrent _priority:"
+msgstr "种子优先级(_P)："
+
+#: ../src/trg-torrent-add-dialog.c:893
+msgid "Show _options dialog"
+msgstr "显示选项对话框(_O)"
+
+#: ../src/trg-torrent-add-url-dialog.c:65
+msgid ""
+"You are trying to add a magnet torrent, but DHT is disabled. Distributed "
+"Hash Table (DHT) should be enabled in remote settings."
+msgstr ""
+
+#: ../src/trg-torrent-add-url-dialog.c:124
+msgid "URL:"
+msgstr ""
+
+#: ../src/trg-torrent-add-url-dialog.c:127
+msgid "Start Paused"
+msgstr "将新添加任务置为暂停状态"
+
+#: ../src/trg-torrent-add-url-dialog.c:130
+msgid "Add torrent from URL"
+msgstr "从 URL 地址添加种子"
+
+#: ../src/trg-torrent-graph.c:415
+msgid "Total Uploading"
+msgstr "上传总计"
+
+#: ../src/trg-torrent-graph.c:423
+msgid "Total Downloading"
+msgstr "下载总计"
+
+#: ../src/trg-torrent-model.c:407
+msgid "Default"
+msgstr "默认"
+
+#: ../src/trg-torrent-move-dialog.c:119 ../src/trg-torrent-props-dialog.c:255
+msgid "Location:"
+msgstr ""
+
+#: ../src/trg-torrent-move-dialog.c:166
+#, c-format
+msgid "Move %s"
+msgstr ""
+
+#: ../src/trg-torrent-move-dialog.c:168
+#, c-format
+msgid "Move %d torrents"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:201
+msgid "Activity"
+msgstr "活动"
+
+#: ../src/trg-torrent-props-dialog.c:206
+msgid "Torrent size:"
+msgstr "种子大小："
+
+#: ../src/trg-torrent-props-dialog.c:211
+msgid "Have:"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:216
+msgid "Downloaded:"
+msgstr "已下载："
+
+#: ../src/trg-torrent-props-dialog.c:221
+msgid "Uploaded:"
+msgstr "已上传："
+
+#: ../src/trg-torrent-props-dialog.c:226
+msgid "State:"
+msgstr "状态："
+
+#: ../src/trg-torrent-props-dialog.c:231
+msgid "Running time:"
+msgstr "运行时间："
+
+#: ../src/trg-torrent-props-dialog.c:236
+msgid "Remaining time:"
+msgstr "剩余时间："
+
+#: ../src/trg-torrent-props-dialog.c:241
+msgid "Last activity:"
+msgstr "上次活动："
+
+#: ../src/trg-torrent-props-dialog.c:246
+msgid "Error:"
+msgstr "错误："
+
+#: ../src/trg-torrent-props-dialog.c:250
+msgid "Details"
+msgstr "详细信息"
+
+#: ../src/trg-torrent-props-dialog.c:261
+msgid "Hash:"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:267
+msgid "Privacy:"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:273
+msgid "Origin:"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:290
+msgid "Comment:"
+msgstr "备注："
+
+#: ../src/trg-torrent-props-dialog.c:325
+msgid "Private to this tracker -- DHT and PEX disabled"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:327
+msgid "Public torrent"
+msgstr "公共种子"
+
+#: ../src/trg-torrent-props-dialog.c:337
+#, c-format
+msgid "Created by %1$s on %2$s"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:340
+#, c-format
+msgid "Created on %1$s"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:342
+#, c-format
+msgid "Created by %1$s"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:375
+msgid "No errors"
+msgstr "无错误"
+
+#: ../src/trg-torrent-props-dialog.c:379
+msgid "Active now"
+msgstr "当前活跃"
+
+#: ../src/trg-torrent-props-dialog.c:412
+msgid "Honor global limits"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:422
+msgid "Torrent priority:"
+msgstr "种子优先级："
+
+#: ../src/trg-torrent-props-dialog.c:428
+msgid "Queue Position:"
+msgstr "队列位置："
+
+#: ../src/trg-torrent-props-dialog.c:433
+msgid "Limit download speed (KiB/s)"
+msgstr "下载速度限制（KiB/s）"
+
+#: ../src/trg-torrent-props-dialog.c:441
+msgid "Limit upload speed (KiB/s)"
+msgstr "上传速度限制（KiB/s）"
+
+#: ../src/trg-torrent-props-dialog.c:449
+msgid "Use global settings"
+msgstr "使用全局设置"
+
+#: ../src/trg-torrent-props-dialog.c:450
+msgid "Stop seeding at ratio"
+msgstr "达到指定比率后停止做种"
+
+#: ../src/trg-torrent-props-dialog.c:451
+msgid "Seed regardless of ratio"
+msgstr "无视比率进行做种"
+
+#: ../src/trg-torrent-props-dialog.c:454
+msgid "Seed ratio mode:"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:462
+msgid "Seed ratio limit:"
+msgstr "做种比率限制："
+
+#: ../src/trg-torrent-props-dialog.c:468
+msgid "Peer limit:"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:541
+#, c-format
+msgid "Multiple (%d) torrent properties"
+msgstr ""
+
+#: ../src/trg-torrent-props-dialog.c:573
+msgid "Information"
+msgstr "信息"
+
+#: ../src/trg-torrent-tree-view.c:64
+msgid "Done"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:69
+msgid "Seeds"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:71
+msgid "Sending"
+msgstr "正在发送"
+
+#: ../src/trg-torrent-tree-view.c:77
+msgid "Downloads"
+msgstr "下载内容"
+
+#: ../src/trg-torrent-tree-view.c:80
+msgid "Receiving"
+msgstr "正在接收"
+
+#: ../src/trg-torrent-tree-view.c:84
+msgid "Connected"
+msgstr "已连接"
+
+#: ../src/trg-torrent-tree-view.c:86
+msgid "PEX Peers"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:91
+msgid "DHT Peers"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:97
+msgid "Tracker Peers"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:101
+msgid "LTEP Peers"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:106
+msgid "Resumed Peers"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:112
+msgid "Incoming Peers"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:117
+msgid "Peers T/I/E/H/X/L/R"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:137
+msgid "Added"
+msgstr "已添加"
+
+#: ../src/trg-torrent-tree-view.c:140
+msgid "First Tracker"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:146
+msgid "ID"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:152
+msgid "Queue Position"
+msgstr ""
+
+#: ../src/trg-torrent-tree-view.c:158
+msgid "Last Active"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:172
+msgid "Tier"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:178
+msgid "Announce URL"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:196
+msgid "Seeder Count"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:199
+msgid "Leecher Count"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:203
+msgid "Last Announce"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:206
+msgid "Last Result"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:208
+msgid "Scrape URL"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:210
+msgid "Last Scrape"
+msgstr ""
+
+#: ../src/trg-trackers-tree-view.c:309
+msgid "Delete"
+msgstr ""
+
+#: ../src/trg-tree-view.c:281
+msgid "Ascending"
+msgstr "升序"
+
+#: ../src/trg-tree-view.c:291
+msgid "Descending"
+msgstr "降序"
+
+#: ../src/trg-files-tree-view-common.c:80
+msgid "Expand All"
+msgstr "全部展开"
+
+#: ../src/trg-files-tree-view-common.c:85
+msgid "Collapse All"
+msgstr "全部收起"
+
+#: ../src/util.c:46
+msgid "KiB"
+msgstr ""
+
+#: ../src/util.c:47
+msgid "MiB"
+msgstr ""
+
+#: ../src/util.c:48
+msgid "GiB"
+msgstr ""
+
+#: ../src/util.c:49
+msgid "TiB"
+msgstr ""
+
+#: ../src/util.c:52
+msgid "KiB/s"
+msgstr ""
+
+#: ../src/util.c:53
+msgid "MiB/s"
+msgstr ""
+
+#: ../src/util.c:54
+msgid "GiB/s"
+msgstr ""
+
+#: ../src/util.c:55
+msgid "TiB/s"
+msgstr ""
+
+#: ../src/util.c:342
+msgid "JSON decoding error."
+msgstr "JSON 解码错误。"
+
+#: ../src/util.c:347
+msgid "Server responded, but with no result."
+msgstr "服务器已回应，但是没有给出结果。"
+
+#: ../src/util.c:385 ../src/util.c:531
+msgid "None"
+msgstr "无"
+
+#: ../src/util.c:431
+#, c-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d 天"
+
+#: ../src/util.c:432
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d 小时"
+
+#: ../src/util.c:434
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d 分钟"
+
+#: ../src/util.c:437
+#, c-format
+msgid "%ld second"
+msgid_plural "%ld seconds"
+msgstr[0] "%ld 秒"
