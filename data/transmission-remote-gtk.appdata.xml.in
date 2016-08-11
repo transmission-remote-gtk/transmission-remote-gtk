@@ -9,7 +9,7 @@
   <name>Transmission Remote</name>
   <_developer_name>Transmission Remote Gtk Team</_developer_name>
   <summary>Remotely manage the Transmission BitTorrent client</summary>
-  <url type="homepage">http://code.google.com/p/transmission-remote-gtk/</url>
+  <url type="homepage">https://github.com/transmission-remote-gtk/transmission-remote-gtk</url>
   <url type="bugtracker">https://github.com/transmission-remote-gtk/transmission-remote-gtk/issues</url>
   <description>
     <_p>
