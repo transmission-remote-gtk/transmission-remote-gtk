@@ -19,7 +19,8 @@ dnl
 
 AC_PREREQ([2.69])
 
-AC_INIT([transmission-remote-gtk], [1.2], [alan@eth0.org.uk])
+AC_INIT([transmission-remote-gtk], [1.2],
+        [https://github.com/transmission-remote-gtk/transmission-remote-gtk/issues])
 AC_CONFIG_SRCDIR([src/main.c])
 AC_CONFIG_HEADERS([config.h])
 AC_CONFIG_MACRO_DIR([m4])
