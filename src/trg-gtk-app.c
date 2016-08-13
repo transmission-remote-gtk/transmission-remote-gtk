@@ -208,7 +208,7 @@ static void trg_gtk_app_init(TrgGtkApp * self)
 TrgGtkApp *trg_gtk_app_new(TrgClient * client)
 {
     return g_object_new(TRG_TYPE_GTK_APP,
-                        "application-id", "uk.org.eth0.trg",
+                        "application-id", "io.github.TransmissionRemoteGtk",
                         "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
                         "trg-client", client, NULL);
 }
