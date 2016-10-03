@@ -22,6 +22,8 @@ AUTOMAKE_OPTIONS = foreign
 DISTCHECK_CONFIGURE_FLAGS = --disable-desktop-database-update
 SUBDIRS = extern src po data
 
+EXTRA_DIST = README.md
+
 DISTCLEANFILES = \
 	intltool-extract \
 	intltool-merge \
