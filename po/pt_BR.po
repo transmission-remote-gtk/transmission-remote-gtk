@@ -83,12 +83,12 @@ msgstr ""
 
 #: src/torrent-cell-renderer.c:230
 msgid "Remaining time unknown"
-msgstr ""
+msgstr "Tempo restante desconhecido"
 
 #: src/torrent-cell-renderer.c:235
 #, c-format
 msgid "%s remaining"
-msgstr ""
+msgstr "%s restante"
 
 #: src/torrent-cell-renderer.c:259
 #, c-format
@@ -102,54 +102,54 @@ msgstr ""
 
 #: src/torrent-cell-renderer.c:270
 msgid "Idle"
-msgstr ""
+msgstr "Ocioso"
 
 #: src/torrent-cell-renderer.c:284
 msgid "Finished"
-msgstr ""
+msgstr "Completado"
 
 #: src/torrent-cell-renderer.c:287
 msgid "Queued for verification"
-msgstr ""
+msgstr "Em fila para verificação"
 
 #: src/torrent-cell-renderer.c:289
 msgid "Queued for download"
-msgstr ""
+msgstr "Em fila para baixar"
 
 #: src/torrent-cell-renderer.c:291
 msgid "Queued for seeding"
-msgstr ""
+msgstr "Em fila para enviar"
 
 #: src/torrent-cell-renderer.c:294
 #, c-format
 msgid "Verifying data (%1$s tested)"
-msgstr ""
+msgstr "Verificando dados (%1$s testado)"
 
 #: src/torrent-cell-renderer.c:302
 #, c-format
 msgid "Ratio %s"
-msgstr ""
+msgstr "Proporção %s"
 
 #: src/torrent-cell-renderer.c:332
 #, c-format
 msgid "Downloading from %1$li of %2$li connected peer"
 msgid_plural "Downloading from %1$li of %2$li connected peers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Baixando de %1$li de %2$li par conectado"
+msgstr[1] "Baixando de %1$li de %2$li pares conectados"
 
 #: src/torrent-cell-renderer.c:340
 #, c-format
 msgid "Downloading metadata from %1$li peer (%2$s done)"
 msgid_plural "Downloading metadata from %1$li peers (%2$s done)"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Baixando metadados de %1$li par (%2$s feito)"
+msgstr[1] "Baixando metadados de %1$li pares (%2$s feito)"
 
 #: src/torrent-cell-renderer.c:351
 #, c-format
 msgid "Seeding to %1$li of %2$li connected peer"
 msgid_plural "Seeding to %1$li of %2$li connected peers"
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Enviando para %1$li de %2$li par conectado"
+msgstr[1] "Enviando para %1$li de %2$li pares conectados"
 
 #: src/trg-about-window.c:74
 msgid "A remote client to transmission-daemon."
@@ -485,7 +485,7 @@ msgstr "Grafo"
 
 #: src/trg-main-window.c:2662
 msgid "Transmission Remote"
-msgstr "Transmission Remote"
+msgstr "Transmission Remoto"
 
 #: src/trg-menu-bar.c:464
 msgid "_View"
@@ -505,7 +505,7 @@ msgstr ""
 
 #: src/trg-menu-bar.c:499
 msgid "Sort"
-msgstr ""
+msgstr "Ordenar"
 
 #: src/trg-menu-bar.c:504 src/trg-preferences-dialog.c:675
 msgid "State selector"
@@ -940,7 +940,7 @@ msgstr "Diretório de downloads"
 
 #: src/trg-remote-prefs-dialog.c:612
 msgid "Incomplete download dir"
-msgstr ""
+msgstr "Diretório de downloads incompletos"
 
 #: src/trg-remote-prefs-dialog.c:619
 msgid "Torrent done script"
@@ -956,7 +956,7 @@ msgstr "Comportamento"
 
 #: src/trg-remote-prefs-dialog.c:635
 msgid "Rename partial files"
-msgstr ""
+msgstr "Renomear arquivos parciais"
 
 #: src/trg-remote-prefs-dialog.c:640
 msgid "Trash original torrent files"
@@ -968,7 +968,7 @@ msgstr "Iniciar torrents adicionados"
 
 #: src/trg-remote-prefs-dialog.c:671 src/trg-toolbar.c:243
 msgid "Remote Preferences"
-msgstr ""
+msgstr "Preferências remotas"
 
 #: src/trg-remote-prefs-dialog.c:703 src/trg-torrent-props-dialog.c:400
 msgid "Bandwidth"
@@ -1012,11 +1012,11 @@ msgstr "Versão"
 
 #: src/trg-stats-dialog.c:296
 msgid "Download Total"
-msgstr ""
+msgstr "Total baixado"
 
 #: src/trg-stats-dialog.c:298
 msgid "Upload Total"
-msgstr ""
+msgstr "Total enviado"
 
 #: src/trg-stats-dialog.c:300
 msgid "Files Added"
@@ -1049,7 +1049,7 @@ msgstr "Conectado: %s (Transmission %g)"
 
 #: src/trg-status-bar.c:160
 msgid "Updating torrents..."
-msgstr "Atualizar torrents..."
+msgstr "Atualizando torrents..."
 
 #: src/trg-status-bar.c:173
 #, c-format
@@ -1058,11 +1058,11 @@ msgstr "Espaço livre: %s"
 
 #: src/trg-status-bar.c:185
 msgid "Disable alternate speed limits"
-msgstr ""
+msgstr "Desativar limites de velocidade alternativos"
 
 #: src/trg-status-bar.c:186
 msgid "Enable alternate speed limits"
-msgstr ""
+msgstr "Habilitar limites de velocidade alternativos"
 
 #: src/trg-status-bar.c:223 src/trg-status-bar.c:230
 #, c-format
@@ -1149,7 +1149,7 @@ msgstr "URL:"
 
 #: src/trg-torrent-add-url-dialog.c:123
 msgid "Start Paused"
-msgstr ""
+msgstr "Iniciar pausado"
 
 #: src/trg-torrent-add-url-dialog.c:126
 msgid "Add torrent from URL"
@@ -1157,11 +1157,11 @@ msgstr "Adicionar torrent de uma URL"
 
 #: src/trg-torrent-graph.c:410
 msgid "Total Uploading"
-msgstr ""
+msgstr "Total enviado"
 
 #: src/trg-torrent-graph.c:418
 msgid "Total Downloading"
-msgstr ""
+msgstr "Total baixado"
 
 #: src/trg-torrent-model.c:407
 msgid "Default"
@@ -1183,11 +1183,11 @@ msgstr "Mover %d torrents"
 
 #: src/trg-torrent-props-dialog.c:197
 msgid "Activity"
-msgstr ""
+msgstr "Atividade"
 
 #: src/trg-torrent-props-dialog.c:202
 msgid "Torrent size:"
-msgstr ""
+msgstr "Tamanho do torrent:"
 
 #: src/trg-torrent-props-dialog.c:207
 msgid "Have:"
@@ -1195,15 +1195,15 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:212
 msgid "Downloaded:"
-msgstr ""
+msgstr "Baixado:"
 
 #: src/trg-torrent-props-dialog.c:217
 msgid "Uploaded:"
-msgstr ""
+msgstr "Enviado:"
 
 #: src/trg-torrent-props-dialog.c:222
 msgid "State:"
-msgstr ""
+msgstr "Estado:"
 
 #: src/trg-torrent-props-dialog.c:227
 msgid "Running time:"
@@ -1211,19 +1211,19 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:232
 msgid "Remaining time:"
-msgstr ""
+msgstr "Tempo restante:"
 
 #: src/trg-torrent-props-dialog.c:237
 msgid "Last activity:"
-msgstr ""
+msgstr "Última atividade:"
 
 #: src/trg-torrent-props-dialog.c:242
 msgid "Error:"
-msgstr ""
+msgstr "Erro:"
 
 #: src/trg-torrent-props-dialog.c:246
 msgid "Details"
-msgstr ""
+msgstr "Detalhes"
 
 #: src/trg-torrent-props-dialog.c:257
 msgid "Hash:"
@@ -1231,15 +1231,15 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:263
 msgid "Privacy:"
-msgstr ""
+msgstr "Privacidade:"
 
 #: src/trg-torrent-props-dialog.c:269
 msgid "Origin:"
-msgstr ""
+msgstr "Origem:"
 
 #: src/trg-torrent-props-dialog.c:286
 msgid "Comment:"
-msgstr ""
+msgstr "Comentário:"
 
 #: src/trg-torrent-props-dialog.c:321
 msgid "Private to this tracker -- DHT and PEX disabled"
@@ -1247,21 +1247,21 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:323
 msgid "Public torrent"
-msgstr ""
+msgstr "Torrent público"
 
 #: src/trg-torrent-props-dialog.c:333
 #, c-format
 msgid "Created on %1$s"
-msgstr ""
+msgstr "Criado em %1$s"
 
 #: src/trg-torrent-props-dialog.c:335
 #, c-format
 msgid "Created by %1$s on %2$s"
-msgstr ""
+msgstr "Criado por %1$s em %2$s"
 
 #: src/trg-torrent-props-dialog.c:367
 msgid "No errors"
-msgstr ""
+msgstr "Sem erros"
 
 #: src/trg-torrent-props-dialog.c:371
 msgid "Active now"
@@ -1269,15 +1269,15 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:404
 msgid "Honor global limits"
-msgstr ""
+msgstr "Honrar limites globais"
 
 #: src/trg-torrent-props-dialog.c:414
 msgid "Torrent priority:"
-msgstr ""
+msgstr "Prioridade do Torrent"
 
 #: src/trg-torrent-props-dialog.c:420
 msgid "Queue Position:"
-msgstr ""
+msgstr "Posição na fila:"
 
 #: src/trg-torrent-props-dialog.c:425
 msgid "Limit download speed (KiB/s)"
@@ -1330,7 +1330,7 @@ msgstr ""
 
 #: src/trg-torrent-tree-view.c:67
 msgid "Sending"
-msgstr ""
+msgstr "Enviando"
 
 #: src/trg-torrent-tree-view.c:73
 msgid "Downloads"
@@ -1430,11 +1430,11 @@ msgstr "Excluir"
 
 #: src/trg-tree-view.c:269
 msgid "Ascending"
-msgstr ""
+msgstr "Ascendente"
 
 #: src/trg-tree-view.c:279
 msgid "Descending"
-msgstr ""
+msgstr "Descendente"
 
 #: src/util.c:342
 msgid "JSON decoding error."
