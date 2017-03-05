@@ -20,7 +20,7 @@ msgstr ""
 
 #: src/torrent.c:360 src/torrent.c:380
 msgid "Metadata Downloading"
-msgstr ""
+msgstr "Baixando Metadados"
 
 #: src/torrent.c:362 src/torrent.c:382 src/trg-state-selector.c:658
 msgid "Downloading"
@@ -40,7 +40,7 @@ msgstr "Verificando"
 
 #: src/torrent.c:370
 msgid "Queued seed"
-msgstr ""
+msgstr "Fila de envio"
 
 #: src/torrent.c:372 src/torrent.c:386 src/trg-remote-prefs-dialog.c:360
 #: src/trg-state-selector.c:665 src/trg-torrent-props-dialog.c:438
@@ -59,27 +59,27 @@ msgstr "Desconhecido(a)"
 #: src/torrent-cell-renderer.c:157
 #, c-format
 msgid "%1$s of %2$s (%3$s)"
-msgstr ""
+msgstr "%1$s de %2$s (%3$s)"
 
 #: src/torrent-cell-renderer.c:167
 #, c-format
 msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s Goal: %6$s)"
-msgstr ""
+msgstr "%1$s de %2$s (%3$s), enviado %4$s (Proporção: %5$s Objetivo: %6$s)"
 
 #: src/torrent-cell-renderer.c:183
 #, c-format
 msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s)"
-msgstr ""
+msgstr "%1$s de %2$s (%3$s), enviado %4$s (Proporção: %5$s)"
 
 #: src/torrent-cell-renderer.c:200
 #, c-format
 msgid "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)"
-msgstr ""
+msgstr "%1$s, enviado %2$s (Proporção: %3$s Objetivo: %4$s)"
 
 #: src/torrent-cell-renderer.c:214
 #, c-format
 msgid "%1$s, uploaded %2$s (Ratio: %3$s)"
-msgstr ""
+msgstr "%1$s, enviado %2$s (Proporção: %3$s)"
 
 #: src/torrent-cell-renderer.c:230
 msgid "Remaining time unknown"
@@ -493,15 +493,15 @@ msgstr "_Visualizar"
 
 #: src/trg-menu-bar.c:473
 msgid "Transmission Style"
-msgstr ""
+msgstr "Estilo Transmission"
 
 #: src/trg-menu-bar.c:483
 msgid "Transmission Compact Style"
-msgstr ""
+msgstr "Estilo Transmission Compacto"
 
 #: src/trg-menu-bar.c:493
 msgid "Classic Style"
-msgstr ""
+msgstr "Estilo Clássico"
 
 #: src/trg-menu-bar.c:499
 msgid "Sort"
@@ -509,7 +509,7 @@ msgstr "Ordenar"
 
 #: src/trg-menu-bar.c:504 src/trg-preferences-dialog.c:675
 msgid "State selector"
-msgstr ""
+msgstr "Seletor de estado"
 
 #: src/trg-menu-bar.c:510 src/trg-preferences-dialog.c:682
 msgid "Directory filters"
@@ -517,7 +517,7 @@ msgstr "Filtros de diretórios"
 
 #: src/trg-menu-bar.c:519 src/trg-preferences-dialog.c:689
 msgid "Tracker filters"
-msgstr ""
+msgstr "Filtros de rastreadores"
 
 #: src/trg-menu-bar.c:528 src/trg-preferences-dialog.c:696
 msgid "Torrent Details"
@@ -685,7 +685,7 @@ msgstr "Comando"
 
 #: src/trg-preferences-dialog.c:637
 msgid "Remote Download Directories"
-msgstr ""
+msgstr "Diretórios de Download Remoto"
 
 #: src/trg-preferences-dialog.c:650
 msgid "Directory"
@@ -745,7 +745,7 @@ msgstr "Porta:"
 
 #: src/trg-preferences-dialog.c:816
 msgid "RPC URL Path:"
-msgstr ""
+msgstr "Caminho da URL RPC:"
 
 #: src/trg-preferences-dialog.c:819
 msgid "Username:"
@@ -797,23 +797,23 @@ msgstr "Limites alternativos"
 
 #: src/trg-remote-prefs-dialog.c:326
 msgid "Alternate speed limits active"
-msgstr ""
+msgstr "Limites de velocidade alternativos ativos"
 
 #: src/trg-remote-prefs-dialog.c:333
 msgid "Alternate time range"
-msgstr ""
+msgstr "Intervalo de tempo alternativo"
 
 #: src/trg-remote-prefs-dialog.c:340
 msgid "Alternate down limit (KiB/s)"
-msgstr ""
+msgstr "Limite de download alternativo (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:345
 msgid "Alternate up limit (KiB/s)"
-msgstr ""
+msgstr "Limite de envio alternativo (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:364
 msgid "Seed ratio limit"
-msgstr ""
+msgstr "Limite de taxa de envio"
 
 #: src/trg-remote-prefs-dialog.c:371
 msgid "Queues"
@@ -821,23 +821,23 @@ msgstr "Filas"
 
 #: src/trg-remote-prefs-dialog.c:375
 msgid "Download queue size"
-msgstr ""
+msgstr "Tamanho da fila de Download"
 
 #: src/trg-remote-prefs-dialog.c:383
 msgid "Seed queue size"
-msgstr ""
+msgstr "Tamanho da fila de Envio"
 
 #: src/trg-remote-prefs-dialog.c:391
 msgid "Ignore stalled (minutes)"
-msgstr ""
+msgstr "Ignorar parados (minutos)"
 
 #: src/trg-remote-prefs-dialog.c:404
 msgid "Global peer limit"
-msgstr ""
+msgstr "Limite global de pares"
 
 #: src/trg-remote-prefs-dialog.c:409
 msgid "Per torrent peer limit"
-msgstr ""
+msgstr "Limite de pares por torrent"
 
 #: src/trg-remote-prefs-dialog.c:422
 msgid "Retest"
@@ -876,7 +876,7 @@ msgstr "Conexões"
 
 #: src/trg-remote-prefs-dialog.c:520
 msgid "Peer port"
-msgstr ""
+msgstr "Porta do par"
 
 #: src/trg-remote-prefs-dialog.c:523
 msgid "Test"
@@ -900,11 +900,11 @@ msgstr "Criptografia"
 
 #: src/trg-remote-prefs-dialog.c:544
 msgid "Random peer port on start"
-msgstr ""
+msgstr "Porta aleatória do par ao iniciar"
 
 #: src/trg-remote-prefs-dialog.c:549
 msgid "Peer port forwarding"
-msgstr ""
+msgstr "Encaminhamento de porta do Par"
 
 #: src/trg-remote-prefs-dialog.c:552
 msgid "Protocol"
@@ -920,7 +920,7 @@ msgstr ""
 
 #: src/trg-remote-prefs-dialog.c:563
 msgid "Local peer discovery"
-msgstr ""
+msgstr "Descobridor de pares locais"
 
 #: src/trg-remote-prefs-dialog.c:566
 msgid "Blocklist"
@@ -944,7 +944,7 @@ msgstr "Diretório de downloads incompletos"
 
 #: src/trg-remote-prefs-dialog.c:619
 msgid "Torrent done script"
-msgstr ""
+msgstr "Script quando torrent for finalizado"
 
 #: src/trg-remote-prefs-dialog.c:628
 msgid "Cache size (MiB)"
@@ -960,7 +960,7 @@ msgstr "Renomear arquivos parciais"
 
 #: src/trg-remote-prefs-dialog.c:640
 msgid "Trash original torrent files"
-msgstr ""
+msgstr "Mover arquivos torrents originais para a lixeira"
 
 #: src/trg-remote-prefs-dialog.c:645
 msgid "Start added torrents"
@@ -1091,6 +1091,8 @@ msgid ""
 "Unable to parse torrent file. File preferences unavailable, but you can "
 "still try uploading it."
 msgstr ""
+"Não foi possível analisar o arquivo de torrent. Preferências do arquivo indisponíveis, mas você pode"
+"tentar enviá-lo."
 
 #: src/trg-torrent-add-dialog.c:510
 #, c-format
@@ -1115,7 +1117,7 @@ msgstr "Adicionar torrent"
 
 #: src/trg-torrent-add-dialog.c:769
 msgid "Start _paused"
-msgstr ""
+msgstr "Iniciar _pausado"
 
 #: src/trg-torrent-add-dialog.c:785
 msgid "_Torrent file:"
@@ -1142,6 +1144,8 @@ msgid ""
 "You are trying to add a magnet torrent, but DHT is disabled. Distributed "
 "Hash Table (DHT) should be enabled in remote settings."
 msgstr ""
+"Você está tentando adicionar um torrent magnético, mas o DHT está desabilitado. "
+"O DHT (Distributed Hash Table) precisa estar habilitado nas configurações remotas."
 
 #: src/trg-torrent-add-url-dialog.c:120
 msgid "URL:"
@@ -1191,7 +1195,7 @@ msgstr "Tamanho do torrent:"
 
 #: src/trg-torrent-props-dialog.c:207
 msgid "Have:"
-msgstr ""
+msgstr "Disponível:"
 
 #: src/trg-torrent-props-dialog.c:212
 msgid "Downloaded:"
@@ -1207,7 +1211,7 @@ msgstr "Estado:"
 
 #: src/trg-torrent-props-dialog.c:227
 msgid "Running time:"
-msgstr ""
+msgstr "Tempo de execução:"
 
 #: src/trg-torrent-props-dialog.c:232
 msgid "Remaining time:"
@@ -1227,7 +1231,7 @@ msgstr "Detalhes"
 
 #: src/trg-torrent-props-dialog.c:257
 msgid "Hash:"
-msgstr ""
+msgstr "Hash:"
 
 #: src/trg-torrent-props-dialog.c:263
 msgid "Privacy:"
@@ -1243,7 +1247,7 @@ msgstr "Comentário:"
 
 #: src/trg-torrent-props-dialog.c:321
 msgid "Private to this tracker -- DHT and PEX disabled"
-msgstr ""
+msgstr "Privado para este rastreador -- DHT e PEX desabilitados"
 
 #: src/trg-torrent-props-dialog.c:323
 msgid "Public torrent"
@@ -1265,7 +1269,7 @@ msgstr "Sem erros"
 
 #: src/trg-torrent-props-dialog.c:371
 msgid "Active now"
-msgstr ""
+msgstr "Ativo agora"
 
 #: src/trg-torrent-props-dialog.c:404
 msgid "Honor global limits"
@@ -1293,7 +1297,7 @@ msgstr "Usar configurações globais"
 
 #: src/trg-torrent-props-dialog.c:442
 msgid "Stop seeding at ratio"
-msgstr ""
+msgstr "Parar de enviar na proporção"
 
 #: src/trg-torrent-props-dialog.c:443
 msgid "Seed regardless of ratio"
@@ -1301,15 +1305,15 @@ msgstr "Distribuir independente da taxa"
 
 #: src/trg-torrent-props-dialog.c:446
 msgid "Seed ratio mode:"
-msgstr ""
+msgstr "Modo de proporção de envio"
 
 #: src/trg-torrent-props-dialog.c:454
 msgid "Seed ratio limit:"
-msgstr ""
+msgstr "Limite de proporção de envio"
 
 #: src/trg-torrent-props-dialog.c:460
 msgid "Peer limit:"
-msgstr ""
+msgstr "Limite de Pares:"
 
 #: src/trg-torrent-props-dialog.c:533
 #, c-format
@@ -1318,7 +1322,7 @@ msgstr ""
 
 #: src/trg-torrent-props-dialog.c:565
 msgid "Information"
-msgstr ""
+msgstr "Informação"
 
 #: src/trg-torrent-tree-view.c:60
 msgid "Done"
@@ -1346,23 +1350,23 @@ msgstr "Conectado"
 
 #: src/trg-torrent-tree-view.c:82
 msgid "PEX Peers"
-msgstr ""
+msgstr "Pares PEX"
 
 #: src/trg-torrent-tree-view.c:87
 msgid "DHT Peers"
-msgstr ""
+msgstr "Pares DHT"
 
 #: src/trg-torrent-tree-view.c:93
 msgid "Tracker Peers"
-msgstr ""
+msgstr "Rastreador de Pares"
 
 #: src/trg-torrent-tree-view.c:97
 msgid "LTEP Peers"
-msgstr ""
+msgstr "Pares LTEP"
 
 #: src/trg-torrent-tree-view.c:102
 msgid "Resumed Peers"
-msgstr ""
+msgstr "Pares Retomados"
 
 #: src/trg-torrent-tree-view.c:108
 msgid "Incoming Peers"
@@ -1370,7 +1374,7 @@ msgstr "Entrada de pares"
 
 #: src/trg-torrent-tree-view.c:113
 msgid "Peers T/I/E/H/X/L/R"
-msgstr ""
+msgstr "Pares T/I/E/H/X/L/R"
 
 #: src/trg-torrent-tree-view.c:133
 msgid "Added"
@@ -1378,7 +1382,7 @@ msgstr "Adicionado"
 
 #: src/trg-torrent-tree-view.c:136
 msgid "First Tracker"
-msgstr ""
+msgstr "Primeiro rastreador"
 
 #: src/trg-torrent-tree-view.c:142
 msgid "ID"
@@ -1390,7 +1394,7 @@ msgstr "Posição na Fila"
 
 #: src/trg-torrent-tree-view.c:154
 msgid "Last Active"
-msgstr ""
+msgstr "Ativo pela última vez"
 
 #: src/trg-trackers-tree-view.c:168
 msgid "Tier"
@@ -1402,15 +1406,15 @@ msgstr "Anunciar URL"
 
 #: src/trg-trackers-tree-view.c:192
 msgid "Seeder Count"
-msgstr ""
+msgstr "Contagem de Distribuidores"
 
 #: src/trg-trackers-tree-view.c:195
 msgid "Leecher Count"
-msgstr ""
+msgstr "Contagem de Receptores"
 
 #: src/trg-trackers-tree-view.c:199
 msgid "Last Announce"
-msgstr ""
+msgstr "Último anúncio"
 
 #: src/trg-trackers-tree-view.c:202
 msgid "Last Result"
@@ -1418,11 +1422,11 @@ msgstr "Último Resultado"
 
 #: src/trg-trackers-tree-view.c:204
 msgid "Scrape URL"
-msgstr ""
+msgstr "URL de coleta"
 
 #: src/trg-trackers-tree-view.c:206
 msgid "Last Scrape"
-msgstr ""
+msgstr "Última coleta"
 
 #: src/trg-trackers-tree-view.c:305
 msgid "Delete"
