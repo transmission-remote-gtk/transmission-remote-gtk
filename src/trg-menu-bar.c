@@ -48,6 +48,7 @@ enum {
     PROP_VERIFY_BUTTON,
     PROP_REANNOUNCE_BUTTON,
     PROP_PROPS_BUTTON,
+    PROP_COPYMAGNET_BUTTON,
     PROP_MOVE_BUTTON,
     PROP_REMOTE_PREFS_BUTTON,
     PROP_LOCAL_PREFS_BUTTON,
@@ -99,6 +100,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_verify;
     GtkWidget *mb_reannounce;
     GtkWidget *mb_props;
+    GtkWidget *mb_copy_magnetlink;
     GtkWidget *mb_local_prefs;
     GtkWidget *mb_remote_prefs;
     GtkWidget *mb_view_states;
@@ -165,6 +167,7 @@ trg_menu_bar_torrent_actions_sensitive(TrgMenuBar * mb, gboolean sensitive)
     TrgMenuBarPrivate *priv = TRG_MENU_BAR_GET_PRIVATE(mb);
 
     gtk_widget_set_sensitive(priv->mb_props, sensitive);
+    gtk_widget_set_sensitive(priv->mb_copy_magnetlink, sensitive);
     gtk_widget_set_sensitive(priv->mb_remove, sensitive);
     gtk_widget_set_sensitive(priv->mb_delete, sensitive);
     gtk_widget_set_sensitive(priv->mb_resume, sensitive);
@@ -264,6 +267,9 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
         break;
     case PROP_PROPS_BUTTON:
         g_value_set_object(value, priv->mb_props);
+        break;
+    case PROP_COPYMAGNET_BUTTON:
+        g_value_set_object(value, priv->mb_copy_magnetlink);
         break;
     case PROP_REMOTE_PREFS_BUTTON:
         g_value_set_object(value, priv->mb_remote_prefs);
@@ -713,6 +719,11 @@ static GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar * menu)
                               FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_props, GDK_i, GDK_CONTROL_MASK);
 
+    priv->mb_copy_magnetlink =
+        trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Copy Magnet Link"),
+                              GTK_STOCK_COPY, FALSE);
+    trg_menu_bar_accel_add(menu, priv->mb_copy_magnetlink, GDK_c, GDK_CONTROL_MASK);
+
     priv->mb_resume =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Resume"),
                               GTK_STOCK_MEDIA_PLAY, FALSE);
@@ -904,6 +915,8 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
                                      "pause-button", "Pause Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_PROPS_BUTTON,
                                      "props-button", "Props Button");
+    trg_menu_bar_install_widget_prop(object_class, PROP_COPYMAGNET_BUTTON,
+                                     "copymagnet-button", "Copy-magnet Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_ABOUT_BUTTON,
                                      "about-button", "About Button");
     trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_STATS_BUTTON,

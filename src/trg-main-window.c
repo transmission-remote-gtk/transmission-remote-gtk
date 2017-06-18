@@ -449,6 +449,20 @@ static void open_props_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
     gtk_widget_show_all(GTK_WIDGET(dialog));
 }
 
+static void copy_magnetlink_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
+{
+    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
+    JsonObject *json = NULL;
+    GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+
+    if (priv->selectedTorrentId < 0)
+        return;
+
+    if(get_torrent_data(trg_client_get_torrent_table(priv->client),
+                priv->selectedTorrentId, &json, NULL))
+        gtk_clipboard_set_text(clip, torrent_get_magnetlink(json), -1);
+}
+
 static void
 torrent_tv_onRowActivated(GtkTreeView * treeview,
                           GtkTreePath * path G_GNUC_UNUSED,
@@ -1785,7 +1799,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 #ifdef HAVE_RSS
     *b_view_rss,
 #endif
-    *b_start_now;
+    *b_start_now, *b_copy_magnetlink;
 
     TrgMenuBar *menuBar;
     GtkAccelGroup *accel_group;
@@ -1818,7 +1832,8 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 #endif
                  "up-queue", &b_up_queue, "down-queue", &b_down_queue,
                  "top-queue", &b_top_queue, "bottom-queue",
-                 &b_bottom_queue, "start-now", &b_start_now, NULL);
+                 &b_bottom_queue, "start-now", &b_start_now,
+                 "copymagnet-button", &b_copy_magnetlink, NULL);
 
     g_signal_connect(b_disconnect, "activate", G_CALLBACK(disconnect_cb),
                      win);
@@ -1871,6 +1886,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                      G_CALLBACK(trg_main_window_toggle_graph_cb), win);
 #endif
     g_signal_connect(b_props, "activate", G_CALLBACK(open_props_cb), win);
+    g_signal_connect(b_copy_magnetlink, "activate", G_CALLBACK(copy_magnetlink_cb), win);
     g_signal_connect(b_quit, "activate", G_CALLBACK(quit_cb), win);
 
     gtk_window_add_accel_group(GTK_WINDOW(win), accel_group);
@@ -2224,6 +2240,9 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Properties"),
                           GTK_STOCK_PROPERTIES, TRUE,
                           G_CALLBACK(open_props_cb), win);
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Copy Magnet Link"),
+                          GTK_STOCK_COPY, TRUE,
+                          G_CALLBACK(copy_magnetlink_cb), win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Resume"),
                           GTK_STOCK_MEDIA_PLAY, TRUE,
                           G_CALLBACK(resume_cb), win);

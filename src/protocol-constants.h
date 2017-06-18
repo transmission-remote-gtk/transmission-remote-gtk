@@ -70,6 +70,7 @@
 #define FIELD_LEFTUNTILDONE     "leftUntilDone"
 #define FIELD_ISFINISHED        "isFinished"
 #define FIELD_ISPRIVATE         "isPrivate"
+#define FIELD_MAGNETLINK        "magnetLink"
 #define FIELD_ERROR				"error"
 #define FIELD_ERROR_STRING      "errorString"
 #define FIELD_BANDWIDTH_PRIORITY "bandwidthPriority"

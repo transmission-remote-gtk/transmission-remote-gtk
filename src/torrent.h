@@ -87,6 +87,7 @@ gboolean torrent_get_is_private(JsonObject * t);
 gboolean torrent_get_honors_session_limits(JsonObject * t);
 gint64 torrent_get_bandwidth_priority(JsonObject * t);
 gint64 torrent_get_upload_limit(JsonObject * t);
+const gchar *torrent_get_magnetlink(JsonObject * t);
 gint64 torrent_get_added_date(JsonObject * t);
 gint64 torrent_get_done_date(JsonObject * t);
 gboolean torrent_get_upload_limited(JsonObject * t);

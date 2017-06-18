@@ -108,6 +108,11 @@ gint64 torrent_get_bandwidth_priority(JsonObject * t)
     return json_object_get_int_member(t, FIELD_BANDWIDTH_PRIORITY);
 }
 
+const gchar *torrent_get_magnetlink(JsonObject * t)
+{
+    return json_object_get_string_member(t, FIELD_MAGNETLINK);
+}
+
 gint64 torrent_get_upload_limit(JsonObject * t)
 {
     return json_object_get_int_member(t, FIELD_UPLOAD_LIMIT);

@@ -212,6 +212,7 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_SEED_RATIO_MODE);
     json_array_add_string_element(fields, FIELD_PEER_LIMIT);
     json_array_add_string_element(fields, FIELD_ACTIVITY_DATE);
+    json_array_add_string_element(fields, FIELD_MAGNETLINK);
     json_array_add_string_element(fields, FIELD_ERROR);
     json_array_add_string_element(fields, FIELD_ERROR_STRING);
     json_array_add_string_element(fields, FIELD_WANTED);
