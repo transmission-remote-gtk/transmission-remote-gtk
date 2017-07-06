@@ -180,6 +180,18 @@ view_onButtonPressed(GtkWidget * treeview,
     return handled;
 }
 
+static gboolean
+search_func (GtkTreeModel *model, gint column,
+                 const gchar *key, GtkTreeIter *iter,
+                 gpointer search_data)
+{
+    gchar *iter_string = NULL;
+    gtk_tree_model_get(model, iter, column, &iter_string, -1);
+    gboolean result = g_strrstr(g_utf8_strdown(iter_string, -1), key) == NULL;
+    g_free(iter_string);
+    return result;
+}
+
 static void trg_files_tree_view_init(TrgFilesTreeView * self)
 {
     TrgTreeView *ttv = TRG_TREE_VIEW(self);
@@ -199,6 +211,11 @@ static void trg_files_tree_view_init(TrgFilesTreeView * self)
                              _("Priority"), "priority", 0);
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), FILESCOL_NAME);
+
+    gtk_tree_view_set_search_equal_func(GTK_TREE_VIEW(self),
+                                        (GtkTreeViewSearchEqualFunc) search_func,
+                                        gtk_tree_view_get_model(GTK_TREE_VIEW(self)),
+                                        NULL);
 
     g_signal_connect(self, "button-press-event",
                      G_CALLBACK(view_onButtonPressed), NULL);
