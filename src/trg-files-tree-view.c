@@ -186,8 +186,14 @@ search_func (GtkTreeModel *model, gint column,
                  gpointer search_data)
 {
     gchar *iter_string = NULL;
+    gchar *lowercase = NULL;
+    gboolean result = TRUE;
     gtk_tree_model_get(model, iter, column, &iter_string, -1);
-    gboolean result = g_strrstr(g_utf8_strdown(iter_string, -1), key) == NULL;
+    if (iter_string != NULL) {
+        lowercase = g_utf8_strdown(iter_string, -1);
+        result = g_strrstr(lowercase, key) == NULL;
+    }
+    g_free(lowercase);
     g_free(iter_string);
     return result;
 }
