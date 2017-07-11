@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2014 Alan F -->
 <component type="desktop">
-  <id>transmission-remote-gtk.desktop</id>
+  <id>uk.org.eth0.transmission-remote-gtk.desktop</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
-  <project_group>GNOME</project_group>
   <translation type="gettext">transmission-remote-gtk</translation>
   <name>Transmission Remote</name>
   <_developer_name>Transmission Remote Gtk Team</_developer_name>
