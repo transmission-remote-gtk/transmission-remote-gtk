@@ -84,6 +84,7 @@ have_geoip=no
 AS_IF([test x$with_libgeoip != xno], [
 	PKG_CHECK_MODULES([GEOIP], [geoip], [
 		have_geoip="yes"
+		AC_DEFINE(HAVE_GEOIP, 1, [Define if GeoIP is available])
 	], [
 		AC_MSG_WARN([libgeoip not found])
 	])
