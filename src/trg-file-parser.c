@@ -88,7 +88,7 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node
             target_node->length = (gint64) file_length_node->val.i;
 
             while (lastIter) {
-                lastIter->length = target_node->length;
+                lastIter->length += target_node->length;
                 lastIter = lastIter->parent;
             }
         }
