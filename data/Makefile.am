@@ -5,7 +5,7 @@ desktop_FILES = $(desktop_in_files:.desktop.in=.desktop)
 @INTLTOOL_DESKTOP_RULE@
 @DESKTOP_FILE_RULES@
 
-appstream_in_files = transmission-remote-gtk.appdata.xml.in
+appstream_in_files = uk.org.eth0.transmission-remote-gtk.appdata.xml.in
 appstream_XML = $(appstream_in_files:.xml.in=.xml)
 @INTLTOOL_XML_RULE@
 @APPSTREAM_XML_RULES@
