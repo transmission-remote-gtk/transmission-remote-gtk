@@ -1,5 +1,5 @@
-[type: gettext/ini]data/uk.org.eth0.transmission-remote-gtk.desktop.in
-[type: gettext/xml]data/uk.org.eth0.transmission-remote-gtk.appdata.xml.in
+[type: gettext/ini]data/io.github.TransmissionRemoteGtk.desktop.in
+[type: gettext/xml]data/io.github.TransmissionRemoteGtk.appdata.xml.in
 src/bencode.c
 src/hig.c
 src/json.c

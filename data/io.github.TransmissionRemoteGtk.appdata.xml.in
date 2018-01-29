@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2014 Alan F -->
 <component type="desktop">
-  <id>uk.org.eth0.transmission-remote-gtk.desktop</id>
+  <id>io.github.TransmissionRemoteGtk</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>GPL-2.0+</project_license>
   <translation type="gettext">transmission-remote-gtk</translation>
@@ -27,5 +27,9 @@
       <image>http://eth0.org.uk/~alan/transmission-remote-gtk-1.1.1.png</image>
     </screenshot>
   </screenshots>
+  <launchable type="desktop-id">io.github.TransmissionRemoteGtk.desktop</launchable>
+  <provides>
+    <id>uk.org.eth0.transmission-remote-gtk.desktop</id>
+  </provides>
   <update_contact>tingping_at_fedoraproject.org</update_contact>
 </component>
