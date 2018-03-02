@@ -699,6 +699,8 @@ static GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBar * menu)
     priv->mb_quit =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Quit"),
                               GTK_STOCK_QUIT, TRUE);
+    trg_menu_bar_accel_add(menu, priv->mb_quit, GDK_q,
+                           GDK_CONTROL_MASK);
 
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(file), fileMenu);
 
