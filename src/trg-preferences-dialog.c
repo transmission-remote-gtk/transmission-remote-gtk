@@ -27,6 +27,10 @@
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
 
+#ifdef HAVE_LIBSECRET
+#include "trg-secret-schema.h"
+#endif
+
 #include "hig.h"
 #include "trg-json-widgets.h"
 #include "trg-preferences-dialog.h"
@@ -59,6 +63,9 @@ struct _TrgPreferencesDialogPrivate {
     GtkWidget *profileComboBox;
     GtkWidget *profileNameEntry;
     GtkWidget *fullUpdateCheck;
+#ifdef HAVE_LIBSECRET
+    GtkWidget *passwordEntry;
+#endif
     GList *widgets;
     GtkWidget *notebook;
 };
@@ -81,6 +88,70 @@ trg_pref_widget_desc *trg_pref_widget_desc_new(GtkWidget * w, gchar * key,
     return desc;
 }
 
+#ifdef HAVE_LIBSECRET
+static void trg_pref_refresh_password_cb(GObject *source, GAsyncResult *result, gpointer userdata) 
+{
+    TrgPreferencesDialogPrivate *priv = userdata;
+
+    GError *error = NULL;
+
+    gchar *password = secret_password_lookup_finish (result, &error);
+
+    if(error) {
+        g_error_free (error);
+        gtk_entry_set_text(GTK_ENTRY(priv->passwordEntry), "");
+    } else if (password) {
+        gtk_entry_set_text(GTK_ENTRY(priv->passwordEntry), password);
+        secret_password_free (password);
+    } else {
+        gtk_entry_set_text(GTK_ENTRY(priv->passwordEntry), "");
+    }
+}
+
+static void trg_pref_refresh_password(TrgPreferencesDialogPrivate *priv)
+{
+    gchar *hostname = trg_prefs_get_string(priv->prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
+    gint64 port = trg_prefs_get_int(priv->prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_PROFILE);
+    gchar *rpc_url_path = trg_prefs_get_string(priv->prefs, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_PROFILE);
+    gboolean ssl = trg_prefs_get_bool(priv->prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE);
+    gchar *username = trg_prefs_get_string(priv->prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
+
+    secret_password_lookup (TRG_SECRET_SCHEMA, NULL, trg_pref_refresh_password_cb, priv,
+        TRG_PREFS_KEY_HOSTNAME, hostname,
+        TRG_PREFS_KEY_PORT, port,
+        TRG_PREFS_KEY_RPC_URL_PATH, rpc_url_path,
+        TRG_PREFS_KEY_SSL, ssl,
+        TRG_PREFS_KEY_USERNAME, username,
+        NULL);
+
+    g_free(hostname);
+    g_free(rpc_url_path);
+    g_free(username);
+}
+
+static void trg_pref_save_password(TrgPreferencesDialogPrivate *priv)
+{
+    const gchar *password = gtk_entry_get_text(GTK_ENTRY(priv->passwordEntry));
+    gchar *hostname = trg_prefs_get_string(priv->prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
+    gint64 port = trg_prefs_get_int(priv->prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_PROFILE);
+    gchar *rpc_url_path = trg_prefs_get_string(priv->prefs, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_PROFILE);
+    gboolean ssl = trg_prefs_get_bool(priv->prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE);
+    gchar *username = trg_prefs_get_string(priv->prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
+
+    secret_password_store(TRG_SECRET_SCHEMA, NULL, PACKAGE_NAME, password, NULL, NULL, NULL,
+        TRG_PREFS_KEY_HOSTNAME, hostname,
+        TRG_PREFS_KEY_PORT, port,
+        TRG_PREFS_KEY_RPC_URL_PATH, rpc_url_path,
+        TRG_PREFS_KEY_SSL, ssl,
+        TRG_PREFS_KEY_USERNAME, username,
+        NULL);
+
+    g_free(hostname);
+    g_free(rpc_url_path);
+    g_free(username);
+}
+#endif /* HAVE_LIBSECRET */
+
 static void
 trg_pref_widget_refresh(TrgPreferencesDialog * dlg,
                         trg_pref_widget_desc * wd)
@@ -99,6 +170,9 @@ static void trg_pref_widget_refresh_all(TrgPreferencesDialog * dlg)
     GList *li;
     for (li = priv->widgets; li; li = g_list_next(li))
         trg_pref_widget_refresh(dlg, (trg_pref_widget_desc *) li->data);
+#ifdef HAVE_LIBSECRET
+    trg_pref_refresh_password(priv);
+#endif
 }
 
 static void
@@ -125,6 +199,9 @@ static void trg_pref_widget_save_all(TrgPreferencesDialog * dlg)
         trg_pref_widget_save(dlg, wd);
     }
     trg_client_configunlock(priv->client);
+#ifdef HAVE_LIBSECRET
+    trg_pref_save_password(priv);
+#endif
 }
 
 static void
@@ -860,11 +937,15 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
 
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
     hig_workarea_add_row(t, &row, _("Username:"), w, NULL);
-
+#ifdef HAVE_LIBSECRET
+    priv->passwordEntry = gtk_entry_new();
+    gtk_entry_set_visibility(GTK_ENTRY(priv->passwordEntry), FALSE);
+    hig_workarea_add_row(t, &row, _("Password:"), priv->passwordEntry, NULL);
+#else
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_PASSWORD, TRG_PREFS_PROFILE);
     gtk_entry_set_visibility(GTK_ENTRY(w), FALSE);
     hig_workarea_add_row(t, &row, _("Password:"), w, NULL);
-
+#endif
     w = trgp_check_new(dlg, _("Automatically connect"),
                        TRG_PREFS_KEY_AUTO_CONNECT, TRG_PREFS_PROFILE,
                        NULL);
@@ -897,6 +978,11 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     gtk_container_set_border_width(GTK_CONTAINER(frame), 5);
     gtk_container_add(GTK_CONTAINER(frame), t);
 
+#ifdef HAVE_LIBSECRET
+    /* This has to be done after all widgets are set  */
+    /* Secret properties are built from config values */
+    trg_pref_refresh_password(priv);
+#endif
     return frame;
 }
 

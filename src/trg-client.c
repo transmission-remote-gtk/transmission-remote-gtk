@@ -32,6 +32,10 @@
 #include <proxy.h>
 #endif
 
+#ifdef HAVE_LIBSECRET
+#include <libsecret/secret.h>
+#endif
+
 #include <curl/curl.h>
 #include <curl/easy.h>
 
@@ -41,6 +45,9 @@
 #include "util.h"
 #include "requests.h"
 #include "trg-client.h"
+#ifdef HAVE_LIBSECRET
+#include "trg-secret-schema.h"
+#endif
 
 /* This class manages/does quite a few things, and is passed around a lot. It:
  *
@@ -77,7 +84,9 @@ struct _TrgClientPrivate {
     gdouble version;
     char *url;
     char *username;
+#ifndef HAVE_LIBSECRET
     char *password;
+#endif
     char *proxy;
     GHashTable *torrentTable;
     GThreadPool *pool;
@@ -240,10 +249,10 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     g_free(priv->username);
     priv->username = NULL;
-
+#ifndef HAVE_LIBSECRET
     g_free(priv->password);
     priv->password = NULL;
-
+#endif
     port =
         trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_CONNECTION);
 
@@ -275,10 +284,10 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     priv->username = trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME,
                                           TRG_PREFS_CONNECTION);
-
+#ifndef HAVE_LIBSECRET
     priv->password = trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD,
                                           TRG_PREFS_CONNECTION);
-
+#endif
     g_free(priv->proxy);
     priv->proxy = NULL;
 
@@ -309,7 +318,36 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
 gchar *trg_client_get_password(TrgClient * tc)
 {
+#ifdef HAVE_LIBSECRET
+    GError *error = NULL;
+
+    gchar *hostname = trg_prefs_get_string(tc->priv->prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
+    gint64 port = trg_prefs_get_int(tc->priv->prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_PROFILE);
+    gchar *rpc_url_path = trg_prefs_get_string(tc->priv->prefs, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_PROFILE);
+    gboolean ssl = trg_prefs_get_bool(tc->priv->prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE);
+    gchar *username = trg_prefs_get_string(tc->priv->prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
+
+    gchar *password = secret_password_lookup_sync (TRG_SECRET_SCHEMA, NULL, &error,
+        TRG_PREFS_KEY_HOSTNAME, hostname,
+        TRG_PREFS_KEY_PORT, port,
+        TRG_PREFS_KEY_RPC_URL_PATH, rpc_url_path,
+        TRG_PREFS_KEY_SSL, ssl,
+        TRG_PREFS_KEY_USERNAME, username,
+        NULL);
+
+    if(error) {
+        password = NULL;
+        g_error_free(error);
+    }
+
+    g_free(hostname);
+    g_free(rpc_url_path);
+    g_free(username);
+
+    return password;
+#else
     return tc->priv->password;
+#endif
 }
 
 gchar *trg_client_get_username(TrgClient * tc)
@@ -543,8 +581,14 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
         	curl_easy_setopt(curl, CURLOPT_WRITEHEADER, (void *) tc);
         	curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         	curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, &header_callback);
+#ifdef HAVE_LIBSECRET
+            gchar *password = trg_client_get_password(tc);
+            curl_easy_setopt(curl, CURLOPT_PASSWORD, password);
+            secret_password_free(password);
+#else
             curl_easy_setopt(curl, CURLOPT_PASSWORD,
                              trg_client_get_password(tc));
+#endif
             curl_easy_setopt(curl, CURLOPT_USERNAME,
                              trg_client_get_username(tc));
             curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));

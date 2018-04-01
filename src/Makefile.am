@@ -170,6 +170,13 @@ transmission_remote_gtk_SOURCES += trg-rss-model.c trg-rss-window.c trg-rss-cell
 noinst_HEADERS += trg-rss-model.h trg-rss-window.h trg-rss-cell-renderer.h
 endif
 
+if HAVE_LIBSECRET
+transmission_remote_gtk_SOURCES += trg-secret-schema.c
+noinst_HEADERS += trg-secret-schema.h
+transmission_remote_gtk_CFLAGS += $(SECRET_CFLAGS)
+transmission_remote_gtk_LDFLAGS += $(SECRET_LIBS)
+endif
+
 if WIN32
 .rc.o:
 	windres $^ -o $@

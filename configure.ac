@@ -139,6 +139,17 @@ AS_IF([test x$with_libappindicator != xno], [
 	])
 ])
 
+AC_ARG_WITH([libsecret], AC_HELP_STRING([--without-libsecret], [disable libsecret]))
+have_libsecret=no
+AS_IF([test x$with_libsecret != xno], [
+         PKG_CHECK_MODULES([SECRET], [libsecret-1], [
+                have_libsecret=yes
+                AC_DEFINE(HAVE_LIBSECRET, 1, [Define if libsecret is available])
+        ], [
+                AC_MSG_WARN([libsecret not found])
+        ])
+])
+AM_CONDITIONAL([HAVE_LIBSECRET], [test "x$have_libsecret" == "xyes"])
 
 dnl ---- build flags ----
 AX_APPEND_COMPILE_FLAGS([ \
@@ -201,4 +212,5 @@ echo "
 	libmrss .......: $have_libmrss
 	libproxy ......: $have_libproxy
 	libappindicator: $have_libappindicator
+	libsecret......: $have_libsecret
 "
