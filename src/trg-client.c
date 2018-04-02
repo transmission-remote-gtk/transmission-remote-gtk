@@ -84,9 +84,7 @@ struct _TrgClientPrivate {
     gdouble version;
     char *url;
     char *username;
-#ifndef HAVE_LIBSECRET
     char *password;
-#endif
     char *proxy;
     GHashTable *torrentTable;
     GThreadPool *pool;
@@ -95,6 +93,10 @@ struct _TrgClientPrivate {
     gint configSerial;
     guint http_class;
     GMutex configMutex;
+#ifdef HAVE_LIBSECRET
+    GMutex passwordMutex;
+    GCond passwordCond;
+#endif
     gboolean seedRatioLimited;
     gdouble seedRatioLimit;
 };
@@ -169,6 +171,9 @@ TrgClient *trg_client_new(void)
     trg_prefs_load(prefs);
 
     g_mutex_init(&priv->configMutex);
+#ifdef HAVE_LIBSECRET
+    g_mutex_init(&priv->passwordMutex);
+#endif
     //priv->tlsKey = g_private_new(NULL);
     priv->seedRatioLimited = FALSE;
     priv->seedRatioLimit = 0.00;
@@ -316,18 +321,40 @@ int trg_client_populate_with_settings(TrgClient * tc)
     return 0;
 }
 
+#ifdef HAVE_LIBSECRET
+static void trg_client_get_password_cb(GObject *source, GAsyncResult *result, gpointer userdata) 
+{
+    TrgClientPrivate *priv = userdata;
+    GError *error = NULL;
+
+    g_mutex_lock (&priv->passwordMutex);
+
+    gchar *password = secret_password_lookup_finish (result, &error);
+
+    if(error) {
+        g_error_free (error);
+        priv->password = NULL;
+    } else {
+        priv->password = password;
+    }
+
+    g_cond_signal (&priv->passwordCond);
+    g_mutex_unlock (&priv->passwordMutex);
+}
+#endif
+
 gchar *trg_client_get_password(TrgClient * tc)
 {
 #ifdef HAVE_LIBSECRET
-    GError *error = NULL;
-
     gchar *hostname = trg_prefs_get_string(tc->priv->prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_PROFILE);
     gint64 port = trg_prefs_get_int(tc->priv->prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_PROFILE);
     gchar *rpc_url_path = trg_prefs_get_string(tc->priv->prefs, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_PROFILE);
     gboolean ssl = trg_prefs_get_bool(tc->priv->prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_PROFILE);
     gchar *username = trg_prefs_get_string(tc->priv->prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
 
-    gchar *password = secret_password_lookup_sync (TRG_SECRET_SCHEMA, NULL, &error,
+    tc->priv->password = NULL;
+
+    secret_password_lookup (TRG_SECRET_SCHEMA, NULL, trg_client_get_password_cb, tc->priv,
         TRG_PREFS_KEY_HOSTNAME, hostname,
         TRG_PREFS_KEY_PORT, port,
         TRG_PREFS_KEY_RPC_URL_PATH, rpc_url_path,
@@ -335,19 +362,19 @@ gchar *trg_client_get_password(TrgClient * tc)
         TRG_PREFS_KEY_USERNAME, username,
         NULL);
 
-    if(error) {
-        password = NULL;
-        g_error_free(error);
-    }
-
     g_free(hostname);
     g_free(rpc_url_path);
     g_free(username);
 
-    return password;
-#else
-    return tc->priv->password;
+    gint64 timeout = g_get_monotonic_time () + SECRET_LOOKUP_TIMEOUT_SECS * G_TIME_SPAN_SECOND;
+    while (!tc->priv->password) {
+        if (!g_cond_wait_until (&tc->priv->passwordCond, &tc->priv->passwordMutex, timeout)) {
+            tc->priv->password = NULL;
+            break;
+        }
+    }
 #endif
+    return tc->priv->password;
 }
 
 gchar *trg_client_get_username(TrgClient * tc)
@@ -582,9 +609,11 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
         	curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         	curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, &header_callback);
 #ifdef HAVE_LIBSECRET
-            gchar *password = trg_client_get_password(tc);
-            curl_easy_setopt(curl, CURLOPT_PASSWORD, password);
-            secret_password_free(password);
+            g_mutex_lock (&priv->passwordMutex);
+            trg_client_get_password(tc);
+            curl_easy_setopt(curl, CURLOPT_PASSWORD, priv->password);
+            secret_password_free(priv->password);
+            g_mutex_unlock (&priv->passwordMutex);
 #else
             curl_easy_setopt(curl, CURLOPT_PASSWORD,
                              trg_client_get_password(tc));
