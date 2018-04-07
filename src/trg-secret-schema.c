@@ -23,20 +23,22 @@
 
 #include <libsecret/secret.h>
 
-#include "trg-prefs.h"
 #include "trg-secret-schema.h"
+#include "trg-prefs.h"
+
+/*
+ * Suppress: "warning: missing initializer for field ‘reserved’ of ‘SecretSchema 
+ * {aka const struct <anonymous>}’ [-Wmissing-field-initializers]" which is harmless
+ */
+#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 const SecretSchema *
 trg_secret_get_schema (void)
 {
     static const SecretSchema the_schema = {
-        TRG_SECRET_SCHEMA_NAME, SECRET_SCHEMA_NONE,
+        "io.github.TransmissionRemoteGtk.password", SECRET_SCHEMA_NONE,
         {
-            {  TRG_PREFS_KEY_HOSTNAME, SECRET_SCHEMA_ATTRIBUTE_STRING },
-            {  TRG_PREFS_KEY_PORT, SECRET_SCHEMA_ATTRIBUTE_INTEGER },
-            {  TRG_PREFS_KEY_RPC_URL_PATH, SECRET_SCHEMA_ATTRIBUTE_STRING },
-            {  TRG_PREFS_KEY_SSL, SECRET_SCHEMA_ATTRIBUTE_BOOLEAN },
-            {  TRG_PREFS_KEY_USERNAME, SECRET_SCHEMA_ATTRIBUTE_STRING },
+            {  TRG_PREFS_KEY_PROFILE_UUID, SECRET_SCHEMA_ATTRIBUTE_STRING },
             {  NULL, 0 },
         }
     };

@@ -24,7 +24,6 @@
 
 const SecretSchema * trg_secret_get_schema (void) G_GNUC_CONST;
 
-#define TRG_SECRET_SCHEMA_NAME "transmission-remote-gtk.schema"
 #define TRG_SECRET_SCHEMA  trg_secret_get_schema ()
 
-#endif                          /* TRG_SECRET_SCHEMA_H_ */
+#endif /* TRG_SECRET_SCHEMA_H_ */

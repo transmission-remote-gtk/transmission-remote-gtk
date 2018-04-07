@@ -32,6 +32,9 @@
 
 #define TRG_PREFS_KEY_RPC_URL_PATH "rpc-url-path"
 #define TRG_PREFS_KEY_PROFILE_ID    "profile-id"
+#ifdef HAVE_LIBSECRET
+#define TRG_PREFS_KEY_PROFILE_UUID    "profile-uuid"
+#endif
 #define TRG_PREFS_KEY_PROFILES    "profiles"
 #define TRG_PREFS_KEY_RSS    "rss"
 #define TRG_PREFS_KEY_PROFILE_NAME   "profile-name"
@@ -122,6 +125,10 @@ G_BEGIN_DECLS
 typedef struct {
     GObjectClass parent_class;
     void (*pref_changed) (TrgPrefs * tc, const gchar * key, gpointer data);
+#ifdef HAVE_LIBSECRET
+    void (*pref_loaded) (TrgPrefs * tc, gpointer data);
+    void (*pref_secret_error) (TrgPrefs * tc, gchar *message, gpointer data);
+#endif
 } TrgPrefsClass;
 
 GType trg_prefs_get_type(void);
@@ -167,6 +174,10 @@ gboolean trg_prefs_save(TrgPrefs * p);
 void trg_prefs_load(TrgPrefs * p);
 void trg_prefs_changed_emit_signal(TrgPrefs * p, const gchar * key);
 void trg_prefs_profile_change_emit_signal(TrgPrefs * p);
+#ifdef HAVE_LIBSECRET
+void trg_prefs_loaded_emit_signal(TrgPrefs * p);
+void trg_prefs_secret_error_emit_signal(TrgPrefs * p, const gchar *message);
+#endif
 guint trg_prefs_get_add_flags(TrgPrefs * p);
 
 G_END_DECLS

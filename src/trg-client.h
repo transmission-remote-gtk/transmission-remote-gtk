@@ -56,10 +56,6 @@
 #define HTTP_CLASS_TRANSMISSION 0
 #define HTTP_CLASS_PUBLIC 1
 
-#ifdef HAVE_LIBSECRET
-#define SECRET_LOOKUP_TIMEOUT_SECS 5
-#endif
-
 typedef struct {
     int status;
     int size;

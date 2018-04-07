@@ -2899,6 +2899,14 @@ static GObject *trg_main_window_constructor(GType type,
     g_signal_connect(self, "drag-data-received",
                      G_CALLBACK(on_dropped_file), self);
 
+#ifdef HAVE_LIBSECRET
+    g_signal_connect(prefs, "pref-loaded",
+                     G_CALLBACK(auto_connect_if_required), self);
+
+    g_signal_connect(prefs, "pref-secret-error",
+                     G_CALLBACK(trg_main_window_secret_error), self);
+#endif
+
     return G_OBJECT(self);
 }
 
@@ -2936,6 +2944,35 @@ void trg_main_window_set_start_args(TrgMainWindow * win, gchar ** args)
     priv->args = args;
 }
 
+#ifdef HAVE_LIBSECRET
+void auto_connect_if_required(TrgPrefs * tc, gpointer data)
+{
+    gchar *host = trg_prefs_get_string(tc, TRG_PREFS_KEY_HOSTNAME,
+                                       TRG_PREFS_PROFILE);
+
+    if(host) {
+        gint len = strlen(host);
+        g_free(host);
+        if (len > 0
+            && trg_prefs_get_bool(tc, TRG_PREFS_KEY_AUTO_CONNECT,
+                                  TRG_PREFS_PROFILE)) {
+            connect_cb(NULL, data);
+        }
+    }
+}
+
+void trg_main_window_secret_error(TrgPrefs * tc, gchar *message, gpointer data)
+{
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(data),
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_ERROR,
+                                                   GTK_BUTTONS_OK, "%s",
+                                                   message);
+        gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+}
+#else
 void auto_connect_if_required(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
@@ -2953,6 +2990,7 @@ void auto_connect_if_required(TrgMainWindow * win)
         }
     }
 }
+#endif
 
 TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart)
 {

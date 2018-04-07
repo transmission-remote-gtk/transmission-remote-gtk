@@ -43,7 +43,12 @@ gboolean on_session_set(gpointer data);
 gboolean on_delete_complete(gpointer data);
 void on_generic_interactive_action(TrgMainWindow *win, trg_response *response);
 gboolean on_generic_interactive_action_response(gpointer data);
+#ifdef HAVE_LIBSECRET
+void auto_connect_if_required(TrgPrefs * tc, gpointer data);
+void trg_main_window_secret_error(TrgPrefs * tc, gchar *message, gpointer data);
+#else
 void auto_connect_if_required(TrgMainWindow * win);
+#endif
 void trg_main_window_set_start_args(TrgMainWindow * win, gchar ** args);
 TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart);
 void trg_main_window_add_status_icon(TrgMainWindow * win);
