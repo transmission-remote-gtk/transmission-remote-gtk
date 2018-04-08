@@ -39,6 +39,9 @@
 #ifdef HAVE_LIBAPPINDICATOR
 #include <libappindicator/app-indicator.h>
 #endif
+#ifdef HAVE_LIBSECRET
+#include <libsecret/secret.h>
+#endif
 
 #include "trg-client.h"
 #include "json.h"
@@ -48,6 +51,9 @@
 #include "torrent.h"
 #include "protocol-constants.h"
 #include "remote-exec.h"
+#ifdef HAVE_LIBSECRET
+#include "trg-secret-schema.h"
+#endif
 
 #include "trg-main-window.h"
 #include "trg-icons.h"
@@ -261,6 +267,10 @@ typedef struct
     guint sessionTimerId;
     gboolean min_on_start;
     gboolean queuesEnabled;
+
+#if HAVE_LIBSECRET
+    gboolean fetch_password_failed_flag;
+#endif
 
     gchar **args;
 } TrgMainWindowPrivate;
@@ -646,6 +656,7 @@ void connect_cb(GtkWidget * w, gpointer data)
     trg_status_bar_push_connection_msg(priv->statusBar,
                                        _("Connecting..."));
     trg_client_inc_connid(priv->client);
+
     dispatch_async(priv->client, session_get(), on_session_get, data);
 }
 
@@ -1560,7 +1571,17 @@ trg_dialog_error_handler(TrgMainWindow * win, trg_response * response)
         GtkWidget *dialog;
         const gchar *msg;
 
+#if HAVE_LIBSECRET
+        if(priv->fetch_password_failed_flag) {
+            msg = g_strdup(_("Failed to fetch password from keychain"));
+            priv->fetch_password_failed_flag = FALSE;
+        }
+        else {
+            msg = make_error_message(response->obj, response->status);
+        }
+#else
         msg = make_error_message(response->obj, response->status);
+#endif
         trg_status_bar_clear_indicators(priv->statusBar);
         trg_status_bar_push_connection_msg(priv->statusBar, msg);
         dialog = gtk_message_dialog_new(GTK_WINDOW(win), GTK_DIALOG_MODAL,
@@ -2651,6 +2672,27 @@ trg_client_session_updated_cb(TrgClient * tc,
     priv->queuesEnabled = queuesEnabled;
 }
 
+#if HAVE_LIBSECRET
+static void
+trg_client_fetch_password_cb(TrgClient * tc, TrgMainWindow * win)
+{
+    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
+
+    /* NOTE: Can't show a dialog here. It will crash! */ 
+    trg_status_bar_push_connection_msg(priv->statusBar,
+                                       _("Fetching password..."));
+}
+
+static void
+trg_client_fetch_password_failed_cb(TrgClient * tc, TrgMainWindow * win)
+{
+    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
+    /* Can't show a dialog here so set fetch_password_failed_flag which will */
+    /* cause the correct error to be displayed in trg_dialog_error_handler   */
+    priv->fetch_password_failed_flag = TRUE;
+}
+#endif
+
 /* Drag & Drop support */
 static GtkTargetEntry target_list[] = {
 /* datatype (string), restrictions on DnD (GtkTargetFlags), datatype (int) */
@@ -2900,11 +2942,11 @@ static GObject *trg_main_window_constructor(GType type,
                      G_CALLBACK(on_dropped_file), self);
 
 #ifdef HAVE_LIBSECRET
-    g_signal_connect(prefs, "pref-loaded",
-                     G_CALLBACK(auto_connect_if_required), self);
-
-    g_signal_connect(prefs, "pref-secret-error",
-                     G_CALLBACK(trg_main_window_secret_error), self);
+    g_signal_connect(priv->client, "fetch-password",
+                     G_CALLBACK(trg_client_fetch_password_cb), self);
+    g_signal_connect(priv->client, "fetch-password-failed",
+                     G_CALLBACK(trg_client_fetch_password_failed_cb), self);
+    priv->fetch_password_failed_flag = FALSE;
 #endif
 
     return G_OBJECT(self);
@@ -2944,35 +2986,6 @@ void trg_main_window_set_start_args(TrgMainWindow * win, gchar ** args)
     priv->args = args;
 }
 
-#ifdef HAVE_LIBSECRET
-void auto_connect_if_required(TrgPrefs * tc, gpointer data)
-{
-    gchar *host = trg_prefs_get_string(tc, TRG_PREFS_KEY_HOSTNAME,
-                                       TRG_PREFS_PROFILE);
-
-    if(host) {
-        gint len = strlen(host);
-        g_free(host);
-        if (len > 0
-            && trg_prefs_get_bool(tc, TRG_PREFS_KEY_AUTO_CONNECT,
-                                  TRG_PREFS_PROFILE)) {
-            connect_cb(NULL, data);
-        }
-    }
-}
-
-void trg_main_window_secret_error(TrgPrefs * tc, gchar *message, gpointer data)
-{
-        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(data),
-                                                   GTK_DIALOG_MODAL,
-                                                   GTK_MESSAGE_ERROR,
-                                                   GTK_BUTTONS_OK, "%s",
-                                                   message);
-        gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
-}
-#else
 void auto_connect_if_required(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
@@ -2990,7 +3003,6 @@ void auto_connect_if_required(TrgMainWindow * win)
         }
     }
 }
-#endif
 
 TrgMainWindow *trg_main_window_new(TrgClient * tc, gboolean minonstart)
 {

@@ -116,9 +116,7 @@ trg_gtk_app_command_line(GApplication * application,
         }
     } else {
         trg_main_window_set_start_args(window, argv);
-#ifndef HAVE_LIBSECRET
         auto_connect_if_required(TRG_MAIN_WINDOW(windows->data));
-#endif
     }
 
     return 0;

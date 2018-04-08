@@ -97,7 +97,11 @@ typedef struct {
     GObjectClass parent_class;
     void (*session_updated) (TrgClient * tc, JsonObject * session,
                              gpointer data);
-
+#ifdef HAVE_LIBSECRET
+    void (*fetch_password) (TrgClient * tc, GCancellable *cancellable,
+                            gpointer data);
+    void (*fetch_password_failed) (TrgClient * tc, gpointer data);
+#endif
 } TrgClientClass;
 
 /* Thread local storage (TLS).
@@ -167,6 +171,11 @@ gboolean trg_client_update_session(TrgClient * tc, GSourceFunc callback,
                                    gpointer data);
 gboolean trg_client_get_seed_ratio_limited(TrgClient * tc);
 gdouble trg_client_get_seed_ratio_limit(TrgClient * tc);
+
+#ifdef HAVE_LIBSECRET
+void trg_client_fetch_password_emit_signal(TrgClient * tc);
+void trg_client_fetch_password_failed_emit_signal(TrgClient * tc);
+#endif
 
 G_END_DECLS
 #endif                          /* _TRG_CLIENT_H_ */

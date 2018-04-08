@@ -26,6 +26,9 @@
 #include <glib-object.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
+#ifdef HAVE_LIBSECRET
+#include <libsecret/secret.h>
+#endif
 
 #include "hig.h"
 #include "trg-json-widgets.h"
@@ -34,6 +37,9 @@
 #include "trg-main-window.h"
 #include "trg-prefs.h"
 #include "util.h"
+#ifdef HAVE_LIBSECRET
+#include "trg-secret-schema.h"
+#endif
 
 /* UI frontend to modify configurables stored in TrgConf.
  * To avoid lots of repetitive code, use our own functions for creating widgets
@@ -556,6 +562,26 @@ static void name_changed_cb(GtkWidget * w, gpointer data)
     }
 }
 
+#ifdef HAVE_LIBSECRET
+static void
+password_del_cb(GObject *source, GAsyncResult *result, gpointer userdata)
+{
+    GtkWidget *win = gtk_widget_get_toplevel(GTK_WIDGET(userdata));
+
+    if(!secret_password_clear_finish (result, NULL)) {
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(win),
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_ERROR,
+                                                   GTK_BUTTONS_OK,
+                                                   "%s", _("Failed to delete password from keychain"));
+
+        gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+    }
+}
+#endif
+
 static void del_profile_cb(GtkWidget * w, gpointer data)
 {
     GtkWidget *win = gtk_widget_get_toplevel(w);
@@ -569,6 +595,14 @@ static void del_profile_cb(GtkWidget * w, gpointer data)
 
     if (gtk_combo_box_get_active_iter(combo, &iter)) {
         gtk_tree_model_get(profileModel, &iter, 0, &profile, -1);
+#ifdef HAVE_LIBSECRET
+        const gchar *uuid = trg_prefs_get_profile_uuid(prefs);
+        secret_password_clear (TRG_SECRET_SCHEMA, NULL,
+                               password_del_cb, win,
+                               TRG_PREFS_KEY_PROFILE_UUID, uuid,
+                               NULL);
+
+#endif
         trg_prefs_del_profile(prefs, profile);
         trg_prefs_set_profile(prefs, NULL);
         gtk_list_store_remove(GTK_LIST_STORE(profileModel), &iter);
@@ -591,6 +625,73 @@ static void add_profile_cb(GtkWidget * w, gpointer data)
                                       _(TRG_PROFILE_NAME_DEFAULT), -1);
     gtk_combo_box_set_active_iter(combo, &iter);
 }
+
+#ifdef HAVE_LIBSECRET
+static void
+password_set_cb(GObject *source, GAsyncResult *result, gpointer userdata)
+{
+    GtkWidget *win = gtk_widget_get_toplevel(GTK_WIDGET(userdata));
+
+    if(!secret_password_store_finish (result, NULL)) {
+        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(win),
+                                                   GTK_DIALOG_MODAL,
+                                                   GTK_MESSAGE_ERROR,
+                                                   GTK_BUTTONS_OK,
+                                                   "%s", _("Failed to save password to keychain"));
+
+        gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
+        gtk_dialog_run(GTK_DIALOG(dialog));
+        gtk_widget_destroy(dialog);
+    }
+}
+
+static void password_button_cb(GtkWidget * w, gpointer data)
+{
+    GtkWidget *win = gtk_widget_get_toplevel(w);
+    TrgPreferencesDialogPrivate *priv =
+        TRG_PREFERENCES_DIALOG_GET_PRIVATE(win);
+    GtkWindow *parent = GTK_WINDOW(data);
+
+    GtkWidget *dlg = gtk_dialog_new();
+    gtk_window_set_title(GTK_WINDOW(dlg), _("Set Password"));
+    gtk_window_set_modal(GTK_WINDOW(dlg), TRUE);
+    gtk_window_set_destroy_with_parent(GTK_WINDOW(dlg), TRUE);
+    gtk_window_set_transient_for (GTK_WINDOW(dlg), parent);
+    gtk_dialog_add_button(GTK_DIALOG(dlg), GTK_STOCK_CANCEL,
+                          GTK_RESPONSE_REJECT);
+    gtk_dialog_add_button(GTK_DIALOG(dlg), GTK_STOCK_OK,
+                          GTK_RESPONSE_ACCEPT);
+
+    GtkWidget *hbox = trg_hbox_new(FALSE, 0);
+    gtk_box_set_spacing (GTK_BOX(hbox), 4);
+
+    GtkWidget *wi = gtk_label_new(_("Password:"));
+    gtk_box_pack_start(GTK_BOX(hbox), wi, FALSE, FALSE, 0);
+
+    GtkWidget *password_entry = gtk_entry_new();
+    gtk_entry_set_visibility (GTK_ENTRY(password_entry), FALSE);
+    gtk_box_pack_end(GTK_BOX(hbox), password_entry, TRUE, TRUE, 0);
+
+    wi = gtk_dialog_get_content_area (GTK_DIALOG(dlg));
+    gtk_container_add (GTK_CONTAINER(wi), hbox);
+    gtk_container_set_border_width(GTK_CONTAINER(wi), GUI_PAD);
+    gtk_box_set_spacing(GTK_BOX(wi), GUI_PAD);
+
+    gtk_widget_show_all(dlg);
+
+    gint result = gtk_dialog_run (GTK_DIALOG(dlg));
+    if(result == GTK_RESPONSE_ACCEPT) {
+        const gchar *password = gtk_entry_get_text(GTK_ENTRY(password_entry));
+        const gchar *uuid = trg_prefs_get_profile_uuid(priv->prefs);
+
+        secret_password_store (TRG_SECRET_SCHEMA, NULL, PACKAGE_NAME, password, NULL,
+                               password_set_cb, win,
+                               TRG_PREFS_KEY_PROFILE_UUID, uuid,
+                               NULL);
+    }
+    gtk_widget_destroy (dlg);
+}
+#endif /* HAVE_LIBSECRET */
 
 static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
 {
@@ -806,6 +907,7 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
 
     GtkWidget *w, *t, *frame, *frameHbox, *profileLabel;
     GtkWidget *profileButtonsHbox;
+
     guint row = 0;
 
     t = hig_workarea_create();
@@ -857,13 +959,29 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_row(t, &row, _("Port:"), w, NULL);
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_PROFILE);
     hig_workarea_add_row(t, &row, _("RPC URL Path:"), w, NULL);
-
+#ifndef HAVE_LIBSECRET
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
     hig_workarea_add_row(t, &row, _("Username:"), w, NULL);
 
     w = trgp_entry_new(dlg, TRG_PREFS_KEY_PASSWORD, TRG_PREFS_PROFILE);
     gtk_entry_set_visibility(GTK_ENTRY(w), FALSE);
     hig_workarea_add_row(t, &row, _("Password:"), w, NULL);
+#else
+    GtkWidget *hbox = trg_hbox_new(FALSE, 0);
+    gtk_box_set_spacing (GTK_BOX(hbox), 4);
+
+    w = trgp_entry_new(dlg, TRG_PREFS_KEY_USERNAME, TRG_PREFS_PROFILE);
+
+    gtk_box_pack_start(GTK_BOX(hbox), w, TRUE, TRUE, 0);
+
+    w = gtk_button_new_from_icon_name("dialog-password", GTK_ICON_SIZE_BUTTON);
+    gtk_button_set_label (GTK_BUTTON(w), _("Password"));
+    g_signal_connect(w, "clicked",
+                     G_CALLBACK(password_button_cb), dlg);
+
+    gtk_box_pack_end(GTK_BOX(hbox), w, FALSE, FALSE, 0);
+    hig_workarea_add_row(t, &row, _("Username:"), hbox, NULL);
+#endif
 
     w = trgp_check_new(dlg, _("Automatically connect"),
                        TRG_PREFS_KEY_AUTO_CONNECT, TRG_PREFS_PROFILE,
