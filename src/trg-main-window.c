@@ -52,7 +52,7 @@
 #include "protocol-constants.h"
 #include "remote-exec.h"
 #ifdef HAVE_LIBSECRET
-#include "trg-secret-schema.h"
+#include "trg-secret.h"
 #endif
 
 #include "trg-main-window.h"

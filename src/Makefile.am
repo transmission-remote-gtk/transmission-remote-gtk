@@ -171,8 +171,8 @@ noinst_HEADERS += trg-rss-model.h trg-rss-window.h trg-rss-cell-renderer.h
 endif
 
 if HAVE_LIBSECRET
-transmission_remote_gtk_SOURCES += trg-secret-schema.c
-noinst_HEADERS += trg-secret-schema.h
+transmission_remote_gtk_SOURCES += trg-secret.c
+noinst_HEADERS += trg-secret.h
 transmission_remote_gtk_CFLAGS += $(SECRET_CFLAGS)
 transmission_remote_gtk_LDFLAGS += $(SECRET_LIBS)
 endif

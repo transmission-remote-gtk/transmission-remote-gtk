@@ -47,7 +47,7 @@
 #include "trg-client.h"
 
 #ifdef HAVE_LIBSECRET
-#include "trg-secret-schema.h"
+#include "trg-secret.h"
 #endif
 
 /* This class manages/does quite a few things, and is passed around a lot. It:
@@ -562,15 +562,6 @@ static trg_tls *get_tls(TrgClient *tc) {
 }
 
 #ifdef HAVE_LIBSECRET
-static gboolean 
-get_secret_password_timeout_cb(gpointer user_data)
-{
-    GCancellable *cancellable = (GCancellable*)user_data;
-    if(!g_cancellable_is_cancelled(cancellable))
-        g_cancellable_cancel(cancellable);
-    return TRUE;
-}
-
 static gchar*
 trg_fetch_password(TrgClient *tc)
 {
@@ -581,23 +572,10 @@ trg_fetch_password(TrgClient *tc)
     /* Inform anyone who wants to know that we are fetching password */
     trg_client_fetch_password_emit_signal(tc);
 
-    /* Use GCancellable and g_timeout_add to create a timeout for password lookup */                                      
-    GCancellable *cancellable = g_cancellable_new();
-    guint timeout_func = g_timeout_add (3000, get_secret_password_timeout_cb, cancellable);
-
-    gchar *password = secret_password_lookup_nonpageable_sync (TRG_SECRET_SCHEMA,
-                                                               cancellable,
-                                                               &error,
-                                                               TRG_PREFS_KEY_PROFILE_UUID,
-                                                               profile_uuid,
-                                                               NULL);
-
-    if(!g_cancellable_is_cancelled(cancellable))
-        g_source_remove(timeout_func);
+    gchar *password = trg_secret_get_password(profile_uuid, 3000, &error);
 
     if(!password || error ) {
-       if(error)
-           g_error_free(error);
+       g_clear_error(&error);
        trg_client_fetch_password_failed_emit_signal(tc);
     }
 

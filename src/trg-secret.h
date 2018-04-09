@@ -17,30 +17,14 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifdef HAVE_CONFIG_H
-#include "config.h"
-#endif
+#ifndef TRG_SECRET_H_
+#define TRG_SECRET_H_
 
 #include <libsecret/secret.h>
 
-#include "trg-secret-schema.h"
-#include "trg-prefs.h"
+const SecretSchema * trg_secret_get_schema (void) G_GNUC_CONST;
+gchar *trg_secret_get_password(const gchar *uuid, guint timeout, GError **error);
 
-/*
- * Suppress: "warning: missing initializer for field ‘reserved’ of ‘SecretSchema 
- * {aka const struct <anonymous>}’ [-Wmissing-field-initializers]" which is harmless
- */
-#pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#define TRG_SECRET_SCHEMA  trg_secret_get_schema ()
 
-const SecretSchema *
-trg_secret_get_schema (void)
-{
-    static const SecretSchema the_schema = {
-        "io.github.TransmissionRemoteGtk.password", SECRET_SCHEMA_NONE,
-        {
-            {  TRG_PREFS_KEY_PROFILE_UUID, SECRET_SCHEMA_ATTRIBUTE_STRING },
-            {  NULL, 0 },
-        }
-    };
-    return &the_schema;
-}
+#endif /* TRG_SECRET_H_ */

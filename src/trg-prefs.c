@@ -187,6 +187,15 @@ trg_prefs_profile_add_uuid_node(JsonObject *profile)
     g_free(uuid);
     json_object_add_member(profile, TRG_PREFS_KEY_PROFILE_UUID, node);
 }
+
+static void
+trg_prefs_add_uuid_node_cb(JsonArray *array, guint index_, JsonNode *element_node, gpointer userdata)
+{
+    JsonObject *profile = json_node_get_object(element_node);
+
+    if(!json_object_has_member (profile, TRG_PREFS_KEY_PROFILE_UUID))
+        trg_prefs_profile_add_uuid_node(profile);
+}
 #endif
 
 static JsonObject *trg_prefs_new_profile_object(void)
@@ -599,6 +608,10 @@ void trg_prefs_load(TrgPrefs * p)
         priv->profile =
             json_array_get_object_element(profiles, profile_id);
     }
+#ifdef HAVE_LIBSECRET
+    /* Add uuid node to profiles if they do not already have one */
+    json_array_foreach_element(profiles, trg_prefs_add_uuid_node_cb, NULL);
+#endif
 }
 
 guint trg_prefs_get_add_flags(TrgPrefs * p)

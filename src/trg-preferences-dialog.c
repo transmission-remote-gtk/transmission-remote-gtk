@@ -38,7 +38,7 @@
 #include "trg-prefs.h"
 #include "util.h"
 #ifdef HAVE_LIBSECRET
-#include "trg-secret-schema.h"
+#include "trg-secret.h"
 #endif
 
 /* UI frontend to modify configurables stored in TrgConf.
@@ -564,6 +564,12 @@ static void name_changed_cb(GtkWidget * w, gpointer data)
 
 #ifdef HAVE_LIBSECRET
 static void
+dialog_response_destroy_cb(GtkDialog *dlg, gint response_id, gpointer userdata)
+{
+    gtk_widget_destroy(GTK_WIDGET(dlg));
+}
+
+static void
 password_del_cb(GObject *source, GAsyncResult *result, gpointer userdata)
 {
     GtkWidget *win = gtk_widget_get_toplevel(GTK_WIDGET(userdata));
@@ -576,8 +582,10 @@ password_del_cb(GObject *source, GAsyncResult *result, gpointer userdata)
                                                    "%s", _("Failed to delete password from keychain"));
 
         gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
+        g_signal_connect(dialog, "response",
+                         G_CALLBACK(dialog_response_destroy_cb), NULL);
+        gtk_widget_show_all(dialog);
+
     }
 }
 #endif
@@ -640,23 +648,42 @@ password_set_cb(GObject *source, GAsyncResult *result, gpointer userdata)
                                                    "%s", _("Failed to save password to keychain"));
 
         gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
+        g_signal_connect(dialog, "response",
+                         G_CALLBACK(dialog_response_destroy_cb), NULL);
+        gtk_widget_show_all(dialog);
     }
+}
+
+static void
+password_dialog_response_cb(GtkDialog *dlg, gint response_id, gpointer userdata)
+{
+    GtkWidget *entry = GTK_WIDGET(userdata);
+    GtkWindow *win = gtk_window_get_transient_for(GTK_WINDOW(dlg));
+    TrgPreferencesDialogPrivate *priv =
+        TRG_PREFERENCES_DIALOG_GET_PRIVATE(win);
+
+    if(response_id == GTK_RESPONSE_ACCEPT) {
+        const gchar *password = gtk_entry_get_text(GTK_ENTRY(entry));
+        const gchar *uuid = trg_prefs_get_profile_uuid(priv->prefs);
+
+        secret_password_store (TRG_SECRET_SCHEMA, NULL, PACKAGE_NAME, password, NULL,
+                               password_set_cb, win,
+                               TRG_PREFS_KEY_PROFILE_UUID, uuid,
+                               NULL);
+    }
+
+    gtk_widget_destroy(GTK_WIDGET(dlg));
 }
 
 static void password_button_cb(GtkWidget * w, gpointer data)
 {
-    GtkWidget *win = gtk_widget_get_toplevel(w);
-    TrgPreferencesDialogPrivate *priv =
-        TRG_PREFERENCES_DIALOG_GET_PRIVATE(win);
     GtkWindow *parent = GTK_WINDOW(data);
 
     GtkWidget *dlg = gtk_dialog_new();
     gtk_window_set_title(GTK_WINDOW(dlg), _("Set Password"));
     gtk_window_set_modal(GTK_WINDOW(dlg), TRUE);
     gtk_window_set_destroy_with_parent(GTK_WINDOW(dlg), TRUE);
-    gtk_window_set_transient_for (GTK_WINDOW(dlg), parent);
+    gtk_window_set_transient_for(GTK_WINDOW(dlg), parent);
     gtk_dialog_add_button(GTK_DIALOG(dlg), GTK_STOCK_CANCEL,
                           GTK_RESPONSE_REJECT);
     gtk_dialog_add_button(GTK_DIALOG(dlg), GTK_STOCK_OK,
@@ -677,19 +704,10 @@ static void password_button_cb(GtkWidget * w, gpointer data)
     gtk_container_set_border_width(GTK_CONTAINER(wi), GUI_PAD);
     gtk_box_set_spacing(GTK_BOX(wi), GUI_PAD);
 
+    g_signal_connect(dlg, "response",
+                     G_CALLBACK(password_dialog_response_cb), password_entry);
+
     gtk_widget_show_all(dlg);
-
-    gint result = gtk_dialog_run (GTK_DIALOG(dlg));
-    if(result == GTK_RESPONSE_ACCEPT) {
-        const gchar *password = gtk_entry_get_text(GTK_ENTRY(password_entry));
-        const gchar *uuid = trg_prefs_get_profile_uuid(priv->prefs);
-
-        secret_password_store (TRG_SECRET_SCHEMA, NULL, PACKAGE_NAME, password, NULL,
-                               password_set_cb, win,
-                               TRG_PREFS_KEY_PROFILE_UUID, uuid,
-                               NULL);
-    }
-    gtk_widget_destroy (dlg);
 }
 #endif /* HAVE_LIBSECRET */
 
