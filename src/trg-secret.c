@@ -26,6 +26,9 @@
 #include "trg-secret.h"
 #include "trg-prefs.h"
 
+
+#include <glib/gprintf.h>
+
 /*
  * Suppress: "warning: missing initializer for field ‘reserved’ of ‘SecretSchema 
  * {aka const struct <anonymous>}’ [-Wmissing-field-initializers]" which is harmless
@@ -33,10 +36,10 @@
 #pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 
 typedef struct {
-	GAsyncResult *result;
-	GMainContext *context;
-	GMainLoop *loop;
-} TrgSecretSync;
+   const gchar *uuid;
+   GCancellable *cancellable;
+   GError **error;
+} TrgSecretGetPasswordTaskData;
 
 const SecretSchema *
 trg_secret_get_schema(void)
@@ -51,43 +54,6 @@ trg_secret_get_schema(void)
     return &the_schema;
 }
 
-static TrgSecretSync *
-trg_secret_sync_new(void)
-{
-    TrgSecretSync *sync;
-
-    sync = g_new0(TrgSecretSync, 1);
-
-    sync->context = g_main_context_new();
-    sync->loop = g_main_loop_new(sync->context, FALSE);
-
-    return sync;
-}
-
-static void
-trg_secret_sync_free(gpointer data)
-{
-    TrgSecretSync *sync = data;
-
-    while(g_main_context_iteration(sync->context, FALSE));
-
-    g_clear_object(&sync->result);
-    g_main_loop_unref(sync->loop);
-    g_main_context_unref(sync->context);
-    g_free(sync);
-}
-
-static void
-trg_secret_sync_on_result(GObject *source,
-                          GAsyncResult *result,
-                          gpointer user_data)
-{
-    TrgSecretSync *sync = user_data;
-    g_assert(sync->result == NULL);
-    sync->result = g_object_ref(result);
-    g_main_loop_quit(sync->loop);
-}
-
 static gboolean
 trg_secret_get_password_timeout(gpointer userdata)
 {
@@ -96,40 +62,47 @@ trg_secret_get_password_timeout(gpointer userdata)
     if(!g_cancellable_is_cancelled(cancellable))
         g_cancellable_cancel(cancellable);
 
-    return G_SOURCE_REMOVE;
+    return FALSE;
+}
+
+static void
+trg_secret_get_password_task(GTask *task, gpointer source, gpointer userdata, GCancellable *notused)
+{
+    TrgSecretGetPasswordTaskData *task_data = (TrgSecretGetPasswordTaskData*)userdata;
+
+    gchar *password = secret_password_lookup_nonpageable_sync (TRG_SECRET_SCHEMA,
+                                                               task_data->cancellable,
+                                                               task_data->error,
+                                                               TRG_PREFS_KEY_PROFILE_UUID,
+                                                               task_data->uuid,
+                                                               NULL);
+    g_task_return_pointer (task, password, NULL);
 }
 
 gchar *
 trg_secret_get_password(const gchar *uuid, guint timeout, GError **error)
 {
-    /* Basically recreating secret_password_lookup_sync, but with a timeout */
+    TrgSecretGetPasswordTaskData *task_data = g_new0(TrgSecretGetPasswordTaskData,1);
 
-    TrgSecretSync *sync = trg_secret_sync_new();
+    task_data->uuid = uuid;
+    task_data->cancellable = g_cancellable_new();
+    task_data->error = error;
 
-    g_main_context_push_thread_default(sync->context);
+    guint timeout_source_id = g_timeout_add (timeout, 
+                                             trg_secret_get_password_timeout,
+                                             task_data->cancellable);
 
-    GCancellable *cancellable = g_cancellable_new();
-    GSource *source = g_timeout_source_new(timeout);
-    g_source_set_callback(source, trg_secret_get_password_timeout, cancellable, NULL);
-    g_source_attach(source, sync->context);
-    g_source_unref(source);
+    GTask *task = g_task_new(NULL, NULL, NULL, NULL);
+    g_task_set_task_data(task, task_data, NULL);
+    g_task_run_in_thread_sync(task, trg_secret_get_password_task);
 
-    secret_password_lookup(TRG_SECRET_SCHEMA, cancellable,
-                           trg_secret_sync_on_result, sync,
-                           TRG_PREFS_KEY_PROFILE_UUID, uuid,
-                           NULL);
+    if(!g_cancellable_is_cancelled(task_data->cancellable))
+        g_source_remove(timeout_source_id);
 
-    g_main_loop_run(sync->loop);
+    gchar *password = g_task_propagate_pointer (task, NULL);
 
-    if(!g_cancellable_is_cancelled(cancellable))
-        g_source_destroy(source);
-
-    gchar *password = secret_password_lookup_nonpageable_finish(sync->result, error);
-
-    g_main_context_pop_thread_default(sync->context);
-
-    trg_secret_sync_free(sync);
+    g_object_unref(task);
+    g_free(task_data);
 
     return password;
 }
-
