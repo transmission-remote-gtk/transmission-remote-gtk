@@ -128,9 +128,8 @@ GtkWidget *trg_json_widget_spin_new(GList ** wl, JsonObject * obj,
 {
     GtkWidget *w = gtk_spin_button_new_with_range(min, max, step);
     trg_json_widget_desc *wd = g_new0(trg_json_widget_desc, 1);
-    JsonNode *node = json_object_get_member(obj, key);
 
-    wd->saveFunc = trg_json_widget_spin_save_double;
+    wd->saveFunc = trg_json_widget_spin_save_int;
     wd->key = g_strdup(key);
     wd->widget = w;
 
@@ -143,7 +142,7 @@ GtkWidget *trg_json_widget_spin_new(GList ** wl, JsonObject * obj,
     }
 
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(w),
-                              json_node_really_get_double(node));
+                              (double)json_object_get_int_member(obj, key));
 
     *wl = g_list_append(*wl, wd);
 
@@ -168,10 +167,10 @@ trg_json_widget_entry_save(GtkWidget * widget, JsonObject * obj,
 }
 
 void
-trg_json_widget_spin_save_double(GtkWidget * widget, JsonObject * obj,
+trg_json_widget_spin_save_int(GtkWidget * widget, JsonObject * obj,
                                  gchar * key)
 {
-    json_object_set_double_member(obj, key,
-                                  gtk_spin_button_get_value(GTK_SPIN_BUTTON
+    json_object_set_int_member(obj, key,
+                                  gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON
                                                             (widget)));
 }
