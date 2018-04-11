@@ -180,13 +180,13 @@ trg_rprefs_time_widget_savefunc(GtkWidget * w, JsonObject * obj,
 {
     GtkWidget *hourSpin = g_object_get_data(G_OBJECT(w), "hours-spin");
     GtkWidget *minutesSpin = g_object_get_data(G_OBJECT(w), "mins-spin");
-    gdouble hoursValue =
-        gtk_spin_button_get_value(GTK_SPIN_BUTTON(hourSpin));
-    gdouble minutesValue =
-        gtk_spin_button_get_value(GTK_SPIN_BUTTON(minutesSpin));
+    gint hoursValue =
+        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(hourSpin));
+    gint minutesValue =
+        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(minutesSpin));
 
     json_object_set_int_member(obj, key,
-                               (gint64) ((hoursValue * 60.0) +
+                               (gint64) ((hoursValue * 60) +
                                          minutesValue));
 
 }
