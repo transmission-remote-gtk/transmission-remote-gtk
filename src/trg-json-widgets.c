@@ -28,8 +28,6 @@
 #include "json.h"
 #include "util.h"
 
-#define TRG_JSON_WIDGET_SPIN_DOUBLE_DIGITS 2
-
 /* Functions for creating widgets that load/save their state from/to a JSON
  * object. This is used by the torrent properties and remote settings dialogs.
  * The pattern here is farily similar to that used in local configuration,
@@ -162,9 +160,6 @@ GtkWidget *trg_json_widget_spin_double_new(GList ** wl, JsonObject * obj,
                                     gdouble max, gdouble step)
 {
     GtkWidget *w = gtk_spin_button_new_with_range(min, max, step);
-
-    gtk_spin_button_set_digits(GTK_SPIN_BUTTON(w),
-                               TRG_JSON_WIDGET_SPIN_DOUBLE_DIGITS);
 
     trg_json_widget_desc *wd = g_new0(trg_json_widget_desc, 1);
 
