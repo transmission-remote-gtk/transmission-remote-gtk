@@ -38,17 +38,21 @@ GtkWidget *trg_json_widget_check_new(GList ** wl, JsonObject * obj,
 GtkWidget *trg_json_widget_entry_new(GList ** wl, JsonObject * obj,
                                      const gchar * key,
                                      GtkWidget * toggleDep);
-GtkWidget *trg_json_widget_spin_new(GList ** wl, JsonObject * obj,
-                                    const gchar * key,
-                                    GtkWidget * toggleDep, gdouble min,
-                                    gdouble max, gdouble step);
+GtkWidget *trg_json_widget_spin_int_new(GList ** wl, JsonObject * obj,
+                                        const gchar * key,
+                                        GtkWidget * toggleDep, gint min,
+                                        gint max, gint step);
+GtkWidget *trg_json_widget_spin_double_new(GList ** wl, JsonObject * obj,
+                                           const gchar * key,
+                                           GtkWidget * toggleDep, gdouble min,
+                                           gdouble max, gdouble step);
 void trg_json_widget_check_save(GtkWidget * widget, JsonObject * obj,
                                 gchar * key);
 void trg_json_widget_entry_save(GtkWidget * widget, JsonObject * obj,
                                 gchar * key);
-void trg_json_widget_spin_save_int(GtkWidget * widget, JsonObject * obj,
+void trg_json_widget_spin_int_save(GtkWidget * widget, JsonObject * obj,
                                    gchar * key);
-void trg_json_widget_spin_save_double(GtkWidget * widget, JsonObject * obj,
+void trg_json_widget_spin_double_save(GtkWidget * widget, JsonObject * obj,
                                       gchar * key);
 
 void trg_json_widget_desc_free(trg_json_widget_desc * wd);

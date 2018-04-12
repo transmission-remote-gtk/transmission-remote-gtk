@@ -279,8 +279,8 @@ static GtkWidget *trg_rprefs_alt_speed_spin_new(GList ** wl,
                                                 GtkWidget * alt_check,
                                                 GtkWidget * alt_time_check)
 {
-    GtkWidget *w = trg_json_widget_spin_new(wl, obj, key,
-                                            NULL, 0, INT_MAX, 5);
+    GtkWidget *w = trg_json_widget_spin_int_new(wl, obj, key,
+                                                NULL, 0, INT_MAX, 5);
     gtk_widget_set_sensitive(w,
                              gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON
                                                           (alt_check))
@@ -311,15 +311,15 @@ static GtkWidget *trg_rprefs_bandwidthPage(TrgRemotePrefsDialog * win,
     tb = trg_json_widget_check_new(&priv->widgets, json,
                                    SGET_SPEED_LIMIT_DOWN_ENABLED,
                                    _("Down Limit (KiB/s)"), NULL);
-    w = trg_json_widget_spin_new(&priv->widgets, json,
-                                 SGET_SPEED_LIMIT_DOWN, tb, 0, INT_MAX, 5);
+    w = trg_json_widget_spin_int_new(&priv->widgets, json,
+                                     SGET_SPEED_LIMIT_DOWN, tb, 0, INT_MAX, 5);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     tb = trg_json_widget_check_new(&priv->widgets, json,
                                    SGET_SPEED_LIMIT_UP_ENABLED,
                                    _("Up Limit (KiB/s)"), NULL);
-    w = trg_json_widget_spin_new(&priv->widgets, json, SGET_SPEED_LIMIT_UP,
-                                 tb, 0, INT_MAX, 5);
+    w = trg_json_widget_spin_int_new(&priv->widgets, json, SGET_SPEED_LIMIT_UP,
+                                     tb, 0, INT_MAX, 5);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     hig_workarea_add_section_title(t, &row, _("Alternate limits"));
@@ -366,9 +366,9 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
     tb = trg_json_widget_check_new(&priv->widgets, json,
                                    SGET_SEED_RATIO_LIMITED,
                                    _("Seed ratio limit"), NULL);
-    w = trg_json_widget_spin_new(&priv->widgets, json,
-                                 SGET_SEED_RATIO_LIMIT, tb, 0, INT_MAX,
-                                 0.1);
+    w = trg_json_widget_spin_double_new(&priv->widgets, json,
+                                        SGET_SEED_RATIO_LIMIT, tb,
+                                        0, INT_MAX, 0.1);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
     if (json_object_has_member(json, SGET_DOWNLOAD_QUEUE_ENABLED)) {
@@ -377,39 +377,39 @@ static GtkWidget *trg_rprefs_limitsPage(TrgRemotePrefsDialog * win,
         tb = trg_json_widget_check_new(&priv->widgets, json,
                                        SGET_DOWNLOAD_QUEUE_ENABLED,
                                        _("Download queue size"), NULL);
-        w = trg_json_widget_spin_new(&priv->widgets, json,
-                                     SGET_DOWNLOAD_QUEUE_SIZE, tb, 0,
-                                     INT_MAX, 1);
+        w = trg_json_widget_spin_int_new(&priv->widgets, json,
+                                         SGET_DOWNLOAD_QUEUE_SIZE, tb, 0,
+                                         INT_MAX, 1);
         hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
         tb = trg_json_widget_check_new(&priv->widgets, json,
                                        SGET_SEED_QUEUE_ENABLED,
                                        _("Seed queue size"), NULL);
-        w = trg_json_widget_spin_new(&priv->widgets, json,
-                                     SGET_SEED_QUEUE_SIZE, tb, 0, INT_MAX,
-                                     1);
+        w = trg_json_widget_spin_int_new(&priv->widgets, json,
+                                         SGET_SEED_QUEUE_SIZE, tb, 0,
+                                         INT_MAX, 1);
         hig_workarea_add_row_w(t, &row, tb, w, NULL);
 
         tb = trg_json_widget_check_new(&priv->widgets, json,
                                        SGET_QUEUE_STALLED_ENABLED,
                                        _("Ignore stalled (minutes)"),
                                        NULL);
-        w = trg_json_widget_spin_new(&priv->widgets, json,
-                                     SGET_QUEUE_STALLED_MINUTES, tb, 0,
-                                     INT_MAX, 1);
+        w = trg_json_widget_spin_int_new(&priv->widgets, json,
+                                         SGET_QUEUE_STALLED_MINUTES, tb,
+                                          0, INT_MAX, 1);
         hig_workarea_add_row_w(t, &row, tb, w, NULL);
     }
 
     hig_workarea_add_section_title(t, &row, _("Peers"));
 
-    w = trg_json_widget_spin_new(&priv->widgets, json,
-                                 SGET_PEER_LIMIT_GLOBAL, NULL, 0, INT_MAX,
-                                 5);
+    w = trg_json_widget_spin_int_new(&priv->widgets, json,
+                                     SGET_PEER_LIMIT_GLOBAL, NULL, 0,
+                                     INT_MAX, 5);
     hig_workarea_add_row(t, &row, _("Global peer limit"), w, w);
 
-    w = trg_json_widget_spin_new(&priv->widgets, json,
-                                 SGET_PEER_LIMIT_PER_TORRENT, NULL, 0,
-                                 INT_MAX, 5);
+    w = trg_json_widget_spin_int_new(&priv->widgets, json,
+                                     SGET_PEER_LIMIT_PER_TORRENT, NULL,
+                                     0, INT_MAX, 5);
     hig_workarea_add_row(t, &row, _("Per torrent peer limit"), w, w);
 
     return t;
@@ -519,8 +519,8 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
 
     hig_workarea_add_section_title(t, &row, _("Connections"));
 
-    w = trg_json_widget_spin_new(&priv->widgets, s, SGET_PEER_PORT, NULL,
-                                 0, 65535, 1);
+    w = trg_json_widget_spin_int_new(&priv->widgets, s, SGET_PEER_PORT,
+                                     NULL, 0, 65535, 1);
     hig_workarea_add_row(t, &row, _("Peer port"), w, w);
 
     priv->port_test_label = gtk_label_new(_("Port test"));
@@ -627,8 +627,8 @@ static GtkWidget *trg_rprefs_generalPage(TrgRemotePrefsDialog * win,
 
     cache_size_mb = session_get_cache_size_mb(s);
     if (cache_size_mb >= 0) {
-        w = trg_json_widget_spin_new(&priv->widgets, s, SGET_CACHE_SIZE_MB,
-                                     NULL, 0, INT_MAX, 1);
+        w = trg_json_widget_spin_int_new(&priv->widgets, s, SGET_CACHE_SIZE_MB,
+                                         NULL, 0, INT_MAX, 1);
         hig_workarea_add_row(t, &row, _("Cache size (MiB)"), w, w);
     }
 
