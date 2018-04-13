@@ -319,10 +319,9 @@ static GtkWidget *trg_rprefs_alt_days(GList ** wl,
                                       const gchar * key,
                                       GtkWidget *alt_time_check)
 {
+    gchar *abdays_fallback[] = {_("Sun"), _("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat")};
 #ifdef ENABLE_NL_LANGINFO
     nl_item abdays[] = {ABDAY_1, ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, ABDAY_6, ABDAY_7};
-#else
-    gchar *abdays[] = {_("Sun"), _("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat")};
 #endif
     GtkWidget *grid = gtk_grid_new();
     gtk_grid_set_column_homogeneous (GTK_GRID(grid), TRUE);
@@ -333,9 +332,13 @@ static GtkWidget *trg_rprefs_alt_days(GList ** wl,
 
     for(gint i = 0, x = 1; i < 7; i++, x<<=1) {
 #ifdef ENABLE_NL_LANGINFO
-        GtkWidget *w = gtk_check_button_new_with_label (nl_langinfo(abdays[i]));
+        gchar *utf8 = g_convert_with_fallback(nl_langinfo(abdays[i]), -1, "utf-8",
+                                              nl_langinfo(CODESET), NULL, NULL,
+                                              NULL, NULL);
+        GtkWidget *w = gtk_check_button_new_with_label (utf8 ? utf8 : abdays_fallback[i]);
+        g_free(utf8);
 #else
-        GtkWidget *w = gtk_check_button_new_with_label (abdays[i]);
+        GtkWidget *w = gtk_check_button_new_with_label (abdays_fallback[i]);
 #endif
         gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), (days & x) == x);
         gtk_grid_attach(GTK_GRID(grid), w, i, 0, 1, 1);
