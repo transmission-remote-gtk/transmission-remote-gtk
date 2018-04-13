@@ -333,8 +333,9 @@ static GtkWidget *trg_rprefs_alt_days(GList ** wl,
 
     for(gint i = 0, x = 1; i < 7; i++, x<<=1) {
 #ifdef ENABLE_NL_LANGINFO
-        gchar *utf8 = g_convert(nl_langinfo(abdays[i]), -1, "utf-8",
-                                nl_langinfo(CODESET), NULL, NULL, NULL);
+        gchar *utf8 = g_convert_with_fallback(nl_langinfo(abdays[i]), -1, "utf-8",
+                                              nl_langinfo(CODESET), NULL, NULL,
+                                              NULL, NULL);
         GtkWidget *w = gtk_check_button_new_with_label (utf8);
         g_free(utf8);
 #else
