@@ -26,6 +26,9 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
+#ifdef ENABLE_NL_LANGINFO
+#include <langinfo.h>
+#endif
 
 #include "trg-main-window.h"
 #include "trg-remote-prefs-dialog.h"
@@ -296,6 +299,60 @@ static GtkWidget *trg_rprefs_alt_speed_spin_new(GList ** wl,
     return w;
 }
 
+static void
+trg_rprefs_alt_days_savefunc(GtkWidget * grid, JsonObject * obj,
+                                gchar * key)
+{
+    guint64 days = 0;
+
+    for(gint i = 0, x = 1; i < 7; i++, x<<=1) {
+        GtkWidget *w = gtk_grid_get_child_at (GTK_GRID(grid), i, 0);
+        if(gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(w)))
+            days += x;
+    }
+
+    json_object_set_int_member(obj, key, days);
+}
+
+static GtkWidget *trg_rprefs_alt_days(GList ** wl,
+                                      JsonObject * Obj,
+                                      const gchar * key,
+                                      GtkWidget *alt_time_check)
+{
+#ifdef ENABLE_NL_LANGINFO
+    nl_item abdays[] = {ABDAY_1, ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, ABDAY_6, ABDAY_7};
+#else
+    gchar *abdays[] = {_("Sun"), _("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat")};
+#endif
+    GtkWidget *grid = gtk_grid_new();
+    gtk_grid_set_column_homogeneous (GTK_GRID(grid), TRUE);
+    g_signal_connect(G_OBJECT(alt_time_check), "toggled",
+                     G_CALLBACK(toggle_active_arg_is_sensitive), grid);
+
+    guint64 days = json_object_get_int_member(Obj, key);
+
+    for(gint i = 0, x = 1; i < 7; i++, x<<=1) {
+#ifdef ENABLE_NL_LANGINFO
+        GtkWidget *w = gtk_check_button_new_with_label (nl_langinfo(abdays[i]));
+#else
+        GtkWidget *w = gtk_check_button_new_with_label (abdays[i]);
+#endif
+        gtk_toggle_button_set_active(GTK_TOGGLE_BUTTON(w), (days & x) == x);
+        gtk_grid_attach(GTK_GRID(grid), w, i, 0, 1, 1);
+    }
+
+    gtk_widget_set_sensitive(grid,
+    gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(alt_time_check)));
+
+    trg_json_widget_desc *wd = g_new0(trg_json_widget_desc, 1);
+    wd->key = g_strdup(key);
+    wd->widget = grid;
+    wd->saveFunc = trg_rprefs_alt_days_savefunc;
+    *wl = g_list_append(*wl, wd);
+
+    return grid;
+}
+
 static GtkWidget *trg_rprefs_bandwidthPage(TrgRemotePrefsDialog * win,
                                            JsonObject * json)
 {
@@ -337,6 +394,10 @@ static GtkWidget *trg_rprefs_bandwidthPage(TrgRemotePrefsDialog * win,
                                   _("Alternate time range"), NULL);
     w = trg_rprefs_time_begin_end_new(&priv->widgets, json, tb);
     hig_workarea_add_row_w(t, &row, tb, w, NULL);
+
+    w = trg_rprefs_alt_days(&priv->widgets, json,
+                            SGET_ALT_SPEED_TIME_DAY, priv->alt_time_check);
+    hig_workarea_add_row(t, &row, _("Alternate days"), w, NULL);
 
     w = trg_rprefs_alt_speed_spin_new(&priv->widgets, json,
                                       SGET_ALT_SPEED_DOWN, priv->alt_check,
