@@ -139,6 +139,19 @@ AS_IF([test x$with_libappindicator != xno], [
 	])
 ])
 
+AC_ARG_ENABLE([nl_langinfo],
+	AC_HELP_STRING([--disable-nl_langinfo], [disable nl_langinfo (for day names)]),
+	[enable_nl_langinfo=no],
+	[enable_nl_langinfo=yes])
+AS_IF([test x$enable_nl_langinfo != xno], [
+	AC_CHECK_FUNC(nl_langinfo,[
+		enable_nl_langinfo=yes
+		AC_DEFINE(ENABLE_NL_LANGINFO, 1, [Define if nl_langinfo is available])
+		AC_SUBST(ENABLE_NL_LANGINFO)
+	], [
+		AC_MSG_WARN([nl_langinfo not available])
+	])
+])
 
 dnl ---- build flags ----
 AX_APPEND_COMPILE_FLAGS([ \
@@ -201,4 +214,5 @@ echo "
 	libmrss .......: $have_libmrss
 	libproxy ......: $have_libproxy
 	libappindicator: $have_libappindicator
+	nl_langinfo....: $enable_nl_langinfo
 "
