@@ -59,9 +59,9 @@ GtkWidget *trg_about_window_new(GtkWindow * parent)
                                   ("A remote client to transmission-daemon."));
 
     gtk_about_dialog_set_website(GTK_ABOUT_DIALOG(dialog),
-                                 "http://code.google.com/p/transmission-remote-gtk/");
+                                 "https://github.com/transmission-remote-gtk/transmission-remote-gtk");
     gtk_about_dialog_set_website_label(GTK_ABOUT_DIALOG(dialog),
-                                       "http://code.google.com/p/transmission-remote-gtk/");
+                                       "https://github.com/transmission-remote-gtk/transmission-remote-gtk");
 
     gtk_about_dialog_set_authors(GTK_ABOUT_DIALOG(dialog), trgAuthors);
     /*gtk_about_dialog_set_documenters(GTK_ABOUT_DIALOG(dialog), documenters); */
