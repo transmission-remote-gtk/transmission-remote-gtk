@@ -40,7 +40,7 @@ Written by Alan Fitton.
 
 =head1 BUGS
 
-Please see L<http://code.google.com/p/transmission-remote-gtk/issues>
+Please see L<https://github.com/transmission-remote-gtk/transmission-remote-gtk/issues>
 
 =head1 COPYRIGHT
 
@@ -51,7 +51,7 @@ permitted by law.
 
 =head1 SEE ALSO
 
-C<transmission-daemon(1)>, C<transmission-gtk(1)>, the project website C<http://code.google.com/p/transmission-remote-gtk/>
+C<transmission-daemon(1)>, C<transmission-gtk(1)>, the project website C<https://github.com/transmission-remote-gtk/transmission-remote-gtk>
 
 =cut
 
