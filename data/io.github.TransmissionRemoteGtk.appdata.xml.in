@@ -27,6 +27,22 @@
       <image>http://eth0.org.uk/~alan/transmission-remote-gtk-1.1.1.png</image>
     </screenshot>
   </screenshots>
+  <releases>
+    <release version="1.4.0" date="2018-11-02">
+      <description>
+        <p>This is a minor release with some improvements:</p>
+        <ul>
+          <li>Rename app-id to io.github.TransmissionRemoteGtk</li>
+          <li>Add configuration of alternate speed days to preferences</li>
+          <li>Add menu option to copy magnet links</li>
+          <li>Add Ctrl+q keybinding to quit</li>
+          <li>Fix building with GeoIP support</li>
+          <li>Fix setting speeds in preferences</li>
+          <li>Improve search behavior in file view</li>
+        </ul>
+      </description>
+    </release>
+  </releases>
   <launchable type="desktop-id">io.github.TransmissionRemoteGtk.desktop</launchable>
   <provides>
     <id>uk.org.eth0.transmission-remote-gtk.desktop</id>
