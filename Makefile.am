@@ -20,12 +20,7 @@
 ACLOCAL_AMFLAGS = -I m4
 AUTOMAKE_OPTIONS = foreign
 DISTCHECK_CONFIGURE_FLAGS = --disable-desktop-database-update
-SUBDIRS = extern src po data
+SUBDIRS = extern src data po
 
-EXTRA_DIST = README.md
-
-DISTCLEANFILES = \
-	intltool-extract \
-	intltool-merge \
-	intltool-update
+EXTRA_DIST = config.rpath  README.md
 

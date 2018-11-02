@@ -1,5 +1,5 @@
-[type: gettext/ini]data/io.github.TransmissionRemoteGtk.desktop.in
-[type: gettext/xml]data/io.github.TransmissionRemoteGtk.appdata.xml.in
+data/io.github.TransmissionRemoteGtk.desktop.in
+data/io.github.TransmissionRemoteGtk.appdata.xml.in
 src/bencode.c
 src/hig.c
 src/json.c

@@ -6,20 +6,20 @@
   <project_license>GPL-2.0+</project_license>
   <translation type="gettext">transmission-remote-gtk</translation>
   <name>Transmission Remote</name>
-  <_developer_name>Transmission Remote Gtk Team</_developer_name>
+  <developer_name>Transmission Remote Gtk Team</developer_name>
   <summary>Remotely manage the Transmission BitTorrent client</summary>
   <url type="homepage">https://github.com/transmission-remote-gtk/transmission-remote-gtk</url>
   <url type="bugtracker">https://github.com/transmission-remote-gtk/transmission-remote-gtk/issues</url>
   <description>
-    <_p>
+    <p>
     Transmission Remote Gtk allows you to remotely manage the Transmission BitTorrent client using its RPC interface.
-    </_p>
-    <_p>Features:</_p>
+    </p>
+    <p>Features:</p>
     <ul>
-      <_li>Remotely add (file/url), start, stop, remove, remove and delete, verify, reannounce torrents</_li>
-      <_li>Works as a .torrent handler (eg. from a web browser)</_li>
-      <_li>Set torrent properties such as speed, seed, peer limits, file priorities, add/edit/remove trackers</_li>
-      <_li>Change remote settings like global limits, download directory, and connectivity preferences</_li>
+      <li>Remotely add (file/url), start, stop, remove, remove and delete, verify, reannounce torrents</li>
+      <li>Works as a .torrent handler (eg. from a web browser)</li>
+      <li>Set torrent properties such as speed, seed, peer limits, file priorities, add/edit/remove trackers</li>
+      <li>Change remote settings like global limits, download directory, and connectivity preferences</li>
     </ul>
   </description>
   <screenshots>

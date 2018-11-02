@@ -40,9 +40,15 @@ __pycache__/
 
 /po/POTFILES
 /po/stamp-it
-/po/.intltool-merge-cache
 /po/*.pot
 /po/*.gmo
+/ABOUT-NLS
+/po/Rules-quot
+/po/*.sed
+/po/*.sin
+/po/*.header
+/po/Makevars.template
+/po/stamp-po
 
 /docs/*.signals
 /docs/*.types

@@ -1,6 +1,6 @@
 [Desktop Entry]
-_Name=Transmission Remote
-_Comment=Remotely manage the Transmission BitTorrent client
+Name=Transmission Remote
+Comment=Remotely manage the Transmission BitTorrent client
 Exec=transmission-remote-gtk %U
 Icon=transmission-remote-gtk
 Terminal=false
