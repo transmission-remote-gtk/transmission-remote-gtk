@@ -478,7 +478,8 @@ header_callback(void *ptr, size_t size, size_t nmemb, void *data)
     TrgClient *tc = TRG_CLIENT(data);
     gchar *session_id;
 
-    if (g_str_has_prefix(header, X_TRANSMISSION_SESSION_ID_HEADER_PREFIX)) {
+    if (g_ascii_strncasecmp(header, X_TRANSMISSION_SESSION_ID_HEADER_PREFIX,
+            strlen(X_TRANSMISSION_SESSION_ID_HEADER_PREFIX)) == 0) {
         char *nl;
 
         session_id = g_strdup(header);
