@@ -28,6 +28,14 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.4.1" date="2019-01-01">
+      <description>
+        <p>This is a minor release with one bugfix:</p>
+        <ul>
+          <li>Fix error when connecting to daemon behind a proxy, specifically nginx</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.4.0" date="2018-11-02">
       <description>
         <p>This is a minor release with some improvements:</p>
