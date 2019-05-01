@@ -479,7 +479,24 @@ gboolean trg_prefs_save(TrgPrefs * p)
     g_object_set(G_OBJECT(gen), "pretty", TRUE, NULL);
     json_generator_set_root(gen, priv->user);
 
-    success = json_generator_to_file(gen, priv->file, NULL);
+    if(g_file_test(priv->file, G_FILE_TEST_IS_SYMLINK)) {
+	    gsize len;
+	    gchar *realFile;
+	    gchar *fileData;
+        gchar *linkPath = realFile = g_file_read_link(priv->file, NULL);
+        if (!g_path_is_absolute (linkPath)) {
+            dirName = g_path_get_dirname (priv->file);
+            realFile = g_build_filename (dirName, linkPath, NULL);
+            g_free(dirName);
+            g_free(linkPath);
+        }
+        fileData = json_generator_to_data (gen, &len);
+        success = g_file_set_contents(realFile, fileData, len, NULL);
+        g_free(realFile);
+        g_free(fileData);
+    } else {
+        success = json_generator_to_file(gen, priv->file, NULL);
+    }
 
     if (!success)
         g_error("Problem writing configuration file (permissions?) to: %s",
