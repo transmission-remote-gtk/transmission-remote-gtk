@@ -108,6 +108,16 @@ static void url_entry_changed(GtkWidget * w, gpointer data)
                              gtk_entry_get_text_length(GTK_ENTRY(w)) > 0);
 }
 
+static gboolean url_entry_key_press(GtkWidget * w, GdkEventKey * event,
+                                    gpointer data)
+{
+    if (event->keyval == GDK_KEY_Return){
+        gtk_dialog_response(GTK_DIALOG(data), GTK_RESPONSE_ACCEPT);
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
 {
     TrgTorrentAddUrlDialogPrivate *priv =
@@ -121,6 +131,9 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
 
     w = priv->urlEntry = gtk_entry_new();
     g_signal_connect(w, "changed", G_CALLBACK(url_entry_changed), self);
+    g_signal_connect(w, "key_press_event",
+                     G_CALLBACK(url_entry_key_press), self);
+
     hig_workarea_add_row(t, &row, _("URL:"), w, NULL);
 
     priv->startCheck =
@@ -148,6 +161,8 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
     gtk_container_set_border_width(GTK_CONTAINER(t), GUI_PAD);
 
     gtk_box_pack_start(GTK_BOX(contentvbox), t, TRUE, TRUE, 0);
+
+    gtk_widget_add_events (self, GDK_KEY_PRESS_MASK);
 }
 
 TrgTorrentAddUrlDialog *trg_torrent_add_url_dialog_new(TrgMainWindow * win,
