@@ -575,6 +575,7 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 	curl_easy_setopt(curl, CURLOPT_TIMEOUT,
 					 (long) trg_prefs_get_int(prefs, TRG_PREFS_KEY_TIMEOUT,
 											  TRG_PREFS_CONNECTION));
+    curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "gzip");
 
     g_mutex_unlock(&priv->configMutex);
 
