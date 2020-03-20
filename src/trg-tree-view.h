@@ -51,7 +51,7 @@ GtkWidget *trg_tree_view_new(void);
 
 G_END_DECLS GList *trg_tree_view_get_selected_refs_list(GtkTreeView * tv);
 
-enum {
+typedef enum {
     TRG_COLTYPE_ICONTEXT,
     TRG_COLTYPE_FILEICONTEXT,
     TRG_COLTYPE_WANTED,
