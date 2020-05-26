@@ -8,3 +8,4 @@ Type=Application
 MimeType=application/x-bittorrent;x-scheme-handler/magnet;
 Categories=Network;FileTransfer;P2P;GTK;
 Keywords=p2p;bittorrent;transmission;rpc;
+StartupWMClass=transmission-remote-gtk
