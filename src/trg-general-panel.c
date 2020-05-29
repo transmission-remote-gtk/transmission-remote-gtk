@@ -70,6 +70,7 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_completedat_label;
     GtkLabel *gen_downloaddir_label;
     GtkLabel *gen_comment_label;
+    GtkLabel *gen_hash_label;
     GtkLabel *gen_error_label;
     GtkTreeModel *model;
     TrgClient *tc;
@@ -97,6 +98,7 @@ void trg_general_panel_clear(TrgGeneralPanel * panel)
     gtk_label_clear(priv->gen_completedat_label);
     gtk_label_clear(priv->gen_downloaddir_label);
     gtk_label_clear(priv->gen_comment_label);
+    gtk_label_clear(priv->gen_hash_label);
     gtk_label_clear(priv->gen_error_label);
     gtk_label_clear(gen_panel_label_get_key_label
                     (GTK_LABEL(priv->gen_error_label)));
@@ -164,6 +166,8 @@ trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
     uploaded = torrent_get_uploaded(t);
     trg_strlsize(buf, uploaded);
     gtk_label_set_text(GTK_LABEL(priv->gen_uploaded_label), buf);
+
+    gtk_label_set_text(GTK_LABEL(priv->gen_hash_label), torrent_get_hash(t));
 
     haveValid = torrent_get_have_valid(t);
     trg_strlsize(buf, torrent_get_downloaded(t));
@@ -310,7 +314,7 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
     int i;
 
     g_object_set(G_OBJECT(self), "n-columns",
-                 TRG_GENERAL_PANEL_COLUMNS_TOTAL, "n-rows", 7, NULL);
+                 TRG_GENERAL_PANEL_COLUMNS_TOTAL, "n-rows", 8, NULL);
 
 	priv->gen_name_label =
 		trg_general_panel_add_label_with_width(self, _("Name"), 0, 0, -1);
@@ -356,8 +360,11 @@ static void trg_general_panel_init(TrgGeneralPanel * self)
 	priv->gen_comment_label =
 		trg_general_panel_add_label(self, _("Comment"), 0, 7);
 
+	priv->gen_hash_label =
+		trg_general_panel_add_label(self, _("Hash"), 0, 8);
+
 	priv->gen_error_label =
-		trg_general_panel_add_label_with_width(self, "", 0, 8, -1);
+		trg_general_panel_add_label_with_width(self, "", 0, 9, -1);
 
     for (i = 0; i < TRG_GENERAL_PANEL_COLUMNS_TOTAL; i++)
         gtk_table_set_col_spacing(GTK_TABLE(self), i,
