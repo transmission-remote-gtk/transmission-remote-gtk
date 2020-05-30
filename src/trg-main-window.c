@@ -1514,9 +1514,15 @@ trg_torrent_tree_view_visible_func(GtkTreeModel * model,
             gchar *filterCmp = g_utf8_casefold(filterText, -1);
             gchar *nameCmp = g_utf8_casefold(name, -1);
 
-            if (!strstr(nameCmp, filterCmp))
-                visible = FALSE;
+            GRegex *regex;
+            GMatchInfo *match_info;
+            regex = g_regex_new (filterCmp, 0, 0, NULL);
 
+            if (!g_regex_match (regex, nameCmp, 0, &match_info))
+	        visible = FALSE;
+
+            g_match_info_free (match_info);
+            g_regex_unref (regex);
             g_free(nameCmp);
             g_free(filterCmp);
             g_free(name);
