@@ -26,6 +26,7 @@
 
 #include "trg-client.h"
 #include "trg-tree-view.h"
+#include "trg-file-rename-dialog.h"
 #include "trg-files-model-common.h"
 #include "trg-files-tree-view-common.h"
 #include "trg-files-tree-view.h"
@@ -85,7 +86,7 @@ send_updated_file_prefs_foreachfunc(GtkTreeModel * model,
     return FALSE;
 }
 
-static gboolean on_files_update(gpointer data)
+gboolean on_files_update(gpointer data)
 {
     trg_response *response = (trg_response *) data;
     TrgFilesTreeViewPrivate *priv =
@@ -123,6 +124,15 @@ static void send_updated_file_prefs(TrgFilesTreeView * tv)
     trg_files_model_set_accept(TRG_FILES_MODEL(model), FALSE);
 
     dispatch_async(priv->client, req, on_files_update, tv);
+}
+
+static void rename_file(GtkWidget * w G_GNUC_UNUSED, gpointer data)
+{
+    TrgFilesTreeView *tv = TRG_FILES_TREE_VIEW(data);
+    TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(tv);
+    gtk_widget_show_all(GTK_WIDGET
+                        (trg_file_rename_dialog_new
+                         (priv->win, priv->client, tv)));
 }
 
 static void set_low(GtkWidget * w G_GNUC_UNUSED, gpointer data)
@@ -167,6 +177,7 @@ view_onButtonPressed(GtkWidget * treeview,
         trg_files_tree_view_onViewButtonPressed(treeview, event,
                                                 -1,
                                                 FILESCOL_WANTED,
+                                                G_CALLBACK(rename_file),
                                                 G_CALLBACK(set_low),
                                                 G_CALLBACK(set_normal),
                                                 G_CALLBACK(set_high),

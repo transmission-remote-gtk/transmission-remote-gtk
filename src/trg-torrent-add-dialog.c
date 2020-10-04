@@ -234,6 +234,7 @@ onViewButtonPressed(GtkWidget * w, GdkEventButton * event, gpointer gdata)
 {
     return trg_files_tree_view_onViewButtonPressed(w, event, FC_PRIORITY,
                                                    FC_ENABLED,
+                                                   NULL, /* no rename */
                                                    G_CALLBACK(set_low),
                                                    G_CALLBACK(set_normal),
                                                    G_CALLBACK(set_high),
