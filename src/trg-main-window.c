@@ -847,8 +847,7 @@ confirm_action_dialog(GtkWindow * gtk_win,
                                 firstNode->data);
         gtk_tree_model_get(GTK_TREE_MODEL(priv->filteredTorrentModel),
                            &firstIter, TORRENT_COLUMN_NAME, &name, -1);
-        g_list_foreach(list, (GFunc) gtk_tree_path_free, NULL);
-        g_list_free(list);
+        g_list_free_full(list, (GDestroyNotify) gtk_tree_path_free);
 
         dialog = gtk_message_dialog_new_with_markup(GTK_WINDOW(win),
                                                     GTK_DIALOG_DESTROY_WITH_PARENT,
@@ -1603,8 +1602,7 @@ torrent_selection_changed(GtkTreeSelection * selection,
         }
     }
 
-    g_list_foreach(selectionList, (GFunc) gtk_tree_path_free, NULL);
-    g_list_free(selectionList);
+    g_list_free_full(selectionList, (GDestroyNotify) gtk_tree_path_free);
 
     update_selected_torrent_notebook(win, TORRENT_GET_MODE_FIRST, id);
 
@@ -2202,8 +2200,7 @@ static void exec_cmd_cb(GtkWidget * w, TrgMainWindow * win)
     g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL,
                   &cmd_error);
 
-    g_list_foreach(selectedRows, (GFunc) gtk_tree_path_free, NULL);
-    g_list_free(selectedRows);
+    g_list_free_full(selectedRows, (GDestroyNotify) gtk_tree_path_free);
 
     if (argv)
         g_strfreev(argv);

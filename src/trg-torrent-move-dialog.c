@@ -176,6 +176,8 @@ static GObject *trg_torrent_move_dialog_constructor(GType type,
                      "response",
                      G_CALLBACK(trg_torrent_move_response_cb), priv->win);
 
+    g_free(msg);
+
     return object;
 }
 

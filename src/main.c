@@ -195,6 +195,8 @@ int main(int argc, char *argv[])
     exitCode = trg_gtkapp_init(client, argc, argv);
 #endif
 
+    g_object_unref(client);
+
     trg_cleanup();
 
     return exitCode;

@@ -644,11 +644,9 @@ update_torrent_iter(TrgTorrentModel * model,
 
     trg_torrent_model_count_peers(model, iter, t);
 
-    if (firstTrackerHost)
-        g_free(firstTrackerHost);
+    g_free(firstTrackerHost);
 
-    if (peerSources)
-        g_free(peerSources);
+    g_free(peerSources);
 
     g_free(lastDownloadDir);
     g_free(statusString);
