@@ -174,7 +174,6 @@ static void trg_torrent_props_response_cb(GtkDialog * dialog, gint res_id,
                 (priv->bandwidthPriorityCombo) ) - 1);
 
         trg_json_widgets_save(priv->widgets, args);
-        trg_json_widget_desc_list_free(priv->widgets);
 
         dispatch_async(priv->client, request, on_generic_interactive_action_response,
                 priv->parent);
@@ -659,6 +658,20 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     return object;
 }
 
+static void trg_torrent_props_dialog_dispose(GObject * object)
+{
+    G_OBJECT_CLASS(trg_torrent_props_dialog_parent_class)->dispose(object);
+}
+
+static void trg_torrent_props_dialog_finalize(GObject * object)
+{
+    TrgTorrentPropsDialogPrivate *priv = GET_PRIVATE(object);
+
+    trg_json_widget_desc_list_free(priv->widgets);
+
+    G_OBJECT_CLASS(trg_torrent_props_dialog_parent_class)->finalize(object);
+}
+
 static void trg_torrent_props_dialog_class_init(TrgTorrentPropsDialogClass
                                                 * klass)
 {
@@ -667,6 +680,8 @@ static void trg_torrent_props_dialog_class_init(TrgTorrentPropsDialogClass
     object_class->constructor = trg_torrent_props_dialog_constructor;
     object_class->set_property = trg_torrent_props_dialog_set_property;
     object_class->get_property = trg_torrent_props_dialog_get_property;
+    object_class->dispose = trg_torrent_props_dialog_dispose;
+    object_class->finalize = trg_torrent_props_dialog_finalize;
 
     g_type_class_add_private(klass, sizeof(TrgTorrentPropsDialogPrivate));
 

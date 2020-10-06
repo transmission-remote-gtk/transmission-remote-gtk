@@ -82,7 +82,7 @@ trg_model_remove_removed(GtkListStore * model, gint serial_column,
 struct find_existing_item_foreach_args {
     gint64 id;
     gint search_column;
-    GtkTreeIter *iter;
+    GtkTreeIter iter;
     gboolean found;
 };
 
@@ -97,7 +97,7 @@ find_existing_item_foreachfunc(GtkTreeModel * model,
 
     gtk_tree_model_get(model, iter, args->search_column, &currentId, -1);
     if (currentId == args->id) {
-        args->iter = iter;
+        args->iter = *iter;
         return args->found = TRUE;
     }
 
@@ -114,6 +114,6 @@ find_existing_model_item(GtkTreeModel * model, gint search_column,
     args.search_column = search_column;
     gtk_tree_model_foreach(model, find_existing_item_foreachfunc, &args);
     if (args.found == TRUE)
-        *iter = *(args.iter);
+        *iter = args.iter;
     return args.found;
 }

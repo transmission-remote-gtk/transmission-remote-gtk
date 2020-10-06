@@ -151,6 +151,7 @@ trg_trackers_model_update(TrgTrackersModel * model,
     }
 
     g_list_free(trackers);
+
     trg_model_remove_removed(GTK_LIST_STORE(model),
                              TRACKERCOL_UPDATESERIAL, updateSerial);
 }

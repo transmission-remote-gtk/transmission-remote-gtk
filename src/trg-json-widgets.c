@@ -53,11 +53,7 @@ void trg_json_widget_desc_free(trg_json_widget_desc * wd)
 
 void trg_json_widget_desc_list_free(GList * list)
 {
-    GList *li;
-    for (li = list; li; li = g_list_next(li))
-        trg_json_widget_desc_free((trg_json_widget_desc *) li->data);
-
-    g_list_free(list);
+    g_list_free_full(list, (GDestroyNotify)trg_json_widget_desc_free);
 }
 
 void toggle_active_arg_is_sensitive(GtkToggleButton * b, gpointer data)
