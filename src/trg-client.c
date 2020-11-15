@@ -337,7 +337,15 @@ gchar *trg_client_get_url(TrgClient * tc)
 gchar *trg_client_get_session_id(TrgClient * tc)
 {
     TrgClientPrivate *priv = tc->priv;
-    return priv->session_id ? g_strdup(priv->session_id) : NULL;
+    gchar *ret;
+
+    g_mutex_lock(&priv->configMutex);
+
+    ret = priv->session_id ? g_strdup(priv->session_id) : NULL;
+
+    g_mutex_unlock(&priv->configMutex);
+
+    return ret;
 }
 
 void trg_client_set_session_id(TrgClient * tc, gchar * session_id)
