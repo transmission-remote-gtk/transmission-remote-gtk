@@ -82,6 +82,16 @@ JsonNode *torrent_set_location(JsonArray * array, gchar * location,
     return req;
 }
 
+JsonNode *torrent_rename_path(JsonArray * array, const gchar * path,
+                              const gchar * name)
+{
+    JsonNode *req = generic_request(METHOD_TORRENT_RENAME_PATH, array);
+    JsonObject *args = node_get_arguments(req);
+    json_object_set_string_member(args, FIELD_PATH, path);
+    json_object_set_string_member(args, FIELD_NAME, name);
+    return req;
+}
+
 JsonNode *torrent_start(JsonArray * array)
 {
     return generic_request(METHOD_TORRENT_START, array);

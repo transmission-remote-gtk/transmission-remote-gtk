@@ -52,6 +52,7 @@ transmission_remote_gtk_SOURCES = \
 	  trg-json-widgets.c \
 	  trg-model.c \
 	  trg-sortable-filtered-model.c \
+	  trg-file-rename-dialog.c \
 	  trg-files-tree.c \
 	  trg-files-model.c \
 	  trg-files-tree-view-common.c \
@@ -113,6 +114,7 @@ noinst_HEADERS = \
 	  trg-json-widgets.h \
 	  trg-model.h \
 	  trg-sortable-filtered-model.h \
+	  trg-file-rename-dialog.h \
 	  trg-files-tree.h \
 	  trg-files-model.h \
 	  trg-files-tree-view-common.h \

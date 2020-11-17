@@ -53,6 +53,8 @@ enum {
 
 GType trg_files_tree_view_get_type(void);
 
+gboolean on_files_update(gpointer data);
+
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
                                           TrgMainWindow * win,
                                           TrgClient * client,

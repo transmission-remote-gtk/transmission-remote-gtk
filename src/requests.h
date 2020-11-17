@@ -41,6 +41,8 @@ JsonNode *torrent_add_from_file(gchar * filename, gint flags);
 JsonNode *torrent_add_url(const gchar * url, gboolean paused);
 JsonNode *torrent_set_location(JsonArray * array, gchar * location,
                                gboolean move);
+JsonNode *torrent_rename_path(JsonArray * array, const gchar * path,
+                              const gchar * name);
 JsonNode *blocklist_update(void);
 JsonNode *port_test(void);
 JsonNode *session_stats(void);
