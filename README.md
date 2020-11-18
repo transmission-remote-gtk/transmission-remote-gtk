@@ -6,12 +6,11 @@ the Transmission BitTorrent client, using its HTTP RPC protocol.
 
 # DEPENDENCIES
 
-The following packages are required dependencies:
+The following packages are required dependencies (debian/ubuntu).
 
 ```bash
-autoconf-archive appstream-glib intltool
+libgtk-3-dev automake autoconf gcc libgeoip-dev gettext autoconf-archive libappstream-dev appstream-util libcurl4-openssl-dev libjson-glib-dev
 ```
-
 
 # BUILDING
 
