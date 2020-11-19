@@ -7,6 +7,7 @@
   <translation type="gettext">transmission-remote-gtk</translation>
   <name>Transmission Remote</name>
   <developer_name>Transmission Remote Gtk Team</developer_name>
+  <content_rating type="oars-1.1" />
   <summary>Remotely manage the Transmission BitTorrent client</summary>
   <url type="homepage">https://github.com/transmission-remote-gtk/transmission-remote-gtk</url>
   <url type="bugtracker">https://github.com/transmission-remote-gtk/transmission-remote-gtk/issues</url>
@@ -23,8 +24,8 @@
     </ul>
   </description>
   <screenshots>
-    <screenshot height="576" width="1024" type="default">
-      <image>http://eth0.org.uk/~alan/transmission-remote-gtk-1.1.1.png</image>
+    <screenshot height="512" width="973" type="default">
+      <image>https://community.linuxmint.com/img/screenshots/transmission-remote-gtk.png</image>
     </screenshot>
   </screenshots>
   <releases>
