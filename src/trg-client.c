@@ -82,13 +82,16 @@ struct _TrgClientPrivate {
     GHashTable *torrentTable;
     GThreadPool *pool;
     TrgPrefs *prefs;
-    GPrivate tlsKey;
     gint configSerial;
     guint http_class;
     GMutex configMutex;
     gboolean seedRatioLimited;
     gdouble seedRatioLimit;
 };
+
+static void trg_tls_free(gpointer data);
+
+static GPrivate tls_key = G_PRIVATE_INIT(trg_tls_free);
 
 static void dispatch_async_threadfunc(trg_request * reqrsp,
                                       TrgClient * tc);
@@ -523,15 +526,19 @@ static trg_tls *trg_tls_new(TrgClient * tc)
     return tls;
 }
 
+static void trg_tls_free(gpointer data)
+{
+    trg_tls *tls = (trg_tls *)data;
+    if (tls) {
+        curl_easy_cleanup(tls->curl);
+    }
+}
+
 static trg_tls *get_tls(TrgClient *tc) {
-    TrgClientPrivate *priv = tc->priv;
-    gpointer threadLocalStorage = g_private_get(&priv->tlsKey);
-    trg_tls *tls;
-    if (!threadLocalStorage) {
+    trg_tls *tls = (trg_tls *) g_private_get(&tls_key);
+    if (!tls) {
         tls = trg_tls_new(tc);
-        g_private_set(&priv->tlsKey, tls);
-    } else {
-        tls = (trg_tls *) threadLocalStorage;
+        g_private_set(&tls_key, tls);
     }
 
     return tls;
