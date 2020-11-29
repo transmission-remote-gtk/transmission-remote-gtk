@@ -718,6 +718,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
                                             GTK_RESPONSE_ACCEPT,
                                             GTK_RESPONSE_CANCEL, -1);
     gtk_dialog_set_default_response(GTK_DIALOG(obj), GTK_RESPONSE_ACCEPT);
+    gtk_widget_grab_focus(gtk_dialog_get_widget_for_response (GTK_DIALOG(obj),
+							      GTK_RESPONSE_ACCEPT));
 
     /* workspace */
     t = hig_workarea_create();
