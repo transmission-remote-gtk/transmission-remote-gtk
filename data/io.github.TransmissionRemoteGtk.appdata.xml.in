@@ -22,6 +22,29 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.4.2" date="2021-10-17">
+      <description>
+        <p>Minor release, but quite a few bugfixes and enhancements from 2 and a half years</p>
+        <ul>
+          <li>Clarify port forwarding label, ref issue #125</li>
+          <li>Torrent add dialog should get focus</li>
+          <li>Static GPrivate and clean up after pool thread</li>
+          <li>Add CI with github actions</li>
+          <li>torrent-rename-path support to rename remote path</li>
+          <li>fix screenshot, OARS rating, and other issues so appdata validates</li>
+          <li>Issue #80 - config file can be symlink</li>
+          <li>Mutex protect trg_client_get_session_id</li>
+          <li>Fix some memory potential leaks</li>
+          <li>Add support for torrent-rename-path rpc</li>
+          <li>Add Hash information in Torrent Details > General tab</li>
+          <li>link window name to an icon in app menu</li>
+          <li>Fix building under GCC 10 / -fno-common</li>
+          <li>Enable curl gzip compression</li>
+          <li>Handle return(enter) key press in torrent-add-url dialog (#91)</li>
+          <li>build: Allow building with gettext ≥ 0.20</li>
+        </ul>
+      </description>
+    </release>
     <release version="1.4.1" date="2019-01-01">
       <description>
         <p>This is a minor release with one bugfix:</p>

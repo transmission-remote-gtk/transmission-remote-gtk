@@ -1,5 +1,23 @@
 * All future changelogs are now maintained in the appdata file
 
+* Sun Oct 2021 1.4.2
+ -  Clarify port forwarding label, ref issue #125
+ -  Torrent add dialog should get focus
+ -  Static GPrivate and clean up after pool thread
+ -  Add CI with github actions
+ -  torrent-rename-path support to rename remote path
+ -  fix screenshot, OARS rating, and other issues so appdata validates
+ -  Issue #80 - config file can be symlink
+ -  Mutex protect trg_client_get_session_id
+ -  Fix some memory potential leaks
+ -  Add support for torrent-rename-path rpc
+ -  Add Hash information in Torrent Details > General tab
+ -  link window name to an icon in app menu
+ -  Fix building under GCC 10 / -fno-common
+ -  Enable curl gzip compression
+ -  Handle return(enter) key press in torrent-add-url dialog (#91)
+ -  build: Allow building with gettext ≥ 0.20
+
 * Fri Aug 12 2016 1.3.1
 - Fix build error on 32bit
 - Fix installing appdata file
