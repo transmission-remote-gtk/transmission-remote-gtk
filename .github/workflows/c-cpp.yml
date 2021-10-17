@@ -17,7 +17,7 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get upgrade
-        sudo apt-get install libgtk-3-dev automake autoconf gcc libgeoip-dev gettext autoconf-archive libappstream-dev appstream-util libcurl4-openssl-dev libjson-glib-dev libmrss0-dev libproxy-dev
+        sudo apt-get install libgtk-3-dev automake autoconf autopoint gcc libgeoip-dev gettext autoconf-archive libappstream-dev appstream-util libcurl4-openssl-dev libjson-glib-dev libmrss0-dev libproxy-dev
     - name: autogen
       run: ./autogen.sh
     - name: configure
