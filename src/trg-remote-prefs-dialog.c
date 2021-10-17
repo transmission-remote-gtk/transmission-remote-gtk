@@ -614,7 +614,7 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog * win,
 
     w = trg_json_widget_check_new(&priv->widgets, s,
                                   SGET_PORT_FORWARDING_ENABLED,
-                                  _("Peer port forwarding"), NULL);
+                                  _("Request forwarding of the peer port using UPnP or NAT-PMP"), NULL);
     hig_workarea_add_wide_control(t, &row, w);
 
     hig_workarea_add_section_title(t, &row, _("Protocol"));
