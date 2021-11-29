@@ -129,7 +129,7 @@ static void trg_client_finalize(GObject * object)
     TrgClientPrivate *priv = tc->priv;
 
     g_free(priv->session_id);
-    json_object_unref(priv->session);
+    g_clear_pointer(&priv->session, json_object_unref);
     g_free(priv->url);
     g_free(priv->username);
     g_free(priv->password);
@@ -370,10 +370,7 @@ void trg_client_status_change(TrgClient * tc, gboolean connected)
     TrgClientPrivate *priv = tc->priv;
 
     if (!connected) {
-        if (priv->session) {
-            json_object_unref(priv->session);
-            priv->session = NULL;
-        }
+        g_clear_pointer(&priv->session, json_object_unref);
         g_mutex_lock(&priv->configMutex);
         trg_prefs_set_connection(priv->prefs, NULL);
         g_mutex_unlock(&priv->configMutex);
@@ -468,8 +465,7 @@ void trg_client_configunlock(TrgClient * tc)
 void trg_response_free(trg_response * response)
 {
 	if (response) {
-		if (response->obj)
-			json_object_unref(response->obj);
+		g_clear_pointer(&response->obj, json_object_unref);
 
 		if (response->raw)
 			g_free(response->raw);

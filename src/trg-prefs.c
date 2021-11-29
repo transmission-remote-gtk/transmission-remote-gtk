@@ -272,8 +272,7 @@ void trg_prefs_set_connection(TrgPrefs * p, JsonObject * profile)
 {
     TrgPrefsPrivate *priv = p->priv;
 
-    if (priv->connectionObj)
-        json_object_unref(priv->connectionObj);
+    g_clear_pointer(&priv->connectionObj, json_object_unref);
 
     if (profile)
         json_object_ref(profile);
