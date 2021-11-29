@@ -191,9 +191,8 @@ static void trg_torrent_model_ref_free(gpointer data)
         GtkTreeIter iter;
         JsonObject *json;
         if (gtk_tree_model_get_iter(model, &iter, path)) {
-            gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json,
-                               -1);
-            json_object_unref(json);
+            gtk_tree_model_get(model, &iter, TORRENT_COLUMN_JSON, &json, -1);
+            g_clear_pointer(&json, json_object_unref);
             g_object_set_data(G_OBJECT(model), PROP_REMOVE_IN_PROGRESS,
                               GINT_TO_POINTER(TRUE));
             gtk_list_store_remove(GTK_LIST_STORE(model), &iter);
@@ -631,8 +630,7 @@ update_torrent_iter(TrgTorrentModel * model,
         *whatsChanged |= TORRENT_UPDATE_PATH_CHANGE;
     }
 
-    if (lastJson)
-        json_object_unref(lastJson);
+    g_clear_pointer(&lastJson, json_object_unref);
 
     if ((lastFlags & TORRENT_FLAG_DOWNLOADING)
         && (!(newFlags & TORRENT_FLAG_DOWNLOADING))
