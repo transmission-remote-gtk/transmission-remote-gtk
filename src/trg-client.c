@@ -79,6 +79,7 @@ struct _TrgClientPrivate {
     char *username;
     char *password;
     char *proxy;
+    GList *headers;
     GHashTable *torrentTable;
     GThreadPool *pool;
     TrgPrefs *prefs;
@@ -240,10 +241,43 @@ TrgPrefs *trg_client_get_prefs(TrgClient * tc)
     return tc->priv->prefs;
 }
 
+static void trg_client_insert_header (JsonNode *header_node, GList **output)
+{
+  const gchar *key = NULL, *value;
+    JsonObject *header_object;
+    if (!header_node)
+        return;
+
+    header_object = json_node_get_object(header_node);
+    if (!header_object)
+      return;
+
+    key = json_object_get_string_member(header_object, TRG_PREFS_KEY_CUSTOM_HEADER_NAME);
+    value = json_object_get_string_member(header_object, TRG_PREFS_KEY_CUSTOM_HEADER_VALUE);
+    if (key && value)
+      *output = g_list_prepend(*output, g_strdup_printf("%s: %s", key, value));
+}
+
+static GList *trg_client_headers_array_to_list(JsonArray *array)
+{
+    GList *output_headers = NULL;
+    GList *nodes;
+    if (!array)
+        return NULL;
+
+    nodes = json_array_get_elements(array);
+    if (!nodes)
+      return NULL;
+
+    g_list_foreach(nodes, (GFunc)trg_client_insert_header, &output_headers);
+    return output_headers;
+}
+
 int trg_client_populate_with_settings(TrgClient * tc)
 {
     TrgClientPrivate *priv = tc->priv;
     TrgPrefs *prefs = priv->prefs;
+    JsonArray* headers;
 
     gint port;
     gchar *host, *path;
@@ -258,6 +292,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
     g_clear_pointer(&priv->url, g_free);
     g_clear_pointer(&priv->username, g_free);
     g_clear_pointer(&priv->password, g_free);
+    g_list_free_full(priv->headers, g_free);
 
     port =
         trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_CONNECTION);
@@ -295,6 +330,11 @@ int trg_client_populate_with_settings(TrgClient * tc)
     priv->password = trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD,
                                           TRG_PREFS_CONNECTION);
 
+    headers = trg_prefs_get_array(prefs, TRG_PREFS_KEY_CUSTOM_HEADERS, TRG_PREFS_CONNECTION);
+    if (headers) {
+        priv->headers = trg_client_headers_array_to_list(headers);
+    }
+
     g_clear_pointer(&priv->proxy, g_free);
 
 #ifdef HAVE_LIBPROXY
@@ -320,6 +360,24 @@ int trg_client_populate_with_settings(TrgClient * tc)
     priv->configSerial++;
     g_mutex_unlock(&priv->configMutex);
     return 0;
+}
+
+static void
+trg_client_inject_header (gchar *header, struct curl_slist **headers)
+{
+  if (!header)
+    return;
+  *headers = curl_slist_append (*headers, header);
+}
+
+static void
+trg_client_inject_custom_headers (TrgClient *tc,
+                                  struct curl_slist **headers)
+{
+  if (!tc->priv->headers)
+    return;
+
+  g_list_foreach (tc->priv->headers, (GFunc) trg_client_inject_header, headers);
 }
 
 gchar *trg_client_get_password(TrgClient * tc)
@@ -608,6 +666,18 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 
 }
 
+static void
+trg_http_headers_free(struct curl_slist *headers)
+{
+    struct curl_slist *next;
+    if (!headers)
+        return;
+
+    for (next = headers; next; next = next->next) {
+        g_free(next->data);
+    }
+}
+
 static inline int
 trg_http_perform_inner(TrgClient * tc, trg_request * request,
                        trg_response * response, gboolean recurse)
@@ -620,23 +690,25 @@ trg_http_perform_inner(TrgClient * tc, trg_request * request,
     response->size = 0;
     response->raw = NULL;
 
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request->body);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) response);
+    curl_easy_setopt (curl, CURLOPT_POSTFIELDS, request->body);
+    curl_easy_setopt (curl, CURLOPT_WRITEDATA, (void *) response);
 
-	session_id = trg_client_get_session_id(tc);
-	if (session_id)
-		headers = curl_slist_append(NULL, session_id);
+    session_id = trg_client_get_session_id (tc);
+    if (session_id)
+      headers = curl_slist_append (NULL, session_id);
 
-	curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
+    trg_client_inject_custom_headers (tc, &headers);
 
-    response->status = curl_easy_perform(curl);
+    curl_easy_setopt (curl, CURLOPT_HTTPHEADER, headers);
+
+    response->status = curl_easy_perform (curl);
 
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
-    g_free(session_id);
 
     if (headers)
-    	curl_slist_free_all(headers);
+        trg_http_headers_free(headers);
+//    	curl_slist_free_all(headers);
 
     if (response->status == CURLE_OK) {
         if (httpCode == HTTP_CONFLICT && recurse == TRUE) {
