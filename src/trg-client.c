@@ -671,18 +671,6 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 
 }
 
-static void
-trg_http_headers_free(struct curl_slist *headers)
-{
-    struct curl_slist *next;
-    if (!headers)
-        return;
-
-    for (next = headers; next; next = next->next) {
-        g_free(next->data);
-    }
-}
-
 static inline int
 trg_http_perform_inner(TrgClient * tc, trg_request * request,
                        trg_response * response, gboolean recurse)
@@ -695,25 +683,26 @@ trg_http_perform_inner(TrgClient * tc, trg_request * request,
     response->size = 0;
     response->raw = NULL;
 
-    curl_easy_setopt (curl, CURLOPT_POSTFIELDS, request->body);
-    curl_easy_setopt (curl, CURLOPT_WRITEDATA, (void *) response);
+    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request->body);
+    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *) response);
 
-    session_id = trg_client_get_session_id (tc);
-    if (session_id)
-      headers = curl_slist_append (NULL, session_id);
+    session_id = trg_client_get_session_id(tc);
+    if (session_id) {
+        headers = curl_slist_append(NULL, session_id);
+        g_free(session_id);
+    }
 
-    trg_client_inject_custom_headers (tc, &headers);
+    trg_client_inject_custom_headers(tc, &headers);
 
-    curl_easy_setopt (curl, CURLOPT_HTTPHEADER, headers);
+    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
 
-    response->status = curl_easy_perform (curl);
+    response->status = curl_easy_perform(curl);
 
     curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
 
 
     if (headers)
-        trg_http_headers_free(headers);
-//    	curl_slist_free_all(headers);
+    	curl_slist_free_all(headers);
 
     if (response->status == CURLE_OK) {
         if (httpCode == HTTP_CONFLICT && recurse == TRUE) {
