@@ -604,6 +604,8 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 	TrgPrefs *prefs = trg_client_get_prefs(tc);
 	trg_tls *tls = get_tls(tc);
 	CURL *curl = tls->curl;
+    gchar *username;
+    gchar *password;
 
     g_mutex_lock(&priv->configMutex);
 
@@ -622,12 +624,14 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 
         if (http_class == HTTP_CLASS_TRANSMISSION) {
         	curl_easy_setopt(curl, CURLOPT_WRITEHEADER, (void *) tc);
-        	curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
         	curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, &header_callback);
-            curl_easy_setopt(curl, CURLOPT_PASSWORD,
-                             trg_client_get_password(tc));
-            curl_easy_setopt(curl, CURLOPT_USERNAME,
-                             trg_client_get_username(tc));
+            username = trg_client_get_username(tc);
+            password = trg_client_get_password(tc);
+            if (username && password) {
+                curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
+                curl_easy_setopt(curl, CURLOPT_USERNAME, username);
+                curl_easy_setopt(curl, CURLOPT_PASSWORD, password);
+            }
             curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
         }
 
