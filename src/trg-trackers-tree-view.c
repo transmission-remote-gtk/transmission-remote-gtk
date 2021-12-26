@@ -286,7 +286,7 @@ view_popup_menu_add_only(GtkWidget * treeview, GdkEventButton * event,
 
     menuitem =
         trg_menu_bar_item_new(GTK_MENU_SHELL(menu), _("Add"),
-                              GTK_STOCK_ADD, TRUE);
+                              TRUE);
     g_signal_connect(menuitem, "activate", G_CALLBACK(add_tracker),
                      treeview);
 
@@ -307,13 +307,13 @@ view_popup_menu(GtkWidget * treeview, GdkEventButton * event,
 
     menuitem =
         trg_menu_bar_item_new(GTK_MENU_SHELL(menu), _("Delete"),
-                              GTK_STOCK_DELETE, TRUE);
+                              TRUE);
     g_signal_connect(menuitem, "activate", G_CALLBACK(delete_tracker),
                      treeview);
 
     menuitem =
         trg_menu_bar_item_new(GTK_MENU_SHELL(menu), _("Add"),
-                              GTK_STOCK_ADD, TRUE);
+                              TRUE);
     g_signal_connect(menuitem, "activate", G_CALLBACK(add_tracker),
                      treeview);
 

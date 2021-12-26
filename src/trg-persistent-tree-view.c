@@ -21,6 +21,7 @@
 #include "config.h"
 #endif
 
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
 #include "trg-prefs.h"
@@ -387,24 +388,24 @@ static GObject *trg_persistent_tree_view_constructor(GType type,
 
     hbox = trg_hbox_new(FALSE, 0);
 
-    w = gtk_button_new_from_stock(GTK_STOCK_ADD);
+    w = gtk_button_new_with_label(_("Add"));
     g_signal_connect(w, "clicked",
                      G_CALLBACK(trg_persistent_tree_view_add_cb), object);
     gtk_box_pack_start(GTK_BOX(hbox), w, FALSE, FALSE, 4);
 
-    w = priv->delButton = gtk_button_new_from_stock(GTK_STOCK_DELETE);
+    w = priv->delButton = gtk_button_new_with_label(_("Delete"));
     gtk_widget_set_sensitive(w, FALSE);
     g_signal_connect(w, "clicked",
                      G_CALLBACK(trg_persistent_tree_view_del_cb), object);
     gtk_box_pack_start(GTK_BOX(hbox), w, FALSE, FALSE, 4);
 
-    w = priv->upButton = gtk_button_new_from_stock(GTK_STOCK_GO_UP);
+    w = priv->upButton = gtk_button_new_with_label(_("Up"));
     gtk_widget_set_sensitive(w, FALSE);
     g_signal_connect(w, "clicked",
                      G_CALLBACK(trg_persistent_tree_view_up_cb), object);
     gtk_box_pack_start(GTK_BOX(hbox), w, FALSE, FALSE, 4);
 
-    w = priv->downButton = gtk_button_new_from_stock(GTK_STOCK_GO_DOWN);
+    w = priv->downButton = gtk_button_new_with_label(_("Down"));
     gtk_widget_set_sensitive(w, FALSE);
     g_signal_connect(w, "clicked",
                      G_CALLBACK(trg_persistent_tree_view_down_cb), object);

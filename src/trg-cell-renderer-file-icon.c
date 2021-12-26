@@ -72,7 +72,7 @@ trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon * fi)
     if (priv->file_id == -2) {
         return;
     } else if (priv->file_id == -1) {
-        g_object_set(fi, "stock-id", GTK_STOCK_DIRECTORY, NULL);
+        g_object_set(fi, "icon-name", "folder", NULL);
     } else if (priv->text) {
 #ifndef WIN32
         gboolean uncertain;
@@ -89,10 +89,10 @@ trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon * fi)
             g_object_set(fi, "gicon", icon, NULL);
             g_object_unref(icon);
         } else {
-            g_object_set(fi, "stock-id", GTK_STOCK_FILE, NULL);
+            g_object_set(fi, "icon-name", "file", NULL);
         }
 #else
-        g_object_set(fi, "stock-id", GTK_STOCK_FILE, NULL);
+        g_object_set(fi, "icon-name", "file", NULL);
 #endif
     }
 }

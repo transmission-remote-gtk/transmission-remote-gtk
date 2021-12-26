@@ -741,9 +741,9 @@ static GObject *trg_remote_prefs_dialog_constructor(GType type,
                                  GTK_WINDOW(priv->parent));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
 
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
+    gtk_dialog_add_button(GTK_DIALOG(object), _("_Close"),
                           GTK_RESPONSE_CLOSE);
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_OK,
+    gtk_dialog_add_button(GTK_DIALOG(object), _("_OK"),
                           GTK_RESPONSE_OK);
 
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);

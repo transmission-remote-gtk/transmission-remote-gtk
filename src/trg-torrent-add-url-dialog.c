@@ -137,10 +137,10 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
     gtk_window_set_title(GTK_WINDOW(self), _("Add torrent from URL"));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(self), TRUE);
 
-    gtk_dialog_add_button(GTK_DIALOG(self), GTK_STOCK_CLOSE,
+    gtk_dialog_add_button(GTK_DIALOG(self), _("_Close"),
                           GTK_RESPONSE_CANCEL);
     priv->addButton =
-        gtk_dialog_add_button(GTK_DIALOG(self), GTK_STOCK_ADD,
+        gtk_dialog_add_button(GTK_DIALOG(self), _("_Add"),
                               GTK_RESPONSE_ACCEPT);
     gtk_widget_set_sensitive(priv->addButton, FALSE);
 

@@ -337,18 +337,11 @@ trg_menu_bar_install_widget_prop(GObjectClass * class, guint propId,
 }
 
 GtkWidget *trg_menu_bar_item_new(GtkMenuShell * shell, const gchar * text,
-                                 const gchar * stock_id,
                                  gboolean sensitive)
 {
-    GtkWidget *item = gtk_image_menu_item_new_with_label(stock_id);
-    gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(item), TRUE);
-
-    gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
-                                              (item), TRUE);
+    GtkWidget *item = gtk_menu_item_new_with_label(text);
     gtk_menu_item_set_use_underline(GTK_MENU_ITEM(item), TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(item), text);
     gtk_widget_set_sensitive(item, sensitive);
-
     gtk_menu_shell_append(shell, item);
 
     return item;
@@ -601,14 +594,14 @@ static GtkWidget *trg_menu_bar_options_menu_new(TrgMenuBar * menu)
     priv->mb_local_prefs =
         trg_menu_bar_item_new(GTK_MENU_SHELL(optsMenu),
                               _("_Local Preferences"),
-                              GTK_STOCK_PREFERENCES, TRUE);
+                              TRUE);
     trg_menu_bar_accel_add(menu, priv->mb_local_prefs, GDK_s,
                            GDK_CONTROL_MASK);
 
     priv->mb_remote_prefs =
         trg_menu_bar_item_new(GTK_MENU_SHELL(optsMenu),
                               _("_Remote Preferences"),
-                              GTK_STOCK_NETWORK, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_remote_prefs, GDK_s,
                            GDK_MOD1_MASK);
 
@@ -675,30 +668,30 @@ static GtkWidget *trg_menu_bar_file_file_menu_new(TrgMenuBar * menu)
 
     priv->mb_connect =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("Connect"),
-                              GTK_STOCK_CONNECT, TRUE);
+                              TRUE);
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(priv->mb_connect),
                               connectMenu);
 
     priv->mb_disconnect =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Disconnect"),
-                              GTK_STOCK_DISCONNECT, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_disconnect, GDK_d,
                            GDK_CONTROL_MASK);
 
     priv->mb_add =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Add"),
-                              GTK_STOCK_ADD, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_add, GDK_o, GDK_CONTROL_MASK);
 
     priv->mb_add_url =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("Add from _URL"),
-                              GTK_STOCK_ADD, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_add_url, GDK_u,
                            GDK_CONTROL_MASK);
 
     priv->mb_quit =
         trg_menu_bar_item_new(GTK_MENU_SHELL(fileMenu), _("_Quit"),
-                              GTK_STOCK_QUIT, TRUE);
+                              TRUE);
     trg_menu_bar_accel_add(menu, priv->mb_quit, GDK_q,
                            GDK_CONTROL_MASK);
 
@@ -717,49 +710,49 @@ static GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar * menu)
 
     priv->mb_props =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              _("Properties"), GTK_STOCK_PROPERTIES,
+                              _("Properties"),
                               FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_props, GDK_i, GDK_CONTROL_MASK);
 
     priv->mb_copy_magnetlink =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Copy Magnet Link"),
-                              GTK_STOCK_COPY, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_copy_magnetlink, GDK_c, GDK_CONTROL_MASK);
 
     priv->mb_resume =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Resume"),
-                              GTK_STOCK_MEDIA_PLAY, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_resume, GDK_r, GDK_CONTROL_MASK);
 
     priv->mb_pause =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Pause"),
-                              GTK_STOCK_MEDIA_PAUSE, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_pause, GDK_p, GDK_CONTROL_MASK);
 
     priv->mb_verify =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Verify"),
-                              GTK_STOCK_REFRESH, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_verify, GDK_h, GDK_CONTROL_MASK);
 
     priv->mb_reannounce =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              _("Re-_announce"), GTK_STOCK_REFRESH, FALSE);
+                              _("Re-_announce"), FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_reannounce, GDK_q,
                            GDK_CONTROL_MASK);
 
     priv->mb_move =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Move"),
-                              GTK_STOCK_HARDDISK, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_move, GDK_m, GDK_CONTROL_MASK);
 
     priv->mb_remove =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("Remove"),
-                              GTK_STOCK_REMOVE, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_remove, GDK_Delete, 0);
 
     priv->mb_delete =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              _("Remove and delete data"), GTK_STOCK_DELETE,
+                              _("Remove and delete data"),
                               FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_delete, GDK_Delete,
                            GDK_SHIFT_MASK);
@@ -770,44 +763,43 @@ static GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar * menu)
 
     priv->mb_start_now = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                                                _("Start Now"),
-                                               GTK_STOCK_MEDIA_PLAY,
                                                FALSE);
 
     priv->mb_up_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                                               _("Move Up Queue"),
-                                              GTK_STOCK_GO_UP, FALSE);
+                                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_up_queue, GDK_Up,
                            GDK_SHIFT_MASK);
 
     priv->mb_down_queue =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              _("Move Down Queue"), GTK_STOCK_GO_DOWN,
+                              _("Move Down Queue"),
                               FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_down_queue, GDK_Down,
                            GDK_SHIFT_MASK);
 
     priv->mb_bottom_queue =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              _("Bottom Of Queue"), GTK_STOCK_GOTO_BOTTOM,
+                              _("Bottom Of Queue"),
                               FALSE);
 
     priv->mb_top_queue = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
                                                _("Top Of Queue"),
-                                               GTK_STOCK_GOTO_TOP, FALSE);
+                                               FALSE);
 
     gtk_menu_shell_append(GTK_MENU_SHELL(torrentMenu),
                           gtk_separator_menu_item_new());
 
     priv->mb_resume_all =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu),
-                              _("_Resume All"), GTK_STOCK_MEDIA_PLAY,
+                              _("_Resume All"),
                               FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_resume_all, GDK_r,
                            GDK_SHIFT_MASK | GDK_CONTROL_MASK);
 
     priv->mb_pause_all =
         trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("_Pause All"),
-                              GTK_STOCK_MEDIA_PAUSE, FALSE);
+                              FALSE);
     trg_menu_bar_accel_add(menu, priv->mb_pause_all, GDK_p,
                            GDK_SHIFT_MASK | GDK_CONTROL_MASK);
 
@@ -825,7 +817,7 @@ static GtkWidget *trg_menu_bar_help_menu_new(TrgMenuBar * menuBar)
 
     priv->mb_about =
         trg_menu_bar_item_new(GTK_MENU_SHELL(helpMenu), _("_About"),
-                              GTK_STOCK_ABOUT, TRUE);
+                              TRUE);
 
     return helpMenu;
 }
