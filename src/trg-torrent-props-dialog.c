@@ -548,9 +548,9 @@ static GObject *trg_torrent_props_dialog_constructor(GType type,
     gtk_window_set_transient_for(window, GTK_WINDOW(priv->parent));
     gtk_window_set_destroy_with_parent(window, TRUE);
 
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
+    gtk_dialog_add_button(GTK_DIALOG(object), _("_Close"),
                           GTK_RESPONSE_CLOSE);
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_OK,
+    gtk_dialog_add_button(GTK_DIALOG(object), _("_OK"),
                           GTK_RESPONSE_OK);
 
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);

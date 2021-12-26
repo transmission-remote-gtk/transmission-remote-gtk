@@ -563,9 +563,9 @@ static GtkWidget *trg_torrent_add_dialog_generic(GtkWindow * parent,
 {
     GtkWidget *w = gtk_file_chooser_dialog_new(_("Add a Torrent"), parent,
                                                GTK_FILE_CHOOSER_ACTION_OPEN,
-                                               GTK_STOCK_CANCEL,
+                                               _("_Cancel"),
                                                GTK_RESPONSE_CANCEL,
-                                               GTK_STOCK_ADD,
+                                               _("_Add"),
                                                GTK_RESPONSE_ACCEPT, NULL);
     gchar *dir =
         trg_prefs_get_string(prefs, TRG_PREFS_KEY_LAST_TORRENT_DIR,
@@ -663,16 +663,16 @@ static GtkWidget
     gtk_list_store_set(model, &iter, 1, _("Low Priority"), 2, FC_PRIORITY,
                        3, TR_PRI_LOW, -1);
     gtk_list_store_append(model, &iter);
-    gtk_list_store_set(model, &iter, 0, GTK_STOCK_APPLY, 1, _("Download"),
+    gtk_list_store_set(model, &iter, 0, _("_Apply"), 1, _("Download"),
                        2, FC_ENABLED, 3, TRUE, -1);
     gtk_list_store_append(model, &iter);
-    gtk_list_store_set(model, &iter, 0, GTK_STOCK_CANCEL, 1, _("Skip"), 2,
+    gtk_list_store_set(model, &iter, 0, _("_Cancel"), 1, _("Skip"), 2,
                        FC_ENABLED, 3, FALSE, -1);
 
     renderer = gtk_cell_renderer_pixbuf_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
     gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer,
-                                  "stock-id", 0);
+                                  "icon-name", 0);
     renderer = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
     gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer, "text",
@@ -711,9 +711,9 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
     gtk_window_set_destroy_with_parent(GTK_WINDOW(obj), TRUE);
 
     /* buttons */
-    gtk_dialog_add_button(GTK_DIALOG(obj), GTK_STOCK_CANCEL,
+    gtk_dialog_add_button(GTK_DIALOG(obj), _("_Cancel"),
                           GTK_RESPONSE_CANCEL);
-    gtk_dialog_add_button(GTK_DIALOG(obj), GTK_STOCK_OPEN,
+    gtk_dialog_add_button(GTK_DIALOG(obj), _("_Open"),
                           GTK_RESPONSE_ACCEPT);
     gtk_dialog_set_alternative_button_order(GTK_DIALOG(obj),
                                             GTK_RESPONSE_ACCEPT,

@@ -822,12 +822,12 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     profileLabel = gtk_label_new(_("Profile: "));
 
     profileButtonsHbox = trg_hbox_new(FALSE, 0);
-    w = gtk_button_new_from_stock(GTK_STOCK_NEW);
+    w = gtk_button_new_with_label(_("New"));
     g_signal_connect(w, "clicked", G_CALLBACK(add_profile_cb),
                      priv->profileComboBox);
     gtk_box_pack_start(GTK_BOX(profileButtonsHbox), w, FALSE, FALSE, 4);
 
-    priv->profileDelButton = gtk_button_new_from_stock(GTK_STOCK_DELETE);
+    priv->profileDelButton = gtk_button_new_with_label(_("Delete"));
     g_signal_connect(priv->profileDelButton, "clicked",
                      G_CALLBACK(del_profile_cb), priv->profileComboBox);
     gtk_widget_set_sensitive(priv->profileDelButton, FALSE);
@@ -940,9 +940,9 @@ static GObject *trg_preferences_dialog_constructor(GType type,
     gtk_window_set_transient_for(GTK_WINDOW(object),
                                  GTK_WINDOW(priv->win));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
+    gtk_dialog_add_button(GTK_DIALOG(object), _("_Close"),
                           GTK_RESPONSE_CLOSE);
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_OK,
+    gtk_dialog_add_button(GTK_DIALOG(object), _("_OK"),
                           GTK_RESPONSE_OK);
 
     gtk_dialog_set_default_response(GTK_DIALOG(object), GTK_RESPONSE_OK);

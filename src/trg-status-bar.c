@@ -85,15 +85,15 @@ turtle_toggle(GtkWidget * w, GdkEventButton * event, gpointer data)
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(data);
     JsonNode *req = session_set();
     JsonObject *args = node_get_arguments(req);
-    gchar *stockName;
+    const gchar *iconName;
     gboolean altSpeedOn;
 
-    gtk_image_get_stock(GTK_IMAGE(priv->turtleImage), &stockName, NULL);
-    altSpeedOn = g_strcmp0(stockName, "alt-speed-on") == 0;
+    gtk_image_get_icon_name(GTK_IMAGE(priv->turtleImage), &iconName, NULL);
+    altSpeedOn = g_strcmp0(iconName, "alt-speed-on") == 0;
 
-    gtk_image_set_from_stock(GTK_IMAGE(priv->turtleImage),
-                             altSpeedOn ? "alt-speed-off" : "alt-speed-on",
-                             GTK_ICON_SIZE_SMALL_TOOLBAR);
+    gtk_image_set_from_icon_name(GTK_IMAGE(priv->turtleImage),
+                                 altSpeedOn ? "alt-speed-off" : "alt-speed-on",
+                                 GTK_ICON_SIZE_SMALL_TOOLBAR);
     json_object_set_boolean_member(args, SGET_ALT_SPEED_ENABLED,
                                    !altSpeedOn);
 
@@ -180,9 +180,9 @@ void trg_status_bar_session_update(TrgStatusBar * sb, JsonObject * session)
         gtk_label_set_text(GTK_LABEL(priv->free_lbl), "");
     }
 
-    gtk_image_set_from_stock(GTK_IMAGE(priv->turtleImage),
-                             altSpeedEnabled ? "alt-speed-on" :
-                             "alt-speed-off", GTK_ICON_SIZE_SMALL_TOOLBAR);
+    gtk_image_set_from_icon_name(GTK_IMAGE(priv->turtleImage),
+                                 altSpeedEnabled ? "alt-speed-on" :
+                                 "alt-speed-off", GTK_ICON_SIZE_SMALL_TOOLBAR);
     gtk_widget_set_tooltip_text(priv->turtleImage,
                                 altSpeedEnabled ?
                                 _("Disable alternate speed limits") :

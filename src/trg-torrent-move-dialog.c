@@ -123,7 +123,7 @@ static GObject *trg_torrent_move_dialog_constructor(GType type,
 
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
 
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CLOSE,
+    gtk_dialog_add_button(GTK_DIALOG(object), _("_Close"),
                           GTK_RESPONSE_CANCEL);
     priv->move_button =
         gtk_dialog_add_button(GTK_DIALOG(object), _("Move"),

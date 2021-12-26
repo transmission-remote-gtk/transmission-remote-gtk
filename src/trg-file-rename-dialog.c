@@ -169,7 +169,7 @@ static GObject *trg_file_rename_dialog_constructor(GType type,
 
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
 
-    gtk_dialog_add_button(GTK_DIALOG(object), GTK_STOCK_CANCEL,
+    gtk_dialog_add_button(GTK_DIALOG(object), _("_Close"),
                           GTK_RESPONSE_CANCEL);
     priv->rename_button =
         gtk_dialog_add_button(GTK_DIALOG(object), _("Rename"),

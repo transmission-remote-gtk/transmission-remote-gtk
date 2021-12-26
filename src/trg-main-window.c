@@ -129,7 +129,7 @@ static gint confirm_action_dialog(GtkWindow * gtk_win,
                                   GtkTreeSelection * selection,
                                   const gchar * question_single,
                                   const gchar * question_multi,
-                                  const gchar * action_stock);
+                                  const gchar * action_label);
 static void view_stats_toggled_cb(GtkWidget * w, gpointer data);
 static void view_states_toggled_cb(GtkCheckMenuItem * w,
                                    TrgMainWindow * win);
@@ -181,8 +181,10 @@ static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
 static void clear_filter_entry_cb(GtkEntry * entry,
                                   GtkEntryIconPosition icon_pos,
                                   GdkEvent * event, gpointer user_data);
+static GtkWidget *trg_imagemenuitem_box(const gchar * text,
+                                        char * icon_name);
 static GtkWidget *trg_imagemenuitem_new(GtkMenuShell * shell,
-                                        const gchar * text, char *stock_id,
+                                        const gchar * text, char * icon_name,
                                         gboolean sensitive, GCallback cb,
                                         gpointer cbdata);
 static void set_limit_cb(GtkWidget * w, TrgMainWindow * win);
@@ -364,7 +366,7 @@ on_torrent_completed(TrgTorrentModel * model,
                      GtkTreeIter * iter, gpointer data)
 {
 #ifdef HAVE_LIBNOTIFY
-    torrent_event_notification(model, GTK_STOCK_APPLY,
+    torrent_event_notification(model, "gtk-apply", //TODO: real value
                                _("This torrent has completed."),
                                TORRENT_COMPLETE_NOTIFY_TMOUT,
                                TRG_PREFS_KEY_COMPLETE_NOTIFY, iter, data);
@@ -376,7 +378,7 @@ on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
                  gpointer data)
 {
 #ifdef HAVE_LIBNOTIFY
-    torrent_event_notification(model, GTK_STOCK_ADD,
+    torrent_event_notification(model, "list-add",
                                _("This torrent has been added."),
                                TORRENT_ADD_NOTIFY_TMOUT,
                                TRG_PREFS_KEY_ADD_NOTIFY, iter, data);
@@ -823,7 +825,7 @@ confirm_action_dialog(GtkWindow * gtk_win,
                       GtkTreeSelection * selection,
                       const gchar * question_single,
                       const gchar * question_multi,
-                      const gchar * action_stock)
+                      const gchar * action_label)
 {
     TrgMainWindow *win = TRG_MAIN_WINDOW(gtk_win);
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
@@ -867,8 +869,8 @@ confirm_action_dialog(GtkWindow * gtk_win,
         return 0;
     }
 
-    gtk_dialog_add_buttons(GTK_DIALOG(dialog), GTK_STOCK_CANCEL,
-                           GTK_RESPONSE_CANCEL, action_stock,
+    gtk_dialog_add_buttons(GTK_DIALOG(dialog), _("_Cancel"),
+                           GTK_RESPONSE_CANCEL, action_label,
                            GTK_RESPONSE_ACCEPT, NULL);
     gtk_dialog_set_default_response(GTK_DIALOG(dialog),
                                     GTK_RESPONSE_CANCEL);
@@ -914,7 +916,7 @@ static void remove_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
     if (confirm_action_dialog(GTK_WINDOW(win), selection, _
                               ("<big><b>Remove torrent \"%s\"?</b></big>"),
                               _("<big><b>Remove %d torrents?</b></big>"),
-                              GTK_STOCK_REMOVE) == GTK_RESPONSE_ACCEPT)
+                              _("_Remove")) == GTK_RESPONSE_ACCEPT)
         dispatch_async(priv->client, torrent_remove(ids, FALSE),
                        on_generic_interactive_action_response, win);
     else
@@ -938,7 +940,7 @@ static void delete_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
                               ("<big><b>Remove and delete torrent \"%s\"?</b></big>"),
                               _
                               ("<big><b>Remove and delete %d torrents?</b></big>"),
-                              GTK_STOCK_DELETE) == GTK_RESPONSE_ACCEPT)
+                              _("_Delete")) == GTK_RESPONSE_ACCEPT)
         dispatch_async(priv->client, torrent_remove(ids, TRUE),
                        on_delete_complete, win);
     else
@@ -1953,17 +1955,31 @@ clear_filter_entry_cb(GtkEntry * entry,
     gtk_entry_set_text(entry, "");
 }
 
+static GtkWidget *trg_imagemenuitem_box(const gchar * text,
+                                        char *icon_name)
+{
+    GtkWidget *item, *box, *label, *icon;
+
+    item = gtk_menu_item_new();
+    box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 6);
+    icon = gtk_image_new_from_icon_name(icon_name, GTK_ICON_SIZE_MENU);
+    label = gtk_label_new(text);
+
+    gtk_container_add(GTK_CONTAINER(box), icon);
+    gtk_container_add(GTK_CONTAINER(box), label);
+
+    gtk_container_add(GTK_CONTAINER(item), box);
+
+    return item;
+}
+
 static GtkWidget *trg_imagemenuitem_new(GtkMenuShell * shell,
-                                        const gchar * text, char *stock_id,
+                                        const gchar * text, char *icon_name,
                                         gboolean sensitive, GCallback cb,
                                         gpointer cbdata)
 {
-    GtkWidget *item = gtk_image_menu_item_new_with_label(stock_id);
 
-    gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(item), TRUE);
-    gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
-                                              (item), TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(item), text);
+    GtkWidget *item = trg_imagemenuitem_box(text, icon_name);
     g_signal_connect(item, "activate", cb, cbdata);
     gtk_widget_set_sensitive(item, sensitive);
     gtk_menu_shell_append(shell, item);
@@ -2075,11 +2091,7 @@ static GtkWidget *priority_menu_new(TrgMainWindow * win, JsonArray * ids)
                          priv->selectedTorrentId, &t, NULL))
         selected_pri = torrent_get_bandwidth_priority(t);
 
-    toplevel = gtk_image_menu_item_new_with_label(GTK_STOCK_NETWORK);
-    gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(toplevel), TRUE);
-    gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
-                                              (toplevel), TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(toplevel), _("Priority"));
+    toplevel = trg_imagemenuitem_box(_("Priority"), "network-workgroup");
 
     menu = gtk_menu_new();
 
@@ -2119,11 +2131,8 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
         json_object_get_boolean_member(current,
                                        enabledKey) ?
         json_object_get_int_member(current, speedKey) : -1;
-    toplevel = gtk_image_menu_item_new_with_label(GTK_STOCK_NETWORK);
-    gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(toplevel), TRUE);
-    gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM
-                                              (toplevel), TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(toplevel), title);
+
+    toplevel = trg_imagemenuitem_box(title, "network-workgroup");
 
     menu = gtk_menu_new();
 
@@ -2232,34 +2241,36 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
     JsonArray *cmds;
 
     menu = gtk_menu_new();
+    gtk_menu_set_reserve_toggle_size(GTK_MENU(menu), FALSE);
+
     ids = build_json_id_array(TRG_TORRENT_TREE_VIEW(treeview));
 
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Properties"),
-                          GTK_STOCK_PROPERTIES, TRUE,
+                          "document-properties", TRUE,
                           G_CALLBACK(open_props_cb), win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Copy Magnet Link"),
-                          GTK_STOCK_COPY, TRUE,
+                          "edit-copy", TRUE,
                           G_CALLBACK(copy_magnetlink_cb), win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Resume"),
-                          GTK_STOCK_MEDIA_PLAY, TRUE,
+                          "media-playback-start", TRUE,
                           G_CALLBACK(resume_cb), win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Pause"),
-                          GTK_STOCK_MEDIA_PAUSE, TRUE,
+                          "media-playback-pause", TRUE,
                           G_CALLBACK(pause_cb), win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Verify"),
-                          GTK_STOCK_REFRESH, TRUE, G_CALLBACK(verify_cb),
+                          "view-refresh", TRUE, G_CALLBACK(verify_cb),
                           win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Re-announce"),
-                          GTK_STOCK_REFRESH, TRUE,
+                          "network-server", TRUE,
                           G_CALLBACK(reannounce_cb), win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Move"),
-                          GTK_STOCK_HARDDISK, TRUE, G_CALLBACK(move_cb),
+                          "drive-harddisk", TRUE, G_CALLBACK(move_cb),
                           win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove"),
-                          GTK_STOCK_REMOVE, TRUE, G_CALLBACK(remove_cb),
+                          "list-remove", TRUE, G_CALLBACK(remove_cb),
                           win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove and delete data"),
-                          GTK_STOCK_DELETE, TRUE, G_CALLBACK(delete_cb),
+                          "edit-delete", TRUE, G_CALLBACK(delete_cb),
                           win);
 
     cmds = trg_prefs_get_array(prefs, TRG_PREFS_KEY_EXEC_COMMANDS,
@@ -2276,13 +2287,8 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
                                   gtk_separator_menu_item_new());
             cmds_shell = GTK_MENU_SHELL(menu);
         } else {
-            GtkImageMenuItem *cmds_menu =
-                GTK_IMAGE_MENU_ITEM(gtk_image_menu_item_new_with_label
-                                    (GTK_STOCK_EXECUTE));
-            gtk_image_menu_item_set_use_stock(cmds_menu, TRUE);
-            gtk_image_menu_item_set_always_show_image(cmds_menu, TRUE);
-            gtk_menu_item_set_label(GTK_MENU_ITEM(cmds_menu),
-                                    _("Actions"));
+            GtkMenuItem *cmds_menu =
+                GTK_MENU_ITEM(gtk_menu_item_new_with_label(_("Execute")));
 
             cmds_shell = GTK_MENU_SHELL(gtk_menu_new());
             gtk_menu_item_set_submenu(GTK_MENU_ITEM(cmds_menu),
@@ -2297,7 +2303,7 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
             const gchar *cmd_label = json_object_get_string_member(cmd_obj,
                                                                    "label");
             GtkWidget *item = trg_imagemenuitem_new(cmds_shell, cmd_label,
-                                                    GTK_STOCK_EXECUTE,
+                                                    "system-run",
                                                     TRUE,
                                                     G_CALLBACK
                                                     (exec_cmd_cb), win);
@@ -2312,19 +2318,19 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
 
     if (priv->queuesEnabled) {
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Start Now"),
-                              GTK_STOCK_MEDIA_PLAY, TRUE,
+                              "media-playback-start", TRUE,
                               G_CALLBACK(start_now_cb), win);
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Move Up Queue"),
-                              GTK_STOCK_GO_UP, TRUE,
+                              "go-up", TRUE,
                               G_CALLBACK(up_queue_cb), win);
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Move Down Queue"),
-                              GTK_STOCK_GO_DOWN, TRUE,
+                              "go-down", TRUE,
                               G_CALLBACK(down_queue_cb), win);
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Bottom Of Queue"),
-                              GTK_STOCK_GOTO_BOTTOM, TRUE,
+                              "go-bottom", TRUE,
                               G_CALLBACK(bottom_queue_cb), win);
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Top Of Queue"),
-                              GTK_STOCK_GOTO_TOP, TRUE,
+                              "go-top", TRUE,
                               G_CALLBACK(top_queue_cb), win);
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                               gtk_separator_menu_item_new());
@@ -2383,11 +2389,8 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
     gtk_widget_set_sensitive(priv->iconSepItem, FALSE);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), priv->iconSepItem);
 
-    connect = gtk_image_menu_item_new_with_label(GTK_STOCK_CONNECT);
-    gtk_image_menu_item_set_use_stock(GTK_IMAGE_MENU_ITEM(connect), TRUE);
-    gtk_image_menu_item_set_always_show_image(GTK_IMAGE_MENU_ITEM(connect),
-                                              TRUE);
-    gtk_menu_item_set_label(GTK_MENU_ITEM(connect), _("Connect"));
+    // TODO: real value
+    connect = trg_imagemenuitem_box(_("Connect"), "gtk-connect");
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(connect),
                               trg_menu_bar_file_connect_menu_new(win,
                                                                  prefs));
@@ -2395,23 +2398,23 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
 
     if (connected) {
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Disconnect"),
-                              GTK_STOCK_DISCONNECT, connected,
+                              "gtk-disconnect", connected,
                               G_CALLBACK(disconnect_cb), win);
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add"),
-                              GTK_STOCK_ADD, connected, G_CALLBACK(add_cb),
+                              "list-add", connected, G_CALLBACK(add_cb),
                               win);
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add from URL"),
-                              GTK_STOCK_ADD, connected,
+                              "list-add", connected,
                               G_CALLBACK(add_url_cb), win);
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Resume All"),
-                              GTK_STOCK_MEDIA_PLAY, connected,
+                              "media-playback-start", connected,
                               G_CALLBACK(resume_all_cb), win);
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Pause All"),
-                              GTK_STOCK_MEDIA_PAUSE, connected,
+                              "media-playback-pause", connected,
                               G_CALLBACK(pause_all_cb), win);
 
         gtk_menu_shell_append(GTK_MENU_SHELL(menu),
@@ -2426,7 +2429,7 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu),
                           gtk_separator_menu_item_new());
-    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Quit"), GTK_STOCK_QUIT,
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Quit"), "application-exit",
                           TRUE, G_CALLBACK(quit_cb), win);
 
     gtk_widget_show_all(menu);
@@ -2795,8 +2798,8 @@ static GObject *trg_main_window_constructor(GType type,
                        TRUE, TRUE, 0);
 
     w = gtk_entry_new();
-    gtk_entry_set_icon_from_stock(GTK_ENTRY(w), GTK_ENTRY_ICON_SECONDARY,
-                                  GTK_STOCK_CLEAR);
+    gtk_entry_set_icon_from_icon_name(GTK_ENTRY(w), GTK_ENTRY_ICON_SECONDARY,
+                                      "edit-clear");
     g_signal_connect(w, "icon-release", G_CALLBACK(clear_filter_entry_cb),
                      NULL);
     gtk_box_pack_start(GTK_BOX(toolbarHbox), w, FALSE, FALSE, 0);

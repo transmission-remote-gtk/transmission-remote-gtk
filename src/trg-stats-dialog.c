@@ -297,7 +297,7 @@ static GObject *trg_stats_dialog_constructor(GType type,
     gtk_window_set_transient_for(GTK_WINDOW(obj),
                                  GTK_WINDOW(priv->parent));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(obj), TRUE);
-    gtk_dialog_add_button(GTK_DIALOG(obj), GTK_STOCK_CLOSE,
+    gtk_dialog_add_button(GTK_DIALOG(obj), _("_Close"),
                           GTK_RESPONSE_CLOSE);
 
     gtk_container_set_border_width(GTK_CONTAINER(obj), GUI_PAD);
