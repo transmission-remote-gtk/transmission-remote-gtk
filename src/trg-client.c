@@ -242,35 +242,34 @@ TrgPrefs *trg_client_get_prefs(TrgClient * tc)
     return tc->priv->prefs;
 }
 
-static void trg_client_insert_header (JsonNode *header_node, GList **output)
-{
-  const gchar *key = NULL, *value;
-    JsonObject *header_object;
-    if (!header_node)
-        return;
-
-    header_object = json_node_get_object(header_node);
-    if (!header_object)
-      return;
-
-    key = json_object_get_string_member(header_object, TRG_PREFS_KEY_CUSTOM_HEADER_NAME);
-    value = json_object_get_string_member(header_object, TRG_PREFS_KEY_CUSTOM_HEADER_VALUE);
-    if (key && value)
-      *output = g_list_prepend(*output, g_strdup_printf("%s: %s", key, value));
-}
-
 static GList *trg_client_headers_array_to_list(JsonArray *array)
 {
-    GList *output_headers = NULL;
-    GList *nodes;
+    GList *output_headers = NULL, *nodes, *nodes_iter;
+    const gchar *key, *value;
+    JsonNode *header_node;
+
     if (!array)
         return NULL;
 
     nodes = json_array_get_elements(array);
     if (!nodes)
-      return NULL;
+        return NULL;
 
-    g_list_foreach(nodes, (GFunc)trg_client_insert_header, &output_headers);
+    for (nodes_iter = g_list_first(nodes); nodes_iter; nodes_iter = g_list_next(nodes_iter))
+    {
+        header_node = nodes_iter->data;
+        if (!header_node)
+            continue;
+        JsonObject *header_object;
+        header_object = json_node_get_object(header_node);
+        if (!header_object)
+            continue;
+
+        key = json_object_get_string_member(header_object, TRG_PREFS_KEY_CUSTOM_HEADER_NAME);
+        value = json_object_get_string_member(header_object, TRG_PREFS_KEY_CUSTOM_HEADER_VALUE);
+        if (key && value)
+            output_headers = g_list_prepend(output_headers, g_strdup_printf("%s: %s", key, value));
+    }
     return output_headers;
 }
 
@@ -294,6 +293,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
     g_clear_pointer(&priv->username, g_free);
     g_clear_pointer(&priv->password, g_free);
     g_list_free_full(priv->headers, g_free);
+    priv->headers = NULL;
 
     port =
         trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_CONNECTION);
@@ -364,21 +364,16 @@ int trg_client_populate_with_settings(TrgClient * tc)
 }
 
 static void
-trg_client_inject_header (gchar *header, struct curl_slist **headers)
+trg_client_inject_custom_headers(TrgClient *tc,
+                                 struct curl_slist **headers)
 {
-  if (!header)
-    return;
-  *headers = curl_slist_append (*headers, header);
-}
+    GList *iter;
+    if (!tc->priv->headers)
+        return;
 
-static void
-trg_client_inject_custom_headers (TrgClient *tc,
-                                  struct curl_slist **headers)
-{
-  if (!tc->priv->headers)
-    return;
-
-  g_list_foreach (tc->priv->headers, (GFunc) trg_client_inject_header, headers);
+    for (iter = g_list_first(tc->priv->headers); iter; iter = g_list_next(iter)) {
+        *headers = curl_slist_append(*headers, iter->data);
+    }
 }
 
 gchar *trg_client_get_password(TrgClient * tc)
