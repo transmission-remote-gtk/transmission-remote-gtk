@@ -806,6 +806,9 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
 
     GtkWidget *w, *t, *frame, *frameHbox, *profileLabel;
     GtkWidget *profileButtonsHbox;
+    GtkListStore *model;
+    TrgPersistentTreeView *ptv;
+    trg_pref_widget_desc *wd;
     guint row = 0;
 
     t = hig_workarea_create();
@@ -887,6 +890,22 @@ static GtkWidget *trg_prefs_serverPage(TrgPreferencesDialog * dlg)
     w = trgp_spin_new(dlg, TRG_PREFS_KEY_RETRIES, 0, 3600, 1,
                       TRG_PREFS_PROFILE, NULL);
     hig_workarea_add_row(t, &row, _("Retries:"), w, NULL);
+
+    hig_workarea_add_section_title(t, &row, _("Headers"));
+
+    model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
+    ptv = trg_persistent_tree_view_new(
+        priv->prefs, model, TRG_PREFS_KEY_CUSTOM_HEADERS, TRG_PREFS_PROFILE);
+    trg_persistent_tree_view_set_add_select(ptv,
+                                             trg_persistent_tree_view_add_column (ptv, 0, TRG_PREFS_KEY_CUSTOM_HEADER_NAME,
+                                                                                  _("Name")));
+    trg_persistent_tree_view_add_column (ptv, 1,
+                                         TRG_PREFS_KEY_CUSTOM_HEADER_VALUE,
+                                         _("Value"));
+    wd = trg_persistent_tree_view_get_widget_desc(ptv);
+    trg_pref_widget_refresh(dlg, wd);
+    priv->widgets = g_list_append(priv->widgets, wd);
+    hig_workarea_add_wide_tall_control(t, &row, GTK_WIDGET(ptv));
 
     frame = gtk_frame_new(NULL);
     frameHbox = trg_hbox_new(FALSE, 2);
