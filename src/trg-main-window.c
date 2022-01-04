@@ -366,7 +366,7 @@ on_torrent_completed(TrgTorrentModel * model,
                      GtkTreeIter * iter, gpointer data)
 {
 #ifdef HAVE_LIBNOTIFY
-    torrent_event_notification(model, "gtk-apply", //TODO: real value
+    torrent_event_notification(model, "trg-gtk-apply",
                                _("This torrent has completed."),
                                TORRENT_COMPLETE_NOTIFY_TMOUT,
                                TRG_PREFS_KEY_COMPLETE_NOTIFY, iter, data);
@@ -2389,8 +2389,7 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
     gtk_widget_set_sensitive(priv->iconSepItem, FALSE);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), priv->iconSepItem);
 
-    // TODO: real value
-    connect = trg_imagemenuitem_box(_("Connect"), "gtk-connect");
+    connect = trg_imagemenuitem_box(_("Connect"), "trg-gtk-connect");
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(connect),
                               trg_menu_bar_file_connect_menu_new(win,
                                                                  prefs));
@@ -2398,7 +2397,7 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
 
     if (connected) {
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Disconnect"),
-                              "gtk-disconnect", connected,
+                              "trg-gtk-disconnect", connected,
                               G_CALLBACK(disconnect_cb), win);
 
         trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Add"),

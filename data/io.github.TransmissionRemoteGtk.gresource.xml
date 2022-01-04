@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/io/github/TransmissionRemoteGtk">
+    <file alias="icons/16x16/actions/trg-gtk-connect.png">icons/menu/trg-gtk-connect.png</file>
+    <file alias="icons/16x16/actions/trg-gtk-disconnect.png">icons/menu/trg-gtk-disconnect.png</file>
+    <file alias="icons/16x16/actions/trg-gtk-apply.png">icons/menu/trg-gtk-apply.png</file>
+    <file alias="icons/24x24/actions/trg-gtk-connect.png">icons/toolbar/trg-gtk-connect.png</file>
+    <file alias="icons/24x24/actions/trg-gtk-disconnect.png">icons/toolbar/trg-gtk-disconnect.png</file>
+  </gresource>
+</gresources>

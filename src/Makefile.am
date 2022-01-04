@@ -17,6 +17,20 @@
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 #
 
+
+gresource_xml  := $(top_srcdir)/data/io.github.TransmissionRemoteGtk.gresource.xml
+RESOURCE_FILES := $(shell glib-compile-resources --sourcedir=$(top_srcdir)/data --generate-dependencies $(gresource_xml))
+
+trg-resources.c: $(gresource_xml) $(RESOURCE_FILES)
+	$(AM_V_GEN)glib-compile-resources --target=$@ --sourcedir=$(top_srcdir)/data --generate $<
+
+trg-resources.h: $(gresource_xml) $(RESOURCE_FILES)
+	$(AM_V_GEN)glib-compile-resources --target=$@ --sourcedir=$(top_srcdir)/data --generate $<
+
+TRG_RESOURCES = trg-resources.c trg-resources.h
+BUILT_SOURCES = $(TRG_RESOURCES)
+EXTRA_DIST = $(gresource_xml) $(RESOURCE_FILES)
+
 bin_PROGRAMS = transmission-remote-gtk
 
 transmission_remote_gtk_SOURCES = \
@@ -79,7 +93,8 @@ transmission_remote_gtk_SOURCES = \
 	  trg-client.c \
 	  trg-main-window.c \
 	  main.c \
-	  upload.c
+	  upload.c \
+	  $(TRG_RESOURCES)
 
 noinst_HEADERS = \
 	  trg-cell-renderer-speed.h \
@@ -185,7 +200,7 @@ else
 %.1: %.pod
 	        $(POD2MAN) --release="$(PACKAGE_VERSION)" --center="Transmission Remote GTK" $< > $@
 
-EXTRA_DIST = transmission-remote-gtk.pod
+EXTRA_DIST += transmission-remote-gtk.pod
 CLEANFILES = transmission-remote-gtk.1
 
 man_MANS = transmission-remote-gtk.1

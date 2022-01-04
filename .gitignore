@@ -82,4 +82,4 @@ __pycache__/
 
 /src/transmission-remote-gtk
 /src/transmission-remote-gtk.1
-
+/src/trg-resources.*
