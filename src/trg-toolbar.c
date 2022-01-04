@@ -196,7 +196,7 @@ static GObject *trg_toolbar_constructor(GType type,
                               GTK_ICON_SIZE_LARGE_TOOLBAR);
     gtk_toolbar_set_style(GTK_TOOLBAR(obj), GTK_TOOLBAR_BOTH_HORIZ);
 
-    GtkWidget *img = gtk_image_new_from_icon_name("gtk-connect", //TODO: real value
+    GtkWidget *img = gtk_image_new_from_icon_name("trg-gtk-connect",
                                                   GTK_ICON_SIZE_LARGE_TOOLBAR);
     priv->tb_connect =
         GTK_WIDGET(gtk_menu_tool_button_new(img, _("Connect")));
@@ -213,7 +213,7 @@ static GObject *trg_toolbar_constructor(GType type,
 
     priv->tb_disconnect =
         trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Disconnect"), &position,
-                             "gtk-disconnect" /* TODO: real value */, FALSE);
+                             "trg-gtk-disconnect", FALSE);
     priv->tb_add =
         trg_toolbar_item_new(TRG_TOOLBAR(obj), _("Add"), &position,
                              "list-add", FALSE);

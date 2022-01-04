@@ -697,7 +697,7 @@ static GObject *trg_state_selector_constructor(GType type,
     trg_state_selector_add_state(selector, &iter, -1,
                                  "media-playback-pause", _("Paused"),
                                  TORRENT_FLAG_PAUSED, &priv->paused_rr);
-    trg_state_selector_add_state(selector, &iter, -1, "gtk-apply", //TODO: real value
+    trg_state_selector_add_state(selector, &iter, -1, "trg-gtk-apply",
                                  _("Complete"), TORRENT_FLAG_COMPLETE,
                                  &priv->complete_rr);
     trg_state_selector_add_state(selector, &iter, -1, "edit-select-all",
