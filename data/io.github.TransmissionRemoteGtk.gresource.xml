@@ -6,5 +6,7 @@
     <file alias="icons/16x16/actions/trg-gtk-apply.png">icons/menu/trg-gtk-apply.png</file>
     <file alias="icons/24x24/actions/trg-gtk-connect.png">icons/toolbar/trg-gtk-connect.png</file>
     <file alias="icons/24x24/actions/trg-gtk-disconnect.png">icons/toolbar/trg-gtk-disconnect.png</file>
+    <file alias="icons/16x16/status/alt-speed-on.png">icons/turtle-blue.png</file>
+    <file alias="icons/16x16/status/alt-speed-off.png">icons/turtle-grey.png</file>
   </gresource>
 </gresources>
