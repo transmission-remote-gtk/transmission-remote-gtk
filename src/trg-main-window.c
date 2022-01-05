@@ -50,7 +50,6 @@
 #include "remote-exec.h"
 
 #include "trg-main-window.h"
-#include "trg-icons.h"
 #include "trg-about-window.h"
 #include "trg-tree-view.h"
 #include "trg-prefs.h"
@@ -2723,9 +2722,6 @@ static GObject *trg_main_window_constructor(GType type,
     priv->queuesEnabled = TRUE;
 
     prefs = trg_client_get_prefs(priv->client);
-
-    theme = gtk_icon_theme_get_default();
-    register_my_icons(theme);
 
 #ifdef HAVE_LIBNOTIFY
     notify_init(PACKAGE_NAME);

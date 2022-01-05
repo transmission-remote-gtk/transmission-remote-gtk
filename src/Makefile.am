@@ -57,7 +57,6 @@ transmission_remote_gtk_SOURCES = \
 	  trg-state-selector.c \
 	  trg-general-panel.c \
 	  trg-torrent-graph.c \
-	  trg-icons.c \
 	  icons.c \
 	  trg-toolbar.c \
 	  trg-menu-bar.c \
@@ -120,7 +119,6 @@ noinst_HEADERS = \
 	  trg-state-selector.h \
 	  trg-general-panel.h \
 	  trg-torrent-graph.h \
-	  trg-icons.h \
 	  icons.h \
 	  trg-toolbar.h \
 	  trg-menu-bar.h \
@@ -156,8 +154,7 @@ noinst_HEADERS = \
 	  trg-client.h \
 	  trg-main-window.h \
 	  upload.h \
-	  protocol-constants.h \
-	  icon-turtle.h
+	  protocol-constants.h
 
 transmission_remote_gtk_CPPFLAGS = \
 	-DLOCALEDIR=\""$(localedir)"\" \
