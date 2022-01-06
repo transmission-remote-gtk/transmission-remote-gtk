@@ -126,8 +126,7 @@ static void delete_cb(GtkWidget * w, TrgMainWindow * win);
 static void open_props_cb(GtkWidget * w, TrgMainWindow * win);
 static gint confirm_action_dialog(GtkWindow * gtk_win,
                                   GtkTreeSelection * selection,
-                                  const gchar * question_single,
-                                  const gchar * question_multi,
+                                  const gchar * action_name,
                                   const gchar * action_label);
 static void view_stats_toggled_cb(GtkWidget * w, gpointer data);
 static void view_states_toggled_cb(GtkCheckMenuItem * w,
@@ -822,8 +821,7 @@ static void down_queue_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
 static gint
 confirm_action_dialog(GtkWindow * gtk_win,
                       GtkTreeSelection * selection,
-                      const gchar * question_single,
-                      const gchar * question_multi,
+                      const gchar * action_name,
                       const gchar * action_label)
 {
     TrgMainWindow *win = TRG_MAIN_WINDOW(gtk_win);
@@ -854,15 +852,16 @@ confirm_action_dialog(GtkWindow * gtk_win,
                                                     GTK_DIALOG_DESTROY_WITH_PARENT,
                                                     GTK_MESSAGE_QUESTION,
                                                     GTK_BUTTONS_NONE,
-                                                    question_single, name);
+                                                    _("<big><b>%s \"%s\"?</b></big>"),
+                                                    action_name, name);
         g_free(name);
     } else if (selectCount > 1) {
         dialog = gtk_message_dialog_new_with_markup(GTK_WINDOW(win),
                                                     GTK_DIALOG_DESTROY_WITH_PARENT,
                                                     GTK_MESSAGE_QUESTION,
                                                     GTK_BUTTONS_NONE,
-                                                    question_multi,
-                                                    selectCount);
+                                                    _("<big><b>%s %d torrents?</b></big>"),
+                                                    action_name, selectCount);
 
     } else {
         return 0;
@@ -912,9 +911,7 @@ static void remove_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
         gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->torrentTreeView));
     ids = build_json_id_array(priv->torrentTreeView);
 
-    if (confirm_action_dialog(GTK_WINDOW(win), selection, _
-                              ("<big><b>Remove torrent \"%s\"?</b></big>"),
-                              _("<big><b>Remove %d torrents?</b></big>"),
+    if (confirm_action_dialog(GTK_WINDOW(win), selection, _("Remove"),
                               _("_Remove")) == GTK_RESPONSE_ACCEPT)
         dispatch_async(priv->client, torrent_remove(ids, FALSE),
                        on_generic_interactive_action_response, win);
@@ -935,10 +932,8 @@ static void delete_cb(GtkWidget * w G_GNUC_UNUSED, TrgMainWindow * win)
     if (!is_ready_for_torrent_action(win))
         return;
 
-    if (confirm_action_dialog(GTK_WINDOW(win), selection, _
-                              ("<big><b>Remove and delete torrent \"%s\"?</b></big>"),
-                              _
-                              ("<big><b>Remove and delete %d torrents?</b></big>"),
+    if (confirm_action_dialog(GTK_WINDOW(win), selection,
+                              _("Remove and delete"),
                               _("_Delete")) == GTK_RESPONSE_ACCEPT)
         dispatch_async(priv->client, torrent_remove(ids, TRUE),
                        on_delete_complete, win);
