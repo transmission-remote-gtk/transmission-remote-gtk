@@ -230,8 +230,7 @@ GRegex *trg_uri_host_regex_new(void)
 
 void g_str_slist_free(GSList * list)
 {
-    g_slist_foreach(list, (GFunc) g_free, NULL);
-    g_slist_free(list);
+    g_slist_free_full(list, (GDestroyNotify) g_free);
 }
 
 void rm_trailing_slashes(gchar * str)
