@@ -2714,7 +2714,6 @@ static GObject *trg_main_window_constructor(GType type,
     GtkWidget *outerVbox;
     GtkWidget *toolbarHbox;
     //GtkWidget *outerAlignment;
-    GtkIconTheme *theme;
     gint width, height, pos;
     gboolean tray;
     TrgPrefs *prefs;
