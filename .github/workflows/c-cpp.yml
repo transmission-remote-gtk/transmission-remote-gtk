@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-autotools:
 
     runs-on: ubuntu-latest
 
@@ -28,3 +28,22 @@ jobs:
       run: make check
     - name: make distcheck
       run: make distcheck
+
+  build-meson:
+
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: install deps
+        run: |
+          sudo apt-get update
+          sudo apt-get upgrade
+          sudo apt-get install python3 python3-pip libgtk-3-dev gcc libgeoip-dev gettext libappstream-dev appstream-util libcurl4-openssl-dev libjson-glib-dev libmrss0-dev libproxy-dev
+          # Meson is too old on ubuntu
+          pip3 install --no-input meson ninja
+      - name: meson configure
+        run: meson build
+      - name: build
+        run: meson compile -C build
+      - name: dist
+        run: meson dist -C build
