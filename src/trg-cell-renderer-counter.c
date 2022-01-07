@@ -71,9 +71,9 @@ static void trg_cell_renderer_counter_refresh(TrgCellRendererCounter * cr)
         trg_cell_renderer_counter_get_instance_private(cr);
     if (priv->originalLabel && priv->count > 0) {
         gchar *counterLabel =
-            g_strdup_printf("%s <span size=\"small\">(%d)</span>",
-                            priv->originalLabel,
-                            priv->count);
+            g_markup_printf_escaped("%s <span size=\"small\">(%d)</span>",
+                                    priv->originalLabel,
+                                    priv->count);
         g_object_set(cr, "markup", counterLabel, NULL);
         g_free(counterLabel);
     } else {
