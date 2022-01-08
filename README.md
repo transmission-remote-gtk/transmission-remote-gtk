@@ -11,7 +11,7 @@ The following packages are required dependencies for building and running
 transmission-remote-gtk:
 
  - gtk >= 3.16
- - glib >= 2.44 (including gio and gthread)
+ - glib >= 2.56 (including gio and gthread)
  - json-glib >= 0.8
  - libcurl
  - GNU gettext

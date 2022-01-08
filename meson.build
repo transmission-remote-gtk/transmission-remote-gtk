@@ -18,7 +18,7 @@ i18n = import('i18n')
 
 
 # glib version info
-glib_version = '2.44'
+glib_version = '2.56'
 glib_max_version = glib_version
 glib_min_version = glib_version
 glib_version_str = '>= @0@'.format(glib_version)

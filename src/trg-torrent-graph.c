@@ -347,8 +347,7 @@ static void trg_torrent_graph_dispose(GObject * object)
 
     trg_torrent_graph_stop(g);
 
-    if (priv->timer_index)
-        g_source_remove(priv->timer_index);
+    g_clear_handle_id(&priv->timer_index, g_source_remove);
 
     trg_torrent_graph_clear_background(g);
 
