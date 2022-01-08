@@ -1718,10 +1718,8 @@ trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected)
 #endif
 
         trg_torrent_model_remove_all(priv->torrentModel);
-
-        g_source_remove(priv->timerId);
-        g_source_remove(priv->sessionTimerId);
-        priv->sessionTimerId = priv->timerId = 0;
+        g_clear_handle_id(&priv->timerId, g_source_remove);
+        g_clear_handle_id(&priv->sessionTimerId, g_source_remove);
     }
 
     trg_client_status_change(tc, connected);
@@ -2475,8 +2473,9 @@ static void trg_main_window_set_hidden_to_tray(TrgMainWindow * win,
         gtk_window_deiconify(GTK_WINDOW(win));
         gtk_window_present(GTK_WINDOW(win));
 
+
         if (priv->timerId > 0) {
-            g_source_remove(priv->timerId);
+            g_clear_handle_id(&priv->timerId, g_source_remove);
             dispatch_async(priv->client,
                            torrent_get(TORRENT_GET_TAG_MODE_FULL),
                            on_torrent_get_update, win);
