@@ -6,9 +6,7 @@
  * $Id: icons.c 12639 2011-08-07 18:41:13Z jordan $
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <string.h>             /* strcmp */
 #include <glib.h>

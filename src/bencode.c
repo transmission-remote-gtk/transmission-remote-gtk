@@ -24,9 +24,7 @@
  * into the public domain as well).
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <stdlib.h>             /* malloc() realloc() free() strtoll() */
 #include <string.h>             /* memset() */

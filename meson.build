@@ -113,7 +113,6 @@ flags = ['-funsigned-char',
 
 cflags = cc.get_supported_arguments(flags)
 add_project_arguments(cflags, language: 'c')
-add_project_arguments('-DHAVE_CONFIG_H', language: 'c')
 
 # link arguments
 ldflags = cc.get_supported_link_arguments('-Wl,-z,relro',

@@ -1,6 +1,4 @@
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include "protocol-constants.h"
 #include "requests.h"

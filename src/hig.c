@@ -10,9 +10,7 @@
  * $Id: hig.c 13677 2012-12-16 22:51:29Z jordan $
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <gtk/gtk.h>
 #include "hig.h"
