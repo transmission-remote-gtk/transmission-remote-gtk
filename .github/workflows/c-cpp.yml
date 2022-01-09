@@ -7,29 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-autotools:
-
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v2
-    - name: install deps
-      run: |
-        sudo apt-get update
-        sudo apt-get upgrade
-        sudo apt-get install libgtk-3-dev automake autoconf autopoint gcc libgeoip-dev gettext autoconf-archive libappstream-dev appstream-util libcurl4-openssl-dev libjson-glib-dev libmrss0-dev libproxy-dev
-    - name: autogen
-      run: ./autogen.sh
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
-
-  build-meson:
+  build:
 
     runs-on: ubuntu-latest
     steps:
