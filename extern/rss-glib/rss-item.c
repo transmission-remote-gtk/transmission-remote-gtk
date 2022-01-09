@@ -29,6 +29,8 @@
  * the source feed.
  */
 
+#include "rss-config.h"
+
 #include "rss-item.h"
 #include "rss-item-private.h"
 

@@ -75,11 +75,12 @@ conf_data.set('G_DISABLE_CAST_CHECKS', not debug)
 
 # glib API configuration
 maj_min = glib_max_version.split('.')
-conf_data.set('GLIB_VERSION_MAX_ALLOWED',
-              'GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1]))
+glib_max ='GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
+conf_data.set('GLIB_VERSION_MAX_ALLOWED', glib_max)
+
 maj_min = glib_min_version.split('.')
-conf_data.set('GLIB_VERSION_MIN_REQUIRED',
-              'GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1]))
+glib_min = 'GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
+conf_data.set('GLIB_VERSION_MIN_REQUIRED', glib_min)
 
 # compile time features
 conf_data.set('HAVE_RSS', rss_dep.found())
