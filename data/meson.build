@@ -2,13 +2,15 @@
 icon_dir = datadir / 'icons' / 'hicolor'
 
 # scalable
-scalable = 'icons' / 'hicolor' / 'scalable' / 'apps' / project_name + '.svg'
+scalable = 'icons' / project_name + '.svg'
 install_data(scalable, install_dir: icon_dir / 'scalable' / 'apps')
 
 # regular icons
 foreach size: ['16x16', '22x22', '24x24', '32x32', '48x48']
-  icon_name = 'icons' / 'hicolor' / size / 'apps' / project_name + '.png'
-  install_data(icon_name, install_dir: icon_dir / size / 'apps')
+  icon_name = 'icons' / project_name + '-@0@.png'.format(size)
+  install_data(icon_name,
+               install_dir: icon_dir / size / 'apps',
+               rename: project_name + '.png')
 endforeach
 
 
