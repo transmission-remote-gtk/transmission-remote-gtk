@@ -17,14 +17,11 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifdef HAVE_CONFIG_H
 #include "config.h"
-#endif
 
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
-#include "config.h"
 #include "torrent.h"
 #include "trg-client.h"
 #include "trg-model.h"
