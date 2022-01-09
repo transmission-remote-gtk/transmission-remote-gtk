@@ -423,10 +423,10 @@ JsonArray *trg_prefs_get_profiles(TrgPrefs * p)
                                         TRG_PREFS_KEY_PROFILES);
 }
 
-JsonArray *trg_prefs_get_rss(TrgPrefs *p) {
-	TrgPrefsPrivate *priv = p->priv;
-	return json_object_get_array_member(priv->userObj,
-            TRG_PREFS_KEY_RSS);
+JsonArray *trg_prefs_get_rss(TrgPrefs *p)
+{
+    return trg_prefs_get_array(p, TRG_PREFS_KEY_RSS,
+                               TRG_PREFS_GLOBAL);
 }
 
 void
