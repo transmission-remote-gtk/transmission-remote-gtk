@@ -134,7 +134,7 @@ static void trg_client_finalize(GObject * object)
     g_free(priv->password);
     g_list_free_full(priv->headers, g_free);
     g_free(priv->proxy);
-    g_hash_table_unref(priv->torrentTable);
+    g_clear_pointer(&priv->torrentTable, g_hash_table_unref);
     g_thread_pool_free(priv->pool, TRUE, TRUE);
 
     G_OBJECT_CLASS(trg_client_parent_class)->finalize(object);
