@@ -72,7 +72,7 @@ trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon * fi)
     } else if (priv->file_id == -1) {
         g_object_set(fi, "icon-name", "folder", NULL);
     } else if (priv->text) {
-#ifndef WIN32
+#ifndef G_OS_WIN32
         gboolean uncertain;
         gchar *mimetype =
             g_content_type_guess(priv->text, NULL, 0, &uncertain);

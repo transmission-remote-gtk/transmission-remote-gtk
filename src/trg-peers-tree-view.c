@@ -19,7 +19,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_GEOIP
+#if HAVE_GEOIP
 #include <GeoIP.h>
 #endif
 
@@ -55,7 +55,7 @@ static void trg_peers_tree_view_setup_columns(TrgPeersTreeView * self, TrgPeersM
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_HOST,
                              _("Host"), "host", 0);
 
-#ifdef HAVE_GEOIP
+#if HAVE_GEOIP
     if (trg_peers_model_has_country_db(model))
 		trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_COUNTRY,
 								 _("Country"), "country", 0);
@@ -78,7 +78,7 @@ static void trg_peers_tree_view_setup_columns(TrgPeersTreeView * self, TrgPeersM
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), PEERSCOL_HOST);
 }
 
-#ifdef HAVE_GEOIP
+#if HAVE_GEOIP
 static void trg_peers_tree_view_column_added(TrgTreeView *tv, const gchar *id) {
 	TrgPeersModel *model = TRG_PEERS_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(tv)));
 	if (!g_strcmp0(id, "city")) {
@@ -103,7 +103,7 @@ TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs * prefs,
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), 0x00);
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
 
-#ifdef HAVE_GEOIP
+#if HAVE_GEOIP
     g_signal_connect(obj, "column-added", G_CALLBACK(trg_peers_tree_view_column_added), NULL);
 #endif
 

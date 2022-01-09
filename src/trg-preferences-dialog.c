@@ -625,7 +625,7 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
     return t;
 }
 
-#ifdef HAVE_RSS
+#if HAVE_RSS
 static GtkWidget *trg_prefs_rss_page(TrgPreferencesDialog * dlg) {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
@@ -780,7 +780,7 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
 			G_CALLBACK(toggle_active_arg_is_sensitive), w);
 	hig_workarea_add_wide_control(t, &row, w);
 
-#ifdef HAVE_LIBNOTIFY
+#if HAVE_LIBNOTIFY
     hig_workarea_add_section_title(t, &row, _("Notifications"));
 
     w = trgp_check_new(dlg, _("Torrent added notifications"),
@@ -978,7 +978,7 @@ static GObject *trg_preferences_dialog_constructor(GType type,
                                                 (object)),
                              gtk_label_new(_("Directories")));
 
-#ifdef HAVE_RSS
+#if HAVE_RSS
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_rss_page(TRG_PREFERENCES_DIALOG
                                                 (object)),

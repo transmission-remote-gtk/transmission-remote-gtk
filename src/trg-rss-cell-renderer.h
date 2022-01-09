@@ -20,7 +20,7 @@
 #ifndef TRG_RSS_CELL_RENDERER_H
 #define TRG_RSS_CELL_RENDERER_H
 
-#ifdef HAVE_RSS
+#if HAVE_RSS
 
 #include <gtk/gtk.h>
 

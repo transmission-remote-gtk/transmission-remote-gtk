@@ -19,7 +19,7 @@
 
 #include "config.h"
 
-#if WIN32
+#ifdef G_OS_WIN32
 
 #define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"
 #define MAILSLOT_BUFFER_SIZE 1024*32

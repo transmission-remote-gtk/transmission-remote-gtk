@@ -83,13 +83,12 @@ glib_min = 'GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
 conf_data.set('GLIB_VERSION_MIN_REQUIRED', glib_min)
 
 # compile time features
-conf_data.set('HAVE_RSS', rss_dep.found())
-# TODO: why??
+conf_data.set10('HAVE_RSS', rss_dep.found())
 conf_data.set10('HAVE_GEOIP', geoip_dep.found())
-conf_data.set('HAVE_LIBPROXY', libproxy_dep.found())
-conf_data.set('HAVE_LIBNOTIFY', libnotify_dep.found())
-conf_data.set('ENABLE_NL_LANGINFO', nl_langinfo)
-conf_data.set('HAVE_LIBAPPINDICATOR', libappindicator_dep.found())
+conf_data.set10('HAVE_LIBPROXY', libproxy_dep.found())
+conf_data.set10('HAVE_LIBNOTIFY', libnotify_dep.found())
+conf_data.set10('ENABLE_NL_LANGINFO', nl_langinfo)
+conf_data.set10('HAVE_LIBAPPINDICATOR', libappindicator_dep.found())
 
 # compiler/linker flags
 flags = ['-funsigned-char',
@@ -122,7 +121,6 @@ add_project_link_arguments(ldflags, language: 'c')
 
 # Windows compiler options
 win32 = host_machine.system() == 'windows' or host_machine.system() == 'cgywin'
-conf_data.set('WIN32', win32)
 if win32
   win_cflags = cc.get_supported_arguments('-mms-bitfields',
                                           '-mwin32',
