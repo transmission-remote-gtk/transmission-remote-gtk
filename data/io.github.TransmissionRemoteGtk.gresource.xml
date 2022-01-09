@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/io/github/TransmissionRemoteGtk">
-    <file alias="icons/16x16/actions/trg-gtk-connect.png">icons/menu/trg-gtk-connect.png</file>
-    <file alias="icons/16x16/actions/trg-gtk-disconnect.png">icons/menu/trg-gtk-disconnect.png</file>
-    <file alias="icons/16x16/actions/trg-gtk-apply.png">icons/menu/trg-gtk-apply.png</file>
-    <file alias="icons/24x24/actions/trg-gtk-connect.png">icons/toolbar/trg-gtk-connect.png</file>
-    <file alias="icons/24x24/actions/trg-gtk-disconnect.png">icons/toolbar/trg-gtk-disconnect.png</file>
+    <file alias="icons/16x16/actions/trg-gtk-connect.png">icons/trg-gtk-connect-16x16.png</file>
+    <file alias="icons/16x16/actions/trg-gtk-disconnect.png">icons/trg-gtk-disconnect-16x16.png</file>
+    <file alias="icons/16x16/actions/trg-gtk-apply.png">icons/trg-gtk-apply.png</file>
+    <file alias="icons/24x24/actions/trg-gtk-connect.png">icons/trg-gtk-connect-24x24.png</file>
+    <file alias="icons/24x24/actions/trg-gtk-disconnect.png">icons/trg-gtk-disconnect-24x24.png</file>
     <file alias="icons/16x16/status/alt-speed-on.png">icons/turtle-blue.png</file>
     <file alias="icons/16x16/status/alt-speed-off.png">icons/turtle-grey.png</file>
   </gresource>
