@@ -20,7 +20,7 @@
 #ifndef TRG_RSS_WINDOW_H_
 #define TRG_RSS_WINDOW_H_
 
-#ifdef HAVE_RSS
+#if HAVE_RSS
 
 #include <glib-object.h>
 #include <gtk/gtk.h>

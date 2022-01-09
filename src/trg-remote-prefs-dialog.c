@@ -24,7 +24,7 @@
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
-#ifdef ENABLE_NL_LANGINFO
+#if ENABLE_NL_LANGINFO
 #include <langinfo.h>
 #endif
 
@@ -318,7 +318,7 @@ static GtkWidget *trg_rprefs_alt_days(GList ** wl,
                                       GtkWidget *alt_time_check)
 {
     gchar *abdays_fallback[] = {_("Sun"), _("Mon"), _("Tue"), _("Wed"), _("Thu"), _("Fri"), _("Sat")};
-#ifdef ENABLE_NL_LANGINFO
+#if ENABLE_NL_LANGINFO
     nl_item abdays[] = {ABDAY_1, ABDAY_2, ABDAY_3, ABDAY_4, ABDAY_5, ABDAY_6, ABDAY_7};
 #endif
     GtkWidget *grid = gtk_grid_new();
@@ -329,7 +329,7 @@ static GtkWidget *trg_rprefs_alt_days(GList ** wl,
     guint64 days = json_object_get_int_member(Obj, key);
 
     for(gint i = 0, x = 1; i < 7; i++, x<<=1) {
-#ifdef ENABLE_NL_LANGINFO
+#if ENABLE_NL_LANGINFO
         gchar *utf8 = g_convert_with_fallback(nl_langinfo(abdays[i]), -1, "utf-8",
                                               nl_langinfo(CODESET), NULL, NULL,
                                               NULL, NULL);

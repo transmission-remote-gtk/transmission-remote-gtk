@@ -19,7 +19,7 @@
 
 #include "config.h"
 
-#ifdef HAVE_RSS
+#if HAVE_RSS
 
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>

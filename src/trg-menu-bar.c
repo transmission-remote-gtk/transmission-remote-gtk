@@ -52,7 +52,7 @@ enum {
     PROP_LOCAL_PREFS_BUTTON,
     PROP_ABOUT_BUTTON,
     PROP_VIEW_STATS_BUTTON,
-#ifdef HAVE_RSS
+#if HAVE_RSS
     PROP_VIEW_RSS_BUTTON,
 #endif
     PROP_VIEW_STATES_BUTTON,
@@ -104,7 +104,7 @@ struct _TrgMenuBarPrivate {
     GtkWidget *mb_view_states;
     GtkWidget *mb_view_notebook;
     GtkWidget *mb_view_stats;
-#ifdef HAVE_RSS
+#if HAVE_RSS
     GtkWidget *mb_view_rss;
 #endif
     GtkWidget *mb_about;
@@ -152,7 +152,7 @@ void trg_menu_bar_connected_change(TrgMenuBar * mb, gboolean connected)
     gtk_widget_set_sensitive(priv->mb_disconnect, connected);
     gtk_widget_set_sensitive(priv->mb_remote_prefs, connected);
     gtk_widget_set_sensitive(priv->mb_view_stats, connected);
-#ifdef HAVE_RSS
+#if HAVE_RSS
     gtk_widget_set_sensitive(priv->mb_view_rss, connected);
 #endif
     gtk_widget_set_sensitive(priv->mb_resume_all, connected);
@@ -292,7 +292,7 @@ trg_menu_bar_get_property(GObject * object, guint property_id,
     case PROP_VIEW_STATS_BUTTON:
         g_value_set_object(value, priv->mb_view_stats);
         break;
-#ifdef HAVE_RSS
+#if HAVE_RSS
     case PROP_VIEW_RSS_BUTTON:
         g_value_set_object(value, priv->mb_view_rss);
         break;
@@ -570,7 +570,7 @@ static GtkWidget *trg_menu_bar_view_menu_new(TrgMenuBar * mb)
     gtk_widget_set_sensitive(priv->mb_view_stats, FALSE);
     gtk_menu_shell_append(GTK_MENU_SHELL(viewMenu), priv->mb_view_stats);
 
-#ifdef HAVE_RSS
+#if HAVE_RSS
     priv->mb_view_rss =
         gtk_menu_item_new_with_mnemonic(_("_RSS"));
     //trg_menu_bar_accel_add(mb, priv->mb_view_rss, GDK_F7, 0);
@@ -914,7 +914,7 @@ static void trg_menu_bar_class_init(TrgMenuBarClass * klass)
     trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_STATS_BUTTON,
                                      "view-stats-button",
                                      "View stats button");
-#ifdef HAVE_RSS
+#if HAVE_RSS
     trg_menu_bar_install_widget_prop(object_class, PROP_VIEW_RSS_BUTTON,
                                      "view-rss-button",
                                      "View rss button");

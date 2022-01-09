@@ -564,7 +564,7 @@ GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing)
     return box;
 }
 
-#ifdef WIN32
+#ifdef G_OS_WIN32
 gchar *trg_win32_support_path(gchar * file)
 {
     gchar *moddir =

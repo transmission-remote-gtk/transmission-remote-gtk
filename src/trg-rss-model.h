@@ -20,7 +20,7 @@
 #ifndef TRG_RSS_MODEL_H_
 #define TRG_RSS_MODEL_H_
 
-#ifdef HAVE_RSS
+#if HAVE_RSS
 
 #include <glib-object.h>
 #include <json-glib/json-glib.h>

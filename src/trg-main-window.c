@@ -31,10 +31,10 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkkeysyms-compat.h>
 #include <curl/curl.h>
-#ifdef HAVE_LIBNOTIFY
+#if HAVE_LIBNOTIFY
 #include <libnotify/notify.h>
 #endif
-#ifdef HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR
 #include <libappindicator/app-indicator.h>
 #endif
 
@@ -70,7 +70,7 @@
 #include "trg-menu-bar.h"
 #include "trg-status-bar.h"
 #include "trg-stats-dialog.h"
-#ifdef HAVE_RSS
+#if HAVE_RSS
 #include "trg-rss-window.h"
 #endif
 #include "trg-remote-prefs-dialog.h"
@@ -81,7 +81,7 @@
 
 static void update_selected_torrent_notebook(TrgMainWindow * win,
                                              gint mode, gint64 id);
-#ifdef HAVE_LIBNOTIFY
+#if HAVE_LIBNOTIFY
 static void torrent_event_notification(TrgTorrentModel * model,
                                        gchar * icon, gchar * desc,
                                        gint tmout, gchar * prefKey,
@@ -220,7 +220,7 @@ typedef struct
     TrgStatusBar *statusBar;
     GtkWidget *iconStatusItem, *iconDownloadingItem, *iconSeedingItem,
         *iconSepItem;
-#ifdef HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR
     AppIndicator *appIndicator;
 #endif
     GtkMenu *iconMenu;
@@ -317,7 +317,7 @@ update_selected_torrent_notebook(TrgMainWindow * win, gint mode, gint64 id)
     priv->selectedTorrentId = id;
 }
 
-#ifdef HAVE_LIBNOTIFY
+#if HAVE_LIBNOTIFY
 static void
 torrent_event_notification(TrgTorrentModel * model,
                            gchar * icon, gchar * desc,
@@ -361,7 +361,7 @@ static void
 on_torrent_completed(TrgTorrentModel * model,
                      GtkTreeIter * iter, gpointer data)
 {
-#ifdef HAVE_LIBNOTIFY
+#if HAVE_LIBNOTIFY
     torrent_event_notification(model, "trg-gtk-apply",
                                _("This torrent has completed."),
                                TORRENT_COMPLETE_NOTIFY_TMOUT,
@@ -373,7 +373,7 @@ static void
 on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
                  gpointer data)
 {
-#ifdef HAVE_LIBNOTIFY
+#if HAVE_LIBNOTIFY
     torrent_event_notification(model, "list-add",
                                _("This torrent has been added."),
                                TORRENT_ADD_NOTIFY_TMOUT,
@@ -424,7 +424,7 @@ destroy_window(TrgMainWindow * win, gpointer data G_GNUC_UNUSED)
                           TRG_TREE_VIEW_PERSIST_LAYOUT);
     trg_prefs_save(prefs);
 
-#if WIN32
+#ifdef G_OS_WIN32
     gtk_main_quit();
 #else
     g_application_quit (g_application_get_default ());
@@ -953,7 +953,7 @@ static void view_stats_toggled_cb(GtkWidget * w, gpointer data)
     }
 }
 
-#ifdef HAVE_RSS
+#if HAVE_RSS
 static void view_rss_toggled_cb(GtkWidget * w, gpointer data)
 {
     TrgMainWindow *win = TRG_MAIN_WINDOW(data);
@@ -1206,7 +1206,7 @@ connchange_whatever_statusicon(TrgMainWindow * win, gboolean connected)
                              TRG_PREFS_CONNECTION) :
         g_strdup(_("Disconnected"));
 
-#ifdef HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR
     if (priv->appIndicator) {
         GtkMenu *menu = trg_status_icon_view_menu(win, display);
         app_indicator_set_menu(priv->appIndicator, menu);
@@ -1232,7 +1232,7 @@ update_whatever_statusicon(TrgMainWindow * win,
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
-#ifdef HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR
     if (!priv->appIndicator && !priv->statusIcon)
 #else
     if (!priv->statusIcon)
@@ -1788,7 +1788,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 #if TRG_WITH_GRAPH
     *b_show_graph,
 #endif
-#ifdef HAVE_RSS
+#if HAVE_RSS
     *b_view_rss,
 #endif
     *b_start_now, *b_copy_magnetlink;
@@ -1819,7 +1819,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
 #if TRG_WITH_GRAPH
                  "show-graph", &b_show_graph,
 #endif
-#ifdef HAVE_RSS
+#if HAVE_RSS
                  "view-rss-button", &b_view_rss,
 #endif
                  "up-queue", &b_up_queue, "down-queue", &b_down_queue,
@@ -1869,7 +1869,7 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
                      G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate",
                      G_CALLBACK(view_stats_toggled_cb), win);
-#ifdef HAVE_RSS
+#if HAVE_RSS
     g_signal_connect(b_view_rss, "activate",
                      G_CALLBACK(view_rss_toggled_cb), win);
 #endif
@@ -1906,7 +1906,7 @@ trg_status_icon_popup_menu_cb(GtkStatusIcon * icon, TrgMainWindow * win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     gtk_menu_popup(priv->iconMenu, NULL, NULL,
-#ifdef WIN32
+#ifdef G_OS_WIN32
                    NULL,
 #else
                    gtk_status_icon_position_menu,
@@ -1925,7 +1925,7 @@ status_icon_button_press_event(GtkStatusIcon * icon,
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
 
         gtk_menu_popup(priv->iconMenu, NULL, NULL,
-#ifdef WIN32
+#ifdef G_OS_WIN32
                        NULL,
 #else
                        gtk_status_icon_position_menu,
@@ -2508,7 +2508,7 @@ window_state_event(TrgMainWindow * win,
 void trg_main_window_remove_status_icon(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-#ifdef HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR
     if (priv->appIndicator) {
         g_object_unref(G_OBJECT(priv->appIndicator));
 
@@ -2565,7 +2565,7 @@ void trg_main_window_remove_graph(TrgMainWindow * win)
 void trg_main_window_add_status_icon(TrgMainWindow * win)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-#ifdef HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR
     if ((priv->appIndicator =
                        app_indicator_new(PACKAGE_NAME, PACKAGE_NAME,
                                          APP_INDICATOR_CATEGORY_APPLICATION_STATUS)))
@@ -2715,7 +2715,7 @@ static GObject *trg_main_window_constructor(GType type,
 
     prefs = trg_client_get_prefs(priv->client);
 
-#ifdef HAVE_LIBNOTIFY
+#if HAVE_LIBNOTIFY
     notify_init(PACKAGE_NAME);
 #endif
     gtk_window_set_default_icon_name(PACKAGE_NAME);

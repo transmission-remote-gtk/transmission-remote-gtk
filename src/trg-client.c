@@ -26,7 +26,7 @@
 #include <glib/gprintf.h>
 #include <glib/gi18n.h>
 
-#ifdef HAVE_LIBPROXY
+#if HAVE_LIBPROXY
 #include <proxy.h>
 #endif
 
@@ -279,7 +279,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     gint port;
     gchar *host, *path;
-#ifdef HAVE_LIBPROXY
+#if HAVE_LIBPROXY
     pxProxyFactory *pf = NULL;
 #endif
 
@@ -336,7 +336,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     g_clear_pointer(&priv->proxy, g_free);
 
-#ifdef HAVE_LIBPROXY
+#if HAVE_LIBPROXY
     if ((pf = px_proxy_factory_new())) {
         char **proxies = px_proxy_factory_get_proxies(pf, priv->url);
         int i;

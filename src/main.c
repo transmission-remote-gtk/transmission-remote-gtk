@@ -31,7 +31,7 @@
 #include <fontconfig/fontconfig.h>
 
 #include "trg-gtk-app.h"
-#if WIN32
+#ifdef G_OS_WIN32
 #include "win32-mailslot.h"
 #endif
 
@@ -48,7 +48,7 @@
  * for GTK2 (support removed).
  */
 
-#if !WIN32
+#ifndef G_OS_WIN32
 
 /* GtkApplication - the replacement for libunique.
  * This is implemented in trg-gtk-app.c
@@ -65,7 +65,7 @@ static gint trg_gtkapp_init(TrgClient * client, int argc, char *argv[])
     return exitCode;
 }
 
-#elif WIN32
+#elif defined G_OS_WIN32
 
 static gint
 trg_win32_init(TrgClient * client, int argc, char *argv[], gchar ** args)
@@ -110,7 +110,7 @@ trg_simple_init(TrgClient * client, int argc, char *argv[], gchar ** args)
 
 /* Win32 mailslots. I've implemented this in win32-mailslot.c */
 
-#if !WIN32
+#ifndef G_OS_WIN32
 static void trg_non_win32_init(void)
 {
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
@@ -122,7 +122,7 @@ static void trg_cleanup(void)
     curl_global_cleanup();
 }
 
-#if WIN32
+#ifdef G_OS_WIN32
 
 static gchar **convert_args(int argc, char *argv[])
 {
@@ -167,7 +167,7 @@ static gchar **convert_args(int argc, char *argv[])
 
 int main(int argc, char *argv[])
 {
-#if WIN32
+#ifdef G_OS_WIN32
     gchar **args;
 #endif
     gint exitCode = EXIT_SUCCESS;
@@ -175,7 +175,7 @@ int main(int argc, char *argv[])
 
     gtk_init(&argc, &argv);
 
-#if WIN32
+#ifdef G_OS_WIN32
     args = convert_args(argc, argv);
 #endif
 
@@ -186,7 +186,7 @@ int main(int argc, char *argv[])
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
 
-#ifdef WIN32
+#ifdef G_OS_WIN32
     exitCode = trg_win32_init(client, argc, argv, args);
 #else
     trg_non_win32_init();

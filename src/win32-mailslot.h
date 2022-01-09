@@ -20,7 +20,7 @@
 #ifndef WIN32_MAILSLOT_H_
 #define WIN32_MAILSLOT_H_
 
-#if WIN32
+#ifdef G_OS_WIN32
 
 #include <windows.h>
 #include "trg-main-window.h"
