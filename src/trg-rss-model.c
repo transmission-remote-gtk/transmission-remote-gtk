@@ -139,7 +139,7 @@ void trg_rss_model_update(TrgRssModel * model) {
 	GList *li;
 
 	if (!feeds)
-		return;
+	    return;
 
 	cookie_regex = g_regex_new("(.*):COOKIE:(.*)", 0, 0, NULL);
 
