@@ -284,12 +284,10 @@ rss_document_dispose (GObject *object)
 	g_free (priv->image_link);
 
 	/* free the items */
-	g_list_foreach (priv->items, (GFunc) g_object_unref, NULL);
-	g_list_free (priv->items);
+	g_list_free_full(priv->items, g_object_unref);
 
 	/* free the category strings */
-	g_list_foreach (priv->categories, (GFunc) g_free, NULL);
-	g_list_free (priv->categories);
+	g_list_free_full(priv->categories, g_free);
 
 	G_OBJECT_CLASS (rss_document_parent_class)->dispose (object);
 }
