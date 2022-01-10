@@ -211,9 +211,8 @@ rss_item_finalize (GObject *object)
 	g_free (priv->pub_date);
 	g_free (priv->source);
 	g_free (priv->source_url);
-  
-	g_list_foreach (priv->categories, (GFunc) g_free, NULL);
-	g_list_free (priv->categories);
+
+	g_list_free_full(priv->categories, g_free);
 
 	G_OBJECT_CLASS (rss_item_parent_class)->finalize (object);
 }
