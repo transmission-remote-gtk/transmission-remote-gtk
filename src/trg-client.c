@@ -664,7 +664,7 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
 
 }
 
-static inline int
+static int
 trg_http_perform_inner(TrgClient * tc, trg_request * request,
                        trg_response * response, gboolean recurse)
 {

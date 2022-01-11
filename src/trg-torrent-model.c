@@ -416,7 +416,7 @@ gchar *shorten_download_dir(TrgClient * tc, const gchar * downloadDir)
     return g_strdup(downloadDir);
 }
 
-static inline void
+static void
 update_torrent_iter(TrgTorrentModel * model,
                     TrgClient * tc, gint64 rpcv,
                     gint64 serial, GtkTreeIter * iter,
