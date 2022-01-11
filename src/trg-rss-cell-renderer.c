@@ -136,7 +136,7 @@ trg_rss_cell_renderer_get_size(GtkCellRenderer * cell, GtkWidget * widget,
     if (self) {
     	struct TrgRssCellRendererPrivate *p = self->priv;
         int xpad, ypad;
-        int h, w;
+        int h = 0, w = 0;
         GtkRequisition icon_size;
         GtkRequisition name_size;
         GtkRequisition stat_size;
