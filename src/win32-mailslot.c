@@ -138,7 +138,7 @@ static gpointer mailslot_recv_thread(gpointer data)
 
 void mailslot_start_background_listener(TrgMainWindow * win)
 {
-    g_thread_create(mailslot_recv_thread, win, FALSE, NULL);
+    g_thread_new(NULL, mailslot_recv_thread, win);
 }
 
 gboolean mailslot_send_message(gchar ** args)
