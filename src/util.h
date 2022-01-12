@@ -93,7 +93,6 @@ gboolean should_be_minimised(int argc, char *argv[]);
 gboolean is_minimised_arg(const gchar * arg);
 GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing);
 GtkWidget *trg_hbox_new(gboolean homogeneous, gint spacing);
-gboolean is_unity(void);
 
 #ifdef G_OS_WIN32
 gchar *trg_win32_support_path(gchar * file);

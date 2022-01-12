@@ -706,9 +706,7 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
 
     GtkWidget *w, *dep, *t, *tray;
-    gchar *tray_label;
     guint row = 0;
-    gboolean _is_unity = is_unity();
 
     t = hig_workarea_create();
 
@@ -760,13 +758,7 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
 
     hig_workarea_add_section_title(t, &row, _("System Tray"));
 
-    if (_is_unity) {
-            tray_label = _("Show in system tray (needs whitelisting in unity)");
-    } else {
-            tray_label = _("Show in system tray");
-    }
-
-    tray = trgp_check_new(dlg, tray_label,
+    tray = trgp_check_new(dlg, _("Show in system tray"),
     TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL, NULL);
     g_signal_connect(G_OBJECT(tray), "toggled", G_CALLBACK(toggle_tray_icon),
                      priv->win);
