@@ -458,8 +458,7 @@ trg_files_model_update(TrgFilesModel * model, GtkTreeView * tv,
          * for. Just do it in the main loop.
          */
         if (futd->idle_add) {
-            g_thread_create(trg_files_model_buildtree_threadfunc, futd,
-                            FALSE, NULL);
+            g_thread_new(NULL, trg_files_model_buildtree_threadfunc, futd);
         } else {
             trg_files_model_buildtree_threadfunc(futd);
             trg_files_model_applytree_idlefunc(futd);
