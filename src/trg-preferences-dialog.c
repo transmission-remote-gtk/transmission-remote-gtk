@@ -345,12 +345,13 @@ static void toggle_graph(GtkToggleButton * w, gpointer win)
 }
 #endif
 
+
 static void toggle_tray_icon(GtkToggleButton * w, gpointer win)
 {
     if (gtk_toggle_button_get_active(w))
-        trg_main_window_add_status_icon(TRG_MAIN_WINDOW(win));
+        trg_main_window_add_tray(TRG_MAIN_WINDOW(win));
     else
-        trg_main_window_remove_status_icon(TRG_MAIN_WINDOW(win));
+        trg_main_window_remove_tray(TRG_MAIN_WINDOW(win));
 }
 
 static void menu_bar_toggle_filter_dirs(GtkToggleButton * w, gpointer win)
@@ -705,9 +706,9 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
 
     GtkWidget *w, *dep, *t, *tray;
+    gchar *tray_label;
     guint row = 0;
     gboolean _is_unity = is_unity();
-    gchar *tray_label;
 
     t = hig_workarea_create();
 
@@ -756,29 +757,34 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
     hig_workarea_add_wide_control(t, &row, w);
 #endif
 
-	hig_workarea_add_section_title(t, &row, _("System Tray"));
 
-	if (_is_unity) {
-		tray_label = _("Show in system tray (needs whitelisting in unity)");
-	} else {
-		tray_label = _("Show in system tray");
-	}
+    hig_workarea_add_section_title(t, &row, _("System Tray"));
 
-	tray = trgp_check_new(dlg, tray_label,
-	TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL,
-	NULL);
-	g_signal_connect(G_OBJECT(tray), "toggled", G_CALLBACK(toggle_tray_icon),
-			priv->win);
-	hig_workarea_add_wide_control(t, &row, tray);
+    if (_is_unity) {
+            tray_label = _("Show in system tray (needs whitelisting in unity)");
+    } else {
+            tray_label = _("Show in system tray");
+    }
 
-	w = trgp_check_new(dlg, _("Minimise to system tray"),
-	TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
-	TRG_PREFS_GLOBAL, NULL);
-	gtk_widget_set_sensitive(w,
-			gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tray)));
-	g_signal_connect(G_OBJECT(tray), "toggled",
-			G_CALLBACK(toggle_active_arg_is_sensitive), w);
-	hig_workarea_add_wide_control(t, &row, w);
+    tray = trgp_check_new(dlg, tray_label,
+    TRG_PREFS_KEY_SYSTEM_TRAY, TRG_PREFS_GLOBAL, NULL);
+    g_signal_connect(G_OBJECT(tray), "toggled", G_CALLBACK(toggle_tray_icon),
+                     priv->win);
+
+    if (!HAVE_LIBAPPINDICATOR) {
+        gtk_widget_set_sensitive(tray, FALSE);
+        gtk_widget_set_tooltip_text(tray, _("System tray not supported."));
+    }
+
+    hig_workarea_add_wide_control(t, &row, tray);
+
+    w = trgp_check_new(dlg, _("Minimise to system tray"),
+    TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
+    TRG_PREFS_GLOBAL, NULL);
+    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tray)));
+    g_signal_connect(G_OBJECT(tray), "toggled",
+                     G_CALLBACK(toggle_active_arg_is_sensitive), w);
+    hig_workarea_add_wide_control(t, &row, w);
 
 #if HAVE_LIBNOTIFY
     hig_workarea_add_section_title(t, &row, _("Notifications"));

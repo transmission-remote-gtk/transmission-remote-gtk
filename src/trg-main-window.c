@@ -87,11 +87,11 @@ static void torrent_event_notification(TrgTorrentModel * model,
                                        gint tmout, gchar * prefKey,
                                        GtkTreeIter * iter, gpointer data);
 #endif
-static void connchange_whatever_statusicon(TrgMainWindow * win,
-                                           gboolean connected);
-static void update_whatever_statusicon(TrgMainWindow * win,
-                                       trg_torrent_model_update_stats *
-                                       stats);
+static void connchange_whatever_tray(TrgMainWindow * win,
+                                     gboolean connected);
+static void update_whatever_tray(TrgMainWindow * win,
+                                 trg_torrent_model_update_stats *
+                                 stats);
 static void on_torrent_completed(TrgTorrentModel * model,
                                  GtkTreeIter * iter, gpointer data);
 static void on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
@@ -167,13 +167,6 @@ static void trg_main_window_set_property(GObject * object,
                                          GParamSpec * pspec);
 static void quit_cb(GtkWidget * w, gpointer data);
 static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win);
-static void status_icon_activated(GtkStatusIcon * icon,
-                                  TrgMainWindow * win);
-static gboolean trg_status_icon_popup_menu_cb(GtkStatusIcon * icon,
-                                              TrgMainWindow * win);
-static gboolean status_icon_button_press_event(GtkStatusIcon * icon,
-                                               GdkEventButton * event,
-                                               TrgMainWindow * win);
 static void clear_filter_entry_cb(GtkEntry * entry,
                                   GtkEntryIconPosition icon_pos,
                                   GdkEvent * event, gpointer user_data);
@@ -192,8 +185,9 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
 static void trg_torrent_tv_view_menu(GtkWidget * treeview,
                                      GdkEventButton * event,
                                      TrgMainWindow * win);
-static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
-                                          const gchar * msg);
+#if HAVE_LIBAPPINDICATOR
+static GtkMenu *trg_tray_view_menu(TrgMainWindow * win, const gchar * msg);
+#endif
 static gboolean torrent_tv_button_pressed_cb(GtkWidget * treeview,
                                              GdkEventButton * event,
                                              gpointer userdata);
@@ -202,9 +196,6 @@ static gboolean torrent_tv_popup_menu_cb(GtkWidget * treeview,
 static void trg_main_window_set_hidden_to_tray(TrgMainWindow * win,
                                                gboolean hidden);
 static gboolean is_ready_for_torrent_action(TrgMainWindow * win);
-static gboolean window_state_event(TrgMainWindow * win,
-                                   GdkEventWindowState * event,
-                                   gpointer trayIcon);
 
 struct _TrgMainWindow
 {
@@ -223,8 +214,6 @@ typedef struct
 #if HAVE_LIBAPPINDICATOR
     AppIndicator *appIndicator;
 #endif
-    GtkMenu *iconMenu;
-    GtkStatusIcon *statusIcon;
     TrgStateSelector *stateSelector;
     GtkWidget *stateSelectorScroller;
     TrgGeneralPanel *genDetails;
@@ -341,12 +330,6 @@ torrent_event_notification(TrgTorrentModel * model,
                                      , NULL
 #endif
         );
-
-#if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7)
-    if (priv->statusIcon && gtk_status_icon_is_embedded(priv->statusIcon))
-        notify_notification_attach_to_status_icon(notify,
-                                                  priv->statusIcon);
-#endif
 
     notify_notification_set_urgency(notify, NOTIFY_URGENCY_LOW);
     notify_notification_set_timeout(notify, tmout);
@@ -1197,8 +1180,9 @@ TRANSMISSION_MIN_SUPPORTED, version);
 }
 
 static void
-connchange_whatever_statusicon(TrgMainWindow * win, gboolean connected)
+connchange_whatever_tray(TrgMainWindow * win, gboolean connected)
 {
+#if HAVE_LIBAPPINDICATOR
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     gchar *display = connected ?
@@ -1206,37 +1190,23 @@ connchange_whatever_statusicon(TrgMainWindow * win, gboolean connected)
                              TRG_PREFS_CONNECTION) :
         g_strdup(_("Disconnected"));
 
-#if HAVE_LIBAPPINDICATOR
     if (priv->appIndicator) {
-        GtkMenu *menu = trg_status_icon_view_menu(win, display);
+        GtkMenu *menu = trg_tray_view_menu(win, display);
         app_indicator_set_menu(priv->appIndicator, menu);
-    } else {
-#else
-    if (1) {
-#endif
-        if (priv->iconMenu)
-            gtk_widget_destroy(GTK_WIDGET(priv->iconMenu));
-
-        priv->iconMenu = trg_status_icon_view_menu(win, display);
-
-        if (priv->statusIcon)
-            gtk_status_icon_set_tooltip_text(priv->statusIcon, display);
     }
 
     g_free(display);
+#endif
 }
 
 static void
-update_whatever_statusicon(TrgMainWindow * win,
-                           trg_torrent_model_update_stats * stats)
+update_whatever_tray(TrgMainWindow * win,
+                     trg_torrent_model_update_stats * stats)
 {
+#if HAVE_LIBAPPINDICATOR
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
-#if HAVE_LIBAPPINDICATOR
-    if (!priv->appIndicator && !priv->statusIcon)
-#else
-    if (!priv->statusIcon)
-#endif
+    if (!priv->appIndicator)
         return;
 
     gtk_widget_set_visible(priv->iconSeedingItem, stats != NULL);
@@ -1262,6 +1232,7 @@ update_whatever_statusicon(TrgMainWindow * win,
                                 seedingLabel);
         g_free(seedingLabel);
     }
+#endif
 }
 
 /*
@@ -1351,7 +1322,7 @@ static gboolean on_torrent_get(gpointer data, int mode)
 
     update_selected_torrent_notebook(win, mode, priv->selectedTorrentId);
     trg_status_bar_update(priv->statusBar, stats, client);
-    update_whatever_statusicon(win, stats);
+    update_whatever_tray(win, stats);
 
 #if TRG_WITH_GRAPH
     if (priv->graphNotebookIndex >= 0)
@@ -1723,7 +1694,7 @@ trg_main_window_conn_changed(TrgMainWindow * win, gboolean connected)
     }
 
     trg_client_status_change(tc, connected);
-    connchange_whatever_statusicon(win, connected);
+    connchange_whatever_tray(win, connected);
 }
 
 static void
@@ -1882,59 +1853,6 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow * win)
     gtk_window_add_accel_group(GTK_WINDOW(win), accel_group);
 
     return menuBar;
-}
-
-static void
-status_icon_activated(GtkStatusIcon * icon G_GNUC_UNUSED,
-                      TrgMainWindow * win)
-{
-    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
-
-    trg_main_window_set_hidden_to_tray(win,
-                                       !priv->hidden
-                                       && trg_prefs_get_bool(prefs,
-                                                             TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
-                                                             TRG_PREFS_GLOBAL));
-}
-
-static gboolean
-trg_status_icon_popup_menu_cb(GtkStatusIcon * icon, TrgMainWindow * win)
-{
-    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-
-    gtk_menu_popup(priv->iconMenu, NULL, NULL,
-#ifdef G_OS_WIN32
-                   NULL,
-#else
-                   gtk_status_icon_position_menu,
-#endif
-                   priv->statusIcon, 0, gtk_get_current_event_time());
-
-    return TRUE;
-}
-
-static gboolean
-status_icon_button_press_event(GtkStatusIcon * icon,
-                               GdkEventButton * event, TrgMainWindow * win)
-{
-    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-
-    if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
-
-        gtk_menu_popup(priv->iconMenu, NULL, NULL,
-#ifdef G_OS_WIN32
-                       NULL,
-#else
-                       gtk_status_icon_position_menu,
-#endif
-                       priv->statusIcon,
-                       event->button,
-                       gdk_event_get_time((GdkEvent *) event));
-        return TRUE;
-    } else {
-        return FALSE;
-    }
 }
 
 static void
@@ -2344,8 +2262,8 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
     gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent *)event);
 }
 
-static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
-                                          const gchar * msg)
+#if HAVE_LIBAPPINDICATOR
+static GtkMenu *trg_tray_view_menu(TrgMainWindow * win, const gchar * msg)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
@@ -2423,6 +2341,7 @@ static GtkMenu *trg_status_icon_view_menu(TrgMainWindow * win,
 
     return GTK_MENU(menu);
 }
+#endif
 
 static gboolean
 torrent_tv_button_pressed_cb(GtkWidget * treeview,
@@ -2483,42 +2402,18 @@ static void trg_main_window_set_hidden_to_tray(TrgMainWindow * win,
     priv->hidden = hidden;
 }
 
-static gboolean
-window_state_event(TrgMainWindow * win,
-                   GdkEventWindowState * event, gpointer trayIcon)
+
+void trg_main_window_remove_tray(TrgMainWindow * win)
 {
-    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
-
-    if (priv->statusIcon
-        && (event->changed_mask & GDK_WINDOW_STATE_ICONIFIED)
-        && (event->new_window_state & GDK_WINDOW_STATE_ICONIFIED)
-        && trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
-                              TRG_PREFS_GLOBAL)) {
-        trg_main_window_set_hidden_to_tray(win, TRUE);
-        return TRUE;
-    }
-
-    return FALSE;
-}
-
-void trg_main_window_remove_status_icon(TrgMainWindow * win)
-{
-    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 #if HAVE_LIBAPPINDICATOR
-    if (priv->appIndicator) {
-        g_object_unref(G_OBJECT(priv->appIndicator));
+    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
-        priv->appIndicator = NULL;
-    } else {
-#else
-    if (1) {
+    if (priv->appIndicator)
+        app_indicator_set_status(priv->appIndicator,
+                                 APP_INDICATOR_STATUS_PASSIVE);
+
+    g_clear_object(&priv->appIndicator);
 #endif
-        if (priv->statusIcon)
-            g_object_unref(G_OBJECT(priv->statusIcon));
-
-        priv->statusIcon = NULL;
-    }
 }
 
 #if TRG_WITH_GRAPH
@@ -2551,46 +2446,22 @@ void trg_main_window_remove_graph(TrgMainWindow * win)
 }
 #endif
 
-/*static gboolean status_icon_size_changed(GtkStatusIcon *status_icon,
-        gint           size,
-        gpointer       user_data)
+void trg_main_window_add_tray(TrgMainWindow * win)
 {
-    gtk_status_icon_set_from_icon_name(status_icon, PACKAGE_NAME);
-    return TRUE;
-}*/
-
-void trg_main_window_add_status_icon(TrgMainWindow * win)
-{
-    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 #if HAVE_LIBAPPINDICATOR
-    if ((priv->appIndicator =
-                       app_indicator_new(PACKAGE_NAME, PACKAGE_NAME,
-                                         APP_INDICATOR_CATEGORY_APPLICATION_STATUS)))
-    {
-        app_indicator_set_status(priv->appIndicator,
-                                 APP_INDICATOR_STATUS_ACTIVE);
-        app_indicator_set_menu(priv->appIndicator,
-                               trg_status_icon_view_menu(win, NULL));
-    } else {
-#else
-    if (1) {
-#endif
-        priv->statusIcon =
-            gtk_status_icon_new_from_icon_name(PACKAGE_NAME);
-        gtk_status_icon_set_screen(priv->statusIcon,
-                                   gtk_window_get_screen(GTK_WINDOW(win)));
-        g_signal_connect(priv->statusIcon, "activate",
-                         G_CALLBACK(status_icon_activated), win);
-        g_signal_connect(priv->statusIcon, "button-press-event",
-                         G_CALLBACK(status_icon_button_press_event), win);
-        g_signal_connect(priv->statusIcon, "popup-menu",
-                         G_CALLBACK(trg_status_icon_popup_menu_cb), win);
+    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
-        gtk_status_icon_set_visible(priv->statusIcon, TRUE);
+    if (!priv->appIndicator) {
+        priv->appIndicator = app_indicator_new(PACKAGE_NAME, PACKAGE_NAME,
+                                               APP_INDICATOR_CATEGORY_APPLICATION_STATUS);
+
+       app_indicator_set_menu(priv->appIndicator,
+                              trg_tray_view_menu(win, NULL));
     }
 
-    connchange_whatever_statusicon(win,
-                                   trg_client_is_connected(priv->client));
+    app_indicator_set_status(priv->appIndicator, APP_INDICATOR_STATUS_ACTIVE);
+    connchange_whatever_tray(win, trg_client_is_connected(priv->client));
+#endif
 }
 
 TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow * win)
@@ -2724,8 +2595,6 @@ static GObject *trg_main_window_constructor(GType type,
                      G_CALLBACK(delete_event), NULL);
     g_signal_connect(G_OBJECT(self), "destroy", G_CALLBACK(destroy_window),
                      NULL);
-    g_signal_connect(G_OBJECT(self), "window-state-event",
-                     G_CALLBACK(window_state_event), NULL);
     g_signal_connect(G_OBJECT(self), "configure-event",
                      G_CALLBACK(trg_main_window_config_event), NULL);
     g_signal_connect(G_OBJECT(self), "key-press-event",
@@ -2825,9 +2694,9 @@ static GObject *trg_main_window_constructor(GType type,
     tray = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SYSTEM_TRAY,
                               TRG_PREFS_GLOBAL);
     if (tray)
-        trg_main_window_add_status_icon(self);
+        trg_main_window_add_tray(self);
     else
-        trg_main_window_remove_status_icon(self);
+        trg_main_window_remove_tray(self);
 
     priv->statusBar = trg_status_bar_new(self, priv->client);
     g_signal_connect(priv->client, "session-updated",
