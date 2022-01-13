@@ -35,9 +35,6 @@ G_BEGIN_DECLS
 #define TRG_TYPE_MAIN_WINDOW (trg_main_window_get_type())
 G_DECLARE_FINAL_TYPE (TrgMainWindow, trg_main_window, TRG, MAIN_WINDOW, GtkApplicationWindow)
 
-#define TORRENT_COMPLETE_NOTIFY_TMOUT 8000
-#define TORRENT_ADD_NOTIFY_TMOUT 3000
-
 gint trg_add_from_filename(TrgMainWindow * win, gchar ** uris);
 gboolean on_session_set(gpointer data);
 gboolean on_delete_complete(gpointer data);

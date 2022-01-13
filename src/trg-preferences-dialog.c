@@ -778,7 +778,7 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
                      G_CALLBACK(toggle_active_arg_is_sensitive), w);
     hig_workarea_add_wide_control(t, &row, w);
 
-#if HAVE_LIBNOTIFY
+
     hig_workarea_add_section_title(t, &row, _("Notifications"));
 
     w = trgp_check_new(dlg, _("Torrent added notifications"),
@@ -789,7 +789,6 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
                        TRG_PREFS_KEY_COMPLETE_NOTIFY, TRG_PREFS_GLOBAL,
                        NULL);
     hig_workarea_add_wide_control(t, &row, w);
-#endif
 
     return t;
 }
