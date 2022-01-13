@@ -29,7 +29,6 @@ The following packages are optional dependencies:
  - libmrss >= 0.18, RSS feed support
  - libproxy, HTTP proxy support
  - libgeoip, country of origin of peers
- - libnotify, desktop notifications support
  - libappindicator, Application tray support
 
 If these libraries are installed at build time they will be automatically

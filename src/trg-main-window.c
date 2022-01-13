@@ -22,6 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <gio/gio.h>
 #include <glib.h>
 #include <glib/gprintf.h>
 #include <glib/gstdio.h>
@@ -31,9 +32,6 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkkeysyms-compat.h>
 #include <curl/curl.h>
-#if HAVE_LIBNOTIFY
-#include <libnotify/notify.h>
-#endif
 #if HAVE_LIBAPPINDICATOR
 #include <libappindicator/app-indicator.h>
 #endif
@@ -81,17 +79,24 @@
 
 static void update_selected_torrent_notebook(TrgMainWindow * win,
                                              gint mode, gint64 id);
-#if HAVE_LIBNOTIFY
 static void torrent_event_notification(TrgTorrentModel * model,
-                                       gchar * icon, gchar * desc,
-                                       gint tmout, gchar * prefKey,
+                                       gchar * icon_name, gchar * desc,
+                                       gchar * prefKey,
                                        GtkTreeIter * iter, gpointer data);
+<<<<<<< HEAD
 #endif
 static void connchange_whatever_tray(TrgMainWindow * win,
                                      gboolean connected);
 static void update_whatever_tray(TrgMainWindow * win,
                                  trg_torrent_model_update_stats *
                                  stats);
+=======
+static void connchange_whatever_statusicon(TrgMainWindow * win,
+                                           gboolean connected);
+static void update_whatever_statusicon(TrgMainWindow * win,
+                                       trg_torrent_model_update_stats *
+                                       stats);
+>>>>>>> 834608c (use GNotification instead of libnotify)
 static void on_torrent_completed(TrgTorrentModel * model,
                                  GtkTreeIter * iter, gpointer data);
 static void on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
@@ -306,18 +311,18 @@ update_selected_torrent_notebook(TrgMainWindow * win, gint mode, gint64 id)
     priv->selectedTorrentId = id;
 }
 
-#if HAVE_LIBNOTIFY
 static void
 torrent_event_notification(TrgTorrentModel * model,
-                           gchar * icon, gchar * desc,
-                           gint tmout, gchar * prefKey,
+                           gchar * icon_name, gchar * desc,
+                           gchar * prefKey,
                            GtkTreeIter * iter, gpointer data)
 {
     TrgMainWindow *win = TRG_MAIN_WINDOW(data);
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     gchar *name;
-    NotifyNotification *notify;
+    GIcon *icon;
+    GNotification *notify;
 
     if (!trg_prefs_get_bool(prefs, prefKey, TRG_PREFS_NOFLAGS))
         return;
@@ -325,43 +330,36 @@ torrent_event_notification(TrgTorrentModel * model,
     gtk_tree_model_get(GTK_TREE_MODEL(model), iter, TORRENT_COLUMN_NAME,
                        &name, -1);
 
-    notify = notify_notification_new(name, desc, icon
-#if !defined(NOTIFY_VERSION_MINOR) || (NOTIFY_VERSION_MAJOR == 0 && NOTIFY_VERSION_MINOR < 7)
-                                     , NULL
-#endif
-        );
+    icon = g_themed_icon_new(icon_name);
+    notify = g_notification_new(name);
+    g_notification_set_body(notify, desc);
+    g_notification_set_icon(notify, icon);
+    g_notification_set_priority(notify, G_NOTIFICATION_PRIORITY_LOW);
+    g_application_send_notification(g_application_get_default(), name, notify);
 
-    notify_notification_set_urgency(notify, NOTIFY_URGENCY_LOW);
-    notify_notification_set_timeout(notify, tmout);
-
+    g_object_unref(notify);
+    g_object_unref(icon);
     g_free(name);
-
-    notify_notification_show(notify, NULL);
 }
-#endif
 
 static void
 on_torrent_completed(TrgTorrentModel * model,
                      GtkTreeIter * iter, gpointer data)
 {
-#if HAVE_LIBNOTIFY
     torrent_event_notification(model, "trg-gtk-apply",
                                _("This torrent has completed."),
-                               TORRENT_COMPLETE_NOTIFY_TMOUT,
-                               TRG_PREFS_KEY_COMPLETE_NOTIFY, iter, data);
-#endif
+                               TRG_PREFS_KEY_COMPLETE_NOTIFY,
+                               iter, data);
 }
 
 static void
 on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
                  gpointer data)
 {
-#if HAVE_LIBNOTIFY
     torrent_event_notification(model, "list-add",
                                _("This torrent has been added."),
-                               TORRENT_ADD_NOTIFY_TMOUT,
-                               TRG_PREFS_KEY_ADD_NOTIFY, iter, data);
-#endif
+                               TRG_PREFS_KEY_ADD_NOTIFY,
+                               iter, data);
 }
 
 static gboolean
@@ -2583,9 +2581,6 @@ static GObject *trg_main_window_constructor(GType type,
 
     prefs = trg_client_get_prefs(priv->client);
 
-#if HAVE_LIBNOTIFY
-    notify_init(PACKAGE_NAME);
-#endif
     gtk_window_set_default_icon_name(PACKAGE_NAME);
 
     gtk_window_set_title(GTK_WINDOW(self), _("Transmission Remote"));
