@@ -43,7 +43,7 @@
  * main window, which calls this. Session updates happen every 10 torrent-get updates.
  */
 
-G_DEFINE_TYPE(TrgStatusBar, trg_status_bar, GTK_TYPE_HBOX)
+G_DEFINE_TYPE(TrgStatusBar, trg_status_bar, GTK_TYPE_BOX)
 #define TRG_STATUS_BAR_GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_STATUS_BAR, TrgStatusBarPrivate))
 typedef struct _TrgStatusBarPrivate TrgStatusBarPrivate;
@@ -260,7 +260,10 @@ const gchar *trg_status_bar_get_speed_text(TrgStatusBar * s)
 
 TrgStatusBar *trg_status_bar_new(TrgMainWindow * win, TrgClient * client)
 {
-    TrgStatusBar *sb = g_object_new(TRG_TYPE_STATUS_BAR, NULL);
+    TrgStatusBar *sb = g_object_new(TRG_TYPE_STATUS_BAR,
+                                    "orientation",
+                                    GTK_ORIENTATION_HORIZONTAL,
+                                    NULL);
     TrgStatusBarPrivate *priv = TRG_STATUS_BAR_GET_PRIVATE(sb);
 
     priv->client = client;
