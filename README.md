@@ -10,7 +10,7 @@ the Transmission BitTorrent client, using its HTTP RPC protocol.
 The following packages are required dependencies for building and running
 transmission-remote-gtk:
 
- - gtk >= 3.16
+ - gtk >= 3.22
  - glib >= 2.56 (including gio and gthread)
  - json-glib >= 0.8
  - libcurl
