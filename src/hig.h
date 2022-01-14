@@ -22,9 +22,6 @@
 
 GtkWidget* hig_workarea_create (void);
 
-void       hig_workarea_add_section_divider (GtkWidget * table,
-                                             guint     *  row);
-
 void       hig_workarea_add_section_title_widget (GtkWidget * t,
                                                   guint     * row,
                                                   GtkWidget * w);

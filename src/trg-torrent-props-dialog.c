@@ -243,7 +243,6 @@ static GtkWidget *info_page_new(TrgTorrentPropsDialog * dialog)
     hig_workarea_add_row(t, &row, _("Error:"), l, NULL);
     priv->error_lb = l;
 
-    hig_workarea_add_section_divider(t, &row);
     hig_workarea_add_section_title(t, &row, _("Details"));
 
     /* destination */
@@ -288,7 +287,6 @@ static GtkWidget *info_page_new(TrgTorrentPropsDialog * dialog)
     gtk_widget_set_halign(w, GTK_ALIGN_START);
     gtk_widget_set_valign(w, GTK_ALIGN_START);
 
-    hig_workarea_add_section_divider(t, &row);
     return t;
 }
 
