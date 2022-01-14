@@ -266,12 +266,14 @@ static GtkLabel *trg_general_panel_add_label_with_width(TrgGeneralPanel *
                                                         guint row,
                                                         gint width)
 {
-    GtkWidget *value, *keyLabel, *alignment;
+    GtkWidget *value, *keyLabel;
 
     int startCol = col * 2;
 
-    alignment = gtk_alignment_new(0, 0, 0, 0);
     keyLabel = gtk_label_new(NULL);
+    gtk_label_set_xalign(GTK_LABEL(keyLabel), 0.0f);
+    gtk_label_set_yalign(GTK_LABEL(keyLabel), 0.0f);
+
     if (strlen(key) > 0) {
         gchar *keyMarkup =
             g_markup_printf_escaped(strlen(key) > 0 ? "<b>%s:</b>" : "",
@@ -279,17 +281,17 @@ static GtkLabel *trg_general_panel_add_label_with_width(TrgGeneralPanel *
         gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
         g_free(keyMarkup);
     }
-    gtk_container_add(GTK_CONTAINER(alignment), keyLabel);
-    gtk_table_attach(GTK_TABLE(gp), alignment, startCol, startCol + 1, row,
+    gtk_table_attach(GTK_TABLE(gp), keyLabel, startCol, startCol + 1, row,
                      row + 1, GTK_FILL, 0, TRG_GENERAL_PANEL_SPACING_X,
                      TRG_GENERAL_PANEL_SPACING_Y);
 
-    alignment = gtk_alignment_new(0, 0, 0, 0);
     value = gtk_label_new(NULL);
+    gtk_label_set_xalign(GTK_LABEL(value), 0.0f);
+    gtk_label_set_yalign(GTK_LABEL(value), 0.0f);
+
     g_object_set_data(G_OBJECT(value), "key-label", keyLabel);
     gtk_label_set_selectable(GTK_LABEL(value), TRUE);
-    gtk_container_add(GTK_CONTAINER(alignment), value);
-    gtk_table_attach(GTK_TABLE(gp), alignment, startCol + 1,
+    gtk_table_attach(GTK_TABLE(gp), value, startCol + 1,
                      width <
                      0 ? TRG_GENERAL_PANEL_COLUMNS_TOTAL - 1 : startCol +
                      1 + width, row, row + 1, GTK_FILL | GTK_SHRINK, 0,
