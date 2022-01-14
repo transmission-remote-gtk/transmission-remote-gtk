@@ -574,9 +574,6 @@ static GtkWidget *trg_torrent_add_dialog_generic(GtkWindow * parent,
     }
 
     addTorrentFilters(GTK_FILE_CHOOSER(w));
-    gtk_dialog_set_alternative_button_order(GTK_DIALOG(w),
-                                            GTK_RESPONSE_ACCEPT,
-                                            GTK_RESPONSE_CANCEL, -1);
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(w), TRUE);
     return w;
 }
@@ -713,9 +710,6 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
                           GTK_RESPONSE_CANCEL);
     gtk_dialog_add_button(GTK_DIALOG(obj), _("_Open"),
                           GTK_RESPONSE_ACCEPT);
-    gtk_dialog_set_alternative_button_order(GTK_DIALOG(obj),
-                                            GTK_RESPONSE_ACCEPT,
-                                            GTK_RESPONSE_CANCEL, -1);
     gtk_dialog_set_default_response(GTK_DIALOG(obj), GTK_RESPONSE_ACCEPT);
     gtk_widget_grab_focus(gtk_dialog_get_widget_for_response (GTK_DIALOG(obj),
 							      GTK_RESPONSE_ACCEPT));
