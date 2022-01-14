@@ -24,7 +24,7 @@ glib_min_version = glib_version
 glib_version_str = '>= @0@'.format(glib_version)
 
 # required dependencies
-gtk_dep     = dependency('gtk+-3.0', version: '>= 3.16')
+gtk_dep     = dependency('gtk+-3.0', version: '>= 3.22')
 gio_dep     = dependency('gio-2.0', version: glib_version_str)
 glib_dep    = dependency('glib-2.0', version: glib_version_str)
 json_dep    = dependency('json-glib-1.0', version: '>= 0.8')
