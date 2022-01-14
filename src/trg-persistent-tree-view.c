@@ -33,7 +33,7 @@
  */
 
 G_DEFINE_TYPE(TrgPersistentTreeView, trg_persistent_tree_view,
-              GTK_TYPE_VBOX)
+              GTK_TYPE_BOX)
 #define GET_PRIVATE(o) \
   (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeViewPrivate))
 typedef struct _TrgPersistentTreeViewPrivate
@@ -510,6 +510,7 @@ TrgPersistentTreeView *trg_persistent_tree_view_new(TrgPrefs * prefs,
         g_object_new(TRG_TYPE_PERSISTENT_TREE_VIEW, "prefs", prefs,
                      "conf-key", key, "persistent-model",
                      model, "conf-flags", conf_flags,
+                     "orientation", GTK_ORIENTATION_VERTICAL,
                      NULL);
 
     return TRG_PERSISTENT_TREE_VIEW(obj);
