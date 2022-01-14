@@ -146,10 +146,6 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
 
     gtk_dialog_set_default_response(GTK_DIALOG(self), GTK_RESPONSE_ACCEPT);
 
-    gtk_dialog_set_alternative_button_order(GTK_DIALOG(self),
-                                            GTK_RESPONSE_ACCEPT,
-                                            GTK_RESPONSE_CANCEL, -1);
-
     gtk_container_set_border_width(GTK_CONTAINER(t), GUI_PAD);
 
     gtk_box_pack_start(GTK_BOX(contentvbox), t, TRUE, TRUE, 0);

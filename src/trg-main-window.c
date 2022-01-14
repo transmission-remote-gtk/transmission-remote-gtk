@@ -842,9 +842,6 @@ confirm_action_dialog(GtkWindow * gtk_win,
                            GTK_RESPONSE_ACCEPT, NULL);
     gtk_dialog_set_default_response(GTK_DIALOG(dialog),
                                     GTK_RESPONSE_CANCEL);
-    gtk_dialog_set_alternative_button_order(GTK_DIALOG(dialog),
-                                            GTK_RESPONSE_ACCEPT,
-                                            GTK_RESPONSE_CANCEL, -1);
 
     response = gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
