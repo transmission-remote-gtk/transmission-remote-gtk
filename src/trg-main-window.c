@@ -83,20 +83,11 @@ static void torrent_event_notification(TrgTorrentModel * model,
                                        gchar * icon_name, gchar * desc,
                                        gchar * prefKey,
                                        GtkTreeIter * iter, gpointer data);
-<<<<<<< HEAD
-#endif
 static void connchange_whatever_tray(TrgMainWindow * win,
                                      gboolean connected);
 static void update_whatever_tray(TrgMainWindow * win,
                                  trg_torrent_model_update_stats *
                                  stats);
-=======
-static void connchange_whatever_statusicon(TrgMainWindow * win,
-                                           gboolean connected);
-static void update_whatever_statusicon(TrgMainWindow * win,
-                                       trg_torrent_model_update_stats *
-                                       stats);
->>>>>>> 834608c (use GNotification instead of libnotify)
 static void on_torrent_completed(TrgTorrentModel * model,
                                  GtkTreeIter * iter, gpointer data);
 static void on_torrent_added(TrgTorrentModel * model, GtkTreeIter * iter,
