@@ -24,16 +24,6 @@ Start the application minimized
 
 =back
 
-=head1 ENVIRONMENT
-
-=over 1
-
-=item TRG_NOUNIQUE
-
-Start a new instance, even if one already exists.
-
-=back
-
 =head1 AUTHOR
 
 Written by Alan Fitton.
