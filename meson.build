@@ -105,8 +105,8 @@ flags = ['-funsigned-char',
          '-Werror=date-time',
          '-Wno-conversion',
          '-Wno-sign-compare',
-         '-Wno-deprecated-declarations',
-         '-Wno-deprecated',
+         '-Wdeprecated-declarations',
+         '-Wdeprecated',
          '-Wno-error=format-nonliteral']
 
 cflags = cc.get_supported_arguments(flags)
