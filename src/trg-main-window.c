@@ -2514,9 +2514,8 @@ static void on_dropped_file(GtkWidget * widget, GdkDragContext * context,
         gchar **uri_list = gtk_selection_data_get_uris(data);
         guint num_files = g_strv_length(uri_list);
         gchar **file_list = g_new0(gchar *, num_files + 1);
-        int i;
 
-        for (i = 0; i < num_files; i++)
+        for (guint i = 0; i < num_files; i++)
             file_list[i] = g_filename_from_uri(uri_list[i], NULL, NULL);
 
         g_strfreev(uri_list);
