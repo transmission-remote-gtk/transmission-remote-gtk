@@ -57,8 +57,8 @@ extern "C" {
     be_node *be_decoden(const char *bencode, gint64 bencode_len);
     void be_free(be_node * node);
     void be_dump(be_node * node);
-    be_node *be_dict_find(be_node * node, char *key, int type);
-    gboolean be_validate_node(be_node * node, gint type);
+    be_node *be_dict_find(be_node * node, char *key, be_type type);
+    gboolean be_validate_node(be_node * node, be_type type);
 
 #ifdef __cplusplus
 }

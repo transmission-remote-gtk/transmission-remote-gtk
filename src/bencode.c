@@ -182,7 +182,7 @@ be_node *be_decode(const char *data)
     return be_decoden(data, strlen(data));
 }
 
-gboolean be_validate_node(be_node * node, gint type)
+gboolean be_validate_node(be_node * node, be_type type)
 {
     if (!node || node->type != type)
         return FALSE;
@@ -233,7 +233,7 @@ void be_free(be_node * node)
     g_free(node);
 }
 
-be_node *be_dict_find(be_node * node, char *key, int type)
+be_node *be_dict_find(be_node * node, char *key, be_type type)
 {
     int i;
     for (i = 0; node->val.d[i].val; ++i) {
