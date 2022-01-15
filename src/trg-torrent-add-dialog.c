@@ -740,9 +740,7 @@ static GObject *trg_torrent_add_dialog_constructor(GType type,
 
     priv->source_chooser = gtk_button_new();
     hig_workarea_add_row(t, &row, _("_Torrent file:"), priv->source_chooser, NULL);
-
-    gtk_button_set_alignment(GTK_BUTTON(priv->source_chooser), 0.0f, 0.5f);
-
+ 
     if (priv->filenames)
 		trg_torrent_add_dialog_set_filenames(TRG_TORRENT_ADD_DIALOG(obj),
 											 priv->filenames);
