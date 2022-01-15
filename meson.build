@@ -104,7 +104,7 @@ flags = ['-funsigned-char',
          '-Werror=missing-include-dirs',
          '-Werror=date-time',
          '-Wno-conversion',
-         '-Wno-sign-compare',
+         '-Wsign-compare',
          '-Wdeprecated-declarations',
          '-Wdeprecated',
          '-Wno-error=format-nonliteral']
