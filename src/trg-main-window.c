@@ -995,9 +995,8 @@ static GtkWidget *trg_main_window_notebook_new(TrgMainWindow * win)
     gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(genScrolledWin),
                                    GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
-    gtk_scrolled_window_add_with_viewport(GTK_SCROLLED_WINDOW
-                                          (genScrolledWin),
-                                          GTK_WIDGET(priv->genDetails));
+    gtk_container_add(GTK_CONTAINER(genScrolledWin),
+                      GTK_WIDGET(priv->genDetails));
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook), genScrolledWin,
                              gtk_label_new(_("General")));
 
