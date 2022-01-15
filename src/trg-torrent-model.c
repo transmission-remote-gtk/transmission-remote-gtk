@@ -341,7 +341,7 @@ trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel *
     else
         stats->incomplete++;
 
-    if (flags & TORRENT_FLAG_CHECKING)
+    if (flags & TORRENT_FLAG_CHECKING_ANY)
         stats->checking++;
 
     if (flags & TORRENT_FLAG_ACTIVE)
