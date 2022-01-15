@@ -842,7 +842,6 @@ static void trg_tree_view_init(TrgTreeView * tv)
 {
     gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(tv), TRUE);
     gtk_tree_view_set_headers_clickable(GTK_TREE_VIEW(tv), TRUE);
-    gtk_tree_view_set_rules_hint(GTK_TREE_VIEW(tv), TRUE);
     gtk_tree_selection_set_mode(gtk_tree_view_get_selection
                                 (GTK_TREE_VIEW(tv)),
                                 GTK_SELECTION_MULTIPLE);
