@@ -326,7 +326,7 @@ static GtkWidget *trg_rprefs_alt_days(GList ** wl,
     g_signal_connect(G_OBJECT(alt_time_check), "toggled",
                      G_CALLBACK(toggle_active_arg_is_sensitive), grid);
 
-    guint64 days = json_object_get_int_member(Obj, key);
+    gint64 days = json_object_get_int_member(Obj, key);
 
     for(gint i = 0, x = 1; i < 7; i++, x<<=1) {
 #if ENABLE_NL_LANGINFO

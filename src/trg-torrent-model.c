@@ -404,7 +404,7 @@ gchar *shorten_download_dir(TrgClient * tc, const gchar * downloadDir)
             return g_strdup(_("Default"));
 
         if (g_str_has_prefix(downloadDir, defaultDownloadDir)) {
-            int offset = strlen(defaultDownloadDir);
+            size_t offset = strlen(defaultDownloadDir);
             if (*(downloadDir + offset) == '/')
                 offset++;
 

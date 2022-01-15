@@ -576,8 +576,9 @@ void trg_prefs_load(TrgPrefs * p)
         trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, 0,
                           TRG_PREFS_GLOBAL);
     } else {
-        gint profile_id = trg_prefs_get_int(p, TRG_PREFS_KEY_PROFILE_ID,
-                                            TRG_PREFS_GLOBAL);
+        // Note: profile IDs are strictly positive
+        guint profile_id = (guint) trg_prefs_get_int(p, TRG_PREFS_KEY_PROFILE_ID,
+                                                     TRG_PREFS_GLOBAL);
         if (profile_id >= n_profiles)
             trg_prefs_set_int(p, TRG_PREFS_KEY_PROFILE_ID, profile_id = 0,
                               TRG_PREFS_GLOBAL);
