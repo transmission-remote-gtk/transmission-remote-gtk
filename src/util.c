@@ -489,7 +489,8 @@ gchar *epoch_to_string(gint64 epoch)
 }
 
 /* wrap a link in text with a hyperlink, for use in pango markup.
- * with or without any links - a newly allocated string is returned. */
+ * with or without any links - a newly allocated string is returned.
+ * Note that a markup-escaped string is always returned. */
 
 gchar *add_links_to_text(const gchar * original)
 {
@@ -514,7 +515,7 @@ gchar *add_links_to_text(const gchar * original)
       g_free(url);
       g_free(link);
     } else {
-      newText = g_strdup(original);
+      newText = g_markup_escape_text(original, -1);
     }
 
     g_regex_unref(regex);
