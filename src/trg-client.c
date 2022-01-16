@@ -306,16 +306,11 @@ int trg_client_populate_with_settings(TrgClient * tc)
         g_mutex_unlock(&priv->configMutex);
         return TRG_NO_HOSTNAME_SET;
     }
-#ifndef CURL_NO_SSL
+
     priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL,
                                    TRG_PREFS_CONNECTION);
     priv->ssl_validate = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL_VALIDATE,
                                    TRG_PREFS_CONNECTION);
-
-#else
-    priv->ssl = FALSE;
-#endif
-
 
     priv->url = g_strdup_printf("%s://%s:%d%s",
                                 priv->ssl ? HTTPS_URI_PREFIX :
@@ -451,7 +446,6 @@ gint64 trg_client_get_serial(TrgClient * tc)
     return tc->priv->updateSerial;
 }
 
-#ifndef CURL_NO_SSL
 gboolean trg_client_get_ssl(TrgClient * tc)
 {
     return tc->priv->ssl;
@@ -461,7 +455,6 @@ gboolean trg_client_get_ssl_validate(TrgClient * tc)
 {
     return tc->priv->ssl_validate;
 }
-#endif
 
 gchar *trg_client_get_proxy(TrgClient * tc)
 {
@@ -629,13 +622,11 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
             curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
         }
 
-    #ifndef CURL_NO_SSL
         if (trg_client_get_ssl(tc) && !trg_client_get_ssl_validate(tc)) {
 
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
             curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
         }
-    #endif
 
         proxy = trg_client_get_proxy(tc);
         if (proxy) {
