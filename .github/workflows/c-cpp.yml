@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
+  build-unix:
 
     runs-on: ubuntu-latest
     steps:
@@ -20,6 +20,44 @@ jobs:
           # Meson is too old on ubuntu
           pip3 install --no-input meson ninja
       - name: meson configure
+        run: meson build
+      - name: build
+        run: meson compile -C build
+      - name: dist
+        run: meson dist -C build
+
+  build-windows:
+
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        shell: msys2 {0}
+
+    steps:
+
+      - uses: msys2/setup-msys2@v2
+      - name: install deps
+        run: |
+          pacman -S --noconfirm \
+                    git \
+                    mingw-w64-x86_64-gcc \
+                    mingw-w64-x86_64-meson \
+                    mingw-w64-x86_64-ninja \
+                    mingw-w64-x86_64-pkg-config \
+                    \
+                    mingw-w64-x86_64-gtk3 \
+                    mingw-w64-x86_64-curl \
+                    mingw-w64-x86_64-glib2 \
+                    mingw-w64-x86_64-gettext \
+                    mingw-w64-x86_64-json-glib \
+                    \
+                    mingw-w64-x86_64-libproxy \
+                    mingw-w64-x86_64-appstream-glib \
+                    mingw-w64-x86_64-desktop-file-utils
+
+      - uses: actions/checkout@v2
+      - name: configure
         run: meson build
       - name: build
         run: meson compile -C build

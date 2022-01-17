@@ -20,13 +20,11 @@
 #ifndef WIN32_MAILSLOT_H_
 #define WIN32_MAILSLOT_H_
 
-#ifdef G_OS_WIN32
-
+#include <winsock2.h>
 #include <windows.h>
 #include "trg-main-window.h"
 
 void mailslot_start_background_listener(TrgMainWindow * win);
 int mailslot_send_message(gchar ** args);
 
-#endif
 #endif                          /* WIN32_MAILSLOT_H_ */
