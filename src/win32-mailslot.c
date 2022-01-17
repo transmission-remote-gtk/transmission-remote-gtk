@@ -19,11 +19,10 @@
 
 #include "config.h"
 
-#ifdef G_OS_WIN32
-
 #define TRG_MAILSLOT_NAME "\\\\.\\mailslot\\TransmissionRemoteGTK"
 #define MAILSLOT_BUFFER_SIZE 1024*32
 
+#include <winsock2.h>
 #include <windows.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
@@ -73,7 +72,7 @@ static gpointer mailslot_recv_thread(gpointer data)
                                NULL);   /* default security attribute */
 
     if (INVALID_HANDLE_VALUE == hMailslot) {
-        g_error("\nError occurred while creating the mailslot: %d",
+        g_error("\nError occurred while creating the mailslot: %ld",
                 GetLastError());
         return NULL;            /* Error */
     }
@@ -86,7 +85,7 @@ static gpointer mailslot_recv_thread(gpointer data)
                            NULL);       /* not overlapped I/O */
 
         if ((!bResult) || (0 == cbBytes)) {
-            g_error("Mailslot error from client: %d", GetLastError());
+            g_error("Mailslot error from client: %ld", GetLastError());
             break;
         }
 
@@ -194,5 +193,3 @@ gboolean mailslot_send_message(gchar ** args)
 
     return FALSE;
 }
-
-#endif

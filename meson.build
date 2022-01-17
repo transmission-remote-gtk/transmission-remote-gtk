@@ -127,7 +127,8 @@ if win32
 
   win_ldflags = cc.get_supported_link_arguments('-Wl,--allow-multiple-definitions',
                                                 '-lws2_32',
-                                                '-lintl')
+                                                '-lintl',
+                                                '-lssp')
   add_project_link_arguments(win_ldflags, language: 'c')
 endif
 
