@@ -36,7 +36,7 @@ trg_deps = [gtk_dep, glib_dep, gio_dep, json_dep, libcurl_dep, gthread_dep]
 # optional dependencies
 rss_dep             = dependency('mrss', version: '>=0.18', required: get_option('mrss'))
 geoip_dep           = dependency('geoip', required: get_option('geoip'))
-libproxy_dep        = dependency('libproxy', required: get_option('libproxy'))
+libproxy_dep        = dependency('libproxy-1.0', required: get_option('libproxy'))
 libappindicator_dep = dependency('appindicator3-0.1', required: get_option('libappindicator'))
 
 trg_deps += [geoip_dep, libproxy_dep, libappindicator_dep]
