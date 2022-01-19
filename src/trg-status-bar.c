@@ -22,6 +22,7 @@
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
+#include <pango/pango.h>
 
 #include "trg-prefs.h"
 #include "trg-main-window.h"
@@ -104,6 +105,8 @@ static void trg_status_bar_init(TrgStatusBar * self)
     gtk_container_set_border_width(GTK_CONTAINER(self), 2);
 
     priv->info_lbl = gtk_label_new(_("Disconnected"));
+    gtk_label_set_ellipsize(GTK_LABEL(priv->info_lbl),
+                            PANGO_ELLIPSIZE_END);
     gtk_box_pack_start(GTK_BOX(self), priv->info_lbl, FALSE, TRUE, 0);
 
     priv->turtleImage = gtk_image_new();
@@ -117,10 +120,12 @@ static void trg_status_bar_init(TrgStatusBar * self)
     gtk_box_pack_end(GTK_BOX(self), priv->turtleEventBox, FALSE, TRUE, 5);
 
     priv->speed_lbl = gtk_label_new(NULL);
-    gtk_box_pack_end(GTK_BOX(self), priv->speed_lbl, FALSE, TRUE, 10);
+    gtk_label_set_ellipsize(GTK_LABEL(priv->speed_lbl),
+                            PANGO_ELLIPSIZE_START);
+    gtk_box_pack_end(GTK_BOX(self), priv->speed_lbl, FALSE, TRUE, 5);
 
     priv->free_lbl = gtk_label_new(NULL);
-    gtk_box_pack_end(GTK_BOX(self), priv->free_lbl, FALSE, TRUE, 30);
+    gtk_box_pack_end(GTK_BOX(self), priv->free_lbl, FALSE, TRUE, 5);
 }
 
 void
@@ -140,7 +145,7 @@ trg_status_bar_set_connected_label(TrgStatusBar * sb, JsonObject * session,
                                               TRG_PREFS_KEY_PROFILE_NAME,
                                               TRG_PREFS_CONNECTION);
     gchar *statusMsg =
-        g_strdup_printf(_("Connected: %s :: Transmission %s"),
+        g_strdup_printf(_("Connected: %s :: %s"),
                         profileName,
                         session_get_version_string(session));
 
