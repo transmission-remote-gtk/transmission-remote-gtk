@@ -110,7 +110,7 @@ gchar *build_remote_exec_cmd(TrgClient * tc, GtkTreeModel * model,
     gchar *work;
     GRegex *regex, *replacerx;
     GMatchInfo *match_info;
-    gchar *whole, *wholeEscaped, *id, *tmp, *valuestr, *repeater;
+    gchar *whole, *wholeEscaped, *id, *tmp, *valueEscaped, *valuestr, *repeater;
     JsonNode *replacement;
 
     if (!profile)
@@ -186,11 +186,15 @@ gchar *build_remote_exec_cmd(TrgClient * tc, GtkTreeModel * model,
             }
 
             if (valuestr) {
-                tmp = g_regex_replace(replacerx, work, -1, 0, valuestr, 0,
+                // Values are not guaranteed to be shell safe
+                valueEscaped = g_shell_quote(valuestr);
+
+                tmp = g_regex_replace(replacerx, work, -1, 0, valueEscaped, 0,
                                       NULL);
                 g_free(work);
                 work = tmp;
                 g_free(valuestr);
+                g_free(valueEscaped);
             }
 
             g_regex_unref(replacerx);
