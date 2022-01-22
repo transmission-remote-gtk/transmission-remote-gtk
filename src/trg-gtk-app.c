@@ -206,7 +206,7 @@ static void trg_gtk_app_init(TrgGtkApp * self)
 TrgGtkApp *trg_gtk_app_new(TrgClient * client)
 {
     return g_object_new(TRG_TYPE_GTK_APP,
-                        "application-id", "io.github.TransmissionRemoteGtk",
+                        "application-id", APPLICATION_ID,
                         "flags", G_APPLICATION_HANDLES_COMMAND_LINE,
                         "trg-client", client, NULL);
 }
