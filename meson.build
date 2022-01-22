@@ -62,6 +62,7 @@ conf_data = configuration_data()
 conf_data.set_quoted('PACKAGE_NAME', project_name)
 conf_data.set_quoted('PACKAGE_VERSION', project_version)
 conf_data.set_quoted('GETTEXT_PACKAGE', project_name)
+conf_data.set_quoted('APPLICATION_ID', app_id)
 conf_data.set_quoted('LOCALEDIR', get_option('localedir'))
 
 # debug options
