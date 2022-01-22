@@ -91,8 +91,6 @@ src_files += gresources
 if win32
   windows = import('windows')
   windres = windows.compile_resources('win32.rc')
-
-  src_files += ['win32-mailslot.c']
 endif
 
 exe_kwargs = {}
