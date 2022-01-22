@@ -29,8 +29,6 @@
  * contains a list of #RssItem<!-- -->s which in turn contain article information.
  */
 
-#include "rss-config.h"
-
 #include "rss-document.h"
 #include "rss-document-private.h"
 

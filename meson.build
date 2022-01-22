@@ -23,6 +23,17 @@ glib_max_version = glib_version
 glib_min_version = glib_version
 glib_version_str = '>= @0@'.format(glib_version)
 
+# glib API configuration
+maj_min = glib_max_version.split('.')
+glib_max ='GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
+glib_max_def = '-DGLIB_VERSION_MAX_ALLOWED=@0@'.format(glib_max)
+
+maj_min = glib_min_version.split('.')
+glib_min = 'GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
+glib_min_def = '-DGLIB_VERSION_MIN_REQUIRED=@0@'.format(glib_min)
+
+add_project_arguments(glib_min_def, glib_max_def, language: 'c')
+
 # required dependencies
 gtk_dep     = dependency('gtk+-3.0', version: '>= 3.22')
 gio_dep     = dependency('gio-2.0', version: glib_version_str)
@@ -72,15 +83,6 @@ conf_data.set('G_ENABLE_DEBUG', debug)
 conf_data.set('G_DISABLE_ASSERT', not debug)
 conf_data.set('G_DISABLE_CHECKS', not debug)
 conf_data.set('G_DISABLE_CAST_CHECKS', not debug)
-
-# glib API configuration
-maj_min = glib_max_version.split('.')
-glib_max ='GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
-conf_data.set('GLIB_VERSION_MAX_ALLOWED', glib_max)
-
-maj_min = glib_min_version.split('.')
-glib_min = 'GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
-conf_data.set('GLIB_VERSION_MIN_REQUIRED', glib_min)
 
 # compile time features
 conf_data.set10('HAVE_RSS', rss_dep.found())

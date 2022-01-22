@@ -28,8 +28,6 @@
  * inside a file or inside a static buffer.
  */
 
-#include "rss-config.h"
-
 #include "rss-parser.h"
 #include "rss-parser-private.h"
 
