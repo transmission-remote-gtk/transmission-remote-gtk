@@ -25,10 +25,8 @@
 #include <glib/gi18n.h>
 #include <glib-object.h>
 #include <gtk/gtk.h>
-#include <fontconfig/fontconfig.h>
 
 #include "trg-gtk-app.h"
-
 #include "trg-main-window.h"
 #include "trg-client.h"
 
@@ -40,8 +38,9 @@ static gint trg_gtkapp_init(TrgClient * client, int argc, char *argv[])
 {
     TrgGtkApp *gtk_app = trg_gtk_app_new(client);
 
-    gint exitCode = g_application_run(G_APPLICATION(gtk_app), argc, argv);
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 
+    gint exitCode = g_application_run(G_APPLICATION(gtk_app), argc, argv);
     g_object_unref(gtk_app);
 
     return exitCode;
@@ -67,33 +66,7 @@ trg_win32_init(TrgClient * client, int argc, char *argv[])
     return exitCode;
 }
 
-#else
-
-static gint
-trg_simple_init(TrgClient * client, int argc, char *argv[], gchar ** args)
-{
-    TrgMainWindow *window =
-        trg_main_window_new(client, should_be_minimised(argc, argv));
-    trg_main_window_set_start_args(window, args);
-    auto_connect_if_required(window);
-    gtk_main();
-
-    return EXIT_SUCCESS;
-}
-
 #endif
-
-#ifndef G_OS_WIN32
-static void trg_non_win32_init(void)
-{
-    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-}
-#endif
-
-static void trg_cleanup(void)
-{
-    curl_global_cleanup();
-}
 
 int main(int argc, char *argv[])
 {
@@ -112,13 +85,12 @@ int main(int argc, char *argv[])
 #ifdef G_OS_WIN32
     exitCode = trg_win32_init(client, argc, argv);
 #else
-    trg_non_win32_init();
     exitCode = trg_gtkapp_init(client, argc, argv);
 #endif
 
     g_object_unref(client);
 
-    trg_cleanup();
+    curl_global_cleanup();
 
     return exitCode;
 }
