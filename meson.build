@@ -102,15 +102,13 @@ flags = ['-funsigned-char',
          '-Werror=format=2',
          '-Werror=implicit-function-declaration',
          '-Werror=pointer-arith',
-         '-Werror=format-security',
          '-Werror=init-self',
          '-Werror=missing-include-dirs',
          '-Werror=date-time',
          '-Wno-conversion',
          '-Wsign-compare',
          '-Wdeprecated-declarations',
-         '-Wdeprecated',
-         '-Wno-error=format-nonliteral']
+         '-Wdeprecated']
 
 cflags = cc.get_supported_arguments(flags)
 add_project_arguments(cflags, language: 'c')
@@ -128,7 +126,7 @@ if win32
                                           '-mwindows')
   add_project_arguments(win_cflags, language: 'c')
 
-  win_ldflags = cc.get_supported_link_arguments('-Wl,--allow-multiple-definitions',
+  win_ldflags = cc.get_supported_link_arguments('-Wl,--allow-multiple-definition',
                                                 '-lws2_32',
                                                 '-lintl',
                                                 '-lssp')
