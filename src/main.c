@@ -32,64 +32,43 @@
 
 /* Handle arguments and start the main window. */
 
-#ifndef G_OS_WIN32
-
-static gint trg_gtkapp_init(TrgClient * client, int argc, char *argv[])
+/* Get platform dependendent localedir */
+static void bindtext_wrapper(void)
 {
-    TrgGtkApp *gtk_app = trg_gtk_app_new(client);
-
-    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
-
-    gint exitCode = g_application_run(G_APPLICATION(gtk_app), argc, argv);
-    g_object_unref(gtk_app);
-
-    return exitCode;
-}
-
-#elif defined G_OS_WIN32
-
-static gint
-trg_win32_init(TrgClient * client, int argc, char *argv[])
-{
+#ifdef G_OS_WIN32
     gchar *moddir =
         g_win32_get_package_installation_directory_of_module(NULL);
-    gchar *localedir =
-        g_build_path(G_DIR_SEPARATOR_S, moddir, "share", "locale",
-                     NULL);
+
+    gchar *localedir = g_build_path(G_DIR_SEPARATOR_S,
+                                    moddir, "share", "locale", NULL);
 
     bindtextdomain(GETTEXT_PACKAGE, localedir);
     g_free(moddir);
     g_free(localedir);
-
-    TrgGtkApp *gtk_app = trg_gtk_app_new(client);
-    gint exitCode = g_application_run(G_APPLICATION(gtk_app), argc, argv);
-    return exitCode;
-}
-
+#else
+    bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
 #endif
+}
 
 int main(int argc, char *argv[])
 {
-    gint exitCode = EXIT_SUCCESS;
     TrgClient *client;
+    TrgGtkApp *gtk_app;
 
     gtk_init(&argc, &argv);
-
     curl_global_init(CURL_GLOBAL_ALL);
-    client = trg_client_new();
 
     g_set_application_name(PACKAGE_NAME);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
+    bindtext_wrapper();
 
-#ifdef G_OS_WIN32
-    exitCode = trg_win32_init(client, argc, argv);
-#else
-    exitCode = trg_gtkapp_init(client, argc, argv);
-#endif
+    client = trg_client_new();
+    gtk_app = trg_gtk_app_new(client);
+    gint exitCode = g_application_run(G_APPLICATION(gtk_app), argc, argv);
 
+    g_object_unref(gtk_app);
     g_object_unref(client);
-
     curl_global_cleanup();
 
     return exitCode;
