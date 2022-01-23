@@ -17,18 +17,22 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef JSON_H_
-#define JSON_H_
+#pragma once
 
 #include <glib-object.h>
-#include <json-glib/json-glib.h>
+#include <gtk/gtk.h>
 
 #include "trg-client.h"
+#include "trg-main-window.h"
 
-JsonGenerator *trg_json_serializer(JsonNode *req, gboolean pretty);
-JsonObject *get_arguments(JsonObject *req);
-JsonObject *node_get_arguments(JsonNode *req);
-gdouble json_double_to_progress(JsonNode *n);
-gdouble json_node_really_get_double(JsonNode *node);
-JsonArray *json_str_list_to_array(GList *list);
-#endif /* JSON_H_ */
+#define TRG_TYPE_LABELS_BOX trg_labels_box_get_type()
+G_DECLARE_FINAL_TYPE(TrgLabelsBox, trg_labels_box, TRG, LABELS_BOX, GtkBox);
+
+GtkWidget *trg_labels_box_new(void);
+gboolean trg_labels_box_is_valid(TrgLabelsBox *trglb);
+GList *trg_labels_box_get_labels(TrgLabelsBox *trglb);
+
+#define TRG_TYPE_LABELS_DIALOG trg_labels_dialog_get_type()
+G_DECLARE_FINAL_TYPE(TrgLabelsDialog, trg_labels_dialog, TRG, LABELS_DIALOG, GtkDialog);
+
+TrgLabelsDialog *trg_labels_dialog_new(TrgMainWindow *win, TrgClient *client);

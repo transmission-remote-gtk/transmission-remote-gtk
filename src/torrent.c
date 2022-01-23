@@ -485,6 +485,14 @@ gint64 torrent_get_queue_position(JsonObject *args)
         return -1;
 }
 
+JsonArray *torrent_get_labels(JsonObject *t)
+{
+    if (json_object_has_member(t, FIELD_LABELS))
+        return json_object_get_array_member(t, FIELD_LABELS);
+    else
+        return NULL;
+}
+
 /* tracker stats */
 
 gint64 tracker_stats_get_id(JsonObject *t)

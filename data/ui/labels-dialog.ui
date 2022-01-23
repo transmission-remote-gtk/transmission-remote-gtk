@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<interface>
+    <template class="TrgLabelsDialog" parent="GtkDialog">
+        <property name="title">Labels</property>
+        <property name="resizeable">FALSE</property>
+        <child internal-child="content-area">
+            <object class="TrgLabelsBox" id="lb">
+                <property name="margin-start">12</property>
+                <property name="margin-end">12</property>
+                <property name="margin-top">12</property>
+                <property name="margin-bottom">12</property>
+            </object>
+        </child>
+        <child type="action">
+            <object class="GtkButton" id="close">
+                <property name="Label">Close</property>
+            </object>
+            <object class="GtkButton" id="ok_btn">
+                <property name="Label">OK</property>
+            </object>
+        </child>
+        <action-widgets>
+            <action-widget response="cancel" defualt="true">close_btn</action-widget>
+            <action-widget respose="accept">ok_btn</action-widget>
+        </action-widgets>
+    </template>
+</interface>

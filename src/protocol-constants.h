@@ -92,6 +92,7 @@
 #define FIELD_ACTIVITY_DATE           "activityDate"
 #define FIELD_ISPRIVATE               "isPrivate"
 #define FIELD_METADATAPERCENTCOMPLETE "metadataPercentComplete"
+#define FIELD_LABELS                  "labels"
 
 #define FIELD_FILES_WANTED          "files-wanted"
 #define FIELD_FILES_UNWANTED        "files-unwanted"

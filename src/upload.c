@@ -53,6 +53,11 @@ static void add_wanteds(JsonObject *args, gint *wanteds, gint n_files)
     }
 }
 
+static void add_labels(JsonObject *args, GList *labels)
+{
+    json_object_set_array_member(args, FIELD_LABELS, json_str_list_to_array(labels));
+}
+
 static void next_upload(trg_upload *upload)
 {
     JsonNode *req = NULL;
@@ -72,6 +77,9 @@ static void next_upload(trg_upload *upload)
 
         if (upload->file_priorities)
             add_priorities(args, upload->file_priorities, upload->n_files);
+
+        if (upload->labels)
+            add_labels(args, upload->labels);
 
         upload->progress_index++;
         dispatch_rpc_async(upload->client, req, upload_complete_callback, upload);

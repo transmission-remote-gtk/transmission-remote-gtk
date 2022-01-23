@@ -101,6 +101,7 @@ gint64 torrent_get_activity_date(JsonObject *t);
 gchar *torrent_get_full_dir(JsonObject *obj);
 gchar *torrent_get_full_path(JsonObject *obj);
 gdouble torrent_get_metadata_percent_complete(JsonObject *t);
+JsonArray *torrent_get_labels(JsonObject *t);
 
 /* outer response object */
 

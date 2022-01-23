@@ -99,6 +99,7 @@ struct _TrgTorrentPropsDialogPrivate {
     GtkWidget *hash_lb;
     GtkWidget *privacy_lb;
     GtkWidget *origin_lb;
+    GtkWidget *labels_lb;
     GtkTextBuffer *comment_buffer;
     gboolean show_details;
 };
@@ -256,6 +257,11 @@ static GtkWidget *info_page_new(TrgTorrentPropsDialog *dialog)
     hig_workarea_add_row(t, &row, _("Origin:"), l, NULL);
     priv->origin_lb = l;
 
+    /* labels */
+    l = g_object_new(GTK_TYPE_LABEL, "selectable", TRUE, "ellipsize", PANGO_ELLIPSIZE_END, NULL);
+    hig_workarea_add_row(t, &row, _("Labels:"), l, NULL);
+    priv->labels_lb = l;
+
     /* comment */
     b = priv->comment_buffer = gtk_text_buffer_new(NULL);
     w = gtk_text_view_new_with_buffer(b);
@@ -320,6 +326,14 @@ static void info_page_update(TrgTorrentPropsDialog *dialog, JsonObject *t,
         gtk_label_set_text(GTK_LABEL(priv->origin_lb), buf);
     }
 
+    /* labels */
+    GList *label_list = json_array_get_elements(torrent_get_labels(t));
+    gchar *labels_str = tr_list_concat(", ", label_list);
+    gtk_label_set_text(GTK_LABEL(priv->labels_lb), labels_str);
+    g_list_free(label_list);
+    g_free(labels_str);
+
+    /* comment */
     gtk_text_buffer_set_text(priv->comment_buffer, torrent_get_comment(t), -1);
     gtk_label_set_text(GTK_LABEL(priv->destination_lb), torrent_get_download_dir(t));
 

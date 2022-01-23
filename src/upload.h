@@ -18,6 +18,7 @@ typedef struct {
     gint *file_priorities;
     gint *file_wanted;
     guint n_files;
+    GList *labels;
     gboolean extra_args;
     guint progress_index;
     GSourceFunc callback;

@@ -222,17 +222,22 @@ JsonNode *torrent_get(gint64 id)
     json_array_add_string_element(fields, FIELD_WANTED);
     json_array_add_string_element(fields, FIELD_PRIORITIES);
     json_array_add_string_element(fields, FIELD_RECHECK_PROGRESS);
+    json_array_add_string_element(fields, FIELD_LABELS);
     json_object_set_array_member(args, PARAM_FIELDS, fields);
     return root;
 }
 
-JsonNode *torrent_add_url(const gchar *url, gboolean paused)
+JsonNode *torrent_add_url(const gchar *url, gboolean paused, GList *labels)
 {
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);
 
     json_object_set_string_member(args, PARAM_FILENAME, url);
     json_object_set_boolean_member(args, PARAM_PAUSED, paused);
+
+    if (labels)
+        json_object_set_array_member(args, FIELD_LABELS, json_str_list_to_array(labels));
+
     request_set_tag(root, TORRENT_GET_TAG_MODE_FULL);
     return root;
 }

@@ -32,6 +32,7 @@ src_files = [
     'trg-general-panel.c',
     'trg-gtk-app.c',
     'trg-json-widgets.c',
+    'trg-labels.c',
     'trg-main-window.c',
     'trg-menu-bar.c',
     'trg-model.c',

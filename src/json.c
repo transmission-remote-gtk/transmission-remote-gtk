@@ -69,3 +69,19 @@ gdouble json_node_really_get_double(JsonNode *node)
         return 0.0;
     }
 }
+
+JsonArray *json_str_list_to_array(GList *list)
+{
+    guint len;
+    JsonArray *arr;
+
+    len = g_list_length(list);
+
+    arr = json_array_sized_new(len);
+
+    for (guint i = 0; i < len; i++) {
+        json_array_add_string_element(arr, (gchar *)g_list_nth_data(list, i));
+    }
+
+    return arr;
+}

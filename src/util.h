@@ -75,6 +75,8 @@ char *gtr_localtime(time_t time);
 char *gtr_localtime2(char *buf, time_t time, size_t buflen);
 double tr_truncd(double x, int decimal_places);
 char *tr_strlsize(char *buf, guint64 bytes, size_t buflen);
+gchar *tr_list_concat(const gchar *separator, GList *list);
+GList *tr_split_to_list(const gchar *separator, const gchar *str);
 void rm_trailing_slashes(gchar *str);
 void trg_widget_set_visible(GtkWidget *w, gboolean visible);
 gchar *trg_base64encode(const gchar *filename);

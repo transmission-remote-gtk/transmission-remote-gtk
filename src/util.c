@@ -516,6 +516,46 @@ char *tr_strlsize(char *buf, guint64 bytes, size_t buflen)
     return buf;
 }
 
+/* Take a GList of strings and concatenate them.
+ * Opposite of tr_split_to_list */
+gchar *tr_list_concat(const gchar *separator, GList *list)
+{
+    gchar *str_out;
+    gchar **str;
+
+    guint len = g_list_length(list);
+    if (len == 0)
+        return g_strdup("");
+
+    str = g_malloc0(sizeof(gchar *) * (len + 1));
+
+    for (guint i = 0; i < len; i++) {
+        str[i] = json_node_dup_string(g_list_nth_data(list, i));
+    }
+
+    str_out = g_strjoinv(separator, str);
+    g_strfreev(str);
+    return str_out;
+}
+
+/* Take a delimited string and split it to a GList.
+ * Opposite of tr_list_concat */
+GList *tr_split_to_list(const gchar *separator, const gchar *str)
+{
+    GList *list_out = NULL;
+    gchar **split_str;
+
+    split_str = g_strsplit(str, separator, -1);
+
+    for (guint i = 0; i < g_strv_length(split_str); i++) {
+        list_out = g_list_append(list_out, g_strdup(split_str[i]));
+    }
+
+    g_strfreev(split_str);
+
+    return list_out;
+}
+
 gboolean is_minimised_arg(const gchar *arg)
 {
     return !g_strcmp0(arg, "-m") || !g_strcmp0(arg, "--minimized") || !g_strcmp0(arg, "/m");

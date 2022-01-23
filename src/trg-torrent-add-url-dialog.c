@@ -26,6 +26,7 @@
 #include "hig.h"
 #include "requests.h"
 #include "trg-client.h"
+#include "trg-labels.h"
 #include "trg-main-window.h"
 #include "trg-torrent-add-url-dialog.h"
 
@@ -39,6 +40,7 @@ struct _TrgTorrentAddUrlDialogPrivate {
     TrgClient *client;
     TrgMainWindow *win;
     GtkWidget *urlEntry, *startCheck, *addButton;
+    TrgLabelsBox *labels_box;
 };
 
 static void trg_torrent_add_url_dialog_class_init(TrgTorrentAddUrlDialogClass *klass)
@@ -69,14 +71,23 @@ static void trg_torrent_add_url_response_cb(TrgTorrentAddUrlDialog *dlg, gint re
     TrgTorrentAddUrlDialogPrivate *priv = TRG_TORRENT_ADD_URL_DIALOG_GET_PRIVATE(dlg);
 
     if (res_id == GTK_RESPONSE_ACCEPT) {
+
+        TrgLabelsBox *labels_box = priv->labels_box;
+
+        /* do not allow invalid labels */
+        if (!trg_labels_box_is_valid(labels_box))
+            return;
+
         JsonNode *request;
         const gchar *entryText = gtk_entry_get_text(GTK_ENTRY(priv->urlEntry));
 
         if (g_str_has_prefix(entryText, "magnet:") && !has_dht_support(dlg))
             show_dht_not_enabled_warning(dlg);
 
-        request = torrent_add_url(
-            entryText, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->startCheck)));
+        request = torrent_add_url(entryText,
+                                  gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->startCheck)),
+                                  trg_labels_box_get_labels(labels_box));
+
         dispatch_rpc_async(priv->client, request, on_generic_interactive_action_response, data);
     }
 
@@ -121,6 +132,9 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog *self)
     gtk_clipboard_request_text(cb, clipboard_text_received, w);
 
     hig_workarea_add_row(t, &row, _("URL:"), w, NULL);
+
+    priv->labels_box = TRG_LABELS_BOX(trg_labels_box_new());
+    hig_workarea_add_row(t, &row, _("Labels:"), GTK_WIDGET(priv->labels_box), NULL);
 
     priv->startCheck = hig_workarea_add_wide_checkbutton(t, &row, _("Start Paused"), FALSE);
 

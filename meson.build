@@ -11,6 +11,8 @@ project('transmission-remote-gtk', 'c',
 project_name = meson.project_name()
 project_version = meson.project_version()
 app_id = 'io.github.TransmissionRemoteGtk'
+resource_path = app_id.replace('.', '/')
+
 datadir = get_option('datadir')
 
 # i18n module
@@ -74,6 +76,7 @@ conf_data.set_quoted('PACKAGE_VERSION', project_version)
 conf_data.set_quoted('GETTEXT_PACKAGE', project_name)
 conf_data.set_quoted('APPLICATION_ID', app_id)
 conf_data.set_quoted('LOCALEDIR', get_option('prefix') / get_option('localedir'))
+conf_data.set_quoted('RESOURCE_PATH', resource_path)
 
 # debug options
 debug = get_option('debug')

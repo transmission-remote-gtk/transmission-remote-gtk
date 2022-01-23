@@ -63,6 +63,7 @@ struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_completedat_label;
     GtkLabel *gen_downloaddir_label;
     GtkLabel *gen_comment_label;
+    GtkLabel *gen_labels_label;
     GtkLabel *gen_hash_label;
     GtkLabel *gen_error_label;
     GtkTreeModel *model;
@@ -210,6 +211,12 @@ void trg_general_panel_update(TrgGeneralPanel *panel, JsonObject *t, GtkTreeIter
     gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
     g_free(comment);
 
+    GList *label_list = json_array_get_elements(torrent_get_labels(t));
+    gchar *labels_str = tr_list_concat(", ", label_list);
+    gtk_label_set_text(GTK_LABEL(priv->gen_labels_label), labels_str);
+    g_list_free(label_list);
+    g_free(labels_str);
+
     errorStr = torrent_get_errorstr(t);
     keyLabel = gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label));
     if (strlen(errorStr) > 0) {
@@ -305,10 +312,10 @@ static void trg_general_panel_init(TrgGeneralPanel *self)
         = trg_general_panel_add_label_with_width(self, _("Location"), 0, 6, -1);
 
     priv->gen_comment_label = trg_general_panel_add_label(self, _("Comment"), 0, 7);
+    priv->gen_labels_label = trg_general_panel_add_label(self, _("Labels"), 0, 8);
+    priv->gen_hash_label = trg_general_panel_add_label(self, _("Hash"), 0, 9);
 
-    priv->gen_hash_label = trg_general_panel_add_label(self, _("Hash"), 0, 8);
-
-    priv->gen_error_label = trg_general_panel_add_label_with_width(self, "", 0, 9, -1);
+    priv->gen_error_label = trg_general_panel_add_label_with_width(self, "", 0, 10, -1);
 
     gtk_grid_set_row_homogeneous(GTK_GRID(self), TRUE);
     gtk_grid_set_column_spacing(GTK_GRID(self), TRG_GENERAL_PANEL_SPACING_X);

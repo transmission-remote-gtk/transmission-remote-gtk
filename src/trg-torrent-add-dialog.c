@@ -1,21 +1,21 @@
 /*
- * transmission-remote-gtk - A GTK RPC client to Transmission
- * Copyright (C) 2011  Alan Fitton
+* transmission-remote-gtk - A GTK RPC client to Transmission
+* Copyright (C) 2011  Alan Fitton
 
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation; either version 2 of the License, or
+* (at your option) any later version.
 
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
 
- * You should have received a copy of the GNU General Public License along
- * with this program; if not, write to the Free Software Foundation, Inc.,
- * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
- */
+* You should have received a copy of the GNU General Public License along
+* with this program; if not, write to the Free Software Foundation, Inc.,
+* 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
 
 /* Most of the UI code was taken from open-dialog.c and files-list.c
  * in Transmission, adapted to fit in with different torrent file parser
@@ -43,6 +43,7 @@
 #include "trg-file-parser.h"
 #include "trg-files-model-common.h"
 #include "trg-files-tree-view-common.h"
+#include "trg-labels.h"
 #include "trg-main-window.h"
 #include "trg-prefs.h"
 #include "trg-torrent-add-dialog.h"
@@ -83,6 +84,7 @@ struct _TrgTorrentAddDialogPrivate {
     GtkTreeStore *store;
     GtkWidget *paused_check;
     GtkWidget *delete_check;
+    TrgLabelsBox *labels_box;
     guint n_files;
 };
 
@@ -146,6 +148,8 @@ static void trg_torrent_add_response_cb(GtkDialog *dlg, gint res_id, gpointer da
 {
     TrgTorrentAddDialogPrivate *priv = TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(dlg);
 
+    TrgLabelsBox *labels_box = priv->labels_box;
+
     guint flags = 0x00;
     if (gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(priv->paused_check)))
         flags |= TORRENT_ADD_FLAG_PAUSED;
@@ -153,6 +157,11 @@ static void trg_torrent_add_response_cb(GtkDialog *dlg, gint res_id, gpointer da
         flags |= TORRENT_ADD_FLAG_DELETE;
 
     if (res_id == GTK_RESPONSE_ACCEPT) {
+
+        /* check that labels are valid */
+        if (!trg_labels_box_is_valid(labels_box))
+            return;
+
         gint priority = gtk_combo_box_get_active(GTK_COMBO_BOX(priv->priority_combo)) - 1;
         gchar *dir = trg_destination_combo_get_dir(TRG_DESTINATION_COMBO(priv->dest_combo));
         trg_upload *upload;
@@ -170,6 +179,7 @@ static void trg_torrent_add_response_cb(GtkDialog *dlg, gint res_id, gpointer da
         upload->priority = priority;
         upload->flags = flags;
         upload->extra_args = TRUE;
+        upload->labels = trg_labels_box_get_labels(labels_box);
 
         upload->n_files = priv->n_files;
         upload->file_priorities = g_new0(gint, priv->n_files);
@@ -626,6 +636,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type, guint n_construct
 
     priv->dest_combo = trg_destination_combo_new(priv->client, TRG_PREFS_KEY_LAST_ADD_DESTINATION);
 
+    priv->labels_box = TRG_LABELS_BOX(trg_labels_box_new());
+
     hig_workarea_add_row(t, &row, _("_Destination folder:"), priv->dest_combo, NULL);
 
     gtk_widget_set_size_request(priv->file_list, 466u, 300u);
@@ -637,6 +649,8 @@ static GObject *trg_torrent_add_dialog_constructor(GType type, guint n_construct
     hig_workarea_add_row(t, &row, _("Apply to all:"), applyall_combo, NULL);
 
     hig_workarea_add_row(t, &row, _("Torrent _priority:"), priv->priority_combo, NULL);
+
+    hig_workarea_add_row(t, &row, _("Labels:"), GTK_WIDGET(priv->labels_box), NULL);
 
     hig_workarea_add_wide_control(t, &row, priv->paused_check);
     hig_workarea_add_wide_control(t, &row, priv->delete_check);
