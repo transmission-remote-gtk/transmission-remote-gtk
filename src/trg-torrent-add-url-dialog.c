@@ -111,6 +111,16 @@ static void url_entry_activate(GtkWidget * w, gpointer data)
     gtk_dialog_response(GTK_DIALOG(data), GTK_RESPONSE_ACCEPT);
 }
 
+static void clipboard_text_received(GtkClipboard *w, const char *text, void *text_widget)
+{
+    if (text && g_regex_match_simple("^(https?|magnet):", text, 0, 0)) {
+        GtkEntry *e = GTK_ENTRY(text_widget);
+        if (g_strcmp0("", gtk_entry_get_text(e)) == 0) {
+            gtk_entry_set_text(e, text);
+        }
+    }
+}
+
 static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
 {
     TrgTorrentAddUrlDialogPrivate *priv =
@@ -125,6 +135,8 @@ static void trg_torrent_add_url_dialog_init(TrgTorrentAddUrlDialog * self)
     w = priv->urlEntry = gtk_entry_new();
     g_signal_connect(w, "changed", G_CALLBACK(url_entry_changed), self);
     g_signal_connect(w, "activate", G_CALLBACK(url_entry_activate), self);
+    GtkClipboard *cb = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+    gtk_clipboard_request_text(cb, clipboard_text_received, w);
 
     hig_workarea_add_row(t, &row, _("URL:"), w, NULL);
 
