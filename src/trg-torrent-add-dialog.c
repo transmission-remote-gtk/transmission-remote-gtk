@@ -642,36 +642,28 @@ static GtkWidget
                                                  dialog)
 {
     GtkListStore *model =
-        gtk_list_store_new(4, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_UINT,
-                           G_TYPE_INT);
+        gtk_list_store_new(3, G_TYPE_STRING, G_TYPE_UINT, G_TYPE_INT);
     GtkWidget *combo = gtk_combo_box_new();
     GtkTreeIter iter;
     GtkCellRenderer *renderer;
 
     gtk_list_store_append(model, &iter);
-    gtk_list_store_set(model, &iter, 1, _("High Priority"), 2, FC_PRIORITY,
-                       3, TR_PRI_HIGH, -1);
+    gtk_list_store_set(model, &iter, 0, _("High Priority"), 1, FC_PRIORITY,
+                       2, TR_PRI_HIGH, -1);
     gtk_list_store_append(model, &iter);
-    gtk_list_store_set(model, &iter, 1, _("Normal Priority"), 2,
-                       FC_PRIORITY, 3, TR_PRI_NORMAL, -1);
+    gtk_list_store_set(model, &iter, 0, _("Normal Priority"), 1, FC_PRIORITY,
+                       2, TR_PRI_NORMAL, -1);
     gtk_list_store_append(model, &iter);
-    gtk_list_store_set(model, &iter, 1, _("Low Priority"), 2, FC_PRIORITY,
-                       3, TR_PRI_LOW, -1);
+    gtk_list_store_set(model, &iter, 0, _("Low Priority"), 1, FC_PRIORITY,
+                       2, TR_PRI_LOW, -1);
     gtk_list_store_append(model, &iter);
-    gtk_list_store_set(model, &iter, 0, _("_Apply"), 1, _("Download"),
-                       2, FC_ENABLED, 3, TRUE, -1);
+    gtk_list_store_set(model, &iter, 0, _("Download"), 1, FC_ENABLED, 2, TRUE, -1);
     gtk_list_store_append(model, &iter);
-    gtk_list_store_set(model, &iter, 0, _("_Cancel"), 1, _("Skip"), 2,
-                       FC_ENABLED, 3, FALSE, -1);
+    gtk_list_store_set(model, &iter, 0, _("Skip"), 1, FC_ENABLED, 2, FALSE, -1);
 
-    renderer = gtk_cell_renderer_pixbuf_new();
-    gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
-    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer,
-                                  "icon-name", 0);
     renderer = gtk_cell_renderer_text_new();
     gtk_cell_layout_pack_start(GTK_CELL_LAYOUT(combo), renderer, FALSE);
-    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer, "text",
-                                  1);
+    gtk_cell_layout_add_attribute(GTK_CELL_LAYOUT(combo), renderer, "text", 0);
 
     gtk_combo_box_set_model(GTK_COMBO_BOX(combo), GTK_TREE_MODEL(model));
     g_signal_connect(combo, "changed",
