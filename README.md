@@ -12,7 +12,7 @@ transmission-remote-gtk:
 
  - gtk >= 3.22
  - glib >= 2.56 (including gio and gthread)
- - json-glib >= 0.8
+ - json-glib >= 1.2.8
  - libcurl
  - GNU gettext
 

@@ -38,7 +38,7 @@ add_project_arguments(glib_min_def, glib_max_def, language: 'c')
 gtk_dep     = dependency('gtk+-3.0', version: '>= 3.22')
 gio_dep     = dependency('gio-2.0', version: glib_version_str)
 glib_dep    = dependency('glib-2.0', version: glib_version_str)
-json_dep    = dependency('json-glib-1.0', version: '>= 0.8')
+json_dep    = dependency('json-glib-1.0', version: '>= 1.2.8')
 libcurl_dep = dependency('libcurl')
 gthread_dep = dependency('gthread-2.0', version: glib_version_str)
 
