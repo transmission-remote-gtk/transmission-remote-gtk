@@ -80,3 +80,14 @@ are also available to download.
 transmission-remote-gtk is released under GNU GPLv2.
 See the [COPYING](./COPYING) file for details.
 
+## CONTRIBUTING
+
+This project is under active development, and help is always appreciated regardless of skill level. Current
+project goals and refactors are being tracked in [the Wiki](https://github.com/transmission-remote-gtk/transmission-remote-gtk/wiki/TODOs).
+Take a look if you're interested in helping. Other PRs are also welcome!
+
+## CONTACT INFO
+
+Development happens on github (this repository). Issues and pull requests should be submitted here. If
+you would like to discuss development or ask general questions about the project, you can try `#transmission-remote-gtk`
+on [irc.libera.chat](ircs://irc.libera.chat:6697).
