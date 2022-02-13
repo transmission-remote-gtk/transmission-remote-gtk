@@ -595,7 +595,7 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
 {
     TrgPreferencesDialogPrivate *priv =
         TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
-    GtkWidget *t;
+    GtkWidget *t, *l;
     TrgPersistentTreeView *ptv;
     GtkListStore *model;
     trg_pref_widget_desc *wd;
@@ -622,6 +622,15 @@ static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog * dlg)
     priv->widgets = g_list_append(priv->widgets, wd);
 
     hig_workarea_add_wide_tall_control(t, &row, GTK_WIDGET(ptv));
+
+    l = gtk_label_new(NULL);
+    gtk_label_set_markup(GTK_LABEL(l),
+            _("Documentation for commands can be found "
+              "<a href=\"https://github.com/transmission-remote-gtk/"
+              "transmission-remote-gtk/wiki/Local-Command-usage\">"
+              "here</a>"));
+
+    hig_workarea_add_label_w(t, row, l);
 
     return t;
 }
