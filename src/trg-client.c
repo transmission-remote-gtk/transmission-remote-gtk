@@ -30,6 +30,10 @@
 #include <proxy.h>
 #endif
 
+#if HAVE_MICRODNS
+#include <microdns/microdns.h>
+#endif
+
 #include <curl/curl.h>
 #include <curl/easy.h>
 
@@ -74,6 +78,7 @@ struct _TrgClientPrivate {
     gboolean ssl_validate;
     gdouble version;
     char *url;
+    char *local_hosts;
     char *username;
     char *password;
     char *proxy;
@@ -130,6 +135,7 @@ static void trg_client_finalize(GObject * object)
     g_clear_pointer(&priv->session_id, g_free);
     g_clear_pointer(&priv->session, json_object_unref);
     g_clear_pointer(&priv->url, g_free);
+    g_clear_pointer(&priv->local_hosts, g_free);
     g_clear_pointer(&priv->username, g_free);
     g_clear_pointer(&priv->password, g_free);
     g_list_free_full(priv->headers, g_free);
@@ -271,6 +277,134 @@ static GList *trg_client_headers_array_to_list(JsonArray *array)
     return output_headers;
 }
 
+#if HAVE_MICRODNS
+
+#define LOOKUP_TIMEOUT_SECONDS 1
+typedef struct {
+    char *host;
+    GTimer *timer;
+    GHashTable *results;
+} mDNSLookupData;
+
+static mDNSLookupData *
+mdns_lookup_data_new(const char *host)
+{
+    mDNSLookupData *data;
+
+    data = g_new0(mDNSLookupData, 1);
+    data->host = g_strdup(host);
+    data->results = g_hash_table_new_full(g_str_hash, g_str_equal,
+                                          g_free, NULL);
+    data->timer = g_timer_new();
+    return data;
+}
+
+static void
+mdns_lookup_data_free(mDNSLookupData *data)
+{
+    if (!data)
+        return;
+    g_clear_pointer(&data->host, g_free);
+    g_clear_pointer(&data->timer, g_timer_destroy);
+    g_clear_pointer(&data->results, g_hash_table_destroy);
+    g_free (data);
+}
+
+static bool
+add_results(GString *result, mDNSLookupData *data, guint num_results)
+{
+    GList *keys, *l;
+
+    keys = g_hash_table_get_keys(data->results);
+    if (!keys)
+        return num_results;
+    for (l = keys; l != NULL; l = l->next) {
+        const char *ip = l->data;
+
+        if (num_results > 0)
+            g_string_append_c(result, ',');
+        g_string_append(result, ip);
+        num_results++;
+    }
+    g_list_free(keys);
+    return num_results;
+}
+
+static bool
+lookup_stop_cb(void *cookie)
+{
+    mDNSLookupData *data = cookie;
+
+    return (g_hash_table_size(data->results) > 0 ||
+            g_timer_elapsed(data->timer, NULL) > (double) LOOKUP_TIMEOUT_SECONDS);
+}
+
+static void
+lookup_listen_cb(void *cookie, int status, const struct rr_entry *entries)
+{
+    struct rr_entry *entry;
+    mDNSLookupData *data = cookie;
+
+    if (status < 0)
+            return;
+    entry = (struct rr_entry *) entries;
+    while (entry) {
+        if (entry->type == RR_A)
+            g_hash_table_insert(data->results, g_strdup(entry->data.A.addr_str), GINT_TO_POINTER(1));
+        else if (entry->type == RR_AAAA)
+            g_hash_table_insert(data->results, g_strdup(entry->data.AAAA.addr_str), GINT_TO_POINTER(1));
+        entry = entry->next;
+    }
+}
+
+static char *
+get_hosts_for_local(const char *host, int port)
+{
+    struct mdns_ctx *ctx;
+    const char *names[] = { NULL };
+    mDNSLookupData *data = NULL;
+    GString *result = NULL;
+    guint num_results = 0;
+    int r;
+
+    if (!g_str_has_suffix(host, ".local") &&
+        !g_str_has_suffix(host, ".local."))
+        return NULL;
+
+    if ((r = mdns_init(&ctx, NULL, MDNS_PORT)) < 0)
+        goto cleanup;
+
+    result = g_string_new(NULL);
+    g_string_append_printf(result, "+%s:%d:", host, port);
+
+    names[0] = host;
+    /* IPv4 */
+    data = mdns_lookup_data_new(host);
+    if ((r = mdns_listen(ctx, names, G_N_ELEMENTS(names), RR_A, LOOKUP_TIMEOUT_SECONDS, lookup_stop_cb,
+                     lookup_listen_cb, data)) < 0)
+        goto cleanup;
+    num_results = add_results(result, data, num_results);
+    mdns_lookup_data_free(data);
+
+    /* IPv6 */
+    data = mdns_lookup_data_new(host);
+    if ((r = mdns_listen(ctx, names, G_N_ELEMENTS(names), RR_AAAA, LOOKUP_TIMEOUT_SECONDS, lookup_stop_cb,
+                     lookup_listen_cb, data)) < 0)
+        goto cleanup;
+    num_results = add_results(result, data, num_results);
+
+cleanup:
+    if (num_results == 0 &&
+        result != NULL) {
+        g_string_free(result, TRUE);
+        result = NULL;
+    }
+    g_clear_pointer(&data, mdns_lookup_data_free);
+    mdns_destroy(ctx);
+    return result ? g_string_free(result, FALSE) : NULL;
+}
+#endif /* HAVE_MICRODNS */
+
 int trg_client_populate_with_settings(TrgClient * tc)
 {
     TrgClientPrivate *priv = tc->priv;
@@ -287,6 +421,7 @@ int trg_client_populate_with_settings(TrgClient * tc)
 
     trg_prefs_set_connection(prefs, trg_prefs_get_profile(prefs));
 
+    g_clear_pointer(&priv->local_hosts, g_free);
     g_clear_pointer(&priv->url, g_free);
     g_clear_pointer(&priv->username, g_free);
     g_clear_pointer(&priv->password, g_free);
@@ -311,6 +446,11 @@ int trg_client_populate_with_settings(TrgClient * tc)
                                    TRG_PREFS_CONNECTION);
     priv->ssl_validate = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL_VALIDATE,
                                    TRG_PREFS_CONNECTION);
+
+#if HAVE_MICRODNS
+    g_clear_pointer(&priv->local_hosts, g_free);
+    priv->local_hosts = get_hosts_for_local(host, port);
+#endif
 
     priv->url = g_strdup_printf("%s://%s:%d%s",
                                 priv->ssl ? HTTPS_URI_PREFIX :
@@ -567,6 +707,7 @@ static void trg_tls_free(gpointer data)
     trg_tls *tls = (trg_tls *)data;
     if (tls) {
         curl_easy_cleanup(tls->curl);
+        curl_slist_free_all(tls->hosts);
     }
 }
 
@@ -615,6 +756,13 @@ static CURL* get_curl(TrgClient *tc, guint http_class)
                 curl_easy_setopt(curl, CURLOPT_PASSWORD, password);
             }
             curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
+
+#if HAVE_MICRODNS
+            if (priv->local_hosts) {
+                tls->hosts = curl_slist_append(NULL, priv->local_hosts);
+                curl_easy_setopt(curl, CURLOPT_RESOLVE, tls->hosts);
+            }
+#endif
         }
 
         if (trg_client_get_ssl(tc) && !trg_client_get_ssl_validate(tc)) {

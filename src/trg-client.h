@@ -112,6 +112,7 @@ typedef struct {
     int serial;
     guint client_class;
     CURL *curl;
+    struct curl_slist *hosts;
 } trg_tls;
 
 /* stuff that used to be in http.h */
