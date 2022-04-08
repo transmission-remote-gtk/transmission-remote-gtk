@@ -22,6 +22,18 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.5.0" date="2022-04-08">
+      <description>
+        <p>Minor release for user facing functionality, but a lot of behind the scene changes</p>
+        <ul>
+          <li>Allow custom headers to be sent to the daemon</li>
+          <li>Uses native glib notifications and not libnotify</li>
+          <li>Fixes to windows support</li>
+          <li>Automatically paste magnet links from clipboard</li>
+          <li>Various other fixes to GTK3 support and the build system behind the scenes</li>
+      </ul>
+      </description>
+    </release>
     <release version="1.4.2" date="2021-10-17">
       <description>
         <p>Minor release, but quite a few bugfixes and enhancements from 2 and a half years</p>
