@@ -74,7 +74,7 @@ if pod2man.found()
                                      '--center="Transmission Remote GTK"',
                                      '@INPUT@', '@OUTPUT@'],
                            install: true,
-                           install_dir: get_option('mandir'))
+                           install_dir: get_option('mandir') / 'man1')
 endif
 
 # gresources.xml
