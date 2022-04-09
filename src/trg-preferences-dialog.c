@@ -772,7 +772,7 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog * dlg)
     g_signal_connect(G_OBJECT(tray), "toggled", G_CALLBACK(toggle_tray_icon),
                      priv->win);
 
-    if (!HAVE_LIBAPPINDICATOR) {
+    if (!(HAVE_LIBAPPINDICATOR || HAVE_LIBAYATANA_APPINDICATOR)) {
         gtk_widget_set_sensitive(tray, FALSE);
         gtk_widget_set_tooltip_text(tray, _("System tray not supported."));
     }

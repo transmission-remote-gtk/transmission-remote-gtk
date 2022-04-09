@@ -49,8 +49,9 @@ rss_dep             = dependency('mrss', version: '>=0.18', required: get_option
 geoip_dep           = dependency('geoip', required: get_option('geoip'))
 libproxy_dep        = dependency('libproxy-1.0', required: get_option('libproxy'))
 libappindicator_dep = dependency('appindicator3-0.1', required: get_option('libappindicator'))
+libayatana_appindicator_dep = dependency('ayatana-appindicator3-0.1', required: get_option('libayatana-appindicator'))
 
-trg_deps += [geoip_dep, libproxy_dep, libappindicator_dep]
+trg_deps += [geoip_dep, libproxy_dep, libappindicator_dep, libayatana_appindicator_dep]
 
 # compiler
 cc = meson.get_compiler('c')
@@ -90,6 +91,7 @@ conf_data.set10('HAVE_GEOIP', geoip_dep.found())
 conf_data.set10('HAVE_LIBPROXY', libproxy_dep.found())
 conf_data.set10('ENABLE_NL_LANGINFO', nl_langinfo)
 conf_data.set10('HAVE_LIBAPPINDICATOR', libappindicator_dep.found())
+conf_data.set10('HAVE_LIBAYATANA_APPINDICATOR', libayatana_appindicator_dep.found())
 
 # compiler/linker flags
 flags = ['-funsigned-char',

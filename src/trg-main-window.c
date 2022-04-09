@@ -34,6 +34,8 @@
 #include <curl/curl.h>
 #if HAVE_LIBAPPINDICATOR
 #include <libappindicator/app-indicator.h>
+#elif HAVE_LIBAYATANA_APPINDICATOR
+#include <libayatana-appindicator/app-indicator.h>
 #endif
 
 #include "trg-client.h"
@@ -181,7 +183,7 @@ static GtkWidget *limit_menu_new(TrgMainWindow * win, gchar * title,
 static void trg_torrent_tv_view_menu(GtkWidget * treeview,
                                      GdkEventButton * event,
                                      TrgMainWindow * win);
-#if HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR || HAVE_LIBAYATANA_APPINDICATOR
 static GtkMenu *trg_tray_view_menu(TrgMainWindow * win, const gchar * msg);
 #endif
 static gboolean torrent_tv_button_pressed_cb(GtkWidget * treeview,
@@ -207,7 +209,7 @@ typedef struct
     TrgStatusBar *statusBar;
     GtkWidget *iconStatusItem, *iconDownloadingItem, *iconSeedingItem,
         *iconSepItem;
-#if HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR || HAVE_LIBAYATANA_APPINDICATOR
     AppIndicator *appIndicator;
 #endif
     TrgStateSelector *stateSelector;
@@ -1163,7 +1165,7 @@ TRANSMISSION_MIN_SUPPORTED, version);
 static void
 connchange_whatever_tray(TrgMainWindow * win, gboolean connected)
 {
-#if HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR || HAVE_LIBAYATANA_APPINDICATOR
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
     TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     gchar *display = connected ?
@@ -1184,7 +1186,7 @@ static void
 update_whatever_tray(TrgMainWindow * win,
                      trg_torrent_model_update_stats * stats)
 {
-#if HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR || HAVE_LIBAYATANA_APPINDICATOR
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (!priv->appIndicator)
@@ -2243,7 +2245,7 @@ trg_torrent_tv_view_menu(GtkWidget * treeview,
     gtk_menu_popup_at_pointer(GTK_MENU(menu), (GdkEvent *)event);
 }
 
-#if HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR || HAVE_LIBAYATANA_APPINDICATOR
 static GtkMenu *trg_tray_view_menu(TrgMainWindow * win, const gchar * msg)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
@@ -2386,7 +2388,7 @@ static void trg_main_window_set_hidden_to_tray(TrgMainWindow * win,
 
 void trg_main_window_remove_tray(TrgMainWindow * win)
 {
-#if HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR || HAVE_LIBAYATANA_APPINDICATOR
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (priv->appIndicator)
@@ -2429,7 +2431,7 @@ void trg_main_window_remove_graph(TrgMainWindow * win)
 
 void trg_main_window_add_tray(TrgMainWindow * win)
 {
-#if HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAPPINDICATOR || HAVE_LIBAYATANA_APPINDICATOR
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (!priv->appIndicator) {
