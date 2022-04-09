@@ -32,7 +32,7 @@ endif
 appdata_file = i18n.merge_file(input: '@0@.appdata.xml.in'.format(app_id),
                                output: '@0@.appdata.xml'.format(app_id),
                                install: true,
-                               install_dir: datadir / 'metadata',
+                               install_dir: datadir / 'metainfo',
                                po_dir: po_dir)
 
 appstream_util = find_program('appstream-util', required: false)
