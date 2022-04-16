@@ -75,6 +75,15 @@ $ meson compile -C "$builddir"
 [Tarball releases](https://github.com/transmission-remote-gtk/transmission-remote-gtk/releases)
 are also available to download.
 
+
+# INSTALLING
+
+Installing transmisison-remote-gtk can be done in a few ways besides building from source. There are many distributions that package transmission-remote-gtk for example. However, there is a cross-distribution Flatpak available that is always up to date.
+
+<a href='https://flathub.org/apps/details/io.github.TransmissionRemoteGtk'><img width='240' alt='Download on Flathub' src='https://flathub.org/assets/badges/flathub-badge-en.png'/></a>
+
+**NOTE**: Only the **latest release** is supported for issues; if your installed version is older you should try the Flatpak or report bugs to your distribution.
+
 ## LICENSE
 
 transmission-remote-gtk is released under GNU GPLv2.
