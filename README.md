@@ -29,7 +29,7 @@ The following packages are optional dependencies:
  - libmrss >= 0.18, RSS feed support
  - libproxy, HTTP proxy support
  - libgeoip, country of origin of peers
- - libappindicator, Application tray support
+ - libappindicator or libayatana-appindicator3, Application tray support
 
 If these libraries are installed at build time they will be automatically
 detected and linked for additional functionality.

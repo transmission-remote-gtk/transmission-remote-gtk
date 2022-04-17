@@ -32,7 +32,9 @@
 #include <gdk/gdkkeysyms.h>
 #include <gdk/gdkkeysyms-compat.h>
 #include <curl/curl.h>
-#if HAVE_LIBAPPINDICATOR
+#if HAVE_LIBAYATANA_APPINDICATOR
+#include <libayatana-appindicator/app-indicator.h>
+#elif HAVE_LIBAPPINDICATOR
 #include <libappindicator/app-indicator.h>
 #endif
 

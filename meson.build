@@ -1,7 +1,7 @@
 project('transmission-remote-gtk', 'c',
         license: 'GPL2+',
         version: '1.5.1',
-        meson_version: '>= 0.59.0',
+        meson_version: '>= 0.60.0',
         default_options: ['b_pie=true',
                           'c_std=gnu99',
                           'warning_level=2',
@@ -48,7 +48,7 @@ trg_deps = [gtk_dep, glib_dep, gio_dep, json_dep, libcurl_dep, gthread_dep]
 rss_dep             = dependency('mrss', version: '>=0.18', required: get_option('mrss'))
 geoip_dep           = dependency('geoip', required: get_option('geoip'))
 libproxy_dep        = dependency('libproxy-1.0', required: get_option('libproxy'))
-libappindicator_dep = dependency('appindicator3-0.1', required: get_option('libappindicator'))
+libappindicator_dep = dependency('libayatana-appindicator', 'appindicator3-0.1', required: get_option('libappindicator'))
 
 trg_deps += [geoip_dep, libproxy_dep, libappindicator_dep]
 
@@ -89,7 +89,10 @@ conf_data.set10('HAVE_RSS', rss_dep.found())
 conf_data.set10('HAVE_GEOIP', geoip_dep.found())
 conf_data.set10('HAVE_LIBPROXY', libproxy_dep.found())
 conf_data.set10('ENABLE_NL_LANGINFO', nl_langinfo)
+
+libappindicator_name = libappindicator_dep.get_variable('Name')
 conf_data.set10('HAVE_LIBAPPINDICATOR', libappindicator_dep.found())
+conf_data.set10('HAVE_LIBAYATANA_APPINDICATOR', libappindicator_dep.found() and libappindicator_name == 'ayatana-appindicator-0.1')
 
 # compiler/linker flags
 flags = ['-funsigned-char',
