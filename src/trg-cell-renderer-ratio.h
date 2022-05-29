@@ -25,17 +25,17 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_CELL_RENDERER_RATIO trg_cell_renderer_ratio_get_type()
-#define TRG_CELL_RENDERER_RATIO(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_CELL_RENDERER_RATIO, TrgCellRendererRatio))
-#define TRG_CELL_RENDERER_RATIO_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_CELL_RENDERER_RATIO, TrgCellRendererRatioClass))
-#define TRG_IS_CELL_RENDERER_RATIO(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_CELL_RENDERER_RATIO))
-#define TRG_IS_CELL_RENDERER_RATIO_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_CELL_RENDERER_RATIO))
-#define TRG_CELL_RENDERER_RATIO_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_CELL_RENDERER_RATIO, TrgCellRendererRatioClass))
-    typedef struct {
+#define TRG_CELL_RENDERER_RATIO(obj)                                                               \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_CELL_RENDERER_RATIO, TrgCellRendererRatio))
+#define TRG_CELL_RENDERER_RATIO_CLASS(klass)                                                       \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_CELL_RENDERER_RATIO, TrgCellRendererRatioClass))
+#define TRG_IS_CELL_RENDERER_RATIO(obj)                                                            \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_CELL_RENDERER_RATIO))
+#define TRG_IS_CELL_RENDERER_RATIO_CLASS(klass)                                                    \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_CELL_RENDERER_RATIO))
+#define TRG_CELL_RENDERER_RATIO_GET_CLASS(obj)                                                     \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_CELL_RENDERER_RATIO, TrgCellRendererRatioClass))
+typedef struct {
     GtkCellRendererText parent;
 } TrgCellRendererRatio;
 
@@ -48,4 +48,4 @@ GType trg_cell_renderer_ratio_get_type(void);
 GtkCellRenderer *trg_cell_renderer_ratio_new(void);
 
 G_END_DECLS
-#endif                          /* TRG_CELL_RENDERER_RATIO_H_ */
+#endif /* TRG_CELL_RENDERER_RATIO_H_ */

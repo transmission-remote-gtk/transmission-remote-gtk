@@ -29,17 +29,15 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_STATS_DIALOG trg_stats_dialog_get_type()
-#define TRG_STATS_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_STATS_DIALOG, TrgStatsDialog))
-#define TRG_STATS_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_STATS_DIALOG, TrgStatsDialogClass))
-#define TRG_IS_STATS_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_STATS_DIALOG))
-#define TRG_IS_STATS_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_STATS_DIALOG))
-#define TRG_STATS_DIALOG_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_STATS_DIALOG, TrgStatsDialogClass))
-    typedef struct {
+#define TRG_STATS_DIALOG(obj)                                                                      \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_STATS_DIALOG, TrgStatsDialog))
+#define TRG_STATS_DIALOG_CLASS(klass)                                                              \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_STATS_DIALOG, TrgStatsDialogClass))
+#define TRG_IS_STATS_DIALOG(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_STATS_DIALOG))
+#define TRG_IS_STATS_DIALOG_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_STATS_DIALOG))
+#define TRG_STATS_DIALOG_GET_CLASS(obj)                                                            \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_STATS_DIALOG, TrgStatsDialogClass))
+typedef struct {
     GtkDialog parent;
 } TrgStatsDialog;
 
@@ -49,8 +47,7 @@ typedef struct {
 
 GType trg_stats_dialog_get_type(void);
 
-TrgStatsDialog *trg_stats_dialog_get_instance(TrgMainWindow * parent,
-                                              TrgClient * client);
+TrgStatsDialog *trg_stats_dialog_get_instance(TrgMainWindow *parent, TrgClient *client);
 
 G_END_DECLS
-#endif                          /* TRG_STATS_DIALOG_H_ */
+#endif /* TRG_STATS_DIALOG_H_ */

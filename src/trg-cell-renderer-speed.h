@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #ifndef TRG_CELL_RENDERER_SPEED_H_
 #define TRG_CELL_RENDERER_SPEED_H_
 
@@ -26,17 +25,17 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_CELL_RENDERER_SPEED trg_cell_renderer_speed_get_type()
-#define TRG_CELL_RENDERER_SPEED(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_CELL_RENDERER_SPEED, TrgCellRendererSpeed))
-#define TRG_CELL_RENDERER_SPEED_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_CELL_RENDERER_SPEED, TrgCellRendererSpeedClass))
-#define TRG_IS_CELL_RENDERER_SPEED(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_CELL_RENDERER_SPEED))
-#define TRG_IS_CELL_RENDERER_SPEED_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_CELL_RENDERER_SPEED))
-#define TRG_CELL_RENDERER_SPEED_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_CELL_RENDERER_SPEED, TrgCellRendererSpeedClass))
-    typedef struct {
+#define TRG_CELL_RENDERER_SPEED(obj)                                                               \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_CELL_RENDERER_SPEED, TrgCellRendererSpeed))
+#define TRG_CELL_RENDERER_SPEED_CLASS(klass)                                                       \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_CELL_RENDERER_SPEED, TrgCellRendererSpeedClass))
+#define TRG_IS_CELL_RENDERER_SPEED(obj)                                                            \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_CELL_RENDERER_SPEED))
+#define TRG_IS_CELL_RENDERER_SPEED_CLASS(klass)                                                    \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_CELL_RENDERER_SPEED))
+#define TRG_CELL_RENDERER_SPEED_GET_CLASS(obj)                                                     \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_CELL_RENDERER_SPEED, TrgCellRendererSpeedClass))
+typedef struct {
     GtkCellRendererText parent;
 } TrgCellRendererSpeed;
 
@@ -49,4 +48,4 @@ GType trg_cell_renderer_speed_get_type(void);
 GtkCellRenderer *trg_cell_renderer_speed_new(void);
 
 G_END_DECLS
-#endif                          /* TRG_CELL_RENDERER_SPEED_H_ */
+#endif /* TRG_CELL_RENDERER_SPEED_H_ */

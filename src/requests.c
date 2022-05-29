@@ -21,23 +21,23 @@
 
 #include <stdio.h>
 
-#include <glib/gstdio.h>
 #include <glib-object.h>
+#include <glib/gstdio.h>
 #include <json-glib/json-glib.h>
 
-#include "protocol-constants.h"
 #include "json.h"
+#include "protocol-constants.h"
+#include "requests.h"
 #include "torrent.h"
 #include "util.h"
-#include "requests.h"
 
 /* A bunch of functions for creating the various requests, in the form of a
  * JsonNode ready for dispatch.
  */
 
-static JsonNode *base_request(gchar * method);
+static JsonNode *base_request(gchar *method);
 
-JsonNode *generic_request(gchar * method, JsonArray * ids)
+JsonNode *generic_request(gchar *method, JsonArray *ids)
 {
     JsonNode *root = base_request(method);
 
@@ -70,8 +70,7 @@ JsonNode *session_get(void)
     return base_request(METHOD_SESSION_GET);
 }
 
-JsonNode *torrent_set_location(JsonArray * array, gchar * location,
-                               gboolean move)
+JsonNode *torrent_set_location(JsonArray *array, gchar *location, gboolean move)
 {
     JsonNode *req = generic_request(METHOD_TORRENT_SET_LOCATION, array);
     JsonObject *args = node_get_arguments(req);
@@ -80,8 +79,7 @@ JsonNode *torrent_set_location(JsonArray * array, gchar * location,
     return req;
 }
 
-JsonNode *torrent_rename_path(JsonArray * array, const gchar * path,
-                              const gchar * name)
+JsonNode *torrent_rename_path(JsonArray *array, const gchar *path, const gchar *name)
 {
     JsonNode *req = generic_request(METHOD_TORRENT_RENAME_PATH, array);
     JsonObject *args = node_get_arguments(req);
@@ -90,47 +88,47 @@ JsonNode *torrent_rename_path(JsonArray * array, const gchar * path,
     return req;
 }
 
-JsonNode *torrent_start(JsonArray * array)
+JsonNode *torrent_start(JsonArray *array)
 {
     return generic_request(METHOD_TORRENT_START, array);
 }
 
-JsonNode *torrent_pause(JsonArray * array)
+JsonNode *torrent_pause(JsonArray *array)
 {
     return generic_request(METHOD_TORRENT_STOP, array);
 }
 
-JsonNode *torrent_reannounce(JsonArray * array)
+JsonNode *torrent_reannounce(JsonArray *array)
 {
     return generic_request(METHOD_TORRENT_REANNOUNCE, array);
 }
 
-JsonNode *torrent_verify(JsonArray * array)
+JsonNode *torrent_verify(JsonArray *array)
 {
     return generic_request(METHOD_TORRENT_VERIFY, array);
 }
 
-JsonNode *torrent_queue_move_up(JsonArray * array)
+JsonNode *torrent_queue_move_up(JsonArray *array)
 {
     return generic_request(METHOD_QUEUE_MOVE_UP, array);
 }
 
-JsonNode *torrent_queue_move_down(JsonArray * array)
+JsonNode *torrent_queue_move_down(JsonArray *array)
 {
     return generic_request(METHOD_QUEUE_MOVE_DOWN, array);
 }
 
-JsonNode *torrent_start_now(JsonArray * array)
+JsonNode *torrent_start_now(JsonArray *array)
 {
     return generic_request(METHOD_TORRENT_START_NOW, array);
 }
 
-JsonNode *torrent_queue_move_bottom(JsonArray * array)
+JsonNode *torrent_queue_move_bottom(JsonArray *array)
 {
     return generic_request(METHOD_QUEUE_MOVE_BOTTOM, array);
 }
 
-JsonNode *torrent_queue_move_top(JsonArray * array)
+JsonNode *torrent_queue_move_top(JsonArray *array)
 {
     return generic_request(METHOD_QUEUE_MOVE_TOP, array);
 }
@@ -140,19 +138,18 @@ JsonNode *session_set(void)
     return generic_request(METHOD_SESSION_SET, NULL);
 }
 
-JsonNode *torrent_set(JsonArray * array)
+JsonNode *torrent_set(JsonArray *array)
 {
     return generic_request(METHOD_TORRENT_SET, array);
 }
 
-JsonNode *torrent_remove(JsonArray * array, gboolean removeData)
+JsonNode *torrent_remove(JsonArray *array, gboolean removeData)
 {
     JsonNode *root = base_request(METHOD_TORRENT_REMOVE);
     JsonObject *args = node_get_arguments(root);
 
     json_object_set_array_member(args, PARAM_IDS, array);
-    json_object_set_boolean_member(args, PARAM_DELETE_LOCAL_DATA,
-                                   removeData);
+    json_object_set_boolean_member(args, PARAM_DELETE_LOCAL_DATA, removeData);
 
     request_set_tag(root, TORRENT_GET_TAG_MODE_FULL);
 
@@ -166,8 +163,7 @@ JsonNode *torrent_get(gint64 id)
     JsonArray *fields = json_array_new();
 
     if (id == TORRENT_GET_TAG_MODE_UPDATE) {
-        json_object_set_string_member(args, PARAM_IDS,
-                                      FIELD_RECENTLY_ACTIVE);
+        json_object_set_string_member(args, PARAM_IDS, FIELD_RECENTLY_ACTIVE);
     } else if (id >= 0) {
         JsonArray *ids = json_array_new();
         json_array_add_int_element(ids, id);
@@ -230,7 +226,7 @@ JsonNode *torrent_get(gint64 id)
     return root;
 }
 
-JsonNode *torrent_add_url(const gchar * url, gboolean paused)
+JsonNode *torrent_add_url(const gchar *url, gboolean paused)
 {
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);
@@ -241,22 +237,21 @@ JsonNode *torrent_add_url(const gchar * url, gboolean paused)
     return root;
 }
 
-JsonNode *torrent_add_from_response(trg_response *response, gint flags) {
+JsonNode *torrent_add_from_response(trg_response *response, gint flags)
+{
     JsonNode *root = base_request(METHOD_TORRENT_ADD);
     JsonObject *args = node_get_arguments(root);
     gchar *encoded = g_base64_encode((guchar *)response->raw, response->size);
 
-    json_object_set_string_member(args, PARAM_METAINFO,
-                                  encoded);
+    json_object_set_string_member(args, PARAM_METAINFO, encoded);
     g_free(encoded);
 
-    json_object_set_boolean_member(args, PARAM_PAUSED,
-                                   (flags & TORRENT_ADD_FLAG_PAUSED));
+    json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED));
 
     return root;
 }
 
-JsonNode *torrent_add_from_file(gchar * target, gint flags)
+JsonNode *torrent_add_from_file(gchar *target, gint flags)
 {
     JsonNode *root;
     JsonObject *args;
@@ -277,8 +272,7 @@ JsonNode *torrent_add_from_file(gchar * target, gint flags)
     } else {
         encodedFile = trg_base64encode(target);
         if (encodedFile) {
-            json_object_set_string_member(args, PARAM_METAINFO,
-                                          encodedFile);
+            json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
             g_free(encodedFile);
         } else {
             g_error("unable to base64 encode file \"%s\".", target);
@@ -286,8 +280,7 @@ JsonNode *torrent_add_from_file(gchar * target, gint flags)
         }
     }
 
-    json_object_set_boolean_member(args, PARAM_PAUSED,
-                                   (flags & TORRENT_ADD_FLAG_PAUSED));
+    json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED));
 
     if ((flags & TORRENT_ADD_FLAG_DELETE))
         g_unlink(target);
@@ -295,7 +288,7 @@ JsonNode *torrent_add_from_file(gchar * target, gint flags)
     return root;
 }
 
-static JsonNode *base_request(gchar * method)
+static JsonNode *base_request(gchar *method)
 {
     JsonNode *root = json_node_new(JSON_NODE_OBJECT);
     JsonObject *object = json_object_new();
@@ -308,15 +301,14 @@ static JsonNode *base_request(gchar * method)
     return root;
 }
 
-void request_set_tag(JsonNode * req, gint64 tag)
+void request_set_tag(JsonNode *req, gint64 tag)
 {
     json_object_set_int_member(json_node_get_object(req), PARAM_TAG, tag);
 }
 
-void request_set_tag_from_ids(JsonNode * req, JsonArray * ids)
+void request_set_tag_from_ids(JsonNode *req, JsonArray *ids)
 {
-    gint64 id =
-        json_array_get_length(ids) == 1 ?
-        json_array_get_int_element(ids, 0) : TORRENT_GET_TAG_MODE_FULL;
+    gint64 id = json_array_get_length(ids) == 1 ? json_array_get_int_element(ids, 0)
+                                                : TORRENT_GET_TAG_MODE_FULL;
     request_set_tag(req, id);
 }

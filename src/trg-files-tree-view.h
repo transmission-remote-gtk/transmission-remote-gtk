@@ -22,22 +22,21 @@
 
 #include <glib-object.h>
 
-#include "trg-main-window.h"
 #include "trg-client.h"
 #include "trg-files-model.h"
+#include "trg-main-window.h"
 
 G_BEGIN_DECLS
 #define TRG_TYPE_FILES_TREE_VIEW trg_files_tree_view_get_type()
-#define TRG_FILES_TREE_VIEW(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_FILES_TREE_VIEW, TrgFilesTreeView))
-#define TRG_FILES_TREE_VIEW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_FILES_TREE_VIEW, TrgFilesTreeViewClass))
-#define TRG_IS_FILES_TREE_VIEW(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_FILES_TREE_VIEW))
-#define TRG_IS_FILES_TREE_VIEW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_FILES_TREE_VIEW))
-#define TRG_FILES_TREE_VIEW_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_FILES_TREE_VIEW, TrgFilesTreeViewClass))
+#define TRG_FILES_TREE_VIEW(obj)                                                                   \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_FILES_TREE_VIEW, TrgFilesTreeView))
+#define TRG_FILES_TREE_VIEW_CLASS(klass)                                                           \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_FILES_TREE_VIEW, TrgFilesTreeViewClass))
+#define TRG_IS_FILES_TREE_VIEW(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_FILES_TREE_VIEW))
+#define TRG_IS_FILES_TREE_VIEW_CLASS(klass)                                                        \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_FILES_TREE_VIEW))
+#define TRG_FILES_TREE_VIEW_GET_CLASS(obj)                                                         \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_FILES_TREE_VIEW, TrgFilesTreeViewClass))
 typedef struct {
     TrgTreeView parent;
 } TrgFilesTreeView;
@@ -55,24 +54,15 @@ GType trg_files_tree_view_get_type(void);
 
 gboolean on_files_update(gpointer data);
 
-TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel * model,
-                                          TrgMainWindow * win,
-                                          TrgClient * client,
-                                          const gchar * configId);
+TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel *model, TrgMainWindow *win,
+                                          TrgClient *client, const gchar *configId);
 
-void
-trg_files_tree_view_renderPriority(GtkTreeViewColumn *
-                                   column G_GNUC_UNUSED,
-                                   GtkCellRenderer * renderer,
-                                   GtkTreeModel * model,
-                                   GtkTreeIter * iter,
-                                   gpointer data G_GNUC_UNUSED);
-void trg_files_tree_view_renderDownload(GtkTreeViewColumn *
-                                        column G_GNUC_UNUSED,
-                                        GtkCellRenderer * renderer,
-                                        GtkTreeModel * model,
-                                        GtkTreeIter * iter,
-                                        gpointer data G_GNUC_UNUSED);
+void trg_files_tree_view_renderPriority(GtkTreeViewColumn *column G_GNUC_UNUSED,
+                                        GtkCellRenderer *renderer, GtkTreeModel *model,
+                                        GtkTreeIter *iter, gpointer data G_GNUC_UNUSED);
+void trg_files_tree_view_renderDownload(GtkTreeViewColumn *column G_GNUC_UNUSED,
+                                        GtkCellRenderer *renderer, GtkTreeModel *model,
+                                        GtkTreeIter *iter, gpointer data G_GNUC_UNUSED);
 
 G_END_DECLS
-#endif                          /* TRG_FILES_TREE_VIEW_H_ */
+#endif /* TRG_FILES_TREE_VIEW_H_ */

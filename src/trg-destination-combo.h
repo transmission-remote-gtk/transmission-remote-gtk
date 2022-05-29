@@ -28,13 +28,13 @@
 G_BEGIN_DECLS
 
 #define TRG_TYPE_DESTINATION_COMBO (trg_destination_combo_get_type())
-G_DECLARE_FINAL_TYPE(TrgDestinationCombo, trg_destination_combo, TRG, DESTINATION_COMBO, GtkComboBox)
+G_DECLARE_FINAL_TYPE(TrgDestinationCombo, trg_destination_combo, TRG, DESTINATION_COMBO,
+                     GtkComboBox)
 
-GtkWidget *trg_destination_combo_new(TrgClient * client,
-                                     const gchar * lastSelectionKey);
-gchar *trg_destination_combo_get_dir(TrgDestinationCombo * combo);
-gboolean trg_destination_combo_has_text(TrgDestinationCombo * combo);
-void trg_destination_combo_save_selection(TrgDestinationCombo * combo_box);
+GtkWidget *trg_destination_combo_new(TrgClient *client, const gchar *lastSelectionKey);
+gchar *trg_destination_combo_get_dir(TrgDestinationCombo *combo);
+gboolean trg_destination_combo_has_text(TrgDestinationCombo *combo);
+void trg_destination_combo_save_selection(TrgDestinationCombo *combo_box);
 
 G_END_DECLS
-#endif                          /* TRG_DESTINATION_COMBO_H_ */
+#endif /* TRG_DESTINATION_COMBO_H_ */

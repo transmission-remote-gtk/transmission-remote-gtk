@@ -29,17 +29,14 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_RSS_WINDOW trg_rss_window_get_type()
-#define TRG_RSS_WINDOW(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_RSS_WINDOW, TrgRssWindow))
-#define TRG_RSS_WINDOW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_RSS_WINDOW, TrgRssWindowClass))
-#define TRG_IS_RSS_WINDOW(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_RSS_WINDOW))
-#define TRG_IS_RSS_WINDOW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_RSS_WINDOW))
-#define TRG_RSS_WINDOW_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_RSS_WINDOW, TrgRssWindowClass))
-    typedef struct {
+#define TRG_RSS_WINDOW(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_RSS_WINDOW, TrgRssWindow))
+#define TRG_RSS_WINDOW_CLASS(klass)                                                                \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_RSS_WINDOW, TrgRssWindowClass))
+#define TRG_IS_RSS_WINDOW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_RSS_WINDOW))
+#define TRG_IS_RSS_WINDOW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_RSS_WINDOW))
+#define TRG_RSS_WINDOW_GET_CLASS(obj)                                                              \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_RSS_WINDOW, TrgRssWindowClass))
+typedef struct {
     GtkWindow parent;
 } TrgRssWindow;
 
@@ -55,4 +52,4 @@ G_END_DECLS
 
 #endif
 
-#endif                          /* TRG_RSS_WINDOW_H_ */
+#endif /* TRG_RSS_WINDOW_H_ */

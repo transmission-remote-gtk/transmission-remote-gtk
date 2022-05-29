@@ -24,217 +24,209 @@
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
 
-#include "trg-client.h"
 #include "json.h"
-#include "torrent.h"
 #include "protocol-constants.h"
+#include "torrent.h"
+#include "trg-client.h"
 #include "util.h"
 
 /* Just some functions to get fields out of the torrent object. */
 
-JsonArray *torrent_get_peers(JsonObject * t)
+JsonArray *torrent_get_peers(JsonObject *t)
 {
     g_assert(json_object_get_array_member(t, FIELD_PEERS));
     return json_object_get_array_member(t, FIELD_PEERS);
 }
 
-JsonObject *torrent_get_peersfrom(JsonObject * t)
+JsonObject *torrent_get_peersfrom(JsonObject *t)
 {
     return json_object_get_object_member(t, FIELD_PEERSFROM);
 }
 
-JsonArray *torrent_get_wanted(JsonObject * t)
+JsonArray *torrent_get_wanted(JsonObject *t)
 {
     g_assert(json_object_get_array_member(t, FIELD_WANTED));
     return json_object_get_array_member(t, FIELD_WANTED);
 }
 
-JsonArray *torrent_get_priorities(JsonObject * t)
+JsonArray *torrent_get_priorities(JsonObject *t)
 {
     g_assert(json_object_get_array_member(t, FIELD_PRIORITIES));
     return json_object_get_array_member(t, FIELD_PRIORITIES);
 }
 
-JsonArray *torrent_get_tracker_stats(JsonObject * t)
+JsonArray *torrent_get_tracker_stats(JsonObject *t)
 {
     g_assert(json_object_get_array_member(t, FIELD_TRACKER_STATS));
     return json_object_get_array_member(t, FIELD_TRACKER_STATS);
 }
 
-gint64 torrent_get_id(JsonObject * t)
+gint64 torrent_get_id(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_ID);
 }
 
-const gchar *torrent_get_download_dir(JsonObject * t)
+const gchar *torrent_get_download_dir(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_DOWNLOAD_DIR);
 }
 
-const gchar *torrent_get_comment(JsonObject * t)
+const gchar *torrent_get_comment(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_COMMENT);
 }
 
-gdouble torrent_get_metadata_percent_complete(JsonObject * t)
+gdouble torrent_get_metadata_percent_complete(JsonObject *t)
 {
-    JsonNode *node =
-        json_object_get_member(t, FIELD_METADATAPERCENTCOMPLETE);
+    JsonNode *node = json_object_get_member(t, FIELD_METADATAPERCENTCOMPLETE);
     if (node)
         return json_double_to_progress(node);
     else
         return 100.0;
 }
 
-const gchar *torrent_get_name(JsonObject * t)
+const gchar *torrent_get_name(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_NAME);
 }
 
-gint64 torrent_get_added_date(JsonObject * t)
+gint64 torrent_get_added_date(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_ADDED_DATE);
 }
 
-gboolean torrent_get_honors_session_limits(JsonObject * t)
+gboolean torrent_get_honors_session_limits(JsonObject *t)
 {
     return json_object_get_boolean_member(t, FIELD_HONORS_SESSION_LIMITS);
 }
 
-gint64 torrent_get_bandwidth_priority(JsonObject * t)
+gint64 torrent_get_bandwidth_priority(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_BANDWIDTH_PRIORITY);
 }
 
-const gchar *torrent_get_magnetlink(JsonObject * t)
+const gchar *torrent_get_magnetlink(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_MAGNETLINK);
 }
 
-gint64 torrent_get_upload_limit(JsonObject * t)
+gint64 torrent_get_upload_limit(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_UPLOAD_LIMIT);
 }
 
-gint64 torrent_get_peer_limit(JsonObject * t)
+gint64 torrent_get_peer_limit(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_PEER_LIMIT);
 }
 
-gboolean torrent_get_upload_limited(JsonObject * t)
+gboolean torrent_get_upload_limited(JsonObject *t)
 {
     return json_object_get_boolean_member(t, FIELD_UPLOAD_LIMITED);
 }
 
-gint64 torrent_get_seed_ratio_mode(JsonObject * t)
+gint64 torrent_get_seed_ratio_mode(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_SEED_RATIO_MODE);
 }
 
-gdouble torrent_get_seed_ratio_limit(JsonObject * t)
+gdouble torrent_get_seed_ratio_limit(JsonObject *t)
 {
-    return
-        json_node_really_get_double(json_object_get_member
-                                    (t, FIELD_SEED_RATIO_LIMIT));
+    return json_node_really_get_double(json_object_get_member(t, FIELD_SEED_RATIO_LIMIT));
 }
 
-gint64 torrent_get_download_limit(JsonObject * t)
+gint64 torrent_get_download_limit(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_DOWNLOAD_LIMIT);
 }
 
-gboolean torrent_get_download_limited(JsonObject * t)
+gboolean torrent_get_download_limited(JsonObject *t)
 {
     return json_object_get_boolean_member(t, FIELD_DOWNLOAD_LIMITED);
 }
 
-gint64 torrent_get_total_size(JsonObject * t)
+gint64 torrent_get_total_size(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_TOTAL_SIZE);
 }
 
-gint64 torrent_get_size_when_done(JsonObject * t)
+gint64 torrent_get_size_when_done(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_SIZEWHENDONE);
 }
 
-gint64 torrent_get_rate_down(JsonObject * t)
+gint64 torrent_get_rate_down(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_RATEDOWNLOAD);
 }
 
-gint64 torrent_get_rate_up(JsonObject * t)
+gint64 torrent_get_rate_up(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_RATEUPLOAD);
 }
 
-gint64 torrent_get_eta(JsonObject * t)
+gint64 torrent_get_eta(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_ETA);
 }
 
-gint64 torrent_get_downloaded(JsonObject * t)
+gint64 torrent_get_downloaded(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_DOWNLOADEDEVER);
 }
 
-gint64 torrent_get_uploaded(JsonObject * t)
+gint64 torrent_get_uploaded(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_UPLOADEDEVER);
 }
 
-gint64 torrent_get_corrupted(JsonObject * t)
+gint64 torrent_get_corrupted(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_CORRUPTEVER);
 }
 
-gint64 torrent_get_have_valid(JsonObject * t)
+gint64 torrent_get_have_valid(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_HAVEVALID);
 }
 
-gint64 torrent_get_have_unchecked(JsonObject * t)
+gint64 torrent_get_have_unchecked(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_HAVEUNCHECKED);
 }
 
-gint64 torrent_get_status(JsonObject * t)
+gint64 torrent_get_status(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_STATUS);
 }
 
-gboolean torrent_get_is_finished(JsonObject * t)
+gboolean torrent_get_is_finished(JsonObject *t)
 {
     return torrent_get_left_until_done(t) <= 0;
 }
 
-gboolean torrent_get_is_private(JsonObject * t)
+gboolean torrent_get_is_private(JsonObject *t)
 {
     return json_object_get_boolean_member(t, FIELD_ISPRIVATE);
 }
 
-gdouble torrent_get_percent_done(JsonObject * t)
+gdouble torrent_get_percent_done(JsonObject *t)
 {
-    return
-        json_double_to_progress(json_object_get_member
-                                (t, FIELD_PERCENTDONE));
+    return json_double_to_progress(json_object_get_member(t, FIELD_PERCENTDONE));
 }
 
-gdouble torrent_get_recheck_progress(JsonObject * t)
+gdouble torrent_get_recheck_progress(JsonObject *t)
 {
-    return
-        json_double_to_progress(json_object_get_member
-                                (t, FIELD_RECHECK_PROGRESS));
+    return json_double_to_progress(json_object_get_member(t, FIELD_RECHECK_PROGRESS));
 }
 
-gint64 torrent_get_activity_date(JsonObject * t)
+gint64 torrent_get_activity_date(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_ACTIVITY_DATE);
 }
 
-guint32
-torrent_get_flags(JsonObject * t, gint64 rpcv, gint64 status,
-                  gint64 fileCount, gint64 downRate, gint64 upRate)
+guint32 torrent_get_flags(JsonObject *t, gint64 rpcv, gint64 status, gint64 fileCount,
+                          gint64 downRate, gint64 upRate)
 {
     guint32 flags = 0;
 
@@ -330,17 +322,17 @@ gchar *torrent_get_status_icon(gint64 rpcv, guint flags)
         return g_strdup("dialog-question");
 }
 
-gint64 torrent_get_done_date(JsonObject * t)
+gint64 torrent_get_done_date(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_DONE_DATE);
 }
 
-const gchar *torrent_get_errorstr(JsonObject * t)
+const gchar *torrent_get_errorstr(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_ERROR_STRING);
 }
 
-gint64 torrent_get_error(JsonObject * t)
+gint64 torrent_get_error(JsonObject *t)
 {
     if (!json_object_has_member(t, FIELD_ERROR))
         return 0;
@@ -348,17 +340,17 @@ gint64 torrent_get_error(JsonObject * t)
         return json_object_get_int_member(t, FIELD_ERROR);
 }
 
-const gchar *torrent_get_creator(JsonObject * t)
+const gchar *torrent_get_creator(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_CREATOR);
 }
 
-gint64 torrent_get_date_created(JsonObject * t)
+gint64 torrent_get_date_created(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_DATE_CREATED);
 }
 
-const gchar *torrent_get_hash(JsonObject * t)
+const gchar *torrent_get_hash(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_HASH_STRING);
 }
@@ -406,7 +398,7 @@ gchar *torrent_get_status_string(gint64 rpcv, gint64 value, guint flags)
     return g_strdup(_("Unknown"));
 }
 
-gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
+gboolean torrent_has_tracker(JsonObject *t, GRegex *rx, gchar *search)
 {
     GList *trackers;
     GList *li;
@@ -415,10 +407,9 @@ gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
     trackers = json_array_get_elements(torrent_get_tracker_stats(t));
 
     for (li = trackers; li; li = g_list_next(li)) {
-        JsonObject *tracker = json_node_get_object((JsonNode *) li->data);
+        JsonObject *tracker = json_node_get_object((JsonNode *)li->data);
         const gchar *trackerAnnounce = tracker_stats_get_announce(tracker);
-        gchar *trackerAnnounceHost =
-            trg_gregex_get_first(rx, trackerAnnounce);
+        gchar *trackerAnnounceHost = trg_gregex_get_first(rx, trackerAnnounce);
         int cmpResult = g_strcmp0(trackerAnnounceHost, search);
         g_free(trackerAnnounceHost);
         if (!cmpResult) {
@@ -432,22 +423,22 @@ gboolean torrent_has_tracker(JsonObject * t, GRegex * rx, gchar * search)
     return ret;
 }
 
-gint64 torrent_get_left_until_done(JsonObject * t)
+gint64 torrent_get_left_until_done(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_LEFTUNTILDONE);
 }
 
-const gchar *tracker_stats_get_announce(JsonObject * t)
+const gchar *tracker_stats_get_announce(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_ANNOUNCE);
 }
 
-const gchar *tracker_stats_get_scrape(JsonObject * t)
+const gchar *tracker_stats_get_scrape(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_SCRAPE);
 }
 
-JsonArray *get_torrents_removed(JsonObject * response)
+JsonArray *get_torrents_removed(JsonObject *response)
 {
     if (G_UNLIKELY(json_object_has_member(response, FIELD_REMOVED)))
         return json_object_get_array_member(response, FIELD_REMOVED);
@@ -455,38 +446,38 @@ JsonArray *get_torrents_removed(JsonObject * response)
         return NULL;
 }
 
-JsonArray *get_torrents(JsonObject * response)
+JsonArray *get_torrents(JsonObject *response)
 {
     g_assert(json_object_get_array_member(response, FIELD_TORRENTS));
     return json_object_get_array_member(response, FIELD_TORRENTS);
 }
 
-JsonArray *torrent_get_files(JsonObject * args)
+JsonArray *torrent_get_files(JsonObject *args)
 {
     return json_object_get_array_member(args, FIELD_FILES);
 }
 
-gint64 torrent_get_peers_connected(JsonObject * args)
+gint64 torrent_get_peers_connected(JsonObject *args)
 {
     return json_object_get_int_member(args, FIELD_PEERS_CONNECTED);
 }
 
-gint64 torrent_get_peers_sending_to_us(JsonObject * args)
+gint64 torrent_get_peers_sending_to_us(JsonObject *args)
 {
     return json_object_get_int_member(args, FIELD_PEERS_SENDING_TO_US);
 }
 
-gint64 torrent_get_peers_getting_from_us(JsonObject * args)
+gint64 torrent_get_peers_getting_from_us(JsonObject *args)
 {
     return json_object_get_int_member(args, FIELD_PEERS_GETTING_FROM_US);
 }
 
-gint64 torrent_get_web_seeds_sending_to_us(JsonObject * args)
+gint64 torrent_get_web_seeds_sending_to_us(JsonObject *args)
 {
     return json_object_get_int_member(args, FIELD_WEB_SEEDS_SENDING_TO_US);
 }
 
-gint64 torrent_get_queue_position(JsonObject * args)
+gint64 torrent_get_queue_position(JsonObject *args)
 {
     if (json_object_has_member(args, FIELD_QUEUE_POSITION))
         return json_object_get_int_member(args, FIELD_QUEUE_POSITION);
@@ -496,65 +487,64 @@ gint64 torrent_get_queue_position(JsonObject * args)
 
 /* tracker stats */
 
-gint64 tracker_stats_get_id(JsonObject * t)
+gint64 tracker_stats_get_id(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_ID);
 }
 
-gint64 tracker_stats_get_tier(JsonObject * t)
+gint64 tracker_stats_get_tier(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_TIER);
 }
 
-gint64 tracker_stats_get_last_announce_peer_count(JsonObject * t)
+gint64 tracker_stats_get_last_announce_peer_count(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_LAST_ANNOUNCE_PEER_COUNT);
 }
 
-gint64 tracker_stats_get_last_announce_time(JsonObject * t)
+gint64 tracker_stats_get_last_announce_time(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_LAST_ANNOUNCE_TIME);
 }
 
-gint64 tracker_stats_get_last_scrape_time(JsonObject * t)
+gint64 tracker_stats_get_last_scrape_time(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_LAST_SCRAPE_TIME);
 }
 
-gint64 tracker_stats_get_seeder_count(JsonObject * t)
+gint64 tracker_stats_get_seeder_count(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_SEEDERCOUNT);
 }
 
-gint64 tracker_stats_get_leecher_count(JsonObject * t)
+gint64 tracker_stats_get_leecher_count(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_LEECHERCOUNT);
 }
 
-gint64 tracker_stats_get_download_count(JsonObject * t)
+gint64 tracker_stats_get_download_count(JsonObject *t)
 {
     return json_object_get_int_member(t, FIELD_DOWNLOADCOUNT);
 }
 
-const gchar *tracker_stats_get_announce_result(JsonObject * t)
+const gchar *tracker_stats_get_announce_result(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_LAST_ANNOUNCE_RESULT);
 }
 
-const gchar *tracker_stats_get_host(JsonObject * t)
+const gchar *tracker_stats_get_host(JsonObject *t)
 {
     return json_object_get_string_member(t, FIELD_HOST);
 }
 
-gchar *torrent_get_full_path(JsonObject * obj)
+gchar *torrent_get_full_path(JsonObject *obj)
 {
-    const gchar *location =
-        json_object_get_string_member(obj, FIELD_DOWNLOAD_DIR);
+    const gchar *location = json_object_get_string_member(obj, FIELD_DOWNLOAD_DIR);
     const gchar *name = json_object_get_string_member(obj, FIELD_NAME);
     return g_strdup_printf("%s/%s", location, name);
 }
 
-gchar *torrent_get_full_dir(JsonObject * obj)
+gchar *torrent_get_full_dir(JsonObject *obj)
 {
     gchar *containing_path, *name, *delim;
     const gchar *location;
@@ -578,87 +568,86 @@ gchar *torrent_get_full_dir(JsonObject * obj)
 
 /* peers */
 
-const gchar *peer_get_address(JsonObject * p)
+const gchar *peer_get_address(JsonObject *p)
 {
     return json_object_get_string_member(p, TPEER_ADDRESS);
 }
 
-const gchar *peer_get_flagstr(JsonObject * p)
+const gchar *peer_get_flagstr(JsonObject *p)
 {
     return json_object_get_string_member(p, TPEER_FLAGSTR);
 }
 
-const gchar *peer_get_client_name(JsonObject * p)
+const gchar *peer_get_client_name(JsonObject *p)
 {
     return json_object_get_string_member(p, TPEER_CLIENT_NAME);
 }
 
-gboolean peer_get_is_encrypted(JsonObject * p)
+gboolean peer_get_is_encrypted(JsonObject *p)
 {
     return json_object_get_boolean_member(p, TPEER_IS_ENCRYPTED);
 }
 
-gboolean peer_get_is_uploading_to(JsonObject * p)
+gboolean peer_get_is_uploading_to(JsonObject *p)
 {
     return json_object_get_boolean_member(p, TPEER_IS_UPLOADING_TO);
 }
 
-gboolean peer_get_is_downloading_from(JsonObject * p)
+gboolean peer_get_is_downloading_from(JsonObject *p)
 {
     return json_object_get_boolean_member(p, TPEER_IS_DOWNLOADING_FROM);
 }
 
-gdouble peer_get_progress(JsonObject * p)
+gdouble peer_get_progress(JsonObject *p)
 {
-    return
-        json_double_to_progress(json_object_get_member(p, TPEER_PROGRESS));
+    return json_double_to_progress(json_object_get_member(p, TPEER_PROGRESS));
 }
 
-gint64 peer_get_rate_to_client(JsonObject * p)
+gint64 peer_get_rate_to_client(JsonObject *p)
 {
     return json_object_get_int_member(p, TPEER_RATE_TO_CLIENT);
 }
 
-gint64 peer_get_rate_to_peer(JsonObject * p)
+gint64 peer_get_rate_to_peer(JsonObject *p)
 {
     return json_object_get_int_member(p, TPEER_RATE_TO_PEER);
 }
 
-gint64 peerfrom_get_pex(JsonObject * pf)
+gint64 peerfrom_get_pex(JsonObject *pf)
 {
     return json_object_get_int_member(pf, TPEERFROM_FROMPEX);
 }
 
-gint64 peerfrom_get_dht(JsonObject * pf)
+gint64 peerfrom_get_dht(JsonObject *pf)
 {
     return json_object_get_int_member(pf, TPEERFROM_FROMDHT);
 }
 
-gint64 peerfrom_get_trackers(JsonObject * pf)
+gint64 peerfrom_get_trackers(JsonObject *pf)
 {
     return json_object_get_int_member(pf, TPEERFROM_FROMTRACKERS);
 }
 
-gint64 peerfrom_get_ltep(JsonObject * pf)
+gint64 peerfrom_get_ltep(JsonObject *pf)
 {
     return json_object_get_int_member(pf, TPEERFROM_FROMLTEP);
 }
 
-gint64 peerfrom_get_resume(JsonObject * pf)
+gint64 peerfrom_get_resume(JsonObject *pf)
 {
     return json_object_get_int_member(pf, TPEERFROM_FROMRESUME);
 }
 
-gint64 peerfrom_get_incoming(JsonObject * pf)
+gint64 peerfrom_get_incoming(JsonObject *pf)
 {
     return json_object_get_int_member(pf, TPEERFROM_FROMINCOMING);
 }
 
-
-gint64 peerfrom_get_lpd(JsonObject * pf)
+gint64 peerfrom_get_lpd(JsonObject *pf)
 {
-    return json_object_has_member(pf, TPEERFROM_FROMLPD) ?
-        json_object_get_int_member(pf, TPEERFROM_FROMLPD) : -1;
+    return json_object_has_member(pf, TPEERFROM_FROMLPD)
+        ? json_object_get_int_member(pf, TPEERFROM_FROMLPD)
+        : -1;
 }
 
 /* files */
@@ -666,8 +655,7 @@ gint64 peerfrom_get_lpd(JsonObject * pf)
 gdouble file_get_progress(gint64 length, gint64 completed)
 {
     if (length > 0) {
-        gdouble progress =
-            ((gdouble) completed / (gdouble) length) * 100.0;
+        gdouble progress = ((gdouble)completed / (gdouble)length) * 100.0;
         if (progress > 100.0)
             return 100.0;
         else
@@ -677,17 +665,17 @@ gdouble file_get_progress(gint64 length, gint64 completed)
     }
 }
 
-gint64 file_get_length(JsonObject * f)
+gint64 file_get_length(JsonObject *f)
 {
     return json_object_get_int_member(f, TFILE_LENGTH);
 }
 
-gint64 file_get_bytes_completed(JsonObject * f)
+gint64 file_get_bytes_completed(JsonObject *f)
 {
     return json_object_get_int_member(f, TFILE_BYTES_COMPLETED);
 }
 
-const gchar *file_get_name(JsonObject * f)
+const gchar *file_get_name(JsonObject *f)
 {
     return json_object_get_string_member(f, TFILE_NAME);
 }

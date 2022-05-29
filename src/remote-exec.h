@@ -20,7 +20,9 @@
 #ifndef REMOTE_EXEC_H_
 #define REMOTE_EXEC_H_
 
-gchar *build_remote_exec_cmd(TrgClient * tc, GtkTreeModel * model,
-                             GList * selection, const gchar * input);
+#include "trg-client.h"
 
-#endif                          /* REMOTE_EXEC_H_ */
+gchar *build_remote_exec_cmd(TrgClient *tc, GtkTreeModel *model, GList *selection,
+                             const gchar *input);
+
+#endif /* REMOTE_EXEC_H_ */

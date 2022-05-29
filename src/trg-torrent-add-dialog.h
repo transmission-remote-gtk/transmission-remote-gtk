@@ -24,22 +24,22 @@
 #include <gtk/gtk.h>
 
 #include "trg-client.h"
-#include "upload.h"
 #include "trg-main-window.h"
+#include "upload.h"
 
 G_BEGIN_DECLS
 #define TRG_TYPE_TORRENT_ADD_DIALOG trg_torrent_add_dialog_get_type()
-#define TRG_TORRENT_ADD_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_TORRENT_ADD_DIALOG, TrgTorrentAddDialog))
-#define TRG_TORRENT_ADD_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_TORRENT_ADD_DIALOG, TrgTorrentAddDialogClass))
-#define TRG_IS_TORRENT_ADD_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_TORRENT_ADD_DIALOG))
-#define TRG_IS_TORRENT_ADD_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_TORRENT_ADD_DIALOG))
-#define TRG_TORRENT_ADD_DIALOG_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_TORRENT_ADD_DIALOG, TrgTorrentAddDialogClass))
-    typedef struct {
+#define TRG_TORRENT_ADD_DIALOG(obj)                                                                \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TORRENT_ADD_DIALOG, TrgTorrentAddDialog))
+#define TRG_TORRENT_ADD_DIALOG_CLASS(klass)                                                        \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TORRENT_ADD_DIALOG, TrgTorrentAddDialogClass))
+#define TRG_IS_TORRENT_ADD_DIALOG(obj)                                                             \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TORRENT_ADD_DIALOG))
+#define TRG_IS_TORRENT_ADD_DIALOG_CLASS(klass)                                                     \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TORRENT_ADD_DIALOG))
+#define TRG_TORRENT_ADD_DIALOG_GET_CLASS(obj)                                                      \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TORRENT_ADD_DIALOG, TrgTorrentAddDialogClass))
+typedef struct {
     GtkDialog parent;
 } TrgTorrentAddDialog;
 
@@ -49,13 +49,12 @@ typedef struct {
 
 GType trg_torrent_add_dialog_get_type(void);
 
-TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_filenames(TrgMainWindow * parent,
-                                                TrgClient * client,
-                                                GSList * filenames);
-TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_upload(TrgMainWindow * parent,
-                                                TrgClient * client,
-                                                trg_upload *upload);
-void trg_torrent_add_dialog(TrgMainWindow * win, TrgClient * client);
+TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_filenames(TrgMainWindow *parent,
+                                                               TrgClient *client,
+                                                               GSList *filenames);
+TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_upload(TrgMainWindow *parent,
+                                                            TrgClient *client, trg_upload *upload);
+void trg_torrent_add_dialog(TrgMainWindow *win, TrgClient *client);
 
 G_END_DECLS
-#endif                          /* TRG_TORRENT_ADD_DIALOG_H_ */
+#endif /* TRG_TORRENT_ADD_DIALOG_H_ */

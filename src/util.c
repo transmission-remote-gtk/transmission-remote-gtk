@@ -22,17 +22,17 @@
 #include "config.h"
 
 #include <limits.h>
-#include <stdlib.h>
 #include <math.h>
+#include <stdlib.h>
 #include <string.h>
 
-#include <glib/gi18n.h>
-#include <glib-object.h>
 #include <curl/curl.h>
-#include <json-glib/json-glib.h>
+#include <glib-object.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <glib/gprintf.h>
 #include <gtk/gtk.h>
+#include <json-glib/json-glib.h>
 
 #include "util.h"
 
@@ -61,13 +61,15 @@ struct formatter_units {
     struct formatter_unit units[4];
 };
 
-enum { TR_FMT_KB, TR_FMT_MB, TR_FMT_GB, TR_FMT_TB };
+enum {
+    TR_FMT_KB,
+    TR_FMT_MB,
+    TR_FMT_GB,
+    TR_FMT_TB
+};
 
-static void
-formatter_init(struct formatter_units *units,
-               unsigned int kilo,
-               const char *kb, const char *mb,
-               const char *gb, const char *tb)
+static void formatter_init(struct formatter_units *units, unsigned int kilo, const char *kb,
+                           const char *mb, const char *gb, const char *tb)
 {
     guint64 value = kilo;
     units->units[TR_FMT_KB].name = g_strdup(kb);
@@ -86,8 +88,8 @@ formatter_init(struct formatter_units *units,
     units->units[TR_FMT_TB].value = value;
 }
 
-static char *formatter_get_size_str(const struct formatter_units *u,
-                                    char *buf, gint64 bytes, size_t buflen)
+static char *formatter_get_size_str(const struct formatter_units *u, char *buf, gint64 bytes,
+                                    size_t buflen)
 {
     int precision;
     double value;
@@ -103,7 +105,7 @@ static char *formatter_get_size_str(const struct formatter_units *u,
     else
         unit = &u->units[3];
 
-    value = (double) bytes / unit->value;
+    value = (double)bytes / unit->value;
     units = unit->name;
     if (unit->value == 1)
         precision = 0;
@@ -117,10 +119,8 @@ static char *formatter_get_size_str(const struct formatter_units *u,
 
 static struct formatter_units size_units;
 
-void
-tr_formatter_size_init(unsigned int kilo,
-                       const char *kb, const char *mb,
-                       const char *gb, const char *tb)
+void tr_formatter_size_init(unsigned int kilo, const char *kb, const char *mb, const char *gb,
+                            const char *tb)
 {
     formatter_init(&size_units, kilo, kb, mb, gb, tb);
 }
@@ -134,10 +134,8 @@ static struct formatter_units speed_units;
 
 unsigned int tr_speed_K = 0u;
 
-void
-tr_formatter_speed_init(unsigned int kilo,
-                        const char *kb, const char *mb,
-                        const char *gb, const char *tb)
+void tr_formatter_speed_init(unsigned int kilo, const char *kb, const char *mb, const char *gb,
+                             const char *tb)
 {
     tr_speed_K = kilo;
     formatter_init(&speed_units, kilo, kb, mb, gb, tb);
@@ -148,21 +146,17 @@ char *tr_formatter_speed_KBps(char *buf, double KBps, size_t buflen)
     const double K = speed_units.units[TR_FMT_KB].value;
     double speed = KBps;
 
-    if (speed <= 999.95)        /* 0.0 KB to 999.9 KB */
-        g_snprintf(buf, buflen, "%d %s", (int) speed,
-                    speed_units.units[TR_FMT_KB].name);
+    if (speed <= 999.95) /* 0.0 KB to 999.9 KB */
+        g_snprintf(buf, buflen, "%d %s", (int)speed, speed_units.units[TR_FMT_KB].name);
     else {
         speed /= K;
-        if (speed <= 99.995)    /* 0.98 MB to 99.99 MB */
-            g_snprintf(buf, buflen, "%.2f %s", speed,
-                        speed_units.units[TR_FMT_MB].name);
-        else if (speed <= 999.95)       /* 100.0 MB to 999.9 MB */
-            g_snprintf(buf, buflen, "%.1f %s", speed,
-                        speed_units.units[TR_FMT_MB].name);
+        if (speed <= 99.995) /* 0.98 MB to 99.99 MB */
+            g_snprintf(buf, buflen, "%.2f %s", speed, speed_units.units[TR_FMT_MB].name);
+        else if (speed <= 999.95) /* 100.0 MB to 999.9 MB */
+            g_snprintf(buf, buflen, "%.1f %s", speed, speed_units.units[TR_FMT_MB].name);
         else {
             speed /= K;
-            g_snprintf(buf, buflen, "%.1f %s", speed,
-                        speed_units.units[TR_FMT_GB].name);
+            g_snprintf(buf, buflen, "%.1f %s", speed, speed_units.units[TR_FMT_GB].name);
         }
     }
 
@@ -171,14 +165,15 @@ char *tr_formatter_speed_KBps(char *buf, double KBps, size_t buflen)
 
 /* URL checkers. */
 
-gboolean is_magnet(const gchar * string)
+gboolean is_magnet(const gchar *string)
 {
     return g_str_has_prefix(string, "magnet:");
 }
 
-gboolean is_url(const gchar * string)
+gboolean is_url(const gchar *string)
 {
-    /* return g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?", string, 0, 0); */
+    /* return g_regex_match_simple ("^(([^:/?#]+):)?(//([^/?#]*))?([^?#]*)(\?([^#]*))?(#(.*))?",
+     * string, 0, 0); */
     return g_regex_match_simple("^http[s]?://", string, 0, 0);
 }
 
@@ -186,7 +181,7 @@ gboolean is_url(const gchar * string)
  * Glib-ish Utility functions.
  */
 
-gchar *trg_base64encode(const gchar * filename)
+gchar *trg_base64encode(const gchar *filename)
 {
     GError *error = NULL;
     GMappedFile *mf = g_mapped_file_new(filename, FALSE, &error);
@@ -196,9 +191,8 @@ gchar *trg_base64encode(const gchar * filename)
         g_error("%s", error->message);
         g_error_free(error);
     } else {
-        b64out =
-            g_base64_encode((guchar *) g_mapped_file_get_contents(mf),
-                            g_mapped_file_get_length(mf));
+        b64out = g_base64_encode((guchar *)g_mapped_file_get_contents(mf),
+                                 g_mapped_file_get_length(mf));
     }
 
     g_mapped_file_unref(mf);
@@ -206,7 +200,7 @@ gchar *trg_base64encode(const gchar * filename)
     return b64out;
 }
 
-gchar *trg_gregex_get_first(GRegex * rx, const gchar * src)
+gchar *trg_gregex_get_first(GRegex *rx, const gchar *src)
 {
     GMatchInfo *mi = NULL;
     gchar *dst = NULL;
@@ -220,18 +214,17 @@ gchar *trg_gregex_get_first(GRegex * rx, const gchar * src)
 
 GRegex *trg_uri_host_regex_new(void)
 {
-    return
-        g_regex_new
-        ("^[^:/?#]+:?//(?:www\\.|torrent\\.|torrents\\.|tracker\\.|\\d+\\.)?([^/?#:]*)",
-         G_REGEX_OPTIMIZE, 0, NULL);
+    return g_regex_new(
+        "^[^:/?#]+:?//(?:www\\.|torrent\\.|torrents\\.|tracker\\.|\\d+\\.)?([^/?#:]*)",
+        G_REGEX_OPTIMIZE, 0, NULL);
 }
 
-void g_str_slist_free(GSList * list)
+void g_str_slist_free(GSList *list)
 {
-    g_slist_free_full(list, (GDestroyNotify) g_free);
+    g_slist_free_full(list, (GDestroyNotify)g_free);
 }
 
-void rm_trailing_slashes(gchar * str)
+void rm_trailing_slashes(gchar *str)
 {
     int i, len;
 
@@ -251,7 +244,7 @@ void rm_trailing_slashes(gchar * str)
 
 /* Working with torrents.. */
 
-void add_file_id_to_array(JsonObject * args, const gchar * key, gint index)
+void add_file_id_to_array(JsonObject *args, const gchar *key, gint index)
 {
     JsonArray *array;
     if (json_object_has_member(args, key)) {
@@ -280,11 +273,9 @@ GtkWidget *gtr_combo_box_new_enum(const char *text_1, ...)
     if (text != NULL)
         do {
             const int val = va_arg(vl, int);
-            gtk_list_store_insert_with_values(store, NULL, INT_MAX, 0, val,
-                                              1, text, -1);
+            gtk_list_store_insert_with_values(store, NULL, INT_MAX, 0, val, 1, text, -1);
             text = va_arg(vl, const char *);
-        }
-        while (text != NULL);
+        } while (text != NULL);
 
     w = gtk_combo_box_new_with_model(GTK_TREE_MODEL(store));
     r = gtk_cell_renderer_text_new();
@@ -296,14 +287,12 @@ GtkWidget *gtr_combo_box_new_enum(const char *text_1, ...)
     return w;
 }
 
-GtkWidget *my_scrolledwin_new(GtkWidget * child)
+GtkWidget *my_scrolledwin_new(GtkWidget *child)
 {
     GtkWidget *scrolled_win = gtk_scrolled_window_new(NULL, NULL);
-    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_win),
-                                   GTK_POLICY_AUTOMATIC,
+    gtk_scrolled_window_set_policy(GTK_SCROLLED_WINDOW(scrolled_win), GTK_POLICY_AUTOMATIC,
                                    GTK_POLICY_AUTOMATIC);
-    gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW(scrolled_win),
-                                        GTK_SHADOW_ETCHED_IN);
+    gtk_scrolled_window_set_shadow_type(GTK_SCROLLED_WINDOW(scrolled_win), GTK_SHADOW_ETCHED_IN);
     gtk_container_add(GTK_CONTAINER(scrolled_win), child);
     return scrolled_win;
 }
@@ -311,7 +300,7 @@ GtkWidget *my_scrolledwin_new(GtkWidget * child)
 /* gtk_widget_set_sensitive() was introduced in 2.18, we can have a minimum of
  * 2.16 otherwise. */
 
-void trg_widget_set_visible(GtkWidget * w, gboolean visible)
+void trg_widget_set_visible(GtkWidget *w, gboolean visible)
 {
     if (visible)
         gtk_widget_show(w);
@@ -319,34 +308,29 @@ void trg_widget_set_visible(GtkWidget * w, gboolean visible)
         gtk_widget_hide(w);
 }
 
-void trg_error_dialog(GtkWindow * parent, trg_response * response)
+void trg_error_dialog(GtkWindow *parent, trg_response *response)
 {
     gchar *msg = make_error_message(response->obj, response->status);
-    GtkWidget *dialog = gtk_message_dialog_new(parent,
-                                               GTK_DIALOG_MODAL,
-                                               GTK_MESSAGE_ERROR,
-                                               GTK_BUTTONS_OK, "%s",
-                                               msg);
+    GtkWidget *dialog = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
+                                               GTK_BUTTONS_OK, "%s", msg);
     gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
     g_free(msg);
 }
 
-gchar *make_error_message(JsonObject * response, int status)
+gchar *make_error_message(JsonObject *response, int status)
 {
     if (status == FAIL_JSON_DECODE) {
         return g_strdup(_("JSON decoding error."));
     } else if (response && status == FAIL_RESPONSE_UNSUCCESSFUL) {
-        const gchar *resultStr =
-            json_object_get_string_member(response, "result");
+        const gchar *resultStr = json_object_get_string_member(response, "result");
         if (resultStr == NULL)
             return g_strdup(_("Server responded, but with no result."));
         else
             return g_strdup(resultStr);
     } else if (status <= -100) {
-        return g_strdup_printf(_("Request failed with HTTP code %d"),
-                               -(status + 100));
+        return g_strdup_printf(_("Request failed with HTTP code %d"), -(status + 100));
     } else {
         return g_strdup(curl_easy_strerror(status));
     }
@@ -370,17 +354,16 @@ char *tr_strlpercent(char *buf, double x, size_t buflen)
 
 double tr_truncd(double x, int decimal_places)
 {
-    const int i = (int) pow(10, decimal_places);
-    double x2 = (int) (x * i);
+    const int i = (int)pow(10, decimal_places);
+    double x2 = (int)(x * i);
     return x2 / i;
 }
 
-char *tr_strratio(char *buf, size_t buflen, double ratio,
-                  const char *infinity)
+char *tr_strratio(char *buf, size_t buflen, double ratio, const char *infinity)
 {
-    if ((int) ratio == TR_RATIO_NA)
+    if ((int)ratio == TR_RATIO_NA)
         g_strlcpy(buf, _("None"), buflen);
-    else if ((int) ratio == TR_RATIO_INF)
+    else if ((int)ratio == TR_RATIO_INF)
         g_strlcpy(buf, infinity, buflen);
     else if (ratio < 10.0)
         g_snprintf(buf, buflen, "%.2f", tr_truncd(ratio, 2));
@@ -426,12 +409,9 @@ char *tr_strltime_long(char *buf, long seconds, size_t buflen)
     seconds = (seconds % 3600) % 60;
 
     g_snprintf(d, sizeof(d), ngettext("%d day", "%d days", days), days);
-    g_snprintf(h, sizeof(h), ngettext("%d hour", "%d hours", hours),
-               hours);
-    g_snprintf(m, sizeof(m), ngettext("%d minute", "%d minutes", minutes),
-               minutes);
-    g_snprintf(s, sizeof(s),
-               ngettext("%ld second", "%ld seconds", seconds), seconds);
+    g_snprintf(h, sizeof(h), ngettext("%d hour", "%d hours", hours), hours);
+    g_snprintf(m, sizeof(m), ngettext("%d minute", "%d minutes", minutes), minutes);
+    g_snprintf(s, sizeof(s), ngettext("%ld second", "%ld seconds", seconds), seconds);
 
     if (days) {
         if (days >= 4 || !hours) {
@@ -480,8 +460,8 @@ char *gtr_localtime2(char *buf, time_t time, size_t buflen)
 
 gchar *epoch_to_string(gint64 epoch)
 {
-	if(epoch == 0)
-		return g_strdup(_("N/A"));
+    if (epoch == 0)
+        return g_strdup(_("N/A"));
     GDateTime *dt = g_date_time_new_from_unix_local(epoch);
     gchar *timestring = g_date_time_format(dt, "%F %H:%M:%S");
     g_date_time_unref(dt);
@@ -492,30 +472,28 @@ gchar *epoch_to_string(gint64 epoch)
  * with or without any links - a newly allocated string is returned.
  * Note that a markup-escaped string is always returned. */
 
-gchar *add_links_to_text(const gchar * original)
+gchar *add_links_to_text(const gchar *original)
 {
     /* return if original already contains links */
     if (g_regex_match_simple("<a\\s.*>", original, 0, 0)) {
-      return g_strdup(original);
+        return g_strdup(original);
     }
 
     gchar *newText, *url, *link;
     GMatchInfo *match_info;
-    GRegex *regex =
-      g_regex_new("(https?://[a-zA-Z0-9_\\-\\./?=&]+)", 0, 0, NULL);
+    GRegex *regex = g_regex_new("(https?://[a-zA-Z0-9_\\-\\./?=&]+)", 0, 0, NULL);
 
     // extract url and build escaped link
     g_regex_match(regex, original, 0, &match_info);
     url = g_match_info_fetch(match_info, 1);
 
-    if(url) {
-      link = g_markup_printf_escaped("<a href='%s'>%s</a>", url, url);
-      newText = g_regex_replace(regex, original, -1, 0, link,
-                                       0, NULL);
-      g_free(url);
-      g_free(link);
+    if (url) {
+        link = g_markup_printf_escaped("<a href='%s'>%s</a>", url, url);
+        newText = g_regex_replace(regex, original, -1, 0, link, 0, NULL);
+        g_free(url);
+        g_free(link);
     } else {
-      newText = g_markup_escape_text(original, -1);
+        newText = g_markup_escape_text(original, -1);
     }
 
     g_regex_unref(regex);
@@ -533,10 +511,9 @@ char *tr_strlsize(char *buf, guint64 bytes, size_t buflen)
     return buf;
 }
 
-gboolean is_minimised_arg(const gchar * arg)
+gboolean is_minimised_arg(const gchar *arg)
 {
-    return !g_strcmp0(arg, "-m")
-        || !g_strcmp0(arg, "--minimized") || !g_strcmp0(arg, "/m");
+    return !g_strcmp0(arg, "-m") || !g_strcmp0(arg, "--minimized") || !g_strcmp0(arg, "/m");
 }
 
 gboolean should_be_minimised(int argc, char *argv[])
@@ -566,10 +543,9 @@ GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing)
 }
 
 #ifdef G_OS_WIN32
-gchar *trg_win32_support_path(gchar * file)
+gchar *trg_win32_support_path(gchar *file)
 {
-    gchar *moddir =
-        g_win32_get_package_installation_directory_of_module(NULL);
+    gchar *moddir = g_win32_get_package_installation_directory_of_module(NULL);
     gchar *path = g_build_filename(moddir, file, NULL);
     g_free(moddir);
     return path;

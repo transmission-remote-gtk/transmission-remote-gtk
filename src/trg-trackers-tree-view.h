@@ -23,24 +23,24 @@
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
-#include "trg-trackers-model.h"
-#include "trg-tree-view.h"
 #include "trg-client.h"
 #include "trg-main-window.h"
+#include "trg-trackers-model.h"
+#include "trg-tree-view.h"
 
 G_BEGIN_DECLS
 #define TRG_TYPE_TRACKERS_TREE_VIEW trg_trackers_tree_view_get_type()
-#define TRG_TRACKERS_TREE_VIEW(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeView))
-#define TRG_TRACKERS_TREE_VIEW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeViewClass))
-#define TRG_IS_TRACKERS_TREE_VIEW(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_TRACKERS_TREE_VIEW))
-#define TRG_IS_TRACKERS_TREE_VIEW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_TRACKERS_TREE_VIEW))
-#define TRG_TRACKERS_TREE_VIEW_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeViewClass))
-    typedef struct {
+#define TRG_TRACKERS_TREE_VIEW(obj)                                                                \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeView))
+#define TRG_TRACKERS_TREE_VIEW_CLASS(klass)                                                        \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeViewClass))
+#define TRG_IS_TRACKERS_TREE_VIEW(obj)                                                             \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TRACKERS_TREE_VIEW))
+#define TRG_IS_TRACKERS_TREE_VIEW_CLASS(klass)                                                     \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TRACKERS_TREE_VIEW))
+#define TRG_TRACKERS_TREE_VIEW_GET_CLASS(obj)                                                      \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeViewClass))
+typedef struct {
     TrgTreeView parent;
 } TrgTrackersTreeView;
 
@@ -50,12 +50,9 @@ typedef struct {
 
 GType trg_trackers_tree_view_get_type(void);
 
-TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel * model,
-                                                TrgClient * client,
-                                                TrgMainWindow * win,
-                                                const gchar * configId);
-void trg_trackers_tree_view_new_connection(TrgTrackersTreeView * tv,
-                                           TrgClient * tc);
+TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel *model, TrgClient *client,
+                                                TrgMainWindow *win, const gchar *configId);
+void trg_trackers_tree_view_new_connection(TrgTrackersTreeView *tv, TrgClient *tc);
 
 G_END_DECLS
-#endif                          /* TRG_TRACKERS_TREE_VIEW_H_ */
+#endif /* TRG_TRACKERS_TREE_VIEW_H_ */

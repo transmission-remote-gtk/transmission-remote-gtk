@@ -25,17 +25,19 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_CELL_RENDERER_FILE_ICON trg_cell_renderer_file_icon_get_type()
-#define TRG_CELL_RENDERER_FILE_ICON(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON, TrgCellRendererFileIcon))
-#define TRG_CELL_RENDERER_FILE_ICON_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_CELL_RENDERER_FILE_ICON, TrgCellRendererFileIconClass))
-#define TRG_IS_CELL_RENDERER_FILE_ICON(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON))
-#define TRG_IS_CELL_RENDERER_FILE_ICON_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_CELL_RENDERER_FILE_ICON))
-#define TRG_CELL_RENDERER_FILE_ICON_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON, TrgCellRendererFileIconClass))
-    typedef struct {
+#define TRG_CELL_RENDERER_FILE_ICON(obj)                                                           \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON, TrgCellRendererFileIcon))
+#define TRG_CELL_RENDERER_FILE_ICON_CLASS(klass)                                                   \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_CELL_RENDERER_FILE_ICON,                            \
+                             TrgCellRendererFileIconClass))
+#define TRG_IS_CELL_RENDERER_FILE_ICON(obj)                                                        \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON))
+#define TRG_IS_CELL_RENDERER_FILE_ICON_CLASS(klass)                                                \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_CELL_RENDERER_FILE_ICON))
+#define TRG_CELL_RENDERER_FILE_ICON_GET_CLASS(obj)                                                 \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON,                            \
+                               TrgCellRendererFileIconClass))
+typedef struct {
     GtkCellRendererPixbuf parent;
 } TrgCellRendererFileIcon;
 
@@ -48,4 +50,4 @@ GType trg_cell_renderer_file_icon_get_type(void);
 GtkCellRenderer *trg_cell_renderer_file_icon_new(void);
 
 G_END_DECLS
-#endif                          /* TRG_CELL_RENDERER_FILE_ICON_H_ */
+#endif /* TRG_CELL_RENDERER_FILE_ICON_H_ */

@@ -19,9 +19,9 @@
 
 #include "config.h"
 
+#include <gtk/gtk.h>
 #include <stdint.h>
 #include <time.h>
-#include <gtk/gtk.h>
 
 #include "trg-cell-renderer-epoch.h"
 #include "util.h"
@@ -31,23 +31,19 @@ enum {
     PROP_EPOCH_VALUE
 };
 
-G_DEFINE_TYPE(TrgCellRendererEpoch, trg_cell_renderer_epoch,
-              GTK_TYPE_CELL_RENDERER_TEXT)
-#define TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(o) \
-  (G_TYPE_INSTANCE_GET_PRIVATE ((o), TRG_TYPE_CELL_RENDERER_EPOCH, TrgCellRendererEpochPrivate))
+G_DEFINE_TYPE(TrgCellRendererEpoch, trg_cell_renderer_epoch, GTK_TYPE_CELL_RENDERER_TEXT)
+#define TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(o)                                                     \
+    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_CELL_RENDERER_EPOCH, TrgCellRendererEpochPrivate))
 typedef struct _TrgCellRendererEpochPrivate TrgCellRendererEpochPrivate;
 
 struct _TrgCellRendererEpochPrivate {
     gdouble epoch_value;
 };
 
-static void
-trg_cell_renderer_epoch_get_property(GObject * object,
-                                     guint property_id,
-                                     GValue * value, GParamSpec * pspec)
+static void trg_cell_renderer_epoch_get_property(GObject *object, guint property_id, GValue *value,
+                                                 GParamSpec *pspec)
 {
-    TrgCellRendererEpochPrivate *priv =
-        TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
+    TrgCellRendererEpochPrivate *priv = TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
     switch (property_id) {
     case PROP_EPOCH_VALUE:
         g_value_set_int64(value, priv->epoch_value);
@@ -58,13 +54,10 @@ trg_cell_renderer_epoch_get_property(GObject * object,
     }
 }
 
-static void
-trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
-                                     const GValue * value,
-                                     GParamSpec * pspec)
+static void trg_cell_renderer_epoch_set_property(GObject *object, guint property_id,
+                                                 const GValue *value, GParamSpec *pspec)
 {
-    TrgCellRendererEpochPrivate *priv =
-        TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
+    TrgCellRendererEpochPrivate *priv = TRG_CELL_RENDERER_EPOCH_GET_PRIVATE(object);
 
     if (property_id == PROP_EPOCH_VALUE) {
         gint64 new_value = g_value_get_int64(value);
@@ -83,41 +76,27 @@ trg_cell_renderer_epoch_set_property(GObject * object, guint property_id,
     }
 }
 
-static void
-trg_cell_renderer_epoch_class_init(TrgCellRendererEpochClass * klass)
+static void trg_cell_renderer_epoch_class_init(TrgCellRendererEpochClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
     object_class->get_property = trg_cell_renderer_epoch_get_property;
     object_class->set_property = trg_cell_renderer_epoch_set_property;
 
-    g_object_class_install_property(object_class,
-                                    PROP_EPOCH_VALUE,
-                                    g_param_spec_int64("epoch-value",
-                                                       "Epoch Value",
-                                                       "Epoch Value",
-                                                       G_MININT64,
-                                                       G_MAXINT64,
-                                                       0,
-                                                       G_PARAM_READWRITE
-                                                       |
-                                                       G_PARAM_STATIC_NAME
-                                                       |
-                                                       G_PARAM_STATIC_NICK
-                                                       |
-                                                       G_PARAM_STATIC_BLURB));
+    g_object_class_install_property(
+        object_class, PROP_EPOCH_VALUE,
+        g_param_spec_int64("epoch-value", "Epoch Value", "Epoch Value", G_MININT64, G_MAXINT64, 0,
+                           G_PARAM_READWRITE | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
+                               | G_PARAM_STATIC_BLURB));
 
     g_type_class_add_private(klass, sizeof(TrgCellRendererEpochPrivate));
 }
 
-static void
-trg_cell_renderer_epoch_init(TrgCellRendererEpoch * self G_GNUC_UNUSED)
+static void trg_cell_renderer_epoch_init(TrgCellRendererEpoch *self G_GNUC_UNUSED)
 {
 }
 
 GtkCellRenderer *trg_cell_renderer_epoch_new(void)
 {
-    return
-        GTK_CELL_RENDERER(g_object_new
-                          (TRG_TYPE_CELL_RENDERER_EPOCH, NULL));
+    return GTK_CELL_RENDERER(g_object_new(TRG_TYPE_CELL_RENDERER_EPOCH, NULL));
 }

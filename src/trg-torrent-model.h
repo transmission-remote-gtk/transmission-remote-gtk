@@ -27,29 +27,25 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_TORRENT_MODEL trg_torrent_model_get_type()
-#define TRG_TORRENT_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_TORRENT_MODEL, TrgTorrentModel))
-#define TRG_TORRENT_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_TORRENT_MODEL, TrgTorrentModelClass))
-#define TRG_IS_TORRENT_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_TORRENT_MODEL))
-#define TRG_IS_TORRENT_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_TORRENT_MODEL))
-#define TRG_TORRENT_MODEL_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_TORRENT_MODEL, TrgTorrentModelClass))
-    typedef struct {
+#define TRG_TORRENT_MODEL(obj)                                                                     \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TORRENT_MODEL, TrgTorrentModel))
+#define TRG_TORRENT_MODEL_CLASS(klass)                                                             \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TORRENT_MODEL, TrgTorrentModelClass))
+#define TRG_IS_TORRENT_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TORRENT_MODEL))
+#define TRG_IS_TORRENT_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TORRENT_MODEL))
+#define TRG_TORRENT_MODEL_GET_CLASS(obj)                                                           \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TORRENT_MODEL, TrgTorrentModelClass))
+typedef struct {
     GtkListStore parent;
 } TrgTorrentModel;
 
 typedef struct {
     GtkListStoreClass parent_class;
-    void (*torrent_completed) (TrgTorrentModel * model,
-                               GtkTreeIter * iter, gpointer data);
-    void (*update) (TrgTorrentModel * model, gpointer data);
-    void (*torrent_added) (TrgTorrentModel * model,
-                           GtkTreeIter * iter, gpointer data);
+    void (*torrent_completed)(TrgTorrentModel *model, GtkTreeIter *iter, gpointer data);
+    void (*update)(TrgTorrentModel *model, gpointer data);
+    void (*torrent_added)(TrgTorrentModel *model, GtkTreeIter *iter, gpointer data);
 
-    void (*torrent_removed) (TrgTorrentModel * model, gpointer data);
+    void (*torrent_removed)(TrgTorrentModel *model, gpointer data);
 } TrgTorrentModelClass;
 
 typedef struct {
@@ -68,39 +64,30 @@ typedef struct {
     gint down_wait;
 } trg_torrent_model_update_stats;
 
-#define TORRENT_UPDATE_STATE_CHANGE        (1 << 0)
-#define TORRENT_UPDATE_PATH_CHANGE         (1 << 1)
-#define TORRENT_UPDATE_ADDREMOVE           (1 << 2)
+#define TORRENT_UPDATE_STATE_CHANGE (1 << 0)
+#define TORRENT_UPDATE_PATH_CHANGE  (1 << 1)
+#define TORRENT_UPDATE_ADDREMOVE    (1 << 2)
 
 GType trg_torrent_model_get_type(void);
 
 TrgTorrentModel *trg_torrent_model_new(void);
 
 G_END_DECLS
-    gboolean
-find_existing_peer_item(GtkListStore * model, JsonObject * p,
-                        GtkTreeIter * iter);
+gboolean find_existing_peer_item(GtkListStore *model, JsonObject *p, GtkTreeIter *iter);
 
-trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *
-                                                         model,
-                                                         TrgClient * tc,
-                                                         JsonObject *
-                                                         response,
-                                                         gint mode);
-trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel
-                                                            * model);
+trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *model, TrgClient *tc,
+                                                         JsonObject *response, gint mode);
+trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel *model);
 
-GHashTable *get_torrent_table(TrgTorrentModel * model);
-void trg_torrent_model_remove_all(TrgTorrentModel * model);
+GHashTable *get_torrent_table(TrgTorrentModel *model);
+void trg_torrent_model_remove_all(TrgTorrentModel *model);
 
-gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel * model);
+gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel *model);
 
-gboolean get_torrent_data(GHashTable * table, gint64 id, JsonObject ** t,
-                          GtkTreeIter * out_iter);
+gboolean get_torrent_data(GHashTable *table, gint64 id, JsonObject **t, GtkTreeIter *out_iter);
 
-gchar *shorten_download_dir(TrgClient * tc, const gchar * downloadDir);
-void trg_torrent_model_reload_dir_aliases(TrgClient * tc,
-                                          GtkTreeModel * model);
+gchar *shorten_download_dir(TrgClient *tc, const gchar *downloadDir);
+void trg_torrent_model_reload_dir_aliases(TrgClient *tc, GtkTreeModel *model);
 
 enum {
     TORRENT_COLUMN_ICON,
@@ -151,4 +138,4 @@ enum {
     TORRENT_COLUMN_COLUMNS
 };
 
-#endif                          /* TRG_TORRENT_MODEL_H_ */
+#endif /* TRG_TORRENT_MODEL_H_ */

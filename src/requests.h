@@ -25,34 +25,32 @@
 
 #include "trg-client.h"
 
-JsonNode *generic_request(gchar * method, JsonArray * array);
+JsonNode *generic_request(gchar *method, JsonArray *array);
 
 JsonNode *session_set(void);
 JsonNode *session_get(void);
 JsonNode *torrent_get(gint64 id);
-JsonNode *torrent_set(JsonArray * array);
-JsonNode *torrent_pause(JsonArray * array);
-JsonNode *torrent_start(JsonArray * array);
-JsonNode *torrent_verify(JsonArray * array);
-JsonNode *torrent_reannounce(JsonArray * array);
-JsonNode *torrent_remove(JsonArray * array, int removeData);
+JsonNode *torrent_set(JsonArray *array);
+JsonNode *torrent_pause(JsonArray *array);
+JsonNode *torrent_start(JsonArray *array);
+JsonNode *torrent_verify(JsonArray *array);
+JsonNode *torrent_reannounce(JsonArray *array);
+JsonNode *torrent_remove(JsonArray *array, int removeData);
 JsonNode *torrent_add_from_response(trg_response *response, gint flags);
-JsonNode *torrent_add_from_file(gchar * filename, gint flags);
-JsonNode *torrent_add_url(const gchar * url, gboolean paused);
-JsonNode *torrent_set_location(JsonArray * array, gchar * location,
-                               gboolean move);
-JsonNode *torrent_rename_path(JsonArray * array, const gchar * path,
-                              const gchar * name);
+JsonNode *torrent_add_from_file(gchar *filename, gint flags);
+JsonNode *torrent_add_url(const gchar *url, gboolean paused);
+JsonNode *torrent_set_location(JsonArray *array, gchar *location, gboolean move);
+JsonNode *torrent_rename_path(JsonArray *array, const gchar *path, const gchar *name);
 JsonNode *blocklist_update(void);
 JsonNode *port_test(void);
 JsonNode *session_stats(void);
-JsonNode *torrent_queue_move_down(JsonArray * array);
-JsonNode *torrent_queue_move_up(JsonArray * array);
-JsonNode *torrent_queue_move_bottom(JsonArray * array);
-JsonNode *torrent_queue_move_top(JsonArray * array);
-JsonNode *torrent_start_now(JsonArray * array);
+JsonNode *torrent_queue_move_down(JsonArray *array);
+JsonNode *torrent_queue_move_up(JsonArray *array);
+JsonNode *torrent_queue_move_bottom(JsonArray *array);
+JsonNode *torrent_queue_move_top(JsonArray *array);
+JsonNode *torrent_start_now(JsonArray *array);
 
-void request_set_tag(JsonNode * req, gint64 tag);
-void request_set_tag_from_ids(JsonNode * req, JsonArray * ids);
+void request_set_tag(JsonNode *req, gint64 tag);
+void request_set_tag_from_ids(JsonNode *req, JsonArray *ids);
 
-#endif                          /* REQUESTS_H_ */
+#endif /* REQUESTS_H_ */

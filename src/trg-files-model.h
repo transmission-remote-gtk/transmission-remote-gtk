@@ -27,17 +27,15 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_FILES_MODEL trg_files_model_get_type()
-#define TRG_FILES_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_FILES_MODEL, TrgFilesModel))
-#define TRG_FILES_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_FILES_MODEL, TrgFilesModelClass))
-#define TRG_IS_FILES_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_FILES_MODEL))
-#define TRG_IS_FILES_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_FILES_MODEL))
-#define TRG_FILES_MODEL_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_FILES_MODEL, TrgFilesModelClass))
-    typedef struct {
+#define TRG_FILES_MODEL(obj)                                                                       \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_FILES_MODEL, TrgFilesModel))
+#define TRG_FILES_MODEL_CLASS(klass)                                                               \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_FILES_MODEL, TrgFilesModelClass))
+#define TRG_IS_FILES_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_FILES_MODEL))
+#define TRG_IS_FILES_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_FILES_MODEL))
+#define TRG_FILES_MODEL_GET_CLASS(obj)                                                             \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_FILES_MODEL, TrgFilesModelClass))
+typedef struct {
     GtkTreeStore parent;
 } TrgFilesModel;
 
@@ -62,10 +60,9 @@ G_END_DECLS enum {
 
 #define TRG_FILES_MODEL_CREATE_THREAD_IF_GT 600
 
-void trg_files_model_update(TrgFilesModel * model, GtkTreeView * tv,
-                            gint64 updateSerial, JsonObject * t,
-                            gint mode);
-gint64 trg_files_model_get_torrent_id(TrgFilesModel * model);
-void trg_files_model_set_accept(TrgFilesModel * model, gboolean accept);
+void trg_files_model_update(TrgFilesModel *model, GtkTreeView *tv, gint64 updateSerial,
+                            JsonObject *t, gint mode);
+gint64 trg_files_model_get_torrent_id(TrgFilesModel *model);
+void trg_files_model_set_accept(TrgFilesModel *model, gboolean accept);
 
-#endif                          /* TRG_FILES_MODEL_H_ */
+#endif /* TRG_FILES_MODEL_H_ */

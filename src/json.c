@@ -21,16 +21,16 @@
 
 #include <glib-object.h>
 #include <glib/gprintf.h>
-#include <json-glib/json-glib.h>
 #include <gtk/gtk.h>
+#include <json-glib/json-glib.h>
 
+#include "json.h"
 #include "protocol-constants.h"
 #include "requests.h"
-#include "json.h"
 
 /* JSON helper functions */
 
-gchar *trg_serialize(JsonNode * req)
+gchar *trg_serialize(JsonNode *req)
 {
     JsonGenerator *generator;
     gsize length;
@@ -45,15 +45,14 @@ gchar *trg_serialize(JsonNode * req)
     return response;
 }
 
-JsonObject *trg_deserialize(trg_response * response, GError ** error)
+JsonObject *trg_deserialize(trg_response *response, GError **error)
 {
     JsonParser *parser;
     JsonNode *root;
     JsonObject *ret = NULL;
 
     parser = json_parser_new();
-    json_parser_load_from_data(parser, response->raw, response->size,
-                               error);
+    json_parser_load_from_data(parser, response->raw, response->size, error);
     if (*error == NULL) {
         root = json_parser_get_root(parser);
 #ifdef DEBUG
@@ -83,30 +82,30 @@ JsonObject *trg_deserialize(trg_response * response, GError ** error)
     return ret;
 }
 
-JsonObject *node_get_arguments(JsonNode * req)
+JsonObject *node_get_arguments(JsonNode *req)
 {
     JsonObject *rootObj = json_node_get_object(req);
     return get_arguments(rootObj);
 }
 
-JsonObject *get_arguments(JsonObject * req)
+JsonObject *get_arguments(JsonObject *req)
 {
     return json_object_get_object_member(req, PARAM_ARGUMENTS);
 }
 
-gdouble json_double_to_progress(JsonNode * n)
+gdouble json_double_to_progress(JsonNode *n)
 {
     return json_node_really_get_double(n) * 100.0;
 }
 
-gdouble json_node_really_get_double(JsonNode * node)
+gdouble json_node_really_get_double(JsonNode *node)
 {
     GValue a = G_VALUE_INIT;
 
     json_node_get_value(node, &a);
     switch (G_VALUE_TYPE(&a)) {
     case G_TYPE_INT64:
-        return (gdouble) g_value_get_int64(&a);
+        return (gdouble)g_value_get_int64(&a);
     case G_TYPE_DOUBLE:
         return g_value_get_double(&a);
     default:

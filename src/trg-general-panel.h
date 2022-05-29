@@ -30,17 +30,15 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_GENERAL_PANEL trg_general_panel_get_type()
-#define TRG_GENERAL_PANEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanel))
-#define TRG_GENERAL_PANEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanelClass))
-#define TRG_IS_GENERAL_PANEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_GENERAL_PANEL))
-#define TRG_IS_GENERAL_PANEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_GENERAL_PANEL))
-#define TRG_GENERAL_PANEL_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanelClass))
-    typedef struct {
+#define TRG_GENERAL_PANEL(obj)                                                                     \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanel))
+#define TRG_GENERAL_PANEL_CLASS(klass)                                                             \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanelClass))
+#define TRG_IS_GENERAL_PANEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_GENERAL_PANEL))
+#define TRG_IS_GENERAL_PANEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_GENERAL_PANEL))
+#define TRG_GENERAL_PANEL_GET_CLASS(obj)                                                           \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanelClass))
+typedef struct {
     GtkGrid parent;
 } TrgGeneralPanel;
 
@@ -50,12 +48,10 @@ typedef struct {
 
 GType trg_general_panel_get_type(void);
 
-TrgGeneralPanel *trg_general_panel_new(GtkTreeModel * model,
-                                       TrgClient * tc);
+TrgGeneralPanel *trg_general_panel_new(GtkTreeModel *model, TrgClient *tc);
 
 G_END_DECLS
-    void trg_general_panel_update(TrgGeneralPanel * panel, JsonObject * t,
-                                  GtkTreeIter * iter);
-void trg_general_panel_clear(TrgGeneralPanel * panel);
+void trg_general_panel_update(TrgGeneralPanel *panel, JsonObject *t, GtkTreeIter *iter);
+void trg_general_panel_clear(TrgGeneralPanel *panel);
 
-#endif                          /* TRG_GENERAL_PANEL_H_ */
+#endif /* TRG_GENERAL_PANEL_H_ */

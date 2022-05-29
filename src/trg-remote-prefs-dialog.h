@@ -27,17 +27,17 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_REMOTE_PREFS_DIALOG trg_remote_prefs_dialog_get_type()
-#define TRG_REMOTE_PREFS_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialog))
-#define TRG_REMOTE_PREFS_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialogClass))
-#define TRG_IS_REMOTE_PREFS_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_REMOTE_PREFS_DIALOG))
-#define TRG_IS_REMOTE_PREFS_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_REMOTE_PREFS_DIALOG))
-#define TRG_REMOTE_PREFS_DIALOG_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialogClass))
-    typedef struct {
+#define TRG_REMOTE_PREFS_DIALOG(obj)                                                               \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialog))
+#define TRG_REMOTE_PREFS_DIALOG_CLASS(klass)                                                       \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialogClass))
+#define TRG_IS_REMOTE_PREFS_DIALOG(obj)                                                            \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_REMOTE_PREFS_DIALOG))
+#define TRG_IS_REMOTE_PREFS_DIALOG_CLASS(klass)                                                    \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_REMOTE_PREFS_DIALOG))
+#define TRG_REMOTE_PREFS_DIALOG_GET_CLASS(obj)                                                     \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_REMOTE_PREFS_DIALOG, TrgRemotePrefsDialogClass))
+typedef struct {
     GtkDialog parent;
 } TrgRemotePrefsDialog;
 
@@ -47,10 +47,8 @@ typedef struct {
 
 GType trg_remote_prefs_dialog_get_type(void);
 
-TrgRemotePrefsDialog *trg_remote_prefs_dialog_get_instance(TrgMainWindow *
-                                                           parent,
-                                                           TrgClient *
-                                                           client);
+TrgRemotePrefsDialog *trg_remote_prefs_dialog_get_instance(TrgMainWindow *parent,
+                                                           TrgClient *client);
 
 G_END_DECLS
-#endif                          /* TRG_REMOTE_PREFS_DIALOG_H_ */
+#endif /* TRG_REMOTE_PREFS_DIALOG_H_ */

@@ -24,21 +24,21 @@
 #include <gtk/gtk.h>
 
 #include "trg-client.h"
-#include "trg-main-window.h"
 #include "trg-files-tree-view.h"
+#include "trg-main-window.h"
 
 G_BEGIN_DECLS
 #define TRG_TYPE_FILE_RENAME_DIALOG trg_file_rename_dialog_get_type()
-#define TRG_FILE_RENAME_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_FILE_RENAME_DIALOG, TrgFileRenameDialog))
-#define TRG_FILE_RENAME_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_FILE_RENAME_DIALOG, TrgFileRenameDialogClass))
-#define TRG_IS_FILE_RENAME_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_FILE_RENAME_DIALOG))
-#define TRG_IS_FILE_RENAME_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_FILE_RENAME_DIALOG))
-#define TRG_FILE_RENAME_DIALOG_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_FILE_RENAME_DIALOG, TrgFileRenameDialogClass))
+#define TRG_FILE_RENAME_DIALOG(obj)                                                                \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_FILE_RENAME_DIALOG, TrgFileRenameDialog))
+#define TRG_FILE_RENAME_DIALOG_CLASS(klass)                                                        \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_FILE_RENAME_DIALOG, TrgFileRenameDialogClass))
+#define TRG_IS_FILE_RENAME_DIALOG(obj)                                                             \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_FILE_RENAME_DIALOG))
+#define TRG_IS_FILE_RENAME_DIALOG_CLASS(klass)                                                     \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_FILE_RENAME_DIALOG))
+#define TRG_FILE_RENAME_DIALOG_GET_CLASS(obj)                                                      \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_FILE_RENAME_DIALOG, TrgFileRenameDialogClass))
 
 typedef struct {
     GtkDialog parent;
@@ -50,10 +50,8 @@ typedef struct {
 
 GType trg_file_rename_dialog_get_type(void);
 
-TrgFileRenameDialog *trg_file_rename_dialog_new(TrgMainWindow * win,
-                                                TrgClient * client,
-                                                TrgFilesTreeView *
-                                                ttv);
+TrgFileRenameDialog *trg_file_rename_dialog_new(TrgMainWindow *win, TrgClient *client,
+                                                TrgFilesTreeView *ttv);
 
 G_END_DECLS
-#endif                          /* TRG_FILE_RENAME_DIALOG_H_ */
+#endif /* TRG_FILE_RENAME_DIALOG_H_ */

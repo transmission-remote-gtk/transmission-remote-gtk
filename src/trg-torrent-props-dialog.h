@@ -22,22 +22,22 @@
 
 #include <glib-object.h>
 
-#include "trg-torrent-tree-view.h"
 #include "trg-client.h"
+#include "trg-torrent-tree-view.h"
 
 G_BEGIN_DECLS
 #define TRG_TYPE_TORRENT_PROPS_DIALOG trg_torrent_props_dialog_get_type()
-#define TRG_TORRENT_PROPS_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_TORRENT_PROPS_DIALOG, TrgTorrentPropsDialog))
-#define TRG_TORRENT_PROPS_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_TORRENT_PROPS_DIALOG, TrgTorrentPropsDialogClass))
-#define TRG_IS_TORRENT_PROPS_DIALOG(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_TORRENT_PROPS_DIALOG))
-#define TRG_IS_TORRENT_PROPS_DIALOG_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_TORRENT_PROPS_DIALOG))
-#define TRG_TORRENT_PROPS_DIALOG_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_TORRENT_PROPS_DIALOG, TrgTorrentPropsDialogClass))
-    typedef struct {
+#define TRG_TORRENT_PROPS_DIALOG(obj)                                                              \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TORRENT_PROPS_DIALOG, TrgTorrentPropsDialog))
+#define TRG_TORRENT_PROPS_DIALOG_CLASS(klass)                                                      \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TORRENT_PROPS_DIALOG, TrgTorrentPropsDialogClass))
+#define TRG_IS_TORRENT_PROPS_DIALOG(obj)                                                           \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TORRENT_PROPS_DIALOG))
+#define TRG_IS_TORRENT_PROPS_DIALOG_CLASS(klass)                                                   \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TORRENT_PROPS_DIALOG))
+#define TRG_TORRENT_PROPS_DIALOG_GET_CLASS(obj)                                                    \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TORRENT_PROPS_DIALOG, TrgTorrentPropsDialogClass))
+typedef struct {
     GtkDialog parent;
 } TrgTorrentPropsDialog;
 
@@ -47,12 +47,9 @@ typedef struct {
 
 GType trg_torrent_props_dialog_get_type(void);
 
-TrgTorrentPropsDialog *trg_torrent_props_dialog_new(GtkWindow * window,
-                                                    TrgTorrentTreeView *
-                                                    treeview,
-                                                    TrgTorrentModel *
-                                                    torrentModel,
-                                                    TrgClient * client);
+TrgTorrentPropsDialog *trg_torrent_props_dialog_new(GtkWindow *window, TrgTorrentTreeView *treeview,
+                                                    TrgTorrentModel *torrentModel,
+                                                    TrgClient *client);
 
 G_END_DECLS
-#endif                          /* TRG_TORRENT_PROPS_DIALOG_H_ */
+#endif /* TRG_TORRENT_PROPS_DIALOG_H_ */

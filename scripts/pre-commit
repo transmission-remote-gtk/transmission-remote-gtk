@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# pre-commit formatting hook
+# inspired by https://github.com/transmission/transmission/blob/main/extras/pre-commit
+# to use: `cp scripts/pre-commit .git/hooks/
+
+# allow hook to be skipped for special cases
+[ -z "$TRG_SKIP_HOOKS" ] || exit 0
+
+root="$(git rev-parse --show-toplevel)"
+clang-format -n --Werror "${root}"/src/*.{c,h}

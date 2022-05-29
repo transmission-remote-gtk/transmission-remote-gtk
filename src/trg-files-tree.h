@@ -37,7 +37,7 @@ typedef struct {
     gint enabled;
 } trg_files_tree_node;
 
-void trg_files_tree_node_add_child(trg_files_tree_node* node, trg_files_tree_node* child);
-void trg_files_tree_node_free(trg_files_tree_node * node);
+void trg_files_tree_node_add_child(trg_files_tree_node *node, trg_files_tree_node *child);
+void trg_files_tree_node_free(trg_files_tree_node *node);
 
-#endif                          /* TRG_FILES_MODEL_H_ */
+#endif /* TRG_FILES_MODEL_H_ */

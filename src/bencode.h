@@ -23,42 +23,42 @@
 extern "C" {
 #endif
 
-    typedef enum {
-        BE_STR,
-        BE_INT,
-        BE_LIST,
-        BE_DICT
-    } be_type;
+typedef enum {
+    BE_STR,
+    BE_INT,
+    BE_LIST,
+    BE_DICT
+} be_type;
 
-    struct be_dict;
-    struct be_node;
+struct be_dict;
+struct be_node;
 
 /*
  * XXX: the "val" field of be_dict and be_node can be confusing ...
  */
 
-    typedef struct be_dict {
-        char *key;
-        struct be_node *val;
-    } be_dict;
+typedef struct be_dict {
+    char *key;
+    struct be_node *val;
+} be_dict;
 
-    typedef struct be_node {
-        be_type type;
-        union {
-            char *s;
-            gint64 i;
-            struct be_node **l;
-            struct be_dict *d;
-        } val;
-    } be_node;
+typedef struct be_node {
+    be_type type;
+    union {
+        char *s;
+        gint64 i;
+        struct be_node **l;
+        struct be_dict *d;
+    } val;
+} be_node;
 
-    gint64 be_str_len(be_node * node);
-    be_node *be_decode(const char *bencode);
-    be_node *be_decoden(const char *bencode, gint64 bencode_len);
-    void be_free(be_node * node);
-    void be_dump(be_node * node);
-    be_node *be_dict_find(be_node * node, char *key, be_type type);
-    gboolean be_validate_node(be_node * node, be_type type);
+gint64 be_str_len(be_node *node);
+be_node *be_decode(const char *bencode);
+be_node *be_decoden(const char *bencode, gint64 bencode_len);
+void be_free(be_node *node);
+void be_dump(be_node *node);
+be_node *be_dict_find(be_node *node, char *key, be_type type);
+gboolean be_validate_node(be_node *node, be_type type);
 
 #ifdef __cplusplus
 }

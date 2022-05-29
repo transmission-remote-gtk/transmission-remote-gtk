@@ -17,17 +17,16 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #pragma once
 
-#include <gtk/gtk.h>
 #include "trg-client.h"
+#include <gtk/gtk.h>
 
 G_BEGIN_DECLS
 
 #define TRG_TYPE_GTK_APP (trg_gtk_app_get_type())
-G_DECLARE_FINAL_TYPE (TrgGtkApp, trg_gtk_app, TRG, GTK_APP, GtkApplication)
+G_DECLARE_FINAL_TYPE(TrgGtkApp, trg_gtk_app, TRG, GTK_APP, GtkApplication)
 
-TrgGtkApp *trg_gtk_app_new (TrgClient *client);
+TrgGtkApp *trg_gtk_app_new(TrgClient *client);
 
 G_END_DECLS

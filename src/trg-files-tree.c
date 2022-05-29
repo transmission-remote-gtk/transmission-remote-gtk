@@ -30,25 +30,25 @@
 
 #include "trg-files-tree.h"
 
-void trg_files_tree_node_add_child(trg_files_tree_node* node, trg_files_tree_node* child)
+void trg_files_tree_node_add_child(trg_files_tree_node *node, trg_files_tree_node *child)
 {
-  if (!node->childrenHash) {
-    node->childrenHash = g_hash_table_new(g_str_hash, g_str_equal);
-  }
-  g_hash_table_insert(node->childrenHash, child->name, child);
-  node->children = g_list_append(node->children, child);
+    if (!node->childrenHash) {
+        node->childrenHash = g_hash_table_new(g_str_hash, g_str_equal);
+    }
+    g_hash_table_insert(node->childrenHash, child->name, child);
+    node->children = g_list_append(node->children, child);
 }
 
-void trg_files_tree_node_free(trg_files_tree_node * node)
+void trg_files_tree_node_free(trg_files_tree_node *node)
 {
     GList *li;
 
     for (li = node->children; li; li = g_list_next(li))
-        trg_files_tree_node_free((trg_files_tree_node *) li->data);
+        trg_files_tree_node_free((trg_files_tree_node *)li->data);
 
     if (node->childrenHash)
-      g_hash_table_destroy(node->childrenHash);
-    
+        g_hash_table_destroy(node->childrenHash);
+
     g_list_free(node->children);
     g_free(node->name);
     g_free(node);

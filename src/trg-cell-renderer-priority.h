@@ -25,17 +25,19 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_CELL_RENDERER_PRIORITY trg_cell_renderer_priority_get_type()
-#define TRG_CELL_RENDERER_PRIORITY(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_CELL_RENDERER_PRIORITY, TrgCellRendererPriority))
-#define TRG_CELL_RENDERER_PRIORITY_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_CELL_RENDERER_PRIORITY, TrgCellRendererPriorityClass))
-#define TRG_IS_CELL_RENDERER_PRIORITY(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_CELL_RENDERER_PRIORITY))
-#define TRG_IS_CELL_RENDERER_PRIORITY_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_CELL_RENDERER_PRIORITY))
-#define TRG_CELL_RENDERER_PRIORITY_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_CELL_RENDERER_PRIORITY, TrgCellRendererPriorityClass))
-    typedef struct {
+#define TRG_CELL_RENDERER_PRIORITY(obj)                                                            \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_CELL_RENDERER_PRIORITY, TrgCellRendererPriority))
+#define TRG_CELL_RENDERER_PRIORITY_CLASS(klass)                                                    \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_CELL_RENDERER_PRIORITY,                             \
+                             TrgCellRendererPriorityClass))
+#define TRG_IS_CELL_RENDERER_PRIORITY(obj)                                                         \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_CELL_RENDERER_PRIORITY))
+#define TRG_IS_CELL_RENDERER_PRIORITY_CLASS(klass)                                                 \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_CELL_RENDERER_PRIORITY))
+#define TRG_CELL_RENDERER_PRIORITY_GET_CLASS(obj)                                                  \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_CELL_RENDERER_PRIORITY,                             \
+                               TrgCellRendererPriorityClass))
+typedef struct {
     GtkCellRendererText parent;
 } TrgCellRendererPriority;
 
@@ -48,4 +50,4 @@ GType trg_cell_renderer_priority_get_type(void);
 GtkCellRenderer *trg_cell_renderer_priority_new(void);
 
 G_END_DECLS
-#endif                          /* TRG_CELL_RENDERER_PRIORITY_H_ */
+#endif /* TRG_CELL_RENDERER_PRIORITY_H_ */

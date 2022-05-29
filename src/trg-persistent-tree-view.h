@@ -20,24 +20,24 @@
 #ifndef _TRG_PERSISTENT_TREE_VIEW
 #define _TRG_PERSISTENT_TREE_VIEW
 
-#include <gtk/gtk.h>
 #include <glib-object.h>
+#include <gtk/gtk.h>
 
 #include "trg-preferences-dialog.h"
 
 G_BEGIN_DECLS
 #define TRG_TYPE_PERSISTENT_TREE_VIEW trg_persistent_tree_view_get_type()
-#define TRG_PERSISTENT_TREE_VIEW(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeView))
-#define TRG_PERSISTENT_TREE_VIEW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeViewClass))
-#define TRG_IS_PERSISTENT_TREE_VIEW(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_PERSISTENT_TREE_VIEW))
-#define TRG_IS_PERSISTENT_TREE_VIEW_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_PERSISTENT_TREE_VIEW))
-#define TRG_PERSISTENT_TREE_VIEW_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeViewClass))
-    typedef struct {
+#define TRG_PERSISTENT_TREE_VIEW(obj)                                                              \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeView))
+#define TRG_PERSISTENT_TREE_VIEW_CLASS(klass)                                                      \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeViewClass))
+#define TRG_IS_PERSISTENT_TREE_VIEW(obj)                                                           \
+    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_PERSISTENT_TREE_VIEW))
+#define TRG_IS_PERSISTENT_TREE_VIEW_CLASS(klass)                                                   \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_PERSISTENT_TREE_VIEW))
+#define TRG_PERSISTENT_TREE_VIEW_GET_CLASS(obj)                                                    \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeViewClass))
+typedef struct {
     GtkVBox parent;
 } TrgPersistentTreeView;
 
@@ -55,22 +55,17 @@ typedef struct {
     gint index;
 } trg_persistent_tree_view_column;
 
-TrgPersistentTreeView *trg_persistent_tree_view_new(TrgPrefs * prefs,
-                                                    GtkListStore * model,
-                                                    const gchar * key, gint conf_flags);
+TrgPersistentTreeView *trg_persistent_tree_view_new(TrgPrefs *prefs, GtkListStore *model,
+                                                    const gchar *key, gint conf_flags);
 
-trg_pref_widget_desc
-    * trg_persistent_tree_view_get_widget_desc(TrgPersistentTreeView *
-                                               ptv);
+trg_pref_widget_desc *trg_persistent_tree_view_get_widget_desc(TrgPersistentTreeView *ptv);
 
-void trg_persistent_tree_view_set_add_select(TrgPersistentTreeView * ptv,
-                                             trg_persistent_tree_view_column
-                                             * cd);
+void trg_persistent_tree_view_set_add_select(TrgPersistentTreeView *ptv,
+                                             trg_persistent_tree_view_column *cd);
 
-trg_persistent_tree_view_column
-    * trg_persistent_tree_view_add_column(TrgPersistentTreeView * ptv,
-                                          gint index, const gchar * key,
-                                          const gchar * label);
+trg_persistent_tree_view_column *trg_persistent_tree_view_add_column(TrgPersistentTreeView *ptv,
+                                                                     gint index, const gchar *key,
+                                                                     const gchar *label);
 
 G_END_DECLS
-#endif                          /* _TRG_PERSISTENT_TREE_VIEW */
+#endif /* _TRG_PERSISTENT_TREE_VIEW */

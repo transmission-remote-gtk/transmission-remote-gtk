@@ -25,17 +25,16 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_TRACKERS_MODEL trg_trackers_model_get_type()
-#define TRG_TRACKERS_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModel))
-#define TRG_TRACKERS_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModelClass))
-#define TRG_IS_TRACKERS_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_TRACKERS_MODEL))
-#define TRG_IS_TRACKERS_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_TRACKERS_MODEL))
-#define TRG_TRACKERS_MODEL_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModelClass))
-    typedef struct {
+#define TRG_TRACKERS_MODEL(obj)                                                                    \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModel))
+#define TRG_TRACKERS_MODEL_CLASS(klass)                                                            \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModelClass))
+#define TRG_IS_TRACKERS_MODEL(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TRACKERS_MODEL))
+#define TRG_IS_TRACKERS_MODEL_CLASS(klass)                                                         \
+    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TRACKERS_MODEL))
+#define TRG_TRACKERS_MODEL_GET_CLASS(obj)                                                          \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModelClass))
+typedef struct {
     GtkListStore parent;
 } TrgTrackersModel;
 
@@ -48,13 +47,11 @@ GType trg_trackers_model_get_type(void);
 TrgTrackersModel *trg_trackers_model_new(void);
 
 G_END_DECLS
-    void trg_trackers_model_update(TrgTrackersModel * model,
-                                   gint64 updateSerial, JsonObject * t,
-                                   gint mode);
-void trg_trackers_model_set_accept(TrgTrackersModel * model,
-                                   gboolean accept);
-gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel * model);
-void trg_trackers_model_set_no_selection(TrgTrackersModel * model);
+void trg_trackers_model_update(TrgTrackersModel *model, gint64 updateSerial, JsonObject *t,
+                               gint mode);
+void trg_trackers_model_set_accept(TrgTrackersModel *model, gboolean accept);
+gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel *model);
+void trg_trackers_model_set_no_selection(TrgTrackersModel *model);
 
 typedef enum {
     /* we won't (announce,scrape) this torrent to this tracker because
@@ -93,4 +90,4 @@ enum {
     TRACKERCOL_COLUMNS
 };
 
-#endif                          /* TRG_TRACKERS_MODEL_H_ */
+#endif /* TRG_TRACKERS_MODEL_H_ */

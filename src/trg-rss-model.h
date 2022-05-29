@@ -30,36 +30,31 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_RSS_MODEL trg_rss_model_get_type()
-#define TRG_RSS_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_RSS_MODEL, TrgRssModel))
-#define TRG_RSS_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_RSS_MODEL, TrgRssModelClass))
-#define TRG_IS_RSS_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_RSS_MODEL))
-#define TRG_IS_RSS_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_RSS_MODEL))
-#define TRG_RSS_MODEL_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_RSS_MODEL, TrgRssModelClass))
-    typedef struct {
+#define TRG_RSS_MODEL(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_RSS_MODEL, TrgRssModel))
+#define TRG_RSS_MODEL_CLASS(klass)                                                                 \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_RSS_MODEL, TrgRssModelClass))
+#define TRG_IS_RSS_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_RSS_MODEL))
+#define TRG_IS_RSS_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_RSS_MODEL))
+#define TRG_RSS_MODEL_GET_CLASS(obj)                                                               \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_RSS_MODEL, TrgRssModelClass))
+typedef struct {
     GtkListStore parent;
 } TrgRssModel;
 
 typedef struct {
-	gchar *feed_id;
-	gint error_code;
+    gchar *feed_id;
+    gint error_code;
 } rss_get_error;
 
 typedef struct {
-	GError *error;
-	gchar *feed_id;
+    GError *error;
+    gchar *feed_id;
 } rss_parse_error;
 
 typedef struct {
     GtkListStoreClass parent_class;
-    void (*get_error) (TrgRssModel * model,
-                               rss_get_error *error);
-    void (*parse_error) (TrgRssModel * model,
-                               rss_parse_error *error);
+    void (*get_error)(TrgRssModel *model, rss_get_error *error);
+    void (*parse_error)(TrgRssModel *model, rss_parse_error *error);
 } TrgRssModelClass;
 
 GType trg_rss_model_get_type(void);
@@ -67,7 +62,7 @@ GType trg_rss_model_get_type(void);
 TrgRssModel *trg_rss_model_new(TrgClient *client);
 
 G_END_DECLS
-void trg_rss_model_update(TrgRssModel * model);
+void trg_rss_model_update(TrgRssModel *model);
 
 enum {
     RSSCOL_ID,
@@ -82,4 +77,4 @@ enum {
 
 #endif
 
-#endif                          /* TRG_RSS_MODEL_H_ */
+#endif /* TRG_RSS_MODEL_H_ */

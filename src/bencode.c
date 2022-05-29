@@ -26,9 +26,9 @@
 
 #include "config.h"
 
-#include <stdlib.h>             /* malloc() realloc() free() strtoll() */
-#include <string.h>             /* memset() */
 #include <ctype.h>
+#include <stdlib.h> /* malloc() realloc() free() strtoll() */
+#include <string.h> /* memset() */
 
 #include <glib.h>
 
@@ -42,7 +42,7 @@ static be_node *be_alloc(be_type type)
     return ret;
 }
 
-static gint64 _be_decode_int(const char **data, gint64 * data_len)
+static gint64 _be_decode_int(const char **data, gint64 *data_len)
 {
     char *endp;
     gint64 ret = strtoll(*data, &endp, 10);
@@ -51,7 +51,7 @@ static gint64 _be_decode_int(const char **data, gint64 * data_len)
     return ret;
 }
 
-gint64 be_str_len(be_node * node)
+gint64 be_str_len(be_node *node)
 {
     gint64 ret = 0;
     if (node->val.s)
@@ -59,7 +59,7 @@ gint64 be_str_len(be_node * node)
     return ret;
 }
 
-static char *_be_decode_str(const char **data, gint64 * data_len)
+static char *_be_decode_str(const char **data, gint64 *data_len)
 {
     gint64 sllen = _be_decode_int(data, data_len);
     long slen = sllen;
@@ -96,7 +96,7 @@ static char *_be_decode_str(const char **data, gint64 * data_len)
     return ret;
 }
 
-static be_node *_be_decode(const char **data, gint64 * data_len)
+static be_node *_be_decode(const char **data, gint64 *data_len)
 {
     be_node *ret = NULL;
     char dc;
@@ -113,8 +113,7 @@ static be_node *_be_decode(const char **data, gint64 * data_len)
         --(*data_len);
         ++(*data);
         while (**data != 'e') {
-            ret->val.l =
-                g_realloc(ret->val.l, (i + 2) * sizeof(*ret->val.l));
+            ret->val.l = g_realloc(ret->val.l, (i + 2) * sizeof(*ret->val.l));
             ret->val.l[i] = _be_decode(data, data_len);
             if (!ret->val.l[i])
                 break;
@@ -135,8 +134,7 @@ static be_node *_be_decode(const char **data, gint64 * data_len)
         --(*data_len);
         ++(*data);
         while (**data != 'e') {
-            ret->val.d =
-                g_realloc(ret->val.d, (i + 2) * sizeof(*ret->val.d));
+            ret->val.d = g_realloc(ret->val.d, (i + 2) * sizeof(*ret->val.d));
             ret->val.d[i].key = _be_decode_str(data, data_len);
             ret->val.d[i].val = _be_decode(data, data_len);
             if (!ret->val.l[i])
@@ -182,7 +180,7 @@ be_node *be_decode(const char *data)
     return be_decoden(data, strlen(data));
 }
 
-gboolean be_validate_node(be_node * node, be_type type)
+gboolean be_validate_node(be_node *node, be_type type)
 {
     if (!node || node->type != type)
         return FALSE;
@@ -196,7 +194,7 @@ static inline void _be_free_str(char *str)
         g_free(str - sizeof(gint64));
 }
 
-void be_free(be_node * node)
+void be_free(be_node *node)
 {
     switch (node->type) {
     case BE_STR:
@@ -206,34 +204,32 @@ void be_free(be_node * node)
     case BE_INT:
         break;
 
-    case BE_LIST:
-        {
-            unsigned int i;
-            if (node->val.l) {
-                for (i = 0; node->val.l[i]; ++i)
-                    be_free(node->val.l[i]);
-                g_free(node->val.l);
-            }
-            break;
+    case BE_LIST: {
+        unsigned int i;
+        if (node->val.l) {
+            for (i = 0; node->val.l[i]; ++i)
+                be_free(node->val.l[i]);
+            g_free(node->val.l);
         }
+        break;
+    }
 
-    case BE_DICT:
-        {
-            unsigned int i;
-            if (node->val.d) {
-                for (i = 0; node->val.d[i].val; ++i) {
-                    _be_free_str(node->val.d[i].key);
-                    be_free(node->val.d[i].val);
-                }
-                g_free(node->val.d);
+    case BE_DICT: {
+        unsigned int i;
+        if (node->val.d) {
+            for (i = 0; node->val.d[i].val; ++i) {
+                _be_free_str(node->val.d[i].key);
+                be_free(node->val.d[i].val);
             }
-            break;
+            g_free(node->val.d);
         }
+        break;
+    }
     }
     g_free(node);
 }
 
-be_node *be_dict_find(be_node * node, char *key, be_type type)
+be_node *be_dict_find(be_node *node, char *key, be_type type)
 {
     int i;
     for (i = 0; node->val.d[i].val; ++i) {
@@ -247,8 +243,8 @@ be_node *be_dict_find(be_node * node, char *key, be_type type)
 }
 
 #ifdef BE_DEBUG
-#include <stdio.h>
 #include <stdint.h>
+#include <stdio.h>
 
 static void _be_dump_indent(ssize_t indent)
 {
@@ -256,7 +252,7 @@ static void _be_dump_indent(ssize_t indent)
         printf("    ");
 }
 
-static void _be_dump(be_node * node, ssize_t indent)
+static void _be_dump(be_node *node, ssize_t indent)
 {
     size_t i;
 
@@ -297,7 +293,7 @@ static void _be_dump(be_node * node, ssize_t indent)
     }
 }
 
-void be_dump(be_node * node)
+void be_dump(be_node *node)
 {
     _be_dump(node, 0);
 }

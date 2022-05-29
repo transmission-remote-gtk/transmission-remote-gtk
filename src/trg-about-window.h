@@ -22,6 +22,6 @@
 
 #include <gtk/gtk.h>
 
-GtkWidget *trg_about_window_new(GtkWindow * parent);
+GtkWidget *trg_about_window_new(GtkWindow *parent);
 
-#endif                          /* ABOUT_WINDOW_H_ */
+#endif /* ABOUT_WINDOW_H_ */

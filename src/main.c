@@ -22,13 +22,13 @@
 #include <curl/curl.h>
 #include <curl/easy.h>
 
-#include <glib/gi18n.h>
 #include <glib-object.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 
+#include "trg-client.h"
 #include "trg-gtk-app.h"
 #include "trg-main-window.h"
-#include "trg-client.h"
 
 /* Handle arguments and start the main window. */
 
@@ -36,11 +36,9 @@
 static void bindtext_wrapper(void)
 {
 #ifdef G_OS_WIN32
-    gchar *moddir =
-        g_win32_get_package_installation_directory_of_module(NULL);
+    gchar *moddir = g_win32_get_package_installation_directory_of_module(NULL);
 
-    gchar *localedir = g_build_path(G_DIR_SEPARATOR_S,
-                                    moddir, "share", "locale", NULL);
+    gchar *localedir = g_build_path(G_DIR_SEPARATOR_S, moddir, "share", "locale", NULL);
 
     bindtextdomain(GETTEXT_PACKAGE, localedir);
     g_free(moddir);

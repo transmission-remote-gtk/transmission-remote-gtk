@@ -15,18 +15,16 @@
 
 #include <gtk/gtk.h>
 
-#define GTR_UNICODE_UP		"\xE2\x86\x91"
-#define GTR_UNICODE_DOWN	"\xE2\x86\x93"
+#define GTR_UNICODE_UP      "\xE2\x86\x91"
+#define GTR_UNICODE_DOWN    "\xE2\x86\x93"
 #define DIRECTORY_MIME_TYPE "folder"
-#define FILE_MIME_TYPE "file"
+#define FILE_MIME_TYPE      "file"
 #define UNKNOWN_MIME_TYPE   "unknown"
 
-#define TORRENT_CELL_RENDERER_TYPE ( torrent_cell_renderer_get_type( ) )
+#define TORRENT_CELL_RENDERER_TYPE (torrent_cell_renderer_get_type())
 
-#define TORRENT_CELL_RENDERER( o ) \
-    ( G_TYPE_CHECK_INSTANCE_CAST( ( o ), \
-                                 TORRENT_CELL_RENDERER_TYPE, \
-                                 TorrentCellRenderer ) )
+#define TORRENT_CELL_RENDERER(o)                                                                   \
+    (G_TYPE_CHECK_INSTANCE_CAST((o), TORRENT_CELL_RENDERER_TYPE, TorrentCellRenderer))
 
 typedef struct TorrentCellRenderer TorrentCellRenderer;
 
@@ -46,6 +44,6 @@ struct TorrentCellRendererClass {
 GType torrent_cell_renderer_get_type(void) G_GNUC_CONST;
 
 GtkCellRenderer *torrent_cell_renderer_new(void);
-GtkTreeView *torrent_cell_renderer_get_owner(TorrentCellRenderer * r);
+GtkTreeView *torrent_cell_renderer_get_owner(TorrentCellRenderer *r);
 
-#endif                          /* GTR_TORRENT_CELL_RENDERER_H */
+#endif /* GTR_TORRENT_CELL_RENDERER_H */

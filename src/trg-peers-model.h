@@ -17,7 +17,6 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-
 #ifndef TRG_PEERS_MODEL_H_
 #define TRG_PEERS_MODEL_H_
 
@@ -34,17 +33,15 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_PEERS_MODEL trg_peers_model_get_type()
-#define TRG_PEERS_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_PEERS_MODEL, TrgPeersModel))
-#define TRG_PEERS_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_PEERS_MODEL, TrgPeersModelClass))
-#define TRG_IS_PEERS_MODEL(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_PEERS_MODEL))
-#define TRG_IS_PEERS_MODEL_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_PEERS_MODEL))
-#define TRG_PEERS_MODEL_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_PEERS_MODEL, TrgPeersModelClass))
-    typedef struct {
+#define TRG_PEERS_MODEL(obj)                                                                       \
+    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_PEERS_MODEL, TrgPeersModel))
+#define TRG_PEERS_MODEL_CLASS(klass)                                                               \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_PEERS_MODEL, TrgPeersModelClass))
+#define TRG_IS_PEERS_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_PEERS_MODEL))
+#define TRG_IS_PEERS_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_PEERS_MODEL))
+#define TRG_PEERS_MODEL_GET_CLASS(obj)                                                             \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_PEERS_MODEL, TrgPeersModelClass))
+typedef struct {
     GtkListStore parent;
 } TrgPeersModel;
 
@@ -79,9 +76,8 @@ enum {
     PEERSCOL_COLUMNS
 };
 
-void trg_peers_model_update(TrgPeersModel * model, TrgTreeView * tv,
-                            gint64 updateSerial, JsonObject * t,
-                            gboolean first);
+void trg_peers_model_update(TrgPeersModel *model, TrgTreeView *tv, gint64 updateSerial,
+                            JsonObject *t, gboolean first);
 
 #if HAVE_GEOIP
 void trg_peers_model_add_city_column(TrgPeersModel *model);
@@ -90,9 +86,9 @@ gboolean trg_peers_model_has_city_db(TrgPeersModel *model);
 gboolean trg_peers_model_has_country_db(TrgPeersModel *model);
 #endif
 
-#endif                          /* TRG_PEERS_MODEL_H_ */
+#endif /* TRG_PEERS_MODEL_H_ */
 
-#define TRG_GEOIP_DATABASE "/usr/share/GeoIP/GeoIP.dat"
-#define TRG_GEOIPV6_DATABASE "/usr/share/GeoIP/GeoIPv6.dat"
-#define TRG_GEOIP_CITY_DATABASE "/usr/share/GeoIP/GeoLiteCity.dat"
+#define TRG_GEOIP_DATABASE          "/usr/share/GeoIP/GeoIP.dat"
+#define TRG_GEOIPV6_DATABASE        "/usr/share/GeoIP/GeoIPv6.dat"
+#define TRG_GEOIP_CITY_DATABASE     "/usr/share/GeoIP/GeoLiteCity.dat"
 #define TRG_GEOIP_CITY_ALT_DATABASE "/usr/share/GeoIP/GeoIPCity.dat"

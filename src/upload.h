@@ -15,8 +15,8 @@ typedef struct {
     guint flags;
     gchar *dir;
     gint priority;
-    gint* file_priorities;
-    gint* file_wanted;
+    gint *file_priorities;
+    gint *file_wanted;
     guint n_files;
     gboolean extra_args;
     guint progress_index;

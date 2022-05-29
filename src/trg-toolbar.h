@@ -20,25 +20,22 @@
 #ifndef TRG_TOOLBAR_H_
 #define TRG_TOOLBAR_H_
 
-#include <gtk/gtk.h>
 #include <glib-object.h>
+#include <gtk/gtk.h>
 
-#include "trg-prefs.h"
 #include "trg-main-window.h"
+#include "trg-prefs.h"
 
 G_BEGIN_DECLS
 #define TRG_TYPE_TOOLBAR trg_toolbar_get_type()
-#define TRG_TOOLBAR(obj) \
-  (G_TYPE_CHECK_INSTANCE_CAST ((obj), TRG_TYPE_TOOLBAR, TrgToolbar))
-#define TRG_TOOLBAR_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_CAST ((klass), TRG_TYPE_TOOLBAR, TrgToolbarClass))
-#define TRG_IS_TOOLBAR(obj) \
-  (G_TYPE_CHECK_INSTANCE_TYPE ((obj), TRG_TYPE_TOOLBAR))
-#define TRG_IS_TOOLBAR_CLASS(klass) \
-  (G_TYPE_CHECK_CLASS_TYPE ((klass), TRG_TYPE_TOOLBAR))
-#define TRG_TOOLBAR_GET_CLASS(obj) \
-  (G_TYPE_INSTANCE_GET_CLASS ((obj), TRG_TYPE_TOOLBAR, TrgToolbarClass))
-    typedef struct {
+#define TRG_TOOLBAR(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TOOLBAR, TrgToolbar))
+#define TRG_TOOLBAR_CLASS(klass)                                                                   \
+    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TOOLBAR, TrgToolbarClass))
+#define TRG_IS_TOOLBAR(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TOOLBAR))
+#define TRG_IS_TOOLBAR_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TOOLBAR))
+#define TRG_TOOLBAR_GET_CLASS(obj)                                                                 \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TOOLBAR, TrgToolbarClass))
+typedef struct {
     GtkToolbar parent;
 } TrgToolbar;
 
@@ -48,11 +45,10 @@ typedef struct {
 
 GType trg_toolbar_get_type(void);
 
-TrgToolbar *trg_toolbar_new(TrgMainWindow * win, TrgPrefs * prefs);
+TrgToolbar *trg_toolbar_new(TrgMainWindow *win, TrgPrefs *prefs);
 
 G_END_DECLS
-    void trg_toolbar_torrent_actions_sensitive(TrgToolbar * mb,
-                                               gboolean sensitive);
-void trg_toolbar_connected_change(TrgToolbar * tb, gboolean connected);
+void trg_toolbar_torrent_actions_sensitive(TrgToolbar *mb, gboolean sensitive);
+void trg_toolbar_connected_change(TrgToolbar *tb, gboolean connected);
 
-#endif                          /* TRG_TOOLBAR_H_ */
+#endif /* TRG_TOOLBAR_H_ */

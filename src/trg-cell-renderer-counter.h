@@ -24,9 +24,9 @@
 G_BEGIN_DECLS
 
 #define TRG_TYPE_CELL_RENDERER_COUNTER (trg_cell_renderer_counter_get_type())
-G_DECLARE_FINAL_TYPE (TrgCellRendererCounter, trg_cell_renderer_counter, TRG, CELL_RENDERER_COUNTER, GtkCellRendererText)
+G_DECLARE_FINAL_TYPE(TrgCellRendererCounter, trg_cell_renderer_counter, TRG, CELL_RENDERER_COUNTER,
+                     GtkCellRendererText)
 
 GtkCellRenderer *trg_cell_renderer_counter_new(void);
 
 G_END_DECLS
-

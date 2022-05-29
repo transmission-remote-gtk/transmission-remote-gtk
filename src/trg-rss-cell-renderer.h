@@ -24,12 +24,10 @@
 
 #include <gtk/gtk.h>
 
-#define TRG_RSS_CELL_RENDERER_TYPE ( trg_rss_cell_renderer_get_type( ) )
+#define TRG_RSS_CELL_RENDERER_TYPE (trg_rss_cell_renderer_get_type())
 
-#define TRG_RSS_CELL_RENDERER( o ) \
-    ( G_TYPE_CHECK_INSTANCE_CAST( ( o ), \
-                                 TRG_RSS_CELL_RENDERER_TYPE, \
-                                 TrgRssCellRenderer ) )
+#define TRG_RSS_CELL_RENDERER(o)                                                                   \
+    (G_TYPE_CHECK_INSTANCE_CAST((o), TRG_RSS_CELL_RENDERER_TYPE, TrgRssCellRenderer))
 
 typedef struct TrgRssCellRenderer TrgRssCellRenderer;
 
@@ -50,4 +48,4 @@ GtkCellRenderer *trg_rss_cell_renderer_new(void);
 
 #endif
 
-#endif                          /* TRG_RSS_CELL_RENDERER_H */
+#endif /* TRG_RSS_CELL_RENDERER_H */
