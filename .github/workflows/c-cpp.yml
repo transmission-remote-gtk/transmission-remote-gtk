@@ -11,7 +11,7 @@ jobs:
 
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: install deps
         run: |
           sudo apt-get update
@@ -56,10 +56,22 @@ jobs:
                     mingw-w64-x86_64-appstream-glib \
                     mingw-w64-x86_64-desktop-file-utils
 
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
       - name: configure
         run: meson build
       - name: build
         run: meson compile -C build
       - name: dist
-        run: meson dist -C build
+        run: |
+          # Why? Line Endings.
+          # actions/checkout runs as a native windows environment and wants
+          # to put CRLF on all lines, while msys2 looks at this and thinks
+          # that every single file has been changed since the line ending is
+          # not LF. Afterwards, `meson dist` (on msys2) will report the repo as
+          # dirty then fail on meson >=0.62 due to the changed default behavior
+          # dist fails on dirty repos. The solution to this is to just add
+          # `--allow-dirty` since our CI runners use the latest meson. But this
+          # is not the cleanest solution since we do care if the repo is dirty,
+          # so add a non-whitespace diff-index check before running meson-dist.
+          git --no-pager diff-index --quiet -b HEAD 2>/dev/null || { git --no-pager diff -b; exit 1; }
+          meson dist --allow-dirty -C build
