@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # This is a really simple script intended to be run as an action
 # from transmission-remote-gtk. It uses rsync to fetch
