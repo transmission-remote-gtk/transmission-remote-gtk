@@ -25,6 +25,7 @@
 #include <glib/gstdio.h>
 #include <json-glib/json-glib.h>
 
+#include "json.h"
 #include "torrent.h"
 #include "trg-client.h"
 #include "trg-prefs.h"
@@ -404,7 +405,7 @@ void trg_prefs_set_bool(TrgPrefs *p, const gchar *key, gboolean value, int flags
 gboolean trg_prefs_save(TrgPrefs *p)
 {
     TrgPrefsPrivate *priv = p->priv;
-    JsonGenerator *gen = json_generator_new();
+    g_autoptr(JsonGenerator) gen = NULL;
     gchar *dirName;
     gboolean success = TRUE;
     gboolean isNew = TRUE;
@@ -422,8 +423,7 @@ gboolean trg_prefs_save(TrgPrefs *p)
         return success;
     }
 
-    g_object_set(G_OBJECT(gen), "pretty", TRUE, NULL);
-    json_generator_set_root(gen, priv->user);
+    gen = trg_json_serializer(priv->user, TRUE);
 
     if (g_file_test(priv->file, G_FILE_TEST_IS_SYMLINK)) {
         gsize len;
@@ -448,8 +448,6 @@ gboolean trg_prefs_save(TrgPrefs *p)
         g_error("Problem writing configuration file (permissions?) to: %s", priv->file);
     else if (isNew)
         g_chmod(priv->file, 384);
-
-    g_object_unref(gen);
 
     return success;
 }

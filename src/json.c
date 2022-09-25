@@ -30,19 +30,13 @@
 
 /* JSON helper functions */
 
-gchar *trg_serialize(JsonNode *req)
+JsonGenerator *trg_json_serializer(JsonNode *req, gboolean pretty)
 {
-    JsonGenerator *generator;
-    gsize length;
-    gchar *response;
-
-    generator = json_generator_new();
+    JsonGenerator *generator = json_generator_new();
+    json_generator_set_pretty(generator, pretty);
     json_generator_set_root(generator, req);
 
-    response = json_generator_to_data(generator, &length);
-    g_object_unref(generator);
-
-    return response;
+    return generator;
 }
 
 JsonObject *node_get_arguments(JsonNode *req)
