@@ -257,7 +257,7 @@ static GList *trg_client_headers_array_to_list(JsonArray *array)
     return output_headers;
 }
 
-int trg_client_populate_with_settings(TrgClient *tc)
+gboolean trg_client_parse_settings(TrgClient *tc, gchar **err_msg)
 {
     TrgClientPrivate *priv = tc->priv;
     TrgPrefs *prefs = priv->prefs;
@@ -288,7 +288,8 @@ int trg_client_populate_with_settings(TrgClient *tc)
         g_free(host);
         g_free(path);
         g_mutex_unlock(&priv->configMutex);
-        return TRG_NO_HOSTNAME_SET;
+        *err_msg = g_strdup("Bad hostname.");
+        return FALSE;
     }
 
     priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_CONNECTION);
@@ -333,7 +334,7 @@ int trg_client_populate_with_settings(TrgClient *tc)
 
     priv->configSerial++;
     g_mutex_unlock(&priv->configMutex);
-    return 0;
+    return TRUE;
 }
 
 static void trg_client_inject_custom_headers(TrgClient *tc, struct curl_slist **headers)

@@ -42,8 +42,6 @@
 #define TORRENT_GET_TAG_MODE_FULL   -1
 #define TORRENT_GET_TAG_MODE_UPDATE -2
 
-#define TRG_NO_HOSTNAME_SET -2
-
 #define HTTP_URI_PREFIX  "http"
 #define HTTPS_URI_PREFIX "https"
 #define HTTP_OK          200
@@ -128,7 +126,7 @@ GType trg_client_get_type(void);
 
 TrgClient *trg_client_new(void);
 TrgPrefs *trg_client_get_prefs(TrgClient *tc);
-int trg_client_populate_with_settings(TrgClient *tc);
+gboolean trg_client_parse_settings(TrgClient *tc, gchar **err_msg);
 void trg_client_set_session(TrgClient *tc, JsonObject *session);
 gdouble trg_client_get_version(TrgClient *tc);
 const gchar *trg_client_get_version_string(TrgClient *tc);
