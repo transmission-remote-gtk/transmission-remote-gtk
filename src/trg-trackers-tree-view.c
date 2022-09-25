@@ -112,7 +112,7 @@ static void trg_tracker_announce_edited(GtkCellRendererText *renderer, gchar *pa
 
     g_free(icon);
 
-    dispatch_async(priv->client, req, on_trackers_update, user_data);
+    dispatch_rpc_async(priv->client, req, on_trackers_update, user_data);
 }
 
 static void trg_tracker_announce_editing_started(GtkCellRenderer *renderer G_GNUC_UNUSED,
@@ -225,7 +225,7 @@ static void delete_tracker(GtkWidget *w, gpointer data)
 
     trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model), FALSE);
 
-    dispatch_async(priv->client, req, on_trackers_update, data);
+    dispatch_rpc_async(priv->client, req, on_trackers_update, data);
 }
 
 static void view_popup_menu_add_only(GtkWidget *treeview, GdkEventButton *event,

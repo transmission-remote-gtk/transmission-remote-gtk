@@ -19,7 +19,6 @@
 
 #include "config.h"
 
-#include <curl/curl.h>
 #include <gdk/gdkkeysyms-compat.h>
 #include <gdk/gdkkeysyms.h>
 #include <gio/gio.h>
@@ -37,6 +36,7 @@
 #elif HAVE_LIBAPPINDICATOR
 #include <libappindicator/app-indicator.h>
 #endif
+#include <libsoup/soup.h>
 
 #include "json.h"
 #include "protocol-constants.h"
@@ -390,8 +390,8 @@ static void pause_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (trg_client_is_connected(priv->client))
-        dispatch_async(priv->client, torrent_pause(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client, torrent_pause(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static void pause_all_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -399,8 +399,8 @@ static void pause_all_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (trg_client_is_connected(priv->client))
-        dispatch_async(priv->client, torrent_pause(NULL), on_generic_interactive_action_response,
-                       win);
+        dispatch_rpc_async(priv->client, torrent_pause(NULL),
+                           on_generic_interactive_action_response, win);
 }
 
 gint trg_add_from_filename(TrgMainWindow *win, gchar **uris)
@@ -456,8 +456,8 @@ static void resume_all_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (trg_client_is_connected(priv->client))
-        dispatch_async(priv->client, torrent_start(NULL), on_generic_interactive_action_response,
-                       win);
+        dispatch_rpc_async(priv->client, torrent_start(NULL),
+                           on_generic_interactive_action_response, win);
 }
 
 static void resume_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -465,8 +465,8 @@ static void resume_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (trg_client_is_connected(priv->client))
-        dispatch_async(priv->client, torrent_start(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client, torrent_start(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static void disconnect_cb(GtkWidget *w G_GNUC_UNUSED, gpointer data)
@@ -515,7 +515,7 @@ void connect_cb(GtkWidget *w, gpointer data)
 
     trg_status_bar_push_connection_msg(priv->statusBar, _("Connecting..."));
     trg_client_inc_connid(priv->client);
-    dispatch_async(priv->client, session_get(), on_session_get, data);
+    dispatch_rpc_async(priv->client, session_get(), on_session_get, data);
 }
 
 static void open_local_prefs_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -598,8 +598,9 @@ static void reannounce_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (trg_client_is_connected(priv->client))
-        dispatch_async(priv->client, torrent_reannounce(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client,
+                           torrent_reannounce(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static void verify_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -607,8 +608,8 @@ static void verify_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (is_ready_for_torrent_action(win))
-        dispatch_async(priv->client, torrent_verify(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client, torrent_verify(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static void start_now_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -616,8 +617,9 @@ static void start_now_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (is_ready_for_torrent_action(win))
-        dispatch_async(priv->client, torrent_start_now(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client,
+                           torrent_start_now(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static void up_queue_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -625,9 +627,9 @@ static void up_queue_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (priv->queuesEnabled && is_ready_for_torrent_action(win))
-        dispatch_async(priv->client,
-                       torrent_queue_move_up(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client,
+                           torrent_queue_move_up(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static void top_queue_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -635,9 +637,9 @@ static void top_queue_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (priv->queuesEnabled && is_ready_for_torrent_action(win))
-        dispatch_async(priv->client,
-                       torrent_queue_move_top(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client,
+                           torrent_queue_move_top(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static void bottom_queue_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -645,9 +647,9 @@ static void bottom_queue_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (priv->queuesEnabled && is_ready_for_torrent_action(win))
-        dispatch_async(priv->client,
-                       torrent_queue_move_bottom(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client,
+                           torrent_queue_move_bottom(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static void down_queue_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
@@ -655,9 +657,9 @@ static void down_queue_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
     if (priv->queuesEnabled && is_ready_for_torrent_action(win))
-        dispatch_async(priv->client,
-                       torrent_queue_move_down(build_json_id_array(priv->torrentTreeView)),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client,
+                           torrent_queue_move_down(build_json_id_array(priv->torrentTreeView)),
+                           on_generic_interactive_action_response, win);
 }
 
 static gint confirm_action_dialog(GtkWindow *gtk_win, GtkTreeSelection *selection,
@@ -737,8 +739,8 @@ static void remove_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
 
     if (confirm_action_dialog(GTK_WINDOW(win), selection, _("Remove"), _("_Remove"))
         == GTK_RESPONSE_ACCEPT)
-        dispatch_async(priv->client, torrent_remove(ids, FALSE),
-                       on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client, torrent_remove(ids, FALSE),
+                           on_generic_interactive_action_response, win);
     else
         json_array_unref(ids);
 }
@@ -757,7 +759,7 @@ static void delete_cb(GtkWidget *w G_GNUC_UNUSED, TrgMainWindow *win)
 
     if (confirm_action_dialog(GTK_WINDOW(win), selection, _("Remove and delete"), _("_Delete"))
         == GTK_RESPONSE_ACCEPT)
-        dispatch_async(priv->client, torrent_remove(ids, TRUE), on_delete_complete, win);
+        dispatch_rpc_async(priv->client, torrent_remove(ids, TRUE), on_delete_complete, win);
     else
         json_array_unref(ids);
 }
@@ -860,7 +862,7 @@ gboolean on_session_set(gpointer data)
     TrgMainWindow *win = TRG_MAIN_WINDOW(response->cb_data);
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
-    if (response->status == CURLE_OK || response->status == FAIL_RESPONSE_UNSUCCESSFUL)
+    if (response->status == SOUP_STATUS_OK || response->status == FAIL_RESULT_UNSUCCESSFUL)
         trg_client_update_session(priv->client, on_session_get, response->cb_data);
 
     trg_dialog_error_handler(TRG_MAIN_WINDOW(response->cb_data), response);
@@ -953,7 +955,8 @@ static gboolean on_session_get(gpointer data)
     if (!isConnected) {
         trg_main_window_conn_changed(win, TRUE);
         trg_trackers_tree_view_new_connection(priv->trackersTreeView, client);
-        dispatch_async(client, torrent_get(TORRENT_GET_TAG_MODE_FULL), on_torrent_get_first, win);
+        dispatch_rpc_async(client, torrent_get(TORRENT_GET_TAG_MODE_FULL), on_torrent_get_first,
+                           win);
     }
 
     trg_response_free(response);
@@ -1037,14 +1040,14 @@ static gboolean on_torrent_get(gpointer data, int mode)
     if (interval < 1)
         interval = TRG_INTERVAL_DEFAULT;
 
-    if (response->status != CURLE_OK) {
+    if (response->status != SOUP_STATUS_OK) {
         gint64 max_retries = trg_prefs_get_int(prefs, TRG_PREFS_KEY_RETRIES, TRG_PREFS_CONNECTION);
 
         if (trg_client_inc_failcount(client) >= max_retries) {
             trg_main_window_conn_changed(win, FALSE);
             trg_dialog_error_handler(win, response);
         } else {
-            gchar *msg = make_error_message(response->obj, response->status);
+            gchar *msg = make_error_message(response->obj, response->status, response->err_msg);
             gchar *statusBarMsg
                 = g_strdup_printf(_("Request %d/%d failed: %s"), trg_client_get_failcount(client),
                                   (gint)max_retries, msg);
@@ -1157,7 +1160,7 @@ static gboolean trg_update_torrents_timerfunc(gpointer data)
                         % trg_prefs_get_int(prefs, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY,
                                             TRG_PREFS_CONNECTION)
                     != 0));
-        dispatch_async(
+        dispatch_rpc_async(
             tc, torrent_get(activeOnly ? TORRENT_GET_TAG_MODE_UPDATE : TORRENT_GET_TAG_MODE_FULL),
             activeOnly ? on_torrent_get_active : on_torrent_get_update, data);
     }
@@ -1259,11 +1262,11 @@ static gboolean trg_dialog_error_handler(TrgMainWindow *win, trg_response *respo
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
 
-    if (response->status != CURLE_OK) {
+    if (response->status != SOUP_STATUS_OK) {
         GtkWidget *dialog;
         const gchar *msg;
 
-        msg = make_error_message(response->obj, response->status);
+        msg = make_error_message(response->obj, response->status, response->err_msg);
         trg_status_bar_clear_indicators(priv->statusBar);
         trg_status_bar_push_connection_msg(priv->statusBar, msg);
         dialog = gtk_message_dialog_new(GTK_WINDOW(win), GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
@@ -1316,7 +1319,7 @@ gboolean on_delete_complete(gpointer data)
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
     TrgClient *tc = priv->client;
 
-    if (trg_client_is_connected(tc) && response->status == CURLE_OK)
+    if (trg_client_is_connected(tc) && response->status == SOUP_STATUS_OK)
         trg_client_update_session(priv->client, on_session_get, response->cb_data);
 
     return on_generic_interactive_action_response(data);
@@ -1330,14 +1333,14 @@ void on_generic_interactive_action(TrgMainWindow *win, trg_response *response)
     if (trg_client_is_connected(tc)) {
         trg_dialog_error_handler(win, response);
 
-        if (response->status == CURLE_OK) {
+        if (response->status == SOUP_STATUS_OK) {
             gint64 id;
             if (json_object_has_member(response->obj, PARAM_TAG))
                 id = json_object_get_int_member(response->obj, PARAM_TAG);
             else
                 id = TORRENT_GET_TAG_MODE_FULL;
 
-            dispatch_async(tc, torrent_get(id), on_torrent_get_interactive, win);
+            dispatch_rpc_async(tc, torrent_get(id), on_torrent_get_interactive, win);
         }
     }
 
@@ -1605,9 +1608,9 @@ static void set_limit_cb(GtkWidget *w, TrgMainWindow *win)
     json_object_set_boolean_member(args, enabledKey, speed >= 0);
 
     if (limitIds)
-        dispatch_async(priv->client, req, on_generic_interactive_action_response, win);
+        dispatch_rpc_async(priv->client, req, on_generic_interactive_action_response, win);
     else
-        dispatch_async(priv->client, req, on_session_set, win);
+        dispatch_rpc_async(priv->client, req, on_session_set, win);
 }
 
 static void set_priority_cb(GtkWidget *w, TrgMainWindow *win)
@@ -1628,7 +1631,7 @@ static void set_priority_cb(GtkWidget *w, TrgMainWindow *win)
 
     json_object_set_int_member(args, FIELD_BANDWIDTH_PRIORITY, priority);
 
-    dispatch_async(priv->client, req, on_generic_interactive_action_response, win);
+    dispatch_rpc_async(priv->client, req, on_generic_interactive_action_response, win);
 }
 
 static GtkWidget *limit_item_new(TrgMainWindow *win, GtkWidget *menu, gint64 currentLimit,
@@ -2001,8 +2004,8 @@ static void trg_main_window_set_hidden_to_tray(TrgMainWindow *win, gboolean hidd
 
         if (priv->timerId > 0) {
             g_clear_handle_id(&priv->timerId, g_source_remove);
-            dispatch_async(priv->client, torrent_get(TORRENT_GET_TAG_MODE_FULL),
-                           on_torrent_get_update, win);
+            dispatch_rpc_async(priv->client, torrent_get(TORRENT_GET_TAG_MODE_FULL),
+                               on_torrent_get_update, win);
         }
     }
 

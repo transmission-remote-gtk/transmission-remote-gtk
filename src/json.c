@@ -45,43 +45,6 @@ gchar *trg_serialize(JsonNode *req)
     return response;
 }
 
-JsonObject *trg_deserialize(trg_response *response, GError **error)
-{
-    JsonParser *parser;
-    JsonNode *root;
-    JsonObject *ret = NULL;
-
-    parser = json_parser_new();
-    json_parser_load_from_data(parser, response->raw, response->size, error);
-    if (*error == NULL) {
-        root = json_parser_get_root(parser);
-#ifdef DEBUG
-        if (g_getenv("TRG_SHOW_INCOMING") != NULL) {
-            g_debug("<=(INcoming)<=: %s", response->raw);
-        } else if (g_getenv("TRG_SHOW_INCOMING_PRETTY") != NULL) {
-            JsonGenerator *pg;
-            gsize len;
-            gchar *pgdata;
-
-            pg = json_generator_new();
-            g_object_set(pg, "pretty", TRUE, NULL);
-            json_generator_set_root(pg, root);
-
-            pgdata = json_generator_to_data(pg, &len);
-            g_debug("<=(incoming)<=:\n%s\n", pgdata);
-            g_free(pgdata);
-
-            g_object_unref(pg);
-        }
-#endif
-        ret = json_node_get_object(root);
-        json_object_ref(ret);
-    }
-
-    g_object_unref(parser);
-    return ret;
-}
-
 JsonObject *node_get_arguments(JsonNode *req)
 {
     JsonObject *rootObj = json_node_get_object(req);

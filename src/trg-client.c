@@ -22,16 +22,10 @@
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gprintf.h>
+#include <libsoup/soup.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-
-#if HAVE_LIBPROXY
-#include <proxy.h>
-#endif
-
-#include <curl/curl.h>
-#include <curl/easy.h>
 
 #include "json.h"
 #include "protocol-constants.h"
@@ -43,17 +37,25 @@
 /* This class manages/does quite a few things, and is passed around a lot. It:
  *
  * 1) Holds/inits the single TrgPrefs object for managing configuration.
- * 2) Manages a thread pool for making requests
- *    (each thread has its own CURL client in thread local storage)
- * 3) Holds current connection details needed by CURL clients.
- *    (session ID, username, password, URL, ssl, proxy)
+ * 3) Holds SoupSession for connection reuse
  * 4) Holds a hash table for looking up a torrent by its ID.
- * 5) Dispatches synchronous/asyncrhonous requests and tracks failures.
+ * 5) Dispatches asyncrhonous requests and tracks failures.
  * 6) Holds connection state, an update serial, and provides signals for
  *    connect/disconnect.
  * 7) Provides a mutex for locking updates.
  * 8) Holds the latest session object sent in a session-get response.
  */
+
+/* rpc_request struct manages state for callbacks */
+typedef struct {
+    TrgClient *client;
+    SoupMessage *msg;
+    GCancellable *cancellable;
+    gint connid;
+    GBytes *body;
+    GSourceFunc response_cb;
+    gpointer *cb_data;
+} trg_request;
 
 G_DEFINE_TYPE(TrgClient, trg_client, G_TYPE_OBJECT)
 enum {
@@ -74,26 +76,18 @@ struct _TrgClientPrivate {
     gboolean ssl;
     gboolean ssl_validate;
     gdouble version;
-    char *url;
+    GUri *url;
     char *username;
     char *password;
-    char *proxy;
-    GList *headers;
+    GHashTable *headers;
     GHashTable *torrentTable;
-    GThreadPool *pool;
     TrgPrefs *prefs;
+    SoupSession *rpc_session;
     gint configSerial;
-    guint http_class;
     GMutex configMutex;
     gboolean seedRatioLimited;
     gdouble seedRatioLimit;
 };
-
-static void trg_tls_free(gpointer data);
-
-static GPrivate tls_key = G_PRIVATE_INIT(trg_tls_free);
-
-static void dispatch_async_threadfunc(trg_request *reqrsp, TrgClient *tc);
 
 static void trg_client_get_property(GObject *object, guint property_id, GValue *value,
                                     GParamSpec *pspec)
@@ -117,6 +111,9 @@ static void trg_client_set_property(GObject *object, guint property_id, const GV
 
 static void trg_client_dispose(GObject *object)
 {
+    TrgClientPrivate *priv = TRG_CLIENT(object)->priv;
+    soup_session_abort(priv->rpc_session);
+    g_object_unref(priv->rpc_session);
     G_OBJECT_CLASS(trg_client_parent_class)->dispose(object);
 }
 
@@ -127,14 +124,11 @@ static void trg_client_finalize(GObject *object)
 
     g_clear_pointer(&priv->session_id, g_free);
     g_clear_pointer(&priv->session, json_object_unref);
-    g_clear_pointer(&priv->url, g_free);
+    g_clear_pointer(&priv->url, g_uri_unref);
     g_clear_pointer(&priv->username, g_free);
     g_clear_pointer(&priv->password, g_free);
-    g_list_free_full(priv->headers, g_free);
-    g_clear_pointer(&priv->proxy, g_free);
+    g_clear_pointer(&priv->headers, g_hash_table_unref);
     g_clear_pointer(&priv->torrentTable, g_hash_table_unref);
-    g_thread_pool_free(priv->pool, TRUE, TRUE);
-
     G_OBJECT_CLASS(trg_client_parent_class)->finalize(object);
 }
 
@@ -165,15 +159,13 @@ TrgClient *trg_client_new(void)
     TrgClient *tc = g_object_new(TRG_TYPE_CLIENT, NULL);
     TrgClientPrivate *priv = tc->priv;
     TrgPrefs *prefs = priv->prefs = trg_prefs_new();
+    priv->rpc_session = soup_session_new_with_options("user-agent", PACKAGE_NAME, NULL);
 
     trg_prefs_load(prefs);
 
     g_mutex_init(&priv->configMutex);
     priv->seedRatioLimited = FALSE;
     priv->seedRatioLimit = 0.00;
-
-    priv->pool
-        = g_thread_pool_new((GFunc)dispatch_async_threadfunc, tc, DISPATCH_POOL_SIZE, TRUE, NULL);
 
     tr_formatter_size_init(disk_K, _(disk_K_str), _(disk_M_str), _(disk_G_str), _(disk_T_str));
     tr_formatter_speed_init(speed_K, _(speed_K_str), _(speed_M_str), _(speed_G_str),
@@ -204,6 +196,12 @@ void trg_client_inc_connid(TrgClient *tc)
     g_atomic_int_inc(&priv->connid);
 }
 
+static gint trg_client_get_connid(TrgClient *tc)
+{
+    TrgClientPrivate *priv = tc->priv;
+    return g_atomic_int_get(&priv->connid);
+}
+
 void trg_client_set_session(TrgClient *tc, JsonObject *session)
 {
     TrgClientPrivate *priv = tc->priv;
@@ -227,11 +225,12 @@ TrgPrefs *trg_client_get_prefs(TrgClient *tc)
     return tc->priv->prefs;
 }
 
-static GList *trg_client_headers_array_to_list(JsonArray *array)
+static GHashTable *trg_client_headers_array_to_table(JsonArray *array)
 {
-    GList *output_headers = NULL, *nodes, *nodes_iter;
+    GList *nodes, *nodes_iter;
     const gchar *key, *value;
     JsonNode *header_node;
+    GHashTable *headers;
 
     if (!array)
         return NULL;
@@ -240,6 +239,7 @@ static GList *trg_client_headers_array_to_list(JsonArray *array)
     if (!nodes)
         return NULL;
 
+    headers = g_hash_table_new(NULL, NULL);
     for (nodes_iter = g_list_first(nodes); nodes_iter; nodes_iter = g_list_next(nodes_iter)) {
         header_node = nodes_iter->data;
         if (!header_node)
@@ -252,9 +252,16 @@ static GList *trg_client_headers_array_to_list(JsonArray *array)
         key = json_object_get_string_member(header_object, TRG_PREFS_KEY_CUSTOM_HEADER_NAME);
         value = json_object_get_string_member(header_object, TRG_PREFS_KEY_CUSTOM_HEADER_VALUE);
         if (key && value)
-            output_headers = g_list_prepend(output_headers, g_strdup_printf("%s: %s", key, value));
+            g_hash_table_insert(headers, (gpointer)key, (gpointer)value);
     }
-    return output_headers;
+
+    return headers;
+}
+
+static void trg_client_inject_custom_header(gpointer key, gpointer value, gpointer user_data)
+{
+    SoupMessageHeaders *headers = user_data;
+    soup_message_headers_replace(headers, (gchar *)key, (gchar *)value);
 }
 
 gboolean trg_client_parse_settings(TrgClient *tc, gchar **err_msg)
@@ -262,31 +269,26 @@ gboolean trg_client_parse_settings(TrgClient *tc, gchar **err_msg)
     TrgClientPrivate *priv = tc->priv;
     TrgPrefs *prefs = priv->prefs;
     JsonArray *headers;
-
+    g_autoptr(GError) uri_err = NULL;
     gint port;
-    gchar *host, *path;
-#if HAVE_LIBPROXY
-    pxProxyFactory *pf = NULL;
-#endif
 
     g_mutex_lock(&priv->configMutex);
 
     trg_prefs_set_connection(prefs, trg_prefs_get_profile(prefs));
 
-    g_clear_pointer(&priv->url, g_free);
+    g_clear_pointer(&priv->url, g_uri_unref);
     g_clear_pointer(&priv->username, g_free);
     g_clear_pointer(&priv->password, g_free);
-    g_list_free_full(priv->headers, g_free);
+    g_clear_pointer(&priv->headers, g_hash_table_unref);
     priv->headers = NULL;
 
     port = trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_CONNECTION);
-
-    host = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_CONNECTION);
-    path = trg_prefs_get_string(prefs, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_CONNECTION);
+    g_autofree gchar *host
+        = trg_prefs_get_string(prefs, TRG_PREFS_KEY_HOSTNAME, TRG_PREFS_CONNECTION);
+    g_autofree gchar *path
+        = trg_prefs_get_string(prefs, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_CONNECTION);
 
     if (!host || strlen(host) < 1) {
-        g_free(host);
-        g_free(path);
         g_mutex_unlock(&priv->configMutex);
         *err_msg = g_strdup("Bad hostname.");
         return FALSE;
@@ -296,56 +298,26 @@ gboolean trg_client_parse_settings(TrgClient *tc, gchar **err_msg)
     priv->ssl_validate
         = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL_VALIDATE, TRG_PREFS_CONNECTION);
 
-    priv->url = g_strdup_printf("%s://%s:%d%s", priv->ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX,
-                                host, port, path);
-    g_free(host);
-    g_free(path);
+    g_autofree gchar *uri_str = g_strdup_printf(
+        "%s://%s:%d%s", priv->ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX, host, port, path);
+
+    priv->url = g_uri_parse(uri_str, G_URI_FLAGS_NONE, &uri_err);
+    if (uri_err) {
+        g_mutex_unlock(&priv->configMutex);
+        *err_msg = g_strdup(uri_err->message);
+        return FALSE;
+    }
 
     priv->username = trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_CONNECTION);
-
     priv->password = trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD, TRG_PREFS_CONNECTION);
 
     headers = trg_prefs_get_array(prefs, TRG_PREFS_KEY_CUSTOM_HEADERS, TRG_PREFS_CONNECTION);
-    if (headers) {
-        priv->headers = trg_client_headers_array_to_list(headers);
-    }
-
-    g_clear_pointer(&priv->proxy, g_free);
-
-#if HAVE_LIBPROXY
-    if ((pf = px_proxy_factory_new())) {
-        char **proxies = px_proxy_factory_get_proxies(pf, priv->url);
-        int i;
-
-        for (i = 0; proxies[i]; i++) {
-            if (g_str_has_prefix(proxies[i], HTTP_URI_PREFIX)
-                || g_str_has_prefix(proxies[i], HTTPS_URI_PREFIX)) {
-                g_free(priv->proxy);
-                priv->proxy = proxies[i];
-            } else {
-                g_free(proxies[i]);
-            }
-        }
-
-        g_free(proxies);
-        px_proxy_factory_free(pf);
-    }
-#endif
+    if (headers)
+        priv->headers = trg_client_headers_array_to_table(headers);
 
     priv->configSerial++;
     g_mutex_unlock(&priv->configMutex);
     return TRUE;
-}
-
-static void trg_client_inject_custom_headers(TrgClient *tc, struct curl_slist **headers)
-{
-    GList *iter;
-    if (!tc->priv->headers)
-        return;
-
-    for (iter = g_list_first(tc->priv->headers); iter; iter = g_list_next(iter)) {
-        *headers = curl_slist_append(*headers, iter->data);
-    }
 }
 
 gchar *trg_client_get_password(TrgClient *tc)
@@ -356,11 +328,6 @@ gchar *trg_client_get_password(TrgClient *tc)
 gchar *trg_client_get_username(TrgClient *tc)
 {
     return tc->priv->username;
-}
-
-gchar *trg_client_get_url(TrgClient *tc)
-{
-    return tc->priv->url;
 }
 
 gchar *trg_client_get_session_id(TrgClient *tc)
@@ -406,11 +373,6 @@ JsonObject *trg_client_get_session(TrgClient *tc)
     return tc->priv->session;
 }
 
-void trg_client_thread_pool_push(TrgClient *tc, gpointer data, GError **err)
-{
-    g_thread_pool_push(tc->priv->pool, data, err);
-}
-
 void trg_client_inc_serial(TrgClient *tc)
 {
     TrgClientPrivate *priv = tc->priv;
@@ -430,11 +392,6 @@ gboolean trg_client_get_ssl(TrgClient *tc)
 gboolean trg_client_get_ssl_validate(TrgClient *tc)
 {
     return tc->priv->ssl_validate;
-}
-
-gchar *trg_client_get_proxy(TrgClient *tc)
-{
-    return tc->priv->proxy;
 }
 
 void trg_client_set_torrent_table(TrgClient *tc, GHashTable *table)
@@ -481,352 +438,18 @@ void trg_client_configunlock(TrgClient *tc)
     g_mutex_unlock(&tc->priv->configMutex);
 }
 
-/* formerly http.c */
-
 void trg_response_free(trg_response *response)
 {
     if (response) {
         g_clear_pointer(&response->obj, json_object_unref);
-        g_clear_pointer(&response->raw, g_free);
+        g_clear_pointer(&response->err_msg, g_free);
         g_free(response);
     }
 }
 
-static size_t http_receive_callback(void *ptr, size_t size, size_t nmemb, void *data)
+void trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer data)
 {
-    size_t realsize = size * nmemb;
-    trg_response *mem = (trg_response *)data;
-
-    mem->raw = g_realloc(mem->raw, mem->size + realsize + 1);
-    if (mem->raw) {
-        memcpy(&(mem->raw[mem->size]), ptr, realsize);
-        mem->size += realsize;
-        mem->raw[mem->size] = 0;
-    }
-
-    return realsize;
-}
-
-static size_t header_callback(void *ptr, size_t size, size_t nmemb, void *data)
-{
-    char *header = (char *)(ptr);
-    TrgClient *tc = TRG_CLIENT(data);
-    gchar *session_id;
-
-    if (g_ascii_strncasecmp(header, X_TRANSMISSION_SESSION_ID_HEADER_PREFIX,
-                            strlen(X_TRANSMISSION_SESSION_ID_HEADER_PREFIX))
-        == 0) {
-        char *nl;
-
-        session_id = g_strdup(header);
-        nl = strrchr(session_id, '\r');
-        if (nl)
-            *nl = '\0';
-
-        trg_client_set_session_id(tc, session_id);
-    }
-
-    return (nmemb * size);
-}
-
-static trg_tls *trg_tls_new(TrgClient *tc)
-{
-    trg_tls *tls = g_new0(trg_tls, 1);
-
-    tls->curl = curl_easy_init();
-    tls->serial = -1;
-
-    return tls;
-}
-
-static void trg_tls_free(gpointer data)
-{
-    trg_tls *tls = (trg_tls *)data;
-    if (tls) {
-        curl_easy_cleanup(tls->curl);
-    }
-}
-
-static trg_tls *get_tls(TrgClient *tc)
-{
-    trg_tls *tls = (trg_tls *)g_private_get(&tls_key);
-    if (!tls) {
-        tls = trg_tls_new(tc);
-        g_private_set(&tls_key, tls);
-    }
-
-    return tls;
-}
-
-static CURL *get_curl(TrgClient *tc, guint http_class)
-{
-    TrgClientPrivate *priv = tc->priv;
-    TrgPrefs *prefs = trg_client_get_prefs(tc);
-    trg_tls *tls = get_tls(tc);
-    CURL *curl = tls->curl;
-    gchar *username;
-    gchar *password;
-
-    g_mutex_lock(&priv->configMutex);
-
-    if (priv->configSerial > tls->serial || http_class != priv->http_class) {
-        gchar *proxy;
-
-        curl_easy_reset(curl);
-
-        curl_easy_setopt(curl, CURLOPT_USERAGENT, PACKAGE_NAME);
-        curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, &http_receive_callback);
-#ifdef DEBUG
-        if (g_getenv("TRG_CURL_VERBOSE") != NULL)
-            curl_easy_setopt(curl, CURLOPT_VERBOSE, 1);
-#endif
-
-        if (http_class == HTTP_CLASS_TRANSMISSION) {
-            curl_easy_setopt(curl, CURLOPT_WRITEHEADER, (void *)tc);
-            curl_easy_setopt(curl, CURLOPT_HEADERFUNCTION, &header_callback);
-            username = trg_client_get_username(tc);
-            password = trg_client_get_password(tc);
-            if (username && password) {
-                curl_easy_setopt(curl, CURLOPT_HTTPAUTH, CURLAUTH_BASIC);
-                curl_easy_setopt(curl, CURLOPT_USERNAME, username);
-                curl_easy_setopt(curl, CURLOPT_PASSWORD, password);
-            }
-            curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
-        }
-
-        if (trg_client_get_ssl(tc) && !trg_client_get_ssl_validate(tc)) {
-
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYHOST, 0);
-            curl_easy_setopt(curl, CURLOPT_SSL_VERIFYPEER, 0);
-        }
-
-        proxy = trg_client_get_proxy(tc);
-        if (proxy) {
-            curl_easy_setopt(curl, CURLOPT_PROXYTYPE, CURLPROXY_HTTP);
-            curl_easy_setopt(curl, CURLOPT_PROXY, proxy);
-        }
-
-        tls->serial = priv->configSerial;
-        priv->http_class = http_class;
-    }
-
-    if (http_class == HTTP_CLASS_TRANSMISSION)
-        curl_easy_setopt(curl, CURLOPT_URL, trg_client_get_url(tc));
-
-    curl_easy_setopt(curl, CURLOPT_TIMEOUT,
-                     (long)trg_prefs_get_int(prefs, TRG_PREFS_KEY_TIMEOUT, TRG_PREFS_CONNECTION));
-
-    curl_easy_setopt(curl, CURLOPT_ACCEPT_ENCODING, "gzip");
-
-    g_mutex_unlock(&priv->configMutex);
-
-    /* Headers are set on each use, then freed, so make sure invalid headers aren't still around. */
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, NULL);
-
-    return curl;
-}
-
-static int trg_http_perform_inner(TrgClient *tc, trg_request *request, trg_response *response,
-                                  gboolean recurse)
-{
-    CURL *curl = get_curl(tc, HTTP_CLASS_TRANSMISSION);
-    struct curl_slist *headers = NULL;
-    gchar *session_id = NULL;
-    long httpCode = 0;
-
-    response->size = 0;
-    response->raw = NULL;
-
-    curl_easy_setopt(curl, CURLOPT_POSTFIELDS, request->body);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)response);
-
-    session_id = trg_client_get_session_id(tc);
-    if (session_id) {
-        headers = curl_slist_append(NULL, session_id);
-        g_free(session_id);
-    }
-
-    trg_client_inject_custom_headers(tc, &headers);
-
-    curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-    response->status = curl_easy_perform(curl);
-
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-
-    g_clear_pointer(&headers, curl_slist_free_all);
-
-    if (response->status == CURLE_OK) {
-        if (httpCode == HTTP_CONFLICT && recurse == TRUE) {
-            g_free(response->raw);
-            return trg_http_perform_inner(tc, request, response, FALSE);
-        } else if (httpCode != HTTP_OK) {
-            response->status = (-httpCode) - 100;
-        }
-    }
-
-    return response->status;
-}
-
-int trg_http_perform(TrgClient *tc, trg_request *request, trg_response *rsp)
-{
-    return trg_http_perform_inner(tc, request, rsp, TRUE);
-}
-
-static void trg_request_free(trg_request *req)
-{
-    if (req) {
-        g_clear_pointer(&req->body, g_free);
-        g_clear_pointer(&req->url, g_free);
-        g_clear_pointer(&req->cookie, g_free);
-        g_clear_pointer(&req->node, json_node_free);
-        g_free(req);
-    }
-}
-
-/* formerly dispatch.c */
-
-trg_response *dispatch(TrgClient *tc, trg_request *req)
-{
-    trg_response *response = g_new0(trg_response, 1);
-    GError *decode_error = NULL;
-    JsonNode *result;
-
-    if (req->node && !req->body)
-        req->body = trg_serialize(req->node);
-
-#ifdef DEBUG
-    if (g_getenv("TRG_SHOW_OUTGOING"))
-        g_message("=>(OUTgoing)=>: %s", req->body);
-#endif
-
-    trg_http_perform(tc, req, response);
-
-    if (response->status == CURLE_OK)
-        response->obj = trg_deserialize(response, &decode_error);
-
-    g_free(response->raw);
-    response->raw = NULL;
-
-    if (response->status != CURLE_OK)
-        return response;
-
-    if (decode_error) {
-        g_error("JSON decoding error: %s", decode_error->message);
-        g_error_free(decode_error);
-        response->status = FAIL_JSON_DECODE;
-        return response;
-    }
-
-    result = json_object_get_member(response->obj, FIELD_RESULT);
-    if (!result || g_strcmp0(json_node_get_string(result), FIELD_SUCCESS))
-        response->status = FAIL_RESPONSE_UNSUCCESSFUL;
-
-    return response;
-}
-
-trg_response *dispatch_public_http(TrgClient *tc, trg_request *req)
-{
-    trg_response *response = g_new0(trg_response, 1);
-    CURL *curl = get_curl(tc, HTTP_CLASS_PUBLIC);
-    struct curl_slist *headers = NULL;
-    long httpCode = 0;
-    gchar *cookie_header = NULL;
-
-    response->size = 0;
-    response->raw = NULL;
-
-    curl_easy_setopt(curl, CURLOPT_URL, req->url);
-    curl_easy_setopt(curl, CURLOPT_WRITEDATA, (void *)response);
-
-    if (req->cookie) {
-        cookie_header = g_strdup_printf("Cookie: %s", req->cookie);
-        headers = curl_slist_append(NULL, cookie_header);
-    }
-
-    if (headers)
-        curl_easy_setopt(curl, CURLOPT_HTTPHEADER, headers);
-
-    response->status = curl_easy_perform(curl);
-
-    trg_request_free(req);
-
-    g_free(cookie_header);
-
-    g_clear_pointer(&headers, curl_slist_free_all);
-
-    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &httpCode);
-
-    if (response->status == CURLE_OK && httpCode != HTTP_OK) {
-        response->status = (-httpCode) - 100;
-    }
-
-    return response;
-}
-
-static void dispatch_async_threadfunc(trg_request *req, TrgClient *tc)
-{
-    TrgClientPrivate *priv = tc->priv;
-    trg_response *rsp;
-
-    if (req->url)
-        rsp = dispatch_public_http(tc, req);
-    else
-        rsp = dispatch(tc, req);
-
-    rsp->cb_data = req->cb_data;
-
-    if (req->callback && req->connid == g_atomic_int_get(&priv->connid))
-        g_idle_add(req->callback, rsp);
-    else
-        trg_response_free(rsp);
-
-    trg_request_free(req);
-}
-
-static gboolean dispatch_async_common(TrgClient *tc, trg_request *trg_req, GSourceFunc callback,
-                                      gpointer data)
-{
-    TrgClientPrivate *priv = tc->priv;
-    GError *error = NULL;
-
-    trg_req->callback = callback;
-    trg_req->cb_data = data;
-    trg_req->connid = g_atomic_int_get(&priv->connid);
-
-    trg_client_thread_pool_push(tc, trg_req, &error);
-    if (error) {
-        g_error("thread creation error: %s\n", error->message);
-        g_error_free(error);
-        trg_request_free(trg_req);
-        return FALSE;
-    } else {
-        return TRUE;
-    }
-}
-
-gboolean dispatch_async(TrgClient *tc, JsonNode *req, GSourceFunc callback, gpointer data)
-{
-    trg_request *trg_req = g_new0(trg_request, 1);
-    trg_req->node = req;
-
-    return dispatch_async_common(tc, trg_req, callback, data);
-}
-
-gboolean async_http_request(TrgClient *tc, gchar *url, const gchar *cookie, GSourceFunc callback,
-                            gpointer data)
-{
-    trg_request *trg_req = g_new0(trg_request, 1);
-    trg_req->url = g_strdup(url);
-
-    trg_req->cookie = g_strdup(cookie);
-
-    return dispatch_async_common(tc, trg_req, callback, data);
-}
-
-gboolean trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer data)
-{
-    return dispatch_async(tc, session_get(), callback, data);
+    dispatch_rpc_async(tc, session_get(), callback, data);
 }
 
 gdouble trg_client_get_seed_ratio_limit(TrgClient *tc)
@@ -837,4 +460,247 @@ gdouble trg_client_get_seed_ratio_limit(TrgClient *tc)
 gboolean trg_client_get_seed_ratio_limited(TrgClient *tc)
 {
     return tc->priv->seedRatioLimited;
+}
+
+/* request handling */
+static trg_request *trg_request_new(TrgClient *tc, GBytes *body, GSourceFunc cb, gpointer cb_data)
+{
+    trg_request *request = (trg_request *)g_new0(trg_request, 1);
+
+    request->msg = NULL;
+    request->cancellable = NULL;
+
+    g_object_ref(tc);
+    request->client = tc;
+    request->connid = trg_client_get_connid(tc);
+
+    request->body = body;
+    request->response_cb = cb;
+    request->cb_data = cb_data;
+
+    return request;
+}
+
+static void session_id_callback(SoupMessage *msg, gpointer user_data);
+static gboolean auth_callback(SoupMessage *msg, SoupAuth *auth, gboolean retry, gpointer user_data);
+static void rpc_callback(GObject *source, GAsyncResult *result, gpointer user_data);
+static gboolean tls_callback(SoupMessage *msg, GTlsCertificate *cert,
+                             GTlsCertificateFlags tls_errors, gpointer user_data);
+
+static void trg_request_setup_msg(trg_request *request)
+{
+    TrgClientPrivate *priv = request->client->priv;
+    SoupMessage *msg;
+    SoupMessageHeaders *req_headers;
+
+    /* setup_msg is also called if a previous message failed, so make sure it's clear */
+    if (request->msg) {
+        g_clear_object(&request->msg);
+        g_clear_object(&request->cancellable);
+    }
+
+    msg = soup_message_new_from_uri(SOUP_METHOD_POST, priv->url);
+
+    request->cancellable = g_cancellable_new();
+
+    req_headers = soup_message_get_request_headers(msg);
+    if (priv->headers)
+        g_hash_table_foreach(priv->headers, trg_client_inject_custom_header, req_headers);
+
+    g_autofree gchar *session_id = trg_client_get_session_id(request->client);
+    if (session_id) {
+        soup_message_headers_replace(req_headers, TRANSMISSION_SESSION_ID_HEADER, session_id);
+    }
+
+    g_signal_connect(msg, "accept-certificate", G_CALLBACK(tls_callback), (gpointer)request);
+    g_signal_connect(msg, "authenticate", G_CALLBACK(auth_callback), (gpointer)request);
+    soup_message_add_status_code_handler(msg, "got-headers", SOUP_STATUS_CONFLICT,
+                                         G_CALLBACK(session_id_callback), request);
+
+    request->msg = msg;
+}
+
+static void trg_request_set_body(trg_request *request)
+{
+    /* body must be reset every time auth/redirection is done */
+    soup_message_set_request_body_from_bytes(request->msg, "application/json", request->body);
+}
+
+static void trg_request_send(trg_request *request)
+{
+    TrgClientPrivate *priv = request->client->priv;
+    soup_session_send_and_read_async(priv->rpc_session, request->msg, G_PRIORITY_DEFAULT,
+                                     request->cancellable, rpc_callback, request);
+}
+
+static void trg_request_free(trg_request *request)
+{
+    g_clear_object(&request->client);
+    g_clear_object(&request->msg);
+    g_clear_object(&request->cancellable);
+    g_clear_pointer(&request->body, g_bytes_unref);
+    g_clear_pointer(&request, g_free);
+}
+
+/* Soup Async callbacks for RPC
+ *
+ * dispatch_rpc_async() is the entry point for all async RPC requests, and is a standard callback
+ * based async function. This sets up a soup message with the right headers. The SoupSession will
+ * re-use connection and authentication as long as it is valid. The callbacks then cascade:
+ *
+ * 1. soup_send_async(): send the message async
+ * 2. session_id_callback()/auth_callback()/tls_callback(): Three optional callbacks called if 409
+ * is found, auth is needed, or tls_certs have errors.
+ * 3. rpc_callback(): called on successful response from server
+ * 4. trg_request_callback(): calls the original callback passed to dispatch_rpc_async(), sets
+ *    up a trg_response and/or passes back any errors and state
+ * 5. response_cb(): original callback passed to dispatch_rpc_async().
+ */
+
+static void trg_request_callback(trg_request *request, JsonObject *obj, gint status, gchar *err_msg)
+{
+    if ((request->connid != trg_client_get_connid(request->client)) || !(request->response_cb)) {
+        g_clear_pointer(&err_msg, g_free);
+        g_clear_pointer(&obj, json_object_unref);
+        trg_request_free(request);
+        return;
+    }
+
+    GSourceFunc response_cb = request->response_cb;
+    gpointer cb_data = request->cb_data;
+
+    trg_response *response = (trg_response *)g_new0(trg_response, 1);
+
+    response->obj = obj;
+    response->cb_data = cb_data;
+    response->status = status;
+    response->err_msg = err_msg;
+
+    trg_request_free(request);
+    response_cb(response);
+}
+
+static void rpc_callback(GObject *source, GAsyncResult *result, gpointer user_data)
+{
+    trg_request *request = user_data;
+    g_autofree gchar *data = NULL;
+    g_autoptr(GError) error = NULL;
+    g_autoptr(JsonParser) parser = NULL;
+    g_autoptr(JsonNode) root = NULL;
+    JsonObject *obj = NULL;
+    gint status = SOUP_STATUS_OK;
+    gsize len;
+    gchar *err_msg = NULL;
+    JsonNode *rpc_result;
+
+    GBytes *bytes = soup_session_send_and_read_finish(SOUP_SESSION(source), result, &error);
+    if (error) {
+        if (g_error_matches(error, G_IO_ERROR, G_IO_ERROR_CANCELLED))
+            return;
+
+        status = FAIL_HTTP_UNSUCCESSFUL;
+        err_msg = g_strdup(error->message);
+        goto out;
+    }
+
+    status = soup_message_get_status(request->msg);
+    if (status != SOUP_STATUS_OK) {
+        goto out;
+    }
+
+    /* TODO(?): Switch this to json_parser_load_from_stream_async() when libsoup
+     * can handle threading better. That function works in a thread underneath
+     * the hood so libsoup has trouble with it. See libsoup #307 */
+    parser = json_parser_new();
+    data = (gchar *)g_bytes_unref_to_data(bytes, &len);
+    if (!json_parser_load_from_data(parser, data, len, &error)) {
+        status = FAIL_JSON_DECODE;
+        err_msg = g_strdup(error->message);
+        goto out;
+    }
+
+    root = json_parser_steal_root(parser);
+    if (!root) {
+        status = FAIL_JSON_DECODE;
+        goto out;
+    }
+
+    obj = json_node_dup_object(root);
+    json_object_seal(obj);
+
+    rpc_result = json_object_get_member(obj, FIELD_RESULT);
+    if (!rpc_result || g_strcmp0(json_node_get_string(rpc_result), FIELD_SUCCESS))
+        status = FAIL_RESULT_UNSUCCESSFUL;
+
+out:
+    trg_request_callback(request, obj, status, err_msg);
+}
+
+static gboolean tls_callback(SoupMessage *msg, GTlsCertificate *cert,
+                             GTlsCertificateFlags tls_errors, gpointer user_data)
+{
+    trg_request *request = user_data;
+    return !trg_client_get_ssl_validate(request->client);
+}
+
+static gboolean auth_callback(SoupMessage *msg, SoupAuth *auth, gboolean retry, gpointer user_data)
+{
+    trg_request *request = user_data;
+
+    if (retry)
+        return FALSE;
+
+    soup_auth_authenticate(auth, trg_client_get_username(request->client),
+                           trg_client_get_password(request->client));
+
+    trg_request_set_body(request);
+
+    return TRUE;
+}
+
+static void session_id_callback(SoupMessage *msg, gpointer data)
+{
+    SoupMessageHeaders *response_headers;
+    trg_request *request = data;
+    const gchar *session_id;
+
+    response_headers = soup_message_get_response_headers(msg);
+    session_id = soup_message_headers_get_one(response_headers, TRANSMISSION_SESSION_ID_HEADER);
+
+    g_cancellable_cancel(request->cancellable);
+
+    if (!session_id) {
+        /* If we get a 409 and there's no session_id header this likely isn't transmission */
+        trg_request_callback(request, NULL, FAIL_NO_SESSION_ID, NULL);
+        return;
+    }
+
+    trg_client_set_session_id(request->client, g_strdup(session_id));
+
+    trg_request_setup_msg(request);
+    trg_request_set_body(request);
+    trg_request_send(request);
+}
+
+void dispatch_rpc_async(TrgClient *tc, JsonNode *req, GSourceFunc callback, gpointer data)
+{
+    gchar *req_body;
+    gsize len;
+
+    g_autoptr(JsonGenerator) generator;
+    GBytes *req_bytes;
+
+    generator = json_generator_new();
+    json_generator_set_root(generator, req);
+
+    /* Note: ownership of req_body is taken by g_bytes_new_take() and will
+     * be freed when req_bytes is freed */
+    req_body = json_generator_to_data(generator, &len);
+    req_bytes = g_bytes_new_take((gpointer)req_body, len);
+
+    trg_request *request = trg_request_new(tc, req_bytes, callback, data);
+    trg_request_setup_msg(request);
+
+    trg_request_set_body(request);
+    trg_request_send(request);
 }

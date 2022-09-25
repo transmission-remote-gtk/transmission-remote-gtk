@@ -13,20 +13,19 @@ transmission-remote-gtk:
  - gtk >= 3.22
  - glib >= 2.56 (including gio and gthread)
  - json-glib >= 1.2.8
- - libcurl
+ - libsoup >= 3.0
  - GNU gettext
 
 An example command for getting the packages required for an Ubuntu/Debian
 system:
 
 ```
-# apt install libgtk-3-dev libgeoip-dev gettext libcurl4-openssl-dev libjson-glib-dev
+# apt install libgtk-3-dev libgeoip-dev gettext libsoup-3.0-dev libjson-glib-dev
 ```
 
 ### Optional Dependencies
 The following packages are optional dependencies:
 
- - libproxy, HTTP proxy support
  - libgeoip, country of origin of peers
  - libappindicator or libayatana-appindicator3, Application tray support
 
@@ -53,7 +52,7 @@ meson that will not work for compiling transmission-remote-gtk. Meson can also
 be installed via pip:
 
 ```
-# apt-get install python3-pip
+# apt install python3-pip
 $ pip install meson
 ```
 

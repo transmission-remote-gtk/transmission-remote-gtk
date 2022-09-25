@@ -19,9 +19,6 @@
 
 #include "config.h"
 
-#include <curl/curl.h>
-#include <curl/easy.h>
-
 #include <glib-object.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -54,7 +51,6 @@ int main(int argc, char *argv[])
     TrgGtkApp *gtk_app;
 
     gtk_init(&argc, &argv);
-    curl_global_init(CURL_GLOBAL_ALL);
 
     g_set_application_name(PACKAGE_NAME);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
@@ -67,7 +63,6 @@ int main(int argc, char *argv[])
 
     g_object_unref(gtk_app);
     g_object_unref(client);
-    curl_global_cleanup();
 
     return exitCode;
 }

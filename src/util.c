@@ -26,7 +26,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include <curl/curl.h>
 #include <glib-object.h>
 #include <glib.h>
 #include <glib/gi18n.h>
@@ -310,7 +309,7 @@ void trg_widget_set_visible(GtkWidget *w, gboolean visible)
 
 void trg_error_dialog(GtkWindow *parent, trg_response *response)
 {
-    gchar *msg = make_error_message(response->obj, response->status);
+    gchar *msg = make_error_message(response->obj, response->status, response->err_msg);
     GtkWidget *dialog = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
                                                GTK_BUTTONS_OK, "%s", msg);
     gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
@@ -319,20 +318,26 @@ void trg_error_dialog(GtkWindow *parent, trg_response *response)
     g_free(msg);
 }
 
-gchar *make_error_message(JsonObject *response, int status)
+gchar *make_error_message(JsonObject *response, gint status, gchar *err_msg)
 {
-    if (status == FAIL_JSON_DECODE) {
-        return g_strdup(_("JSON decoding error."));
-    } else if (response && status == FAIL_RESPONSE_UNSUCCESSFUL) {
+    switch (status) {
+
+    case FAIL_HTTP_UNSUCCESSFUL:
+        return g_strdup(err_msg ? err_msg : "Unknown HTTP failure.");
+
+    case FAIL_JSON_DECODE:
+        return g_strdup(err_msg ? err_msg : "Unknown JSON decoding error.");
+
+    case FAIL_RESULT_UNSUCCESSFUL:
         const gchar *resultStr = json_object_get_string_member(response, "result");
-        if (resultStr == NULL)
-            return g_strdup(_("Server responded, but with no result."));
-        else
-            return g_strdup(resultStr);
-    } else if (status <= -100) {
-        return g_strdup_printf(_("Request failed with HTTP code %d"), -(status + 100));
-    } else {
-        return g_strdup(curl_easy_strerror(status));
+        return g_strdup(resultStr ? resultStr : "Server responded, but with no result.");
+
+    case FAIL_NO_SESSION_ID:
+        return g_strdup("No \"" TRANSMISSION_SESSION_ID_HEADER
+                        "\" header sent, is this the right host?");
+
+    default:
+        return g_strdup_printf(_("Request failed with HTTP code: %d"), status);
     }
 }
 

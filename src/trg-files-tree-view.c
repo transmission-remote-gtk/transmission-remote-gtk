@@ -115,7 +115,7 @@ static void send_updated_file_prefs(TrgFilesTreeView *tv)
 
     trg_files_model_set_accept(TRG_FILES_MODEL(model), FALSE);
 
-    dispatch_async(priv->client, req, on_files_update, tv);
+    dispatch_rpc_async(priv->client, req, on_files_update, tv);
 }
 
 static void rename_file(GtkWidget *w G_GNUC_UNUSED, gpointer data)

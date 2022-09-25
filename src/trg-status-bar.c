@@ -94,7 +94,7 @@ static void turtle_toggle(GtkWidget *w, GdkEventButton *event, gpointer data)
                                  GTK_ICON_SIZE_SMALL_TOOLBAR);
     json_object_set_boolean_member(args, SGET_ALT_SPEED_ENABLED, !altSpeedOn);
 
-    dispatch_async(priv->client, req, on_session_set, priv->win);
+    dispatch_rpc_async(priv->client, req, on_session_set, priv->win);
 }
 
 static void trg_status_bar_init(TrgStatusBar *self)

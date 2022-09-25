@@ -57,9 +57,7 @@ static void next_upload(trg_upload *upload)
 {
     JsonNode *req = NULL;
 
-    if (upload->upload_response && upload->progress_index < 1)
-        req = torrent_add_from_response(upload->upload_response, upload->flags);
-    else if (upload->list && upload->progress_index < g_slist_length(upload->list))
+    if (upload->list && upload->progress_index < g_slist_length(upload->list))
         req = torrent_add_from_file((gchar *)g_slist_nth_data(upload->list, upload->progress_index),
                                     upload->flags);
 
@@ -76,7 +74,7 @@ static void next_upload(trg_upload *upload)
             add_priorities(args, upload->file_priorities, upload->n_files);
 
         upload->progress_index++;
-        dispatch_async(upload->client, req, upload_complete_callback, upload);
+        dispatch_rpc_async(upload->client, req, upload_complete_callback, upload);
     } else {
         trg_upload_free(upload);
     }

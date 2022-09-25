@@ -52,8 +52,7 @@ GType trg_torrent_add_dialog_get_type(void);
 TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_filenames(TrgMainWindow *parent,
                                                                TrgClient *client,
                                                                GSList *filenames);
-TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_upload(TrgMainWindow *parent,
-                                                            TrgClient *client, trg_upload *upload);
+
 void trg_torrent_add_dialog(TrgMainWindow *win, TrgClient *client);
 
 G_END_DECLS

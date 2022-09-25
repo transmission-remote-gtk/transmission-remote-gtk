@@ -22,17 +22,14 @@
 #ifndef _TRG_CLIENT_H_
 #define _TRG_CLIENT_H_
 
-#include <curl/curl.h>
-#include <curl/easy.h>
-
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
 
 #include "session-get.h"
 #include "trg-prefs.h"
 
-#define TRANSMISSION_MIN_SUPPORTED              2.0
-#define X_TRANSMISSION_SESSION_ID_HEADER_PREFIX "X-Transmission-Session-Id: "
+#define TRANSMISSION_MIN_SUPPORTED     2.0
+#define TRANSMISSION_SESSION_ID_HEADER "X-Transmission-Session-Id"
 
 #define TORRENT_GET_MODE_FIRST       0
 #define TORRENT_GET_MODE_ACTIVE      1
@@ -44,33 +41,20 @@
 
 #define HTTP_URI_PREFIX  "http"
 #define HTTPS_URI_PREFIX "https"
-#define HTTP_OK          200
-#define HTTP_CONFLICT    409
 
-#define FAIL_JSON_DECODE           -2
-#define FAIL_RESPONSE_UNSUCCESSFUL -3
-#define DISPATCH_POOL_SIZE         3
-
-#define HTTP_CLASS_TRANSMISSION 0
-#define HTTP_CLASS_PUBLIC       1
+#define FAIL_HTTP_UNSUCCESSFUL   -1
+#define FAIL_JSON_DECODE         -2
+#define FAIL_RESULT_UNSUCCESSFUL -3
+#define FAIL_NO_SESSION_ID       -4
 
 typedef struct {
-    int status;
-    int size;
-    char *raw;
+    gint status;
+    gchar *err_msg;
     JsonObject *obj;
     gpointer cb_data;
 } trg_response;
 
-typedef struct {
-    gint connid;
-    JsonNode *node;
-    gchar *body;
-    gchar *url;
-    GSourceFunc callback;
-    gpointer cb_data;
-    gchar *cookie;
-} trg_request;
+void trg_response_free(trg_response *response);
 
 typedef struct _TrgClientPrivate TrgClientPrivate;
 
@@ -93,34 +77,9 @@ typedef struct {
 
 } TrgClientClass;
 
-/* Thread local storage (TLS).
- * CURL clients can't be used concurrently.
- * So create one instance for each thread in the thread pool.
- */
-typedef struct {
-    /* Use a serial to figure out when there's been a configuration change
-     * by comparing with priv->serial.
-     * We lock updating (and checking for updates) with priv->configMutex
-     */
-    int serial;
-    guint client_class;
-    CURL *curl;
-} trg_tls;
-
-/* stuff that used to be in http.h */
-void trg_response_free(trg_response *response);
-int trg_http_perform(TrgClient *tc, trg_request *request, trg_response *rsp);
-
-/* end http.h*/
-
-/* stuff that used to be in dispatch.c */
-trg_response *dispatch(TrgClient *tc, trg_request *req);
-trg_response *dispatch_public_http(TrgClient *tc, trg_request *req);
-gboolean dispatch_async(TrgClient *client, JsonNode *req, GSourceFunc callback, gpointer data);
-gboolean async_http_request(TrgClient *tc, gchar *url, const gchar *cookie, GSourceFunc callback,
-                            gpointer data);
-
-/* end dispatch.c*/
+/* NOTE: This function is NOT THREAD SAFE, it MUST be called from the thread that TrgClient was
+ * created in. */
+void dispatch_rpc_async(TrgClient *client, JsonNode *req, GSourceFunc callback, gpointer data);
 
 GType trg_client_get_type(void);
 
@@ -133,13 +92,8 @@ const gchar *trg_client_get_version_string(TrgClient *tc);
 gint64 trg_client_get_rpc_version(TrgClient *tc);
 gchar *trg_client_get_password(TrgClient *tc);
 gchar *trg_client_get_username(TrgClient *tc);
-gchar *trg_client_get_url(TrgClient *tc);
 gchar *trg_client_get_session_id(TrgClient *tc);
 void trg_client_set_session_id(TrgClient *tc, gchar *session_id);
-#ifndef CURL_NO_SSL
-gboolean trg_client_get_ssl(TrgClient *tc);
-gboolean trg_client_get_ssl_validate(TrgClient *tc);
-#endif
 gchar *trg_client_get_proxy(TrgClient *tc);
 gint64 trg_client_get_serial(TrgClient *tc);
 void trg_client_thread_pool_push(TrgClient *tc, gpointer data, GError **err);
@@ -155,9 +109,11 @@ guint trg_client_get_failcount(TrgClient *tc);
 void trg_client_reset_failcount(TrgClient *tc);
 void trg_client_inc_serial(TrgClient *tc);
 void trg_client_inc_connid(TrgClient *tc);
-gboolean trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer data);
+void trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer data);
 gboolean trg_client_get_seed_ratio_limited(TrgClient *tc);
 gdouble trg_client_get_seed_ratio_limit(TrgClient *tc);
+gboolean trg_client_get_ssl(TrgClient *tc);
+gboolean trg_client_get_ssl_validate(TrgClient *tc);
 
 G_END_DECLS
 #endif /* _TRG_CLIENT_H_ */

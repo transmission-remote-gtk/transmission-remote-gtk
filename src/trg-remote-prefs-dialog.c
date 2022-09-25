@@ -27,6 +27,7 @@
 #if ENABLE_NL_LANGINFO
 #include <langinfo.h>
 #endif
+#include <libsoup/soup.h>
 
 #include "hig.h"
 #include "json.h"
@@ -96,7 +97,7 @@ static void update_session(GtkDialog *dlg)
 
     trg_json_widgets_save(priv->widgets, args);
 
-    dispatch_async(priv->client, request, on_session_set, priv->parent);
+    dispatch_rpc_async(priv->client, request, on_session_set, priv->parent);
 }
 
 static void trg_remote_prefs_response_cb(GtkDialog *dlg, gint res_id, gpointer data G_GNUC_UNUSED)
@@ -407,7 +408,7 @@ static gboolean on_port_tested(gpointer data)
         gtk_button_set_label(GTK_BUTTON(priv->port_test_button), _("Retest"));
         gtk_widget_set_sensitive(priv->port_test_button, TRUE);
 
-        if (response->status == CURLE_OK) {
+        if (response->status == SOUP_STATUS_OK) {
             gboolean isOpen
                 = json_object_get_boolean_member(get_arguments(response->obj), "port-is-open");
             if (isOpen)
@@ -436,7 +437,7 @@ static void port_test_cb(GtkButton *b, gpointer data)
     gtk_button_set_label(b, _("Testing..."));
     gtk_widget_set_sensitive(GTK_WIDGET(b), FALSE);
 
-    dispatch_async(priv->client, req, on_port_tested, data);
+    dispatch_rpc_async(priv->client, req, on_port_tested, data);
 }
 
 static gboolean on_blocklist_updated(gpointer data)
@@ -448,7 +449,7 @@ static gboolean on_blocklist_updated(gpointer data)
         gtk_widget_set_sensitive(priv->blocklist_update_button, TRUE);
         gtk_button_set_label(GTK_BUTTON(priv->blocklist_update_button), _("Update"));
 
-        if (response->status == CURLE_OK) {
+        if (response->status == SOUP_STATUS_OK) {
             JsonObject *args = get_arguments(response->obj);
             gchar *labelText
                 = g_strdup_printf(_("Blocklist (%" G_GINT64_FORMAT " entries)"),
@@ -473,7 +474,7 @@ static gboolean update_blocklist_cb(GtkButton *b, gpointer data)
     gtk_widget_set_sensitive(GTK_WIDGET(b), FALSE);
     gtk_button_set_label(b, _("Updating..."));
 
-    dispatch_async(priv->client, req, on_blocklist_updated, data);
+    dispatch_rpc_async(priv->client, req, on_blocklist_updated, data);
 
     return FALSE;
 }

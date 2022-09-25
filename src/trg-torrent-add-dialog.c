@@ -404,27 +404,6 @@ static void torrent_not_found_error(GtkWindow *parent, gchar *file)
     gtk_widget_destroy(dialog);
 }
 
-static void trg_torrent_add_dialog_set_upload(TrgTorrentAddDialog *d, trg_upload *upload)
-{
-    TrgTorrentAddDialogPrivate *priv = TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(d);
-    GtkButton *chooser = GTK_BUTTON(priv->source_chooser);
-    trg_torrent_file *tor_data = NULL;
-
-    if (upload->uid)
-        gtk_button_set_label(chooser, upload->uid);
-
-    tor_data = trg_parse_torrent_data(upload->upload_response->raw, upload->upload_response->size);
-
-    if (!tor_data) {
-        torrent_not_parsed_warning(GTK_WINDOW(priv->parent));
-    } else {
-        store_add_node(priv->store, NULL, tor_data->top_node, &priv->n_files);
-        trg_torrent_file_free(tor_data);
-    }
-
-    gtk_widget_set_sensitive(priv->file_list, tor_data != NULL);
-}
-
 static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog *d, GSList *filenames)
 {
     TrgTorrentAddDialogPrivate *priv = TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(d);
@@ -642,8 +621,6 @@ static GObject *trg_torrent_add_dialog_constructor(GType type, guint n_construct
 
     if (priv->filenames)
         trg_torrent_add_dialog_set_filenames(TRG_TORRENT_ADD_DIALOG(obj), priv->filenames);
-    else if (priv->upload)
-        trg_torrent_add_dialog_set_upload(TRG_TORRENT_ADD_DIALOG(obj), priv->upload);
 
     g_signal_connect(priv->source_chooser, "clicked",
                      G_CALLBACK(trg_torrent_add_dialog_source_click_cb), obj);
@@ -717,13 +694,6 @@ TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_filenames(TrgMainWindow *pa
 {
     return g_object_new(TRG_TYPE_TORRENT_ADD_DIALOG, "filenames", filenames, "parent", parent,
                         "client", client, NULL);
-}
-
-TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_upload(TrgMainWindow *parent,
-                                                            TrgClient *client, trg_upload *upload)
-{
-    return g_object_new(TRG_TYPE_TORRENT_ADD_DIALOG, "upload", upload, "parent", parent, "client",
-                        client, NULL);
 }
 
 void trg_torrent_add_dialog(TrgMainWindow *win, TrgClient *client)
