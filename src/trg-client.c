@@ -161,6 +161,11 @@ TrgClient *trg_client_new(void)
     TrgPrefs *prefs = priv->prefs = trg_prefs_new();
     priv->rpc_session = soup_session_new_with_options("user-agent", PACKAGE_NAME, NULL);
 
+    if (g_getenv("TRG_CLIENT_DEBUG") != NULL) {
+        g_autoptr(SoupLogger) log = soup_logger_new(SOUP_LOGGER_LOG_BODY);
+        soup_session_add_feature(priv->rpc_session, SOUP_SESSION_FEATURE(log));
+    }
+
     trg_prefs_load(prefs);
 
     g_mutex_init(&priv->configMutex);

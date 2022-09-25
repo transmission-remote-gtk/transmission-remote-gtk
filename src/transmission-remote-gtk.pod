@@ -24,6 +24,19 @@ Start the application minimized
 
 =back
 
+=head1 ENVIRONMENT
+
+The following environment variables an be used when running C<transmission-remote-gtk>:
+
+=over 6
+
+=item $TRG_CLIENT_DEBUG
+
+When this environment is set, verbose HTTP and JSON information will be logged to stdout
+for debugging purposes.
+
+=back
+
 =head1 AUTHOR
 
 Written by Alan Fitton.
