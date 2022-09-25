@@ -684,17 +684,14 @@ static void session_id_callback(SoupMessage *msg, gpointer data)
 
 void dispatch_rpc_async(TrgClient *tc, JsonNode *req, GSourceFunc callback, gpointer data)
 {
+    GBytes *req_bytes;
     gchar *req_body;
     gsize len;
-
-    g_autoptr(JsonGenerator) generator;
-    GBytes *req_bytes;
-
-    generator = json_generator_new();
-    json_generator_set_root(generator, req);
+    g_autoptr(JsonGenerator) generator = NULL;
 
     /* Note: ownership of req_body is taken by g_bytes_new_take() and will
      * be freed when req_bytes is freed */
+    generator = trg_json_serializer(req, FALSE);
     req_body = json_generator_to_data(generator, &len);
     req_bytes = g_bytes_new_take((gpointer)req_body, len);
 
