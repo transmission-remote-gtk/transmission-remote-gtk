@@ -488,7 +488,7 @@ void connect_cb(GtkWidget *w, gpointer data)
     JsonObject *currentProfile = trg_prefs_get_profile(prefs);
     JsonObject *profile = NULL;
     GtkWidget *dialog;
-    int populate_result;
+    g_autofree gchar *err_msg = NULL;
 
     if (w)
         profile = (JsonObject *)g_object_get_data(G_OBJECT(w), "profile");
@@ -501,30 +501,14 @@ void connect_cb(GtkWidget *w, gpointer data)
     else
         trg_prefs_profile_change_emit_signal(prefs);
 
-    populate_result = trg_client_populate_with_settings(priv->client);
-
-    if (populate_result < 0) {
-        gchar *msg;
-
-        switch (populate_result) {
-        case TRG_NO_HOSTNAME_SET:
-            msg = _("No hostname set");
-            break;
-        default:
-            msg = _("Unknown error getting settings");
-            break;
-        }
-
-        dialog = gtk_message_dialog_new(
-            GTK_WINDOW(data), GTK_DIALOG_DESTROY_WITH_PARENT,
-            (populate_result == TRG_NO_HOSTNAME_SET) ? GTK_MESSAGE_INFO : GTK_MESSAGE_ERROR,
-            GTK_BUTTONS_OK, "%s", msg);
+    if (!trg_client_parse_settings(priv->client, &err_msg)) {
+        dialog = gtk_message_dialog_new(GTK_WINDOW(data), GTK_DIALOG_DESTROY_WITH_PARENT,
+                                        GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "%s", err_msg);
         gtk_dialog_run(GTK_DIALOG(dialog));
         gtk_widget_destroy(dialog);
         reset_connect_args(TRG_MAIN_WINDOW(data));
 
-        if (populate_result == TRG_NO_HOSTNAME_SET)
-            open_local_prefs_cb(NULL, win);
+        open_local_prefs_cb(NULL, win);
 
         return;
     }
