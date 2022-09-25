@@ -53,7 +53,7 @@ void add_file_id_to_array(JsonObject *args, const gchar *key, gint index);
 void g_str_slist_free(GSList *list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex *rx, const gchar *uri);
-gchar *make_error_message(JsonObject *response, int status);
+gchar *make_error_message(JsonObject *response, int status, gchar *err_msg);
 void trg_error_dialog(GtkWindow *parent, trg_response *response);
 gchar *add_links_to_text(const gchar *original);
 

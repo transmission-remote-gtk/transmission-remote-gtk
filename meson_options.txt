@@ -1,4 +1,3 @@
-option('libproxy', type: 'feature', value: 'auto', description: 'HTTP proxy support')
 option('geoip', type: 'feature', value: 'auto', description: 'geoip support')
 option('libappindicator', type: 'feature', value: 'auto', description: 'libappindicator')
 option('nl_langinfo', type: 'feature', value: 'auto', description: 'nl_langinfo() support')

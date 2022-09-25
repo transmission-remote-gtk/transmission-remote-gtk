@@ -26,7 +26,6 @@
 #include "trg-client.h"
 
 gchar *trg_serialize(JsonNode *req);
-JsonObject *trg_deserialize(trg_response *response, GError **error);
 JsonObject *get_arguments(JsonObject *req);
 JsonObject *node_get_arguments(JsonNode *req);
 gdouble json_double_to_progress(JsonNode *n);

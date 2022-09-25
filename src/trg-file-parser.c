@@ -129,7 +129,7 @@ static trg_files_tree_node *trg_parse_torrent_file_nodes(be_node *info_node)
     return top_node;
 }
 
-trg_torrent_file *trg_parse_torrent_data(const gchar *data, gsize length)
+static trg_torrent_file *trg_parse_torrent_data(const gchar *data, gsize length)
 {
     trg_torrent_file *ret = NULL;
     be_node *top_node, *info_node, *name_node;

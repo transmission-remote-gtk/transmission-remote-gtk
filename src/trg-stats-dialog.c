@@ -19,10 +19,10 @@
 
 #include "config.h"
 
-#include <curl/curl.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <json-glib/json-glib.h>
+#include <libsoup/soup.h>
 
 #include "hig.h"
 #include "json.h"
@@ -203,7 +203,7 @@ static gboolean on_stats_reply(gpointer data)
 
     priv = TRG_STATS_DIALOG_GET_PRIVATE(response->cb_data);
 
-    if (response->status == CURLE_OK) {
+    if (response->status == SOUP_STATUS_OK) {
         args = get_arguments(response->obj);
 
         g_snprintf(versionStr, sizeof(versionStr), "Transmission %s",
@@ -235,7 +235,7 @@ static gboolean trg_update_stats_timerfunc(gpointer data)
     if (TRG_IS_STATS_DIALOG(data)) {
         priv = TRG_STATS_DIALOG_GET_PRIVATE(data);
         if (trg_client_is_connected(priv->client))
-            dispatch_async(priv->client, session_stats(), on_stats_reply, data);
+            dispatch_rpc_async(priv->client, session_stats(), on_stats_reply, data);
     }
 
     return FALSE;
@@ -294,7 +294,7 @@ static GObject *trg_stats_dialog_constructor(GType type, guint n_construct_prope
     gtk_container_set_border_width(GTK_CONTAINER(tv), GUI_PAD);
     gtk_box_pack_start(GTK_BOX(gtk_bin_get_child(GTK_BIN(obj))), tv, TRUE, TRUE, 0);
 
-    dispatch_async(priv->client, session_stats(), on_stats_reply, obj);
+    dispatch_rpc_async(priv->client, session_stats(), on_stats_reply, obj);
 
     return obj;
 }

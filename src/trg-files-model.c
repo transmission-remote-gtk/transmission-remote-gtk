@@ -26,7 +26,6 @@
 
 #include "protocol-constants.h"
 #include "torrent.h"
-#include "trg-client.h"
 #include "trg-files-model-common.h"
 #include "trg-files-model.h"
 #include "trg-files-tree-view-common.h"

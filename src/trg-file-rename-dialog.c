@@ -87,7 +87,7 @@ static void trg_file_rename_response_cb(GtkDialog *dlg, gint res_id, gpointer da
         GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->treeview));
         trg_files_model_set_accept(TRG_FILES_MODEL(model), FALSE);
 
-        dispatch_async(priv->client, request, on_files_update, priv->treeview);
+        dispatch_rpc_async(priv->client, request, on_files_update, priv->treeview);
     } else {
         g_free(priv->orig_path);
         json_array_unref(priv->ids);
