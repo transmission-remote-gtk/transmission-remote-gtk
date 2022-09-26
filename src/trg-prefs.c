@@ -387,11 +387,6 @@ JsonArray *trg_prefs_get_profiles(TrgPrefs *p)
     return json_object_get_array_member(priv->userObj, TRG_PREFS_KEY_PROFILES);
 }
 
-JsonArray *trg_prefs_get_rss(TrgPrefs *p)
-{
-    return trg_prefs_get_array(p, TRG_PREFS_KEY_RSS, TRG_PREFS_GLOBAL);
-}
-
 void trg_prefs_set_double(TrgPrefs *p, const gchar *key, gdouble value, int flags)
 {
     JsonNode *node = trg_prefs_get_value(p, key, JSON_NODE_VALUE, flags | TRG_PREFS_NEWNODE);

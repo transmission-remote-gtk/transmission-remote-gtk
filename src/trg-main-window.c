@@ -54,7 +54,9 @@
 #include "trg-menu-bar.h"
 #include "trg-peers-model.h"
 #include "trg-peers-tree-view.h"
+#include "trg-preferences-dialog.h"
 #include "trg-prefs.h"
+#include "trg-remote-prefs-dialog.h"
 #include "trg-sortable-filtered-model.h"
 #include "trg-state-selector.h"
 #include "trg-stats-dialog.h"
@@ -70,11 +72,6 @@
 #include "trg-trackers-model.h"
 #include "trg-trackers-tree-view.h"
 #include "trg-tree-view.h"
-#if HAVE_RSS
-#include "trg-rss-window.h"
-#endif
-#include "trg-preferences-dialog.h"
-#include "trg-remote-prefs-dialog.h"
 #include "upload.h"
 
 /* The rather large main window class, which glues everything together. */
@@ -793,21 +790,6 @@ static void view_stats_toggled_cb(GtkWidget *w, gpointer data)
     }
 }
 
-#if HAVE_RSS
-static void view_rss_toggled_cb(GtkWidget *w, gpointer data)
-{
-    TrgMainWindow *win = TRG_MAIN_WINDOW(data);
-    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-
-    if (trg_client_is_connected(priv->client)) {
-        TrgRssWindow *rss = trg_rss_window_get_instance(TRG_MAIN_WINDOW(data), priv->client);
-
-        gtk_widget_show_all(GTK_WIDGET(rss));
-        gtk_window_present(GTK_WINDOW(rss));
-    }
-}
-#endif
-
 static void view_states_toggled_cb(GtkCheckMenuItem *w, TrgMainWindow *win)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
@@ -1510,9 +1492,6 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow *win)
 #if TRG_WITH_GRAPH
         *b_show_graph,
 #endif
-#if HAVE_RSS
-        *b_view_rss,
-#endif
         *b_start_now, *b_copy_magnetlink;
 
     TrgMenuBar *menuBar;
@@ -1535,9 +1514,6 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow *win)
                  &b_tracker_filters, TRG_PREFS_KEY_DIRECTORIES_FIRST, &b_directories_first,
 #if TRG_WITH_GRAPH
                  "show-graph", &b_show_graph,
-#endif
-#if HAVE_RSS
-                 "view-rss-button", &b_view_rss,
 #endif
                  "up-queue", &b_up_queue, "down-queue", &b_down_queue, "top-queue", &b_top_queue,
                  "bottom-queue", &b_bottom_queue, "start-now", &b_start_now, "copymagnet-button",
@@ -1571,9 +1547,6 @@ static TrgMenuBar *trg_main_window_menu_bar_new(TrgMainWindow *win)
                      G_CALLBACK(main_window_toggle_directories_first), win);
     g_signal_connect(b_view_states, "toggled", G_CALLBACK(view_states_toggled_cb), win);
     g_signal_connect(b_view_stats, "activate", G_CALLBACK(view_stats_toggled_cb), win);
-#if HAVE_RSS
-    g_signal_connect(b_view_rss, "activate", G_CALLBACK(view_rss_toggled_cb), win);
-#endif
 #if TRG_WITH_GRAPH
     g_signal_connect(b_show_graph, "toggled", G_CALLBACK(trg_main_window_toggle_graph_cb), win);
 #endif

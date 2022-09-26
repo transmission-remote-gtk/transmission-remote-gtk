@@ -93,19 +93,9 @@ if win32
   windres = windows.compile_resources('win32.rc')
 endif
 
-exe_kwargs = {}
-if rss_dep.found()
-  exe_kwargs = {'link_with': glib_rss_lib,
-                'include_directories': rss_includes}
-  src_files += ['trg-rss-cell-renderer.c',
-                'trg-rss-model.c',
-                'trg-rss-window.c']
-endif
-
 trg_bin = executable(project_name, 
                      sources: src_files,
                      dependencies: trg_deps,
                      install: true,
-                     pie: true,
-                     kwargs: exe_kwargs)
+                     pie: true)
 

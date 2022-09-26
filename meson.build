@@ -45,7 +45,6 @@ gthread_dep = dependency('gthread-2.0', version: glib_version_str)
 trg_deps = [gtk_dep, glib_dep, gio_dep, json_dep, libcurl_dep, gthread_dep]
 
 # optional dependencies
-rss_dep             = dependency('mrss', version: '>=0.18', required: get_option('mrss'))
 geoip_dep           = dependency('geoip', required: get_option('geoip'))
 libproxy_dep        = dependency('libproxy-1.0', required: get_option('libproxy'))
 libappindicator_dep = dependency('ayatana-appindicator3-0.1', 'appindicator3-0.1', required: get_option('libappindicator'))
@@ -85,7 +84,6 @@ conf_data.set('G_DISABLE_CHECKS', not debug)
 conf_data.set('G_DISABLE_CAST_CHECKS', not debug)
 
 # compile time features
-conf_data.set10('HAVE_RSS', rss_dep.found())
 conf_data.set10('HAVE_GEOIP', geoip_dep.found())
 conf_data.set10('HAVE_LIBPROXY', libproxy_dep.found())
 conf_data.set10('ENABLE_NL_LANGINFO', nl_langinfo)
@@ -137,7 +135,4 @@ endif
 
 subdir('po')
 subdir('data')
-if rss_dep.found()
-  subdir('extern/rss-glib')
-endif
 subdir('src')
