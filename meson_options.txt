@@ -1,4 +1,3 @@
-option('mrss', type: 'feature', value: 'auto', description: 'RSS support')
 option('libproxy', type: 'feature', value: 'auto', description: 'HTTP proxy support')
 option('geoip', type: 'feature', value: 'auto', description: 'geoip support')
 option('libappindicator', type: 'feature', value: 'auto', description: 'libappindicator')
