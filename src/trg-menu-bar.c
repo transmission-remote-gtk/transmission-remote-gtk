@@ -626,11 +626,9 @@ static GtkWidget *trg_menu_bar_torrent_menu_new(TrgMenuBar *menu)
 
     priv->mb_up_queue
         = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("Move Up Queue"), FALSE);
-    trg_menu_bar_accel_add(menu, priv->mb_up_queue, GDK_Up, GDK_SHIFT_MASK);
 
     priv->mb_down_queue
         = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("Move Down Queue"), FALSE);
-    trg_menu_bar_accel_add(menu, priv->mb_down_queue, GDK_Down, GDK_SHIFT_MASK);
 
     priv->mb_bottom_queue
         = trg_menu_bar_item_new(GTK_MENU_SHELL(torrentMenu), _("Bottom Of Queue"), FALSE);
