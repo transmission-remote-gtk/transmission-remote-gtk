@@ -212,14 +212,13 @@ static void load_directory_model(TrgDestinationCombo *self)
     GList *li, *list;
 
     JsonArray *savedDestinations;
-    gchar *defaultDir;
 
     /* Add default dir */
+    g_autofree gchar *defaultDir = NULL;
     defaultDir = g_strdup(session_get_download_dir(trg_client_get_session(client)));
     rm_trailing_slashes(defaultDir);
 
     trg_destination_combo_insert(GTK_COMBO_BOX(self), NULL, defaultDir, DEST_DEFAULT);
-    g_free(defaultDir);
 
     /* Add saved dirs */
     savedDestinations
