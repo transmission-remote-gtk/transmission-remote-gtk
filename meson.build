@@ -95,7 +95,6 @@ conf_data.set10('HAVE_LIBAYATANA_APPINDICATOR', libappindicator_dep.found() and 
 flags = ['-funsigned-char',
          '-fstack-protector-strong',
          '-Winline',
-         '-Wno-padded',
          '-Wno-unused-parameter',
          '-Wstrict-prototypes',
          '-Wmissing-prototypes',
@@ -105,8 +104,6 @@ flags = ['-funsigned-char',
          '-Werror=init-self',
          '-Werror=missing-include-dirs',
          '-Werror=date-time',
-         '-Wno-conversion',
-         '-Wsign-compare',
          '-Wdeprecated-declarations',
          '-Wdeprecated']
 
