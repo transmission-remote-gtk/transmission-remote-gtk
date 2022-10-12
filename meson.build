@@ -89,7 +89,7 @@ conf_data.set10('HAVE_LIBPROXY', libproxy_dep.found())
 conf_data.set10('ENABLE_NL_LANGINFO', nl_langinfo)
 
 conf_data.set10('HAVE_LIBAPPINDICATOR', libappindicator_dep.found())
-conf_data.set10('HAVE_LIBAYATANA_APPINDICATOR', libappindicator_dep.found() and libappindicator_dep.get_variable('Name') == 'ayatana-appindicator3-0.1')
+conf_data.set10('HAVE_LIBAYATANA_APPINDICATOR', libappindicator_dep.found() and libappindicator_dep.name() == 'ayatana-appindicator3-0.1')
 
 # compiler/linker flags
 flags = ['-funsigned-char',
