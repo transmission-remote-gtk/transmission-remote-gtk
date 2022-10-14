@@ -502,29 +502,28 @@ static void trg_torrent_add_dialog_generic_save_dir(GtkFileChooser *c, TrgPrefs 
     }
 }
 
-static GtkWidget *trg_torrent_add_dialog_generic(GtkWindow *parent, TrgPrefs *prefs)
+static GtkFileChooserNative *trg_torrent_add_dialog_generic(GtkWindow *parent, TrgPrefs *prefs)
 {
-    GtkWidget *w = gtk_file_chooser_dialog_new(
-        _("Add a Torrent"), parent, GTK_FILE_CHOOSER_ACTION_OPEN, _("_Cancel"), GTK_RESPONSE_CANCEL,
-        _("_Add"), GTK_RESPONSE_ACCEPT, NULL);
+    GtkFileChooserNative *fc = gtk_file_chooser_native_new(
+        _("Add a Torrent"), parent, GTK_FILE_CHOOSER_ACTION_OPEN, _("_Add"), _("_Cancel"));
     gchar *dir = trg_prefs_get_string(prefs, TRG_PREFS_KEY_LAST_TORRENT_DIR, TRG_PREFS_GLOBAL);
     if (dir) {
-        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(w), dir);
+        gtk_file_chooser_set_current_folder(GTK_FILE_CHOOSER(fc), dir);
         g_free(dir);
     }
 
-    addTorrentFilters(GTK_FILE_CHOOSER(w));
-    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(w), TRUE);
-    return w;
+    addTorrentFilters(GTK_FILE_CHOOSER(fc));
+    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(fc), TRUE);
+    return fc;
 }
 
 static void trg_torrent_add_dialog_source_click_cb(GtkWidget *w, gpointer data)
 {
     TrgTorrentAddDialogPrivate *priv = TRG_TORRENT_ADD_DIALOG_GET_PRIVATE(data);
-    GtkWidget *d
+    GtkFileChooserNative *d
         = trg_torrent_add_dialog_generic(GTK_WINDOW(data), trg_client_get_prefs(priv->client));
 
-    if (gtk_dialog_run(GTK_DIALOG(d)) == GTK_RESPONSE_ACCEPT) {
+    if (gtk_native_dialog_run(GTK_NATIVE_DIALOG(d)) == GTK_RESPONSE_ACCEPT) {
         if (priv->filenames)
             g_str_slist_free(priv->filenames);
 
@@ -535,7 +534,7 @@ static void trg_torrent_add_dialog_source_click_cb(GtkWidget *w, gpointer data)
         trg_torrent_add_dialog_set_filenames(TRG_TORRENT_ADD_DIALOG(data), priv->filenames);
     }
 
-    gtk_widget_destroy(GTK_WIDGET(d));
+    g_object_unref(G_OBJECT(d));
 }
 
 static gboolean apply_all_changed_foreachfunc(GtkTreeModel *model, GtkTreePath *path,
@@ -728,25 +727,25 @@ TrgTorrentAddDialog *trg_torrent_add_dialog_new_from_upload(TrgMainWindow *paren
 
 void trg_torrent_add_dialog(TrgMainWindow *win, TrgClient *client)
 {
-    GtkWidget *w;
+    GtkFileChooserNative *fc;
     GtkWidget *c;
     TrgPrefs *prefs = trg_client_get_prefs(client);
 
-    w = trg_torrent_add_dialog_generic(GTK_WINDOW(win), prefs);
+    fc = trg_torrent_add_dialog_generic(GTK_WINDOW(win), prefs);
 
     c = gtk_check_button_new_with_mnemonic(_("Show _options dialog"));
     gtk_toggle_button_set_active(
         GTK_TOGGLE_BUTTON(c),
         trg_prefs_get_bool(prefs, TRG_PREFS_KEY_ADD_OPTIONS_DIALOG, TRG_PREFS_GLOBAL));
-    gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER(w), c);
+    gtk_file_chooser_set_extra_widget(GTK_FILE_CHOOSER(fc), c);
 
-    if (gtk_dialog_run(GTK_DIALOG(w)) == GTK_RESPONSE_ACCEPT) {
-        GtkFileChooser *chooser = GTK_FILE_CHOOSER(w);
+    if (gtk_native_dialog_run(GTK_NATIVE_DIALOG(fc)) == GTK_RESPONSE_ACCEPT) {
+        GtkFileChooser *chooser = GTK_FILE_CHOOSER(fc);
         GtkToggleButton *tb = GTK_TOGGLE_BUTTON(gtk_file_chooser_get_extra_widget(chooser));
         gboolean showOptions = gtk_toggle_button_get_active(tb);
         GSList *l = gtk_file_chooser_get_filenames(chooser);
 
-        trg_torrent_add_dialog_generic_save_dir(GTK_FILE_CHOOSER(w), prefs);
+        trg_torrent_add_dialog_generic_save_dir(GTK_FILE_CHOOSER(fc), prefs);
 
         if (showOptions) {
             TrgTorrentAddDialog *dialog = trg_torrent_add_dialog_new_from_filenames(win, client, l);
@@ -765,5 +764,5 @@ void trg_torrent_add_dialog(TrgMainWindow *win, TrgClient *client)
         }
     }
 
-    gtk_widget_destroy(GTK_WIDGET(w));
+    g_object_unref(G_OBJECT(fc));
 }
