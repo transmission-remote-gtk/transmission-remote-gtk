@@ -65,7 +65,7 @@ the repository, build transmission-remote-gtk, and install it on your system:
 ```
 $ git clone https://github.com/transmission-remote-gtk/transmission-remote-gtk.git
 $ cd transmission-remote-gtk
-$ meson --prefix="$prefix" "$builddir"
+$ meson setup --prefix="$prefix" "$builddir"
 $ meson compile -C "$builddir"
 # meson install -C "$builddir"
 ```
