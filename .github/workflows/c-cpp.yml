@@ -32,37 +32,34 @@ jobs:
         run: meson dist -C build
 
   build-windows:
-
     runs-on: windows-latest
-
     defaults:
       run:
         shell: msys2 {0}
-
     steps:
-
       - uses: msys2/setup-msys2@v2
       - name: install deps
         run: |
+          mingw="mingw-w64-x86_64"
           pacman -S --noconfirm \
                     git \
-                    mingw-w64-x86_64-gcc \
-                    mingw-w64-x86_64-meson \
-                    mingw-w64-x86_64-ninja \
-                    mingw-w64-x86_64-pkg-config \
+                    ${mingw}-gcc \
+                    ${mingw}-meson \
+                    ${mingw}-ninja \
+                    ${mingw}-pkg-config \
                     \
-                    mingw-w64-x86_64-gtk3 \
-                    mingw-w64-x86_64-libsoup3 \
-                    mingw-w64-x86_64-glib2 \
-                    mingw-w64-x86_64-gettext \
-                    mingw-w64-x86_64-json-glib \
+                    ${mingw}-gtk3 \
+                    ${mingw}-libsoup3 \
+                    ${mingw}-glib2 \
+                    ${mingw}-gettext \
+                    ${mingw}-json-glib \
                     \
-                    mingw-w64-x86_64-appstream-glib \
-                    mingw-w64-x86_64-desktop-file-utils
+                    ${mingw}-appstream-glib \
+                    ${mingw}-desktop-file-utils
 
       - uses: actions/checkout@v3
       - name: configure
-        run: meson build
+        run: meson setup build
       - name: build
         run: meson compile -C build
       - name: dist
