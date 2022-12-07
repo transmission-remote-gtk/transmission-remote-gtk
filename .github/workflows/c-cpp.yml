@@ -8,15 +8,14 @@ on:
 
 jobs:
   build-unix:
-    # NOTE: temporarily setting this to get over 20.04 not having libsoup3
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
       - name: install deps
         run: |
           sudo apt-get update
           sudo apt-get upgrade
-          sudo apt-get install python3-pip gcc \
+          sudo apt-get install meson gcc \
                                libgtk-3-dev \
                                libjson-glib-dev \
                                libsoup-3.0-dev \
@@ -24,12 +23,9 @@ jobs:
                                \
                                libgeoip-dev \
                                libappstream-dev \
-                               appstream-util \
-
-          # Meson is too old on ubuntu
-          pip3 install --no-input meson ninja
+                               appstream-util
       - name: meson configure
-        run: meson build
+        run: meson setup build
       - name: build
         run: meson compile -C build
       - name: dist
