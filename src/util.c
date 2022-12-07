@@ -328,9 +328,10 @@ gchar *make_error_message(JsonObject *response, gint status, gchar *err_msg)
     case FAIL_JSON_DECODE:
         return g_strdup(err_msg ? err_msg : "Unknown JSON decoding error.");
 
-    case FAIL_RESULT_UNSUCCESSFUL:
+    case FAIL_RESULT_UNSUCCESSFUL: {
         const gchar *resultStr = json_object_get_string_member(response, "result");
         return g_strdup(resultStr ? resultStr : "Server responded, but with no result.");
+    }
 
     case FAIL_NO_SESSION_ID:
         return g_strdup("No \"" TRANSMISSION_SESSION_ID_HEADER
