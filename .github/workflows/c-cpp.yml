@@ -7,7 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
-  build-unix:
+  build-linux:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -27,6 +27,30 @@ jobs:
       - name: meson configure
         run: meson setup build
       - name: build
+        run: meson compile -C build
+      - name: dist
+        run: meson dist -C build
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: install deps
+        run: |
+          export PKG_CONFIG_PATH=/usr/local/Cellar/icu4c/71.1/lib/pkgconfig/
+          brew update
+          brew install meson \
+                       gtk+3 \
+                       json-glib \
+                       libsoup \
+                       gettext\
+                       \
+                       geoip \
+                       appstream-glib \
+                       desktop-file-utils
+      - name: meson configure
+        run: meson setup build
+      - name: meson build
         run: meson compile -C build
       - name: dist
         run: meson dist -C build
