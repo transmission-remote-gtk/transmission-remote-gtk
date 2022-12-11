@@ -253,7 +253,7 @@ static GtkLabel *trg_general_panel_add_label_with_width(TrgGeneralPanel *gp, cha
     gtk_label_set_width_chars(GTK_LABEL(keyLabel), 10);
 
     if (strlen(key) > 0) {
-        gchar *keyMarkup = g_markup_printf_escaped(strlen(key) > 0 ? "<b>%s:</b>" : "", key);
+        gchar *keyMarkup = g_markup_printf_escaped("<b>%s:</b>", key);
         gtk_label_set_markup(GTK_LABEL(keyLabel), keyMarkup);
         g_free(keyMarkup);
     }
