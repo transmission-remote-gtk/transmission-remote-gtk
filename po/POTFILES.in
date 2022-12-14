@@ -33,7 +33,6 @@ src/trg-peers-tree-view.c
 src/trg-preferences-dialog.c
 src/trg-prefs.c
 src/trg-remote-prefs-dialog.c
-src/trg-rss-window.c
 src/trg-state-selector.c
 src/trg-stats-dialog.c
 src/trg-status-bar.c
