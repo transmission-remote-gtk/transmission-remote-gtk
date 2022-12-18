@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: transmission-remote-gtk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-13 22:01-0600\n"
-"PO-Revision-Date: 2016-04-07 22:10+0200\n"
-"Last-Translator: Milo Casagrande <milo.casagrande@gmail.com>\n"
+"PO-Revision-Date: 2022-12-18 16:01+0100\n"
+"Last-Translator: Roberto Bellingeri <bellingeri@gmail.com>\n"
 "Language-Team: Italian <it@li.org>\n"
 "Language: it\n"
 "MIME-Version: 1.0\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Launchpad-Export-Date: 2014-06-12 07:44+0000\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 3.2.2\n"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:3
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:8
@@ -31,18 +31,16 @@ msgid "Remotely manage the Transmission BitTorrent client"
 msgstr "Gestisci da remoto il Transmission BitTorrent client"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:6
-#, fuzzy
 msgid "transmission-remote-gtk"
-msgstr "Transmission Remote"
+msgstr "transmission-remote-gtk"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:11
 msgid "p2p;bittorrent;transmission;rpc;"
-msgstr ""
+msgstr "p2p;bittorrent;transmission;rpc;"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:9
-#, fuzzy
 msgid "Transmission Remote Gtk Team"
-msgstr "Transmission Remote"
+msgstr "Transmission Remote Gtk Team"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:15
 msgid ""
@@ -52,155 +50,175 @@ msgid ""
 "ones (it works as a .torrent fle handler from a webbrowser), and configure "
 "settings on transmission-daemon."
 msgstr ""
+"Transmission Remote Gtk consente di gestire in remoto il client Transmission "
+"BitTorrent utilizzando la sua interfaccia RPC. Puoi usarlo per gestire i "
+"torrent (avviare/arrestare/verificare/rinnovare/rimuovere/rimuovere ed "
+"eliminare), aggiungerne di nuovi (funziona come un gestore di file .torrent "
+"da un browser Web) e configurare le impostazioni sul demone di trasmissione."
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:27
 msgid "Bug fix release to fix install paths"
 msgstr ""
+"Rilascio di correzione di bug per correggere i percorsi di installazione"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:32
 msgid ""
 "Minor release for user facing functionality, but a lot of behind the scene "
 "changes"
 msgstr ""
+"Rilascio minore per funzionalità rivolte all'utente, ma molti cambiamenti "
+"dietro le quinte"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:34
 msgid "Allow custom headers to be sent to the daemon"
-msgstr ""
+msgstr "Consentito l'invio di intestazioni personalizzate al demone"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:35
 msgid "Uses native glib notifications and not libnotify"
-msgstr ""
+msgstr "Utilizzo delle notifiche glib native e non libnotify"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:36
 msgid "Fixes to windows support"
-msgstr ""
+msgstr "Correzioni al supporto Windows"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:37
 msgid "Automatically paste magnet links from clipboard"
-msgstr ""
+msgstr "Incolla automaticamente i magnet link dagli appunti"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:38
 msgid ""
 "Various other fixes to GTK3 support and the build system behind the scenes"
 msgstr ""
+"Varie altre correzioni al supporto GTK3 e al sistema di compilazione dietro "
+"le quinte"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:44
 msgid ""
 "Minor release, but quite a few bugfixes and enhancements from 2 and a half "
 "years"
 msgstr ""
+"Rilascio minore, ma alcune correzioni di bug e miglioramenti da 2 anni e "
+"mezzo"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:46
 msgid "Clarify port forwarding label, ref issue #125"
-msgstr ""
+msgstr "Chiarita l'etichetta di inoltro porte, rif problema #125"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:47
 msgid "Torrent add dialog should get focus"
-msgstr ""
+msgstr "La finestra di dialogo di aggiunta del torrent dovrebbe essere attiva"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:48
 msgid "Static GPrivate and clean up after pool thread"
-msgstr ""
+msgstr "Static GPrivate e pulitura dopo il thread del pool"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:49
 msgid "Add CI with github actions"
-msgstr ""
+msgstr "Aggiunto CI con le azioni github"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:50
 msgid "torrent-rename-path support to rename remote path"
-msgstr ""
+msgstr "supporto torrent-rename-path per rinominare il percorso remoto"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:51
 msgid "fix screenshot, OARS rating, and other issues so appdata validates"
 msgstr ""
+"corretti screenshot, valutazione OARS e altri problemi in modo che appdata "
+"venga convalidata"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:52
 msgid "Issue #80 - config file can be symlink"
 msgstr ""
+"Problema #80 - il file di configurazione può essere un collegamento simbolico"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:53
 msgid "Mutex protect trg_client_get_session_id"
-msgstr ""
+msgstr "Protezione mutex trg_client_get_session_id"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:54
 msgid "Fix some memory potential leaks"
-msgstr ""
+msgstr "Corretti alcuni potenziali memory leak"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:55
 msgid "Add support for torrent-rename-path rpc"
-msgstr ""
+msgstr "Aggiunto il supporto per torrent-rename-path rpc"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:56
 msgid "Add Hash information in Torrent Details &gt; General tab"
-msgstr ""
+msgstr "Aggiute informazioni hash in Dettagli torrent &gt; tab Generale"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:57
 msgid "link window name to an icon in app menu"
-msgstr ""
+msgstr "collega il nome della finestra a un'icona nel menu dell'app"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:58
 msgid "Fix building under GCC 10 / -fno-common"
-msgstr ""
+msgstr "Corretta la compilazione in GCC 10 / -fno-common"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:59
 msgid "Enable curl gzip compression"
-msgstr ""
+msgstr "Abilitata la compressione curl gzip"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:60
 msgid "Handle return(enter) key press in torrent-add-url dialog (#91)"
 msgstr ""
+"Gestita la pressione del tasto Invio nella finestra di dialogo Aggiungi URL "
+"torrent (#91)"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:61
 msgid "build: Allow building with gettext ≥ 0.20"
-msgstr ""
+msgstr "build: Consentita la compilazione con gettext ≥ 0.20"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:67
 msgid "This is a minor release with one bugfix:"
-msgstr ""
+msgstr "Questa è una versione minore con la correzione di un bug:"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:69
 msgid "Fix error when connecting to daemon behind a proxy, specifically nginx"
 msgstr ""
+"Risolto l'errore durante la connessione al demone dietro un proxy, in "
+"particolare nginx"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:75
 msgid "This is a minor release with some improvements:"
-msgstr ""
+msgstr "Questa è una versione minore con alcuni miglioramenti:"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:77
 msgid "Rename app-id to io.github.TransmissionRemoteGtk"
-msgstr ""
+msgstr "Rinominata app-id in io.github.TransmissionRemoteGtk"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:78
 msgid "Add configuration of alternate speed days to preferences"
 msgstr ""
+"Aggiunta la configurazione dei giorni di velocità alternativi alle preferenze"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:79
 msgid "Add menu option to copy magnet links"
-msgstr ""
+msgstr "Aggiunta l'opzione di menu per copiare i magnet link"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:80
 msgid "Add Ctrl+q keybinding to quit"
-msgstr ""
+msgstr "Aggiunta la combinazione di tasti Ctrl+q per uscire"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:81
 msgid "Fix building with GeoIP support"
-msgstr ""
+msgstr "Correzione della build con il supporto GeoIP"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:82
 msgid "Fix setting speeds in preferences"
-msgstr ""
+msgstr "Correzione dell'impostazione della velocità nelle preferenze"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:83
 msgid "Improve search behavior in file view"
-msgstr ""
+msgstr "Migliora il comportamento di ricerca nella visualizzazione dei file"
 
 #: src/torrent.c:364 src/torrent.c:384
 msgid "Metadata Downloading"
-msgstr "Downloading dei metadati"
+msgstr "Download dei metadati"
 
 #: src/torrent.c:366 src/torrent.c:386 src/trg-state-selector.c:602
 msgid "Downloading"
-msgstr "Downloading"
+msgstr "In download"
 
 #: src/torrent.c:368
 msgid "Queued download"
@@ -208,7 +226,7 @@ msgstr "In coda per download"
 
 #: src/torrent.c:370 src/torrent.c:394
 msgid "Waiting To Check"
-msgstr "In attesa di controllo"
+msgstr "In attesa di verifica"
 
 #: src/torrent.c:372 src/torrent.c:392 src/trg-state-selector.c:618
 msgid "Checking"
@@ -221,7 +239,7 @@ msgstr "In coda per seed"
 #: src/torrent.c:376 src/torrent.c:390 src/trg-remote-prefs-dialog.c:359
 #: src/trg-state-selector.c:606 src/trg-torrent-props-dialog.c:404
 msgid "Seeding"
-msgstr "Seeding"
+msgstr "In seed"
 
 #: src/torrent.c:378 src/torrent.c:388 src/torrent-cell-renderer.c:242
 #: src/trg-state-selector.c:610
@@ -294,12 +312,12 @@ msgstr "Accodato per il download"
 
 #: src/torrent-cell-renderer.c:248
 msgid "Queued for seeding"
-msgstr "Accodato per il seeding"
+msgstr "Accodato per il seed"
 
 #: src/torrent-cell-renderer.c:251
 #, c-format
 msgid "Verifying data (%1$s tested)"
-msgstr "Verifica dei dati (%1$s controllati)"
+msgstr "Verifica dei dati (%1$s controllato)"
 
 #: src/torrent-cell-renderer.c:257
 #, c-format
@@ -317,30 +335,27 @@ msgid "Tracker gave an error: \"%s\""
 msgstr "Errore dal tracker: \"%s\""
 
 #: src/torrent-cell-renderer.c:283
-#, fuzzy, c-format
+#, c-format
 msgid "Error: \"%s\""
-msgstr "Errore: %s"
+msgstr "Errore: \"%s\""
 
 #: src/torrent-cell-renderer.c:294
-#, fuzzy
 msgid "Downloading from %1$"
 msgid_plural "Downloading from %1$"
-msgstr[0] "%d in download @ %s"
-msgstr[1] "%d in download @ %s"
+msgstr[0] "Download da %1$"
+msgstr[1] "Download da %1$"
 
 #: src/torrent-cell-renderer.c:304
-#, fuzzy
 msgid "Downloading metadata from %1$"
 msgid_plural "Downloading metadata from %1$"
-msgstr[0] "Downloading metadati da %1$lu peer (%2$s scaricato)"
-msgstr[1] "Downloading metadati da %1$lu peer (%2$s scaricato)"
+msgstr[0] "Download metadata da %1$"
+msgstr[1] "Download metadata da %1$"
 
 #: src/torrent-cell-renderer.c:312
-#, fuzzy
 msgid "Seeding to %1$"
 msgid_plural "Seeding to %1$"
-msgstr[0] "%d in seeding @ %s"
-msgstr[1] "%d in seeding @ %s"
+msgstr[0] "Seed a %1$"
+msgstr[1] "Seed a %1$"
 
 #: src/trg-about-window.c:51
 msgid "A remote client to transmission-daemon."
@@ -401,11 +416,11 @@ msgstr "N/D"
 
 #: src/trg-general-panel.c:185
 msgid "(Private)"
-msgstr "(privato)"
+msgstr "(Privato)"
 
 #: src/trg-general-panel.c:185
 msgid "(Public)"
-msgstr "(pubblico)"
+msgstr "(Pubblico)"
 
 #: src/trg-general-panel.c:221 src/trg-main-window.c:924
 #: src/trg-main-window.c:1274 src/trg-main-window.c:1794
@@ -416,7 +431,7 @@ msgstr "Errore"
 
 #: src/trg-general-panel.c:285
 msgid "Rate Down"
-msgstr "Download"
+msgstr "Abbassa"
 
 #: src/trg-general-panel.c:286 src/trg-torrent-tree-view.c:111
 msgid "Completed"
@@ -428,15 +443,15 @@ msgstr "ETA"
 
 #: src/trg-general-panel.c:289
 msgid "Rate Up"
-msgstr "Upload"
+msgstr "Alza"
 
 #: src/trg-general-panel.c:290 src/trg-torrent-tree-view.c:97
 msgid "Downloaded"
-msgstr "Downloaded"
+msgstr "Scaricato"
 
 #: src/trg-general-panel.c:292
 msgid "Seeders"
-msgstr "Seeders"
+msgstr "Seeder"
 
 #: src/trg-general-panel.c:293 src/trg-stats-dialog.c:280
 #: src/trg-torrent-tree-view.c:99
@@ -449,11 +464,11 @@ msgstr "Uploaded"
 
 #: src/trg-general-panel.c:296 src/trg-torrent-tree-view.c:64
 msgid "Leechers"
-msgstr "Leechers"
+msgstr "Leecher"
 
 #: src/trg-general-panel.c:297
 msgid "Ratio limit"
-msgstr "Limite ratio"
+msgstr "Limite di rapporto"
 
 #: src/trg-general-panel.c:298
 msgid "Corrupted"
@@ -476,9 +491,8 @@ msgid "Comment"
 msgstr "Commento"
 
 #: src/trg-general-panel.c:309
-#, fuzzy
 msgid "Hash"
-msgstr "Hash:"
+msgstr "Hash"
 
 #: src/trg-gtk-app.c:169 src/trg-peers-tree-view.c:69
 msgid "Client"
@@ -501,19 +515,19 @@ msgid "Connecting..."
 msgstr "Connessione..."
 
 #: src/trg-main-window.c:693
-#, fuzzy, c-format
+#, c-format
 msgid "<big><b>%s \"%s\"?</b></big>"
-msgstr "<big><b>Rimuovere il torrent «%s»?</b></big>"
+msgstr "<big><b>%s \"%s\"?</b></big>"
 
 #: src/trg-main-window.c:698
-#, fuzzy, c-format
+#, c-format
 msgid "<big><b>%s %d torrents?</b></big>"
-msgstr "<big><b>Rimuovere %d torrent?</b></big>"
+msgstr "<big><b>%s %d torrent?</b></big>"
 
 #: src/trg-main-window.c:704 src/trg-torrent-add-dialog.c:487
 #: src/trg-torrent-add-dialog.c:592
 msgid "_Cancel"
-msgstr ""
+msgstr "_Annulla"
 
 #: src/trg-main-window.c:740 src/trg-main-window.c:1829 src/trg-menu-bar.c:594
 #: src/trg-toolbar.c:196
@@ -521,19 +535,16 @@ msgid "Remove"
 msgstr "Rimuovi"
 
 #: src/trg-main-window.c:740
-#, fuzzy
 msgid "_Remove"
-msgstr "Rimuovi"
+msgstr "_Rimuovi"
 
 #: src/trg-main-window.c:760
-#, fuzzy
 msgid "Remove and delete"
-msgstr "Rimuovi e cancella i dati"
+msgstr "Rimuovi e cancella"
 
 #: src/trg-main-window.c:760
-#, fuzzy
 msgid "_Delete"
-msgstr "Elimina"
+msgstr "_Elimina"
 
 #: src/trg-main-window.c:828 src/trg-preferences-dialog.c:796
 #: src/trg-remote-prefs-dialog.c:640
@@ -542,7 +553,7 @@ msgstr "Generali"
 
 #: src/trg-main-window.c:835 src/trg-torrent-props-dialog.c:544
 msgid "Trackers"
-msgstr "Trackers"
+msgstr "Tracker"
 
 #: src/trg-main-window.c:841 src/trg-torrent-props-dialog.c:521
 msgid "Files"
@@ -573,7 +584,7 @@ msgstr "%d in download @ %s"
 #: src/trg-main-window.c:1008
 #, c-format
 msgid "%d Seeding @ %s"
-msgstr "%d in seeding @ %s"
+msgstr "%d in seed @ %s"
 
 #: src/trg-main-window.c:1052
 #, c-format
@@ -582,7 +593,7 @@ msgstr "Richiesta %d/%d non riuscita: %s"
 
 #: src/trg-main-window.c:1724
 msgid "No Limit"
-msgstr "Nessun limite"
+msgstr "Nessun Limite"
 
 #: src/trg-main-window.c:1815 src/trg-menu-bar.c:571 src/trg-toolbar.c:192
 msgid "Properties"
@@ -590,7 +601,7 @@ msgstr "Proprietà"
 
 #: src/trg-main-window.c:1817
 msgid "Copy Magnet Link"
-msgstr ""
+msgstr "Copia Magnet Link"
 
 #: src/trg-main-window.c:1819 src/trg-toolbar.c:187
 msgid "Resume"
@@ -619,11 +630,11 @@ msgstr "Rimuovi e cancella i dati"
 
 #: src/trg-main-window.c:1846
 msgid "Execute"
-msgstr ""
+msgstr "Esegui"
 
 #: src/trg-main-window.c:1867 src/trg-menu-bar.c:604
 msgid "Start Now"
-msgstr "Avvia ora"
+msgstr "Avvia Ora"
 
 #: src/trg-main-window.c:1869 src/trg-menu-bar.c:607
 msgid "Move Up Queue"
@@ -771,7 +782,7 @@ msgstr "_Torrent"
 
 #: src/trg-menu-bar.c:575
 msgid "_Copy Magnet Link"
-msgstr ""
+msgstr "_Copia Magnet Link"
 
 #: src/trg-menu-bar.c:578
 msgid "_Resume"
@@ -827,11 +838,11 @@ msgstr "Città"
 
 #: src/trg-peers-tree-view.c:62 src/trg-torrent-tree-view.c:90
 msgid "Down Speed"
-msgstr "Download"
+msgstr "Velocità download"
 
 #: src/trg-peers-tree-view.c:64 src/trg-torrent-tree-view.c:92
 msgid "Up Speed"
-msgstr "Upload"
+msgstr "Velocità upload"
 
 #: src/trg-peers-tree-view.c:68
 msgid "Flags"
@@ -892,13 +903,16 @@ msgstr "Comando"
 #: src/trg-preferences-dialog.c:546
 msgid ""
 "Documentation for commands can be found <a href=\"https://github.com/"
-"transmission-remote-gtk/transmission-remote-gtk/wiki/Local-Command-"
-"usage\">here</a>"
+"transmission-remote-gtk/transmission-remote-gtk/wiki/Local-Command-usage"
+"\">here</a>"
 msgstr ""
+"La documentazione per i comandi può essere trovata  <a href=\"https://github."
+"com/transmission-remote-gtk/transmission-remote-gtk/wiki/Local-Command-usage"
+"\">qui</a>"
 
 #: src/trg-preferences-dialog.c:567
 msgid "Remote Download Directories"
-msgstr "Directories di download remote"
+msgstr "Cartelle di download remote"
 
 #: src/trg-preferences-dialog.c:576
 msgid "Directory"
@@ -922,7 +936,7 @@ msgstr "Mostra in system tray"
 
 #: src/trg-preferences-dialog.c:637
 msgid "System tray not supported."
-msgstr ""
+msgstr "Barra delle applicazioni non supportata."
 
 #: src/trg-preferences-dialog.c:642
 msgid "Minimise to system tray"
@@ -946,7 +960,7 @@ msgstr "Profilo: "
 
 #: src/trg-preferences-dialog.c:683
 msgid "New"
-msgstr ""
+msgstr "Nuovo"
 
 #: src/trg-preferences-dialog.c:687 src/trg-trackers-tree-view.c:252
 msgid "Delete"
@@ -1001,24 +1015,23 @@ msgid "Retries:"
 msgstr "Tentativi:"
 
 #: src/trg-preferences-dialog.c:738
-#, fuzzy
 msgid "Headers"
-msgstr "Seeders"
+msgstr "Intestazioni"
 
 #: src/trg-preferences-dialog.c:746
 msgid "Value"
-msgstr ""
+msgstr "Valore"
 
 #: src/trg-preferences-dialog.c:778 src/trg-remote-prefs-dialog.c:627
 #: src/trg-stats-dialog.c:267 src/trg-torrent-add-url-dialog.c:130
 #: src/trg-torrent-move-dialog.c:105 src/trg-torrent-props-dialog.c:491
 msgid "_Close"
-msgstr ""
+msgstr "_Chiudi"
 
 #: src/trg-preferences-dialog.c:779 src/trg-remote-prefs-dialog.c:628
 #: src/trg-torrent-props-dialog.c:492
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #: src/trg-preferences-dialog.c:783 src/trg-toolbar.c:204
 msgid "Local Preferences"
@@ -1030,36 +1043,35 @@ msgstr "Azioni"
 
 #: src/trg-preferences-dialog.c:808
 msgid "Directories"
-msgstr "Directories"
+msgstr "Cartelle"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Sun"
-msgstr ""
+msgstr "Dom"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Mon"
-msgstr ""
+msgstr "Lun"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Tue"
-msgstr ""
+msgstr "Mar"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Wed"
-msgstr ""
+msgstr "Mer"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Thu"
-msgstr ""
+msgstr "Gio"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Fri"
-msgstr ""
+msgstr "Ven"
 
 #: src/trg-remote-prefs-dialog.c:271
-#, fuzzy
 msgid "Sat"
-msgstr "Stato"
+msgstr "Sab"
 
 #: src/trg-remote-prefs-dialog.c:314
 msgid "Bandwidth limits"
@@ -1086,9 +1098,8 @@ msgid "Alternate time range"
 msgstr "Intervallo di tempo limiti alternativi"
 
 #: src/trg-remote-prefs-dialog.c:339
-#, fuzzy
 msgid "Alternate days"
-msgstr "Limiti alternativi"
+msgstr "Giorni alternativi"
 
 #: src/trg-remote-prefs-dialog.c:343
 msgid "Alternate down limit (KiB/s)"
@@ -1100,7 +1111,7 @@ msgstr "Limite di upload alternativo (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:362
 msgid "Seed ratio limit"
-msgstr "Limite ratio seed"
+msgstr "Limite rapporto seed"
 
 #: src/trg-remote-prefs-dialog.c:368
 msgid "Queues"
@@ -1152,9 +1163,8 @@ msgid "Update"
 msgstr "Aggiornamento"
 
 #: src/trg-remote-prefs-dialog.c:455 src/trg-remote-prefs-dialog.c:540
-#, fuzzy
 msgid "Blocklist (%"
-msgstr "Blocklist"
+msgstr "Blocklist (%"
 
 #: src/trg-remote-prefs-dialog.c:492 src/trg-remote-prefs-dialog.c:644
 msgid "Connections"
@@ -1190,7 +1200,7 @@ msgstr "Porta peer casuale all'avvio"
 
 #: src/trg-remote-prefs-dialog.c:520
 msgid "Request forwarding of the peer port using UPnP or NAT-PMP"
-msgstr ""
+msgstr "Richiedi l'inoltro della porta peer utilizzando UPnP o NAT-PMP"
 
 #: src/trg-remote-prefs-dialog.c:524
 msgid "Protocol"
@@ -1266,7 +1276,7 @@ msgstr "Limiti"
 
 #: src/trg-state-selector.c:204
 msgid "Refresh"
-msgstr ""
+msgstr "Aggiorna"
 
 #: src/trg-state-selector.c:601
 msgid "All"
@@ -1278,7 +1288,7 @@ msgstr "Coda di download"
 
 #: src/trg-state-selector.c:608 src/trg-state-selector.c:655
 msgid "Queue Up"
-msgstr "Coda di seeding"
+msgstr "Coda di seed"
 
 #: src/trg-state-selector.c:612
 msgid "Complete"
@@ -1322,7 +1332,7 @@ msgstr "Tempo di esecuzione"
 
 #: src/trg-stats-dialog.c:288
 msgid "Statistic"
-msgstr "Parametro"
+msgstr "Statistiche"
 
 #: src/trg-stats-dialog.c:289
 msgid "Session"
@@ -1333,9 +1343,9 @@ msgid "Cumulative"
 msgstr "Cumulativo"
 
 #: src/trg-status-bar.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Connected: %s :: %s"
-msgstr "Connesso a %s :: Transmission %s"
+msgstr "Connesso: %s :: %s"
 
 #: src/trg-status-bar.c:152
 msgid "Updating torrents..."
@@ -1419,7 +1429,7 @@ msgstr "Aggiungi Torrent"
 
 #: src/trg-torrent-add-dialog.c:593
 msgid "_Open"
-msgstr ""
+msgstr "_Apri"
 
 #: src/trg-torrent-add-dialog.c:604
 msgid "Start _paused"
@@ -1571,9 +1581,9 @@ msgid "Created on %1$s"
 msgstr "Creato in data %1$s"
 
 #: src/trg-torrent-props-dialog.c:315
-#, fuzzy, c-format
+#, c-format
 msgid "Created by %1$s"
-msgstr "Creato in data %1$s"
+msgstr "Creato da %1$s"
 
 #: src/trg-torrent-props-dialog.c:345
 msgid "No errors"
@@ -1609,19 +1619,19 @@ msgstr "Limite globale"
 
 #: src/trg-torrent-props-dialog.c:407
 msgid "Stop seeding at ratio"
-msgstr "Limite personalizzato"
+msgstr "Rapporto di interruzione seed"
 
 #: src/trg-torrent-props-dialog.c:408
 msgid "Seed regardless of ratio"
-msgstr "Nessun limite"
+msgstr "Seed indipendente dal rapporto"
 
 #: src/trg-torrent-props-dialog.c:410
 msgid "Seed ratio mode:"
-msgstr "Modalità di ratio:"
+msgstr "Modalità rapporto seed:"
 
 #: src/trg-torrent-props-dialog.c:417
 msgid "Seed ratio limit:"
-msgstr "Limite ratio:"
+msgstr "Limite rapporto seed:"
 
 #: src/trg-torrent-props-dialog.c:422
 msgid "Peer limit:"
@@ -1634,7 +1644,7 @@ msgstr "Proprietà di torrent multipli (%d)"
 
 #: src/trg-torrent-props-dialog.c:508
 msgid "Information"
-msgstr "Informazione"
+msgstr "Informazioni"
 
 #: src/trg-torrent-tree-view.c:56
 msgid "Done"
@@ -1642,11 +1652,11 @@ msgstr "Completato"
 
 #: src/trg-torrent-tree-view.c:60
 msgid "Seeds"
-msgstr "Seeds"
+msgstr "Seed"
 
 #: src/trg-torrent-tree-view.c:62
 msgid "Sending"
-msgstr "Invio in corso"
+msgstr "Seed in corso"
 
 #: src/trg-torrent-tree-view.c:66
 msgid "Downloads"
@@ -1750,7 +1760,7 @@ msgstr "Decrescente"
 
 #: src/trg-files-tree-view-common.c:57
 msgid "Rename..."
-msgstr ""
+msgstr "Rinomina..."
 
 #: src/trg-files-tree-view-common.c:93
 msgid "Expand All"
@@ -1761,9 +1771,9 @@ msgid "Collapse All"
 msgstr "Contrai tutto"
 
 #: src/util.c:341
-#, fuzzy, c-format
+#, c-format
 msgid "Request failed with HTTP code: %d"
-msgstr "Richiesta non riuscita con codice HTTP %d"
+msgstr "Richiesta non riuscita con codice HTTP: %d"
 
 #: src/util.c:371
 msgid "None"
