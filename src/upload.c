@@ -1,5 +1,7 @@
 #include "config.h"
 
+#include <glib.h>
+
 #include "json.h"
 #include "protocol-constants.h"
 #include "requests.h"
@@ -56,10 +58,12 @@ static void add_wanteds(JsonObject *args, gint *wanteds, gint n_files)
 static void next_upload(trg_upload *upload)
 {
     JsonNode *req = NULL;
+    g_autoptr(GError) error = NULL;
 
     if (upload->list && upload->progress_index < g_slist_length(upload->list))
+
         req = torrent_add_from_file((gchar *)g_slist_nth_data(upload->list, upload->progress_index),
-                                    upload->flags);
+                                    upload->flags, &error);
 
     if (req) {
         JsonObject *args = node_get_arguments(req);
@@ -76,6 +80,9 @@ static void next_upload(trg_upload *upload)
         upload->progress_index++;
         dispatch_rpc_async(upload->client, req, upload_complete_callback, upload);
     } else {
+        if (error)
+            trg_error_dialog(GTK_WINDOW(upload->main_window), error->message);
+
         trg_upload_free(upload);
     }
 }

@@ -175,9 +175,8 @@ out:
     return ret;
 }
 
-trg_torrent_file *trg_parse_torrent_file(const gchar *filename)
+trg_torrent_file *trg_parse_torrent_file(const gchar *filename, GError **error)
 {
-    GError *error = NULL;
     trg_torrent_file *ret = NULL;
     GMappedFile *mf;
 
@@ -186,12 +185,12 @@ trg_torrent_file *trg_parse_torrent_file(const gchar *filename)
         return NULL;
     }
 
-    mf = g_mapped_file_new(filename, FALSE, &error);
+    mf = g_mapped_file_new(filename, FALSE, error);
 
-    if (error) {
-        g_error("%s", error->message);
-        g_error_free(error);
-        g_mapped_file_unref(mf);
+    /* Should not be possible */
+    g_assert(error != NULL);
+
+    if (*error) {
         return NULL;
     } else {
         ret = trg_parse_torrent_data(g_mapped_file_get_contents(mf), g_mapped_file_get_length(mf));

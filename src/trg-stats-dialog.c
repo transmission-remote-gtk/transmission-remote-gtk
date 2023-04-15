@@ -221,7 +221,7 @@ static gboolean on_stats_reply(gpointer data)
             g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc,
                                   response->cb_data);
     } else {
-        trg_error_dialog(GTK_WINDOW(data), response);
+        trg_client_error_dialog(GTK_WINDOW(data), response);
     }
 
     trg_response_free(response);

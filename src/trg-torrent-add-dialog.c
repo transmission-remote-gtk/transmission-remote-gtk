@@ -383,17 +383,6 @@ static void store_add_node(GtkTreeStore *store, GtkTreeIter *parent, trg_files_t
         store_add_node(store, node->name ? &child : NULL, (trg_files_tree_node *)li->data, n_files);
 }
 
-static void torrent_not_parsed_warning(GtkWindow *parent)
-{
-    GtkWidget *dialog = gtk_message_dialog_new(
-        parent, GTK_DIALOG_DESTROY_WITH_PARENT, GTK_MESSAGE_WARNING, GTK_BUTTONS_OK,
-        _("Unable to parse torrent file. File preferences unavailable, but you can still try "
-          "uploading it."));
-    gtk_window_set_transient_for(GTK_WINDOW(dialog), parent);
-    gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
-}
-
 static void torrent_not_found_error(GtkWindow *parent, gchar *file)
 {
     GtkWidget *dialog
@@ -446,9 +435,14 @@ static void trg_torrent_add_dialog_set_filenames(TrgTorrentAddDialog *d, GSList 
             }
 
             if (g_file_test(file_name, G_FILE_TEST_IS_REGULAR)) {
-                tor_data = trg_parse_torrent_file(file_name);
+                g_autoptr(GError) error = NULL;
+                tor_data = trg_parse_torrent_file(file_name, &error);
                 if (!tor_data) {
-                    torrent_not_parsed_warning(GTK_WINDOW(priv->parent));
+                    if (error) {
+                        trg_error_dialog(GTK_WINDOW(priv->parent), error->message);
+                        priv->filenames = NULL;
+                        return;
+                    }
                 } else {
                     store_add_node(priv->store, NULL, tor_data->top_node, &priv->n_files);
                     trg_torrent_file_free(tor_data);
