@@ -32,19 +32,18 @@
 
 /* torrents */
 
-#define FIELD_RECENTLY_ACTIVE "recently-active"
-#define FIELD_TORRENTS        "torrents" /* parent node */
-#define FIELD_REMOVED         "removed"
-#define FIELD_ANNOUNCE_URL    "announceUrl"
-#define FIELD_LEFT_UNTIL_DONE "leftUntilDone"
-#define FIELD_TOTAL_SIZE      "totalSize"
-#define FIELD_DONE_DATE       "doneDate"
-#define FIELD_ADDED_DATE      "addedDate"
-#define FIELD_DATE_CREATED    "dateCreated"
-#define FIELD_TRACKER_STATS   "trackerStats"
-#define FIELD_DOWNLOAD_DIR    "downloadDir"
-#define FIELD_HASH_STRING     "hashString"
-//#define FIELD_SWARM_SPEED       "swarmSpeed"
+#define FIELD_RECENTLY_ACTIVE         "recently-active"
+#define FIELD_TORRENTS                "torrents" /* parent node */
+#define FIELD_REMOVED                 "removed"
+#define FIELD_ANNOUNCE_URL            "announceUrl"
+#define FIELD_LEFT_UNTIL_DONE         "leftUntilDone"
+#define FIELD_TOTAL_SIZE              "totalSize"
+#define FIELD_DONE_DATE               "doneDate"
+#define FIELD_ADDED_DATE              "addedDate"
+#define FIELD_DATE_CREATED            "dateCreated"
+#define FIELD_TRACKER_STATS           "trackerStats"
+#define FIELD_DOWNLOAD_DIR            "downloadDir"
+#define FIELD_HASH_STRING             "hashString"
 #define FIELD_NAME                    "name"
 #define FIELD_PATH                    "path"
 #define FIELD_SIZEWHENDONE            "sizeWhenDone"
@@ -92,12 +91,11 @@
 #define FIELD_ACTIVITY_DATE           "activityDate"
 #define FIELD_ISPRIVATE               "isPrivate"
 #define FIELD_METADATAPERCENTCOMPLETE "metadataPercentComplete"
-
-#define FIELD_FILES_WANTED          "files-wanted"
-#define FIELD_FILES_UNWANTED        "files-unwanted"
-#define FIELD_FILES_PRIORITY_HIGH   "priority-high"
-#define FIELD_FILES_PRIORITY_NORMAL "priority-normal"
-#define FIELD_FILES_PRIORITY_LOW    "priority-low"
+#define FIELD_FILES_WANTED            "files-wanted"
+#define FIELD_FILES_UNWANTED          "files-unwanted"
+#define FIELD_FILES_PRIORITY_HIGH     "priority-high"
+#define FIELD_FILES_PRIORITY_NORMAL   "priority-normal"
+#define FIELD_FILES_PRIORITY_LOW      "priority-low"
 
 /* trackers */
 
