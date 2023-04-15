@@ -54,7 +54,8 @@ void g_str_slist_free(GSList *list);
 GRegex *trg_uri_host_regex_new(void);
 gchar *trg_gregex_get_first(GRegex *rx, const gchar *uri);
 gchar *make_error_message(JsonObject *response, int status, gchar *err_msg);
-void trg_error_dialog(GtkWindow *parent, trg_response *response);
+void trg_error_dialog(GtkWindow *parent, gchar *msg);
+void trg_client_error_dialog(GtkWindow *parent, trg_response *response);
 gchar *add_links_to_text(const gchar *original);
 
 void tr_formatter_size_init(unsigned int kilo, const char *kb, const char *mb, const char *gb,
@@ -77,7 +78,7 @@ double tr_truncd(double x, int decimal_places);
 char *tr_strlsize(char *buf, guint64 bytes, size_t buflen);
 void rm_trailing_slashes(gchar *str);
 void trg_widget_set_visible(GtkWidget *w, gboolean visible);
-gchar *trg_base64encode(const gchar *filename);
+gchar *trg_base64encode(const gchar *filename, GError **error);
 GtkWidget *my_scrolledwin_new(GtkWidget *child);
 gboolean is_url(const gchar *string);
 gboolean is_magnet(const gchar *string);

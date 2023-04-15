@@ -246,7 +246,7 @@ static void trash_cb(GObject *source_object, GAsyncResult *res, gpointer user_da
                   error->message);
 }
 
-JsonNode *torrent_add_from_file(gchar *target, gint flags)
+JsonNode *torrent_add_from_file(gchar *target, gint flags, GError **error)
 {
     JsonNode *root;
     JsonObject *args;
@@ -265,14 +265,12 @@ JsonNode *torrent_add_from_file(gchar *target, gint flags)
     if (isUri) {
         json_object_set_string_member(args, PARAM_FILENAME, target);
     } else {
-        encodedFile = trg_base64encode(target);
-        if (encodedFile) {
-            json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
-            g_free(encodedFile);
-        } else {
-            g_error("unable to base64 encode file \"%s\".", target);
+        encodedFile = trg_base64encode(target, error);
+        if (!encodedFile)
             return NULL;
-        }
+
+        json_object_set_string_member(args, PARAM_METAINFO, encodedFile);
+        g_free(encodedFile);
     }
 
     json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED));

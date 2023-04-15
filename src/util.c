@@ -180,15 +180,16 @@ gboolean is_url(const gchar *string)
  * Glib-ish Utility functions.
  */
 
-gchar *trg_base64encode(const gchar *filename)
+gchar *trg_base64encode(const gchar *filename, GError **error)
 {
-    GError *error = NULL;
-    GMappedFile *mf = g_mapped_file_new(filename, FALSE, &error);
+    GMappedFile *mf = g_mapped_file_new(filename, FALSE, error);
     gchar *b64out = NULL;
 
-    if (error) {
-        g_error("%s", error->message);
-        g_error_free(error);
+    /* Should not be possible */
+    g_assert(error != NULL);
+
+    if (*error) {
+        return NULL;
     } else {
         b64out = g_base64_encode((guchar *)g_mapped_file_get_contents(mf),
                                  g_mapped_file_get_length(mf));
@@ -307,15 +308,19 @@ void trg_widget_set_visible(GtkWidget *w, gboolean visible)
         gtk_widget_hide(w);
 }
 
-void trg_error_dialog(GtkWindow *parent, trg_response *response)
+void trg_client_error_dialog(GtkWindow *parent, trg_response *response)
 {
-    gchar *msg = make_error_message(response->obj, response->status, response->err_msg);
+    g_autofree char *msg = make_error_message(response->obj, response->status, response->err_msg);
+    trg_error_dialog(parent, msg);
+}
+
+void trg_error_dialog(GtkWindow *parent, gchar *msg)
+{
     GtkWidget *dialog = gtk_message_dialog_new(parent, GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
                                                GTK_BUTTONS_OK, "%s", msg);
     gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
     gtk_dialog_run(GTK_DIALOG(dialog));
     gtk_widget_destroy(dialog);
-    g_free(msg);
 }
 
 gchar *make_error_message(JsonObject *response, gint status, gchar *err_msg)

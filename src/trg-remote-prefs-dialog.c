@@ -420,7 +420,7 @@ static gboolean on_port_tested(gpointer data)
                     GTK_LABEL(priv->port_test_label),
                     _("Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"));
         } else {
-            trg_error_dialog(GTK_WINDOW(response->cb_data), response);
+            trg_client_error_dialog(GTK_WINDOW(response->cb_data), response);
         }
     }
 
@@ -457,7 +457,7 @@ static gboolean on_blocklist_updated(gpointer data)
             gtk_button_set_label(GTK_BUTTON(priv->blocklist_check), labelText);
             g_free(labelText);
         } else {
-            trg_error_dialog(GTK_WINDOW(response->cb_data), response);
+            trg_client_error_dialog(GTK_WINDOW(response->cb_data), response);
         }
     }
 
