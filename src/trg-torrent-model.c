@@ -131,8 +131,8 @@ static void trg_torrent_model_count_peers(TrgTorrentModel *model, GtkTreeIter *i
     for (li = trackersList; li; li = g_list_next(li)) {
         JsonObject *tracker = json_node_get_object((JsonNode *)li->data);
 
-        seeders += tracker_stats_get_seeder_count(tracker);
-        leechers += tracker_stats_get_leecher_count(tracker);
+        seeders = MAX(seeders, tracker_stats_get_seeder_count(tracker));
+        leechers = MAX(leechers, tracker_stats_get_leecher_count(tracker));
         downloads += tracker_stats_get_download_count(tracker);
     }
 
