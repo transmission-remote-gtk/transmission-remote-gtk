@@ -22,6 +22,19 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.6.0" date="2023-06-18">
+      <description>
+          <p>This release adds some behind-the-scenes functionality as well as some small, user-facing bug fixes. The most prominent change is a new backend for interfacing with transmission-daemon that should be more robust and have less bugs.</p>
+          <ul>
+              <li>Support libayatana-appindicator for e.g. Debian based distros</li>
+              <li>Remove RSS support</li>
+              <li>Fix the spacing in the torrent information banel</li>
+              <li>Allow for trashing torrents instead of deleting them</li>
+              <li>Fix shift+up and shift+down being broken for highlighting torrents</li>
+              <li>Fix crash when transmission-remote-gtk cannot read files due to permissions</li>
+          </ul>
+      </description>
+    </release>
     <release version="1.5.1" date="2022-04-09">
       <description>
         <p>Bug fix release to fix install paths</p>

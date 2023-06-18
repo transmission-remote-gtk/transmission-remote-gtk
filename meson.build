@@ -1,6 +1,6 @@
 project('transmission-remote-gtk', 'c',
         license: 'GPL2+',
-        version: '1.5.1',
+        version: '1.6.0',
         meson_version: '>= 0.60.0',
         default_options: ['b_pie=true',
                           'c_std=gnu99',
