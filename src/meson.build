@@ -93,9 +93,9 @@ if win32
   windres = windows.compile_resources('win32.rc')
 endif
 
-trg_bin = executable(project_name, 
-                     sources: src_files,
-                     dependencies: trg_deps,
-                     install: true,
-                     pie: true)
+executable(project_name, 
+           sources: src_files,
+           dependencies: trg_deps,
+           install: true,
+           pie: true)
 
