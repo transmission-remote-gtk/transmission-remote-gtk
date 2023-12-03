@@ -1,22 +1,21 @@
 project('transmission-remote-gtk', 'c',
-        license: 'GPL2+',
-        version: '1.6.0',
-        meson_version: '>= 0.60.0',
-        default_options: ['b_pie=true',
-                          'c_std=gnu99',
-                          'warning_level=2',
-                          'buildtype=debugoptimized']
+  license: 'GPL2+',
+  version: '1.6.0',
+  meson_version: '>= 0.60.0',
+  default_options:[
+    'b_pie=true',
+    'c_std=gnu99',
+    'warning_level=2',
+    'buildtype=debugoptimized'
+  ]
 )
 
 project_name = meson.project_name()
 project_version = meson.project_version()
 app_id = 'io.github.TransmissionRemoteGtk'
+resource_prefix = '/' + app_id.replace('.', '/')
 pretty_name = 'Transmission Remote GTK'
 datadir = get_option('datadir')
-
-# i18n module
-i18n = import('i18n')
-
 
 # glib version info
 glib_version = '2.70'
