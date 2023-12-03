@@ -9,8 +9,8 @@ install_data(scalable, install_dir: icon_dir / 'scalable' / 'apps')
 foreach size: ['16x16', '22x22', '24x24', '32x32', '48x48']
   icon_name = 'icons' / project_name + '-@0@.png'.format(size)
   install_data(icon_name,
-               install_dir: icon_dir / size / 'apps',
-               rename: project_name + '.png')
+    install_dir: icon_dir / size / 'apps',
+    rename: project_name + '.png')
 endforeach
 
 # man pages
@@ -34,14 +34,19 @@ if rst2man.found()
       install_dir: get_option('mandir') / 'man1')
 endif
 
-po_dir = meson.project_source_root() / 'po'
+# gresources.xml
+gnome = import('gnome')
+gresource_xml ='@0@.gresource.xml'.format(app_id)
+gresources = gnome.compile_resources('trg-resources', gresource_xml)
+
 # desktop file
+po_dir = meson.project_source_root() / 'po'
 desktop_file = i18n.merge_file(input: '@0@.desktop.in'.format(app_id),
-                               output: '@0@.desktop'.format(app_id),
-                               install: true,
-                               install_dir: datadir / 'applications',
-                               po_dir: po_dir,
-                               type: 'desktop')
+  output: '@0@.desktop'.format(app_id),
+  install: true,
+  install_dir: datadir / 'applications',
+  po_dir: po_dir,
+  type: 'desktop')
 
 desktop_utils = find_program('desktop-file-validate', required: false)
 if desktop_utils.found()
@@ -50,10 +55,10 @@ endif
 
 # appdata
 appdata_file = i18n.merge_file(input: '@0@.appdata.xml.in'.format(app_id),
-                               output: '@0@.appdata.xml'.format(app_id),
-                               install: true,
-                               install_dir: datadir / 'metainfo',
-                               po_dir: po_dir)
+  output: '@0@.appdata.xml'.format(app_id),
+  install: true,
+  install_dir: datadir / 'metainfo',
+  po_dir: po_dir)
 
 appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
