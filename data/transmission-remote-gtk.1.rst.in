@@ -1,0 +1,73 @@
+#######################
+transmission-remote-gtk
+#######################
+
+------------------------------------------------------------------
+RPC client for the Transmission BitTorrent client, written in GTK.
+------------------------------------------------------------------
+
+:Version: @PROJECT_VERSION@
+:Manual group: @PRETTY_NAME@
+:Manual Section: 1
+
+SYNOPSIS
+--------
+| **transmission-remote-gtk** [OPTIONS] [torrent file|magnet link|url]
+
+
+DESCRIPTION
+-----------
+
+**transmission-remote-gtk** is an application for remote management of the
+Transmission BitTorrent client using its RPC interface. 
+
+OPTIONS
+-------
+
+**transmission-remote-gtk** has no options, but torrent files, magnet links,
+or URLs may be passed to the command to be automatically loaded. For example:
+
+    ::
+
+        transmission-remote-gtk Downloads/ubuntu-22.04.3-desktop-amd64.iso.torrent
+
+
+ENVIRONMENT
+-----------
+
+The following environment variables an be used when running **transmission-remote-gtk**
+
+``TRG_CLIENT_DEBUG``
+
+    When this environment is set, verbose HTTP and JSON information will be logged to stdout
+    for debugging purposes. Be aware that this can be extremely verbose.
+
+
+AUTHOR
+------
+
+Written by Alan Fitton.
+
+Maintained by various contributors.
+
+BUGS
+----
+
+Please see https://github.com/transmission-remote-gtk/transmission-remote-gtk/issues
+
+COPYRIGHT
+---------
+
+Copyright \(C\) 2011 Alan Fitton and various contributors.
+
+
+This is free software. You may redistribute copies of it under the terms of the GNU General
+Public License https://www.gnu.org/licenses/gpl.html. There is NO WARRANTY, to the extent
+permitted by law.
+
+SEE ALSO
+--------
+
+**transmission-daemon**\(1\)
+
+The project website https://github.com/transmission-remote-gtk/transmission-remote-gtk
