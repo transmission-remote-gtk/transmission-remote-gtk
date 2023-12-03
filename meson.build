@@ -11,6 +11,7 @@ project('transmission-remote-gtk', 'c',
 project_name = meson.project_name()
 project_version = meson.project_version()
 app_id = 'io.github.TransmissionRemoteGtk'
+pretty_name = 'Transmission Remote GTK'
 datadir = get_option('datadir')
 
 # i18n module

@@ -63,20 +63,6 @@ src_files = [
 # generate config file
 configure_file(output: 'config.h', configuration: conf_data)
 
-
-# man pages
-pod2man = find_program('pod2man', required: false)
-if pod2man.found()
-  manpages = custom_target('manpages',
-                           input: '@0@.pod'.format(project_name),
-                           output: '@0@.1'.format(project_name),
-                           command: [pod2man, '--release=@0@'.format(project_version),
-                                     '--center="Transmission Remote GTK"',
-                                     '@INPUT@', '@OUTPUT@'],
-                           install: true,
-                           install_dir: get_option('mandir') / 'man1')
-endif
-
 # gresources.xml
 gnome = import('gnome')
 gresource_data = meson.project_source_root() / 'data'
@@ -85,7 +71,6 @@ gresource_xml = gresource_data / '@0@.gresource.xml'.format(app_id)
 gresources = gnome.compile_resources('trg-resources', gresource_xml,
                                      source_dir:  gresource_data)
 src_files += gresources
-
 
 # Windows
 if win32

@@ -13,6 +13,26 @@ foreach size: ['16x16', '22x22', '24x24', '32x32', '48x48']
                rename: project_name + '.png')
 endforeach
 
+# man pages
+rst2man = find_program('rst2man', required: false)
+if rst2man.found()
+  man_rst_in = '@0@.1.rst.in'.format(project_name)
+  man_rst_out = '@0@.1.rst'.format(project_name)
+  man_page = '@0@.1'.format(project_name)
+
+  man_rst = configure_file(input: man_rst_in, output: man_rst_out,
+    configuration:
+      {'PRETTY_NAME': pretty_name,
+       'PROJECT_VERSION': project_version})
+
+  manpages = custom_target('manpages',
+    input: man_rst, output: man_page,
+    command: [rst2man, '--strict', '--no-raw',
+      '--no-generator', '--no-datestamp',
+      '@INPUT@', '@OUTPUT@'],
+      install: true,
+      install_dir: get_option('mandir') / 'man1')
+endif
 
 po_dir = meson.project_source_root() / 'po'
 # desktop file
@@ -39,4 +59,3 @@ appstream_util = find_program('appstream-util', required: false)
 if appstream_util.found()
   test('Validate appdata.xml', appstream_util, args: ['validate-relax', appdata_file])
 endif
-
