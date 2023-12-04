@@ -372,10 +372,6 @@ static GtkWidget *trg_prefs_generalPage(TrgPreferencesDialog *dlg)
     w = trgp_spin_new(dlg, TRG_PREFS_KEY_UPDATE_INTERVAL, 1, INT_MAX, 1, TRG_PREFS_PROFILE, NULL);
     hig_workarea_add_row(t, &row, _("Update interval:"), w, NULL);
 
-    w = trgp_spin_new(dlg, TRG_PREFS_KEY_MINUPDATE_INTERVAL, 1, INT_MAX, 1, TRG_PREFS_PROFILE,
-                      NULL);
-    hig_workarea_add_row(t, &row, _("Minimised update interval:"), w, NULL);
-
     w = trgp_spin_new(dlg, TRG_PREFS_KEY_SESSION_UPDATE_INTERVAL, 1, INT_MAX, 1, TRG_PREFS_PROFILE,
                       NULL);
     hig_workarea_add_row(t, &row, _("Session update interval:"), w, NULL);
@@ -638,12 +634,6 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog *dlg)
     }
 
     hig_workarea_add_wide_control(t, &row, tray);
-
-    w = trgp_check_new(dlg, _("Minimise to system tray"), TRG_PREFS_KEY_SYSTEM_TRAY_MINIMISE,
-                       TRG_PREFS_GLOBAL, NULL);
-    gtk_widget_set_sensitive(w, gtk_toggle_button_get_active(GTK_TOGGLE_BUTTON(tray)));
-    g_signal_connect(G_OBJECT(tray), "toggled", G_CALLBACK(toggle_active_arg_is_sensitive), w);
-    hig_workarea_add_wide_control(t, &row, w);
 
     hig_workarea_add_section_title(t, &row, _("Notifications"));
 

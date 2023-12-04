@@ -84,8 +84,6 @@ gboolean is_url(const gchar *string);
 gboolean is_magnet(const gchar *string);
 GtkWidget *gtr_combo_box_new_enum(const char *text_1, ...);
 
-gboolean should_be_minimised(int argc, char *argv[]);
-gboolean is_minimised_arg(const gchar *arg);
 GtkWidget *trg_vbox_new(gboolean homogeneous, gint spacing);
 GtkWidget *trg_hbox_new(gboolean homogeneous, gint spacing);
 

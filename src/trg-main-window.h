@@ -42,7 +42,7 @@ void on_generic_interactive_action(TrgMainWindow *win, trg_response *response);
 gboolean on_generic_interactive_action_response(gpointer data);
 void auto_connect_if_required(TrgMainWindow *win);
 void trg_main_window_set_start_args(TrgMainWindow *win, gchar **args);
-TrgMainWindow *trg_main_window_new(TrgClient *tc, gboolean minonstart);
+TrgMainWindow *trg_main_window_new(TrgClient *tc);
 void trg_main_window_add_tray(TrgMainWindow *win);
 void trg_main_window_remove_tray(TrgMainWindow *win);
 void trg_main_window_add_graph(TrgMainWindow *win, gboolean show);
