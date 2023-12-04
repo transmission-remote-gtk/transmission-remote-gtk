@@ -29,8 +29,7 @@
 enum {
     PROP_0,
     PROP_CLIENT,
-    PROP_MINIMISE_ON_START,
-    N_PROPS,
+    N_PROPS
 };
 
 struct _TrgGtkApp {
@@ -39,7 +38,6 @@ struct _TrgGtkApp {
 
 typedef struct {
     TrgClient *client;
-    gboolean min_start;
 } TrgGtkAppPrivate;
 
 G_DEFINE_TYPE_WITH_PRIVATE(TrgGtkApp, trg_gtk_app, GTK_TYPE_APPLICATION)
@@ -51,9 +49,6 @@ static void trg_gtk_app_get_property(GObject *object, guint property_id, GValue 
     switch (property_id) {
     case PROP_CLIENT:
         g_value_set_pointer(value, priv->client);
-        break;
-    case PROP_MINIMISE_ON_START:
-        g_value_set_boolean(value, priv->min_start);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -69,9 +64,6 @@ static void trg_gtk_app_set_property(GObject *object, guint property_id, const G
     case PROP_CLIENT:
         priv->client = g_value_get_pointer(value);
         break;
-    case PROP_MINIMISE_ON_START:
-        priv->min_start = g_value_get_boolean(value);
-        break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
         break;
@@ -81,7 +73,7 @@ static void trg_gtk_app_set_property(GObject *object, guint property_id, const G
 static void trg_gtk_app_startup(GApplication *app, gpointer userdata)
 {
     TrgGtkAppPrivate *priv = trg_gtk_app_get_instance_private(TRG_GTK_APP(app));
-    TrgMainWindow *window = trg_main_window_new(priv->client, priv->min_start);
+    TrgMainWindow *window = trg_main_window_new(priv->client);
     gtk_window_set_application(GTK_WINDOW(window), GTK_APPLICATION(app));
 }
 
@@ -122,7 +114,6 @@ static void shift_args(gchar **argv, int i)
 
 static gboolean test_local_cmdline(GApplication *application, gchar ***arguments, gint *exit_status)
 {
-    TrgGtkAppPrivate *priv = trg_gtk_app_get_instance_private(TRG_GTK_APP(application));
     gchar **argv;
     gchar *cwd = g_get_current_dir();
     gchar *tmp;
@@ -133,12 +124,8 @@ static gboolean test_local_cmdline(GApplication *application, gchar ***arguments
 
     i = 0;
     while (argv[i]) {
-        if (is_minimised_arg(argv[i])) {
-            shift_args(argv, i);
-            priv->min_start = TRUE;
-        } else if (!is_url(argv[i]) && !is_magnet(argv[i])
-                   && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
-                   && !g_path_is_absolute(argv[i])) {
+        if (!is_url(argv[i]) && !is_magnet(argv[i]) && g_file_test(argv[i], G_FILE_TEST_IS_REGULAR)
+            && !g_path_is_absolute(argv[i])) {
             tmp = g_build_path(G_DIR_SEPARATOR_S, cwd, argv[i], NULL);
             g_free(argv[i]);
             argv[i] = tmp;
@@ -167,11 +154,6 @@ static void trg_gtk_app_class_init(TrgGtkAppClass *klass)
     g_object_class_install_property(
         object_class, PROP_CLIENT,
         g_param_spec_pointer("trg-client", "TClient", _("Client"),
-                             G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
-
-    g_object_class_install_property(
-        object_class, PROP_MINIMISE_ON_START,
-        g_param_spec_boolean("min-on-start", "Min On Start", _("Min On Start"), FALSE,
                              G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 }
 

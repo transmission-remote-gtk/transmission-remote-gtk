@@ -522,21 +522,6 @@ char *tr_strlsize(char *buf, guint64 bytes, size_t buflen)
     return buf;
 }
 
-gboolean is_minimised_arg(const gchar *arg)
-{
-    return !g_strcmp0(arg, "-m") || !g_strcmp0(arg, "--minimized") || !g_strcmp0(arg, "/m");
-}
-
-gboolean should_be_minimised(int argc, char *argv[])
-{
-    int i;
-    for (i = 1; i < argc; i++)
-        if (is_minimised_arg(argv[i]))
-            return TRUE;
-
-    return FALSE;
-}
-
 GtkWidget *trg_hbox_new(gboolean homogeneous, gint spacing)
 {
     GtkWidget *box;

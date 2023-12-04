@@ -96,7 +96,6 @@ static void trg_prefs_create_defaults(TrgPrefs *p)
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_UPDATE_INTERVAL, TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_SESSION_UPDATE_INTERVAL,
                               TRG_SESSION_INTERVAL_DEFAULT);
-    trg_prefs_add_default_int(p, TRG_PREFS_KEY_MINUPDATE_INTERVAL, TRG_INTERVAL_DEFAULT);
     trg_prefs_add_default_int(p, TRG_PREFS_ACTIVEONLY_FULLSYNC_EVERY, 2);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_STATES_PANED_POS, 120);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_TIMEOUT, 40);
