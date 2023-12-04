@@ -19,10 +19,6 @@
 
 #include "config.h"
 
-#if HAVE_GEOIP
-#include <GeoIP.h>
-#endif
-
 #include <glib-object.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
@@ -50,15 +46,6 @@ static void trg_peers_tree_view_setup_columns(TrgPeersTreeView *self, TrgPeersMo
     desc->model_column_extra = PEERSCOL_ICON;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_HOST, _("Host"), "host", 0);
-
-#if HAVE_GEOIP
-    if (trg_peers_model_has_country_db(model))
-        trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_COUNTRY, _("Country"), "country",
-                                 0);
-
-    if (trg_peers_model_has_city_db(model))
-        trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, PEERSCOL_CITY, _("City"), "city", 0);
-#endif
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_DOWNSPEED, _("Down Speed"),
                              "down-speed", 0);
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_SPEED, PEERSCOL_UPSPEED, _("Up Speed"), "up-speed",
@@ -71,18 +58,6 @@ static void trg_peers_tree_view_setup_columns(TrgPeersTreeView *self, TrgPeersMo
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(self), PEERSCOL_HOST);
 }
 
-#if HAVE_GEOIP
-static void trg_peers_tree_view_column_added(TrgTreeView *tv, const gchar *id)
-{
-    TrgPeersModel *model = TRG_PEERS_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(tv)));
-    if (!g_strcmp0(id, "city")) {
-        trg_peers_model_add_city_column(model);
-    } else if (!g_strcmp0(id, "country")) {
-        trg_peers_model_add_country_column(model);
-    }
-}
-#endif
-
 TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs *prefs, TrgPeersModel *model,
                                           const gchar *configId)
 {
@@ -94,10 +69,6 @@ TrgPeersTreeView *trg_peers_tree_view_new(TrgPrefs *prefs, TrgPeersModel *model,
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
     trg_tree_view_restore_sort(TRG_TREE_VIEW(obj), 0x00);
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
-
-#if HAVE_GEOIP
-    g_signal_connect(obj, "column-added", G_CALLBACK(trg_peers_tree_view_column_added), NULL);
-#endif
 
     return TRG_PEERS_TREE_VIEW(obj);
 }

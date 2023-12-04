@@ -26,7 +26,6 @@ system:
 ### Optional Dependencies
 The following packages are optional dependencies:
 
- - libgeoip, country of origin of peers
  - libappindicator or libayatana-appindicator3, Application tray support
 
 If these libraries are installed at build time they will be automatically

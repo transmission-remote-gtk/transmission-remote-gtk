@@ -21,7 +21,6 @@ jobs:
                                libsoup-3.0-dev \
                                gettext \
                                \
-                               libgeoip-dev \
                                libappstream-dev \
                                appstream-util
       - name: meson configure
@@ -46,7 +45,6 @@ jobs:
                        libsoup \
                        gettext\
                        \
-                       geoip \
                        appstream-glib \
                        desktop-file-utils
       - name: meson configure
