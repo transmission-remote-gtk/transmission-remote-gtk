@@ -47,11 +47,10 @@ gthread_dep = dependency('gthread-2.0', version: glib_version_str)
 trg_deps = [gtk_dep, glib_dep, gio_dep, json_dep, libsoup_dep, gthread_dep]
 
 # optional dependencies
-geoip_dep           = dependency('geoip', required: get_option('geoip'))
 libappindicator_dep = dependency('ayatana-appindicator3-0.1',
   'appindicator3-0.1', required: get_option('libappindicator'))
 
-trg_deps += [geoip_dep, libappindicator_dep]
+trg_deps += [libappindicator_dep]
 
 # compiler
 cc = meson.get_compiler('c')
@@ -87,7 +86,6 @@ conf_data.set('G_DISABLE_CHECKS', not debug)
 conf_data.set('G_DISABLE_CAST_CHECKS', not debug)
 
 # compile time features
-conf_data.set10('HAVE_GEOIP', geoip_dep.found())
 conf_data.set10('ENABLE_NL_LANGINFO', nl_langinfo)
 
 conf_data.set10('HAVE_LIBAPPINDICATOR', libappindicator_dep.found())
