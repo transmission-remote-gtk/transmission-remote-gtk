@@ -48,7 +48,6 @@ src_files = files(
   'trg-toolbar.c',
   'trg-torrent-add-dialog.c',
   'trg-torrent-add-url-dialog.c',
-  'trg-torrent-graph.c',
   'trg-torrent-model.c',
   'trg-torrent-move-dialog.c',
   'trg-torrent-props-dialog.c',

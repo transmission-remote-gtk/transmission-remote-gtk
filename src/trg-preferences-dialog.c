@@ -298,16 +298,6 @@ static void toggle_directories_first(GtkToggleButton *w, gpointer win)
     trg_state_selector_set_directories_first(selector, gtk_toggle_button_get_active(w));
 }
 
-#if TRG_WITH_GRAPH
-static void toggle_graph(GtkToggleButton *w, gpointer win)
-{
-    if (gtk_toggle_button_get_active(w))
-        trg_main_window_add_graph(TRG_MAIN_WINDOW(win), TRUE);
-    else
-        trg_main_window_remove_graph(TRG_MAIN_WINDOW(win));
-}
-#endif
-
 static void toggle_tray_icon(GtkToggleButton *w, gpointer win)
 {
     if (gtk_toggle_button_get_active(w))
@@ -614,13 +604,6 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog *dlg)
                        NULL);
     g_signal_connect(G_OBJECT(w), "toggled", G_CALLBACK(notebook_toggled_cb), priv->win);
     hig_workarea_add_wide_control(t, &row, w);
-
-#if TRG_WITH_GRAPH
-    w = trgp_check_new(dlg, _("Show graph"), TRG_PREFS_KEY_SHOW_GRAPH, TRG_PREFS_GLOBAL,
-                       GTK_TOGGLE_BUTTON(w));
-    g_signal_connect(G_OBJECT(w), "toggled", G_CALLBACK(toggle_graph), priv->win);
-    hig_workarea_add_wide_control(t, &row, w);
-#endif
 
     hig_workarea_add_section_title(t, &row, _("System Tray"));
 
