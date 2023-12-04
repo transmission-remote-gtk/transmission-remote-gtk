@@ -45,8 +45,6 @@ void trg_main_window_set_start_args(TrgMainWindow *win, gchar **args);
 TrgMainWindow *trg_main_window_new(TrgClient *tc);
 void trg_main_window_add_tray(TrgMainWindow *win);
 void trg_main_window_remove_tray(TrgMainWindow *win);
-void trg_main_window_add_graph(TrgMainWindow *win, gboolean show);
-void trg_main_window_remove_graph(TrgMainWindow *win);
 TrgStateSelector *trg_main_window_get_state_selector(TrgMainWindow *win);
 gint trg_mw_get_selected_torrent_id(TrgMainWindow *win);
 GtkTreeModel *trg_main_window_get_torrent_model(TrgMainWindow *win);
