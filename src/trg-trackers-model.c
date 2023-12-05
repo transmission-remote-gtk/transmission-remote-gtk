@@ -27,33 +27,28 @@
 #include "trg-model.h"
 #include "trg-trackers-model.h"
 
-G_DEFINE_TYPE(TrgTrackersModel, trg_trackers_model, GTK_TYPE_LIST_STORE)
-#define TRG_TRACKERS_MODEL_GET_PRIVATE(o)                                                          \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_TRACKERS_MODEL, TrgTrackersModelPrivate))
-typedef struct _TrgTrackersModelPrivate TrgTrackersModelPrivate;
+struct _TrgTrackersModel {
+    GtkListStore parent;
 
-struct _TrgTrackersModelPrivate {
     gint64 torrentId;
     gint64 accept;
 };
 
+G_DEFINE_TYPE(TrgTrackersModel, trg_trackers_model, GTK_TYPE_LIST_STORE)
+
 void trg_trackers_model_set_no_selection(TrgTrackersModel *model)
 {
-    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
-    priv->torrentId = -1;
+    model->torrentId = -1;
 }
 
 gint64 trg_trackers_model_get_torrent_id(TrgTrackersModel *model)
 {
-    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
-    return priv->torrentId;
+    return model->torrentId;
 }
 
 void trg_trackers_model_update(TrgTrackersModel *model, gint64 updateSerial, JsonObject *t,
                                gint mode)
 {
-    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
-
     GtkTreeIter trackIter;
     JsonObject *tracker;
     gint64 trackerId;
@@ -63,9 +58,9 @@ void trg_trackers_model_update(TrgTrackersModel *model, gint64 updateSerial, Jso
 
     if (mode == TORRENT_GET_MODE_FIRST) {
         gtk_list_store_clear(GTK_LIST_STORE(model));
-        priv->torrentId = torrent_get_id(t);
-        priv->accept = TRUE;
-    } else if (!priv->accept) {
+        model->torrentId = torrent_get_id(t);
+        model->accept = TRUE;
+    } else if (!model->accept) {
         return;
     }
 
@@ -129,19 +124,15 @@ void trg_trackers_model_update(TrgTrackersModel *model, gint64 updateSerial, Jso
 
 static void trg_trackers_model_class_init(TrgTrackersModelClass *klass)
 {
-    g_type_class_add_private(klass, sizeof(TrgTrackersModelPrivate));
 }
 
 void trg_trackers_model_set_accept(TrgTrackersModel *model, gboolean accept)
 {
-    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(model);
-    priv->accept = accept;
+    model->accept = accept;
 }
 
 static void trg_trackers_model_init(TrgTrackersModel *self)
 {
-    TrgTrackersModelPrivate *priv = TRG_TRACKERS_MODEL_GET_PRIVATE(self);
-
     GType column_types[TRACKERCOL_COLUMNS];
 
     column_types[TRACKERCOL_ICON] = G_TYPE_STRING;
@@ -158,8 +149,8 @@ static void trg_trackers_model_init(TrgTrackersModel *self)
     column_types[TRACKERCOL_LAST_ANNOUNCE_RESULT] = G_TYPE_STRING;
     column_types[TRACKERCOL_UPDATESERIAL] = G_TYPE_INT64;
 
-    priv->accept = TRUE;
-    priv->torrentId = -1;
+    self->accept = TRUE;
+    self->torrentId = -1;
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self), TRACKERCOL_COLUMNS, column_types);
 }

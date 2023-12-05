@@ -35,19 +35,17 @@
 #include "trg-tree-view.h"
 #include "util.h"
 
-G_DEFINE_TYPE(TrgFilesTreeView, trg_files_tree_view, TRG_TYPE_TREE_VIEW)
-#define TRG_FILES_TREE_VIEW_GET_PRIVATE(o)                                                         \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_FILES_TREE_VIEW, TrgFilesTreeViewPrivate))
-typedef struct _TrgFilesTreeViewPrivate TrgFilesTreeViewPrivate;
+struct _TrgFilesTreeView {
+    TrgTreeView parent;
 
-struct _TrgFilesTreeViewPrivate {
     TrgClient *client;
     TrgMainWindow *win;
 };
 
+G_DEFINE_TYPE(TrgFilesTreeView, trg_files_tree_view, TRG_TYPE_TREE_VIEW)
+
 static void trg_files_tree_view_class_init(TrgFilesTreeViewClass *klass)
 {
-    g_type_class_add_private(klass, sizeof(TrgFilesTreeViewPrivate));
 }
 
 static gboolean send_updated_file_prefs_foreachfunc(GtkTreeModel *model,
@@ -84,19 +82,18 @@ static gboolean send_updated_file_prefs_foreachfunc(GtkTreeModel *model,
 gboolean on_files_update(gpointer data)
 {
     trg_response *response = (trg_response *)data;
-    TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(response->cb_data);
+    TrgFilesTreeView *self = TRG_FILES_TREE_VIEW(response->cb_data);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(response->cb_data));
 
     trg_files_model_set_accept(TRG_FILES_MODEL(model), TRUE);
 
-    response->cb_data = priv->win;
+    response->cb_data = self->win;
 
     return on_generic_interactive_action_response(data);
 }
 
 static void send_updated_file_prefs(TrgFilesTreeView *tv)
 {
-    TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(tv);
     JsonNode *req;
     JsonObject *args;
     GtkTreeModel *model;
@@ -115,14 +112,13 @@ static void send_updated_file_prefs(TrgFilesTreeView *tv)
 
     trg_files_model_set_accept(TRG_FILES_MODEL(model), FALSE);
 
-    dispatch_rpc_async(priv->client, req, on_files_update, tv);
+    dispatch_rpc_async(tv->client, req, on_files_update, tv);
 }
 
 static void rename_file(GtkWidget *w G_GNUC_UNUSED, gpointer data)
 {
     TrgFilesTreeView *tv = TRG_FILES_TREE_VIEW(data);
-    TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(tv);
-    gtk_widget_show_all(GTK_WIDGET(trg_file_rename_dialog_new(priv->win, priv->client, tv)));
+    gtk_widget_show_all(GTK_WIDGET(trg_file_rename_dialog_new(tv->win, tv->client, tv)));
 }
 
 static void set_low(GtkWidget *w G_GNUC_UNUSED, gpointer data)
@@ -213,15 +209,14 @@ static void trg_files_tree_view_init(TrgFilesTreeView *self)
 TrgFilesTreeView *trg_files_tree_view_new(TrgFilesModel *model, TrgMainWindow *win,
                                           TrgClient *client, const gchar *configId)
 {
-    GObject *obj = g_object_new(TRG_TYPE_FILES_TREE_VIEW, "config-id", configId, "prefs",
-                                trg_client_get_prefs(client), NULL);
-
-    TrgFilesTreeViewPrivate *priv = TRG_FILES_TREE_VIEW_GET_PRIVATE(obj);
+    TrgFilesTreeView *obj
+        = TRG_FILES_TREE_VIEW(g_object_new(TRG_TYPE_FILES_TREE_VIEW, "config-id", configId, "prefs",
+                                           trg_client_get_prefs(client), NULL));
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
 
-    priv->client = client;
-    priv->win = win;
+    obj->client = client;
+    obj->win = win;
 
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
 

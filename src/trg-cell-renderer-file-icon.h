@@ -16,38 +16,13 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef TRG_CELL_RENDERER_FILE_ICON_H_
-#define TRG_CELL_RENDERER_FILE_ICON_H_
+#pragma once
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
-G_BEGIN_DECLS
 #define TRG_TYPE_CELL_RENDERER_FILE_ICON trg_cell_renderer_file_icon_get_type()
-#define TRG_CELL_RENDERER_FILE_ICON(obj)                                                           \
-    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON, TrgCellRendererFileIcon))
-#define TRG_CELL_RENDERER_FILE_ICON_CLASS(klass)                                                   \
-    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_CELL_RENDERER_FILE_ICON,                            \
-                             TrgCellRendererFileIconClass))
-#define TRG_IS_CELL_RENDERER_FILE_ICON(obj)                                                        \
-    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON))
-#define TRG_IS_CELL_RENDERER_FILE_ICON_CLASS(klass)                                                \
-    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_CELL_RENDERER_FILE_ICON))
-#define TRG_CELL_RENDERER_FILE_ICON_GET_CLASS(obj)                                                 \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_CELL_RENDERER_FILE_ICON,                            \
-                               TrgCellRendererFileIconClass))
-typedef struct {
-    GtkCellRendererPixbuf parent;
-} TrgCellRendererFileIcon;
-
-typedef struct {
-    GtkCellRendererPixbufClass parent_class;
-} TrgCellRendererFileIconClass;
-
-GType trg_cell_renderer_file_icon_get_type(void);
+G_DECLARE_FINAL_TYPE(TrgCellRendererFileIcon, trg_cell_renderer_file_icon, TRG,
+                     CELL_RENDERER_FILE_ICON, GtkCellRendererPixbuf)
 
 GtkCellRenderer *trg_cell_renderer_file_icon_new(void);
-
-G_END_DECLS
-#endif /* TRG_CELL_RENDERER_FILE_ICON_H_ */

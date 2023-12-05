@@ -30,22 +30,21 @@ enum {
     PROP_ETA_VALUE
 };
 
-G_DEFINE_TYPE(TrgCellRendererEta, trg_cell_renderer_eta, GTK_TYPE_CELL_RENDERER_TEXT)
-#define TRG_CELL_RENDERER_ETA_GET_PRIVATE(o)                                                       \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_CELL_RENDERER_ETA, TrgCellRendererEtaPrivate))
-typedef struct _TrgCellRendererEtaPrivate TrgCellRendererEtaPrivate;
+struct _TrgCellRendererEta {
+    GtkCellRendererText parent;
 
-struct _TrgCellRendererEtaPrivate {
     gdouble eta_value;
 };
+
+G_DEFINE_TYPE(TrgCellRendererEta, trg_cell_renderer_eta, GTK_TYPE_CELL_RENDERER_TEXT)
 
 static void trg_cell_renderer_eta_get_property(GObject *object, guint property_id, GValue *value,
                                                GParamSpec *pspec)
 {
-    TrgCellRendererEtaPrivate *priv = TRG_CELL_RENDERER_ETA_GET_PRIVATE(object);
+    TrgCellRendererEta *self = TRG_CELL_RENDERER_ETA(object);
     switch (property_id) {
     case PROP_ETA_VALUE:
-        g_value_set_int64(value, priv->eta_value);
+        g_value_set_int64(value, self->eta_value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -56,15 +55,15 @@ static void trg_cell_renderer_eta_get_property(GObject *object, guint property_i
 static void trg_cell_renderer_eta_set_property(GObject *object, guint property_id,
                                                const GValue *value, GParamSpec *pspec)
 {
-    TrgCellRendererEtaPrivate *priv = TRG_CELL_RENDERER_ETA_GET_PRIVATE(object);
+    TrgCellRendererEta *self = TRG_CELL_RENDERER_ETA(object);
 
     if (property_id == PROP_ETA_VALUE) {
-        priv->eta_value = g_value_get_int64(value);
-        if (priv->eta_value > 0) {
+        self->eta_value = g_value_get_int64(value);
+        if (self->eta_value > 0) {
             char etaString[32];
-            tr_strltime_short(etaString, priv->eta_value, sizeof(etaString));
+            tr_strltime_short(etaString, self->eta_value, sizeof(etaString));
             g_object_set(object, "text", etaString, NULL);
-        } else if (priv->eta_value == -2) {
+        } else if (self->eta_value == -2) {
             g_object_set(object, "text", "∞", NULL);
         } else {
             g_object_set(object, "text", "", NULL);
@@ -86,8 +85,6 @@ static void trg_cell_renderer_eta_class_init(TrgCellRendererEtaClass *klass)
         g_param_spec_int64("eta-value", "Eta Value", "Eta Value", G_MININT64, G_MAXINT64, 0,
                            G_PARAM_READWRITE | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
                                | G_PARAM_STATIC_BLURB));
-
-    g_type_class_add_private(klass, sizeof(TrgCellRendererEtaPrivate));
 }
 
 static void trg_cell_renderer_eta_init(TrgCellRendererEta *self G_GNUC_UNUSED)

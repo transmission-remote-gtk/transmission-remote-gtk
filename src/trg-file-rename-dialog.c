@@ -31,12 +31,9 @@
 #include "trg-file-rename-dialog.h"
 #include "trg-main-window.h"
 
-G_DEFINE_TYPE(TrgFileRenameDialog, trg_file_rename_dialog, GTK_TYPE_DIALOG)
-#define TRG_FILE_RENAME_DIALOG_GET_PRIVATE(o)                                                      \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_FILE_RENAME_DIALOG, TrgFileRenameDialogPrivate))
-typedef struct _TrgFileRenameDialogPrivate TrgFileRenameDialogPrivate;
+struct _TrgFileRenameDialog {
+    GtkDialog parent;
 
-struct _TrgFileRenameDialogPrivate {
     TrgClient *client;
     TrgMainWindow *win;
     TrgFilesTreeView *treeview;
@@ -45,6 +42,12 @@ struct _TrgFileRenameDialogPrivate {
     GtkWidget *rename_button;
     GtkEntryBuffer *name_entry_buf;
 };
+
+typedef struct {
+    GtkDialogClass parent_class;
+} _TrgFileRenameDialogClass;
+
+G_DEFINE_TYPE(TrgFileRenameDialog, trg_file_rename_dialog, GTK_TYPE_DIALOG)
 
 enum {
     PROP_0,
@@ -78,28 +81,28 @@ static gchar *trg_file_rename_dialog_get_file_path(GtkTreeModel *model, const Gt
 
 static void trg_file_rename_response_cb(GtkDialog *dlg, gint res_id, gpointer data)
 {
-    TrgFileRenameDialogPrivate *priv = TRG_FILE_RENAME_DIALOG_GET_PRIVATE(dlg);
+    TrgFileRenameDialog *self = TRG_FILE_RENAME_DIALOG(dlg);
 
     if (res_id == GTK_RESPONSE_ACCEPT) {
-        const gchar *name = gtk_entry_buffer_get_text(priv->name_entry_buf);
-        JsonNode *request = torrent_rename_path(priv->ids, priv->orig_path, name);
+        const gchar *name = gtk_entry_buffer_get_text(self->name_entry_buf);
+        JsonNode *request = torrent_rename_path(self->ids, self->orig_path, name);
 
-        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(priv->treeview));
+        GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(self->treeview));
         trg_files_model_set_accept(TRG_FILES_MODEL(model), FALSE);
 
-        dispatch_rpc_async(priv->client, request, on_files_update, priv->treeview);
+        dispatch_rpc_async(self->client, request, on_files_update, self->treeview);
     } else {
-        g_free(priv->orig_path);
-        json_array_unref(priv->ids);
+        g_free(self->orig_path);
+        json_array_unref(self->ids);
     }
     gtk_widget_destroy(GTK_WIDGET(dlg));
 }
 
 static void location_changed(GtkComboBox *w, gpointer data)
 {
-    TrgFileRenameDialogPrivate *priv = TRG_FILE_RENAME_DIALOG_GET_PRIVATE(data);
-    gtk_widget_set_sensitive(priv->rename_button,
-                             gtk_entry_buffer_get_length(priv->name_entry_buf));
+    TrgFileRenameDialog *self = TRG_FILE_RENAME_DIALOG(data);
+    gtk_widget_set_sensitive(self->rename_button,
+                             gtk_entry_buffer_get_length(self->name_entry_buf));
 }
 
 static GObject *trg_file_rename_dialog_constructor(GType type, guint n_construct_properties,
@@ -107,7 +110,7 @@ static GObject *trg_file_rename_dialog_constructor(GType type, guint n_construct
 {
     GObject *object = G_OBJECT_CLASS(trg_file_rename_dialog_parent_class)
                           ->constructor(type, n_construct_properties, construct_params);
-    TrgFileRenameDialogPrivate *priv = TRG_FILE_RENAME_DIALOG_GET_PRIVATE(object);
+    TrgFileRenameDialog *self = TRG_FILE_RENAME_DIALOG(object);
 
     gint64 target_id;
     guint count;
@@ -118,7 +121,7 @@ static GObject *trg_file_rename_dialog_constructor(GType type, guint n_construct
 
     /* Get file selection info */
 
-    GtkTreeView *tv = GTK_TREE_VIEW(priv->treeview);
+    GtkTreeView *tv = GTK_TREE_VIEW(self->treeview);
     GtkTreeSelection *selection = gtk_tree_view_get_selection(tv);
     GtkTreeModel *model;
     gchar *orig_filename;
@@ -132,18 +135,18 @@ static GObject *trg_file_rename_dialog_constructor(GType type, guint n_construct
         gtk_tree_model_get_iter(model, &iter, (GtkTreePath *)list->data);
         gtk_tree_model_get(model, &iter, FILESCOL_NAME, &orig_filename, -1);
 
-        priv->orig_path = trg_file_rename_dialog_get_file_path(model, &iter);
+        self->orig_path = trg_file_rename_dialog_get_file_path(model, &iter);
     } else {
         orig_filename = g_strdup("error");
-        priv->orig_path = NULL;
+        self->orig_path = NULL;
     }
 
     /* Populate dialog widget */
 
     t = hig_workarea_create();
 
-    priv->name_entry_buf = gtk_entry_buffer_new(orig_filename, strlen(orig_filename));
-    GtkWidget *name_entry = gtk_entry_new_with_buffer(priv->name_entry_buf);
+    self->name_entry_buf = gtk_entry_buffer_new(orig_filename, strlen(orig_filename));
+    GtkWidget *name_entry = gtk_entry_new_with_buffer(self->name_entry_buf);
     gtk_entry_set_activates_default(GTK_ENTRY(name_entry), TRUE);
 
     g_signal_connect(name_entry, "changed", G_CALLBACK(location_changed), object);
@@ -152,11 +155,11 @@ static GObject *trg_file_rename_dialog_constructor(GType type, guint n_construct
     gtk_window_set_destroy_with_parent(GTK_WINDOW(object), TRUE);
 
     gtk_dialog_add_button(GTK_DIALOG(object), _("_Close"), GTK_RESPONSE_CANCEL);
-    priv->rename_button
+    self->rename_button
         = gtk_dialog_add_button(GTK_DIALOG(object), _("Rename"), GTK_RESPONSE_ACCEPT);
 
-    gtk_widget_set_sensitive(priv->rename_button,
-                             gtk_entry_buffer_get_length(priv->name_entry_buf));
+    gtk_widget_set_sensitive(self->rename_button,
+                             gtk_entry_buffer_get_length(self->name_entry_buf));
 
     gtk_container_set_border_width(GTK_CONTAINER(object), GUI_PAD);
 
@@ -167,8 +170,8 @@ static GObject *trg_file_rename_dialog_constructor(GType type, guint n_construct
     gtk_box_pack_start(GTK_BOX(gtk_dialog_get_content_area(GTK_DIALOG(object))), t, TRUE, TRUE, 0);
 
     target_id = trg_files_model_get_torrent_id(TRG_FILES_MODEL(model));
-    priv->ids = json_array_new();
-    json_array_add_int_element(priv->ids, target_id);
+    self->ids = json_array_new();
+    json_array_add_int_element(self->ids, target_id);
 
     if (count == 1) {
         msg = g_strdup_printf(_("Rename %s"), orig_filename);
@@ -176,15 +179,15 @@ static GObject *trg_file_rename_dialog_constructor(GType type, guint n_construct
         /* this really shouldn't happen since TrgFilesTreeView checks number of
          * selected files before allowing rename */
         msg = g_strdup_printf(_("INTERNAL ERROR: Rename %d files not supported"), count);
-        gtk_widget_set_sensitive(priv->rename_button, FALSE);
+        gtk_widget_set_sensitive(self->rename_button, FALSE);
         gtk_widget_set_sensitive(name_entry, FALSE);
     }
 
-    gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(priv->win));
+    gtk_window_set_transient_for(GTK_WINDOW(object), GTK_WINDOW(self->win));
     gtk_window_set_title(GTK_WINDOW(object), msg);
 
     g_signal_connect(G_OBJECT(object), "response", G_CALLBACK(trg_file_rename_response_cb),
-                     priv->win);
+                     self->win);
 
     g_free(msg);
     g_free(orig_filename);
@@ -196,16 +199,16 @@ static GObject *trg_file_rename_dialog_constructor(GType type, guint n_construct
 static void trg_file_rename_dialog_get_property(GObject *object, guint property_id, GValue *value,
                                                 GParamSpec *pspec)
 {
-    TrgFileRenameDialogPrivate *priv = TRG_FILE_RENAME_DIALOG_GET_PRIVATE(object);
+    TrgFileRenameDialog *self = TRG_FILE_RENAME_DIALOG(object);
     switch (property_id) {
     case PROP_CLIENT:
-        g_value_set_pointer(value, priv->client);
+        g_value_set_pointer(value, self->client);
         break;
     case PROP_PARENT_WINDOW:
-        g_value_set_object(value, priv->win);
+        g_value_set_object(value, self->win);
         break;
     case PROP_TREEVIEW:
-        g_value_set_object(value, priv->treeview);
+        g_value_set_object(value, self->treeview);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -216,16 +219,16 @@ static void trg_file_rename_dialog_get_property(GObject *object, guint property_
 static void trg_file_rename_dialog_set_property(GObject *object, guint property_id,
                                                 const GValue *value, GParamSpec *pspec)
 {
-    TrgFileRenameDialogPrivate *priv = TRG_FILE_RENAME_DIALOG_GET_PRIVATE(object);
+    TrgFileRenameDialog *self = TRG_FILE_RENAME_DIALOG(object);
     switch (property_id) {
     case PROP_CLIENT:
-        priv->client = g_value_get_pointer(value);
+        self->client = g_value_get_pointer(value);
         break;
     case PROP_PARENT_WINDOW:
-        priv->win = g_value_get_object(value);
+        self->win = g_value_get_object(value);
         break;
     case PROP_TREEVIEW:
-        priv->treeview = g_value_get_object(value);
+        self->treeview = g_value_get_object(value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -236,8 +239,6 @@ static void trg_file_rename_dialog_set_property(GObject *object, guint property_
 static void trg_file_rename_dialog_class_init(TrgFileRenameDialogClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
-
-    g_type_class_add_private(klass, sizeof(TrgFileRenameDialogPrivate));
 
     object_class->get_property = trg_file_rename_dialog_get_property;
     object_class->set_property = trg_file_rename_dialog_set_property;

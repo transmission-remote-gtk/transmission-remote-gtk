@@ -43,13 +43,9 @@ enum {
 };
 
 static guint signals[SELECTOR_SIGNAL_COUNT] = { 0 };
+struct _TrgStateSelector {
+    GtkTreeView parent;
 
-G_DEFINE_TYPE(TrgStateSelector, trg_state_selector, GTK_TYPE_TREE_VIEW)
-#define TRG_STATE_SELECTOR_GET_PRIVATE(o)                                                          \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_STATE_SELECTOR, TrgStateSelectorPrivate))
-typedef struct _TrgStateSelectorPrivate TrgStateSelectorPrivate;
-
-struct _TrgStateSelectorPrivate {
     guint flag;
     gboolean showDirs;
     gboolean showTrackers;
@@ -74,36 +70,36 @@ struct _TrgStateSelectorPrivate {
     GtkTreeRowReference *down_wait_rr;
 };
 
+G_DEFINE_TYPE(TrgStateSelector, trg_state_selector, GTK_TYPE_TREE_VIEW)
+#define TRG_STATE_SELECTOR_GET_PRIVATE(o)
+
 GRegex *trg_state_selector_get_url_host_regex(TrgStateSelector *s)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
-    return priv->urlHostRegex;
+    return s->urlHostRegex;
 }
 
 guint32 trg_state_selector_get_flag(TrgStateSelector *s)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
-    return priv->flag;
+    return s->flag;
 }
 
 static void state_selection_changed(GtkTreeSelection *selection, gpointer data)
 {
-    TrgStateSelectorPrivate *priv;
     GtkTreeIter iter;
     GtkTreeModel *stateModel;
     guint index = 0;
 
-    priv = TRG_STATE_SELECTOR_GET_PRIVATE(data);
+    TrgStateSelector *self = TRG_STATE_SELECTOR(data);
 
     if (gtk_tree_selection_get_selected(selection, &stateModel, &iter))
-        gtk_tree_model_get(stateModel, &iter, STATE_SELECTOR_BIT, &priv->flag, STATE_SELECTOR_INDEX,
+        gtk_tree_model_get(stateModel, &iter, STATE_SELECTOR_BIT, &self->flag, STATE_SELECTOR_INDEX,
                            &index, -1);
     else
-        priv->flag = 0;
+        self->flag = 0;
 
-    trg_prefs_set_int(priv->prefs, TRG_PREFS_STATE_SELECTOR_LAST, index, TRG_PREFS_GLOBAL);
+    trg_prefs_set_int(self->prefs, TRG_PREFS_STATE_SELECTOR_LAST, index, TRG_PREFS_GLOBAL);
 
-    g_signal_emit(TRG_STATE_SELECTOR(data), signals[SELECTOR_STATE_CHANGED], 0, priv->flag);
+    g_signal_emit(TRG_STATE_SELECTOR(data), signals[SELECTOR_STATE_CHANGED], 0, self->flag);
 }
 
 static GtkTreeRowReference *quick_tree_ref_new(GtkTreeModel *model, GtkTreeIter *iter)
@@ -186,9 +182,9 @@ static void trg_state_selector_update_dynamic_filter(GtkTreeModel *model, GtkTre
 
 static void refresh_statelist_cb(GtkWidget *w, gpointer data)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(data);
-    trg_client_inc_serial(priv->client);
-    trg_state_selector_update(TRG_STATE_SELECTOR(data), TORRENT_UPDATE_ADDREMOVE);
+    TrgStateSelector *self = TRG_STATE_SELECTOR(data);
+    trg_client_inc_serial(self->client);
+    trg_state_selector_update(data, TORRENT_UPDATE_ADDREMOVE);
 }
 
 static void view_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer data G_GNUC_UNUSED)
@@ -280,9 +276,8 @@ static void trg_state_selector_insert(TrgStateSelector *s, int offset, gint rang
 
 void trg_state_selector_update(TrgStateSelector *s, guint whatsChanged)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(s));
-    TrgClient *client = priv->client;
+    TrgClient *client = s->client;
     gint64 updateSerial = trg_client_get_serial(client);
     GList *torrentItemRefs;
     GtkTreeIter torrentIter, iter;
@@ -314,30 +309,30 @@ void trg_state_selector_update(TrgStateSelector *s, guint whatsChanged)
         if (!t)
             continue;
 
-        if (priv->showTrackers && (whatsChanged & TORRENT_UPDATE_ADDREMOVE)) {
+        if (s->showTrackers && (whatsChanged & TORRENT_UPDATE_ADDREMOVE)) {
             trackersList = json_array_get_elements(torrent_get_tracker_stats(t));
             for (trackerItem = trackersList; trackerItem; trackerItem = g_list_next(trackerItem)) {
                 JsonObject *tracker = json_node_get_object((JsonNode *)trackerItem->data);
                 const gchar *announceUrl = tracker_stats_get_announce(tracker);
-                gchar *announceHost = trg_gregex_get_first(priv->urlHostRegex, announceUrl);
+                gchar *announceHost = trg_gregex_get_first(s->urlHostRegex, announceUrl);
 
                 if (!announceHost)
                     continue;
 
-                result = g_hash_table_lookup(priv->trackers, announceHost);
+                result = g_hash_table_lookup(s->trackers, announceHost);
 
                 if (result) {
                     trg_state_selector_update_dynamic_filter(model, (GtkTreeRowReference *)result,
                                                              updateSerial);
                     g_free(announceHost);
                 } else {
-                    if (priv->dirsFirst) {
+                    if (s->dirsFirst) {
                         trg_state_selector_insert(
-                            s, priv->n_categories + g_hash_table_size(priv->directories), -1,
+                            s, s->n_categories + g_hash_table_size(s->directories), -1,
                             announceHost, &iter);
                     } else {
-                        trg_state_selector_insert(s, priv->n_categories,
-                                                  g_hash_table_size(priv->trackers), announceHost,
+                        trg_state_selector_insert(s, s->n_categories,
+                                                  g_hash_table_size(s->trackers), announceHost,
                                                   &iter);
                     }
                     gtk_list_store_set(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_ICON,
@@ -345,37 +340,37 @@ void trg_state_selector_update(TrgStateSelector *s, guint whatsChanged)
                                        STATE_SELECTOR_SERIAL, updateSerial, STATE_SELECTOR_COUNT, 1,
                                        STATE_SELECTOR_BIT, FILTER_FLAG_TRACKER,
                                        STATE_SELECTOR_INDEX, 0, -1);
-                    g_hash_table_insert(priv->trackers, announceHost,
+                    g_hash_table_insert(s->trackers, announceHost,
                                         quick_tree_ref_new(model, &iter));
                 }
             }
             g_list_free(trackersList);
         }
 
-        if (priv->showDirs
+        if (s->showDirs
             && ((whatsChanged & TORRENT_UPDATE_ADDREMOVE)
                 || (whatsChanged & TORRENT_UPDATE_PATH_CHANGE))) {
             gchar *dir;
             gtk_tree_model_get(torrentModel, &torrentIter, TORRENT_COLUMN_DOWNLOADDIR_SHORT, &dir,
                                -1);
 
-            result = g_hash_table_lookup(priv->directories, dir);
+            result = g_hash_table_lookup(s->directories, dir);
             if (result) {
                 trg_state_selector_update_dynamic_filter(model, (GtkTreeRowReference *)result,
                                                          updateSerial);
             } else {
-                if (priv->dirsFirst) {
-                    trg_state_selector_insert(s, priv->n_categories,
-                                              g_hash_table_size(priv->directories), dir, &iter);
+                if (s->dirsFirst) {
+                    trg_state_selector_insert(s, s->n_categories, g_hash_table_size(s->directories),
+                                              dir, &iter);
                 } else {
-                    trg_state_selector_insert(
-                        s, priv->n_categories + g_hash_table_size(priv->trackers), -1, dir, &iter);
+                    trg_state_selector_insert(s, s->n_categories + g_hash_table_size(s->trackers),
+                                              -1, dir, &iter);
                 }
                 gtk_list_store_set(GTK_LIST_STORE(model), &iter, STATE_SELECTOR_ICON, "folder",
                                    STATE_SELECTOR_NAME, dir, STATE_SELECTOR_SERIAL, updateSerial,
                                    STATE_SELECTOR_BIT, FILTER_FLAG_DIR, STATE_SELECTOR_COUNT, 1,
                                    STATE_SELECTOR_INDEX, 0, -1);
-                g_hash_table_insert(priv->directories, g_strdup(dir),
+                g_hash_table_insert(s->directories, g_strdup(dir),
                                     quick_tree_ref_new(model, &iter));
             }
 
@@ -387,25 +382,24 @@ void trg_state_selector_update(TrgStateSelector *s, guint whatsChanged)
 
     cruft.serial = trg_client_get_serial(client);
 
-    if (priv->showTrackers && ((whatsChanged & TORRENT_UPDATE_ADDREMOVE))) {
-        cruft.table = priv->trackers;
-        g_hash_table_foreach_remove(priv->trackers, trg_state_selector_remove_cruft, &cruft);
+    if (s->showTrackers && ((whatsChanged & TORRENT_UPDATE_ADDREMOVE))) {
+        cruft.table = s->trackers;
+        g_hash_table_foreach_remove(s->trackers, trg_state_selector_remove_cruft, &cruft);
     }
 
-    if (priv->showDirs
+    if (s->showDirs
         && ((whatsChanged & TORRENT_UPDATE_ADDREMOVE)
             || (whatsChanged & TORRENT_UPDATE_PATH_CHANGE))) {
-        cruft.table = priv->directories;
-        g_hash_table_foreach_remove(priv->directories, trg_state_selector_remove_cruft, &cruft);
+        cruft.table = s->directories;
+        g_hash_table_foreach_remove(s->directories, trg_state_selector_remove_cruft, &cruft);
     }
 }
 
 void trg_state_selector_set_show_dirs(TrgStateSelector *s, gboolean show)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
-    priv->showDirs = show;
+    s->showDirs = show;
     if (!show)
-        g_hash_table_remove_all(priv->directories);
+        g_hash_table_remove_all(s->directories);
     else
         trg_state_selector_update(s, TORRENT_UPDATE_PATH_CHANGE);
 }
@@ -421,20 +415,18 @@ static void on_torrents_state_change(TrgTorrentModel *model, guint whatsChanged,
 
 void trg_state_selector_set_show_trackers(TrgStateSelector *s, gboolean show)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
-    priv->showTrackers = show;
+    s->showTrackers = show;
     if (!show)
-        g_hash_table_remove_all(priv->trackers);
+        g_hash_table_remove_all(s->trackers);
     else
         trg_state_selector_update(s, TORRENT_UPDATE_ADDREMOVE);
 }
 
 void trg_state_selector_set_directories_first(TrgStateSelector *s, gboolean _dirsFirst)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
-    priv->dirsFirst = _dirsFirst;
-    g_hash_table_remove_all(priv->directories);
-    g_hash_table_remove_all(priv->trackers);
+    s->dirsFirst = _dirsFirst;
+    g_hash_table_remove_all(s->directories);
+    g_hash_table_remove_all(s->trackers);
     trg_state_selector_update(s, TORRENT_UPDATE_ADDREMOVE);
 }
 
@@ -442,13 +434,12 @@ static void trg_state_selector_add_state(TrgStateSelector *selector, GtkTreeIter
                                          gchar *icon, gchar *name, guint32 flag,
                                          GtkTreeRowReference **rr)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(selector);
     GtkListStore *model = GTK_LIST_STORE(gtk_tree_view_get_model(GTK_TREE_VIEW(selector)));
 
     if (pos < 0)
-        gtk_list_store_append(priv->store, iter);
+        gtk_list_store_append(selector->store, iter);
     else
-        gtk_list_store_insert(priv->store, iter, pos);
+        gtk_list_store_insert(selector->store, iter, pos);
 
     gtk_list_store_set(model, iter, STATE_SELECTOR_ICON, icon, STATE_SELECTOR_NAME, name,
                        STATE_SELECTOR_BIT, flag, STATE_SELECTOR_INDEX,
@@ -457,7 +448,7 @@ static void trg_state_selector_add_state(TrgStateSelector *selector, GtkTreeIter
     if (rr)
         *rr = quick_tree_ref_new(GTK_TREE_MODEL(model), iter);
 
-    priv->n_categories++;
+    selector->n_categories++;
 }
 
 static void remove_row_ref_and_free(GtkTreeRowReference *rr)
@@ -492,53 +483,51 @@ static void trg_state_selector_update_stat(GtkTreeRowReference *rr, gint count)
 
 void trg_state_selector_stats_update(TrgStateSelector *s, trg_torrent_model_update_stats *stats)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
     GtkTreeIter iter;
-    if (stats->error > 0 && !priv->error_rr) {
-        trg_state_selector_add_state(s, &iter, priv->n_categories - 1, "dialog-warning", _("Error"),
-                                     TORRENT_FLAG_ERROR, &priv->error_rr);
+    if (stats->error > 0 && !s->error_rr) {
+        trg_state_selector_add_state(s, &iter, s->n_categories - 1, "dialog-warning", _("Error"),
+                                     TORRENT_FLAG_ERROR, &s->error_rr);
 
-    } else if (stats->error < 1 && priv->error_rr) {
-        remove_row_ref_and_free(priv->error_rr);
-        priv->error_rr = NULL;
-        priv->n_categories--;
+    } else if (stats->error < 1 && s->error_rr) {
+        remove_row_ref_and_free(s->error_rr);
+        s->error_rr = NULL;
+        s->n_categories--;
     }
 
-    trg_state_selector_update_stat(priv->all_rr, stats->count);
-    trg_state_selector_update_stat(priv->down_rr, stats->down);
-    trg_state_selector_update_stat(priv->seeding_rr, stats->seeding);
-    trg_state_selector_update_stat(priv->error_rr, stats->error);
-    trg_state_selector_update_stat(priv->paused_rr, stats->paused);
-    trg_state_selector_update_stat(priv->complete_rr, stats->complete);
-    trg_state_selector_update_stat(priv->incomplete_rr, stats->incomplete);
-    trg_state_selector_update_stat(priv->active_rr, stats->active);
-    trg_state_selector_update_stat(priv->checking_rr, stats->checking);
-    trg_state_selector_update_stat(priv->down_wait_rr, stats->down_wait);
-    trg_state_selector_update_stat(priv->seed_wait_rr, stats->seed_wait);
+    trg_state_selector_update_stat(s->all_rr, stats->count);
+    trg_state_selector_update_stat(s->down_rr, stats->down);
+    trg_state_selector_update_stat(s->seeding_rr, stats->seeding);
+    trg_state_selector_update_stat(s->error_rr, stats->error);
+    trg_state_selector_update_stat(s->paused_rr, stats->paused);
+    trg_state_selector_update_stat(s->complete_rr, stats->complete);
+    trg_state_selector_update_stat(s->incomplete_rr, stats->incomplete);
+    trg_state_selector_update_stat(s->active_rr, stats->active);
+    trg_state_selector_update_stat(s->checking_rr, stats->checking);
+    trg_state_selector_update_stat(s->down_wait_rr, stats->down_wait);
+    trg_state_selector_update_stat(s->seed_wait_rr, stats->seed_wait);
 }
 
 void trg_state_selector_disconnect(TrgStateSelector *s)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
 
-    if (priv->error_rr) {
-        remove_row_ref_and_free(priv->error_rr);
-        priv->error_rr = NULL;
-        priv->n_categories--;
+    if (s->error_rr) {
+        remove_row_ref_and_free(s->error_rr);
+        s->error_rr = NULL;
+        s->n_categories--;
     }
 
-    g_hash_table_remove_all(priv->trackers);
-    g_hash_table_remove_all(priv->directories);
+    g_hash_table_remove_all(s->trackers);
+    g_hash_table_remove_all(s->directories);
 
-    trg_state_selector_update_stat(priv->all_rr, -1);
-    trg_state_selector_update_stat(priv->down_rr, -1);
-    trg_state_selector_update_stat(priv->seeding_rr, -1);
-    trg_state_selector_update_stat(priv->error_rr, -1);
-    trg_state_selector_update_stat(priv->paused_rr, -1);
-    trg_state_selector_update_stat(priv->complete_rr, -1);
-    trg_state_selector_update_stat(priv->incomplete_rr, -1);
-    trg_state_selector_update_stat(priv->active_rr, -1);
-    trg_state_selector_update_stat(priv->checking_rr, -1);
+    trg_state_selector_update_stat(s->all_rr, -1);
+    trg_state_selector_update_stat(s->down_rr, -1);
+    trg_state_selector_update_stat(s->seeding_rr, -1);
+    trg_state_selector_update_stat(s->error_rr, -1);
+    trg_state_selector_update_stat(s->paused_rr, -1);
+    trg_state_selector_update_stat(s->complete_rr, -1);
+    trg_state_selector_update_stat(s->incomplete_rr, -1);
+    trg_state_selector_update_stat(s->active_rr, -1);
+    trg_state_selector_update_stat(s->checking_rr, -1);
 }
 
 static void trg_state_selector_init(TrgStateSelector *self)
@@ -558,7 +547,6 @@ static GObject *trg_state_selector_constructor(GType type, guint n_construct_pro
 {
     GObject *object;
     TrgStateSelector *selector;
-    TrgStateSelectorPrivate *priv;
     GtkListStore *store;
     GtkTreeViewColumn *column;
     GtkCellRenderer *renderer;
@@ -570,13 +558,12 @@ static GObject *trg_state_selector_constructor(GType type, guint n_construct_pro
                  ->constructor(type, n_construct_properties, construct_params);
 
     selector = TRG_STATE_SELECTOR(object);
-    priv = TRG_STATE_SELECTOR_GET_PRIVATE(object);
 
-    priv->urlHostRegex = trg_uri_host_regex_new();
-    priv->trackers = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
-                                           (GDestroyNotify)remove_row_ref_and_free);
-    priv->directories = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
-                                              (GDestroyNotify)remove_row_ref_and_free);
+    selector->urlHostRegex = trg_uri_host_regex_new();
+    selector->trackers = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
+                                               (GDestroyNotify)remove_row_ref_and_free);
+    selector->directories = g_hash_table_new_full(g_str_hash, g_str_equal, g_free,
+                                                  (GDestroyNotify)remove_row_ref_and_free);
 
     gtk_tree_view_set_headers_visible(GTK_TREE_VIEW(object), FALSE);
 
@@ -594,29 +581,30 @@ static GObject *trg_state_selector_constructor(GType type, guint n_construct_pro
 
     gtk_tree_view_append_column(GTK_TREE_VIEW(object), column);
 
-    store = priv->store = gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING, G_TYPE_STRING,
-                                             G_TYPE_INT, G_TYPE_UINT, G_TYPE_INT64, G_TYPE_UINT);
+    store = selector->store
+        = gtk_list_store_new(STATE_SELECTOR_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_INT,
+                             G_TYPE_UINT, G_TYPE_INT64, G_TYPE_UINT);
     gtk_tree_view_set_model(GTK_TREE_VIEW(object), GTK_TREE_MODEL(store));
 
-    trg_state_selector_add_state(selector, &iter, -1, "help-about", _("All"), 0, &priv->all_rr);
+    trg_state_selector_add_state(selector, &iter, -1, "help-about", _("All"), 0, &selector->all_rr);
     trg_state_selector_add_state(selector, &iter, -1, "go-down", _("Downloading"),
-                                 TORRENT_FLAG_DOWNLOADING, &priv->down_rr);
+                                 TORRENT_FLAG_DOWNLOADING, &selector->down_rr);
     trg_state_selector_add_state(selector, &iter, -1, "media-seek-backward", _("Queue Down"),
-                                 TORRENT_FLAG_DOWNLOADING_WAIT, &priv->down_wait_rr);
+                                 TORRENT_FLAG_DOWNLOADING_WAIT, &selector->down_wait_rr);
     trg_state_selector_add_state(selector, &iter, -1, "go-up", _("Seeding"), TORRENT_FLAG_SEEDING,
-                                 &priv->seeding_rr);
+                                 &selector->seeding_rr);
     trg_state_selector_add_state(selector, &iter, -1, "media-seek-forward", _("Queue Up"),
-                                 TORRENT_FLAG_SEEDING_WAIT, &priv->seed_wait_rr);
+                                 TORRENT_FLAG_SEEDING_WAIT, &selector->seed_wait_rr);
     trg_state_selector_add_state(selector, &iter, -1, "media-playback-pause", _("Paused"),
-                                 TORRENT_FLAG_PAUSED, &priv->paused_rr);
+                                 TORRENT_FLAG_PAUSED, &selector->paused_rr);
     trg_state_selector_add_state(selector, &iter, -1, "trg-gtk-apply", _("Complete"),
-                                 TORRENT_FLAG_COMPLETE, &priv->complete_rr);
+                                 TORRENT_FLAG_COMPLETE, &selector->complete_rr);
     trg_state_selector_add_state(selector, &iter, -1, "edit-select-all", _("Incomplete"),
-                                 TORRENT_FLAG_INCOMPLETE, &priv->incomplete_rr);
+                                 TORRENT_FLAG_INCOMPLETE, &selector->incomplete_rr);
     trg_state_selector_add_state(selector, &iter, -1, "network-workgroup", _("Active"),
-                                 TORRENT_FLAG_ACTIVE, &priv->active_rr);
+                                 TORRENT_FLAG_ACTIVE, &selector->active_rr);
     trg_state_selector_add_state(selector, &iter, -1, "view-refresh", _("Checking"),
-                                 TORRENT_FLAG_CHECKING_ANY, &priv->checking_rr);
+                                 TORRENT_FLAG_CHECKING_ANY, &selector->checking_rr);
     trg_state_selector_add_state(selector, &iter, -1, NULL, NULL, 0, NULL);
 
     gtk_tree_view_set_rubber_banding(GTK_TREE_VIEW(object), TRUE);
@@ -629,47 +617,47 @@ static GObject *trg_state_selector_constructor(GType type, guint n_construct_pro
 
     gtk_tree_view_set_search_column(GTK_TREE_VIEW(object), STATE_SELECTOR_NAME);
 
-    index = trg_prefs_get_int(priv->prefs, TRG_PREFS_STATE_SELECTOR_LAST, TRG_PREFS_GLOBAL);
+    index = trg_prefs_get_int(selector->prefs, TRG_PREFS_STATE_SELECTOR_LAST, TRG_PREFS_GLOBAL);
     if (index > 0 && gtk_tree_model_iter_nth_child(GTK_TREE_MODEL(store), &iter, NULL, index)) {
         GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(object));
         gtk_tree_selection_select_iter(selection, &iter);
     }
 
-    priv->showDirs = trg_prefs_get_bool(priv->prefs, TRG_PREFS_KEY_FILTER_DIRS, TRG_PREFS_GLOBAL);
-    priv->showTrackers
-        = trg_prefs_get_bool(priv->prefs, TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL);
-    priv->dirsFirst
-        = trg_prefs_get_bool(priv->prefs, TRG_PREFS_KEY_DIRECTORIES_FIRST, TRG_PREFS_GLOBAL);
+    selector->showDirs
+        = trg_prefs_get_bool(selector->prefs, TRG_PREFS_KEY_FILTER_DIRS, TRG_PREFS_GLOBAL);
+    selector->showTrackers
+        = trg_prefs_get_bool(selector->prefs, TRG_PREFS_KEY_FILTER_TRACKERS, TRG_PREFS_GLOBAL);
+    selector->dirsFirst
+        = trg_prefs_get_bool(selector->prefs, TRG_PREFS_KEY_DIRECTORIES_FIRST, TRG_PREFS_GLOBAL);
 
     return object;
 }
 
 void trg_state_selector_set_queues_enabled(TrgStateSelector *s, gboolean enabled)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(s);
     GtkTreeIter iter;
 
     if (enabled) {
         trg_state_selector_add_state(s, &iter, 2, "media-seek-backward", _("Queue Down"),
-                                     TORRENT_FLAG_DOWNLOADING_WAIT, &priv->down_wait_rr);
+                                     TORRENT_FLAG_DOWNLOADING_WAIT, &s->down_wait_rr);
         trg_state_selector_add_state(s, &iter, 4, "media-seek-forward", _("Queue Up"),
-                                     TORRENT_FLAG_SEEDING_WAIT, &priv->seed_wait_rr);
+                                     TORRENT_FLAG_SEEDING_WAIT, &s->seed_wait_rr);
     } else {
-        remove_row_ref_and_free(priv->seed_wait_rr);
-        remove_row_ref_and_free(priv->down_wait_rr);
-        priv->down_wait_rr = NULL;
-        priv->seed_wait_rr = NULL;
-        priv->n_categories -= 2;
+        remove_row_ref_and_free(s->seed_wait_rr);
+        remove_row_ref_and_free(s->down_wait_rr);
+        s->down_wait_rr = NULL;
+        s->seed_wait_rr = NULL;
+        s->n_categories -= 2;
     }
 }
 
 static void trg_state_selector_get_property(GObject *object, guint property_id, GValue *value,
                                             GParamSpec *pspec)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(object);
+    TrgStateSelector *self = TRG_STATE_SELECTOR(object);
     switch (property_id) {
     case PROP_CLIENT:
-        g_value_set_object(value, priv->client);
+        g_value_set_object(value, self->client);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -680,12 +668,11 @@ static void trg_state_selector_get_property(GObject *object, guint property_id, 
 static void trg_state_selector_set_property(GObject *object, guint prop_id, const GValue *value,
                                             GParamSpec *pspec G_GNUC_UNUSED)
 {
-    TrgStateSelectorPrivate *priv = TRG_STATE_SELECTOR_GET_PRIVATE(object);
-
+    TrgStateSelector *self = TRG_STATE_SELECTOR(object);
     switch (prop_id) {
     case PROP_CLIENT:
-        priv->client = g_value_get_object(value);
-        priv->prefs = trg_client_get_prefs(priv->client);
+        self->client = g_value_get_object(value);
+        self->prefs = trg_client_get_prefs(self->client);
         break;
     }
 }
@@ -699,8 +686,7 @@ static void trg_state_selector_class_init(TrgStateSelectorClass *klass)
 
     signals[SELECTOR_STATE_CHANGED]
         = g_signal_new("torrent-state-changed", G_TYPE_FROM_CLASS(object_class),
-                       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-                       G_STRUCT_OFFSET(TrgStateSelectorClass, torrent_state_changed), NULL, NULL,
+                       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, 0, NULL, NULL,
                        g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT);
 
     g_object_class_install_property(
@@ -708,6 +694,4 @@ static void trg_state_selector_class_init(TrgStateSelectorClass *klass)
         g_param_spec_object("client", "Client", "Client", TRG_TYPE_CLIENT,
                             G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_NAME
                                 | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB));
-
-    g_type_class_add_private(klass, sizeof(TrgStateSelectorPrivate));
 }

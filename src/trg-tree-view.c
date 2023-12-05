@@ -60,22 +60,19 @@ enum {
 
 static guint signals[SIGNAL_COUNT] = { 0 };
 
-G_DEFINE_TYPE(TrgTreeView, trg_tree_view, GTK_TYPE_TREE_VIEW)
-#define TRG_TREE_VIEW_GET_PRIVATE(o)                                                               \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_TREE_VIEW, TrgTreeViewPrivate))
-typedef struct _TrgTreeViewPrivate TrgTreeViewPrivate;
-
-struct _TrgTreeViewPrivate {
+typedef struct {
     GList *columns;
     TrgPrefs *prefs;
     gchar *configId;
-};
+} TrgTreeViewPrivate;
+
+G_DEFINE_TYPE_WITH_PRIVATE(TrgTreeView, trg_tree_view, GTK_TYPE_TREE_VIEW)
 
 #define GDATA_KEY_COLUMN_DESC "column-desc"
 
 gboolean trg_tree_view_is_column_showing(TrgTreeView *tv, gint index)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(tv);
 
     GList *li;
     for (li = priv->columns; li; li = g_list_next(li)) {
@@ -109,7 +106,7 @@ static void trg_tree_view_get_property(GObject *object, guint property_id, GValu
 static void trg_tree_view_set_property(GObject *object, guint property_id, const GValue *value,
                                        GParamSpec *pspec)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(object);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(TRG_TREE_VIEW(object));
     switch (property_id) {
     case PROP_PREFS:
         priv->prefs = g_value_get_object(value);
@@ -135,7 +132,7 @@ static GObject *trg_tree_view_constructor(GType type, guint n_construct_properti
 
 static JsonObject *trg_prefs_get_tree_view_props(TrgTreeView *tv)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(tv);
     JsonObject *root = trg_prefs_get_root(priv->prefs);
     const gchar *className
         = priv->configId && strlen(priv->configId) > 0 ? priv->configId : G_OBJECT_TYPE_NAME(tv);
@@ -165,7 +162,7 @@ static void trg_tree_view_add_column_after(TrgTreeView *tv, trg_column_descripti
 trg_column_description *trg_tree_view_reg_column(TrgTreeView *tv, gint type, gint model_column,
                                                  const gchar *header, const gchar *id, guint flags)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(tv);
     trg_column_description *desc = g_new0(trg_column_description, 1);
 
     desc->type = type;
@@ -181,7 +178,7 @@ trg_column_description *trg_tree_view_reg_column(TrgTreeView *tv, gint type, gin
 
 static trg_column_description *trg_tree_view_find_column(TrgTreeView *tv, const gchar *id)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(tv);
     GList *li;
     trg_column_description *desc;
 
@@ -244,7 +241,7 @@ static void trg_tree_view_sort_menu_type_toggled(GtkCheckMenuItem *w, gpointer d
 
 GtkWidget *trg_tree_view_sort_menu(TrgTreeView *tv, const gchar *label)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(tv);
     GtkWidget *item = gtk_menu_item_new_with_mnemonic(label);
     GtkTreeModel *treeViewModel = gtk_tree_view_get_model(GTK_TREE_VIEW(tv));
     GtkTreeSortable *sortableModel
@@ -299,7 +296,7 @@ GtkWidget *trg_tree_view_sort_menu(TrgTreeView *tv, const gchar *label)
 static void view_popup_menu(GtkButton *button, GdkEventButton *event, GtkTreeViewColumn *column)
 {
     GtkWidget *tv = gtk_tree_view_column_get_tree_view(column);
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(TRG_TREE_VIEW(tv));
     GtkWidget *menu, *menuitem;
     trg_column_description *desc;
     guint n_showing = 0;
@@ -589,13 +586,13 @@ void trg_tree_view_restore_sort(TrgTreeView *tv, guint flags)
 
 void trg_tree_view_set_prefs(TrgTreeView *tv, TrgPrefs *prefs)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(tv);
     priv->prefs = prefs;
 }
 
 void trg_tree_view_setup_columns(TrgTreeView *tv)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(tv);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(tv);
     JsonObject *props = trg_prefs_get_tree_view_props(tv);
     GList *columns, *widths, *cli, *wli;
 
@@ -653,7 +650,7 @@ static void trg_tree_view_dispose(GObject *object)
 
 static void trg_tree_view_finalize(GObject *object)
 {
-    TrgTreeViewPrivate *priv = TRG_TREE_VIEW_GET_PRIVATE(object);
+    TrgTreeViewPrivate *priv = trg_tree_view_get_instance_private(TRG_TREE_VIEW(object));
 
     g_list_free_full(priv->columns, (GDestroyNotify)trg_column_description_free);
     g_free(priv->configId);
@@ -664,8 +661,6 @@ static void trg_tree_view_finalize(GObject *object)
 static void trg_tree_view_class_init(TrgTreeViewClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
-
-    g_type_class_add_private(klass, sizeof(TrgTreeViewPrivate));
 
     object_class->get_property = trg_tree_view_get_property;
     object_class->set_property = trg_tree_view_set_property;
@@ -686,9 +681,8 @@ static void trg_tree_view_class_init(TrgTreeViewClass *klass)
                                 | G_PARAM_STATIC_NICK | G_PARAM_STATIC_BLURB));
 
     signals[SIGNAL_COLUMN_ADDED] = g_signal_new(
-        "column-added", G_TYPE_FROM_CLASS(object_class), G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-        G_STRUCT_OFFSET(TrgTreeViewClass, column_added), NULL, NULL,
-        g_cclosure_marshal_VOID__STRING, G_TYPE_NONE, 1, G_TYPE_STRING);
+        "column-added", G_TYPE_FROM_CLASS(object_class), G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, 0,
+        NULL, NULL, g_cclosure_marshal_VOID__STRING, G_TYPE_NONE, 1, G_TYPE_STRING);
 }
 
 static void trg_tree_view_init(TrgTreeView *tv)

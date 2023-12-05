@@ -19,22 +19,15 @@ datadir = get_option('datadir')
 
 # glib version info
 glib_version = '2.70'
-glib_max_version = glib_version
-# While we actually depend on 2.70 because of libsoup3 we have some deprecated
-# usage that we'll deal with later so this silences it for now.
-glib_min_version = '2.56'
+glib_min_version = glib_version
 glib_version_str = '>= @0@'.format(glib_version)
 
 # glib API configuration
-maj_min = glib_max_version.split('.')
-glib_max ='GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
-glib_max_def = '-DGLIB_VERSION_MAX_ALLOWED=@0@'.format(glib_max)
-
 maj_min = glib_min_version.split('.')
 glib_min = 'GLIB_VERSION_@0@_@1@'.format(maj_min[0], maj_min[1])
 glib_min_def = '-DGLIB_VERSION_MIN_REQUIRED=@0@'.format(glib_min)
 
-add_project_arguments(glib_min_def, glib_max_def, language: 'c')
+add_project_arguments(glib_min_def, language: 'c')
 
 # required dependencies
 gtk_dep     = dependency('gtk+-3.0', version: '>= 3.22')
@@ -105,9 +98,7 @@ flags = [
   '-Werror=pointer-arith',
   '-Werror=init-self',
   '-Werror=missing-include-dirs',
-  '-Werror=date-time',
-  '-Wdeprecated-declarations',
-  '-Wdeprecated'
+  '-Werror=date-time'
 ]
 
 cflags = cc.get_supported_arguments(flags)

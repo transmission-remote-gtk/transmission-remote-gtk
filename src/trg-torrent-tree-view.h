@@ -16,9 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef _TRG_TORRENT_TREE_VIEW_H_
-#define _TRG_TORRENT_TREE_VIEW_H_
+#pragma once
 
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
@@ -30,28 +28,7 @@
 
 G_BEGIN_DECLS
 #define TRG_TYPE_TORRENT_TREE_VIEW trg_torrent_tree_view_get_type()
-#define TRG_TORRENT_TREE_VIEW(obj)                                                                 \
-    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TORRENT_TREE_VIEW, TrgTorrentTreeView))
-#define TRG_TORRENT_TREE_VIEW_CLASS(klass)                                                         \
-    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TORRENT_TREE_VIEW, TrgTorrentTreeViewClass))
-#define TRG_IS_TORRENT_TREE_VIEW(obj)                                                              \
-    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TORRENT_TREE_VIEW))
-#define TRG_IS_TORRENT_TREE_VIEW_CLASS(klass)                                                      \
-    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TORRENT_TREE_VIEW))
-#define TRG_TORRENT_TREE_VIEW_GET_CLASS(obj)                                                       \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TORRENT_TREE_VIEW, TrgTorrentTreeViewClass))
-typedef struct {
-    TrgTreeView parent;
-} TrgTorrentTreeView;
-
-typedef struct {
-    TrgTreeViewClass parent_class;
-} TrgTorrentTreeViewClass;
-
-GType trg_torrent_tree_view_get_type(void);
+G_DECLARE_FINAL_TYPE(TrgTorrentTreeView, trg_torrent_tree_view, TRG, TORRENT_TREE_VIEW, TrgTreeView)
 
 TrgTorrentTreeView *trg_torrent_tree_view_new(TrgClient *tc, GtkTreeModel *model);
 JsonArray *build_json_id_array(TrgTorrentTreeView *tv);
-
-G_END_DECLS
-#endif /* _TRG_TORRENT_TREE_VIEW_H_ */

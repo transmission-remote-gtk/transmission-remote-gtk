@@ -22,11 +22,7 @@
 #include "trg-client.h"
 #include <gtk/gtk.h>
 
-G_BEGIN_DECLS
-
 #define TRG_TYPE_GTK_APP (trg_gtk_app_get_type())
 G_DECLARE_FINAL_TYPE(TrgGtkApp, trg_gtk_app, TRG, GTK_APP, GtkApplication)
 
 TrgGtkApp *trg_gtk_app_new(TrgClient *client);
-
-G_END_DECLS

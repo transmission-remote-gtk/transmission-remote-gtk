@@ -9,9 +9,7 @@
  *
  * $Id: torrent-cell-renderer.h 12658 2011-08-09 05:47:24Z jordan $
  */
-
-#ifndef GTR_TORRENT_CELL_RENDERER_H
-#define GTR_TORRENT_CELL_RENDERER_H
+#pragma once
 
 #include <gtk/gtk.h>
 
@@ -22,28 +20,8 @@
 #define UNKNOWN_MIME_TYPE   "unknown"
 
 #define TORRENT_CELL_RENDERER_TYPE (torrent_cell_renderer_get_type())
-
-#define TORRENT_CELL_RENDERER(o)                                                                   \
-    (G_TYPE_CHECK_INSTANCE_CAST((o), TORRENT_CELL_RENDERER_TYPE, TorrentCellRenderer))
-
-typedef struct TorrentCellRenderer TorrentCellRenderer;
-
-typedef struct TorrentCellRendererClass TorrentCellRendererClass;
-
-struct TorrentCellRenderer {
-    GtkCellRenderer parent;
-
-    /*< private > */
-    struct TorrentCellRendererPrivate *priv;
-};
-
-struct TorrentCellRendererClass {
-    GtkCellRendererClass parent;
-};
-
-GType torrent_cell_renderer_get_type(void) G_GNUC_CONST;
+G_DECLARE_FINAL_TYPE(TorrentCellRenderer, torrent_cell_renderer, TORRENT, CELL_RENDERER,
+                     GtkCellRenderer)
 
 GtkCellRenderer *torrent_cell_renderer_new(void);
 GtkTreeView *torrent_cell_renderer_get_owner(TorrentCellRenderer *r);
-
-#endif /* GTR_TORRENT_CELL_RENDERER_H */

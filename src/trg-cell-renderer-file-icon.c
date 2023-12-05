@@ -31,24 +31,22 @@ enum {
     PROP_FILE_NAME
 };
 
-G_DEFINE_TYPE(TrgCellRendererFileIcon, trg_cell_renderer_file_icon, GTK_TYPE_CELL_RENDERER_PIXBUF)
-#define TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(o)                                                 \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_CELL_RENDERER_FILE_ICON,                            \
-                                 TrgCellRendererFileIconPrivate))
-typedef struct _TrgCellRendererFileIconPrivate TrgCellRendererFileIconPrivate;
+struct _TrgCellRendererFileIcon {
+    GtkCellRendererPixbuf parent;
 
-struct _TrgCellRendererFileIconPrivate {
     gint64 file_id;
     gchar *text;
 };
 
+G_DEFINE_TYPE(TrgCellRendererFileIcon, trg_cell_renderer_file_icon, GTK_TYPE_CELL_RENDERER_PIXBUF)
+
 static void trg_cell_renderer_file_icon_get_property(GObject *object, guint property_id,
                                                      GValue *value, GParamSpec *pspec)
 {
-    TrgCellRendererFileIconPrivate *priv = TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(object);
+    TrgCellRendererFileIcon *self = TRG_CELL_RENDERER_FILE_ICON(object);
     switch (property_id) {
     case PROP_FILE_ID:
-        g_value_set_int64(value, priv->file_id);
+        g_value_set_int64(value, self->file_id);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -58,16 +56,14 @@ static void trg_cell_renderer_file_icon_get_property(GObject *object, guint prop
 
 static void trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon *fi)
 {
-    TrgCellRendererFileIconPrivate *priv = TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(fi);
-
-    if (priv->file_id == -2) {
+    if (fi->file_id == -2) {
         return;
-    } else if (priv->file_id == -1) {
+    } else if (fi->file_id == -1) {
         g_object_set(fi, "icon-name", "folder", NULL);
-    } else if (priv->text) {
+    } else if (fi->text) {
 #ifndef G_OS_WIN32
         gboolean uncertain;
-        gchar *mimetype = g_content_type_guess(priv->text, NULL, 0, &uncertain);
+        gchar *mimetype = g_content_type_guess(fi->text, NULL, 0, &uncertain);
         GIcon *icon = NULL;
 
         if (!uncertain && mimetype)
@@ -90,14 +86,14 @@ static void trg_cell_renderer_file_icon_refresh(TrgCellRendererFileIcon *fi)
 static void trg_cell_renderer_file_icon_set_property(GObject *object, guint property_id,
                                                      const GValue *value, GParamSpec *pspec)
 {
-    TrgCellRendererFileIconPrivate *priv = TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(object);
+    TrgCellRendererFileIcon *self = TRG_CELL_RENDERER_FILE_ICON(object);
     if (property_id == PROP_FILE_ID) {
-        priv->file_id = g_value_get_int64(value);
+        self->file_id = g_value_get_int64(value);
         trg_cell_renderer_file_icon_refresh(TRG_CELL_RENDERER_FILE_ICON(object));
     } else if (property_id == PROP_FILE_NAME) {
-        if (priv->file_id != -1) {
-            g_free(priv->text);
-            priv->text = g_strdup(g_value_get_string(value));
+        if (self->file_id != -1) {
+            g_free(self->text);
+            self->text = g_strdup(g_value_get_string(value));
             trg_cell_renderer_file_icon_refresh(TRG_CELL_RENDERER_FILE_ICON(object));
         }
     } else {
@@ -107,8 +103,8 @@ static void trg_cell_renderer_file_icon_set_property(GObject *object, guint prop
 
 static void trg_cell_renderer_file_icon_dispose(GObject *object)
 {
-    TrgCellRendererFileIconPrivate *priv = TRG_CELL_RENDERER_FILE_ICON_GET_PRIVATE(object);
-    g_free(priv->text);
+    TrgCellRendererFileIcon *self = TRG_CELL_RENDERER_FILE_ICON(object);
+    g_free(self->text);
     G_OBJECT_CLASS(trg_cell_renderer_file_icon_parent_class)->dispose(object);
 }
 
@@ -131,8 +127,6 @@ static void trg_cell_renderer_file_icon_class_init(TrgCellRendererFileIconClass 
                                                         G_PARAM_READWRITE | G_PARAM_STATIC_NAME
                                                             | G_PARAM_STATIC_NICK
                                                             | G_PARAM_STATIC_BLURB));
-
-    g_type_class_add_private(klass, sizeof(TrgCellRendererFileIconPrivate));
 }
 
 static void trg_cell_renderer_file_icon_init(TrgCellRendererFileIcon *self)
