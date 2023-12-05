@@ -4,7 +4,6 @@ src_files = files(
   'icons.c',
   'json.c',
   'main.c',
-  'remote-exec.c',
   'requests.c',
   'session-get.c',
   'torrent.c',
