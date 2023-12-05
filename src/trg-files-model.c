@@ -34,16 +34,19 @@
 
 #include "trg-files-model.h"
 
-G_DEFINE_TYPE(TrgFilesModel, trg_files_model, GTK_TYPE_TREE_STORE)
-#define TRG_FILES_MODEL_GET_PRIVATE(o)                                                             \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_FILES_MODEL, TrgFilesModelPrivate))
-typedef struct _TrgFilesModelPrivate TrgFilesModelPrivate;
+struct _TrgFilesModel {
+    GtkTreeStore parent;
 
-struct _TrgFilesModelPrivate {
     gint64 torrentId;
     guint n_items;
     gboolean accept;
 };
+
+typedef struct {
+    GtkTreeStoreClass parent_class;
+} _TrgFilesModelClass;
+
+G_DEFINE_TYPE(TrgFilesModel, trg_files_model, GTK_TYPE_TREE_STORE)
 
 /* Push a given increment to a treemodel node and its parents.
  * Used for updating bytescompleted.
@@ -235,15 +238,14 @@ static trg_files_tree_node *trg_file_parser_node_insert(trg_files_tree_node *top
 
 void trg_files_model_set_accept(TrgFilesModel *model, gboolean accept)
 {
-    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
-    priv->accept = accept;
+    model->accept = accept;
 }
 
 static void trg_files_model_iter_update(TrgFilesModel *model, GtkTreeIter *filesIter,
                                         JsonObject *file, JsonArray *wantedArray,
                                         JsonArray *prioritiesArray, gint id)
 {
-    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
+    TrgFilesModel *self = TRG_FILES_MODEL(model);
     gchar **path = g_strsplit(file_get_name(file), "/", -1);
 
     /* Find last element in the path */
@@ -268,7 +270,7 @@ static void trg_files_model_iter_update(TrgFilesModel *model, GtkTreeIter *files
     trg_files_update_parent_progress(GTK_TREE_MODEL(model), filesIter,
                                      fileCompleted - lastCompleted);
 
-    if (priv->accept) {
+    if (self->accept) {
         gtk_tree_store_set(GTK_TREE_STORE(model), filesIter, FILESCOL_NAME, *path_last,
                            FILESCOL_WANTED, wanted, FILESCOL_PRIORITY, priority, -1);
 
@@ -280,15 +282,13 @@ static void trg_files_model_iter_update(TrgFilesModel *model, GtkTreeIter *files
 
 static void trg_files_model_class_init(TrgFilesModelClass *klass)
 {
-    g_type_class_add_private(klass, sizeof(TrgFilesModelPrivate));
 }
 
 static void trg_files_model_init(TrgFilesModel *self)
 {
-    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(self);
     GType column_types[FILESCOL_COLUMNS];
 
-    priv->accept = TRUE;
+    self->accept = TRUE;
 
     column_types[FILESCOL_NAME] = G_TYPE_STRING;
     column_types[FILESCOL_SIZE] = G_TYPE_INT64;
@@ -341,13 +341,13 @@ struct FirstUpdateThreadData {
 static gboolean trg_files_model_applytree_idlefunc(gpointer data)
 {
     struct FirstUpdateThreadData *args = (struct FirstUpdateThreadData *)data;
-    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(args->model);
+    TrgFilesModel *self = TRG_FILES_MODEL(args->model);
 
-    if (args->torrent_id == priv->torrentId) {
+    if (args->torrent_id == self->torrentId) {
         store_add_node(GTK_TREE_STORE(args->model), NULL, args->top_node);
         gtk_tree_view_expand_all(args->tree_view);
-        priv->n_items = args->n_items;
-        priv->accept = TRUE;
+        self->n_items = args->n_items;
+        self->accept = TRUE;
     }
 
     trg_files_tree_node_free(args->top_node);
@@ -383,18 +383,17 @@ static gpointer trg_files_model_buildtree_threadfunc(gpointer data)
 void trg_files_model_update(TrgFilesModel *model, GtkTreeView *tv, gint64 updateSerial,
                             JsonObject *t, gint mode)
 {
-    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
     JsonArray *files = torrent_get_files(t);
     GList *filesList = json_array_get_elements(files);
     guint filesListLength = g_list_length(filesList);
     JsonArray *priorities = torrent_get_priorities(t);
     JsonArray *wanted = torrent_get_wanted(t);
-    priv->torrentId = torrent_get_id(t);
+    model->torrentId = torrent_get_id(t);
 
     /* It's quicker to build this up with simple data structures before
      * putting it into GTK models.
      */
-    if (mode == TORRENT_GET_MODE_FIRST || priv->n_items != filesListLength) {
+    if (mode == TORRENT_GET_MODE_FIRST || model->n_items != filesListLength) {
         struct FirstUpdateThreadData *futd = g_new0(struct FirstUpdateThreadData, 1);
 
         gtk_tree_store_clear(GTK_TREE_STORE(model));
@@ -405,7 +404,7 @@ void trg_files_model_update(TrgFilesModel *model, GtkTreeView *tv, gint64 update
         futd->priorities = priorities;
         futd->wanted = wanted;
         futd->filesList = filesList;
-        futd->torrent_id = priv->torrentId;
+        futd->torrent_id = model->torrentId;
         futd->model = model;
         futd->idle_add = filesListLength > TRG_FILES_MODEL_CREATE_THREAD_IF_GT;
 
@@ -435,8 +434,7 @@ void trg_files_model_update(TrgFilesModel *model, GtkTreeView *tv, gint64 update
 
 gint64 trg_files_model_get_torrent_id(TrgFilesModel *model)
 {
-    TrgFilesModelPrivate *priv = TRG_FILES_MODEL_GET_PRIVATE(model);
-    return priv->torrentId;
+    return model->torrentId;
 }
 
 TrgFilesModel *trg_files_model_new(void)

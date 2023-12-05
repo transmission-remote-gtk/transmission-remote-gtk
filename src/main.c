@@ -32,6 +32,8 @@
 /* Get platform dependendent localedir */
 static void bindtext_wrapper(void)
 {
+    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
+    textdomain(GETTEXT_PACKAGE);
 #ifdef G_OS_WIN32
     gchar *moddir = g_win32_get_package_installation_directory_of_module(NULL);
 
@@ -47,22 +49,10 @@ static void bindtext_wrapper(void)
 
 int main(int argc, char *argv[])
 {
-    TrgClient *client;
-    TrgGtkApp *gtk_app;
-
-    gtk_init(&argc, &argv);
-
     g_set_application_name(PACKAGE_NAME);
-    bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
-    textdomain(GETTEXT_PACKAGE);
     bindtext_wrapper();
 
-    client = trg_client_new();
-    gtk_app = trg_gtk_app_new(client);
-    gint exitCode = g_application_run(G_APPLICATION(gtk_app), argc, argv);
-
-    g_object_unref(gtk_app);
-    g_object_unref(client);
-
-    return exitCode;
+    g_autoptr(TrgClient) client = trg_client_new();
+    g_autoptr(TrgGtkApp) gtk_app = trg_gtk_app_new(client);
+    return g_application_run(G_APPLICATION(gtk_app), argc, argv);
 }

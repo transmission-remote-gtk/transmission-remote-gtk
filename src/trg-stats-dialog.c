@@ -48,19 +48,23 @@ enum {
 
 #define STATS_UPDATE_INTERVAL 5
 
-G_DEFINE_TYPE(TrgStatsDialog, trg_stats_dialog, GTK_TYPE_DIALOG)
-#define TRG_STATS_DIALOG_GET_PRIVATE(o)                                                            \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_STATS_DIALOG, TrgStatsDialogPrivate))
-typedef struct _TrgStatsDialogPrivate TrgStatsDialogPrivate;
+struct _TrgStatsDialog {
+    GtkDialog parent;
 
-struct _TrgStatsDialogPrivate {
     TrgClient *client;
-    TrgMainWindow *parent;
+    TrgMainWindow *parent_win;
     GtkWidget *tv;
     GtkListStore *model;
-    GtkTreeRowReference *rr_down, *rr_up, *rr_ratio, *rr_files_added, *rr_session_count, *rr_active,
-        *rr_version;
+    GtkTreeRowReference *rr_down;
+    GtkTreeRowReference *rr_up;
+    GtkTreeRowReference *rr_ratio;
+    GtkTreeRowReference *rr_files_added;
+    GtkTreeRowReference *rr_session_count;
+    GtkTreeRowReference *rr_active;
+    GtkTreeRowReference *rr_version;
 };
+
+G_DEFINE_TYPE(TrgStatsDialog, trg_stats_dialog, GTK_TYPE_DIALOG)
 
 static GObject *instance = NULL;
 static gboolean trg_update_stats_timerfunc(gpointer data);
@@ -75,13 +79,13 @@ static void trg_stats_dialog_get_property(GObject *object, guint property_id, GV
 static void trg_stats_dialog_set_property(GObject *object, guint property_id, const GValue *value,
                                           GParamSpec *pspec)
 {
-    TrgStatsDialogPrivate *priv = TRG_STATS_DIALOG_GET_PRIVATE(object);
+    TrgStatsDialog *self = TRG_STATS_DIALOG(object);
     switch (property_id) {
     case PROP_CLIENT:
-        priv->client = g_value_get_pointer(value);
+        self->client = g_value_get_pointer(value);
         break;
     case PROP_PARENT:
-        priv->parent = g_value_get_object(value);
+        self->parent_win = g_value_get_object(value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -192,32 +196,29 @@ static void update_time_stat(JsonObject *args, GtkTreeRowReference *rr, gchar *j
 static gboolean on_stats_reply(gpointer data)
 {
     trg_response *response = (trg_response *)data;
-    TrgStatsDialogPrivate *priv;
-    JsonObject *args;
-    char versionStr[32];
 
     if (!TRG_IS_STATS_DIALOG(response->cb_data)) {
         trg_response_free(response);
         return FALSE;
     }
 
-    priv = TRG_STATS_DIALOG_GET_PRIVATE(response->cb_data);
-
     if (response->status == SOUP_STATUS_OK) {
-        args = get_arguments(response->obj);
+        TrgStatsDialog *dlg = TRG_STATS_DIALOG(response->cb_data);
+        JsonObject *args = get_arguments(response->obj);
+        char versionStr[32];
 
         g_snprintf(versionStr, sizeof(versionStr), "Transmission %s",
-                   trg_client_get_version_string(priv->client));
-        update_statistic(priv->rr_version, versionStr, "");
+                   trg_client_get_version_string(dlg->client));
+        update_statistic(dlg->rr_version, versionStr, "");
 
-        update_size_stat(args, priv->rr_up, "uploadedBytes");
-        update_size_stat(args, priv->rr_down, "downloadedBytes");
-        update_ratio_stat(args, priv->rr_ratio, "uploadedBytes", "downloadedBytes");
-        update_int_stat(args, priv->rr_files_added, "filesAdded");
-        update_int_stat(args, priv->rr_session_count, "sessionCount");
-        update_time_stat(args, priv->rr_active, "secondsActive");
+        update_size_stat(args, dlg->rr_up, "uploadedBytes");
+        update_size_stat(args, dlg->rr_down, "downloadedBytes");
+        update_ratio_stat(args, dlg->rr_ratio, "uploadedBytes", "downloadedBytes");
+        update_int_stat(args, dlg->rr_files_added, "filesAdded");
+        update_int_stat(args, dlg->rr_session_count, "sessionCount");
+        update_time_stat(args, dlg->rr_active, "secondsActive");
 
-        if (trg_client_is_connected(priv->client))
+        if (trg_client_is_connected(dlg->client))
             g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc,
                                   response->cb_data);
     } else {
@@ -230,12 +231,10 @@ static gboolean on_stats_reply(gpointer data)
 
 static gboolean trg_update_stats_timerfunc(gpointer data)
 {
-    TrgStatsDialogPrivate *priv;
-
     if (TRG_IS_STATS_DIALOG(data)) {
-        priv = TRG_STATS_DIALOG_GET_PRIVATE(data);
-        if (trg_client_is_connected(priv->client))
-            dispatch_rpc_async(priv->client, session_stats(), on_stats_reply, data);
+        TrgStatsDialog *dlg = TRG_STATS_DIALOG(data);
+        if (trg_client_is_connected(dlg->client))
+            dispatch_rpc_async(dlg->client, session_stats(), on_stats_reply, data);
     }
 
     return FALSE;
@@ -256,13 +255,12 @@ static GObject *trg_stats_dialog_constructor(GType type, guint n_construct_prope
                                              GObjectConstructParam *construct_params)
 {
     GtkWidget *tv;
-
     GObject *obj = G_OBJECT_CLASS(trg_stats_dialog_parent_class)
                        ->constructor(type, n_construct_properties, construct_params);
-    TrgStatsDialogPrivate *priv = TRG_STATS_DIALOG_GET_PRIVATE(obj);
+    TrgStatsDialog *dlg = TRG_STATS_DIALOG(obj);
 
     gtk_window_set_title(GTK_WINDOW(obj), _("Statistics"));
-    gtk_window_set_transient_for(GTK_WINDOW(obj), GTK_WINDOW(priv->parent));
+    gtk_window_set_transient_for(GTK_WINDOW(obj), GTK_WINDOW(dlg->parent_win));
     gtk_window_set_destroy_with_parent(GTK_WINDOW(obj), TRUE);
     gtk_dialog_add_button(GTK_DIALOG(obj), _("_Close"), GTK_RESPONSE_CLOSE);
 
@@ -272,29 +270,29 @@ static GObject *trg_stats_dialog_constructor(GType type, guint n_construct_prope
 
     g_signal_connect(G_OBJECT(obj), "response", G_CALLBACK(trg_stats_response_cb), NULL);
 
-    priv->model = gtk_list_store_new(STATCOL_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
+    dlg->model = gtk_list_store_new(STATCOL_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
 
-    priv->rr_version = stats_dialog_add_statistic(priv->model, _("Version"));
-    priv->rr_down = stats_dialog_add_statistic(priv->model, _("Download Total"));
-    priv->rr_up = stats_dialog_add_statistic(priv->model, _("Upload Total"));
-    priv->rr_ratio = stats_dialog_add_statistic(priv->model, _("Ratio"));
-    priv->rr_files_added = stats_dialog_add_statistic(priv->model, _("Files Added"));
-    priv->rr_session_count = stats_dialog_add_statistic(priv->model, _("Session Count"));
-    priv->rr_active = stats_dialog_add_statistic(priv->model, _("Time Active"));
+    dlg->rr_version = stats_dialog_add_statistic(dlg->model, _("Version"));
+    dlg->rr_down = stats_dialog_add_statistic(dlg->model, _("Download Total"));
+    dlg->rr_up = stats_dialog_add_statistic(dlg->model, _("Upload Total"));
+    dlg->rr_ratio = stats_dialog_add_statistic(dlg->model, _("Ratio"));
+    dlg->rr_files_added = stats_dialog_add_statistic(dlg->model, _("Files Added"));
+    dlg->rr_session_count = stats_dialog_add_statistic(dlg->model, _("Session Count"));
+    dlg->rr_active = stats_dialog_add_statistic(dlg->model, _("Time Active"));
 
-    tv = priv->tv = trg_tree_view_new();
+    tv = dlg->tv = trg_tree_view_new();
     gtk_widget_set_sensitive(tv, TRUE);
 
     trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_STAT, _("Statistic"), 200);
     trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_SESSION, _("Session"), 200);
     trg_stats_add_column(GTK_TREE_VIEW(tv), STATCOL_CUMULAT, _("Cumulative"), 200);
 
-    gtk_tree_view_set_model(GTK_TREE_VIEW(tv), GTK_TREE_MODEL(priv->model));
+    gtk_tree_view_set_model(GTK_TREE_VIEW(tv), GTK_TREE_MODEL(dlg->model));
 
     gtk_container_set_border_width(GTK_CONTAINER(tv), GUI_PAD);
     gtk_box_pack_start(GTK_BOX(gtk_bin_get_child(GTK_BIN(obj))), tv, TRUE, TRUE, 0);
 
-    dispatch_rpc_async(priv->client, session_stats(), on_stats_reply, obj);
+    dispatch_rpc_async(dlg->client, session_stats(), on_stats_reply, obj);
 
     return obj;
 }
@@ -302,8 +300,6 @@ static GObject *trg_stats_dialog_constructor(GType type, guint n_construct_prope
 static void trg_stats_dialog_class_init(TrgStatsDialogClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
-
-    g_type_class_add_private(klass, sizeof(TrgStatsDialogPrivate));
 
     object_class->get_property = trg_stats_dialog_get_property;
     object_class->set_property = trg_stats_dialog_set_property;

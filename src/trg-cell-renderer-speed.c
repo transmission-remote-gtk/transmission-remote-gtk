@@ -30,22 +30,21 @@ enum {
     PROP_SPEED_VALUE
 };
 
-G_DEFINE_TYPE(TrgCellRendererSpeed, trg_cell_renderer_speed, GTK_TYPE_CELL_RENDERER_TEXT)
-#define TRG_CELL_RENDERER_SPEED_GET_PRIVATE(o)                                                     \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_CELL_RENDERER_SPEED, TrgCellRendererSpeedPrivate))
-typedef struct _TrgCellRendererSpeedPrivate TrgCellRendererSpeedPrivate;
+struct _TrgCellRendererSpeed {
+    GtkCellRendererText parent;
 
-struct _TrgCellRendererSpeedPrivate {
     gint64 speed_value;
 };
+
+G_DEFINE_TYPE(TrgCellRendererSpeed, trg_cell_renderer_speed, GTK_TYPE_CELL_RENDERER_TEXT)
 
 static void trg_cell_renderer_speed_get_property(GObject *object, guint property_id, GValue *value,
                                                  GParamSpec *pspec)
 {
-    TrgCellRendererSpeedPrivate *priv = TRG_CELL_RENDERER_SPEED_GET_PRIVATE(object);
+    TrgCellRendererSpeed *self = TRG_CELL_RENDERER_SPEED(object);
     switch (property_id) {
     case PROP_SPEED_VALUE:
-        g_value_set_int64(value, priv->speed_value);
+        g_value_set_int64(value, self->speed_value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -56,10 +55,10 @@ static void trg_cell_renderer_speed_get_property(GObject *object, guint property
 static void trg_cell_renderer_speed_set_property(GObject *object, guint property_id,
                                                  const GValue *value, GParamSpec *pspec)
 {
-    TrgCellRendererSpeedPrivate *priv = TRG_CELL_RENDERER_SPEED_GET_PRIVATE(object);
+    TrgCellRendererSpeed *self = TRG_CELL_RENDERER_SPEED(object);
     if (property_id == PROP_SPEED_VALUE) {
         gint64 new_value = g_value_get_int64(value);
-        if (new_value != priv->speed_value) {
+        if (new_value != self->speed_value) {
             if (new_value > 0) {
                 char speedString[32];
                 trg_strlspeed(speedString, new_value / disk_K);
@@ -67,7 +66,7 @@ static void trg_cell_renderer_speed_set_property(GObject *object, guint property
             } else {
                 g_object_set(object, "text", "", NULL);
             }
-            priv->speed_value = new_value;
+            self->speed_value = new_value;
         }
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -86,8 +85,6 @@ static void trg_cell_renderer_speed_class_init(TrgCellRendererSpeedClass *klass)
         g_param_spec_int64("speed-value", "Speed Value", "Speed Value", 0, G_MAXINT64, 0,
                            G_PARAM_READWRITE | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
                                | G_PARAM_STATIC_BLURB));
-
-    g_type_class_add_private(klass, sizeof(TrgCellRendererSpeedPrivate));
 }
 
 static void trg_cell_renderer_speed_init(TrgCellRendererSpeed *self)

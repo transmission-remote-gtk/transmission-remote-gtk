@@ -16,38 +16,13 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef TRG_CELL_RENDERER_PRIORITY_H_
-#define TRG_CELL_RENDERER_PRIORITY_H_
+#pragma once
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
-G_BEGIN_DECLS
 #define TRG_TYPE_CELL_RENDERER_PRIORITY trg_cell_renderer_priority_get_type()
-#define TRG_CELL_RENDERER_PRIORITY(obj)                                                            \
-    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_CELL_RENDERER_PRIORITY, TrgCellRendererPriority))
-#define TRG_CELL_RENDERER_PRIORITY_CLASS(klass)                                                    \
-    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_CELL_RENDERER_PRIORITY,                             \
-                             TrgCellRendererPriorityClass))
-#define TRG_IS_CELL_RENDERER_PRIORITY(obj)                                                         \
-    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_CELL_RENDERER_PRIORITY))
-#define TRG_IS_CELL_RENDERER_PRIORITY_CLASS(klass)                                                 \
-    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_CELL_RENDERER_PRIORITY))
-#define TRG_CELL_RENDERER_PRIORITY_GET_CLASS(obj)                                                  \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_CELL_RENDERER_PRIORITY,                             \
-                               TrgCellRendererPriorityClass))
-typedef struct {
-    GtkCellRendererText parent;
-} TrgCellRendererPriority;
-
-typedef struct {
-    GtkCellRendererTextClass parent_class;
-} TrgCellRendererPriorityClass;
-
-GType trg_cell_renderer_priority_get_type(void);
+G_DECLARE_FINAL_TYPE(TrgCellRendererPriority, trg_cell_renderer_priority, TRG,
+                     CELL_RENDERER_PRIORITY, GtkCellRendererText)
 
 GtkCellRenderer *trg_cell_renderer_priority_new(void);
-
-G_END_DECLS
-#endif /* TRG_CELL_RENDERER_PRIORITY_H_ */

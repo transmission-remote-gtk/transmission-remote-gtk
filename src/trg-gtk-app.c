@@ -34,21 +34,19 @@ enum {
 
 struct _TrgGtkApp {
     GtkApplication parent;
+
+    TrgClient *client;
 };
 
-typedef struct {
-    TrgClient *client;
-} TrgGtkAppPrivate;
-
-G_DEFINE_TYPE_WITH_PRIVATE(TrgGtkApp, trg_gtk_app, GTK_TYPE_APPLICATION)
+G_DEFINE_TYPE(TrgGtkApp, trg_gtk_app, GTK_TYPE_APPLICATION)
 
 static void trg_gtk_app_get_property(GObject *object, guint property_id, GValue *value,
                                      GParamSpec *pspec)
 {
-    TrgGtkAppPrivate *priv = trg_gtk_app_get_instance_private(TRG_GTK_APP(object));
+    TrgGtkApp *self = TRG_GTK_APP(object);
     switch (property_id) {
     case PROP_CLIENT:
-        g_value_set_pointer(value, priv->client);
+        g_value_set_pointer(value, self->client);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -59,10 +57,10 @@ static void trg_gtk_app_get_property(GObject *object, guint property_id, GValue 
 static void trg_gtk_app_set_property(GObject *object, guint property_id, const GValue *value,
                                      GParamSpec *pspec)
 {
-    TrgGtkAppPrivate *priv = trg_gtk_app_get_instance_private(TRG_GTK_APP(object));
+    TrgGtkApp *self = TRG_GTK_APP(object);
     switch (property_id) {
     case PROP_CLIENT:
-        priv->client = g_value_get_pointer(value);
+        self->client = g_value_get_pointer(value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -72,8 +70,8 @@ static void trg_gtk_app_set_property(GObject *object, guint property_id, const G
 
 static void trg_gtk_app_startup(GApplication *app, gpointer userdata)
 {
-    TrgGtkAppPrivate *priv = trg_gtk_app_get_instance_private(TRG_GTK_APP(app));
-    TrgMainWindow *window = trg_main_window_new(priv->client);
+    TrgGtkApp *self = TRG_GTK_APP(app);
+    TrgMainWindow *window = trg_main_window_new(self->client);
     gtk_window_set_application(GTK_WINDOW(window), GTK_APPLICATION(app));
 }
 

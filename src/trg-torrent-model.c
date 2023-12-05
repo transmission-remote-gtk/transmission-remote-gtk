@@ -64,21 +64,19 @@ enum {
 
 static guint signals[TMODEL_SIGNAL_COUNT] = { 0 };
 
-G_DEFINE_TYPE(TrgTorrentModel, trg_torrent_model, GTK_TYPE_LIST_STORE)
-#define TRG_TORRENT_MODEL_GET_PRIVATE(o)                                                           \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_TORRENT_MODEL, TrgTorrentModelPrivate))
-typedef struct _TrgTorrentModelPrivate TrgTorrentModelPrivate;
+struct _TrgTorrentModel {
+    GtkListStore parent;
 
-struct _TrgTorrentModelPrivate {
     GHashTable *ht;
     GRegex *urlHostRegex;
     trg_torrent_model_update_stats stats;
 };
 
+G_DEFINE_TYPE(TrgTorrentModel, trg_torrent_model, GTK_TYPE_LIST_STORE)
+
 static void trg_torrent_model_dispose(GObject *object)
 {
-    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(object);
-    g_hash_table_destroy(priv->ht);
+    g_hash_table_destroy(TRG_TORRENT_MODEL(object)->ht);
     G_OBJECT_CLASS(trg_torrent_model_parent_class)->dispose(object);
 }
 
@@ -90,34 +88,29 @@ static void trg_torrent_model_class_init(TrgTorrentModelClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
-    g_type_class_add_private(klass, sizeof(TrgTorrentModelPrivate));
     object_class->dispose = trg_torrent_model_dispose;
 
     signals[TMODEL_TORRENT_COMPLETED] = g_signal_new(
         "torrent-completed", G_TYPE_FROM_CLASS(object_class), G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-        G_STRUCT_OFFSET(TrgTorrentModelClass, torrent_completed), NULL, NULL,
-        g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+        0, NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
     signals[TMODEL_UPDATE] = g_signal_new("update", G_TYPE_FROM_CLASS(object_class),
-                                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-                                          G_STRUCT_OFFSET(TrgTorrentModelClass, update), NULL, NULL,
+                                          G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, 0, NULL, NULL,
                                           g_cclosure_marshal_VOID__VOID, G_TYPE_NONE, 0);
 
     signals[TMODEL_TORRENT_ADDED] = g_signal_new(
-        "torrent-added", G_TYPE_FROM_CLASS(object_class), G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-        G_STRUCT_OFFSET(TrgTorrentModelClass, torrent_added), NULL, NULL,
-        g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+        "torrent-added", G_TYPE_FROM_CLASS(object_class), G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, 0,
+        NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 
-    signals[TMODEL_STATE_CHANGED] = g_signal_new(
-        "torrents-state-change", G_TYPE_FROM_CLASS(object_class),
-        G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, G_STRUCT_OFFSET(TrgTorrentModelClass, torrent_removed),
-        NULL, NULL, g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT);
+    signals[TMODEL_STATE_CHANGED]
+        = g_signal_new("torrents-state-change", G_TYPE_FROM_CLASS(object_class),
+                       G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, 0, NULL, NULL,
+                       g_cclosure_marshal_VOID__UINT, G_TYPE_NONE, 1, G_TYPE_UINT);
 }
 
 trg_torrent_model_update_stats *trg_torrent_model_get_stats(TrgTorrentModel *model)
 {
-    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
-    return &(priv->stats);
+    return &(model->stats);
 }
 
 static void trg_torrent_model_count_peers(TrgTorrentModel *model, GtkTreeIter *iter, JsonObject *t)
@@ -166,8 +159,6 @@ static void trg_torrent_model_ref_free(gpointer data)
 
 static void trg_torrent_model_init(TrgTorrentModel *self)
 {
-    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(self);
-
     GType column_types[TORRENT_COLUMN_COLUMNS];
 
     column_types[TORRENT_COLUMN_ICON] = G_TYPE_STRING;
@@ -218,12 +209,12 @@ static void trg_torrent_model_init(TrgTorrentModel *self)
 
     gtk_list_store_set_column_types(GTK_LIST_STORE(self), TORRENT_COLUMN_COLUMNS, column_types);
 
-    priv->ht = g_hash_table_new_full(g_int64_hash, g_int64_equal, (GDestroyNotify)g_free,
+    self->ht = g_hash_table_new_full(g_int64_hash, g_int64_equal, (GDestroyNotify)g_free,
                                      trg_torrent_model_ref_free);
 
     g_object_set_data(G_OBJECT(self), PROP_REMOVE_IN_PROGRESS, GINT_TO_POINTER(FALSE));
 
-    priv->urlHostRegex = trg_uri_host_regex_new();
+    self->urlHostRegex = trg_uri_host_regex_new();
 }
 
 gboolean trg_torrent_model_is_remove_in_progress(TrgTorrentModel *model)
@@ -299,8 +290,7 @@ static gboolean trg_torrent_model_stats_scan_foreachfunc(GtkTreeModel *model,
 
 void trg_torrent_model_remove_all(TrgTorrentModel *model)
 {
-    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
-    g_hash_table_remove_all(priv->ht);
+    g_hash_table_remove_all(model->ht);
     gtk_list_store_clear(GTK_LIST_STORE(model));
 }
 
@@ -355,7 +345,6 @@ static void update_torrent_iter(TrgTorrentModel *model, TrgClient *tc, gint64 rp
                                 GtkTreeIter *iter, JsonObject *t,
                                 trg_torrent_model_update_stats *stats, guint *whatsChanged)
 {
-    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
     GtkListStore *ls = GTK_LIST_STORE(model);
     guint lastFlags, newFlags;
     JsonObject *lastJson, *pf;
@@ -398,7 +387,7 @@ static void update_torrent_iter(TrgTorrentModel *model, TrgClient *tc, gint64 rp
     if (json_array_get_length(trackerStats) > 0) {
         JsonObject *firstTracker = json_array_get_object_element(trackerStats, 0);
         firstTrackerHost
-            = trg_gregex_get_first(priv->urlHostRegex, tracker_stats_get_host(firstTracker));
+            = trg_gregex_get_first(model->urlHostRegex, tracker_stats_get_host(firstTracker));
     }
 
     lpd = peerfrom_get_lpd(pf);
@@ -535,8 +524,7 @@ struct TrgModelRemoveData {
 
 GHashTable *get_torrent_table(TrgTorrentModel *model)
 {
-    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
-    return priv->ht;
+    return model->ht;
 }
 
 static gboolean trg_model_find_removed_foreachfunc(GtkTreeModel *model,
@@ -602,8 +590,6 @@ static void trg_torrent_model_stat_counts_clear(trg_torrent_model_update_stats *
 trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *model, TrgClient *tc,
                                                          JsonObject *response, gint mode)
 {
-    TrgTorrentModelPrivate *priv = TRG_TORRENT_MODEL_GET_PRIVATE(model);
-
     GList *torrentList;
     JsonObject *args, *t;
     GList *li;
@@ -621,27 +607,27 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *model,
     args = get_arguments(response);
     torrentList = json_array_get_elements(get_torrents(args));
 
-    priv->stats.downRateTotal = 0;
-    priv->stats.upRateTotal = 0;
+    model->stats.downRateTotal = 0;
+    model->stats.upRateTotal = 0;
 
     for (li = torrentList; li; li = g_list_next(li)) {
         t = json_node_get_object((JsonNode *)li->data);
         id = torrent_get_id(t);
 
-        result = mode == TORRENT_GET_MODE_FIRST ? NULL : g_hash_table_lookup(priv->ht, &id);
+        result = mode == TORRENT_GET_MODE_FIRST ? NULL : g_hash_table_lookup(model->ht, &id);
 
         if (!result) {
             gint64 *idCopy;
             gtk_list_store_append(GTK_LIST_STORE(model), &iter);
             whatsChanged |= TORRENT_UPDATE_ADDREMOVE;
 
-            update_torrent_iter(model, tc, rpcv, serial, &iter, t, &(priv->stats), &whatsChanged);
+            update_torrent_iter(model, tc, rpcv, serial, &iter, t, &(model->stats), &whatsChanged);
 
             path = gtk_tree_model_get_path(GTK_TREE_MODEL(model), &iter);
             rr = gtk_tree_row_reference_new(GTK_TREE_MODEL(model), path);
             idCopy = g_new(gint64, 1);
             *idCopy = id;
-            g_hash_table_insert(priv->ht, idCopy, rr);
+            g_hash_table_insert(model->ht, idCopy, rr);
             gtk_tree_path_free(path);
 
             if (mode != TORRENT_GET_MODE_FIRST)
@@ -650,7 +636,7 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *model,
             path = gtk_tree_row_reference_get_path((GtkTreeRowReference *)result);
             if (path) {
                 if (gtk_tree_model_get_iter(GTK_TREE_MODEL(model), &iter, path)) {
-                    update_torrent_iter(model, tc, rpcv, serial, &iter, t, &(priv->stats),
+                    update_torrent_iter(model, tc, rpcv, serial, &iter, t, &(model->stats),
                                         &whatsChanged);
                 }
                 gtk_tree_path_free(path);
@@ -664,7 +650,7 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *model,
         GList *hitlist = trg_torrent_model_find_removed(GTK_TREE_MODEL(model), serial);
         if (hitlist) {
             for (li = hitlist; li; li = g_list_next(li)) {
-                g_hash_table_remove(priv->ht, li->data);
+                g_hash_table_remove(model->ht, li->data);
                 g_free(li->data);
             }
             whatsChanged |= TORRENT_UPDATE_ADDREMOVE;
@@ -676,7 +662,7 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *model,
             GList *hitlist = json_array_get_elements(removedTorrents);
             for (li = hitlist; li; li = g_list_next(li)) {
                 id = json_node_get_int((JsonNode *)li->data);
-                g_hash_table_remove(priv->ht, &id);
+                g_hash_table_remove(model->ht, &id);
                 whatsChanged |= TORRENT_UPDATE_ADDREMOVE;
             }
             g_list_free(hitlist);
@@ -686,14 +672,14 @@ trg_torrent_model_update_stats *trg_torrent_model_update(TrgTorrentModel *model,
     if (whatsChanged != 0) {
         if ((whatsChanged & TORRENT_UPDATE_ADDREMOVE)
             || (whatsChanged & TORRENT_UPDATE_STATE_CHANGE)) {
-            trg_torrent_model_stat_counts_clear(&priv->stats);
+            trg_torrent_model_stat_counts_clear(&model->stats);
             gtk_tree_model_foreach(GTK_TREE_MODEL(model), trg_torrent_model_stats_scan_foreachfunc,
-                                   &(priv->stats));
+                                   &(model->stats));
         }
         g_signal_emit(model, signals[TMODEL_STATE_CHANGED], 0, whatsChanged);
     }
 
     g_signal_emit(model, signals[TMODEL_UPDATE], 0);
 
-    return &(priv->stats);
+    return &(model->stats);
 }

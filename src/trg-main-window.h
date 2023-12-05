@@ -30,8 +30,6 @@
 #include "trg-torrent-tree-view.h"
 #include "trg-trackers-model.h"
 
-G_BEGIN_DECLS
-
 #define TRG_TYPE_MAIN_WINDOW (trg_main_window_get_type())
 G_DECLARE_FINAL_TYPE(TrgMainWindow, trg_main_window, TRG, MAIN_WINDOW, GtkApplicationWindow)
 
@@ -51,5 +49,3 @@ GtkTreeModel *trg_main_window_get_torrent_model(TrgMainWindow *win);
 void trg_main_window_notebook_set_visible(TrgMainWindow *win, gboolean visible);
 void connect_cb(GtkWidget *w, gpointer data);
 void trg_main_window_reload_dir_aliases(TrgMainWindow *win);
-
-G_END_DECLS

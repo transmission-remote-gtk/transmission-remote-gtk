@@ -16,11 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-/* trg-client.h */
-
-#ifndef _TRG_CLIENT_H_
-#define _TRG_CLIENT_H_
+#pragma once
 
 #include <glib-object.h>
 #include <json-glib/json-glib.h>
@@ -56,26 +52,8 @@ typedef struct {
 
 void trg_response_free(trg_response *response);
 
-typedef struct _TrgClientPrivate TrgClientPrivate;
-
-G_BEGIN_DECLS
-#define TRG_TYPE_CLIENT            trg_client_get_type()
-#define TRG_CLIENT(obj)            (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_CLIENT, TrgClient))
-#define TRG_CLIENT_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_CLIENT, TrgClientClass))
-#define TRG_IS_CLIENT(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_CLIENT))
-#define TRG_IS_CLIENT_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_CLIENT))
-#define TRG_CLIENT_GET_CLASS(obj)                                                                  \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_CLIENT, TrgClientClass))
-typedef struct {
-    GObject parent;
-    TrgClientPrivate *priv;
-} TrgClient;
-
-typedef struct {
-    GObjectClass parent_class;
-    void (*session_updated)(TrgClient *tc, JsonObject *session, gpointer data);
-
-} TrgClientClass;
+#define TRG_TYPE_CLIENT trg_client_get_type()
+G_DECLARE_FINAL_TYPE(TrgClient, trg_client, TRG, CLIENT, GObject);
 
 /* NOTE: This function is NOT THREAD SAFE, it MUST be called from the thread that TrgClient was
  * created in. */
@@ -114,6 +92,3 @@ gboolean trg_client_get_seed_ratio_limited(TrgClient *tc);
 gdouble trg_client_get_seed_ratio_limit(TrgClient *tc);
 gboolean trg_client_get_ssl(TrgClient *tc);
 gboolean trg_client_get_ssl_validate(TrgClient *tc);
-
-G_END_DECLS
-#endif /* _TRG_CLIENT_H_ */

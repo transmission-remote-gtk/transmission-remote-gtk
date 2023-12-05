@@ -22,6 +22,7 @@
 #include <gtk/gtk.h>
 #include <stdint.h>
 
+#include "trg-cell-renderer-eta.h"
 #include "trg-cell-renderer-numgteqthan.h"
 #include "util.h"
 
@@ -30,26 +31,23 @@ enum {
     PROP_VALUE_VALUE,
     PROP_MINVALUE
 };
+struct _TrgCellRendererNumGtEqThan {
+    GtkCellRendererText parent;
+
+    gint64 minvalue;
+    gint64 value_value;
+};
 
 G_DEFINE_TYPE(TrgCellRendererNumGtEqThan, trg_cell_renderer_numgteqthan,
               GTK_TYPE_CELL_RENDERER_TEXT)
-#define TRG_CELL_RENDERER_NUMGTEQTHAN_GET_PRIVATE(o)                                               \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_CELL_RENDERER_NUMGTEQTHAN,                          \
-                                 TrgCellRendererNumGtEqThanPrivate))
-typedef struct _TrgCellRendererNumGtEqThanPrivate TrgCellRendererNumGtEqThanPrivate;
-
-struct _TrgCellRendererNumGtEqThanPrivate {
-    gint64 value_value;
-    gint64 minvalue;
-};
 
 static void trg_cell_renderer_numgteqthan_get_property(GObject *object, guint property_id,
                                                        GValue *value, GParamSpec *pspec)
 {
-    TrgCellRendererNumGtEqThanPrivate *priv = TRG_CELL_RENDERER_NUMGTEQTHAN_GET_PRIVATE(object);
+    TrgCellRendererNumGtEqThan *self = TRG_CELL_RENDERER_NUMGTEQTHAN(object);
     switch (property_id) {
     case PROP_VALUE_VALUE:
-        g_value_set_int64(value, priv->value_value);
+        g_value_set_int64(value, self->value_value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -60,18 +58,18 @@ static void trg_cell_renderer_numgteqthan_get_property(GObject *object, guint pr
 static void trg_cell_renderer_numgteqthan_set_property(GObject *object, guint property_id,
                                                        const GValue *value, GParamSpec *pspec)
 {
-    TrgCellRendererNumGtEqThanPrivate *priv = TRG_CELL_RENDERER_NUMGTEQTHAN_GET_PRIVATE(object);
+    TrgCellRendererNumGtEqThan *self = TRG_CELL_RENDERER_NUMGTEQTHAN(object);
     if (property_id == PROP_VALUE_VALUE) {
-        priv->value_value = g_value_get_int64(value);
-        if (priv->value_value >= priv->minvalue) {
+        self->value_value = g_value_get_int64(value);
+        if (self->value_value >= self->minvalue) {
             gchar size_text[32];
-            g_snprintf(size_text, sizeof(size_text), "%" G_GINT64_FORMAT, priv->value_value);
+            g_snprintf(size_text, sizeof(size_text), "%" G_GINT64_FORMAT, self->value_value);
             g_object_set(object, "text", size_text, NULL);
         } else {
             g_object_set(object, "text", "", NULL);
         }
     } else if (property_id == PROP_MINVALUE) {
-        priv->minvalue = g_value_get_int64(value);
+        self->minvalue = g_value_get_int64(value);
     } else {
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
     }
@@ -95,8 +93,6 @@ static void trg_cell_renderer_numgteqthan_class_init(TrgCellRendererNumGtEqThanC
         g_param_spec_int64("minvalue", "Min Value", "Min Value", G_MININT64, G_MAXINT64, 1,
                            G_PARAM_READWRITE | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
                                | G_PARAM_STATIC_BLURB));
-
-    g_type_class_add_private(klass, sizeof(TrgCellRendererNumGtEqThanPrivate));
 }
 
 static void trg_cell_renderer_numgteqthan_init(TrgCellRendererNumGtEqThan *self)

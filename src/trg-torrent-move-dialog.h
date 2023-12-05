@@ -16,9 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef TRG_TORRENT_MOVE_DIALOG_H_
-#define TRG_TORRENT_MOVE_DIALOG_H_
+#pragma once
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
@@ -26,30 +24,9 @@
 #include "trg-client.h"
 #include "trg-main-window.h"
 
-G_BEGIN_DECLS
 #define TRG_TYPE_TORRENT_MOVE_DIALOG trg_torrent_move_dialog_get_type()
-#define TRG_TORRENT_MOVE_DIALOG(obj)                                                               \
-    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TORRENT_MOVE_DIALOG, TrgTorrentMoveDialog))
-#define TRG_TORRENT_MOVE_DIALOG_CLASS(klass)                                                       \
-    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TORRENT_MOVE_DIALOG, TrgTorrentMoveDialogClass))
-#define TRG_IS_TORRENT_MOVE_DIALOG(obj)                                                            \
-    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TORRENT_MOVE_DIALOG))
-#define TRG_IS_TORRENT_MOVE_DIALOG_CLASS(klass)                                                    \
-    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TORRENT_MOVE_DIALOG))
-#define TRG_TORRENT_MOVE_DIALOG_GET_CLASS(obj)                                                     \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TORRENT_MOVE_DIALOG, TrgTorrentMoveDialogClass))
-typedef struct {
-    GtkDialog parent;
-} TrgTorrentMoveDialog;
-
-typedef struct {
-    GtkDialogClass parent_class;
-} TrgTorrentMoveDialogClass;
-
-GType trg_torrent_move_dialog_get_type(void);
+G_DECLARE_FINAL_TYPE(TrgTorrentMoveDialog, trg_torrent_move_dialog, TRG, TORRENT_MOVE_DIALOG,
+                     GtkDialog)
 
 TrgTorrentMoveDialog *trg_torrent_move_dialog_new(TrgMainWindow *win, TrgClient *client,
                                                   TrgTorrentTreeView *ttv);
-
-G_END_DECLS
-#endif /* TRG_TORRENT_MOVE_DIALOG_H_ */

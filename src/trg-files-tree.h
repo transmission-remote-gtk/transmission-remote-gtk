@@ -23,8 +23,6 @@
 #include <glib.h>
 #include <json-glib/json-glib.h>
 
-#include "trg-files-tree.h"
-
 typedef struct {
     gchar *name;
     gint64 length;

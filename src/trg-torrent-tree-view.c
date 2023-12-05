@@ -28,18 +28,16 @@
 #include "trg-torrent-tree-view.h"
 #include "trg-tree-view.h"
 
-G_DEFINE_TYPE(TrgTorrentTreeView, trg_torrent_tree_view, TRG_TYPE_TREE_VIEW)
-#define GET_PRIVATE(o)                                                                             \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_TORRENT_TREE_VIEW, TrgTorrentTreeViewPrivate))
-typedef struct _TrgTorrentTreeViewPrivate TrgTorrentTreeViewPrivate;
+struct _TrgTorrentTreeView {
+    TrgTreeView parent;
 
-struct _TrgTorrentTreeViewPrivate {
     TrgClient *client;
 };
 
+G_DEFINE_TYPE(TrgTorrentTreeView, trg_torrent_tree_view, TRG_TYPE_TREE_VIEW)
+
 static void trg_torrent_tree_view_class_init(TrgTorrentTreeViewClass *klass G_GNUC_UNUSED)
 {
-    g_type_class_add_private(klass, sizeof(TrgTorrentTreeViewPrivate));
 }
 
 static void trg_torrent_tree_view_init(TrgTorrentTreeView *tttv)
@@ -159,9 +157,8 @@ static void trg_torrent_tree_view_renderer_pref_changed(TrgPrefs *p, const gchar
 
 static void setup_transmission_layout(TrgTorrentTreeView *tv, gint64 style)
 {
-    TrgTorrentTreeViewPrivate *priv = GET_PRIVATE(tv);
     GtkCellRenderer *renderer = torrent_cell_renderer_new();
-    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+    TrgPrefs *prefs = trg_client_get_prefs(tv->client);
 
     GtkTreeViewColumn *column = gtk_tree_view_column_new_with_attributes(
         "", renderer, "status", TORRENT_COLUMN_FLAGS, "error", TORRENT_COLUMN_ERROR, "fileCount",
@@ -176,7 +173,7 @@ static void setup_transmission_layout(TrgTorrentTreeView *tv, gint64 style)
         TORRENT_COLUMN_JSON, "seedRatioMode", TORRENT_COLUMN_SEED_RATIO_MODE, "seedRatioLimit",
         TORRENT_COLUMN_SEED_RATIO_LIMIT, "connected", TORRENT_COLUMN_PEERS_CONNECTED, NULL);
 
-    g_object_set(G_OBJECT(renderer), "client", priv->client, "owner", tv, "compact",
+    g_object_set(G_OBJECT(renderer), "client", tv->client, "owner", tv, "compact",
                  style == TRG_STYLE_TR_COMPACT, NULL);
 
     g_signal_connect_object(prefs, "pref-changed",
@@ -197,8 +194,8 @@ static void setup_transmission_layout(TrgTorrentTreeView *tv, gint64 style)
 static void trg_torrent_tree_view_pref_changed(TrgPrefs *p, const gchar *updatedKey, gpointer data)
 {
     if (!g_strcmp0(updatedKey, TRG_PREFS_KEY_STYLE)) {
-        TrgTorrentTreeViewPrivate *priv = GET_PRIVATE(data);
-        TrgPrefs *prefs = trg_client_get_prefs(priv->client);
+        TrgTorrentTreeView *ttv = TRG_TORRENT_TREE_VIEW(data);
+        TrgPrefs *prefs = trg_client_get_prefs(ttv->client);
 
         trg_tree_view_remove_all_columns(TRG_TREE_VIEW(data));
         if (trg_prefs_get_int(p, TRG_PREFS_KEY_STYLE, TRG_PREFS_GLOBAL) == TRG_STYLE_CLASSIC)
@@ -213,14 +210,14 @@ static void trg_torrent_tree_view_pref_changed(TrgPrefs *p, const gchar *updated
 TrgTorrentTreeView *trg_torrent_tree_view_new(TrgClient *tc, GtkTreeModel *model)
 {
     GObject *obj = g_object_new(TRG_TYPE_TORRENT_TREE_VIEW, NULL);
-    TrgTorrentTreeViewPrivate *priv = GET_PRIVATE(obj);
+    TrgTorrentTreeView *self = TRG_TORRENT_TREE_VIEW(obj);
     TrgPrefs *prefs = trg_client_get_prefs(tc);
     gint64 style = trg_prefs_get_int(prefs, TRG_PREFS_KEY_STYLE, TRG_PREFS_GLOBAL);
 
     trg_tree_view_set_prefs(TRG_TREE_VIEW(obj), trg_client_get_prefs(tc));
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), model);
 
-    priv->client = tc;
+    self->client = tc;
 
     if (style == TRG_STYLE_CLASSIC) {
         setup_classic_layout(TRG_TORRENT_TREE_VIEW(obj));

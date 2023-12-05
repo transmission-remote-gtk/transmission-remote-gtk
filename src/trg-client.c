@@ -45,27 +45,9 @@
  * 7) Provides a mutex for locking updates.
  * 8) Holds the latest session object sent in a session-get response.
  */
+struct _TrgClient {
+    GObject parent;
 
-/* rpc_request struct manages state for callbacks */
-typedef struct {
-    TrgClient *client;
-    SoupMessage *msg;
-    GCancellable *cancellable;
-    gint connid;
-    GBytes *body;
-    GSourceFunc response_cb;
-    gpointer *cb_data;
-} trg_request;
-
-G_DEFINE_TYPE(TrgClient, trg_client, G_TYPE_OBJECT)
-enum {
-    TC_SESSION_UPDATED,
-    TC_SIGNAL_COUNT
-};
-
-static guint signals[TC_SIGNAL_COUNT] = { 0 };
-
-struct _TrgClientPrivate {
     char *session_id;
     gint connid;
     guint failCount;
@@ -89,6 +71,14 @@ struct _TrgClientPrivate {
     gdouble seedRatioLimit;
 };
 
+enum {
+    TC_SESSION_UPDATED,
+    TC_SIGNAL_COUNT
+};
+
+static guint signals[TC_SIGNAL_COUNT] = { 0 };
+
+G_DEFINE_TYPE(TrgClient, trg_client, G_TYPE_OBJECT)
 static void trg_client_get_property(GObject *object, guint property_id, GValue *value,
                                     GParamSpec *pspec)
 {
@@ -111,24 +101,23 @@ static void trg_client_set_property(GObject *object, guint property_id, const GV
 
 static void trg_client_dispose(GObject *object)
 {
-    TrgClientPrivate *priv = TRG_CLIENT(object)->priv;
-    soup_session_abort(priv->rpc_session);
-    g_object_unref(priv->rpc_session);
+    TrgClient *self = TRG_CLIENT(object);
+    soup_session_abort(self->rpc_session);
+    g_object_unref(self->rpc_session);
     G_OBJECT_CLASS(trg_client_parent_class)->dispose(object);
 }
 
 static void trg_client_finalize(GObject *object)
 {
-    TrgClient *tc = TRG_CLIENT(object);
-    TrgClientPrivate *priv = tc->priv;
+    TrgClient *self = TRG_CLIENT(object);
 
-    g_clear_pointer(&priv->session_id, g_free);
-    g_clear_pointer(&priv->session, json_object_unref);
-    g_clear_pointer(&priv->url, g_uri_unref);
-    g_clear_pointer(&priv->username, g_free);
-    g_clear_pointer(&priv->password, g_free);
-    g_clear_pointer(&priv->headers, g_hash_table_unref);
-    g_clear_pointer(&priv->torrentTable, g_hash_table_unref);
+    g_clear_pointer(&self->session_id, g_free);
+    g_clear_pointer(&self->session, json_object_unref);
+    g_clear_pointer(&self->url, g_uri_unref);
+    g_clear_pointer(&self->username, g_free);
+    g_clear_pointer(&self->password, g_free);
+    g_clear_pointer(&self->headers, g_hash_table_unref);
+    g_clear_pointer(&self->torrentTable, g_hash_table_unref);
     G_OBJECT_CLASS(trg_client_parent_class)->finalize(object);
 }
 
@@ -136,98 +125,90 @@ static void trg_client_class_init(TrgClientClass *klass)
 {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
-    g_type_class_add_private(klass, sizeof(TrgClientPrivate));
-
     object_class->get_property = trg_client_get_property;
     object_class->set_property = trg_client_set_property;
     object_class->dispose = trg_client_dispose;
     object_class->finalize = trg_client_finalize;
 
     signals[TC_SESSION_UPDATED] = g_signal_new(
-        "session-updated", G_TYPE_FROM_CLASS(object_class), G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION,
-        G_STRUCT_OFFSET(TrgClientClass, session_updated), NULL, NULL,
-        g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
+        "session-updated", G_TYPE_FROM_CLASS(object_class), G_SIGNAL_RUN_LAST | G_SIGNAL_ACTION, 0,
+        NULL, NULL, g_cclosure_marshal_VOID__POINTER, G_TYPE_NONE, 1, G_TYPE_POINTER);
 }
 
 static void trg_client_init(TrgClient *self)
 {
-    self->priv = G_TYPE_INSTANCE_GET_PRIVATE(self, TRG_TYPE_CLIENT, TrgClientPrivate);
 }
 
 TrgClient *trg_client_new(void)
 {
-    TrgClient *tc = g_object_new(TRG_TYPE_CLIENT, NULL);
-    TrgClientPrivate *priv = tc->priv;
-    TrgPrefs *prefs = priv->prefs = trg_prefs_new();
-    priv->rpc_session = soup_session_new_with_options("user-agent", PACKAGE_NAME, NULL);
+    TrgClient *self = TRG_CLIENT(g_object_new(TRG_TYPE_CLIENT, NULL));
+
+    TrgPrefs *prefs = self->prefs = trg_prefs_new();
+    self->rpc_session = soup_session_new_with_options("user-agent", PACKAGE_NAME, NULL);
 
     if (g_getenv("TRG_CLIENT_DEBUG") != NULL) {
         g_autoptr(SoupLogger) log = soup_logger_new(SOUP_LOGGER_LOG_BODY);
-        soup_session_add_feature(priv->rpc_session, SOUP_SESSION_FEATURE(log));
+        soup_session_add_feature(self->rpc_session, SOUP_SESSION_FEATURE(log));
     }
 
     trg_prefs_load(prefs);
 
-    g_mutex_init(&priv->configMutex);
-    priv->seedRatioLimited = FALSE;
-    priv->seedRatioLimit = 0.00;
+    g_mutex_init(&self->configMutex);
+    self->seedRatioLimited = FALSE;
+    self->seedRatioLimit = 0.00;
 
     tr_formatter_size_init(disk_K, _(disk_K_str), _(disk_M_str), _(disk_G_str), _(disk_T_str));
     tr_formatter_speed_init(speed_K, _(speed_K_str), _(speed_M_str), _(speed_G_str),
                             _(speed_T_str));
 
-    return tc;
+    return self;
 }
 
 const gchar *trg_client_get_version_string(TrgClient *tc)
 {
-    return session_get_version_string(tc->priv->session);
+    return session_get_version_string(tc->session);
 }
 
 gdouble trg_client_get_version(TrgClient *tc)
 {
-    return tc->priv->version;
+    return tc->version;
 }
 
 gint64 trg_client_get_rpc_version(TrgClient *tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return session_get_rpc_version(priv->session);
+    return session_get_rpc_version(tc->session);
 }
 
 void trg_client_inc_connid(TrgClient *tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    g_atomic_int_inc(&priv->connid);
+    g_atomic_int_inc(&tc->connid);
 }
 
 static gint trg_client_get_connid(TrgClient *tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return g_atomic_int_get(&priv->connid);
+    return g_atomic_int_get(&tc->connid);
 }
 
 void trg_client_set_session(TrgClient *tc, JsonObject *session)
 {
-    TrgClientPrivate *priv = tc->priv;
 
-    if (priv->session)
-        json_object_unref(priv->session);
+    if (tc->session)
+        json_object_unref(tc->session);
     else
-        priv->version = session_get_version(session);
+        tc->version = session_get_version(session);
 
-    priv->session = session;
+    tc->session = session;
     json_object_ref(session);
 
-    priv->seedRatioLimit = session_get_seed_ratio_limit(session);
-    priv->seedRatioLimited = session_get_seed_ratio_limited(session);
+    tc->seedRatioLimit = session_get_seed_ratio_limit(session);
+    tc->seedRatioLimited = session_get_seed_ratio_limited(session);
 
     g_signal_emit(tc, signals[TC_SESSION_UPDATED], 0, session);
 }
 
 TrgPrefs *trg_client_get_prefs(TrgClient *tc)
 {
-    return tc->priv->prefs;
+    return tc->prefs;
 }
 
 static GHashTable *trg_client_headers_array_to_table(JsonArray *array)
@@ -271,21 +252,20 @@ static void trg_client_inject_custom_header(gpointer key, gpointer value, gpoint
 
 gboolean trg_client_parse_settings(TrgClient *tc, gchar **err_msg)
 {
-    TrgClientPrivate *priv = tc->priv;
-    TrgPrefs *prefs = priv->prefs;
+    TrgPrefs *prefs = tc->prefs;
     JsonArray *headers;
     g_autoptr(GError) uri_err = NULL;
     gint port;
 
-    g_mutex_lock(&priv->configMutex);
+    g_mutex_lock(&tc->configMutex);
 
     trg_prefs_set_connection(prefs, trg_prefs_get_profile(prefs));
 
-    g_clear_pointer(&priv->url, g_uri_unref);
-    g_clear_pointer(&priv->username, g_free);
-    g_clear_pointer(&priv->password, g_free);
-    g_clear_pointer(&priv->headers, g_hash_table_unref);
-    priv->headers = NULL;
+    g_clear_pointer(&tc->url, g_uri_unref);
+    g_clear_pointer(&tc->username, g_free);
+    g_clear_pointer(&tc->password, g_free);
+    g_clear_pointer(&tc->headers, g_hash_table_unref);
+    tc->headers = NULL;
 
     port = trg_prefs_get_int(prefs, TRG_PREFS_KEY_PORT, TRG_PREFS_CONNECTION);
     g_autofree gchar *host
@@ -294,153 +274,142 @@ gboolean trg_client_parse_settings(TrgClient *tc, gchar **err_msg)
         = trg_prefs_get_string(prefs, TRG_PREFS_KEY_RPC_URL_PATH, TRG_PREFS_CONNECTION);
 
     if (!host || strlen(host) < 1) {
-        g_mutex_unlock(&priv->configMutex);
+        g_mutex_unlock(&tc->configMutex);
         *err_msg = g_strdup("Bad hostname.");
         return FALSE;
     }
 
-    priv->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_CONNECTION);
-    priv->ssl_validate
-        = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL_VALIDATE, TRG_PREFS_CONNECTION);
+    tc->ssl = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL, TRG_PREFS_CONNECTION);
+    tc->ssl_validate = trg_prefs_get_bool(prefs, TRG_PREFS_KEY_SSL_VALIDATE, TRG_PREFS_CONNECTION);
 
     g_autofree gchar *uri_str = g_strdup_printf(
-        "%s://%s:%d%s", priv->ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX, host, port, path);
+        "%s://%s:%d%s", tc->ssl ? HTTPS_URI_PREFIX : HTTP_URI_PREFIX, host, port, path);
 
-    priv->url = g_uri_parse(uri_str, G_URI_FLAGS_NONE, &uri_err);
+    tc->url = g_uri_parse(uri_str, G_URI_FLAGS_NONE, &uri_err);
     if (uri_err) {
-        g_mutex_unlock(&priv->configMutex);
+        g_mutex_unlock(&tc->configMutex);
         *err_msg = g_strdup(uri_err->message);
         return FALSE;
     }
 
-    priv->username = trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_CONNECTION);
-    priv->password = trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD, TRG_PREFS_CONNECTION);
+    tc->username = trg_prefs_get_string(prefs, TRG_PREFS_KEY_USERNAME, TRG_PREFS_CONNECTION);
+    tc->password = trg_prefs_get_string(prefs, TRG_PREFS_KEY_PASSWORD, TRG_PREFS_CONNECTION);
 
     headers = trg_prefs_get_array(prefs, TRG_PREFS_KEY_CUSTOM_HEADERS, TRG_PREFS_CONNECTION);
     if (headers)
-        priv->headers = trg_client_headers_array_to_table(headers);
+        tc->headers = trg_client_headers_array_to_table(headers);
 
-    priv->configSerial++;
-    g_mutex_unlock(&priv->configMutex);
+    tc->configSerial++;
+    g_mutex_unlock(&tc->configMutex);
     return TRUE;
 }
 
 gchar *trg_client_get_password(TrgClient *tc)
 {
-    return tc->priv->password;
+    return tc->password;
 }
 
 gchar *trg_client_get_username(TrgClient *tc)
 {
-    return tc->priv->username;
+    return tc->username;
 }
 
 gchar *trg_client_get_session_id(TrgClient *tc)
 {
-    TrgClientPrivate *priv = tc->priv;
     gchar *ret;
 
-    g_mutex_lock(&priv->configMutex);
+    g_mutex_lock(&tc->configMutex);
 
-    ret = priv->session_id ? g_strdup(priv->session_id) : NULL;
+    ret = tc->session_id ? g_strdup(tc->session_id) : NULL;
 
-    g_mutex_unlock(&priv->configMutex);
+    g_mutex_unlock(&tc->configMutex);
 
     return ret;
 }
 
 void trg_client_set_session_id(TrgClient *tc, gchar *session_id)
 {
-    TrgClientPrivate *priv = tc->priv;
+    g_mutex_lock(&tc->configMutex);
 
-    g_mutex_lock(&priv->configMutex);
+    g_clear_pointer(&tc->session_id, g_free);
+    tc->session_id = session_id;
 
-    g_clear_pointer(&priv->session_id, g_free);
-    priv->session_id = session_id;
-
-    g_mutex_unlock(&priv->configMutex);
+    g_mutex_unlock(&tc->configMutex);
 }
 
 void trg_client_status_change(TrgClient *tc, gboolean connected)
 {
-    TrgClientPrivate *priv = tc->priv;
-
     if (!connected) {
-        g_clear_pointer(&priv->session, json_object_unref);
-        g_mutex_lock(&priv->configMutex);
-        trg_prefs_set_connection(priv->prefs, NULL);
-        g_mutex_unlock(&priv->configMutex);
+        g_clear_pointer(&tc->session, json_object_unref);
+        g_mutex_lock(&tc->configMutex);
+        trg_prefs_set_connection(tc->prefs, NULL);
+        g_mutex_unlock(&tc->configMutex);
     }
 }
 
 JsonObject *trg_client_get_session(TrgClient *tc)
 {
-    return tc->priv->session;
+    return tc->session;
 }
 
 void trg_client_inc_serial(TrgClient *tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    priv->updateSerial++;
+    tc->updateSerial++;
 }
 
 gint64 trg_client_get_serial(TrgClient *tc)
 {
-    return tc->priv->updateSerial;
+    return tc->updateSerial;
 }
 
 gboolean trg_client_get_ssl(TrgClient *tc)
 {
-    return tc->priv->ssl;
+    return tc->ssl;
 }
 
 gboolean trg_client_get_ssl_validate(TrgClient *tc)
 {
-    return tc->priv->ssl_validate;
+    return tc->ssl_validate;
 }
 
 void trg_client_set_torrent_table(TrgClient *tc, GHashTable *table)
 {
-    TrgClientPrivate *priv = tc->priv;
-    priv->torrentTable = table;
+    tc->torrentTable = table;
 }
 
 GHashTable *trg_client_get_torrent_table(TrgClient *tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->torrentTable;
+    return tc->torrentTable;
 }
 
 gboolean trg_client_is_connected(TrgClient *tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return priv->session != NULL;
+    return tc->session != NULL;
 }
 
 void trg_client_configlock(TrgClient *tc)
 {
-    g_mutex_lock(&tc->priv->configMutex);
+    g_mutex_lock(&tc->configMutex);
 }
 
 guint trg_client_get_failcount(TrgClient *tc)
 {
-    return tc->priv->failCount;
+    return tc->failCount;
 }
 
 guint trg_client_inc_failcount(TrgClient *tc)
 {
-    TrgClientPrivate *priv = tc->priv;
-    return ++(priv->failCount);
+    return ++(tc->failCount);
 }
 
 void trg_client_reset_failcount(TrgClient *tc)
 {
-    tc->priv->failCount = 0;
+    tc->failCount = 0;
 }
 
 void trg_client_configunlock(TrgClient *tc)
 {
-    g_mutex_unlock(&tc->priv->configMutex);
+    g_mutex_unlock(&tc->configMutex);
 }
 
 void trg_response_free(trg_response *response)
@@ -459,13 +428,24 @@ void trg_client_update_session(TrgClient *tc, GSourceFunc callback, gpointer dat
 
 gdouble trg_client_get_seed_ratio_limit(TrgClient *tc)
 {
-    return tc->priv->seedRatioLimit;
+    return tc->seedRatioLimit;
 }
 
 gboolean trg_client_get_seed_ratio_limited(TrgClient *tc)
 {
-    return tc->priv->seedRatioLimited;
+    return tc->seedRatioLimited;
 }
+
+/* rpc_request struct manages state for callbacks */
+typedef struct {
+    TrgClient *client;
+    SoupMessage *msg;
+    GCancellable *cancellable;
+    gint connid;
+    GBytes *body;
+    GSourceFunc response_cb;
+    gpointer *cb_data;
+} trg_request;
 
 /* request handling */
 static trg_request *trg_request_new(TrgClient *tc, GBytes *body, GSourceFunc cb, gpointer cb_data)
@@ -494,7 +474,7 @@ static gboolean tls_callback(SoupMessage *msg, GTlsCertificate *cert,
 
 static void trg_request_setup_msg(trg_request *request)
 {
-    TrgClientPrivate *priv = request->client->priv;
+    TrgClient *self = request->client;
     SoupMessage *msg;
     SoupMessageHeaders *req_headers;
 
@@ -504,13 +484,13 @@ static void trg_request_setup_msg(trg_request *request)
         g_clear_object(&request->cancellable);
     }
 
-    msg = soup_message_new_from_uri(SOUP_METHOD_POST, priv->url);
+    msg = soup_message_new_from_uri(SOUP_METHOD_POST, self->url);
 
     request->cancellable = g_cancellable_new();
 
     req_headers = soup_message_get_request_headers(msg);
-    if (priv->headers)
-        g_hash_table_foreach(priv->headers, trg_client_inject_custom_header, req_headers);
+    if (self->headers)
+        g_hash_table_foreach(self->headers, trg_client_inject_custom_header, req_headers);
 
     g_autofree gchar *session_id = trg_client_get_session_id(request->client);
     if (session_id) {
@@ -533,8 +513,8 @@ static void trg_request_set_body(trg_request *request)
 
 static void trg_request_send(trg_request *request)
 {
-    TrgClientPrivate *priv = request->client->priv;
-    soup_session_send_and_read_async(priv->rpc_session, request->msg, G_PRIORITY_DEFAULT,
+    TrgClient *self = request->client;
+    soup_session_send_and_read_async(self->rpc_session, request->msg, G_PRIORITY_DEFAULT,
                                      request->cancellable, rpc_callback, request);
 }
 

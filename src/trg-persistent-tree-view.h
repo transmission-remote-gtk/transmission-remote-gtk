@@ -16,36 +16,16 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef _TRG_PERSISTENT_TREE_VIEW
-#define _TRG_PERSISTENT_TREE_VIEW
+#pragma once
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
 
 #include "trg-preferences-dialog.h"
 
-G_BEGIN_DECLS
 #define TRG_TYPE_PERSISTENT_TREE_VIEW trg_persistent_tree_view_get_type()
-#define TRG_PERSISTENT_TREE_VIEW(obj)                                                              \
-    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeView))
-#define TRG_PERSISTENT_TREE_VIEW_CLASS(klass)                                                      \
-    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeViewClass))
-#define TRG_IS_PERSISTENT_TREE_VIEW(obj)                                                           \
-    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_PERSISTENT_TREE_VIEW))
-#define TRG_IS_PERSISTENT_TREE_VIEW_CLASS(klass)                                                   \
-    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_PERSISTENT_TREE_VIEW))
-#define TRG_PERSISTENT_TREE_VIEW_GET_CLASS(obj)                                                    \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_PERSISTENT_TREE_VIEW, TrgPersistentTreeViewClass))
-typedef struct {
-    GtkVBox parent;
-} TrgPersistentTreeView;
-
-typedef struct {
-    GtkTreeViewClass parent_class;
-} TrgPersistentTreeViewClass;
-
-GType trg_persistent_tree_view_get_type(void);
+G_DECLARE_FINAL_TYPE(TrgPersistentTreeView, trg_persistent_tree_view, TRG, PERSISTENT_TREE_VIEW,
+                     GtkBox)
 
 typedef struct {
     GtkTreeViewColumn *column;
@@ -66,6 +46,3 @@ void trg_persistent_tree_view_set_add_select(TrgPersistentTreeView *ptv,
 trg_persistent_tree_view_column *trg_persistent_tree_view_add_column(TrgPersistentTreeView *ptv,
                                                                      gint index, const gchar *key,
                                                                      const gchar *label);
-
-G_END_DECLS
-#endif /* _TRG_PERSISTENT_TREE_VIEW */

@@ -16,9 +16,7 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef TRG_TRACKERS_TREE_VIEW_H_
-#define TRG_TRACKERS_TREE_VIEW_H_
+#pragma once
 
 #include <glib-object.h>
 #include <gtk/gtk.h>
@@ -28,31 +26,10 @@
 #include "trg-trackers-model.h"
 #include "trg-tree-view.h"
 
-G_BEGIN_DECLS
 #define TRG_TYPE_TRACKERS_TREE_VIEW trg_trackers_tree_view_get_type()
-#define TRG_TRACKERS_TREE_VIEW(obj)                                                                \
-    (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeView))
-#define TRG_TRACKERS_TREE_VIEW_CLASS(klass)                                                        \
-    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeViewClass))
-#define TRG_IS_TRACKERS_TREE_VIEW(obj)                                                             \
-    (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TRACKERS_TREE_VIEW))
-#define TRG_IS_TRACKERS_TREE_VIEW_CLASS(klass)                                                     \
-    (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TRACKERS_TREE_VIEW))
-#define TRG_TRACKERS_TREE_VIEW_GET_CLASS(obj)                                                      \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeViewClass))
-typedef struct {
-    TrgTreeView parent;
-} TrgTrackersTreeView;
-
-typedef struct {
-    TrgTreeViewClass parent_class;
-} TrgTrackersTreeViewClass;
-
-GType trg_trackers_tree_view_get_type(void);
+G_DECLARE_FINAL_TYPE(TrgTrackersTreeView, trg_trackers_tree_view, TRG, TRACKERS_TREE_VIEW,
+                     TrgTreeView)
 
 TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel *model, TrgClient *client,
                                                 TrgMainWindow *win, const gchar *configId);
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView *tv, TrgClient *tc);
-
-G_END_DECLS
-#endif /* TRG_TRACKERS_TREE_VIEW_H_ */

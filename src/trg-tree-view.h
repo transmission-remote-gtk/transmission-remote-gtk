@@ -16,37 +16,23 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
-
-#ifndef _TRG_TREE_VIEW_H_
-#define _TRG_TREE_VIEW_H_
+#pragma once
 
 #include <glib-object.h>
+#include <gtk/gtk.h>
 
 #include "trg-prefs.h"
 
-G_BEGIN_DECLS
 #define TRG_TYPE_TREE_VIEW trg_tree_view_get_type()
-#define TRG_TREE_VIEW(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), TRG_TYPE_TREE_VIEW, TrgTreeView))
-#define TRG_TREE_VIEW_CLASS(klass)                                                                 \
-    (G_TYPE_CHECK_CLASS_CAST((klass), TRG_TYPE_TREE_VIEW, TrgTreeViewClass))
-#define TRG_IS_TREE_VIEW(obj)         (G_TYPE_CHECK_INSTANCE_TYPE((obj), TRG_TYPE_TREE_VIEW))
-#define TRG_IS_TREE_VIEW_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), TRG_TYPE_TREE_VIEW))
-#define TRG_TREE_VIEW_GET_CLASS(obj)                                                               \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), TRG_TYPE_TREE_VIEW, TrgTreeViewClass))
-typedef struct {
-    GtkTreeView parent;
-} TrgTreeView;
+G_DECLARE_DERIVABLE_TYPE(TrgTreeView, trg_tree_view, TRG, TREE_VIEW, GtkTreeView)
 
-typedef struct {
+struct _TrgTreeViewClass {
     GtkTreeViewClass parent_class;
-    void (*column_added)(TrgTreeView *tv, const gchar *id);
-} TrgTreeViewClass;
-
-GType trg_tree_view_get_type(void);
+};
 
 GtkWidget *trg_tree_view_new(void);
 
-G_END_DECLS GList *trg_tree_view_get_selected_refs_list(GtkTreeView *tv);
+GList *trg_tree_view_get_selected_refs_list(GtkTreeView *tv);
 
 typedef enum {
     TRG_COLTYPE_ICONTEXT,
@@ -94,5 +80,3 @@ void trg_tree_view_remove_all_columns(TrgTreeView *tv);
 void trg_tree_view_restore_sort(TrgTreeView *tv, guint flags);
 GtkWidget *trg_tree_view_sort_menu(TrgTreeView *tv, const gchar *label);
 gboolean trg_tree_view_is_column_showing(TrgTreeView *tv, gint index);
-
-#endif /* _TRG_TREE_VIEW_H_ */

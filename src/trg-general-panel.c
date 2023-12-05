@@ -39,12 +39,9 @@ static void gtk_label_clear(GtkLabel *l);
 static GtkLabel *gen_panel_label_get_key_label(GtkLabel *l);
 static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel *gp, char *key, guint col, guint row);
 
-G_DEFINE_TYPE(TrgGeneralPanel, trg_general_panel, GTK_TYPE_GRID)
-#define TRG_GENERAL_PANEL_GET_PRIVATE(o)                                                           \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_GENERAL_PANEL, TrgGeneralPanelPrivate))
-typedef struct _TrgGeneralPanelPrivate TrgGeneralPanelPrivate;
+struct _TrgGeneralPanel {
+    GtkGrid parent;
 
-struct _TrgGeneralPanelPrivate {
     GtkLabel *gen_name_label;
     GtkLabel *gen_size_label;
     GtkLabel *gen_completed_label;
@@ -69,31 +66,31 @@ struct _TrgGeneralPanelPrivate {
     TrgClient *tc;
 };
 
+G_DEFINE_FINAL_TYPE(TrgGeneralPanel, trg_general_panel, GTK_TYPE_GRID)
+
 void trg_general_panel_clear(TrgGeneralPanel *panel)
 {
-    TrgGeneralPanelPrivate *priv = TRG_GENERAL_PANEL_GET_PRIVATE(panel);
-
-    gtk_label_clear(priv->gen_name_label);
-    gtk_label_clear(priv->gen_size_label);
-    gtk_label_clear(priv->gen_completed_label);
-    gtk_label_clear(priv->gen_seeders_label);
-    gtk_label_clear(priv->gen_leechers_label);
-    gtk_label_clear(priv->gen_status_label);
-    gtk_label_clear(priv->gen_priority_label);
-    gtk_label_clear(priv->gen_eta_label);
-    gtk_label_clear(priv->gen_downloaded_label);
-    gtk_label_clear(priv->gen_uploaded_label);
-    gtk_label_clear(priv->gen_corrupted_label);
-    gtk_label_clear(priv->gen_down_rate_label);
-    gtk_label_clear(priv->gen_up_rate_label);
-    gtk_label_clear(priv->gen_ratio_label);
-    gtk_label_clear(priv->gen_limit_label);
-    gtk_label_clear(priv->gen_completedat_label);
-    gtk_label_clear(priv->gen_downloaddir_label);
-    gtk_label_clear(priv->gen_comment_label);
-    gtk_label_clear(priv->gen_hash_label);
-    gtk_label_clear(priv->gen_error_label);
-    gtk_label_clear(gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label)));
+    gtk_label_clear(panel->gen_name_label);
+    gtk_label_clear(panel->gen_size_label);
+    gtk_label_clear(panel->gen_completed_label);
+    gtk_label_clear(panel->gen_seeders_label);
+    gtk_label_clear(panel->gen_leechers_label);
+    gtk_label_clear(panel->gen_status_label);
+    gtk_label_clear(panel->gen_priority_label);
+    gtk_label_clear(panel->gen_eta_label);
+    gtk_label_clear(panel->gen_downloaded_label);
+    gtk_label_clear(panel->gen_uploaded_label);
+    gtk_label_clear(panel->gen_corrupted_label);
+    gtk_label_clear(panel->gen_down_rate_label);
+    gtk_label_clear(panel->gen_up_rate_label);
+    gtk_label_clear(panel->gen_ratio_label);
+    gtk_label_clear(panel->gen_limit_label);
+    gtk_label_clear(panel->gen_completedat_label);
+    gtk_label_clear(panel->gen_downloaddir_label);
+    gtk_label_clear(panel->gen_comment_label);
+    gtk_label_clear(panel->gen_hash_label);
+    gtk_label_clear(panel->gen_error_label);
+    gtk_label_clear(gen_panel_label_get_key_label(GTK_LABEL(panel->gen_error_label)));
 }
 
 static void gtk_label_clear(GtkLabel *l)
@@ -108,12 +105,10 @@ static GtkLabel *gen_panel_label_get_key_label(GtkLabel *l)
 
 static void trg_general_panel_class_init(TrgGeneralPanelClass *klass)
 {
-    g_type_class_add_private(klass, sizeof(TrgGeneralPanelPrivate));
 }
 
 void trg_general_panel_update(TrgGeneralPanel *panel, JsonObject *t, GtkTreeIter *iter)
 {
-    TrgGeneralPanelPrivate *priv;
     gchar buf[32], buf1[32]; // TODO: do it better
     gchar *statusString, *fullStatusString, *completedAtString, *speed, *comment, *markup;
     const gchar *errorStr;
@@ -121,14 +116,12 @@ void trg_general_panel_update(TrgGeneralPanel *panel, JsonObject *t, GtkTreeIter
     GtkLabel *keyLabel;
     gint64 seeders = 0, leechers = 0;
 
-    priv = TRG_GENERAL_PANEL_GET_PRIVATE(panel);
-
-    gtk_tree_model_get(GTK_TREE_MODEL(priv->model), iter, TORRENT_COLUMN_SEEDS, &seeders,
+    gtk_tree_model_get(GTK_TREE_MODEL(panel->model), iter, TORRENT_COLUMN_SEEDS, &seeders,
                        TORRENT_COLUMN_LEECHERS, &leechers, TORRENT_COLUMN_STATUS, &statusString,
                        -1);
 
     trg_strlsize(buf, torrent_get_size_when_done(t));
-    gtk_label_set_text(GTK_LABEL(priv->gen_size_label), buf);
+    gtk_label_set_text(GTK_LABEL(panel->gen_size_label), buf);
 
     trg_strlspeed(buf, torrent_get_rate_down(t) / disk_K);
     if (torrent_get_download_limited(t)) {
@@ -136,7 +129,7 @@ void trg_general_panel_update(TrgGeneralPanel *panel, JsonObject *t, GtkTreeIter
         speed = g_strdup_printf("%s [%s]", buf, buf1);
     } else
         speed = g_strdup_printf("%s", buf);
-    gtk_label_set_text(GTK_LABEL(priv->gen_down_rate_label), speed);
+    gtk_label_set_text(GTK_LABEL(panel->gen_down_rate_label), speed);
     g_free(speed);
 
     trg_strlspeed(buf, torrent_get_rate_up(t) / disk_K);
@@ -145,76 +138,76 @@ void trg_general_panel_update(TrgGeneralPanel *panel, JsonObject *t, GtkTreeIter
         speed = g_strdup_printf("%s [%s]", buf, buf1);
     } else
         speed = g_strdup_printf("%s", buf);
-    gtk_label_set_text(GTK_LABEL(priv->gen_up_rate_label), speed);
+    gtk_label_set_text(GTK_LABEL(panel->gen_up_rate_label), speed);
     g_free(speed);
 
     corrupted = torrent_get_corrupted(t);
     trg_strlsize(buf, corrupted);
-    gtk_label_set_text(GTK_LABEL(priv->gen_corrupted_label), buf);
+    gtk_label_set_text(GTK_LABEL(panel->gen_corrupted_label), buf);
 
     uploaded = torrent_get_uploaded(t);
     trg_strlsize(buf, uploaded);
-    gtk_label_set_text(GTK_LABEL(priv->gen_uploaded_label), buf);
+    gtk_label_set_text(GTK_LABEL(panel->gen_uploaded_label), buf);
 
-    gtk_label_set_text(GTK_LABEL(priv->gen_hash_label), torrent_get_hash(t));
+    gtk_label_set_text(GTK_LABEL(panel->gen_hash_label), torrent_get_hash(t));
 
     haveValid = torrent_get_have_valid(t);
     trg_strlsize(buf, torrent_get_downloaded(t));
-    gtk_label_set_text(GTK_LABEL(priv->gen_downloaded_label), buf);
+    gtk_label_set_text(GTK_LABEL(panel->gen_downloaded_label), buf);
 
     if (uploaded > 0 && haveValid > 0) {
         trg_strlratio(buf, (double)uploaded / (double)haveValid);
-        gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), buf);
+        gtk_label_set_text(GTK_LABEL(panel->gen_ratio_label), buf);
     } else {
-        gtk_label_set_text(GTK_LABEL(priv->gen_ratio_label), _("N/A"));
+        gtk_label_set_text(GTK_LABEL(panel->gen_ratio_label), _("N/A"));
     }
 
     trg_strlratio(buf, torrent_get_seed_ratio_limit(t));
-    gtk_label_set_text(GTK_LABEL(priv->gen_limit_label), buf);
+    gtk_label_set_text(GTK_LABEL(panel->gen_limit_label), buf);
 
     completedAt = torrent_get_done_date(t);
     if (completedAt > 0) {
         completedAtString = epoch_to_string(completedAt);
-        gtk_label_set_text(GTK_LABEL(priv->gen_completedat_label), completedAtString);
+        gtk_label_set_text(GTK_LABEL(panel->gen_completedat_label), completedAtString);
         g_free(completedAtString);
     } else {
-        gtk_label_set_text(GTK_LABEL(priv->gen_completedat_label), "");
+        gtk_label_set_text(GTK_LABEL(panel->gen_completedat_label), "");
     }
 
     fullStatusString = g_strdup_printf("%s %s", statusString,
                                        torrent_get_is_private(t) ? _("(Private)") : _("(Public)"));
-    gtk_label_set_text(GTK_LABEL(priv->gen_status_label), fullStatusString);
+    gtk_label_set_text(GTK_LABEL(panel->gen_status_label), fullStatusString);
     g_free(fullStatusString);
     g_free(statusString);
 
     switch (torrent_get_bandwidth_priority(t)) {
     case TR_PRI_LOW:
-        gtk_label_set_text(GTK_LABEL(priv->gen_priority_label), _("Low"));
+        gtk_label_set_text(GTK_LABEL(panel->gen_priority_label), _("Low"));
         break;
     case TR_PRI_NORMAL:
-        gtk_label_set_text(GTK_LABEL(priv->gen_priority_label), _("Normal"));
+        gtk_label_set_text(GTK_LABEL(panel->gen_priority_label), _("Normal"));
         break;
     case TR_PRI_HIGH:
-        gtk_label_set_text(GTK_LABEL(priv->gen_priority_label), _("High"));
+        gtk_label_set_text(GTK_LABEL(panel->gen_priority_label), _("High"));
         break;
     }
 
     trg_strlpercent(buf, torrent_get_percent_done(t));
-    gtk_label_set_text(GTK_LABEL(priv->gen_completed_label), buf);
+    gtk_label_set_text(GTK_LABEL(panel->gen_completed_label), buf);
 
-    gtk_label_set_text(GTK_LABEL(priv->gen_name_label), torrent_get_name(t));
+    gtk_label_set_text(GTK_LABEL(panel->gen_name_label), torrent_get_name(t));
 
-    gtk_label_set_text(GTK_LABEL(priv->gen_downloaddir_label), torrent_get_download_dir(t));
+    gtk_label_set_text(GTK_LABEL(panel->gen_downloaddir_label), torrent_get_download_dir(t));
 
     comment = add_links_to_text(torrent_get_comment(t));
-    gtk_label_set_markup(GTK_LABEL(priv->gen_comment_label), comment);
+    gtk_label_set_markup(GTK_LABEL(panel->gen_comment_label), comment);
     g_free(comment);
 
     errorStr = torrent_get_errorstr(t);
-    keyLabel = gen_panel_label_get_key_label(GTK_LABEL(priv->gen_error_label));
+    keyLabel = gen_panel_label_get_key_label(GTK_LABEL(panel->gen_error_label));
     if (strlen(errorStr) > 0) {
         markup = g_markup_printf_escaped("<span fgcolor=\"red\">%s</span>", errorStr);
-        gtk_label_set_markup(GTK_LABEL(priv->gen_error_label), markup);
+        gtk_label_set_markup(GTK_LABEL(panel->gen_error_label), markup);
         g_free(markup);
 
         markup = g_markup_printf_escaped("<span font_weight=\"bold\" fgcolor=\"red\">%s</span>",
@@ -222,21 +215,21 @@ void trg_general_panel_update(TrgGeneralPanel *panel, JsonObject *t, GtkTreeIter
         gtk_label_set_markup(keyLabel, markup);
         g_free(markup);
     } else {
-        gtk_label_clear(GTK_LABEL(priv->gen_error_label));
+        gtk_label_clear(GTK_LABEL(panel->gen_error_label));
         gtk_label_clear(keyLabel);
     }
 
     if ((eta = torrent_get_eta(t)) > 0) {
         tr_strltime_long(buf, eta, sizeof(buf));
-        gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), buf);
+        gtk_label_set_text(GTK_LABEL(panel->gen_eta_label), buf);
     } else {
-        gtk_label_set_text(GTK_LABEL(priv->gen_eta_label), _("N/A"));
+        gtk_label_set_text(GTK_LABEL(panel->gen_eta_label), _("N/A"));
     }
 
     g_snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT, seeders >= 0 ? seeders : 0);
-    gtk_label_set_text(GTK_LABEL(priv->gen_seeders_label), buf);
+    gtk_label_set_text(GTK_LABEL(panel->gen_seeders_label), buf);
     g_snprintf(buf, sizeof(buf), "%" G_GINT64_FORMAT, leechers >= 0 ? leechers : 0);
-    gtk_label_set_text(GTK_LABEL(priv->gen_leechers_label), buf);
+    gtk_label_set_text(GTK_LABEL(panel->gen_leechers_label), buf);
 }
 
 static GtkLabel *trg_general_panel_add_label_with_width(TrgGeneralPanel *gp, char *key, guint col,
@@ -278,37 +271,36 @@ static GtkLabel *trg_general_panel_add_label(TrgGeneralPanel *gp, char *key, gui
 
 static void trg_general_panel_init(TrgGeneralPanel *self)
 {
-    TrgGeneralPanelPrivate *priv = TRG_GENERAL_PANEL_GET_PRIVATE(self);
-    priv->gen_name_label = trg_general_panel_add_label_with_width(self, _("Name"), 0, 0, -1);
+    self->gen_name_label = trg_general_panel_add_label_with_width(self, _("Name"), 0, 0, -1);
 
-    priv->gen_size_label = trg_general_panel_add_label(self, _("Size"), 0, 1);
-    priv->gen_down_rate_label = trg_general_panel_add_label(self, _("Rate Down"), 1, 1);
-    priv->gen_completed_label = trg_general_panel_add_label(self, _("Completed"), 2, 1);
+    self->gen_size_label = trg_general_panel_add_label(self, _("Size"), 0, 1);
+    self->gen_down_rate_label = trg_general_panel_add_label(self, _("Rate Down"), 1, 1);
+    self->gen_completed_label = trg_general_panel_add_label(self, _("Completed"), 2, 1);
 
-    priv->gen_eta_label = trg_general_panel_add_label(self, _("ETA"), 0, 2);
-    priv->gen_up_rate_label = trg_general_panel_add_label(self, _("Rate Up"), 1, 2);
-    priv->gen_downloaded_label = trg_general_panel_add_label(self, _("Downloaded"), 2, 2);
+    self->gen_eta_label = trg_general_panel_add_label(self, _("ETA"), 0, 2);
+    self->gen_up_rate_label = trg_general_panel_add_label(self, _("Rate Up"), 1, 2);
+    self->gen_downloaded_label = trg_general_panel_add_label(self, _("Downloaded"), 2, 2);
 
-    priv->gen_seeders_label = trg_general_panel_add_label(self, _("Seeders"), 0, 3);
-    priv->gen_ratio_label = trg_general_panel_add_label(self, _("Ratio"), 1, 3);
-    priv->gen_uploaded_label = trg_general_panel_add_label(self, _("Uploaded"), 2, 3);
+    self->gen_seeders_label = trg_general_panel_add_label(self, _("Seeders"), 0, 3);
+    self->gen_ratio_label = trg_general_panel_add_label(self, _("Ratio"), 1, 3);
+    self->gen_uploaded_label = trg_general_panel_add_label(self, _("Uploaded"), 2, 3);
 
-    priv->gen_leechers_label = trg_general_panel_add_label(self, _("Leechers"), 0, 4);
-    priv->gen_limit_label = trg_general_panel_add_label(self, _("Ratio limit"), 1, 4);
-    priv->gen_corrupted_label = trg_general_panel_add_label(self, _("Corrupted"), 2, 4);
+    self->gen_leechers_label = trg_general_panel_add_label(self, _("Leechers"), 0, 4);
+    self->gen_limit_label = trg_general_panel_add_label(self, _("Ratio limit"), 1, 4);
+    self->gen_corrupted_label = trg_general_panel_add_label(self, _("Corrupted"), 2, 4);
 
-    priv->gen_status_label = trg_general_panel_add_label(self, _("Status"), 0, 5);
-    priv->gen_priority_label = trg_general_panel_add_label(self, _("Priority"), 1, 5);
-    priv->gen_completedat_label = trg_general_panel_add_label(self, _("Completed At"), 2, 5);
+    self->gen_status_label = trg_general_panel_add_label(self, _("Status"), 0, 5);
+    self->gen_priority_label = trg_general_panel_add_label(self, _("Priority"), 1, 5);
+    self->gen_completedat_label = trg_general_panel_add_label(self, _("Completed At"), 2, 5);
 
-    priv->gen_downloaddir_label
+    self->gen_downloaddir_label
         = trg_general_panel_add_label_with_width(self, _("Location"), 0, 6, -1);
 
-    priv->gen_comment_label = trg_general_panel_add_label(self, _("Comment"), 0, 7);
+    self->gen_comment_label = trg_general_panel_add_label(self, _("Comment"), 0, 7);
 
-    priv->gen_hash_label = trg_general_panel_add_label(self, _("Hash"), 0, 8);
+    self->gen_hash_label = trg_general_panel_add_label(self, _("Hash"), 0, 8);
 
-    priv->gen_error_label = trg_general_panel_add_label_with_width(self, "", 0, 9, -1);
+    self->gen_error_label = trg_general_panel_add_label_with_width(self, "", 0, 9, -1);
 
     gtk_grid_set_row_homogeneous(GTK_GRID(self), TRUE);
     gtk_grid_set_column_spacing(GTK_GRID(self), TRG_GENERAL_PANEL_SPACING_X);
@@ -318,15 +310,12 @@ static void trg_general_panel_init(TrgGeneralPanel *self)
 
 TrgGeneralPanel *trg_general_panel_new(GtkTreeModel *model, TrgClient *tc)
 {
-    GObject *obj;
-    TrgGeneralPanelPrivate *priv;
+    TrgGeneralPanel *obj
+        = TRG_GENERAL_PANEL(g_object_new(TRG_TYPE_GENERAL_PANEL, "row-homogeneous", FALSE,
+                                         "row-spacing", 6, "column-spacing", 8, NULL));
 
-    obj = g_object_new(TRG_TYPE_GENERAL_PANEL, "row-homogeneous", FALSE, "row-spacing", 6,
-                       "column-spacing", 8, NULL);
+    obj->model = model;
+    obj->tc = tc;
 
-    priv = TRG_GENERAL_PANEL_GET_PRIVATE(obj);
-    priv->model = model;
-    priv->tc = tc;
-
-    return TRG_GENERAL_PANEL(obj);
+    return obj;
 }

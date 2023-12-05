@@ -22,6 +22,7 @@
 #include <gtk/gtk.h>
 #include <limits.h>
 
+#include "trg-cell-renderer-eta.h"
 #include "trg-cell-renderer-ratio.h"
 #include "util.h"
 
@@ -30,22 +31,21 @@ enum {
     PROP_RATIO_VALUE
 };
 
-G_DEFINE_TYPE(TrgCellRendererRatio, trg_cell_renderer_ratio, GTK_TYPE_CELL_RENDERER_TEXT)
-#define TRG_CELL_RENDERER_RATIO_GET_PRIVATE(o)                                                     \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_CELL_RENDERER_RATIO, TrgCellRendererRatioPrivate))
-typedef struct _TrgCellRendererRatioPrivate TrgCellRendererRatioPrivate;
+struct _TrgCellRendererRatio {
+    GtkCellRendererText parent;
 
-struct _TrgCellRendererRatioPrivate {
     gdouble ratio_value;
 };
+
+G_DEFINE_TYPE(TrgCellRendererRatio, trg_cell_renderer_ratio, GTK_TYPE_CELL_RENDERER_TEXT)
 
 static void trg_cell_renderer_ratio_get_property(GObject *object, guint property_id, GValue *value,
                                                  GParamSpec *pspec)
 {
-    TrgCellRendererRatioPrivate *priv = TRG_CELL_RENDERER_RATIO_GET_PRIVATE(object);
+    TrgCellRendererRatio *self = TRG_CELL_RENDERER_RATIO(object);
     switch (property_id) {
     case PROP_RATIO_VALUE:
-        g_value_set_double(value, priv->ratio_value);
+        g_value_set_double(value, self->ratio_value);
         break;
     default:
         G_OBJECT_WARN_INVALID_PROPERTY_ID(object, property_id, pspec);
@@ -55,12 +55,12 @@ static void trg_cell_renderer_ratio_get_property(GObject *object, guint property
 static void trg_cell_renderer_ratio_set_property(GObject *object, guint property_id,
                                                  const GValue *value, GParamSpec *pspec)
 {
-    TrgCellRendererRatioPrivate *priv = TRG_CELL_RENDERER_RATIO_GET_PRIVATE(object);
+    TrgCellRendererRatio *self = TRG_CELL_RENDERER_RATIO(object);
     if (property_id == PROP_RATIO_VALUE) {
-        priv->ratio_value = g_value_get_double(value);
-        if (priv->ratio_value > 0) {
+        self->ratio_value = g_value_get_double(value);
+        if (self->ratio_value > 0) {
             char ratioString[32];
-            trg_strlratio(ratioString, priv->ratio_value);
+            trg_strlratio(ratioString, self->ratio_value);
             g_object_set(object, "text", ratioString, NULL);
         } else {
             g_object_set(object, "text", "", NULL);
@@ -82,8 +82,6 @@ static void trg_cell_renderer_ratio_class_init(TrgCellRendererRatioClass *klass)
         g_param_spec_double("ratio-value", "Ratio Value", "Ratio Value", 0, DBL_MAX, 0,
                             G_PARAM_READWRITE | G_PARAM_STATIC_NAME | G_PARAM_STATIC_NICK
                                 | G_PARAM_STATIC_BLURB));
-
-    g_type_class_add_private(klass, sizeof(TrgCellRendererRatioPrivate));
 }
 
 static void trg_cell_renderer_ratio_init(TrgCellRendererRatio *self)

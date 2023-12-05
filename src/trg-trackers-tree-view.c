@@ -33,21 +33,19 @@
 #include "trg-trackers-tree-view.h"
 #include "trg-tree-view.h"
 
-G_DEFINE_TYPE(TrgTrackersTreeView, trg_trackers_tree_view, TRG_TYPE_TREE_VIEW)
-#define TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(o)                                                      \
-    (G_TYPE_INSTANCE_GET_PRIVATE((o), TRG_TYPE_TRACKERS_TREE_VIEW, TrgTrackersTreeViewPrivate))
-typedef struct _TrgTrackersTreeViewPrivate TrgTrackersTreeViewPrivate;
+struct _TrgTrackersTreeView {
+    TrgTreeView parent;
 
-struct _TrgTrackersTreeViewPrivate {
     TrgClient *client;
     GtkCellRenderer *announceRenderer;
     GtkTreeViewColumn *announceColumn;
     TrgMainWindow *win;
 };
 
+G_DEFINE_TYPE(TrgTrackersTreeView, trg_trackers_tree_view, TRG_TYPE_TREE_VIEW)
+
 static void trg_trackers_tree_view_class_init(TrgTrackersTreeViewClass *klass)
 {
-    g_type_class_add_private(klass, sizeof(TrgTrackersTreeViewPrivate));
 }
 
 static gboolean is_tracker_edit_supported(TrgClient *tc)
@@ -58,29 +56,27 @@ static gboolean is_tracker_edit_supported(TrgClient *tc)
 static gboolean on_trackers_update(gpointer data)
 {
     trg_response *response = (trg_response *)data;
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(response->cb_data);
+    TrgTrackersTreeView *tv = TRG_TRACKERS_TREE_VIEW(response->cb_data);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(response->cb_data));
 
     trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model), TRUE);
 
-    response->cb_data = priv->win;
+    response->cb_data = tv->win;
     return on_generic_interactive_action_response(data);
 }
 
 void trg_trackers_tree_view_new_connection(TrgTrackersTreeView *tv, TrgClient *tc)
 {
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(tv);
-
     gboolean editable = is_tracker_edit_supported(tc);
 
-    g_object_set(priv->announceRenderer, "editable", editable, "mode",
+    g_object_set(tv->announceRenderer, "editable", editable, "mode",
                  editable ? GTK_CELL_RENDERER_MODE_EDITABLE : GTK_CELL_RENDERER_MODE_INERT, NULL);
 }
 
 static void trg_tracker_announce_edited(GtkCellRendererText *renderer, gchar *path, gchar *new_text,
                                         gpointer user_data)
 {
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(user_data);
+    TrgTrackersTreeView *tv = TRG_TRACKERS_TREE_VIEW(user_data);
     GtkTreeModel *model = gtk_tree_view_get_model(GTK_TREE_VIEW(user_data));
     gint64 torrentId = trg_trackers_model_get_torrent_id(TRG_TRACKERS_MODEL(model));
     JsonArray *torrentIds = json_array_new();
@@ -112,7 +108,7 @@ static void trg_tracker_announce_edited(GtkCellRendererText *renderer, gchar *pa
 
     g_free(icon);
 
-    dispatch_rpc_async(priv->client, req, on_trackers_update, user_data);
+    dispatch_rpc_async(tv->client, req, on_trackers_update, user_data);
 }
 
 static void trg_tracker_announce_editing_started(GtkCellRenderer *renderer G_GNUC_UNUSED,
@@ -133,7 +129,6 @@ static void trg_tracker_announce_editing_canceled(GtkWidget *w G_GNUC_UNUSED, gp
 
 static void trg_trackers_tree_view_init(TrgTrackersTreeView *self)
 {
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(self);
     TrgTreeView *ttv = TRG_TREE_VIEW(self);
     trg_column_description *desc;
 
@@ -143,14 +138,14 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView *self)
 
     desc = trg_tree_view_reg_column(ttv, TRG_COLTYPE_TEXT, TRACKERCOL_ANNOUNCE, _("Announce URL"),
                                     "announce-url", TRG_COLUMN_UNREMOVABLE);
-    priv->announceRenderer = desc->customRenderer = gtk_cell_renderer_text_new();
-    g_signal_connect(priv->announceRenderer, "edited", G_CALLBACK(trg_tracker_announce_edited),
+    self->announceRenderer = desc->customRenderer = gtk_cell_renderer_text_new();
+    g_signal_connect(self->announceRenderer, "edited", G_CALLBACK(trg_tracker_announce_edited),
                      self);
-    g_signal_connect(priv->announceRenderer, "editing-canceled",
+    g_signal_connect(self->announceRenderer, "editing-canceled",
                      G_CALLBACK(trg_tracker_announce_editing_canceled), self);
-    g_signal_connect(priv->announceRenderer, "editing-started",
+    g_signal_connect(self->announceRenderer, "editing-started",
                      G_CALLBACK(trg_tracker_announce_editing_started), self);
-    desc->out = &priv->announceColumn;
+    desc->out = &self->announceColumn;
 
     trg_tree_view_reg_column(ttv, TRG_COLTYPE_NUMGTZERO, TRACKERCOL_LAST_ANNOUNCE_PEER_COUNT,
                              _("Peers"), "last-announce-peer-count", 0);
@@ -173,7 +168,7 @@ static void trg_trackers_tree_view_init(TrgTrackersTreeView *self)
 static void add_tracker(GtkWidget *w, gpointer data)
 {
     GtkTreeView *tv = GTK_TREE_VIEW(data);
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(data);
+    TrgTrackersTreeView *self = TRG_TRACKERS_TREE_VIEW(data);
     GtkTreeModel *model = gtk_tree_view_get_model(tv);
     GtkTreeIter iter;
     GtkTreePath *path;
@@ -182,13 +177,13 @@ static void add_tracker(GtkWidget *w, gpointer data)
     gtk_list_store_set(GTK_LIST_STORE(model), &iter, TRACKERCOL_ICON, "list-add", -1);
 
     path = gtk_tree_model_get_path(model, &iter);
-    gtk_tree_view_set_cursor(tv, path, priv->announceColumn, TRUE);
+    gtk_tree_view_set_cursor(tv, path, self->announceColumn, TRUE);
     gtk_tree_path_free(path);
 }
 
 static void delete_tracker(GtkWidget *w, gpointer data)
 {
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(data);
+    TrgTrackersTreeView *self = TRG_TRACKERS_TREE_VIEW(data);
     GtkTreeView *tv = GTK_TREE_VIEW(data);
     GList *selectionRefs = trg_tree_view_get_selected_refs_list(tv);
     GtkTreeModel *model = gtk_tree_view_get_model(tv);
@@ -225,7 +220,7 @@ static void delete_tracker(GtkWidget *w, gpointer data)
 
     trg_trackers_model_set_accept(TRG_TRACKERS_MODEL(model), FALSE);
 
-    dispatch_rpc_async(priv->client, req, on_trackers_update, data);
+    dispatch_rpc_async(self->client, req, on_trackers_update, data);
 }
 
 static void view_popup_menu_add_only(GtkWidget *treeview, GdkEventButton *event,
@@ -262,12 +257,12 @@ static void view_popup_menu(GtkWidget *treeview, GdkEventButton *event, gpointer
 
 static gboolean view_onButtonPressed(GtkWidget *treeview, GdkEventButton *event, gpointer userdata)
 {
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(treeview);
+    TrgTrackersTreeView *self = TRG_TRACKERS_TREE_VIEW(treeview);
     TrgTrackersModel *model = TRG_TRACKERS_MODEL(gtk_tree_view_get_model(GTK_TREE_VIEW(treeview)));
     GtkTreeSelection *selection;
     GtkTreePath *path;
 
-    if (!is_tracker_edit_supported(priv->client))
+    if (!is_tracker_edit_supported(self->client))
         return FALSE;
 
     if (event->type == GDK_BUTTON_PRESS && event->button == 3) {
@@ -303,11 +298,11 @@ TrgTrackersTreeView *trg_trackers_tree_view_new(TrgTrackersModel *model, TrgClie
     GObject *obj = g_object_new(TRG_TYPE_TRACKERS_TREE_VIEW, "config-id", configId, "prefs",
                                 trg_client_get_prefs(client), NULL);
 
-    TrgTrackersTreeViewPrivate *priv = TRG_TRACKERS_TREE_VIEW_GET_PRIVATE(obj);
+    TrgTrackersTreeView *self = TRG_TRACKERS_TREE_VIEW(obj);
 
     gtk_tree_view_set_model(GTK_TREE_VIEW(obj), GTK_TREE_MODEL(model));
-    priv->client = client;
-    priv->win = win;
+    self->client = client;
+    self->win = win;
 
     trg_tree_view_setup_columns(TRG_TREE_VIEW(obj));
 
