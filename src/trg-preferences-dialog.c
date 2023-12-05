@@ -500,45 +500,6 @@ static void add_profile_cb(GtkWidget *w, gpointer data)
     gtk_combo_box_set_active_iter(combo, &iter);
 }
 
-static GtkWidget *trg_prefs_openExecPage(TrgPreferencesDialog *dlg)
-{
-    TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
-    GtkWidget *t, *l;
-    TrgPersistentTreeView *ptv;
-    GtkListStore *model;
-    trg_pref_widget_desc *wd;
-    guint row = 0;
-
-    t = hig_workarea_create();
-
-    hig_workarea_add_section_title(t, &row, _("Commands"));
-
-    model = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_STRING);
-
-    ptv = trg_persistent_tree_view_new(priv->prefs, model, TRG_PREFS_KEY_EXEC_COMMANDS,
-                                       TRG_PREFS_CONNECTION);
-    trg_persistent_tree_view_set_add_select(
-        ptv, trg_persistent_tree_view_add_column(ptv, 0, TRG_PREFS_SUBKEY_LABEL, _("Label")));
-    trg_persistent_tree_view_add_column(ptv, 1, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD,
-                                        _("Command"));
-    wd = trg_persistent_tree_view_get_widget_desc(ptv);
-    trg_pref_widget_refresh(dlg, wd);
-    priv->widgets = g_list_append(priv->widgets, wd);
-
-    hig_workarea_add_wide_tall_control(t, &row, GTK_WIDGET(ptv));
-
-    l = gtk_label_new(NULL);
-    gtk_label_set_markup(GTK_LABEL(l),
-                         _("Documentation for commands can be found "
-                           "<a href=\"https://github.com/transmission-remote-gtk/"
-                           "transmission-remote-gtk/wiki/Local-Command-usage\">"
-                           "here</a>"));
-
-    hig_workarea_add_label_w(t, row, l);
-
-    return t;
-}
-
 static GtkWidget *trg_prefs_dirsPage(TrgPreferencesDialog *dlg)
 {
     TrgPreferencesDialogPrivate *priv = TRG_PREFERENCES_DIALOG_GET_PRIVATE(dlg);
@@ -771,10 +732,6 @@ static GObject *trg_preferences_dialog_constructor(GType type, guint n_construct
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_viewPage(TRG_PREFERENCES_DIALOG(object)),
                              gtk_label_new(_("View")));
-
-    gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
-                             trg_prefs_openExecPage(TRG_PREFERENCES_DIALOG(object)),
-                             gtk_label_new(_("Actions")));
 
     gtk_notebook_append_page(GTK_NOTEBOOK(notebook),
                              trg_prefs_dirsPage(TRG_PREFERENCES_DIALOG(object)),

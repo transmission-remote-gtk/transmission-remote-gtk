@@ -75,8 +75,6 @@
 #define TRG_PREFS_KEY_NOTEBOOK_PANED_POS       "notebook-paned-pos"
 #define TRG_PREFS_KEY_STATES_PANED_POS         "states-paned-pos"
 #define TRG_PREFS_SUBKEY_LABEL                 "label"
-#define TRG_PREFS_KEY_EXEC_COMMANDS            "exec-commands"
-#define TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD "cmd"
 #define TRG_PREFS_KEY_DESTINATIONS             "destinations"
 #define TRG_PREFS_KEY_LAST_MOVE_DESTINATION    "last-move-destination"
 #define TRG_PREFS_KEY_LAST_ADD_DESTINATION     "last-add-destination"

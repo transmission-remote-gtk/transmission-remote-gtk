@@ -40,7 +40,6 @@
 
 #include "json.h"
 #include "protocol-constants.h"
-#include "remote-exec.h"
 #include "requests.h"
 #include "session-get.h"
 #include "torrent.h"
@@ -1692,58 +1691,11 @@ static GtkWidget *limit_menu_new(TrgMainWindow *win, gchar *title, gchar *enable
     return toplevel;
 }
 
-static void exec_cmd_cb(GtkWidget *w, TrgMainWindow *win)
-{
-    TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-    JsonObject *cmd_obj = (JsonObject *)g_object_get_data(G_OBJECT(w), "cmd-object");
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(GTK_TREE_VIEW(priv->torrentTreeView));
-    GtkTreeModel *model;
-    GList *selectedRows = gtk_tree_selection_get_selected_rows(selection, &model);
-    GError *cmd_error = NULL;
-    gchar *cmd_line = NULL;
-    gchar **argv = NULL;
-
-    cmd_line = build_remote_exec_cmd(
-        priv->client, model, selectedRows,
-        json_object_get_string_member(cmd_obj, TRG_PREFS_KEY_EXEC_COMMANDS_SUBKEY_CMD));
-
-    g_debug("Exec: %s", cmd_line);
-
-    if (!cmd_line)
-        return;
-
-    /* GTK has bug, won't let you pass a string here containing a quoted param, so use parse and
-     * then spawn rather than g_spawn_command_line_async(cmd_line,&cmd_error); */
-
-    g_shell_parse_argv(cmd_line, NULL, &argv, NULL);
-    g_spawn_async(NULL, argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &cmd_error);
-
-    g_list_free_full(selectedRows, (GDestroyNotify)gtk_tree_path_free);
-
-    if (argv)
-        g_strfreev(argv);
-
-    g_free(cmd_line);
-
-    if (cmd_error) {
-        GtkWidget *dialog
-            = gtk_message_dialog_new(GTK_WINDOW(win), GTK_DIALOG_MODAL, GTK_MESSAGE_ERROR,
-                                     GTK_BUTTONS_OK, "%s", cmd_error->message);
-        gtk_window_set_title(GTK_WINDOW(dialog), _("Error"));
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
-        g_error_free(cmd_error);
-    }
-}
-
 static void trg_torrent_tv_view_menu(GtkWidget *treeview, GdkEventButton *event, TrgMainWindow *win)
 {
     TrgMainWindowPrivate *priv = trg_main_window_get_instance_private(win);
-    TrgPrefs *prefs = trg_client_get_prefs(priv->client);
     GtkWidget *menu;
-    gint n_cmds;
     JsonArray *ids;
-    JsonArray *cmds;
 
     menu = gtk_menu_new();
     gtk_menu_set_reserve_toggle_size(GTK_MENU(menu), FALSE);
@@ -1768,36 +1720,6 @@ static void trg_torrent_tv_view_menu(GtkWidget *treeview, GdkEventButton *event,
                           G_CALLBACK(remove_cb), win);
     trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Remove and delete data"), "edit-delete", TRUE,
                           G_CALLBACK(delete_cb), win);
-
-    cmds = trg_prefs_get_array(prefs, TRG_PREFS_KEY_EXEC_COMMANDS, TRG_PREFS_CONNECTION);
-    n_cmds = json_array_get_length(cmds);
-
-    if (n_cmds > 0) {
-        GList *cmds_list = json_array_get_elements(cmds);
-        GtkMenuShell *cmds_shell;
-        GList *cmds_li;
-
-        if (n_cmds < 3) {
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
-            cmds_shell = GTK_MENU_SHELL(menu);
-        } else {
-            GtkMenuItem *cmds_menu = GTK_MENU_ITEM(gtk_menu_item_new_with_label(_("Execute")));
-
-            cmds_shell = GTK_MENU_SHELL(gtk_menu_new());
-            gtk_menu_item_set_submenu(GTK_MENU_ITEM(cmds_menu), GTK_WIDGET(cmds_shell));
-            gtk_menu_shell_append(GTK_MENU_SHELL(menu), GTK_WIDGET(cmds_menu));
-        }
-
-        for (cmds_li = cmds_list; cmds_li; cmds_li = g_list_next(cmds_li)) {
-            JsonObject *cmd_obj = json_node_get_object((JsonNode *)cmds_li->data);
-            const gchar *cmd_label = json_object_get_string_member(cmd_obj, "label");
-            GtkWidget *item = trg_imagemenuitem_new(cmds_shell, cmd_label, "system-run", TRUE,
-                                                    G_CALLBACK(exec_cmd_cb), win);
-            g_object_set_data(G_OBJECT(item), "cmd-object", cmd_obj);
-        }
-
-        g_list_free(cmds_list);
-    }
 
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
 
