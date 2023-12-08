@@ -98,7 +98,6 @@ flags = [
   '-fstack-protector-strong',
   '-Winline',
   '-Wno-unused-parameter',
-  '-Wno-typedef-redefinition',
   '-Wstrict-prototypes',
   '-Wmissing-prototypes',
   '-Werror=format=2',
