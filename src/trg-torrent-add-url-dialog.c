@@ -30,6 +30,8 @@
 #include "trg-torrent-add-url-dialog.h"
 
 struct _TrgTorrentAddUrlDialog {
+    GtkDialog parent;
+
     TrgClient *client;
     TrgMainWindow *win;
     GtkWidget *urlEntry;
