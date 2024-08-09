@@ -50,6 +50,8 @@
 #define TRG_PREFS_KEY_ADD_NOTIFY              "add-notify"
 #define TRG_PREFS_KEY_WINDOW_WIDTH            "window-width"
 #define TRG_PREFS_KEY_WINDOW_HEIGHT           "window-height"
+#define TRG_PREFS_KEY_WINDOW_X                "window-x"
+#define TRG_PREFS_KEY_WINDOW_Y                "window-y"
 #define TRG_PREFS_KEY_SYSTEM_TRAY             "system-tray"
 #define TRG_PREFS_KEY_FILTER_TRACKERS         "filter-trackers"
 #define TRG_PREFS_KEY_DIRECTORIES_FIRST       "directories-first"

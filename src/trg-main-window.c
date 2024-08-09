@@ -191,6 +191,7 @@ struct _TrgMainWindow {
 
     gboolean hidden;
     gint width, height;
+    gint x, y;
     guint timerId;
     guint sessionTimerId;
     gboolean min_on_start;
@@ -294,6 +295,8 @@ static void destroy_window(TrgMainWindow *win, gpointer data G_GNUC_UNUSED)
 
     trg_prefs_set_int(prefs, TRG_PREFS_KEY_WINDOW_HEIGHT, win->height, TRG_PREFS_GLOBAL);
     trg_prefs_set_int(prefs, TRG_PREFS_KEY_WINDOW_WIDTH, win->width, TRG_PREFS_GLOBAL);
+    trg_prefs_set_int(prefs, TRG_PREFS_KEY_WINDOW_X, win->x, TRG_PREFS_GLOBAL);
+    trg_prefs_set_int(prefs, TRG_PREFS_KEY_WINDOW_Y, win->y, TRG_PREFS_GLOBAL);
     trg_prefs_set_int(prefs, TRG_PREFS_KEY_NOTEBOOK_PANED_POS,
                       gtk_paned_get_position(GTK_PANED(win->vpaned)), TRG_PREFS_GLOBAL);
     trg_prefs_set_int(prefs, TRG_PREFS_KEY_STATES_PANED_POS,
@@ -1831,6 +1834,7 @@ static gboolean trg_main_window_config_event(TrgMainWindow *win, GdkEvent *event
 {
     win->width = event->configure.width;
     win->height = event->configure.height;
+    gtk_window_get_position(GTK_WINDOW(win), &win->x, &win->y);
     return FALSE;
 }
 
@@ -1906,7 +1910,7 @@ static GObject *trg_main_window_constructor(GType type, guint n_construct_proper
     GtkWidget *outerVbox;
     GtkWidget *toolbarHbox;
     // GtkWidget *outerAlignment;
-    gint width, height, pos;
+    gint width, height, x, y, pos;
     gboolean tray;
     TrgPrefs *prefs;
 
@@ -2004,6 +2008,8 @@ static GObject *trg_main_window_constructor(GType type, guint n_construct_proper
 
     width = trg_prefs_get_int(prefs, TRG_PREFS_KEY_WINDOW_WIDTH, TRG_PREFS_GLOBAL);
     height = trg_prefs_get_int(prefs, TRG_PREFS_KEY_WINDOW_HEIGHT, TRG_PREFS_GLOBAL);
+    x = trg_prefs_get_int(prefs, TRG_PREFS_KEY_WINDOW_X, TRG_PREFS_GLOBAL);
+    y = trg_prefs_get_int(prefs, TRG_PREFS_KEY_WINDOW_Y, TRG_PREFS_GLOBAL);
 
     pos = trg_prefs_get_int(prefs, TRG_PREFS_KEY_NOTEBOOK_PANED_POS, TRG_PREFS_GLOBAL);
 
@@ -2014,6 +2020,9 @@ static GObject *trg_main_window_constructor(GType type, guint n_construct_proper
 
     if (pos > 0)
         gtk_paned_set_position(GTK_PANED(self->vpaned), pos);
+
+    if (x >= 0 && y >= 0)
+        gtk_window_move(GTK_WINDOW(self), x, y);
 
     gtk_widget_show_all(GTK_WIDGET(self));
 

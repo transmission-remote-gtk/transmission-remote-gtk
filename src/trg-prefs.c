@@ -101,6 +101,8 @@ static void trg_prefs_create_defaults(TrgPrefs *p)
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_STATES_PANED_POS, 120);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_TIMEOUT, 40);
     trg_prefs_add_default_int(p, TRG_PREFS_KEY_RETRIES, 3);
+    trg_prefs_add_default_int(p, TRG_PREFS_KEY_WINDOW_X, -1);
+    trg_prefs_add_default_int(p, TRG_PREFS_KEY_WINDOW_Y, -1);
 
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_DIRS);
     trg_prefs_add_default_bool_true(p, TRG_PREFS_KEY_FILTER_TRACKERS);
