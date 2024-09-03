@@ -53,6 +53,7 @@ struct _TrgStatsDialog {
 
     TrgClient *client;
     TrgMainWindow *parent_win;
+    guint update_stats_timer_tag;
     GtkWidget *tv;
     GtkListStore *model;
     GtkTreeRowReference *rr_down;
@@ -95,6 +96,9 @@ static void trg_stats_dialog_set_property(GObject *object, guint property_id, co
 
 static void trg_stats_response_cb(GtkDialog *dlg, gint res_id, gpointer data G_GNUC_UNUSED)
 {
+    TrgStatsDialog *trg_dlg = TRG_STATS_DIALOG(dlg);
+    if (trg_dlg->update_stats_timer_tag)
+        g_clear_handle_id(&trg_dlg->update_stats_timer_tag, g_source_remove);
     gtk_widget_destroy(GTK_WIDGET(dlg));
     instance = NULL;
 }
@@ -219,8 +223,9 @@ static gboolean on_stats_reply(gpointer data)
         update_time_stat(args, dlg->rr_active, "secondsActive");
 
         if (trg_client_is_connected(dlg->client))
-            g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc,
-                                  response->cb_data);
+            dlg->update_stats_timer_tag =
+                g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc,
+                                      response->cb_data);
     } else {
         trg_client_error_dialog(GTK_WINDOW(data), response);
     }
