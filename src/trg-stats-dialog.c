@@ -222,9 +222,8 @@ static gboolean on_stats_reply(gpointer data)
         update_time_stat(args, dlg->rr_active, "secondsActive");
 
         if (trg_client_is_connected(dlg->client))
-            dlg->update_stats_timer_tag =
-                g_timeout_add_seconds(STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc,
-                                      response->cb_data);
+            dlg->update_stats_timer_tag = g_timeout_add_seconds(
+                STATS_UPDATE_INTERVAL, trg_update_stats_timerfunc, response->cb_data);
     } else {
         trg_client_error_dialog(GTK_WINDOW(data), response);
     }
