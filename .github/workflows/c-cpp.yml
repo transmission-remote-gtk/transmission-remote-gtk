@@ -42,6 +42,7 @@ jobs:
           brew install meson \
                        gtk+3 \
                        json-glib \
+                       icu4c \
                        libsoup \
                        gettext\
                        \
