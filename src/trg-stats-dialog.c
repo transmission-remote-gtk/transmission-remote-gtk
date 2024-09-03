@@ -97,8 +97,7 @@ static void trg_stats_dialog_set_property(GObject *object, guint property_id, co
 static void trg_stats_response_cb(GtkDialog *dlg, gint res_id, gpointer data G_GNUC_UNUSED)
 {
     TrgStatsDialog *trg_dlg = TRG_STATS_DIALOG(dlg);
-    if (trg_dlg->update_stats_timer_tag)
-        g_clear_handle_id(&trg_dlg->update_stats_timer_tag, g_source_remove);
+    g_clear_handle_id(&trg_dlg->update_stats_timer_tag, g_source_remove);
     gtk_widget_destroy(GTK_WIDGET(dlg));
     instance = NULL;
 }
