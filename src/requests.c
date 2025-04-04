@@ -237,15 +237,6 @@ JsonNode *torrent_add_url(const gchar *url, gboolean paused)
     return root;
 }
 
-static void trash_cb(GObject *source_object, GAsyncResult *res, gpointer user_data)
-{
-    g_autoptr(GError) error = NULL;
-
-    if (!g_file_trash_finish(G_FILE(source_object), res, &error))
-        g_warning("Failed to trash '%s': %s", g_file_peek_path(G_FILE(source_object)),
-                  error->message);
-}
-
 JsonNode *torrent_add_from_file(gchar *target, gint flags, GError **error)
 {
     JsonNode *root;
@@ -275,12 +266,8 @@ JsonNode *torrent_add_from_file(gchar *target, gint flags, GError **error)
 
     json_object_set_boolean_member(args, PARAM_PAUSED, (flags & TORRENT_ADD_FLAG_PAUSED));
 
-    if ((flags & TORRENT_ADD_FLAG_DELETE)) {
-        g_autoptr(GFile) file = NULL;
-
-        file = g_file_new_for_path(target);
-        g_file_trash_async(file, G_PRIORITY_DEFAULT, NULL, trash_cb, NULL);
-    }
+    if ((flags & TORRENT_ADD_FLAG_DELETE))
+        g_unlink(target);
 
     return root;
 }
