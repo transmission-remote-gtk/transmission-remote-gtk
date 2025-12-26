@@ -598,6 +598,19 @@ static void rpc_callback(GObject *source, GAsyncResult *result, gpointer user_da
      * the hood so libsoup has trouble with it. See libsoup #307 */
     parser = json_parser_new();
     data = (gchar *)g_bytes_unref_to_data(bytes, &len);
+
+    // Potential Transmission bug, we need to validate utf-8, see #261
+    if (!g_utf8_validate(data, len, NULL)) {
+        // This may be expensive, but it prevents errors
+        gchar *new_data = g_utf8_make_valid(data, len);
+
+        g_warning(
+            "Invalid JSON received from Transmission, fixing it, but data may be wrong/corrupted");
+
+        g_free(data);
+        data = new_data;
+    }
+
     if (!json_parser_load_from_data(parser, data, len, &error)) {
         status = FAIL_JSON_DECODE;
         err_msg = g_strdup(error->message);
