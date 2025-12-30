@@ -20,7 +20,7 @@ An example command for getting the packages required for an Ubuntu/Debian
 system:
 
 ```
-# apt install libgtk-3-dev libgeoip-dev gettext libsoup-3.0-dev libjson-glib-dev
+# apt install libgtk-3-dev gettext libsoup-3.0-dev libjson-glib-dev
 ```
 
 ### Optional Dependencies
