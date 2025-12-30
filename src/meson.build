@@ -6,8 +6,8 @@ src_files = files(
   'main.c',
   'requests.c',
   'session-get.c',
-  'torrent.c',
   'torrent-cell-renderer.c',
+  'torrent.c',
   'trg-about-window.c',
   'trg-cell-renderer-counter.c',
   'trg-cell-renderer-epoch.c',
@@ -23,11 +23,11 @@ src_files = files(
   'trg-destination-combo.c',
   'trg-file-parser.c',
   'trg-file-rename-dialog.c',
-  'trg-files-model.c',
   'trg-files-model-common.c',
-  'trg-files-tree.c',
-  'trg-files-tree-view.c',
+  'trg-files-model.c',
   'trg-files-tree-view-common.c',
+  'trg-files-tree-view.c',
+  'trg-files-tree.c',
   'trg-general-panel.c',
   'trg-gtk-app.c',
   'trg-json-widgets.c',
@@ -55,7 +55,7 @@ src_files = files(
   'trg-trackers-tree-view.c',
   'trg-tree-view.c',
   'upload.c',
-  'util.c'
+  'util.c',
 )
 
 # generate config file
@@ -64,8 +64,10 @@ configure_file(output: 'config.h', configuration: conf_data)
 # Add gresources
 src_files += gresources
 
-executable(project_name, 
+executable(
+  project_name,
   sources: src_files,
   dependencies: trg_deps,
   install: true,
-  pie: true)
+  pie: true,
+)
