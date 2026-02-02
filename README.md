@@ -36,14 +36,14 @@ transmission-remote-gtk uses meson for its build system. A relatively new
 version of meson is required.
 
  - meson >= 0.59.0
- - appstream-util (optional, appdata validation)
+ - appstream (optional, appdata validation using `appstreamcli validate`)
  - desktop-file-utils (optional, desktop file validation)
  - rst2man (optional, manpage generation)
 
 An example of getting the build dependencies for an Ubuntu/Debian system:
 
 ```
-# apt install gcc meson appstream-util python-docutils
+# apt install gcc meson appstream python-docutils
 ```
 
 **NOTE:** Ubuntu and other stable or LTS distros may have outdated versions of
