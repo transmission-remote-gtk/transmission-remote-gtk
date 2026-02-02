@@ -75,11 +75,26 @@ appdata_file = i18n.merge_file(
   po_dir: po_dir,
 )
 
+# validate appdata
+#
+# Note: appstream-util is deprecated on Debian GNU/Linux, which is switching to appstreamcli.
+#  However appstreamcli is not yet available through brew on MacOS or pacman Microsoft Windows.
+#  Therefore, to future-proof this we use whatever is available, preferring appstreamcli.
+#
+appstreamcli = find_program('appstreamcli', required: false)
 appstream_util = find_program('appstream-util', required: false)
-if appstream_util.found()
+if appstreamcli.found()
+  test(
+    'Validate appdata.xml',
+    appstreamcli,
+    args: ['validate', '--pedantic', '--explain', '--no-net', appdata_file],
+  )
+elif appstream_util.found()
   test(
     'Validate appdata.xml',
     appstream_util,
     args: ['validate-relax', '--nonet', appdata_file],
   )
+else
+  warning('Neither appstreamcli nor appstream-util found; skipping appdata.xml validation')
 endif

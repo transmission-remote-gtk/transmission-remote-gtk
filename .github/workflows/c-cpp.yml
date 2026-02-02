@@ -22,7 +22,7 @@ jobs:
                                gettext \
                                \
                                libappstream-dev \
-                               appstream-util
+                               appstream
       - name: meson configure
         run: meson setup build
       - name: build
