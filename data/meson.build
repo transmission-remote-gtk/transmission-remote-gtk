@@ -75,11 +75,11 @@ appdata_file = i18n.merge_file(
   po_dir: po_dir,
 )
 
-appstream_util = find_program('appstream-util', required: false)
-if appstream_util.found()
+appstreamcli = find_program('appstreamcli', required: false)
+if appstreamcli.found()
   test(
     'Validate appdata.xml',
-    appstream_util,
-    args: ['validate-relax', '--nonet', appdata_file],
+    appstreamcli,
+    args: ['validate', '--pedantic', '--explain', '--no-net', appdata_file],
   )
 endif
