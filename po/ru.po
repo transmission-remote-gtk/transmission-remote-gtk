@@ -1,19 +1,20 @@
+# SPDX-FileCopyrightText: 2026 Alevtina <alevkarash@altlinux.org>
 msgid ""
 msgstr ""
 "Project-Id-Version: transmission-remote-gui\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-13 22:01-0600\n"
-"PO-Revision-Date: 2012-09-30 10:07+0000\n"
-"Last-Translator: Nkolay Parukhin <parukhin@gmail.com>\n"
-"Language-Team: \n"
+"PO-Revision-Date: 2026-02-27 16:44+0300\n"
+"Last-Translator: Alevtina <alevkarash@altlinux.org>\n"
+"Language-Team: Basealt Translation Team\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<"
+"=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Launchpad-Export-Date: 2014-06-12 07:44+0000\n"
-"X-Generator: Launchpad (build 17045)\n"
+"X-Generator: Lokalize 23.08.5\n"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:3
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:8
@@ -24,21 +25,19 @@ msgstr "Transmission Remote"
 #: data/io.github.TransmissionRemoteGtk.desktop.in:4
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:11
 msgid "Remotely manage the Transmission BitTorrent client"
-msgstr ""
+msgstr "Удалённое управление BitTorrent-клиентом Transmission"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:6
-#, fuzzy
 msgid "transmission-remote-gtk"
-msgstr "Transmission Remote"
+msgstr "transmission-remote-gtk"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:11
 msgid "p2p;bittorrent;transmission;rpc;"
-msgstr ""
+msgstr "p2p;bittorrent;transmission;rpc;"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:9
-#, fuzzy
 msgid "Transmission Remote Gtk Team"
-msgstr "Transmission Remote"
+msgstr "Команда Transmission Remote Gtk"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:15
 msgid ""
@@ -48,147 +47,166 @@ msgid ""
 "ones (it works as a .torrent fle handler from a webbrowser), and configure "
 "settings on transmission-daemon."
 msgstr ""
+"Transmission Remote Gtk позволяет удалённо управлять BitTorrent-клиентом "
+"Transmission с помощью его интерфейса RPC. Вы можете использовать его для"
+" управления "
+"торрентами (запуск/остановка/проверка/обновление трекера/удаление/удаление и"
+" полное удаление), "
+"добавления новых (работает как обработчик файлов .torrent из веб-браузера) и"
+" настройки"
+"параметров transmission-daemon."
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:27
 msgid "Bug fix release to fix install paths"
-msgstr ""
+msgstr "Исправление ошибки, связанной с путями установки"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:32
 msgid ""
 "Minor release for user facing functionality, but a lot of behind the scene "
 "changes"
 msgstr ""
+"Минорная версия для пользовательских функций, но со множеством скрытых "
+"изменений"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:34
 msgid "Allow custom headers to be sent to the daemon"
-msgstr ""
+msgstr "Разрешена отправка пользовательских заголовков в демон"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:35
 msgid "Uses native glib notifications and not libnotify"
-msgstr ""
+msgstr "Использование нативных уведомлений glib, а не libnotify"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:36
 msgid "Fixes to windows support"
-msgstr ""
+msgstr "Исправления поддержки окон"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:37
 msgid "Automatically paste magnet links from clipboard"
-msgstr ""
+msgstr "Автоматическая вставка магнет-ссылок из буфера обмена"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:38
 msgid ""
 "Various other fixes to GTK3 support and the build system behind the scenes"
-msgstr ""
+msgstr "Различные другие скрытые исправления поддержки GTK3 и системы сборки"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:44
 msgid ""
 "Minor release, but quite a few bugfixes and enhancements from 2 and a half "
 "years"
 msgstr ""
+"Минорная версия, но довольно много исправлений ошибок и улучшений за два с"
+" половиной "
+"года"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:46
 msgid "Clarify port forwarding label, ref issue #125"
-msgstr ""
+msgstr "Уточнение метки переадресации портов, см. проблему № 125"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:47
 msgid "Torrent add dialog should get focus"
-msgstr ""
+msgstr "Диалоговое окно добавления торрента должно быть активным"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:48
 msgid "Static GPrivate and clean up after pool thread"
-msgstr ""
+msgstr "Статический GPrivate и очистка после потоков из пула"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:49
 msgid "Add CI with github actions"
-msgstr ""
+msgstr "Добавлен CI с действиями в github"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:50
 msgid "torrent-rename-path support to rename remote path"
-msgstr ""
+msgstr "Поддержка torrent-rename-path для переименования удалённого пути"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:51
 msgid "fix screenshot, OARS rating, and other issues so appdata validates"
 msgstr ""
+"Исправлен снимок экрана, оценка OARS и другие проблемы для проверки appdata"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:52
 msgid "Issue #80 - config file can be symlink"
-msgstr ""
+msgstr "Проблема № 80 — конфигурационный файл может быть символьной ссылкой"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:53
 msgid "Mutex protect trg_client_get_session_id"
-msgstr ""
+msgstr "Защита мьютексом trg_client_get_session_id"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:54
 msgid "Fix some memory potential leaks"
-msgstr ""
+msgstr "Исправлены некоторые потенциальные утечки памяти"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:55
 msgid "Add support for torrent-rename-path rpc"
-msgstr ""
+msgstr "Добавлена поддержка RPC torrent-rename-path"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:56
 msgid "Add Hash information in Torrent Details &gt; General tab"
 msgstr ""
+"Добавлена информация о хеше в разделе «Сведения о торренте» &gt; вкладка"
+" «Основные»"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:57
 msgid "link window name to an icon in app menu"
-msgstr ""
+msgstr "Имя окна связано со значком в меню приложения"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:58
 msgid "Fix building under GCC 10 / -fno-common"
-msgstr ""
+msgstr "Исправлена сборка в GCC 10 / -fno-common"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:59
 msgid "Enable curl gzip compression"
-msgstr ""
+msgstr "Включено gzip-сжатие в curl"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:60
 msgid "Handle return(enter) key press in torrent-add-url dialog (#91)"
 msgstr ""
+"Обработка нажатия клавиши Enter в диалоговом окне «Добавить торрент из URL»"
+" (#91)"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:61
 msgid "build: Allow building with gettext ≥ 0.20"
-msgstr ""
+msgstr "Сборка: разрешена сборка с gettext ≥ 0.20"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:67
 msgid "This is a minor release with one bugfix:"
-msgstr ""
+msgstr "Это минорная версия с одним исправлением:"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:69
 msgid "Fix error when connecting to daemon behind a proxy, specifically nginx"
 msgstr ""
+"Исправлена ошибка при подключении к демону через прокси, в частности nginx"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:75
 msgid "This is a minor release with some improvements:"
-msgstr ""
+msgstr "Это минорная версия с некоторыми улучшениями:"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:77
 msgid "Rename app-id to io.github.TransmissionRemoteGtk"
-msgstr ""
+msgstr "app-id переименован в io.github.TransmissionRemoteGtk"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:78
 msgid "Add configuration of alternate speed days to preferences"
-msgstr ""
+msgstr "Добавлена настройка альтернативных дней скоростей в параметрах"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:79
 msgid "Add menu option to copy magnet links"
-msgstr ""
+msgstr "Добавлен пункт меню для копирования магнет-ссылок"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:80
 msgid "Add Ctrl+q keybinding to quit"
-msgstr ""
+msgstr "Добавлена комбинация клавиш Ctrl+q для выхода"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:81
 msgid "Fix building with GeoIP support"
-msgstr ""
+msgstr "Исправлена сборка с поддержкой GeoIP"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:82
 msgid "Fix setting speeds in preferences"
-msgstr ""
+msgstr "Исправлена настройка скоростей в параметрах"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:83
 msgid "Improve search behavior in file view"
-msgstr ""
+msgstr "Улучшен поиск в окне просмотра файлов"
 
 #: src/torrent.c:364 src/torrent.c:384
 msgid "Metadata Downloading"
@@ -204,7 +222,7 @@ msgstr "В очереди на загрузку"
 
 #: src/torrent.c:370 src/torrent.c:394
 msgid "Waiting To Check"
-msgstr "Ждет проверки"
+msgstr "Ждёт проверки"
 
 #: src/torrent.c:372 src/torrent.c:392 src/trg-state-selector.c:618
 msgid "Checking"
@@ -231,7 +249,7 @@ msgstr "Неизвестный"
 #: src/torrent-cell-renderer.c:145
 #, c-format
 msgid "%1$s of %2$s (%3$s)"
-msgstr "%1$s of %2$s (%3$s)"
+msgstr "%1$s из %2$s (%3$s)"
 
 #: src/torrent-cell-renderer.c:151
 #, c-format
@@ -306,45 +324,42 @@ msgstr "Рейтинг %s"
 #: src/torrent-cell-renderer.c:277
 #, c-format
 msgid "Tracker gave a warning: \"%s\""
-msgstr ""
+msgstr "Трекер выдал предупреждение: «%s»"
 
 #: src/torrent-cell-renderer.c:280
-#, fuzzy, c-format
+#, c-format
 msgid "Tracker gave an error: \"%s\""
-msgstr "Пиры с трекера"
+msgstr "Трекер выдал ошибку: «%s»"
 
 #: src/torrent-cell-renderer.c:283
-#, fuzzy, c-format
+#, c-format
 msgid "Error: \"%s\""
-msgstr "Ошибка:"
+msgstr "Ошибка: «%s»"
 
 #: src/torrent-cell-renderer.c:294
-#, fuzzy
 msgid "Downloading from %1$"
 msgid_plural "Downloading from %1$"
-msgstr[0] "%d загружается @ %s"
-msgstr[1] "%d загружается @ %s"
-msgstr[2] "%d загружается @ %s"
+msgstr[0] "Загрузка от %1$"
+msgstr[1] "Загрузка от %1$"
+msgstr[2] "Загрузка от %1$"
 
 #: src/torrent-cell-renderer.c:304
-#, fuzzy
 msgid "Downloading metadata from %1$"
 msgid_plural "Downloading metadata from %1$"
-msgstr[0] "Скачивание метаданных от %1$li пира (%2$s выполнено)"
-msgstr[1] "Скачивание метаданных от %1$li пиров (%2$s выполнено)"
-msgstr[2] "Скачивание метаданных от %1$li пиров (%2$s выполнено)"
+msgstr[0] "Загрузка метаданных от %1$"
+msgstr[1] "Загрузка метаданных от %1$"
+msgstr[2] "Загрузка метаданных от %1$"
 
 #: src/torrent-cell-renderer.c:312
-#, fuzzy
 msgid "Seeding to %1$"
 msgid_plural "Seeding to %1$"
-msgstr[0] "%d раздаётся @ %s"
-msgstr[1] "%d раздаётся @ %s"
-msgstr[2] "%d раздаётся @ %s"
+msgstr[0] "Раздаётся %1$"
+msgstr[1] "Раздаётся %1$"
+msgstr[2] "Раздаётся %1$"
 
 #: src/trg-about-window.c:51
 msgid "A remote client to transmission-daemon."
-msgstr "Клиент для transsmission-daemon."
+msgstr "Клиент для transmission-daemon."
 
 #: src/trg-cell-renderer-priority.c:68 src/trg-general-panel.c:192
 #: src/trg-main-window.c:1689 src/trg-torrent-add-dialog.c:348
@@ -452,13 +467,12 @@ msgid "Leechers"
 msgstr "Личеры"
 
 #: src/trg-general-panel.c:297
-#, fuzzy
 msgid "Ratio limit"
-msgstr "Раздавать до достижения коэффициента отдачи"
+msgstr "Лимит коэффициента"
 
 #: src/trg-general-panel.c:298
 msgid "Corrupted"
-msgstr ""
+msgstr "Повреждённые"
 
 #: src/trg-general-panel.c:300 src/trg-torrent-tree-view.c:58
 msgid "Status"
@@ -477,9 +491,8 @@ msgid "Comment"
 msgstr "Примечание"
 
 #: src/trg-general-panel.c:309
-#, fuzzy
 msgid "Hash"
-msgstr "Хеш:"
+msgstr "Хеш"
 
 #: src/trg-gtk-app.c:169 src/trg-peers-tree-view.c:69
 msgid "Client"
@@ -487,7 +500,7 @@ msgstr "Клиент"
 
 #: src/trg-gtk-app.c:174
 msgid "Min On Start"
-msgstr ""
+msgstr "Свернуть при запуске"
 
 #: src/trg-main-window.c:291
 msgid "This torrent has completed."
@@ -502,19 +515,19 @@ msgid "Connecting..."
 msgstr "Подключение..."
 
 #: src/trg-main-window.c:693
-#, fuzzy, c-format
+#, c-format
 msgid "<big><b>%s \"%s\"?</b></big>"
-msgstr "<big><b>Удалить торрент \"%s\"?</b></big>"
+msgstr "<big><b>%s «%s»?</b></big>"
 
 #: src/trg-main-window.c:698
-#, fuzzy, c-format
+#, c-format
 msgid "<big><b>%s %d torrents?</b></big>"
-msgstr "<big><b>Удалить %d торрента(ов)?</b></big>"
+msgstr "<big><b>%s торренты (%d)?</b></big>"
 
 #: src/trg-main-window.c:704 src/trg-torrent-add-dialog.c:487
 #: src/trg-torrent-add-dialog.c:592
 msgid "_Cancel"
-msgstr ""
+msgstr "_Отмена"
 
 #: src/trg-main-window.c:740 src/trg-main-window.c:1829 src/trg-menu-bar.c:594
 #: src/trg-toolbar.c:196
@@ -522,19 +535,16 @@ msgid "Remove"
 msgstr "Удалить"
 
 #: src/trg-main-window.c:740
-#, fuzzy
 msgid "_Remove"
-msgstr "Удалить"
+msgstr "_Удалить"
 
 #: src/trg-main-window.c:760
-#, fuzzy
 msgid "Remove and delete"
-msgstr "_Удалить торрент и файлы"
+msgstr "Удалить и стереть"
 
 #: src/trg-main-window.c:760
-#, fuzzy
 msgid "_Delete"
-msgstr "Удалить"
+msgstr "_Стереть"
 
 #: src/trg-main-window.c:828 src/trg-preferences-dialog.c:796
 #: src/trg-remote-prefs-dialog.c:640
@@ -559,11 +569,11 @@ msgstr "Пиры"
 #, c-format
 msgid "This application supports Transmission %g and later, you have %g."
 msgstr ""
-"Это приложение поддерживаетTransmission %g и старше, у вас установлена %g."
+"Это приложение поддерживает Transmission %g и старше, у вас установлена %g."
 
 #: src/trg-main-window.c:974 src/trg-status-bar.c:77 src/trg-status-bar.c:105
 msgid "Disconnected"
-msgstr "Разъединен"
+msgstr "Разъединён"
 
 #: src/trg-main-window.c:1003
 #, c-format
@@ -590,7 +600,7 @@ msgstr "Свойства"
 
 #: src/trg-main-window.c:1817
 msgid "Copy Magnet Link"
-msgstr ""
+msgstr "Копировать магнет-ссылку"
 
 #: src/trg-main-window.c:1819 src/trg-toolbar.c:187
 msgid "Resume"
@@ -614,13 +624,12 @@ msgid "Move"
 msgstr "Переместить файлы"
 
 #: src/trg-main-window.c:1831 src/trg-menu-bar.c:598 src/trg-toolbar.c:198
-#, fuzzy
 msgid "Remove and delete data"
-msgstr "_Удалить торрент и файлы"
+msgstr "Удалить и стереть данные"
 
 #: src/trg-main-window.c:1846
 msgid "Execute"
-msgstr ""
+msgstr "Выполнить"
 
 #: src/trg-main-window.c:1867 src/trg-menu-bar.c:604
 msgid "Start Now"
@@ -722,13 +731,12 @@ msgid "Tracker filters"
 msgstr "Фильтры по трекерам"
 
 #: src/trg-menu-bar.c:451 src/trg-preferences-dialog.c:612
-#, fuzzy
 msgid "Directories first"
-msgstr "Директории"
+msgstr "Сначала директории"
 
 #: src/trg-menu-bar.c:455 src/trg-preferences-dialog.c:617
 msgid "Torrent Details"
-msgstr "Детали торрента"
+msgstr "Сведения о торренте"
 
 #: src/trg-menu-bar.c:466
 msgid "_Statistics"
@@ -773,7 +781,7 @@ msgstr "_Торрент"
 
 #: src/trg-menu-bar.c:575
 msgid "_Copy Magnet Link"
-msgstr ""
+msgstr "_Копировать магнет-ссылку"
 
 #: src/trg-menu-bar.c:578
 msgid "_Resume"
@@ -781,7 +789,7 @@ msgstr "П_родолжить"
 
 #: src/trg-menu-bar.c:581
 msgid "_Pause"
-msgstr "Пр_остановить"
+msgstr "Пр_иостановить"
 
 #: src/trg-menu-bar.c:584
 msgid "_Verify"
@@ -825,7 +833,7 @@ msgstr "Страна"
 
 #: src/trg-peers-tree-view.c:60
 msgid "City"
-msgstr ""
+msgstr "Город"
 
 #: src/trg-peers-tree-view.c:62 src/trg-torrent-tree-view.c:90
 msgid "Down Speed"
@@ -857,7 +865,7 @@ msgstr "Интервал обновления:"
 
 #: src/trg-preferences-dialog.c:377
 msgid "Minimised update interval:"
-msgstr "Интервал обновлений при свернутом окне:"
+msgstr "Интервал обновлений при свёрнутом окне:"
 
 #: src/trg-preferences-dialog.c:381
 msgid "Session update interval:"
@@ -877,7 +885,7 @@ msgstr "Показывать опции при добавлении"
 
 #: src/trg-preferences-dialog.c:392 src/trg-torrent-add-dialog.c:610
 msgid "Delete local .torrent file after adding"
-msgstr "Удалить локальный torrent файл после добавления"
+msgstr "Удалить локальный торрент-файл после добавления"
 
 #: src/trg-preferences-dialog.c:528
 msgid "Commands"
@@ -897,6 +905,9 @@ msgid ""
 "transmission-remote-gtk/transmission-remote-gtk/wiki/Local-Command-"
 "usage\">here</a>"
 msgstr ""
+"Документацию по командам можно найти <a href=\"https://github.com/"
+"transmission-remote-gtk/transmission-remote-gtk/wiki/Local-Command-"
+"usage\">здесь</a>"
 
 #: src/trg-preferences-dialog.c:567
 msgid "Remote Download Directories"
@@ -924,7 +935,7 @@ msgstr "Показывать в трее"
 
 #: src/trg-preferences-dialog.c:637
 msgid "System tray not supported."
-msgstr ""
+msgstr "Трей не поддерживается."
 
 #: src/trg-preferences-dialog.c:642
 msgid "Minimise to system tray"
@@ -940,7 +951,7 @@ msgstr "Уведомления о добавленных торрентах"
 
 #: src/trg-preferences-dialog.c:654
 msgid "Torrent complete notifications"
-msgstr "Уведомления о завершенных торрентах"
+msgstr "Уведомления о завершённых торрентах"
 
 #: src/trg-preferences-dialog.c:680
 msgid "Profile: "
@@ -948,7 +959,7 @@ msgstr "Профиль: "
 
 #: src/trg-preferences-dialog.c:683
 msgid "New"
-msgstr ""
+msgstr "Создать"
 
 #: src/trg-preferences-dialog.c:687 src/trg-trackers-tree-view.c:252
 msgid "Delete"
@@ -972,7 +983,7 @@ msgstr "Порт:"
 
 #: src/trg-preferences-dialog.c:713
 msgid "RPC URL Path:"
-msgstr ""
+msgstr "Путь URL-адреса RPC:"
 
 #: src/trg-preferences-dialog.c:716
 msgid "Username:"
@@ -992,7 +1003,7 @@ msgstr "SSL"
 
 #: src/trg-preferences-dialog.c:728
 msgid "Validate SSL Certificate"
-msgstr ""
+msgstr "Проверять сертификат SSL"
 
 #: src/trg-preferences-dialog.c:733
 msgid "Timeout:"
@@ -1003,24 +1014,23 @@ msgid "Retries:"
 msgstr "Попыток:"
 
 #: src/trg-preferences-dialog.c:738
-#, fuzzy
 msgid "Headers"
-msgstr "Сидеры"
+msgstr "Заголовки"
 
 #: src/trg-preferences-dialog.c:746
 msgid "Value"
-msgstr ""
+msgstr "Значение"
 
 #: src/trg-preferences-dialog.c:778 src/trg-remote-prefs-dialog.c:627
 #: src/trg-stats-dialog.c:267 src/trg-torrent-add-url-dialog.c:130
 #: src/trg-torrent-move-dialog.c:105 src/trg-torrent-props-dialog.c:491
 msgid "_Close"
-msgstr ""
+msgstr "_Закрыть"
 
 #: src/trg-preferences-dialog.c:779 src/trg-remote-prefs-dialog.c:628
 #: src/trg-torrent-props-dialog.c:492
 msgid "_OK"
-msgstr ""
+msgstr "_ОК"
 
 #: src/trg-preferences-dialog.c:783 src/trg-toolbar.c:204
 msgid "Local Preferences"
@@ -1036,32 +1046,31 @@ msgstr "Директории"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Sun"
-msgstr ""
+msgstr "Вс"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Mon"
-msgstr ""
+msgstr "Пн"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Tue"
-msgstr ""
+msgstr "Вт"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Wed"
-msgstr ""
+msgstr "Ср"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Thu"
-msgstr ""
+msgstr "Чт"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Fri"
-msgstr ""
+msgstr "Пт"
 
 #: src/trg-remote-prefs-dialog.c:271
-#, fuzzy
 msgid "Sat"
-msgstr "Статус"
+msgstr "Сб"
 
 #: src/trg-remote-prefs-dialog.c:314
 msgid "Bandwidth limits"
@@ -1088,9 +1097,8 @@ msgid "Alternate time range"
 msgstr "Временные рамки"
 
 #: src/trg-remote-prefs-dialog.c:339
-#, fuzzy
 msgid "Alternate days"
-msgstr "Альтернативные ограничения скорости"
+msgstr "Альтернативные дни"
 
 #: src/trg-remote-prefs-dialog.c:343
 msgid "Alternate down limit (KiB/s)"
@@ -1150,12 +1158,11 @@ msgstr "Тестирование..."
 
 #: src/trg-remote-prefs-dialog.c:450 src/trg-remote-prefs-dialog.c:546
 msgid "Update"
-msgstr "Обновить блоклист"
+msgstr "Обновить список блокировок"
 
 #: src/trg-remote-prefs-dialog.c:455 src/trg-remote-prefs-dialog.c:540
-#, fuzzy
 msgid "Blocklist (%"
-msgstr "Блоклист"
+msgstr "Список блокировок (%"
 
 #: src/trg-remote-prefs-dialog.c:492 src/trg-remote-prefs-dialog.c:644
 msgid "Connections"
@@ -1191,7 +1198,7 @@ msgstr "Случайный порт при запуске"
 
 #: src/trg-remote-prefs-dialog.c:520
 msgid "Request forwarding of the peer port using UPnP or NAT-PMP"
-msgstr ""
+msgstr "Запрашивать переадресацию порта пира с помощью UPnP или NAT-PMP"
 
 #: src/trg-remote-prefs-dialog.c:524
 msgid "Protocol"
@@ -1211,11 +1218,11 @@ msgstr "Обнаружение локальных пиров"
 
 #: src/trg-remote-prefs-dialog.c:538
 msgid "Blocklist"
-msgstr "Блоклист"
+msgstr "Список блокировок"
 
 #: src/trg-remote-prefs-dialog.c:553
 msgid "Blocklist URL:"
-msgstr "URL блоклиста:"
+msgstr "URL списка блокировок:"
 
 #: src/trg-remote-prefs-dialog.c:569
 msgid "Environment"
@@ -1247,7 +1254,7 @@ msgstr "Переименовывать не полностью загружен�
 
 #: src/trg-remote-prefs-dialog.c:598
 msgid "Trash original torrent files"
-msgstr "Удалить torrent файлы после добавления"
+msgstr "Удалить торрент-файлы после добавления"
 
 #: src/trg-remote-prefs-dialog.c:602
 msgid "Start added torrents"
@@ -1267,7 +1274,7 @@ msgstr "Ограничения"
 
 #: src/trg-state-selector.c:204
 msgid "Refresh"
-msgstr ""
+msgstr "Обновить"
 
 #: src/trg-state-selector.c:601
 msgid "All"
@@ -1283,11 +1290,11 @@ msgstr "В очереди на отдачу"
 
 #: src/trg-state-selector.c:612
 msgid "Complete"
-msgstr "Завершенные"
+msgstr "Завершённые"
 
 #: src/trg-state-selector.c:614
 msgid "Incomplete"
-msgstr "Незавершенные"
+msgstr "Незавершённые"
 
 #: src/trg-state-selector.c:616
 msgid "Active"
@@ -1334,9 +1341,9 @@ msgid "Cumulative"
 msgstr "Всего"
 
 #: src/trg-status-bar.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Connected: %s :: %s"
-msgstr "Подключен: %s (Transmission %g)"
+msgstr "Подключён: %s :: %s"
 
 #: src/trg-status-bar.c:152
 msgid "Updating torrents..."
@@ -1378,13 +1385,13 @@ msgid ""
 "Unable to parse torrent file. File preferences unavailable, but you can "
 "still try uploading it."
 msgstr ""
-"Не могу обработать торрент файл. Настройки для файлов недоступны, но вы все-"
+"Не могу обработать торрент-файл. Настройки для файлов недоступны, но вы всё-"
 "таки можете попробовать загрузить этот торрент."
 
 #: src/trg-torrent-add-dialog.c:401
 #, c-format
 msgid "Unable to open torrent file: %s"
-msgstr "Не могу открыть торрент файл: %s"
+msgstr "Не могу открыть торрент-файл: %s"
 
 #: src/trg-torrent-add-dialog.c:465
 msgid "(None)"
@@ -1420,7 +1427,7 @@ msgstr "Добавить торрент"
 
 #: src/trg-torrent-add-dialog.c:593
 msgid "_Open"
-msgstr ""
+msgstr "_Открыть"
 
 #: src/trg-torrent-add-dialog.c:604
 msgid "Start _paused"
@@ -1428,7 +1435,7 @@ msgstr "_Приостановить после добавления"
 
 #: src/trg-torrent-add-dialog.c:619
 msgid "_Torrent file:"
-msgstr "_Торрент файл:"
+msgstr "_Торрент-файл:"
 
 #: src/trg-torrent-add-dialog.c:629
 msgid "_Destination folder:"
@@ -1451,7 +1458,7 @@ msgid ""
 "You are trying to add a magnet torrent, but DHT is disabled. Distributed "
 "Hash Table (DHT) should be enabled in remote settings."
 msgstr ""
-"Вы пытаетесь добавить торрент по magnet ссылке, но DHT отключен. Вы должны "
+"Вы пытаетесь добавить торрент по magnet-ссылке, но DHT отключён. Вы должны "
 "включить Distributed Hash Table (DHT) в настройках сервера."
 
 #: src/trg-torrent-add-url-dialog.c:123
@@ -1472,7 +1479,7 @@ msgstr "Общая скорость отдачи"
 
 #: src/trg-torrent-graph.c:393
 msgid "Total Downloading"
-msgstr "Общая скорость загруки"
+msgstr "Общая скорость загрузки"
 
 #: src/trg-torrent-model.c:339
 msgid "Default"
@@ -1490,7 +1497,7 @@ msgstr "Переместить %s"
 #: src/trg-torrent-move-dialog.c:133
 #, c-format
 msgid "Move %d torrents"
-msgstr "Переместить %d торрента(ов)"
+msgstr "Переместить торренты (%d)"
 
 #: src/trg-torrent-props-dialog.c:189
 msgid "Activity"
@@ -1571,9 +1578,9 @@ msgid "Created on %1$s"
 msgstr "Создано %1$s"
 
 #: src/trg-torrent-props-dialog.c:315
-#, fuzzy, c-format
+#, c-format
 msgid "Created by %1$s"
-msgstr "Создано %1$s"
+msgstr "Создан %1$s"
 
 #: src/trg-torrent-props-dialog.c:345
 msgid "No errors"
@@ -1613,7 +1620,7 @@ msgstr "Прекратить раздачу при коэффициенте от
 
 #: src/trg-torrent-props-dialog.c:408
 msgid "Seed regardless of ratio"
-msgstr "Раздавать без учета коэффициента отдачи"
+msgstr "Раздавать без учёта коэффициента отдачи"
 
 #: src/trg-torrent-props-dialog.c:410
 msgid "Seed ratio mode:"
@@ -1630,7 +1637,7 @@ msgstr "Лимит пиров:"
 #: src/trg-torrent-props-dialog.c:481
 #, c-format
 msgid "Multiple (%d) torrent properties"
-msgstr "Свойства нескольких (%d) торрентов"
+msgstr "Свойства нескольких торрентов (%d)"
 
 #: src/trg-torrent-props-dialog.c:508
 msgid "Information"
@@ -1678,7 +1685,7 @@ msgstr "LTEP пиры"
 
 #: src/trg-torrent-tree-view.c:82
 msgid "Resumed Peers"
-msgstr "Возобновленные пиры"
+msgstr "Возобновлённые пиры"
 
 #: src/trg-torrent-tree-view.c:85
 msgid "Incoming Peers"
@@ -1714,7 +1721,7 @@ msgstr "Номер"
 
 #: src/trg-trackers-tree-view.c:144
 msgid "Announce URL"
-msgstr "URL аннонса"
+msgstr "URL анонса"
 
 #: src/trg-trackers-tree-view.c:157
 msgid "Seeder Count"
@@ -1750,7 +1757,7 @@ msgstr "По убыванию"
 
 #: src/trg-files-tree-view-common.c:57
 msgid "Rename..."
-msgstr ""
+msgstr "Переименовать…"
 
 #: src/trg-files-tree-view-common.c:93
 msgid "Expand All"
@@ -1761,9 +1768,9 @@ msgid "Collapse All"
 msgstr "Свернуть все"
 
 #: src/util.c:341
-#, fuzzy, c-format
+#, c-format
 msgid "Request failed with HTTP code: %d"
-msgstr "HTTP запрос завершился с ошибкой %d"
+msgstr "Запрос не выполнен. Код HTTP: %d"
 
 #: src/util.c:371
 msgid "None"
@@ -1850,3 +1857,4 @@ msgstr[2] "%ld секунд"
 
 #~ msgid "Remove with data"
 #~ msgstr "Удалить вместе с файлами"
+
