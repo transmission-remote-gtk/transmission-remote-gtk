@@ -609,6 +609,7 @@ static void rpc_callback(GObject *source, GAsyncResult *result, gpointer user_da
 
         g_free(data);
         data = new_data;
+        len = strlen(data);
     }
 
     if (!json_parser_load_from_data(parser, data, len, &error)) {
