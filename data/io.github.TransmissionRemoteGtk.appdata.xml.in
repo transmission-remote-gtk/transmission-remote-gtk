@@ -22,6 +22,11 @@
     </screenshot>
   </screenshots>
   <releases>
+    <release version="1.7.1" date="2026-03-13">
+      <description>
+        <p>This release is a minor bug fix for an issue where the client can't receive data properly if Transmission does not send valid JSON.</p>
+      </description>
+    </release>
     <release version="1.7.0" date="2025-12-26">
       <description>
         <p>This release removed some user facing functionality that did not work properly. Core functionality remains unchanged. There are also bug fixes for some minor crashes, and protocol compliance issues.</p>
