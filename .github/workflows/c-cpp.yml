@@ -2,9 +2,9 @@ name: C/C++ CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
   build-linux:
@@ -22,7 +22,7 @@ jobs:
                                gettext \
                                \
                                libappstream-dev \
-                               appstream-util
+                               appstream
       - name: meson configure
         run: meson setup build
       - name: build
@@ -45,7 +45,7 @@ jobs:
                        libsoup \
                        gettext\
                        \
-                       appstream-glib \
+                       appstream \
                        desktop-file-utils
       - name: meson configure
         run: meson setup build
@@ -77,7 +77,7 @@ jobs:
                     ${mingw}-gettext \
                     ${mingw}-json-glib \
                     \
-                    ${mingw}-appstream-glib \
+                    ${mingw}-appstream \
                     ${mingw}-desktop-file-utils
       - name: setup git eol
         run: git config --global core.autocrlf false
