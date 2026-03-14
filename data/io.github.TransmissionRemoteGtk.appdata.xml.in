@@ -10,6 +10,7 @@
   <content_rating type="oars-1.1" />
   <summary>Remotely manage the Transmission BitTorrent client</summary>
   <url type="homepage">https://github.com/transmission-remote-gtk/transmission-remote-gtk</url>
+  <url type="vcs-browser">https://github.com/transmission-remote-gtk/transmission-remote-gtk</url>
   <url type="bugtracker">https://github.com/transmission-remote-gtk/transmission-remote-gtk/issues</url>
   <description>
     <p>
@@ -19,6 +20,7 @@
   <screenshots>
     <screenshot height="512" width="973" type="default">
       <image>https://community.linuxmint.com/img/screenshots/transmission-remote-gtk.png</image>
+      <caption>Main window</caption>
     </screenshot>
   </screenshots>
   <releases>
