@@ -140,7 +140,7 @@ static GtkWidget *trg_imagemenuitem_new(GtkMenuShell *shell, const gchar *text, 
                                         gboolean sensitive, GCallback cb, gpointer cbdata);
 static void set_limit_cb(GtkWidget *w, TrgMainWindow *win);
 static GtkWidget *limit_item_new(TrgMainWindow *win, GtkWidget *menu, gint64 currentLimit,
-                                 gfloat limit);
+                                 gfloat limit, GSList **group);
 static GtkWidget *limit_menu_new(TrgMainWindow *win, gchar *title, gchar *enabledKey,
                                  gchar *speedKey, JsonArray *ids);
 static void trg_torrent_tv_view_menu(GtkWidget *treeview, GdkEventButton *event,
@@ -1449,15 +1449,22 @@ static GtkWidget *trg_imagemenuitem_new(GtkMenuShell *shell, const gchar *text, 
 static void set_limit_cb(GtkWidget *w, TrgMainWindow *win)
 {
 
-    GtkWidget *parent = gtk_widget_get_parent(w);
-
-    gint speed = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w), "limit"));
-    gchar *speedKey = g_object_get_data(G_OBJECT(parent), "speedKey");
-    gchar *enabledKey = g_object_get_data(G_OBJECT(parent), "enabledKey");
-    gpointer limitIds = g_object_get_data(G_OBJECT(parent), "limit-ids");
-
+    GtkWidget *parent;
+    gint speed;
+    gchar *speedKey, *enabledKey;
+    gpointer limitIds;
     JsonNode *req = NULL;
     JsonObject *args;
+
+    /* Ignore deselection events from the previously active radio button */
+    if (!gtk_check_menu_item_get_active(GTK_CHECK_MENU_ITEM(w)))
+        return;
+
+    parent = gtk_widget_get_parent(w);
+    speed = GPOINTER_TO_INT(g_object_get_data(G_OBJECT(w), "limit"));
+    speedKey = g_object_get_data(G_OBJECT(parent), "speedKey");
+    enabledKey = g_object_get_data(G_OBJECT(parent), "enabledKey");
+    limitIds = g_object_get_data(G_OBJECT(parent), "limit-ids");
 
     if (limitIds)
         req = torrent_set((JsonArray *)limitIds);
@@ -1498,7 +1505,7 @@ static void set_priority_cb(GtkWidget *w, TrgMainWindow *win)
 }
 
 static GtkWidget *limit_item_new(TrgMainWindow *win, GtkWidget *menu, gint64 currentLimit,
-                                 gfloat limit)
+                                 gfloat limit, GSList **group)
 {
     char speed[32];
     GtkWidget *item;
@@ -1506,7 +1513,8 @@ static GtkWidget *limit_item_new(TrgMainWindow *win, GtkWidget *menu, gint64 cur
 
     trg_strlspeed(speed, limit);
 
-    item = gtk_check_menu_item_new_with_label(speed);
+    item = gtk_radio_menu_item_new_with_label(*group, speed);
+    *group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));
 
     g_object_set_data(G_OBJECT(item), "limit", GINT_TO_POINTER((gint)limit));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), active);
@@ -1563,6 +1571,10 @@ static GtkWidget *limit_menu_new(TrgMainWindow *win, gchar *title, gchar *enable
     GtkTreeIter iter;
     GtkWidget *toplevel, *menu, *item;
     gint64 limit;
+    GSList *group = NULL;
+    gboolean is_custom;
+    gint64 v;
+    gint i;
 
     if (ids)
         get_torrent_data(trg_client_get_torrent_table(client), win->selectedTorrentId, &current,
@@ -1582,33 +1594,40 @@ static GtkWidget *limit_menu_new(TrgMainWindow *win, gchar *title, gchar *enable
     g_object_set_data_full(G_OBJECT(menu), "enabledKey", g_strdup(enabledKey), g_free);
     g_object_set_data_full(G_OBJECT(menu), "limit-ids", ids, (GDestroyNotify)json_array_unref);
 
-    item = gtk_check_menu_item_new_with_label(_("No Limit"));
+    item = gtk_radio_menu_item_new_with_label(NULL, _("No Limit"));
+    group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));
     gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), limit < 0);
     g_object_set_data(G_OBJECT(item), "limit", GINT_TO_POINTER(-1));
     g_signal_connect(item, "activate", G_CALLBACK(set_limit_cb), win);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
 
+    /* bandwidth items: n = 5*2^(n-1) */
+    if (limit >= 0) {
+        is_custom = TRUE;
+        v = 5;
+        for (i = 0; i < 16; i++) {
+            if (limit == v) {
+                is_custom = FALSE;
+                break;
+            }
+            v *= 2;
+        }
+        if (is_custom) {
+            char speed[32];
+            trg_strlspeed(speed, limit);
+            item = gtk_radio_menu_item_new_with_label(group, speed);
+            group = gtk_radio_menu_item_get_group(GTK_RADIO_MENU_ITEM(item));
+            gtk_check_menu_item_set_active(GTK_CHECK_MENU_ITEM(item), TRUE);
+            gtk_widget_set_sensitive(item, FALSE);
+            gtk_menu_shell_append(GTK_MENU_SHELL(menu), item);
+        }
+    }
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), gtk_separator_menu_item_new());
-
-    limit_item_new(win, menu, limit, 0);
-    limit_item_new(win, menu, limit, 5);
-    limit_item_new(win, menu, limit, 10);
-    limit_item_new(win, menu, limit, 25);
-    limit_item_new(win, menu, limit, 50);
-    limit_item_new(win, menu, limit, 75);
-    limit_item_new(win, menu, limit, 100);
-    limit_item_new(win, menu, limit, 150);
-    limit_item_new(win, menu, limit, 200);
-    limit_item_new(win, menu, limit, 300);
-    limit_item_new(win, menu, limit, 400);
-    limit_item_new(win, menu, limit, 500);
-    limit_item_new(win, menu, limit, 750);
-    limit_item_new(win, menu, limit, 1024);
-    limit_item_new(win, menu, limit, 1280);
-    limit_item_new(win, menu, limit, 1536);
-    limit_item_new(win, menu, limit, 2048);
-    limit_item_new(win, menu, limit, 2560);
-    limit_item_new(win, menu, limit, 3072);
+    v = 5;
+    for (i = 0; i < 16; i++) {
+        limit_item_new(win, menu, limit, v, &group);
+        v *= 2;
+    }
 
     gtk_menu_item_set_submenu(GTK_MENU_ITEM(toplevel), menu);
 
@@ -1853,6 +1872,7 @@ static void trg_client_session_updated_cb(TrgClient *tc, JsonObject *session, Tr
     }
 
     win->queuesEnabled = queuesEnabled;
+    connchange_whatever_tray(win, trg_client_is_connected(win->client));
 }
 
 /* Drag & Drop support */
