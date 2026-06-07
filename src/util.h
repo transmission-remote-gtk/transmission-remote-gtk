@@ -34,9 +34,6 @@
 #define trg_strlratio(a, b)   tr_strlratio(a, b, sizeof(a))
 #define MAX3(a, b, c)         MAX(a, MAX(b, c))
 
-#define TR_RATIO_NA  -1
-#define TR_RATIO_INF -2
-
 extern const int disk_K;
 extern const char *disk_K_str;
 extern const char *disk_M_str;

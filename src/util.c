@@ -372,9 +372,9 @@ double tr_truncd(double x, int decimal_places)
 
 char *tr_strratio(char *buf, size_t buflen, double ratio, const char *infinity)
 {
-    if ((int)ratio == TR_RATIO_NA)
+    if (isnan(ratio))
         g_strlcpy(buf, _("None"), buflen);
-    else if ((int)ratio == TR_RATIO_INF)
+    else if (isinf(ratio))
         g_strlcpy(buf, infinity, buflen);
     else if (ratio < 10.0)
         g_snprintf(buf, buflen, "%.2f", tr_truncd(ratio, 2));
