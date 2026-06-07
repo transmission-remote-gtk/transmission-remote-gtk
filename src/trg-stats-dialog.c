@@ -166,19 +166,23 @@ static void update_size_stat(JsonObject *args, GtkTreeRowReference *rr, gchar *j
     update_statistic(rr, session_val, cumulat_val);
 }
 
-static void update_ratio_stat(JsonObject *args, GtkTreeRowReference *rr, gchar *jsonKeyA,
-                              gchar *jsonKeyB)
+static void update_ratio_stat(JsonObject *args, GtkTreeRowReference *rr, gchar *jsonKeyUp,
+                              gchar *jsonKeyDown)
 {
     gchar session_val[32];
     gchar cumulat_val[32];
 
-    trg_strlratio(session_val,
-                  json_object_get_double_member(get_session_arg(args), jsonKeyA)
-                      / json_object_get_double_member(get_session_arg(args), jsonKeyB));
+    JsonObject *session = get_session_arg(args);
+    const double session_up = json_object_get_double_member(session, jsonKeyUp);
+    const double session_down = json_object_get_double_member(session, jsonKeyDown);
 
-    trg_strlratio(cumulat_val,
-                  json_object_get_double_member(get_cumulat_arg(args), jsonKeyA)
-                      / json_object_get_double_member(get_cumulat_arg(args), jsonKeyB));
+    JsonObject *cumulat = get_cumulat_arg(args);
+    const double cumulat_up = json_object_get_double_member(cumulat, jsonKeyUp);
+    const double cumulat_down = json_object_get_double_member(cumulat, jsonKeyDown);
+
+    // Note: NAN and INFINITY are handled by trg_strlratio
+    trg_strlratio(session_val, session_up / session_down);
+    trg_strlratio(cumulat_val, cumulat_up / cumulat_down);
 
     update_statistic(rr, session_val, cumulat_val);
 }
