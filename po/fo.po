@@ -302,7 +302,7 @@ msgstr "Liðugt"
 
 #: ../src/trg-general-panel.c:326 ../src/trg-torrent-tree-view.c:127
 msgid "ETA"
-msgstr "Væntandi liðugt um"
+msgstr "Írestandi tíð"
 
 #: ../src/trg-general-panel.c:328
 msgid "Rate Up"
@@ -1293,7 +1293,7 @@ msgstr "_Torrent fíla:"
 
 #: ../src/trg-torrent-add-dialog.c:766
 msgid "_Destination folder:"
-msgstr "_Skjátta at goyma í:"
+msgstr "_Goym í:"
 
 #: ../src/trg-torrent-add-dialog.c:775
 msgid "Apply to all:"
