@@ -1,7 +1,5 @@
 # Faroese translation for transmission-remote-gtk
-# Copyright (c) 2026 Rosetta Contributors and Canonical Ltd 2026
 # This file is distributed under the same license as the transmission-remote-gtk package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
 #
 msgid ""
 msgstr ""
