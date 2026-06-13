@@ -814,7 +814,7 @@ msgstr "Vís í stýrikervistøðuteiginum."
 
 #: src/trg-preferences-dialog.c:637
 msgid "System tray not supported."
-msgstr "Stýrikervistøðuteigafunka er ikki virkja í ritbúnaði."
+msgstr "Stýrikervistøðuteigafunka er ikki virkt í ritbúnaði."
 
 #: ../src/trg-preferences-dialog.c:776
 msgid "Minimise to system tray"
