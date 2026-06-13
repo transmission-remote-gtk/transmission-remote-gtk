@@ -39,7 +39,7 @@ msgstr ""
 "Við Transmission Remote GTK kanst tú fjarumsita Transmission BitTorrent "
 "viðskiftaran umvegis RPC markamót hansara. Innles torrent fílur, byrja, "
 "steðga, strika, vátta og endurfráboða torrentir. Transmission Remote GTK "
-" virkar sum ein handfari fyri .torrent fílar (t.d. frá einum vevkaga)."
+" virkar sum ein handfari fyri .torrent fílur (t.d. frá einum vevkaga)."
 
 #: ../data/transmission-remote-gtk.appdata.xml.in.h:3
 msgid "Features:"
@@ -814,7 +814,7 @@ msgstr "Vís í stýrikervistøðuteiginum."
 
 #: src/trg-preferences-dialog.c:637
 msgid "System tray not supported."
-msgstr "Stýrikevistøðuteigafunka er ikki virkja í ritbúnaði."
+msgstr "Stýrikervistøðuteigafunka er ikki virkja í ritbúnaði."
 
 #: ../src/trg-preferences-dialog.c:776
 msgid "Minimise to system tray"
@@ -985,7 +985,7 @@ msgstr ""
 
 #: ../src/trg-remote-prefs-dialog.c:441
 msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
-msgstr "Portrið er <span font_weight=\"bold\" fgcolor=\"red\">læst</span>"
+msgstr "Portrið er <span font_weight=\"bold\" fgcolor=\"red\">stongt</span>"
 
 #: ../src/trg-remote-prefs-dialog.c:457 ../src/trg-remote-prefs-dialog.c:526
 msgid "Port test"
@@ -1093,7 +1093,7 @@ msgstr "Atburður"
 
 #: ../src/trg-remote-prefs-dialog.c:639
 msgid "Rename partial files"
-msgstr "Navnaeftirfesti á ólidnar fílar"
+msgstr "Navnaeftirfest ólidnar fílur"
 
 #: ../src/trg-remote-prefs-dialog.c:644
 msgid "Trash original torrent files"
