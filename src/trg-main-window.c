@@ -147,6 +147,7 @@ static void trg_torrent_tv_view_menu(GtkWidget *treeview, GdkEventButton *event,
                                      TrgMainWindow *win);
 #if HAVE_LIBAPPINDICATOR
 static GtkMenu *trg_tray_view_menu(TrgMainWindow *win, const gchar *msg);
+static void tray_toggle_show_cb(GtkWidget *w, gpointer data);
 #endif
 static gboolean torrent_tv_button_pressed_cb(GtkWidget *treeview, GdkEventButton *event,
                                              gpointer userdata);
@@ -1704,6 +1705,8 @@ static GtkMenu *trg_tray_view_menu(TrgMainWindow *win, const gchar *msg)
     win->iconStatusItem = gtk_menu_item_new_with_label(msg);
     gtk_widget_set_sensitive(win->iconStatusItem, FALSE);
     gtk_menu_shell_append(GTK_MENU_SHELL(menu), win->iconStatusItem);
+    trg_imagemenuitem_new(GTK_MENU_SHELL(menu), _("Show/Hide Transmission"), "window-restore", TRUE,
+                          G_CALLBACK(tray_toggle_show_cb), win);
 
     if (connected) {
         win->iconDownloadingItem = gtk_menu_item_new_with_label(_("Updating..."));
@@ -1790,6 +1793,31 @@ static gboolean torrent_tv_popup_menu_cb(GtkWidget *treeview, gpointer userdata)
 {
     trg_torrent_tv_view_menu(treeview, NULL, userdata);
     return TRUE;
+}
+
+static gboolean on_window_state_event(GtkWidget *widget, GdkEventWindowState *event, gpointer data)
+{
+    TrgMainWindow *win = TRG_MAIN_WINDOW(widget);
+    TrgPrefs *prefs = trg_client_get_prefs(win->client);
+
+    if (trg_prefs_get_bool(prefs, TRG_PREFS_KEY_MINIMIZE_TO_TRAY, TRG_PREFS_GLOBAL)) {
+        if (event->changed_mask & GDK_WINDOW_STATE_ICONIFIED) {
+            if (event->new_window_state & GDK_WINDOW_STATE_ICONIFIED) {
+                trg_main_window_set_hidden_to_tray(win, TRUE);
+                return TRUE;
+            }
+        }
+    }
+
+    return FALSE;
+}
+
+static void tray_toggle_show_cb(GtkWidget *w, gpointer data)
+{
+    TrgMainWindow *win = TRG_MAIN_WINDOW(data);
+    gboolean is_visible = gtk_widget_get_visible(GTK_WIDGET(win));
+
+    trg_main_window_set_hidden_to_tray(win, is_visible);
 }
 
 static void trg_main_window_set_hidden_to_tray(TrgMainWindow *win, gboolean hidden)
@@ -1945,6 +1973,7 @@ static GObject *trg_main_window_constructor(GType type, guint n_construct_proper
     g_signal_connect(G_OBJECT(self), "configure-event", G_CALLBACK(trg_main_window_config_event),
                      NULL);
     g_signal_connect(G_OBJECT(self), "key-press-event", G_CALLBACK(window_key_press_handler), NULL);
+    g_signal_connect(G_OBJECT(self), "window-state-event", G_CALLBACK(on_window_state_event), NULL);
 
     self->torrentModel = trg_torrent_model_new();
     trg_client_set_torrent_table(self->client, get_torrent_table(self->torrentModel));

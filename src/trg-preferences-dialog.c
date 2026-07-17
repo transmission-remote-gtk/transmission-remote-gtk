@@ -559,6 +559,10 @@ static GtkWidget *trg_prefs_viewPage(TrgPreferencesDialog *dlg)
 
     hig_workarea_add_wide_control(t, &row, tray);
 
+    w = trgp_check_new(dlg, _("Minimize to tray"), TRG_PREFS_KEY_MINIMIZE_TO_TRAY, TRG_PREFS_GLOBAL,
+                       GTK_TOGGLE_BUTTON(tray));
+    hig_workarea_add_wide_control(t, &row, w);
+
     hig_workarea_add_section_title(t, &row, _("Notifications"));
 
     w = trgp_check_new(dlg, _("Torrent added notifications"), TRG_PREFS_KEY_ADD_NOTIFY,

@@ -77,6 +77,7 @@
 #define TRG_PREFS_KEY_LAST_MOVE_DESTINATION   "last-move-destination"
 #define TRG_PREFS_KEY_LAST_ADD_DESTINATION    "last-add-destination"
 #define TRG_PREFS_KEY_DESTINATIONS_SUBKEY_DIR "dir"
+#define TRG_PREFS_KEY_MINIMIZE_TO_TRAY        "minimize-to-tray"
 
 #define TRG_PREFS_NOFLAGS     (1 << 0) /* 0x00 */
 #define TRG_PREFS_GLOBAL      (1 << 1) /* 0x01 */
