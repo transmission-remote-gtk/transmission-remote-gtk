@@ -1,0 +1,1822 @@
+# Georgian translation for transmission-remote-gtk.
+# Copyright (C) 2026 transmission-remote-gtk's authors.
+# This file is distributed under the same license as the transmission-remote-gtk package.
+# Ekaterine Papava <papava.e@gtu.ge>, 2026.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: transmission-remote-gtk\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-06-07 15:16+0200\n"
+"PO-Revision-Date: 2026-07-26 13:01+0200\n"
+"Last-Translator: Ekaterine Papava <papava.e@gtu.ge>\n"
+"Language-Team: Georgian <(nothing)>\n"
+"Language: ka\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 3.9\n"
+
+#: data/io.github.TransmissionRemoteGtk.desktop.in:2
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:8
+#: src/trg-main-window.c:1940
+msgid "Transmission Remote"
+msgstr "Transmission Remote"
+
+#: data/io.github.TransmissionRemoteGtk.desktop.in:3
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:11
+msgid "Remotely manage the Transmission BitTorrent client"
+msgstr "Transmission BitTorrent-ის კლიენტის დაშორებული მართვა"
+
+#: data/io.github.TransmissionRemoteGtk.desktop.in:10
+msgid "p2p;bittorrent;transmission;rpc;"
+msgstr "p2p;bittorrent;transmission;rpc;"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:9
+msgid "Transmission Remote Gtk Team"
+msgstr "Transmission Remote Gtk-ის გუნდი"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:16
+msgid ""
+"Transmission Remote Gtk allows you to remotely manage the Transmission "
+"BitTorrent client using its RPC interface. You can use it to to manage "
+"torrents (start/stop/verify/reannounce/remove/remove and delete), add new "
+"ones (it works as a .torrent fle handler from a webbrowser), and configure "
+"settings on transmission-daemon."
+msgstr ""
+"Transmission Remote Gtk საშუალებას გაძლევთ, დაშორებულად მართოთ the "
+"Transmission BitTorrent client მისი RPC ინტერფეისის გამოყენებით. ის "
+"შეგიძლიათ, გამოიყენოთ ტორენტების სამართავად (გაშვება/გაჩერება/გადამოწმება/"
+"თავიდან გამოცხადება/მოცილება/მოცილება და წაშლა) და ახლების დასამატებლად "
+"(მუშაობს, როგორც .torrent ფაილების გამხსნელი პროგრამა ბრაუზერიდან) და "
+"transmission-daemon-ის პარამეტრების სამართავად."
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:23
+msgid "Main window"
+msgstr "მთავარი ფანჯარა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:29
+msgid ""
+"This release is a minor bug fix for an issue where the client can't receive "
+"data properly if Transmission does not send valid JSON."
+msgstr ""
+"ეს გამოცემა უმნიშვნელო შეცდომების გასწორებისთვისაა, სადაც კლიენტი ვერ იღებდა "
+"მონაცემებს სწორად, თუ Transmission სწორ JSON-ს არ გამოაგზავნის."
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:34
+msgid ""
+"This release removed some user facing functionality that did not work "
+"properly. Core functionality remains unchanged. There are also bug fixes for "
+"some minor crashes, and protocol compliance issues."
+msgstr ""
+"ამ გამოცემაში წაიშალა ზოგიერთი მომხმარებლის ფუნქცია, რომელიც სწორად არ "
+"მუშაობდა, ძირითადი ფუნქციონალი არ შეცვლილა. ასევე გასწორდა რამდენიმე "
+"უმნიშვნელო შეცდომა და პროტოკოლთან შეუთავსებლობის პრობლემები."
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:36
+msgid "Remove GeoIP feature (non-functional, used deprecated library)"
+msgstr ""
+"მოცილებულია GeoIP-ის ფუნქცია (არაფუნქციონალური, იყენებდა მოძველებულ "
+"ბიბლიოთეკას)"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:37
+msgid "Remove local commands feature (untested, had security issues)"
+msgstr ""
+"მოცილებულია ლოკალური ბრძანებების ფუნქცია (შეუმოწმებელია, ჰქონდა უსაფრთხოების "
+"პრობლემები)"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:38
+msgid "Revert support for trashing torrents instead of deleting them"
+msgstr ""
+"დაბრუნდა ტორენტების წაშლის მაგიერ მათი ნაგვის ყუთში გადატანის შესაძლებლობა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:39
+msgid "Fix a minor crash when adding a torrent by URL"
+msgstr "გასწორდა უმნიშვნელო ავარია ტორენტების ბმულით დამატებისას"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:40
+msgid "Fix a minor crash when using the stats page"
+msgstr "გასწორდა უმნიშვნელო ავარია სტატისტიკის გვერდის გამოყენებისას"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:41
+msgid "Ensure JSON is properly UTF-8 encoded from transmission-daemon"
+msgstr "გარანტია, რომ JSON სწორი UTF-8-ითაა კოდირებული transmission-daemon-დან"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:47
+msgid ""
+"This release adds some behind-the-scenes functionality as well as some "
+"small, user-facing bug fixes. The most prominent change is a new backend for "
+"interfacing with transmission-daemon that should be more robust and have "
+"less bugs."
+msgstr ""
+"ეს გამოცემა ამატებს რამდენიმე მომხმარებლისთვის მიუწვდომელ ფუნქციონალს და "
+"ასწორებს ზოგიერთ მომხმარებლისთვის ხელმისაწვდომ ფუნქციას. ყველაზე "
+"თვალშისაცემი ფუნქციაა ახალი უკანაბოლო transmission-daemon-თან სამუშაოდ, "
+"რომელიც უფრო მძლავრი უნდა იყოს და ნაკლები შეცდომა უნდა ჰქონდეს."
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:49
+msgid "Support libayatana-appindicator for e.g. Debian based distros"
+msgstr ""
+"libayatana-appindicator-ის მხარდაჭერა Debian-ზე ბაზირებული "
+"დისტრიბუტივებისთვის"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:50
+msgid "Remove RSS support"
+msgstr "მოცილდა RSS-ის მხარდაჭერა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:51
+msgid "Fix the spacing in the torrent information banel"
+msgstr "გასწორდა დაშორება ტორენტის ინფორმაციის პანელზე"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:52
+msgid "Allow for trashing torrents instead of deleting them"
+msgstr "ტორენტების ნაგვის ყუთში გადატანის შესაძლებლობა მათი წაშლის მაგიერ"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:53
+msgid "Fix shift+up and shift+down being broken for highlighting torrents"
+msgstr ""
+"გასწორდა ფაქტი, რომ ტორენტების გამოკვეთა ღილაკებით shift+up და shift+down "
+"გაფუჭებული იყო"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:54
+msgid ""
+"Fix crash when transmission-remote-gtk cannot read files due to permissions"
+msgstr ""
+"გასწორდა ავარია, როცა transmission-remote-gtk ვერ კითხულობდა ფაილების "
+"წვდომების არქონის გამო"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:60
+msgid "Bug fix release to fix install paths"
+msgstr "შეცდომების გასწორების გამოცემა დაყენების ბილიკების ფასასწორებლად"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:65
+msgid ""
+"Minor release for user facing functionality, but a lot of behind the scene "
+"changes"
+msgstr ""
+"უმნიშვნელო გამოცემა მომხმარებლის ინტერფეისის ფუნქციონალისთვის, მაგრამ "
+"შეიცვალა ბევრი რამ სცენის მიღმა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:67
+msgid "Allow custom headers to be sent to the daemon"
+msgstr "დემონთან გასაგზავნად სასურველი თავსართების დამატება"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:68
+msgid "Uses native glib notifications and not libnotify"
+msgstr "glib-ის საკუთარი გაფრთხილებების გამოყენება libnotify-ის მაგიერ"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:69
+msgid "Fixes to windows support"
+msgstr "გასწორდა Windows-ის მხარდაჭერა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:70
+msgid "Automatically paste magnet links from clipboard"
+msgstr "მაგნიტური ბმულების ავტომატური ჩასმა ბუფერიდან"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:71
+msgid ""
+"Various other fixes to GTK3 support and the build system behind the scenes"
+msgstr ""
+"გასწორდა სხვადასხვა შეცდომები GTK3-ის მხარდაჭერაში და აგების სისტემა სცენის "
+"მიღმა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:77
+msgid ""
+"Minor release, but quite a few bugfixes and enhancements from 2 and a half "
+"years"
+msgstr ""
+"უმნიშვნელო გამოცემა, მაგრამ გასწორდა საკმაოდ ბევრი შეცდომა 2.5 წლის "
+"განმავლობაში"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:79
+msgid "Clarify port forwarding label, ref issue #125"
+msgstr "პორტის გადამისამართება ახლა უფრო გასაგებია. იხ. შეცდომა #125"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:80
+msgid "Torrent add dialog should get focus"
+msgstr "ტორენტის დამატების დიალოგი ფოკუსს უნდა იღებდეს"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:81
+msgid "Static GPrivate and clean up after pool thread"
+msgstr "სტატიკური GPrivate და გასუფთავება პულის ნაკადის შემდეგ"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:82
+msgid "Add CI with github actions"
+msgstr "დაემატა CI github-ის ქმედებებით"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:83
+msgid "torrent-rename-path support to rename remote path"
+msgstr ""
+"torrent-rename-path-ის მხარდაჭერა დაშორებული ბილიკის სახელის გადასარქმევად"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:84
+msgid "fix screenshot, OARS rating, and other issues so appdata validates"
+msgstr ""
+"გასწორდა ეკრანის ანაბეჭდის გადაღება, OARS რეიტინგი და სხვა შეცდომები, რომ "
+"appdata სწორი იყოს"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:85
+msgid "Issue #80 - config file can be symlink"
+msgstr "პრობლემა #80 - კონფიგურაციის ფაილი შეიძლება, სიმბმული იყოს"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:86
+msgid "Mutex protect trg_client_get_session_id"
+msgstr "trg_client_get_session_id-ის დაცვა მუტექსით"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:87
+msgid "Fix some memory potential leaks"
+msgstr "გასწორდა ზოგიერთი პოტენციური მეხსიერების გჟონვა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:88
+msgid "Add support for torrent-rename-path rpc"
+msgstr "დაემატა torrent-rename-path rpc-ის მხარდაჭერა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:89
+msgid "Add Hash information in Torrent Details > General tab"
+msgstr "გასწორდა ჰეშის ინფორმაცია მენიუში ტორენტის დეტალები > ჩანართი 'ზოგადი'"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:90
+msgid "link window name to an icon in app menu"
+msgstr "ფანჯრის სახელი მიება ხატულას აპლიკაციის მენიუში"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:91
+msgid "Fix building under GCC 10 / -fno-common"
+msgstr "გასწორდა აგება GCC 10-ით / -fno-common"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:92
+msgid "Enable curl gzip compression"
+msgstr "curl-ის gzip შეკუმშვის ჩართვა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:93
+msgid "Handle return(enter) key press in torrent-add-url dialog (#91)"
+msgstr ""
+"ღილაკის return(enter) დაჭერის დამუშავება ტორენტის ბმულით დამატების მენიუში "
+"(#91)"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:94
+msgid "build: Allow building with gettext ≥ 0.20"
+msgstr "აგება: აგება gettext ≥ 0.20-ით"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:100
+msgid "This is a minor release with one bugfix:"
+msgstr "უმნიშვნელო გამოცემა ერთი შეცდომის გასწორებით:"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:102
+msgid "Fix error when connecting to daemon behind a proxy, specifically nginx"
+msgstr ""
+"გასწორდა დემონის პროქსის მიღმა (განსაკუთრებით nginx-ის) დაკავშირების შეცდომა"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:108
+msgid "This is a minor release with some improvements:"
+msgstr "უმნიშვნელო გამოცემა რამდენიმე გაუმჯობესებით:"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:110
+msgid "Rename app-id to io.github.TransmissionRemoteGtk"
+msgstr "app-id შეიცვალა მნიშვნელობაზე io.github.TransmissionRemoteGtk"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:111
+msgid "Add configuration of alternate speed days to preferences"
+msgstr "მორგების ფანჯარაში დაემატა ალტერნატიული სიჩქარის დღეების მორგება"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:112
+msgid "Add menu option to copy magnet links"
+msgstr "დაემატა მენიუს პუნქტი მაგნიტური ბმულების დასაკოპირებლად"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:113
+msgid "Add Ctrl+q keybinding to quit"
+msgstr "დაემატა კლავიატურის მალსახმობი Ctrl+q პროგრამიდან გასასვლელად"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:114
+msgid "Fix building with GeoIP support"
+msgstr "გასწორდა აგება GeoIP-ის მხარდაჭერით"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:115
+msgid "Fix setting speeds in preferences"
+msgstr "გასწორდა სიჩქარეების დაყენება მორგების ფანჯარაში"
+
+#: data/io.github.TransmissionRemoteGtk.appdata.xml.in:116
+msgid "Improve search behavior in file view"
+msgstr "გაუმჯობესდა ძებნის ქცევა ფაილის ხედში"
+
+#: src/torrent.c:364 src/torrent.c:384
+msgid "Metadata Downloading"
+msgstr "მეტამონაცემების გადმოწერა"
+
+#: src/torrent.c:366 src/torrent.c:386 src/trg-state-selector.c:590
+msgid "Downloading"
+msgstr "გადმოწერა"
+
+#: src/torrent.c:368
+msgid "Queued download"
+msgstr "გადმოწერა რიგშია"
+
+#: src/torrent.c:370 src/torrent.c:394
+msgid "Waiting To Check"
+msgstr "შემოწმების მოლოდინი"
+
+#: src/torrent.c:372 src/torrent.c:392 src/trg-state-selector.c:606
+msgid "Checking"
+msgstr "შემოწმება"
+
+#: src/torrent.c:374
+msgid "Queued seed"
+msgstr "რიგში მყოფი სიდი"
+
+#: src/torrent.c:376 src/torrent.c:390 src/trg-remote-prefs-dialog.c:351
+#: src/trg-state-selector.c:594 src/trg-torrent-props-dialog.c:398
+msgid "Seeding"
+msgstr "Seeding"
+
+#: src/torrent.c:378 src/torrent.c:388 src/torrent-cell-renderer.c:239
+#: src/trg-state-selector.c:598
+msgid "Paused"
+msgstr "შეჩერებულია"
+
+#: src/torrent.c:398
+msgid "Unknown"
+msgstr "უცნობი"
+
+#: src/torrent-cell-renderer.c:145
+#, c-format
+msgid "%1$s of %2$s (%3$s)"
+msgstr "%1$s / %2$s (%3$s)"
+
+#: src/torrent-cell-renderer.c:151
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s Goal: %6$s)"
+msgstr "%1$s of %2$s (%3$s), ატვირთულია %4$s (ფარდობა: %5$s მიზანი: %6$s)"
+
+#: src/torrent-cell-renderer.c:159
+#, c-format
+msgid "%1$s of %2$s (%3$s), uploaded %4$s (Ratio: %5$s)"
+msgstr "%1$s of %2$s (%3$s), ატვირთულია %4$s (ფარდობა: %5$s)"
+
+#: src/torrent-cell-renderer.c:169
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s Goal: %4$s)"
+msgstr "%1$s, ატვირთულია %2$s (ფარდობა: %3$s მიზანი: %4$s)"
+
+#: src/torrent-cell-renderer.c:179
+#, c-format
+msgid "%1$s, uploaded %2$s (Ratio: %3$s)"
+msgstr "%1$s, ატვირთულია %2$s (ფარდობა: %3$s)"
+
+#: src/torrent-cell-renderer.c:192
+msgid "Remaining time unknown"
+msgstr "დარჩენილი დრო უცნობია"
+
+#: src/torrent-cell-renderer.c:197
+#, c-format
+msgid "%s remaining"
+msgstr "დარჩენილია %s"
+
+#: src/torrent-cell-renderer.c:216
+#, c-format
+msgid "%1$s %2$s, %3$s %4$s"
+msgstr "%1$s %2$s, %3$s %4$s"
+
+#: src/torrent-cell-renderer.c:220 src/torrent-cell-renderer.c:223
+#, c-format
+msgid "%1$s %2$s"
+msgstr "%1$s-%2$s"
+
+#: src/torrent-cell-renderer.c:227
+msgid "Idle"
+msgstr "უმოქმედო"
+
+#: src/torrent-cell-renderer.c:239
+msgid "Finished"
+msgstr "დასრულდა"
+
+#: src/torrent-cell-renderer.c:241
+msgid "Queued for verification"
+msgstr "რიგშია გადამოწმებისთვის"
+
+#: src/torrent-cell-renderer.c:243
+msgid "Queued for download"
+msgstr "რიგშია გადმოსაწერად"
+
+#: src/torrent-cell-renderer.c:245
+msgid "Queued for seeding"
+msgstr "რიგშია Seeding-სთვის"
+
+#: src/torrent-cell-renderer.c:248
+#, c-format
+msgid "Verifying data (%1$s tested)"
+msgstr "მონაცემების გადამოწმება (შემოწმდა %1$s)"
+
+#: src/torrent-cell-renderer.c:254
+#, c-format
+msgid "Ratio %s"
+msgstr "ფარდობა %s"
+
+#: src/torrent-cell-renderer.c:273
+#, c-format
+msgid "Tracker gave a warning: \"%s\""
+msgstr "ტრეკერმა გამოაგზავნა გაფრთხილება: \"%s\""
+
+#: src/torrent-cell-renderer.c:276
+#, c-format
+msgid "Tracker gave an error: \"%s\""
+msgstr "ტრეკერმა გამოაგზავნა შეცდომა: \"%s\""
+
+#: src/torrent-cell-renderer.c:279
+#, c-format
+msgid "Error: \"%s\""
+msgstr "შეცდომა: \"%s\""
+
+#: src/torrent-cell-renderer.c:289
+msgid "Downloading from %1$"
+msgid_plural "Downloading from %1$"
+msgstr[0] "გადმოწერა %1$-დან"
+msgstr[1] "გადმოწერა %1$-დან"
+
+#: src/torrent-cell-renderer.c:298
+msgid "Downloading metadata from %1$"
+msgid_plural "Downloading metadata from %1$"
+msgstr[0] "მეტამონაცემების გადმოწერა %1$-დან"
+msgstr[1] "მეტამონაცემების გადმოწერა %1$-დან"
+
+#: src/torrent-cell-renderer.c:306
+msgid "Seeding to %1$"
+msgid_plural "Seeding to %1$"
+msgstr[0] "გაცემა %1$-ზე"
+msgstr[1] "გაცემა %1$-ზე"
+
+#: src/trg-about-window.c:51
+msgid "A remote client to transmission-daemon."
+msgstr "დაშორებული კლიენტი transmission-daemon-ისთვის."
+
+#: src/trg-cell-renderer-priority.c:66 src/trg-general-panel.c:185
+#: src/trg-main-window.c:1559 src/trg-torrent-add-dialog.c:350
+#: src/trg-torrent-props-dialog.c:377
+msgid "Low"
+msgstr "დაბალი"
+
+#: src/trg-cell-renderer-priority.c:68 src/trg-general-panel.c:191
+#: src/trg-main-window.c:1557 src/trg-torrent-add-dialog.c:350
+#: src/trg-torrent-props-dialog.c:377
+msgid "High"
+msgstr "მაღალი"
+
+#: src/trg-cell-renderer-priority.c:70 src/trg-general-panel.c:188
+#: src/trg-main-window.c:1558 src/trg-torrent-add-dialog.c:350
+#: src/trg-torrent-props-dialog.c:377
+msgid "Normal"
+msgstr "ნორმალური"
+
+#: src/trg-cell-renderer-priority.c:72
+msgid "Mixed"
+msgstr "შერეული"
+
+#: src/trg-files-tree-view.c:188 src/trg-general-panel.c:274
+#: src/trg-preferences-dialog.c:658 src/trg-torrent-add-dialog.c:261
+#: src/trg-torrent-tree-view.c:48
+msgid "Name"
+msgstr "სახელი"
+
+#: src/trg-files-tree-view.c:192 src/trg-general-panel.c:276
+#: src/trg-torrent-add-dialog.c:278 src/trg-torrent-tree-view.c:52
+msgid "Size"
+msgstr "ზომა"
+
+#: src/trg-files-tree-view.c:193 src/trg-peers-tree-view.c:53
+msgid "Progress"
+msgstr "მიმდინარეობა"
+
+#: src/trg-files-tree-view.c:195 src/trg-torrent-add-dialog.c:289
+#: src/trg-torrent-add-dialog.c:551 src/trg-files-tree-view-common.c:83
+msgid "Download"
+msgstr "გადმოწერა"
+
+#: src/trg-files-tree-view.c:196 src/trg-general-panel.c:293
+#: src/trg-main-window.c:1551 src/trg-torrent-add-dialog.c:302
+#: src/trg-torrent-tree-view.c:106
+msgid "Priority"
+msgstr "პრიორიტეტი"
+
+#: src/trg-general-panel.c:162 src/trg-general-panel.c:226
+#: src/trg-torrent-props-dialog.c:311 src/util.c:475
+msgid "N/A"
+msgstr "ა/მ"
+
+#: src/trg-general-panel.c:178
+msgid "(Private)"
+msgstr "(პირადი)"
+
+#: src/trg-general-panel.c:178
+msgid "(Public)"
+msgstr "(საჯარო)"
+
+#: src/trg-general-panel.c:214 src/trg-main-window.c:837
+#: src/trg-main-window.c:1170 src/trg-state-selector.c:488
+#: src/trg-torrent-add-url-dialog.c:60 src/util.c:321
+msgid "Error"
+msgstr "შეცდომა"
+
+#: src/trg-general-panel.c:277
+msgid "Rate Down"
+msgstr "გადმოწერა"
+
+#: src/trg-general-panel.c:278 src/trg-torrent-tree-view.c:109
+msgid "Completed"
+msgstr "დასრულებულია"
+
+#: src/trg-general-panel.c:280 src/trg-torrent-tree-view.c:92
+msgid "ETA"
+msgstr "დარჩენილი დრო"
+
+#: src/trg-general-panel.c:281
+msgid "Rate Up"
+msgstr "ატვირთვა"
+
+#: src/trg-general-panel.c:282 src/trg-torrent-tree-view.c:95
+msgid "Downloaded"
+msgstr "გადმოწერილია"
+
+#: src/trg-general-panel.c:284
+msgid "Seeders"
+msgstr "სიდერები"
+
+#: src/trg-general-panel.c:285 src/trg-stats-dialog.c:285
+#: src/trg-torrent-tree-view.c:97
+msgid "Ratio"
+msgstr "ფარდობა"
+
+#: src/trg-general-panel.c:286 src/trg-torrent-tree-view.c:93
+msgid "Uploaded"
+msgstr "ატვირთულია"
+
+#: src/trg-general-panel.c:288 src/trg-torrent-tree-view.c:62
+msgid "Leechers"
+msgstr "ლიჩერები"
+
+#: src/trg-general-panel.c:289
+msgid "Ratio limit"
+msgstr "ფარდობის ლიმიტი"
+
+#: src/trg-general-panel.c:290
+msgid "Corrupted"
+msgstr "დაზიანებულია"
+
+#: src/trg-general-panel.c:292 src/trg-torrent-tree-view.c:56
+msgid "Status"
+msgstr "სტატუსი"
+
+#: src/trg-general-panel.c:294
+msgid "Completed At"
+msgstr "დასრულების დროა"
+
+#: src/trg-general-panel.c:297 src/trg-torrent-tree-view.c:101
+msgid "Location"
+msgstr "მდებარეობა"
+
+#: src/trg-general-panel.c:299
+msgid "Comment"
+msgstr "კომენტარი"
+
+#: src/trg-general-panel.c:301
+msgid "Hash"
+msgstr "ჰეში"
+
+#: src/trg-gtk-app.c:154 src/trg-peers-tree-view.c:56
+msgid "Client"
+msgstr "კლიენტი"
+
+#: src/trg-main-window.c:275
+msgid "This torrent has completed."
+msgstr "ეს ტორენტი დასრულდა."
+
+#: src/trg-main-window.c:281
+msgid "This torrent has been added."
+msgstr "ეს ტორენტი დამატებულია."
+
+#: src/trg-main-window.c:482
+msgid "Connecting..."
+msgstr "დაკავშირება..."
+
+#: src/trg-main-window.c:643
+#, c-format
+msgid "<big><b>%s \"%s\"?</b></big>"
+msgstr "<big><b>%s \"%s\"?</b></big>"
+
+#: src/trg-main-window.c:648
+#, c-format
+msgid "<big><b>%s %d torrents?</b></big>"
+msgstr "<big><b>%s %d ტორენტი?</b></big>"
+
+#: src/trg-main-window.c:654 src/trg-torrent-add-dialog.c:481
+#: src/trg-torrent-add-dialog.c:582
+msgid "_Cancel"
+msgstr "გაუ_ქმება"
+
+#: src/trg-main-window.c:687 src/trg-main-window.c:1661 src/trg-menu-bar.c:557
+#: src/trg-toolbar.c:191
+msgid "Remove"
+msgstr "წაშლა"
+
+#: src/trg-main-window.c:687
+msgid "_Remove"
+msgstr "_წაშლა"
+
+#: src/trg-main-window.c:706
+msgid "Remove and delete"
+msgstr "მოცილება და წაშლა"
+
+#: src/trg-main-window.c:706
+msgid "_Delete"
+msgstr "_წაშლა"
+
+#: src/trg-main-window.c:752 src/trg-preferences-dialog.c:708
+#: src/trg-remote-prefs-dialog.c:627
+msgid "General"
+msgstr "ზოგადი"
+
+#: src/trg-main-window.c:758 src/trg-torrent-props-dialog.c:540
+msgid "Trackers"
+msgstr "ტრეკერები"
+
+#: src/trg-main-window.c:764 src/trg-torrent-props-dialog.c:515
+msgid "Files"
+msgstr "ფაილები"
+
+#: src/trg-main-window.c:770 src/trg-remote-prefs-dialog.c:381
+#: src/trg-torrent-props-dialog.c:413 src/trg-torrent-props-dialog.c:527
+#: src/trg-trackers-tree-view.c:151
+msgid "Peers"
+msgstr "პარტნიორები"
+
+#: src/trg-main-window.c:833
+#, c-format
+msgid "This application supports Transmission %g and later, you have %g."
+msgstr ""
+"ამ აპლიკაციას აქვს Transmission %g-ის, ან უფრო ახლის მხარდაჭერა. თქვენ გაქვთ "
+"%g."
+
+#: src/trg-main-window.c:886 src/trg-status-bar.c:73 src/trg-status-bar.c:100
+msgid "Disconnected"
+msgstr "გათიშულია"
+
+#: src/trg-main-window.c:914
+#, c-format
+msgid "%d Downloading @ %s"
+msgstr "%d გადმოწერა @ %s"
+
+#: src/trg-main-window.c:919
+#, c-format
+msgid "%d Seeding @ %s"
+msgstr "%d გაცემა @ %s"
+
+#: src/trg-main-window.c:960
+#, c-format
+msgid "Request %d/%d failed: %s"
+msgstr "მოთხოვნა %d/%d ჩავარდა: %s"
+
+#: src/trg-main-window.c:1597
+msgid "No Limit"
+msgstr "უსაზღვრო"
+
+#: src/trg-main-window.c:1647 src/trg-menu-bar.c:534 src/trg-toolbar.c:187
+msgid "Properties"
+msgstr "თვისებები"
+
+#: src/trg-main-window.c:1649
+msgid "Copy Magnet Link"
+msgstr "მაგნიტური ბმულის კოპირება"
+
+#: src/trg-main-window.c:1651 src/trg-toolbar.c:182
+msgid "Resume"
+msgstr "გაგრძელება"
+
+#: src/trg-main-window.c:1653 src/trg-toolbar.c:184
+msgid "Pause"
+msgstr "შეჩერება"
+
+#: src/trg-main-window.c:1655
+msgid "Verify"
+msgstr "გადამოწმება"
+
+#: src/trg-main-window.c:1657
+msgid "Re-announce"
+msgstr "თავიდან გამოცხადება"
+
+#: src/trg-main-window.c:1659 src/trg-torrent-move-dialog.c:101
+#: src/trg-torrent-move-dialog.c:106
+msgid "Move"
+msgstr "გადატანა"
+
+#: src/trg-main-window.c:1663 src/trg-menu-bar.c:561 src/trg-toolbar.c:193
+msgid "Remove and delete data"
+msgstr "მოცილება და მონაცემების წაშლა"
+
+#: src/trg-main-window.c:1669 src/trg-menu-bar.c:567
+msgid "Start Now"
+msgstr "ახლა დაწყება"
+
+#: src/trg-main-window.c:1671 src/trg-menu-bar.c:569
+msgid "Move Up Queue"
+msgstr "რიგში მაღლა აწევა"
+
+#: src/trg-main-window.c:1673 src/trg-menu-bar.c:572
+msgid "Move Down Queue"
+msgstr "რიგში დაბლა ჩამოწევა"
+
+#: src/trg-main-window.c:1675 src/trg-menu-bar.c:575
+msgid "Bottom Of Queue"
+msgstr "რიგის ბოლოში"
+
+#: src/trg-main-window.c:1677 src/trg-menu-bar.c:577
+msgid "Top Of Queue"
+msgstr "რიგის თავში"
+
+#: src/trg-main-window.c:1684 src/trg-main-window.c:1746
+msgid "Down Limit"
+msgstr "გადმოწერის ლიმიტი"
+
+#: src/trg-main-window.c:1687 src/trg-main-window.c:1749
+msgid "Up Limit"
+msgstr "ატვირთვის ლიმიტი"
+
+#: src/trg-main-window.c:1709 src/trg-main-window.c:1714
+#: src/trg-remote-prefs-dialog.c:468
+msgid "Updating..."
+msgstr "განახლება..."
+
+#: src/trg-main-window.c:1724 src/trg-menu-bar.c:507 src/trg-toolbar.c:167
+#: src/trg-toolbar.c:168
+msgid "Connect"
+msgstr "დაკავშირება"
+
+#: src/trg-main-window.c:1730 src/trg-toolbar.c:175
+msgid "Disconnect"
+msgstr "გათიშვა"
+
+#: src/trg-main-window.c:1733 src/trg-toolbar.c:177
+#: src/trg-trackers-tree-view.c:233 src/trg-trackers-tree-view.c:250
+msgid "Add"
+msgstr "დამატება"
+
+#: src/trg-main-window.c:1736
+msgid "Add from URL"
+msgstr "დამატება ბმულიდან"
+
+#: src/trg-main-window.c:1739
+msgid "Resume All"
+msgstr "ყველას გაგრძელება"
+
+#: src/trg-main-window.c:1742
+msgid "Pause All"
+msgstr "ყველას შეჩერება"
+
+#: src/trg-main-window.c:1754
+msgid "Quit"
+msgstr "გასვლა"
+
+#: src/trg-menu-bar.c:388
+msgid "_View"
+msgstr "_ხედი"
+
+#: src/trg-menu-bar.c:395
+msgid "Transmission Style"
+msgstr "Transmission-ის სტილი"
+
+#: src/trg-menu-bar.c:400
+msgid "Transmission Compact Style"
+msgstr "Transmission-ის კომპაქტური სტილი"
+
+#: src/trg-menu-bar.c:404
+msgid "Classic Style"
+msgstr "კლასიკური სტილი"
+
+#: src/trg-menu-bar.c:408
+msgid "Sort"
+msgstr "დალაგება"
+
+#: src/trg-menu-bar.c:411 src/trg-preferences-dialog.c:524
+msgid "State selector"
+msgstr "მდგომარეობის ამრჩევი"
+
+#: src/trg-menu-bar.c:416 src/trg-preferences-dialog.c:529
+msgid "Directory filters"
+msgstr "საქაღალდის ფილტრები"
+
+#: src/trg-menu-bar.c:421 src/trg-preferences-dialog.c:534
+msgid "Tracker filters"
+msgstr "ტრეკერის"
+
+#: src/trg-menu-bar.c:426 src/trg-preferences-dialog.c:539
+msgid "Directories first"
+msgstr "ჯერ საქაღალდეები"
+
+#: src/trg-menu-bar.c:430 src/trg-preferences-dialog.c:544
+msgid "Torrent Details"
+msgstr "ტორენტის დეტალები"
+
+#: src/trg-menu-bar.c:434
+msgid "_Statistics"
+msgstr "_სტატისტიკა"
+
+#: src/trg-menu-bar.c:444
+msgid "_Options"
+msgstr "_პარამეტრები"
+
+#: src/trg-menu-bar.c:449
+msgid "_Local Preferences"
+msgstr "_ლოკალური პარამეტრები"
+
+#: src/trg-menu-bar.c:453
+msgid "_Remote Preferences"
+msgstr "დაშო_რებული პარამეტრები"
+
+#: src/trg-menu-bar.c:502
+msgid "_File"
+msgstr "_ფაილი"
+
+#: src/trg-menu-bar.c:510
+msgid "_Disconnect"
+msgstr "_გათიშვა"
+
+#: src/trg-menu-bar.c:513 src/trg-torrent-add-dialog.c:481
+#: src/trg-torrent-add-url-dialog.c:126
+msgid "_Add"
+msgstr "დ_ამატება"
+
+#: src/trg-menu-bar.c:516
+msgid "Add from _URL"
+msgstr "დამატება ბმ_ულიდან"
+
+#: src/trg-menu-bar.c:519
+msgid "_Quit"
+msgstr "გასვ_ლა"
+
+#: src/trg-menu-bar.c:529
+msgid "_Torrent"
+msgstr "_ტორენტი"
+
+#: src/trg-menu-bar.c:538
+msgid "_Copy Magnet Link"
+msgstr "მაგნიტური ბმულის _კოპირება"
+
+#: src/trg-menu-bar.c:541
+msgid "_Resume"
+msgstr "_გაგრძელება"
+
+#: src/trg-menu-bar.c:544
+msgid "_Pause"
+msgstr "_შეჩერება"
+
+#: src/trg-menu-bar.c:547
+msgid "_Verify"
+msgstr "_შემოწმება"
+
+#: src/trg-menu-bar.c:551
+msgid "Re-_announce"
+msgstr "თავიდან გამოცხადებ_ა"
+
+#: src/trg-menu-bar.c:554
+msgid "_Move"
+msgstr "_გადატანა"
+
+#: src/trg-menu-bar.c:581
+msgid "_Resume All"
+msgstr "_ყველას გაგრძელება"
+
+#: src/trg-menu-bar.c:584
+msgid "_Pause All"
+msgstr "_ყველას შეჩერება"
+
+#: src/trg-menu-bar.c:592
+msgid "_Help"
+msgstr "_დახმარება"
+
+#: src/trg-menu-bar.c:597
+msgid "_About"
+msgstr "_შესახებ"
+
+#: src/trg-peers-tree-view.c:45
+msgid "IP"
+msgstr "IP"
+
+#: src/trg-peers-tree-view.c:48 src/trg-trackers-tree-view.c:164
+msgid "Host"
+msgstr "ჰოსტი"
+
+#: src/trg-peers-tree-view.c:49 src/trg-torrent-tree-view.c:88
+msgid "Down Speed"
+msgstr "გადმოწერის სიჩქარე"
+
+#: src/trg-peers-tree-view.c:51 src/trg-torrent-tree-view.c:90
+msgid "Up Speed"
+msgstr "ატვირთვის სიჩქარე"
+
+#: src/trg-peers-tree-view.c:55
+msgid "Flags"
+msgstr "ალმები"
+
+#: src/trg-preferences-dialog.c:332
+msgid "Updates"
+msgstr "განახლებები"
+
+#: src/trg-preferences-dialog.c:334
+msgid "Update active torrents only"
+msgstr "მხოლოდ, აქტიური ტორენტების განახლება"
+
+#: src/trg-preferences-dialog.c:338
+msgid "Full update every (?) updates"
+msgstr "სრული განახლება ყოველ (?) განახლებაში"
+
+#: src/trg-preferences-dialog.c:348
+msgid "Update interval:"
+msgstr "განახლების ინტერვალი:"
+
+#: src/trg-preferences-dialog.c:352
+msgid "Session update interval:"
+msgstr "სესიის განახლების ინტერვალი:"
+
+#: src/trg-preferences-dialog.c:354
+msgid "Torrents"
+msgstr "ტორენტი"
+
+#: src/trg-preferences-dialog.c:356
+msgid "Start paused"
+msgstr "შეჩერებულად გაშვება"
+
+#: src/trg-preferences-dialog.c:359
+msgid "Options dialog on add"
+msgstr "მორგების დიალოგი დამატებისას"
+
+#: src/trg-preferences-dialog.c:363 src/trg-torrent-add-dialog.c:600
+msgid "Delete local .torrent file after adding"
+msgstr "ლოკალური .torrent ფაილის წაშლა დამატების შემდეგ"
+
+#: src/trg-preferences-dialog.c:496
+msgid "Remote Download Directories"
+msgstr "დაშორებული გადმოწერის საქაღალდეები"
+
+#: src/trg-preferences-dialog.c:503
+msgid "Label"
+msgstr "ჭდე"
+
+#: src/trg-preferences-dialog.c:505
+msgid "Directory"
+msgstr "საქაღალდე"
+
+#: src/trg-preferences-dialog.c:522 src/trg-preferences-dialog.c:712
+msgid "View"
+msgstr "ხედი"
+
+#: src/trg-preferences-dialog.c:549
+msgid "System Tray"
+msgstr "სისტემს კუთხე"
+
+#: src/trg-preferences-dialog.c:551
+msgid "Show in system tray"
+msgstr "სისტემის კუთხეში ჩვენება"
+
+#: src/trg-preferences-dialog.c:557
+msgid "System tray not supported."
+msgstr "სისტემური საათის პანელი მხარდაჭერილი არაა."
+
+#: src/trg-preferences-dialog.c:562
+msgid "Notifications"
+msgstr "გაფრთხილებები"
+
+#: src/trg-preferences-dialog.c:564
+msgid "Torrent added notifications"
+msgstr "ტორენტის დამატების გაფრთხილებები"
+
+#: src/trg-preferences-dialog.c:568
+msgid "Torrent complete notifications"
+msgstr "ტორენტის დასრულების გაფრთხილებები"
+
+#: src/trg-preferences-dialog.c:593
+msgid "Profile: "
+msgstr "პროფილი: "
+
+#: src/trg-preferences-dialog.c:596
+msgid "New"
+msgstr "ახალი"
+
+#: src/trg-preferences-dialog.c:600 src/trg-trackers-tree-view.c:247
+msgid "Delete"
+msgstr "წაშლა"
+
+#: src/trg-preferences-dialog.c:614
+msgid "Name:"
+msgstr "სახელი:"
+
+#: src/trg-preferences-dialog.c:618 src/trg-preferences-dialog.c:704
+msgid "Connection"
+msgstr "კავშირი"
+
+#: src/trg-preferences-dialog.c:621
+msgid "Host:"
+msgstr "ჰოსტი:"
+
+#: src/trg-preferences-dialog.c:624
+msgid "Port:"
+msgstr "პორტი:"
+
+#: src/trg-preferences-dialog.c:626
+msgid "RPC URL Path:"
+msgstr "RPC URL ბილიკი:"
+
+#: src/trg-preferences-dialog.c:629
+msgid "Username:"
+msgstr "მომხმარებელი:"
+
+#: src/trg-preferences-dialog.c:633
+msgid "Password:"
+msgstr "პაროლი:"
+
+#: src/trg-preferences-dialog.c:635
+msgid "Automatically connect"
+msgstr "ავტომატური მიერთება"
+
+#: src/trg-preferences-dialog.c:639
+msgid "SSL"
+msgstr "SSL"
+
+#: src/trg-preferences-dialog.c:641
+msgid "Validate SSL Certificate"
+msgstr "SSL სერტიფიკატის გადამოწმება"
+
+#: src/trg-preferences-dialog.c:646
+msgid "Timeout:"
+msgstr "მოლოდინის ვადა:"
+
+#: src/trg-preferences-dialog.c:649
+msgid "Retries:"
+msgstr "თავიდან ცდები:"
+
+#: src/trg-preferences-dialog.c:651
+msgid "Headers"
+msgstr "თავსართები"
+
+#: src/trg-preferences-dialog.c:659
+msgid "Value"
+msgstr "მნიშვნელობა"
+
+#: src/trg-preferences-dialog.c:690 src/trg-remote-prefs-dialog.c:614
+#: src/trg-stats-dialog.c:272 src/trg-torrent-add-url-dialog.c:125
+#: src/trg-torrent-move-dialog.c:105 src/trg-torrent-props-dialog.c:484
+msgid "_Close"
+msgstr "და_ხურვა"
+
+#: src/trg-preferences-dialog.c:691 src/trg-remote-prefs-dialog.c:615
+#: src/trg-torrent-props-dialog.c:485
+msgid "_OK"
+msgstr "_დიახ"
+
+#: src/trg-preferences-dialog.c:695 src/trg-toolbar.c:199
+msgid "Local Preferences"
+msgstr "ლოკალური პარამეტრები"
+
+#: src/trg-preferences-dialog.c:716
+msgid "Directories"
+msgstr "საქაღალდეები"
+
+#: src/trg-remote-prefs-dialog.c:267
+msgid "Sun"
+msgstr "მზე"
+
+#: src/trg-remote-prefs-dialog.c:267
+msgid "Mon"
+msgstr "ორშ"
+
+#: src/trg-remote-prefs-dialog.c:267
+msgid "Tue"
+msgstr "სამ"
+
+#: src/trg-remote-prefs-dialog.c:267
+msgid "Wed"
+msgstr "ოთხ"
+
+#: src/trg-remote-prefs-dialog.c:267
+msgid "Thu"
+msgstr "ხუთ"
+
+#: src/trg-remote-prefs-dialog.c:267
+msgid "Fri"
+msgstr "პარ"
+
+#: src/trg-remote-prefs-dialog.c:267
+msgid "Sat"
+msgstr "შაბ"
+
+#: src/trg-remote-prefs-dialog.c:309
+msgid "Bandwidth limits"
+msgstr "გამტარობის შეზღუდვები"
+
+#: src/trg-remote-prefs-dialog.c:312
+msgid "Down Limit (KiB/s)"
+msgstr "გადმოწერის ზღვარი (კიბ/წმ)"
+
+#: src/trg-remote-prefs-dialog.c:317
+msgid "Up Limit (KiB/s)"
+msgstr "ატვირთვის ზღვარი (კიბ/წმ)"
+
+#: src/trg-remote-prefs-dialog.c:321
+msgid "Alternate limits"
+msgstr "ალტერნატიული შეზღუდვები"
+
+#: src/trg-remote-prefs-dialog.c:324
+msgid "Alternate speed limits active"
+msgstr "ალტერნატიული სიჩქარის შეზღუდვები აქტიურია"
+
+#: src/trg-remote-prefs-dialog.c:328
+msgid "Alternate time range"
+msgstr "ალტერნატიული დროის შუალედი"
+
+#: src/trg-remote-prefs-dialog.c:333
+msgid "Alternate days"
+msgstr "ალტერნატული დღეები"
+
+#: src/trg-remote-prefs-dialog.c:336
+msgid "Alternate down limit (KiB/s)"
+msgstr "ალტერნატიული გადმოწერის ზღვარი (კიბ/წმ)"
+
+#: src/trg-remote-prefs-dialog.c:339
+msgid "Alternate up limit (KiB/s)"
+msgstr "ალტერნატიული ატვირთვის ზღვარი (კიბ/წმ)"
+
+#: src/trg-remote-prefs-dialog.c:354
+msgid "Seed ratio limit"
+msgstr "გაცემის ფარდობის ლიმიტი"
+
+#: src/trg-remote-prefs-dialog.c:360
+msgid "Queues"
+msgstr "რიგები"
+
+#: src/trg-remote-prefs-dialog.c:363
+msgid "Download queue size"
+msgstr "გადმოწერის რიგის ზომა"
+
+#: src/trg-remote-prefs-dialog.c:369
+msgid "Seed queue size"
+msgstr "გაცემის რიგის ზომა"
+
+#: src/trg-remote-prefs-dialog.c:375
+msgid "Ignore stalled (minutes)"
+msgstr "გაჭედვის იგნორი (წთ)"
+
+#: src/trg-remote-prefs-dialog.c:385
+msgid "Global peer limit"
+msgstr "გლობალური პარტნიორების ლიმიტი"
+
+#: src/trg-remote-prefs-dialog.c:389
+msgid "Per torrent peer limit"
+msgstr "ლიმიტი თითოეული ტორენტისთვის"
+
+#: src/trg-remote-prefs-dialog.c:401
+msgid "Retest"
+msgstr "თავიდან შემოწმება"
+
+#: src/trg-remote-prefs-dialog.c:410
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
+msgstr "პორტი <span font_weight=\"bold\" fgcolor=\"darkgreen\">ღიაა</span>"
+
+#: src/trg-remote-prefs-dialog.c:414
+msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
+msgstr "პორტი <span font_weight=\"bold\" fgcolor=\"red\">დახურულია</span>"
+
+#: src/trg-remote-prefs-dialog.c:429 src/trg-remote-prefs-dialog.c:488
+msgid "Port test"
+msgstr "პორტის შემოწმება"
+
+#: src/trg-remote-prefs-dialog.c:430
+msgid "Testing..."
+msgstr "ტესტირება..."
+
+#: src/trg-remote-prefs-dialog.c:443 src/trg-remote-prefs-dialog.c:537
+msgid "Update"
+msgstr "განახლება"
+
+#: src/trg-remote-prefs-dialog.c:448 src/trg-remote-prefs-dialog.c:531
+msgid "Blocklist (%"
+msgstr "შავი სია (%"
+
+#: src/trg-remote-prefs-dialog.c:483 src/trg-remote-prefs-dialog.c:631
+msgid "Connections"
+msgstr "კავშირები"
+
+#: src/trg-remote-prefs-dialog.c:486
+msgid "Peer port"
+msgstr "პარტნიორის პორტი"
+
+#: src/trg-remote-prefs-dialog.c:489
+msgid "Test"
+msgstr "შემოწმება"
+
+#: src/trg-remote-prefs-dialog.c:494
+msgid "Required"
+msgstr "აუცილებელია"
+
+#: src/trg-remote-prefs-dialog.c:494
+msgid "Preferred"
+msgstr "უპირატესი"
+
+#: src/trg-remote-prefs-dialog.c:494
+msgid "Tolerated"
+msgstr "დაშვებულია"
+
+#: src/trg-remote-prefs-dialog.c:504
+msgid "Encryption"
+msgstr "დაშიფვრა"
+
+#: src/trg-remote-prefs-dialog.c:507
+msgid "Random peer port on start"
+msgstr "შემთხვევითი პარტნიორის პორტი გაშვებისას"
+
+#: src/trg-remote-prefs-dialog.c:511
+msgid "Request forwarding of the peer port using UPnP or NAT-PMP"
+msgstr "პარტნიორის პორტის გადამისამართების მოთხოვნა UPnP-ით, ან NAT-PMP-ით"
+
+#: src/trg-remote-prefs-dialog.c:515
+msgid "Protocol"
+msgstr "პროტოკოლი"
+
+#: src/trg-remote-prefs-dialog.c:517
+msgid "Peer exchange (PEX)"
+msgstr "პარტნიორების მიმოცვლა (PeX)"
+
+#: src/trg-remote-prefs-dialog.c:522
+msgid "Distributed Hash Table (DHT)"
+msgstr "განაწილებული ჰეშების ცხრილი (DHT)"
+
+#: src/trg-remote-prefs-dialog.c:525
+msgid "Local peer discovery"
+msgstr "ლოკალური პარტნიორის აღმოჩენა"
+
+#: src/trg-remote-prefs-dialog.c:529
+msgid "Blocklist"
+msgstr "შავი სია"
+
+#: src/trg-remote-prefs-dialog.c:544
+msgid "Blocklist URL:"
+msgstr "შავი სიის URL:"
+
+#: src/trg-remote-prefs-dialog.c:558
+msgid "Environment"
+msgstr "გარემო"
+
+#: src/trg-remote-prefs-dialog.c:561
+msgid "Download directory"
+msgstr "გადმოწერის საქაღალდე"
+
+#: src/trg-remote-prefs-dialog.c:564
+msgid "Incomplete download dir"
+msgstr "არასრული გადმოწერების საქაღალდე"
+
+#: src/trg-remote-prefs-dialog.c:569
+msgid "Torrent done script"
+msgstr "ტორენტის დასრულებისას გასაშვები სკრიპტი"
+
+#: src/trg-remote-prefs-dialog.c:576
+msgid "Cache size (MiB)"
+msgstr "კეშის ზომა (მიბ)"
+
+#: src/trg-remote-prefs-dialog.c:579
+msgid "Behavior"
+msgstr "ქცევა"
+
+#: src/trg-remote-prefs-dialog.c:582
+msgid "Rename partial files"
+msgstr "ბოლომდე არგადმოწერილი ფაილების სახელის გადარქმევა"
+
+#: src/trg-remote-prefs-dialog.c:586
+msgid "Trash original torrent files"
+msgstr "ორიგინალი ტორენტის ფაილების ნაგვის ყუთში გადატანა"
+
+#: src/trg-remote-prefs-dialog.c:590
+msgid "Start added torrents"
+msgstr "დამატებული ტორენტების გაშვება"
+
+#: src/trg-remote-prefs-dialog.c:610 src/trg-toolbar.c:202
+msgid "Remote Preferences"
+msgstr "დაშორებული პარამეტრები"
+
+#: src/trg-remote-prefs-dialog.c:635 src/trg-torrent-props-dialog.c:370
+msgid "Bandwidth"
+msgstr "გამტარობა"
+
+#: src/trg-remote-prefs-dialog.c:639 src/trg-torrent-props-dialog.c:553
+msgid "Limits"
+msgstr "ლიმიტები"
+
+#: src/trg-state-selector.c:200
+msgid "Refresh"
+msgstr "განახლება"
+
+#: src/trg-state-selector.c:589
+msgid "All"
+msgstr "ყველა"
+
+#: src/trg-state-selector.c:592 src/trg-state-selector.c:641
+msgid "Queue Down"
+msgstr "რიგში დაბლა"
+
+#: src/trg-state-selector.c:596 src/trg-state-selector.c:643
+msgid "Queue Up"
+msgstr "რიგში მაღლა"
+
+#: src/trg-state-selector.c:600
+msgid "Complete"
+msgstr "დასრულება"
+
+#: src/trg-state-selector.c:602
+msgid "Incomplete"
+msgstr "არასრული"
+
+#: src/trg-state-selector.c:604
+msgid "Active"
+msgstr "აქტიური"
+
+#: src/trg-stats-dialog.c:269
+msgid "Statistics"
+msgstr "სტატისტიკა"
+
+#: src/trg-stats-dialog.c:282
+msgid "Version"
+msgstr "ვერსია"
+
+#: src/trg-stats-dialog.c:283
+msgid "Download Total"
+msgstr "გადმოწერა სულ"
+
+#: src/trg-stats-dialog.c:284
+msgid "Upload Total"
+msgstr "ატვირთვა სულ"
+
+#: src/trg-stats-dialog.c:286
+msgid "Files Added"
+msgstr "დამატებული ფაილები"
+
+#: src/trg-stats-dialog.c:287
+msgid "Session Count"
+msgstr "სესიების რაოდენობა"
+
+#: src/trg-stats-dialog.c:288
+msgid "Time Active"
+msgstr "აქტიური დრო"
+
+#: src/trg-stats-dialog.c:293
+msgid "Statistic"
+msgstr "სტატისტიკა"
+
+#: src/trg-stats-dialog.c:294
+msgid "Session"
+msgstr "სესია"
+
+#: src/trg-stats-dialog.c:295
+msgid "Cumulative"
+msgstr "ინტეგრალური"
+
+#: src/trg-status-bar.c:132
+#, c-format
+msgid "Connected: %s :: %s"
+msgstr "დაკავშირებულია: %s :: %s"
+
+#: src/trg-status-bar.c:145
+msgid "Updating torrents..."
+msgstr "ტორენტების განახლება..."
+
+#: src/trg-status-bar.c:157
+#, c-format
+msgid "Free space: %s"
+msgstr "თავისუფალია: %s"
+
+#: src/trg-status-bar.c:168
+msgid "Disable alternate speed limits"
+msgstr "ალტერნატიული სიჩქარის შეზღუდვების გათიშვა"
+
+#: src/trg-status-bar.c:169
+msgid "Enable alternate speed limits"
+msgstr "ალტერნატიული სიჩქარის შეზღუდვების ჩართვა"
+
+#: src/trg-status-bar.c:203 src/trg-status-bar.c:209
+#, c-format
+msgid " (Limit: %s)"
+msgstr " (ლიმიტი: %s)"
+
+#: src/trg-status-bar.c:212
+#, c-format
+msgid "Down: %s%s, Up: %s%s"
+msgstr "გადმ: %s%s, ატვ: %s%s"
+
+#: src/trg-torrent-add-dialog.c:359
+msgid "Torrent files"
+msgstr "ტორენტ ფაილები"
+
+#: src/trg-torrent-add-dialog.c:364
+msgid "All files"
+msgstr "ყველა ფაილი"
+
+#: src/trg-torrent-add-dialog.c:392
+#, c-format
+msgid "Unable to open torrent file: %s"
+msgstr "გახსნის შეცდომა ტორენტის ფაილისთვის: %s"
+
+#: src/trg-torrent-add-dialog.c:459
+msgid "(None)"
+msgstr "(არცერთი)"
+
+#: src/trg-torrent-add-dialog.c:461
+msgid "(Multiple)"
+msgstr "(ერთზე მეტი)"
+
+#: src/trg-torrent-add-dialog.c:481
+msgid "Add a Torrent"
+msgstr "ტორენტის დამატება"
+
+#: src/trg-torrent-add-dialog.c:545 src/trg-files-tree-view-common.c:69
+msgid "High Priority"
+msgstr "მაღალი პრიორიტეტი"
+
+#: src/trg-torrent-add-dialog.c:547 src/trg-files-tree-view-common.c:73
+msgid "Normal Priority"
+msgstr "ნორმალური პრიორიტეტი"
+
+#: src/trg-torrent-add-dialog.c:549 src/trg-files-tree-view-common.c:77
+msgid "Low Priority"
+msgstr "დაბალი პრიორიტეტი"
+
+#: src/trg-torrent-add-dialog.c:553 src/trg-files-tree-view-common.c:87
+msgid "Skip"
+msgstr "გამოტოვება"
+
+#: src/trg-torrent-add-dialog.c:577
+msgid "Add Torrent"
+msgstr "ტორენტის დამატება"
+
+#: src/trg-torrent-add-dialog.c:583
+msgid "_Open"
+msgstr "_გახსნა"
+
+#: src/trg-torrent-add-dialog.c:594
+msgid "Start _paused"
+msgstr "_შეჩერებულად გაშვება"
+
+#: src/trg-torrent-add-dialog.c:609
+msgid "_Torrent file:"
+msgstr "ტორენტის _ფაილი:"
+
+#: src/trg-torrent-add-dialog.c:619
+msgid "_Destination folder:"
+msgstr "_დანიშნულების საქაღალდე:"
+
+#: src/trg-torrent-add-dialog.c:627
+msgid "Apply to all:"
+msgstr "ყველაზე გადატარება:"
+
+#: src/trg-torrent-add-dialog.c:629
+msgid "Torrent _priority:"
+msgstr "ტორენტის _პრიორიტეტი:"
+
+#: src/trg-torrent-add-dialog.c:694
+msgid "Show _options dialog"
+msgstr "პარამეტრების დიალ_ოგის ჩვენება"
+
+#: src/trg-torrent-add-url-dialog.c:56
+msgid ""
+"You are trying to add a magnet torrent, but DHT is disabled. Distributed "
+"Hash Table (DHT) should be enabled in remote settings."
+msgstr ""
+"თქვენ ცდილობთ, დაამატოთ მაგნიტური ტორენტი, მაგრამ DHT გათიშულია. ჩართეთ "
+"განაწილებული ჰეშებიც ცხრილი (DHT) დაშორებულის პარამეტრებში."
+
+#: src/trg-torrent-add-url-dialog.c:118
+msgid "URL:"
+msgstr "URL:"
+
+#: src/trg-torrent-add-url-dialog.c:120
+msgid "Start Paused"
+msgstr "შეჩერებულად გაჩვება"
+
+#: src/trg-torrent-add-url-dialog.c:122
+msgid "Add torrent from URL"
+msgstr "ტორენტის დამატება ბმულიდან"
+
+#: src/trg-torrent-model.c:329
+msgid "Default"
+msgstr "ნაგულისხმევი"
+
+#: src/trg-torrent-move-dialog.c:99 src/trg-torrent-props-dialog.c:235
+msgid "Location:"
+msgstr "მდებარეობა:"
+
+#: src/trg-torrent-move-dialog.c:131
+#, c-format
+msgid "Move %s"
+msgstr "%s-ის გადატანა"
+
+#: src/trg-torrent-move-dialog.c:133
+#, c-format
+msgid "Move %d torrents"
+msgstr "%d ტორენტის გადატანა"
+
+#: src/trg-torrent-props-dialog.c:184
+msgid "Activity"
+msgstr "აქტივობა"
+
+#: src/trg-torrent-props-dialog.c:189
+msgid "Torrent size:"
+msgstr "ტორენტის ზომა:"
+
+#: src/trg-torrent-props-dialog.c:194
+msgid "Have:"
+msgstr "მაქვს:"
+
+#: src/trg-torrent-props-dialog.c:199
+msgid "Downloaded:"
+msgstr "გადმოწერილია:"
+
+#: src/trg-torrent-props-dialog.c:204
+msgid "Uploaded:"
+msgstr "ატვირთულია:"
+
+#: src/trg-torrent-props-dialog.c:209
+msgid "State:"
+msgstr "მდგომარეობა:"
+
+#: src/trg-torrent-props-dialog.c:214
+msgid "Running time:"
+msgstr "გაშვების დრო:"
+
+#: src/trg-torrent-props-dialog.c:219
+msgid "Remaining time:"
+msgstr "დარჩენილი დრო:"
+
+#: src/trg-torrent-props-dialog.c:224
+msgid "Last activity:"
+msgstr "ბოლო აქტივობა:"
+
+#: src/trg-torrent-props-dialog.c:228
+msgid "Error:"
+msgstr "შეცდომა:"
+
+#: src/trg-torrent-props-dialog.c:231
+msgid "Details"
+msgstr "დეტალები"
+
+#: src/trg-torrent-props-dialog.c:240
+msgid "Hash:"
+msgstr "ჰეში:"
+
+#: src/trg-torrent-props-dialog.c:246
+msgid "Privacy:"
+msgstr "კონფიდენციალობა:"
+
+#: src/trg-torrent-props-dialog.c:251
+msgid "Origin:"
+msgstr "საწყისი:"
+
+#: src/trg-torrent-props-dialog.c:267
+msgid "Comment:"
+msgstr "კომენტარი:"
+
+#: src/trg-torrent-props-dialog.c:293
+msgid "Private to this tracker -- DHT and PEX disabled"
+msgstr "მხოლოდ, ამ ტრეკერისთვის -- DHT და PEX გათიშულია"
+
+#: src/trg-torrent-props-dialog.c:295
+msgid "Public torrent"
+msgstr "საჯარო ტორენტი"
+
+#: src/trg-torrent-props-dialog.c:305
+#, c-format
+msgid "Created by %1$s on %2$s"
+msgstr "ავტორი: %1$s %2$s"
+
+#: src/trg-torrent-props-dialog.c:307
+#, c-format
+msgid "Created on %1$s"
+msgstr "შეიქმნა %1$s"
+
+#: src/trg-torrent-props-dialog.c:309
+#, c-format
+msgid "Created by %1$s"
+msgstr "ავტორი: %1$s"
+
+#: src/trg-torrent-props-dialog.c:340
+msgid "No errors"
+msgstr "შეცდომების გარეშე"
+
+#: src/trg-torrent-props-dialog.c:343
+msgid "Active now"
+msgstr "ახლა აქტიურია"
+
+#: src/trg-torrent-props-dialog.c:373
+msgid "Honor global limits"
+msgstr "გლობალური ლიმიტების გათვალისწინება"
+
+#: src/trg-torrent-props-dialog.c:380
+msgid "Torrent priority:"
+msgstr "ტორენტის პრიორიტეტი:"
+
+#: src/trg-torrent-props-dialog.c:385
+msgid "Queue Position:"
+msgstr "რიგის პოზიცია:"
+
+#: src/trg-torrent-props-dialog.c:389
+msgid "Limit download speed (KiB/s)"
+msgstr "გადმოწერის სიჩქარის შეზღუდვა (კიბ/წმ)"
+
+#: src/trg-torrent-props-dialog.c:394
+msgid "Limit upload speed (KiB/s)"
+msgstr "ატვირთვის სიჩქარის შეზღუდვა (კიბ/წმ)"
+
+#: src/trg-torrent-props-dialog.c:401
+msgid "Use global settings"
+msgstr "გლობალური პარამეტრების გამოყენება"
+
+#: src/trg-torrent-props-dialog.c:401
+msgid "Stop seeding at ratio"
+msgstr "გაცემის შეწყვეტა ფარდობისას"
+
+#: src/trg-torrent-props-dialog.c:402
+msgid "Seed regardless of ratio"
+msgstr "გაცემა ფარდობის მიუხედავად"
+
+#: src/trg-torrent-props-dialog.c:404
+msgid "Seed ratio mode:"
+msgstr "გაცემის ფარდობის რეჟიმი:"
+
+#: src/trg-torrent-props-dialog.c:411
+msgid "Seed ratio limit:"
+msgstr "გაცემის ფარდობის ლიმიტი:"
+
+#: src/trg-torrent-props-dialog.c:416
+msgid "Peer limit:"
+msgstr "პარტნიორების ლიმიტი:"
+
+#: src/trg-torrent-props-dialog.c:474
+#, c-format
+msgid "Multiple (%d) torrent properties"
+msgstr "ერთზე მეტი (%d) ტორენტის თვისებები"
+
+#: src/trg-torrent-props-dialog.c:501
+msgid "Information"
+msgstr "ინფორმაცია"
+
+#: src/trg-torrent-tree-view.c:54
+msgid "Done"
+msgstr "მზადაა"
+
+#: src/trg-torrent-tree-view.c:58
+msgid "Seeds"
+msgstr "მარცვლები"
+
+#: src/trg-torrent-tree-view.c:60
+msgid "Sending"
+msgstr "გაგზავნა"
+
+#: src/trg-torrent-tree-view.c:64
+msgid "Downloads"
+msgstr "გადმოწერები"
+
+#: src/trg-torrent-tree-view.c:67
+msgid "Receiving"
+msgstr "მიღება"
+
+#: src/trg-torrent-tree-view.c:69
+msgid "Connected"
+msgstr "დაკავშირებულია"
+
+#: src/trg-torrent-tree-view.c:70
+msgid "PEX Peers"
+msgstr "PEX პარტნიორები"
+
+#: src/trg-torrent-tree-view.c:72
+msgid "DHT Peers"
+msgstr "DHT პარტნიორები"
+
+#: src/trg-torrent-tree-view.c:75
+msgid "Tracker Peers"
+msgstr "ტრეკერი პარტნიორები"
+
+#: src/trg-torrent-tree-view.c:77
+msgid "LTEP Peers"
+msgstr "LTEP პარტმიორები"
+
+#: src/trg-torrent-tree-view.c:80
+msgid "Resumed Peers"
+msgstr "გაგრძელებული პარტნიორები"
+
+#: src/trg-torrent-tree-view.c:83
+msgid "Incoming Peers"
+msgstr "შემომავალი პარტნიორები"
+
+#: src/trg-torrent-tree-view.c:86
+msgid "Peers T/I/E/H/X/L/R"
+msgstr "პარტნიორის T/I/E/H/X/L/R"
+
+#: src/trg-torrent-tree-view.c:98
+msgid "Added"
+msgstr "დამატებულია"
+
+#: src/trg-torrent-tree-view.c:99
+msgid "First Tracker"
+msgstr "პირველი ტრეკერი"
+
+#: src/trg-torrent-tree-view.c:103
+msgid "ID"
+msgstr "ID"
+
+#: src/trg-torrent-tree-view.c:108
+msgid "Queue Position"
+msgstr "რიგის პოზიცია"
+
+#: src/trg-torrent-tree-view.c:111
+msgid "Last Active"
+msgstr "ბოლოს აქტიური"
+
+#: src/trg-trackers-tree-view.c:135
+msgid "Tier"
+msgstr "კლასი"
+
+#: src/trg-trackers-tree-view.c:139
+msgid "Announce URL"
+msgstr "URL-ის გამოცხადება"
+
+#: src/trg-trackers-tree-view.c:152
+msgid "Seeder Count"
+msgstr "სიდერების რაოდენობა"
+
+#: src/trg-trackers-tree-view.c:155
+msgid "Leecher Count"
+msgstr "ლიჩერების რაოდენობა"
+
+#: src/trg-trackers-tree-view.c:157
+msgid "Last Announce"
+msgstr "ბოლო გამოცხადება"
+
+#: src/trg-trackers-tree-view.c:159
+msgid "Last Result"
+msgstr "ბოლო შედეგი"
+
+#: src/trg-trackers-tree-view.c:160
+msgid "Scrape URL"
+msgstr "Scrape-ის URL"
+
+#: src/trg-trackers-tree-view.c:162
+msgid "Last Scrape"
+msgstr "ბოლო Scrape"
+
+#: src/trg-tree-view.c:258
+msgid "Ascending"
+msgstr "აღმავალი"
+
+#: src/trg-tree-view.c:264
+msgid "Descending"
+msgstr "დაღმავალი"
+
+#: src/trg-files-tree-view-common.c:57
+msgid "Rename..."
+msgstr "სახელის გადარქმევა..."
+
+#: src/trg-files-tree-view-common.c:93
+msgid "Expand All"
+msgstr "ყველას აკეცვა"
+
+#: src/trg-files-tree-view-common.c:97
+msgid "Collapse All"
+msgstr "ყველას ჩამოშლა"
+
+#: src/util.c:346
+#, c-format
+msgid "Request failed with HTTP code: %d"
+msgstr "მოთხოვნა ჩავარდა HTTP კოდით: %d"
+
+#: src/util.c:376
+msgid "None"
+msgstr "არცერთი"
+
+#: src/util.c:422
+#, c-format
+msgid "%d day"
+msgid_plural "%d days"
+msgstr[0] "%d დღე"
+msgstr[1] "%d დღე"
+
+#: src/util.c:423
+#, c-format
+msgid "%d hour"
+msgid_plural "%d hours"
+msgstr[0] "%d საათი"
+msgstr[1] "%d საათი"
+
+#: src/util.c:424
+#, c-format
+msgid "%d minute"
+msgid_plural "%d minutes"
+msgstr[0] "%d წუთი"
+msgstr[1] "%d წუთი"
+
+#: src/util.c:425
+#, c-format
+msgid "%ld second"
+msgid_plural "%ld seconds"
+msgstr[0] "%ld წამი"
+msgstr[1] "%ld წამი"
