@@ -1008,8 +1008,8 @@ msgid "Update"
 msgstr "Dagfør"
 
 #: ../src/trg-remote-prefs-dialog.c:478 ../src/trg-remote-prefs-dialog.c:572
-msgid "Blocklist (%"
-msgstr "Svartalisti (%"
+msgid "Blocklist (%lld entries)"
+msgstr "Svartalisti (%lld skrásetingar)"
 
 #: ../src/trg-remote-prefs-dialog.c:520 ../src/trg-remote-prefs-dialog.c:702
 msgid "Connections"

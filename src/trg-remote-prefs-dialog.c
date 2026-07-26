@@ -445,8 +445,8 @@ static gboolean on_blocklist_updated(gpointer data)
         if (response->status == SOUP_STATUS_OK) {
             JsonObject *args = get_arguments(response->obj);
             gchar *labelText
-                = g_strdup_printf(_("Blocklist (%" G_GINT64_FORMAT " entries)"),
-                                  json_object_get_int_member(args, SGET_BLOCKLIST_SIZE));
+                = g_strdup_printf(_("Blocklist (%lld entries)"),
+                                  (long long)json_object_get_int_member(args, SGET_BLOCKLIST_SIZE));
             gtk_button_set_label(GTK_BUTTON(self->blocklist_check), labelText);
             g_free(labelText);
         } else {
@@ -528,8 +528,8 @@ static GtkWidget *trg_rprefs_connPage(TrgRemotePrefsDialog *win, JsonObject *s)
 
     hig_workarea_add_section_title(t, &row, _("Blocklist"));
 
-    stringValue = g_strdup_printf(_("Blocklist (%" G_GINT64_FORMAT " entries)"),
-                                  session_get_blocklist_size(s));
+    stringValue
+        = g_strdup_printf(_("Blocklist (%lld entries)"), (long long)session_get_blocklist_size(s));
     tb = win->blocklist_check
         = trg_json_widget_check_new(&win->widgets, s, SGET_BLOCKLIST_ENABLED, stringValue, NULL);
     g_free((gchar *)stringValue);
