@@ -197,7 +197,7 @@ msgstr ""
 
 #: src/torrent.c:364 src/torrent.c:384
 msgid "Metadata Downloading"
-msgstr "Metaadatok Letöltése"
+msgstr "Metaadatok letöltése"
 
 #: src/torrent.c:366 src/torrent.c:386 src/trg-state-selector.c:602
 msgid "Downloading"
@@ -523,7 +523,7 @@ msgstr "_Eltávolítás"
 
 #: src/trg-main-window.c:760
 msgid "Remove and delete"
-msgstr "Eltávolítés és törlés"
+msgstr "Eltávolítás és törlés"
 
 #: src/trg-main-window.c:760
 msgid "_Delete"
@@ -592,7 +592,7 @@ msgstr "Folytatás"
 
 #: src/trg-main-window.c:1821 src/trg-toolbar.c:189
 msgid "Pause"
-msgstr "Szünetelteés"
+msgstr "Szüneteltetés"
 
 #: src/trg-main-window.c:1823
 msgid "Verify"
@@ -609,7 +609,7 @@ msgstr "Áthelyezés"
 
 #: src/trg-main-window.c:1831 src/trg-menu-bar.c:598 src/trg-toolbar.c:198
 msgid "Remove and delete data"
-msgstr "Eltávolítés és adatok törlése"
+msgstr "Eltávolítás és adatok törlése"
 
 #: src/trg-main-window.c:1846
 msgid "Execute"
@@ -1018,7 +1018,7 @@ msgstr "_OK"
 
 #: src/trg-preferences-dialog.c:783 src/trg-toolbar.c:204
 msgid "Local Preferences"
-msgstr "Helyi Beállítások"
+msgstr "Helyi beállítások"
 
 #: src/trg-preferences-dialog.c:804
 msgid "Actions"
@@ -1042,11 +1042,11 @@ msgstr "K"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Wed"
-msgstr "SZe"
+msgstr "Sze"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Thu"
-msgstr "CS"
+msgstr "Cs"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Fri"
@@ -1202,7 +1202,7 @@ msgstr "Helyi peerek felderítése"
 
 #: src/trg-remote-prefs-dialog.c:538
 msgid "Blocklist"
-msgstr "Tiltőlista"
+msgstr "Tiltólista"
 
 #: src/trg-remote-prefs-dialog.c:553
 msgid "Blocklist URL:"
@@ -1302,11 +1302,11 @@ msgstr "Feltöltések összesen"
 
 #: src/trg-stats-dialog.c:281
 msgid "Files Added"
-msgstr "Fájlok Hozzáadva"
+msgstr "Fájlok hozzáadva"
 
 #: src/trg-stats-dialog.c:282
 msgid "Session Count"
-msgstr "Munkamenetek Száma"
+msgstr "Munkamenetek száma"
 
 #: src/trg-stats-dialog.c:283
 msgid "Time Active"
