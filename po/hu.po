@@ -1,48 +1,44 @@
-# SOME DESCRIPTIVE TITLE.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
-# This file is distributed under the same license as the PACKAGE package.
-# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+# Hungarian translation for Transmission Remote GTK.
+# Dénes Sávoli, 2012.
+# Miklós Moldován, 2026.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: transmission-remote-gtk\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-12-13 22:01-0600\n"
-"PO-Revision-Date: 2012-10-08 09:59+0000\n"
-"Last-Translator: Dénes Sávoli <savolidenes@gmail.com>\n"
-"Language-Team: Random Team <info@randomteam.hu>\n"
+"PO-Revision-Date: 2026-08-26 20:45+0200\n"
+"Last-Translator: Miklós Moldován\n"
+"Language-Team: Hungarian\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Launchpad-Export-Date: 2014-06-12 07:44+0000\n"
-"X-Generator: Launchpad (build 17045)\n"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:3
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:8
 #: src/trg-main-window.c:2173
 msgid "Transmission Remote"
-msgstr "Transmission Remote - Hungarian"
+msgstr "Transmission Remote"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:4
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:11
 msgid "Remotely manage the Transmission BitTorrent client"
-msgstr ""
+msgstr "A Transmission BitTorrent kliens távoli kezelése"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:6
-#, fuzzy
 msgid "transmission-remote-gtk"
-msgstr "Transmission Remote - Hungarian"
+msgstr "transmission-remote-gtk"
 
 #: data/io.github.TransmissionRemoteGtk.desktop.in:11
 msgid "p2p;bittorrent;transmission;rpc;"
-msgstr ""
+msgstr "p2p;bittorrent;transmission;rpc;"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:9
-#, fuzzy
+
 msgid "Transmission Remote Gtk Team"
-msgstr "Transmission Remote - Hungarian"
+msgstr "Transmission Remote GTK csapat"
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:15
 msgid ""
@@ -52,6 +48,11 @@ msgid ""
 "ones (it works as a .torrent fle handler from a webbrowser), and configure "
 "settings on transmission-daemon."
 msgstr ""
+"A Transmission Remote GTK lehetővé teszi a Transmission BitTorrent kliens "
+"távoli kezelését az RPC felületén keresztül. Használható torrentek kezelésére "
+"(indítás/leállítás/ellenőrzés/tracker frissítése/eltávolítás/eltávolítás és "
+"adatok törlése), új torrentek hozzáadására (torrentfájlból vagy webböngészőből "
+"torrentfájl-kezelőként), valamint a transmission-daemon beállítására."
 
 #: data/io.github.TransmissionRemoteGtk.appdata.xml.in:27
 msgid "Bug fix release to fix install paths"
@@ -196,7 +197,7 @@ msgstr ""
 
 #: src/torrent.c:364 src/torrent.c:384
 msgid "Metadata Downloading"
-msgstr "Metaadat Letöltése"
+msgstr "Metaadatok letöltése"
 
 #: src/torrent.c:366 src/torrent.c:386 src/trg-state-selector.c:602
 msgid "Downloading"
@@ -204,11 +205,11 @@ msgstr "Letöltés"
 
 #: src/torrent.c:368
 msgid "Queued download"
-msgstr "Sorban áll letöltésre"
+msgstr "Letöltésre vár"
 
 #: src/torrent.c:370 src/torrent.c:394
 msgid "Waiting To Check"
-msgstr "Várakozás ellenőrzésre"
+msgstr "Ellenőrzésre vár"
 
 #: src/torrent.c:372 src/torrent.c:392 src/trg-state-selector.c:618
 msgid "Checking"
@@ -216,12 +217,12 @@ msgstr "Ellenőrzés"
 
 #: src/torrent.c:374
 msgid "Queued seed"
-msgstr "Sorban áll feltöltésre"
+msgstr "Feltöltésre vár"
 
 #: src/torrent.c:376 src/torrent.c:390 src/trg-remote-prefs-dialog.c:359
 #: src/trg-state-selector.c:606 src/trg-torrent-props-dialog.c:404
 msgid "Seeding"
-msgstr "Feltöltés"
+msgstr "Seedelés"
 
 #: src/torrent.c:378 src/torrent.c:388 src/torrent-cell-renderer.c:242
 #: src/trg-state-selector.c:610
@@ -235,7 +236,7 @@ msgstr "Ismeretlen"
 #: src/torrent-cell-renderer.c:145
 #, c-format
 msgid "%1$s of %2$s (%3$s)"
-msgstr "%1$s a %2$s-ból (%3$s)"
+msgstr "%1$s / %2$s (%3$s)"
 
 #: src/torrent-cell-renderer.c:151
 #, c-format
@@ -259,7 +260,7 @@ msgstr "%1$s, feltöltve %2$s (Arány: %3$s)"
 
 #: src/torrent-cell-renderer.c:192
 msgid "Remaining time unknown"
-msgstr "Hátralévő idő ismeretlen"
+msgstr "A hátralévő idő ismeretlen"
 
 #: src/torrent-cell-renderer.c:197
 #, c-format
@@ -286,20 +287,20 @@ msgstr "Elkészült"
 
 #: src/torrent-cell-renderer.c:244
 msgid "Queued for verification"
-msgstr "Ellenőrzéshez sorba állítva"
+msgstr "Ellenőrzésre vár"
 
 #: src/torrent-cell-renderer.c:246
 msgid "Queued for download"
-msgstr "Sorba állítva letöltéshez"
+msgstr "Letöltésre vár"
 
 #: src/torrent-cell-renderer.c:248
 msgid "Queued for seeding"
-msgstr "Sorba állítva feltöltésre"
+msgstr "Seedelésre vár"
 
 #: src/torrent-cell-renderer.c:251
 #, c-format
 msgid "Verifying data (%1$s tested)"
-msgstr "Adat ellenőrzése (%1$s ellenőrizve)"
+msgstr "Adatok ellenőrzése (%1$s ellenőrizve)"
 
 #: src/torrent-cell-renderer.c:257
 #, c-format
@@ -309,42 +310,39 @@ msgstr "Arány: %s"
 #: src/torrent-cell-renderer.c:277
 #, c-format
 msgid "Tracker gave a warning: \"%s\""
-msgstr ""
+msgstr "A tracker figyelmeztetést küldött: „%s”"
 
 #: src/torrent-cell-renderer.c:280
-#, fuzzy, c-format
+#, c-format
 msgid "Tracker gave an error: \"%s\""
-msgstr "Tracker Peerek"
+msgstr "A tracker hibát jelzett: „%s”"
 
 #: src/torrent-cell-renderer.c:283
-#, fuzzy, c-format
+#, c-format
 msgid "Error: \"%s\""
-msgstr "Hiba:"
+msgstr "Hiba: „%s”"
 
 #: src/torrent-cell-renderer.c:294
-#, fuzzy
 msgid "Downloading from %1$"
 msgid_plural "Downloading from %1$"
-msgstr[0] "%d Letöltés @ %s"
-msgstr[1] "%d Letöltés @ %s"
+msgstr[0] "Letöltés %1$li / %2$li csatlakozott peertől"
+msgstr[1] "Letöltés %1$li / %2$li csatlakozott peertől"
 
 #: src/torrent-cell-renderer.c:304
-#, fuzzy
 msgid "Downloading metadata from %1$"
 msgid_plural "Downloading metadata from %1$"
 msgstr[0] "Metaadat letöltése %1$li peertől (%2$s kész)"
 msgstr[1] "Metaadat letöltése %1$li peertől (%2$s kész)"
 
 #: src/torrent-cell-renderer.c:312
-#, fuzzy
 msgid "Seeding to %1$"
 msgid_plural "Seeding to %1$"
-msgstr[0] "%d Feltöltés @ %s"
-msgstr[1] "%d Feltöltés @ %s"
+msgstr[0] "Seedelés %1$li / %2$li csatlakozott peernek"
+msgstr[1] "Seedelés %1$li / %2$li csatlakozott peernek"
 
 #: src/trg-about-window.c:51
 msgid "A remote client to transmission-daemon."
-msgstr "Távoli kliens a transmission-daemon-hoz"
+msgstr "Távoli kliens a transmission-daemonhoz"
 
 #: src/trg-cell-renderer-priority.c:68 src/trg-general-panel.c:192
 #: src/trg-main-window.c:1689 src/trg-torrent-add-dialog.c:348
@@ -381,7 +379,7 @@ msgstr "Méret"
 
 #: src/trg-files-tree-view.c:197 src/trg-peers-tree-view.c:66
 msgid "Progress"
-msgstr "Állapot"
+msgstr "Előrehaladás"
 
 #: src/trg-files-tree-view.c:199 src/trg-torrent-add-dialog.c:287
 #: src/trg-torrent-add-dialog.c:560 src/trg-files-tree-view-common.c:83
@@ -416,7 +414,7 @@ msgstr "Hiba"
 
 #: src/trg-general-panel.c:285
 msgid "Rate Down"
-msgstr "Letöltési seb."
+msgstr "Letöltési sebesség"
 
 #: src/trg-general-panel.c:286 src/trg-torrent-tree-view.c:111
 msgid "Completed"
@@ -428,7 +426,7 @@ msgstr "Hátravan"
 
 #: src/trg-general-panel.c:289
 msgid "Rate Up"
-msgstr "Feltöltési seb."
+msgstr "Feltöltési sebesség"
 
 #: src/trg-general-panel.c:290 src/trg-torrent-tree-view.c:97
 msgid "Downloaded"
@@ -452,13 +450,12 @@ msgid "Leechers"
 msgstr "Letöltők"
 
 #: src/trg-general-panel.c:297
-#, fuzzy
 msgid "Ratio limit"
 msgstr "Feltöltési arány korlát"
 
 #: src/trg-general-panel.c:298
 msgid "Corrupted"
-msgstr ""
+msgstr "Sérült"
 
 #: src/trg-general-panel.c:300 src/trg-torrent-tree-view.c:58
 msgid "Status"
@@ -466,7 +463,7 @@ msgstr "Státusz"
 
 #: src/trg-general-panel.c:302
 msgid "Completed At"
-msgstr "Kész ekkor"
+msgstr "Befejezés ideje"
 
 #: src/trg-general-panel.c:305 src/trg-torrent-tree-view.c:103
 msgid "Location"
@@ -477,9 +474,8 @@ msgid "Comment"
 msgstr "Megjegyzés"
 
 #: src/trg-general-panel.c:309
-#, fuzzy
 msgid "Hash"
-msgstr "Hash:"
+msgstr "Hash"
 
 #: src/trg-gtk-app.c:169 src/trg-peers-tree-view.c:69
 msgid "Client"
@@ -487,7 +483,7 @@ msgstr "Kliens"
 
 #: src/trg-gtk-app.c:174
 msgid "Min On Start"
-msgstr ""
+msgstr "Minimalizálás induláskor"
 
 #: src/trg-main-window.c:291
 msgid "This torrent has completed."
@@ -502,39 +498,36 @@ msgid "Connecting..."
 msgstr "Kapcsolódás..."
 
 #: src/trg-main-window.c:693
-#, fuzzy, c-format
+#, c-format
 msgid "<big><b>%s \"%s\"?</b></big>"
-msgstr "<big><b>Törlöd ezt a torrentet: \"%s\"?</b></big>"
+msgstr "<big><b>%s: „%s”?</b></big>"
 
 #: src/trg-main-window.c:698
-#, fuzzy, c-format
+#, c-format
 msgid "<big><b>%s %d torrents?</b></big>"
-msgstr "<big><b>Eltávolítod %d torrenteket?</b></big>"
+msgstr "<big><b>%s: %d torrent?</b></big>"
 
 #: src/trg-main-window.c:704 src/trg-torrent-add-dialog.c:487
 #: src/trg-torrent-add-dialog.c:592
 msgid "_Cancel"
-msgstr ""
+msgstr "_Mégse"
 
 #: src/trg-main-window.c:740 src/trg-main-window.c:1829 src/trg-menu-bar.c:594
 #: src/trg-toolbar.c:196
 msgid "Remove"
-msgstr "Eltávolít"
+msgstr "Eltávolítás"
 
 #: src/trg-main-window.c:740
-#, fuzzy
 msgid "_Remove"
-msgstr "Eltávolít"
+msgstr "_Eltávolítás"
 
 #: src/trg-main-window.c:760
-#, fuzzy
 msgid "Remove and delete"
-msgstr "Eltávolít és töröl"
+msgstr "Eltávolítás és törlés"
 
 #: src/trg-main-window.c:760
-#, fuzzy
 msgid "_Delete"
-msgstr "Töröl"
+msgstr "_Törlés"
 
 #: src/trg-main-window.c:828 src/trg-preferences-dialog.c:796
 #: src/trg-remote-prefs-dialog.c:640
@@ -559,8 +552,8 @@ msgstr "Peerek"
 #, c-format
 msgid "This application supports Transmission %g and later, you have %g."
 msgstr ""
-"Ez az alkalmazás Transmisson %g vagy későbbi verziót támogat, a te verziód "
-"%g."
+"Ez az alkalmazás a Transmission %g vagy újabb verzióját támogatja. A telepített "
+"verzió: %g."
 
 #: src/trg-main-window.c:974 src/trg-status-bar.c:77 src/trg-status-bar.c:105
 msgid "Disconnected"
@@ -569,63 +562,62 @@ msgstr "Szétkapcsolva"
 #: src/trg-main-window.c:1003
 #, c-format
 msgid "%d Downloading @ %s"
-msgstr "%d Letöltés @ %s"
+msgstr "%d letöltés @ %s"
 
 #: src/trg-main-window.c:1008
 #, c-format
 msgid "%d Seeding @ %s"
-msgstr "%d Feltöltés @ %s"
+msgstr "%d seedelés @ %s"
 
 #: src/trg-main-window.c:1052
 #, c-format
 msgid "Request %d/%d failed: %s"
-msgstr "Kérés %d/%d sikertelen: %s"
+msgstr "A(z) %d/%d kérés sikertelen: %s"
 
 #: src/trg-main-window.c:1724
 msgid "No Limit"
-msgstr "Nincs limit"
+msgstr "Nincs korlát"
 
 #: src/trg-main-window.c:1815 src/trg-menu-bar.c:571 src/trg-toolbar.c:192
 msgid "Properties"
-msgstr "Beállítások"
+msgstr "Tulajdonságok"
 
 #: src/trg-main-window.c:1817
 msgid "Copy Magnet Link"
-msgstr ""
+msgstr "Magnet hivatkozás másolása"
 
 #: src/trg-main-window.c:1819 src/trg-toolbar.c:187
 msgid "Resume"
-msgstr "Folytat"
+msgstr "Folytatás"
 
 #: src/trg-main-window.c:1821 src/trg-toolbar.c:189
 msgid "Pause"
-msgstr "Szünetel"
+msgstr "Szüneteltetés"
 
 #: src/trg-main-window.c:1823
 msgid "Verify"
-msgstr "Ellenőriz"
+msgstr "Ellenőrzés"
 
 #: src/trg-main-window.c:1825
 msgid "Re-announce"
-msgstr "Re-announce"
+msgstr "Tracker frissítése"
 
 #: src/trg-main-window.c:1827 src/trg-torrent-move-dialog.c:101
 #: src/trg-torrent-move-dialog.c:106
 msgid "Move"
-msgstr "Mozgat"
+msgstr "Áthelyezés"
 
 #: src/trg-main-window.c:1831 src/trg-menu-bar.c:598 src/trg-toolbar.c:198
-#, fuzzy
 msgid "Remove and delete data"
-msgstr "Eltávolít és töröl"
+msgstr "Eltávolítás és adatok törlése"
 
 #: src/trg-main-window.c:1846
 msgid "Execute"
-msgstr ""
+msgstr "Végrehajtás"
 
 #: src/trg-main-window.c:1867 src/trg-menu-bar.c:604
 msgid "Start Now"
-msgstr "Indítás Most"
+msgstr "Indítás most"
 
 #: src/trg-main-window.c:1869 src/trg-menu-bar.c:607
 msgid "Move Up Queue"
@@ -645,11 +637,11 @@ msgstr "Sor elejére"
 
 #: src/trg-main-window.c:1882 src/trg-main-window.c:1945
 msgid "Down Limit"
-msgstr "Letöltési limit"
+msgstr "Letöltési korlát"
 
 #: src/trg-main-window.c:1885 src/trg-main-window.c:1948
 msgid "Up Limit"
-msgstr "Feltöltési limit"
+msgstr "Feltöltési korlát"
 
 #: src/trg-main-window.c:1908 src/trg-main-window.c:1913
 #: src/trg-remote-prefs-dialog.c:475
@@ -663,28 +655,28 @@ msgstr "Kapcsolódás"
 
 #: src/trg-main-window.c:1929 src/trg-toolbar.c:180
 msgid "Disconnect"
-msgstr "Szétkapcsol"
+msgstr "Szétkapcsolás"
 
 #: src/trg-main-window.c:1932 src/trg-toolbar.c:182
 #: src/trg-trackers-tree-view.c:238 src/trg-trackers-tree-view.c:255
 msgid "Add"
-msgstr "Hozzáad"
+msgstr "Hozzáadás"
 
 #: src/trg-main-window.c:1935
 msgid "Add from URL"
-msgstr "Hozzáad URL-ből"
+msgstr "Hozzáadás URL-ből"
 
 #: src/trg-main-window.c:1938
 msgid "Resume All"
-msgstr "Mindet folytat"
+msgstr "Összes folytatása"
 
 #: src/trg-main-window.c:1941
 msgid "Pause All"
-msgstr "Mindet szüneteltet"
+msgstr "Összes szüneteltetése"
 
 #: src/trg-main-window.c:1953
 msgid "Quit"
-msgstr "Kilép"
+msgstr "Kilépés"
 
 #: src/trg-main-window.c:2034 src/trg-menu-bar.c:461
 msgid "Graph"
@@ -696,15 +688,15 @@ msgstr "_Nézet"
 
 #: src/trg-menu-bar.c:419
 msgid "Transmission Style"
-msgstr "Transmission Téma"
+msgstr "Transmission stílus"
 
 #: src/trg-menu-bar.c:424
 msgid "Transmission Compact Style"
-msgstr "Transmission Kompakt Téma"
+msgstr "Transmission kompakt stílus"
 
 #: src/trg-menu-bar.c:428
 msgid "Classic Style"
-msgstr "Klasszikus Téma"
+msgstr "Klasszikus stílus"
 
 #: src/trg-menu-bar.c:433
 msgid "Sort"
@@ -712,24 +704,23 @@ msgstr "Rendezés"
 
 #: src/trg-menu-bar.c:436 src/trg-preferences-dialog.c:597
 msgid "State selector"
-msgstr "Státusz kiválasztó"
+msgstr "Állapotválasztó"
 
 #: src/trg-menu-bar.c:441 src/trg-preferences-dialog.c:602
 msgid "Directory filters"
-msgstr "Mappa szűrők"
+msgstr "Mappaszűrők"
 
 #: src/trg-menu-bar.c:446 src/trg-preferences-dialog.c:607
 msgid "Tracker filters"
-msgstr "Tracker szűrők"
+msgstr "Trackerszűrők"
 
 #: src/trg-menu-bar.c:451 src/trg-preferences-dialog.c:612
-#, fuzzy
 msgid "Directories first"
-msgstr "Könyvtárak"
+msgstr "Mappák előre"
 
 #: src/trg-menu-bar.c:455 src/trg-preferences-dialog.c:617
 msgid "Torrent Details"
-msgstr "Torrent adatok"
+msgstr "Torrent részletei"
 
 #: src/trg-menu-bar.c:466
 msgid "_Statistics"
@@ -753,16 +744,16 @@ msgstr "_Fájl"
 
 #: src/trg-menu-bar.c:546
 msgid "_Disconnect"
-msgstr "_Szétkapcsol"
+msgstr "_Szétkapcsolás"
 
 #: src/trg-menu-bar.c:549 src/trg-torrent-add-dialog.c:487
 #: src/trg-torrent-add-url-dialog.c:131
 msgid "_Add"
-msgstr "_Hozzáad"
+msgstr "_Hozzáadás"
 
 #: src/trg-menu-bar.c:552
 msgid "Add from _URL"
-msgstr "Hozzáad _URL-ből"
+msgstr "Hozzáadás _URL-ből"
 
 #: src/trg-menu-bar.c:555
 msgid "_Quit"
@@ -774,35 +765,35 @@ msgstr "_Torrent"
 
 #: src/trg-menu-bar.c:575
 msgid "_Copy Magnet Link"
-msgstr ""
+msgstr "_Magnet hivatkozás másolása"
 
 #: src/trg-menu-bar.c:578
 msgid "_Resume"
-msgstr "_Folytat"
+msgstr "_Folytatás"
 
 #: src/trg-menu-bar.c:581
 msgid "_Pause"
-msgstr "_Szünetel"
+msgstr "_Szüneteltetés"
 
 #: src/trg-menu-bar.c:584
 msgid "_Verify"
-msgstr "_Ellenőriz"
+msgstr "_Ellenőrzés"
 
 #: src/trg-menu-bar.c:588
 msgid "Re-_announce"
-msgstr "Re-_announce"
+msgstr "Tracker _frissítése"
 
 #: src/trg-menu-bar.c:591
 msgid "_Move"
-msgstr "_Mozgat"
+msgstr "_Áthelyezés"
 
 #: src/trg-menu-bar.c:621
 msgid "_Resume All"
-msgstr "_Folytat MINDET"
+msgstr "Összes _folytatása"
 
 #: src/trg-menu-bar.c:624
 msgid "_Pause All"
-msgstr "_Szünetel MINDET"
+msgstr "Összes _szüneteltetése"
 
 #: src/trg-menu-bar.c:634
 msgid "_Help"
@@ -826,7 +817,7 @@ msgstr "Ország"
 
 #: src/trg-peers-tree-view.c:60
 msgid "City"
-msgstr ""
+msgstr "Város"
 
 #: src/trg-peers-tree-view.c:62 src/trg-torrent-tree-view.c:90
 msgid "Down Speed"
@@ -838,7 +829,7 @@ msgstr "Feltöltési sebesség"
 
 #: src/trg-peers-tree-view.c:68
 msgid "Flags"
-msgstr "Flagek"
+msgstr "Jelzők"
 
 #: src/trg-preferences-dialog.c:357
 msgid "Updates"
@@ -850,19 +841,19 @@ msgstr "Csak aktív torrentek frissítése"
 
 #: src/trg-preferences-dialog.c:363
 msgid "Full update every (?) updates"
-msgstr "Teljes frissítés minden (?)"
+msgstr "Teljes frissítés minden (?) frissítés után"
 
 #: src/trg-preferences-dialog.c:373
 msgid "Update interval:"
-msgstr "Frissítési intervallum:"
+msgstr "Frissítési időköz:"
 
 #: src/trg-preferences-dialog.c:377
 msgid "Minimised update interval:"
-msgstr "Frissítési intervallum minimalizálva:"
+msgstr "Frissítési időköz minimalizálva:"
 
 #: src/trg-preferences-dialog.c:381
 msgid "Session update interval:"
-msgstr "Munkamenet frissítés intervalluma:"
+msgstr "Munkamenet frissítési időköze:"
 
 #: src/trg-preferences-dialog.c:383
 msgid "Torrents"
@@ -870,11 +861,11 @@ msgstr "Torrentek"
 
 #: src/trg-preferences-dialog.c:385
 msgid "Start paused"
-msgstr "Szüneteltek indítása"
+msgstr "Indítás szüneteltetve"
 
 #: src/trg-preferences-dialog.c:388
 msgid "Options dialog on add"
-msgstr "Beállítások dialógos hozzáadásnál"
+msgstr "Beállítások megjelenítése hozzáadáskor"
 
 #: src/trg-preferences-dialog.c:392 src/trg-torrent-add-dialog.c:610
 msgid "Delete local .torrent file after adding"
@@ -886,7 +877,7 @@ msgstr "Parancsok"
 
 #: src/trg-preferences-dialog.c:535 src/trg-preferences-dialog.c:574
 msgid "Label"
-msgstr "Cimke"
+msgstr "Címke"
 
 #: src/trg-preferences-dialog.c:537
 msgid "Command"
@@ -898,10 +889,13 @@ msgid ""
 "transmission-remote-gtk/transmission-remote-gtk/wiki/Local-Command-"
 "usage\">here</a>"
 msgstr ""
+"A parancsok dokumentációja <a href=\"https://github.com/"
+"transmission-remote-gtk/transmission-remote-gtk/wiki/Local-Command-"
+"usage\">itt</a> található."
 
 #: src/trg-preferences-dialog.c:567
 msgid "Remote Download Directories"
-msgstr "Távoli letöltések könyvtárai"
+msgstr "Távoli letöltési könyvtárak"
 
 #: src/trg-preferences-dialog.c:576
 msgid "Directory"
@@ -913,35 +907,35 @@ msgstr "Nézet"
 
 #: src/trg-preferences-dialog.c:623
 msgid "Show graph"
-msgstr "Grafikon mutatása"
+msgstr "Grafikon megjelenítése"
 
 #: src/trg-preferences-dialog.c:629
 msgid "System Tray"
-msgstr "Rendszer ikon"
+msgstr "Rendszertálca"
 
 #: src/trg-preferences-dialog.c:631
 msgid "Show in system tray"
-msgstr "Mutatás rendszer ikonként"
+msgstr "Megjelenítés a rendszertálcán"
 
 #: src/trg-preferences-dialog.c:637
 msgid "System tray not supported."
-msgstr ""
+msgstr "A rendszertálca nem támogatott"
 
 #: src/trg-preferences-dialog.c:642
 msgid "Minimise to system tray"
-msgstr "Minimalizálás óra mellé"
+msgstr "Minimalizálás a rendszertálcára"
 
 #: src/trg-preferences-dialog.c:648
 msgid "Notifications"
-msgstr "Figyelmeztetések"
+msgstr "Értesítések"
 
 #: src/trg-preferences-dialog.c:650
 msgid "Torrent added notifications"
-msgstr "Torrent hozzáadva figyelmeztetések"
+msgstr "Értesítés torrent hozzáadásakor"
 
 #: src/trg-preferences-dialog.c:654
 msgid "Torrent complete notifications"
-msgstr "Torrent kész figyelmeztetések"
+msgstr "Értesítés torrent befejezésekor"
 
 #: src/trg-preferences-dialog.c:680
 msgid "Profile: "
@@ -949,11 +943,11 @@ msgstr "Profil: "
 
 #: src/trg-preferences-dialog.c:683
 msgid "New"
-msgstr ""
+msgstr "Új"
 
 #: src/trg-preferences-dialog.c:687 src/trg-trackers-tree-view.c:252
 msgid "Delete"
-msgstr "Töröl"
+msgstr "Törlés"
 
 #: src/trg-preferences-dialog.c:701
 msgid "Name:"
@@ -973,15 +967,15 @@ msgstr "Port:"
 
 #: src/trg-preferences-dialog.c:713
 msgid "RPC URL Path:"
-msgstr ""
+msgstr "RPC URL elérési út:"
 
 #: src/trg-preferences-dialog.c:716
 msgid "Username:"
-msgstr "Felh név:"
+msgstr "Felhasználónév:"
 
 #: src/trg-preferences-dialog.c:720
 msgid "Password:"
-msgstr "Jelszó"
+msgstr "Jelszó:"
 
 #: src/trg-preferences-dialog.c:722
 msgid "Automatically connect"
@@ -993,7 +987,7 @@ msgstr "SSL"
 
 #: src/trg-preferences-dialog.c:728
 msgid "Validate SSL Certificate"
-msgstr ""
+msgstr "SSL-tanúsítvány ellenőrzése"
 
 #: src/trg-preferences-dialog.c:733
 msgid "Timeout:"
@@ -1004,28 +998,27 @@ msgid "Retries:"
 msgstr "Újrapróbálkozások:"
 
 #: src/trg-preferences-dialog.c:738
-#, fuzzy
 msgid "Headers"
-msgstr "Feltöltők"
+msgstr "Fejlécek"
 
 #: src/trg-preferences-dialog.c:746
 msgid "Value"
-msgstr ""
+msgstr "Érték"
 
 #: src/trg-preferences-dialog.c:778 src/trg-remote-prefs-dialog.c:627
 #: src/trg-stats-dialog.c:267 src/trg-torrent-add-url-dialog.c:130
 #: src/trg-torrent-move-dialog.c:105 src/trg-torrent-props-dialog.c:491
 msgid "_Close"
-msgstr ""
+msgstr "_Bezárás"
 
 #: src/trg-preferences-dialog.c:779 src/trg-remote-prefs-dialog.c:628
 #: src/trg-torrent-props-dialog.c:492
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #: src/trg-preferences-dialog.c:783 src/trg-toolbar.c:204
 msgid "Local Preferences"
-msgstr "Helyi Beállítások"
+msgstr "Helyi beállítások"
 
 #: src/trg-preferences-dialog.c:804
 msgid "Actions"
@@ -1037,73 +1030,71 @@ msgstr "Könyvtárak"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Sun"
-msgstr ""
+msgstr "V"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Mon"
-msgstr ""
+msgstr "H"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Tue"
-msgstr ""
+msgstr "K"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Wed"
-msgstr ""
+msgstr "Sze"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Thu"
-msgstr ""
+msgstr "Cs"
 
 #: src/trg-remote-prefs-dialog.c:271
 msgid "Fri"
-msgstr ""
+msgstr "P"
 
 #: src/trg-remote-prefs-dialog.c:271
-#, fuzzy
 msgid "Sat"
-msgstr "Státusz"
+msgstr "Szo"
 
 #: src/trg-remote-prefs-dialog.c:314
 msgid "Bandwidth limits"
-msgstr "Sávszél. korlátok"
+msgstr "Sávszélesség-korlátok"
 
 #: src/trg-remote-prefs-dialog.c:317
 msgid "Down Limit (KiB/s)"
-msgstr "Le. Korlát (KiB/s)"
+msgstr "Letöltési korlát (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:323
 msgid "Up Limit (KiB/s)"
-msgstr "Fel. Korlát (KiB/s)"
+msgstr "Feltöltési korlát (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:327
 msgid "Alternate limits"
-msgstr "Változó korlátok"
+msgstr "Alternatív korlátok"
 
 #: src/trg-remote-prefs-dialog.c:330
 msgid "Alternate speed limits active"
-msgstr "Változó sebesség korlátok aktívak"
+msgstr "Alternatív sebességkorlátok aktívak"
 
 #: src/trg-remote-prefs-dialog.c:334
 msgid "Alternate time range"
-msgstr "Változó idő intervallum"
+msgstr "Alternatív időszak"
 
 #: src/trg-remote-prefs-dialog.c:339
-#, fuzzy
 msgid "Alternate days"
-msgstr "Változó korlátok"
+msgstr "Alternatív napok"
 
 #: src/trg-remote-prefs-dialog.c:343
 msgid "Alternate down limit (KiB/s)"
-msgstr "Változó le. korlát (KiB/s)"
+msgstr "Alternatív letöltési korlát (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:346
 msgid "Alternate up limit (KiB/s)"
-msgstr "Változó fel. korlát (KiB/s)"
+msgstr "Alternatív feltöltési korlát (KiB/s)"
 
 #: src/trg-remote-prefs-dialog.c:362
 msgid "Seed ratio limit"
-msgstr "Feltöltési arány korlát"
+msgstr "Seed aránykorlát"
 
 #: src/trg-remote-prefs-dialog.c:368
 msgid "Queues"
@@ -1115,35 +1106,35 @@ msgstr "Letöltési sor hossza"
 
 #: src/trg-remote-prefs-dialog.c:377
 msgid "Seed queue size"
-msgstr "Feltöltési sor hossza"
+msgstr "Seedelési sor hossza"
 
 #: src/trg-remote-prefs-dialog.c:383
 msgid "Ignore stalled (minutes)"
-msgstr "Elakadtak elutasítása (perc)"
+msgstr "Elakadt torrentek figyelmen kívül hagyása (perc)"
 
 #: src/trg-remote-prefs-dialog.c:393
 msgid "Global peer limit"
-msgstr "Globális peer korlát"
+msgstr "Globális peerkorlát"
 
 #: src/trg-remote-prefs-dialog.c:397
 msgid "Per torrent peer limit"
-msgstr "Torrentenkénti peer korlát"
+msgstr "Torrentenkénti peerkorlát"
 
 #: src/trg-remote-prefs-dialog.c:408
 msgid "Retest"
-msgstr "Újratesztel"
+msgstr "Újratesztelés"
 
 #: src/trg-remote-prefs-dialog.c:417
 msgid "Port is <span font_weight=\"bold\" fgcolor=\"darkgreen\">open</span>"
-msgstr "A <span font_weight=\"bold\" fgcolor=\"darkgreen\"> port nyitva</span>"
+msgstr "A port <span font_weight=\"bold\" fgcolor=\"darkgreen\">nyitva</span>"
 
 #: src/trg-remote-prefs-dialog.c:421
 msgid "Port is <span font_weight=\"bold\" fgcolor=\"red\">closed</span>"
-msgstr "A <span font_weight=\"bold\" fgcolor=\"darkgreen\"> port zárva</span>"
+msgstr "A port <span font_weight=\"bold\" fgcolor=\"red\">zárva</span>"
 
 #: src/trg-remote-prefs-dialog.c:436 src/trg-remote-prefs-dialog.c:497
 msgid "Port test"
-msgstr "Port teszt"
+msgstr "Portteszt"
 
 #: src/trg-remote-prefs-dialog.c:437
 msgid "Testing..."
@@ -1154,9 +1145,8 @@ msgid "Update"
 msgstr "Frissítés"
 
 #: src/trg-remote-prefs-dialog.c:455 src/trg-remote-prefs-dialog.c:540
-#, fuzzy
 msgid "Blocklist (%"
-msgstr "Blokkolt lista"
+msgstr "Tiltólista (%ld bejegyzés)"
 
 #: src/trg-remote-prefs-dialog.c:492 src/trg-remote-prefs-dialog.c:644
 msgid "Connections"
@@ -1176,11 +1166,11 @@ msgstr "Kötelező"
 
 #: src/trg-remote-prefs-dialog.c:503
 msgid "Preferred"
-msgstr "Engedve"
+msgstr "Előnyben részesített"
 
 #: src/trg-remote-prefs-dialog.c:503
 msgid "Tolerated"
-msgstr "Tiltva"
+msgstr "Engedélyezett"
 
 #: src/trg-remote-prefs-dialog.c:513
 msgid "Encryption"
@@ -1188,19 +1178,19 @@ msgstr "Titkosítás"
 
 #: src/trg-remote-prefs-dialog.c:516
 msgid "Random peer port on start"
-msgstr "Véletlenszerű peer port indításnál"
+msgstr "Véletlenszerű peer port indításkor"
 
 #: src/trg-remote-prefs-dialog.c:520
 msgid "Request forwarding of the peer port using UPnP or NAT-PMP"
-msgstr ""
+msgstr "Peer port továbbításának kérése UPnP vagy NAT-PMP használatával"
 
 #: src/trg-remote-prefs-dialog.c:524
 msgid "Protocol"
-msgstr "Protokol"
+msgstr "Protokoll"
 
 #: src/trg-remote-prefs-dialog.c:526
 msgid "Peer exchange (PEX)"
-msgstr "Peer exchange (PEX)"
+msgstr "Peercsere (PEX)"
 
 #: src/trg-remote-prefs-dialog.c:531
 msgid "Distributed Hash Table (DHT)"
@@ -1208,19 +1198,19 @@ msgstr "Distributed Hash Table (DHT)"
 
 #: src/trg-remote-prefs-dialog.c:534
 msgid "Local peer discovery"
-msgstr "Helyi peerek keresése"
+msgstr "Helyi peerek felderítése"
 
 #: src/trg-remote-prefs-dialog.c:538
 msgid "Blocklist"
-msgstr "Blokkolt lista"
+msgstr "Tiltólista"
 
 #: src/trg-remote-prefs-dialog.c:553
 msgid "Blocklist URL:"
-msgstr "Blokkolt lista URL"
+msgstr "Tiltólista URL-je:"
 
 #: src/trg-remote-prefs-dialog.c:569
 msgid "Environment"
-msgstr "Változó"
+msgstr "Környezet"
 
 #: src/trg-remote-prefs-dialog.c:572
 msgid "Download directory"
@@ -1232,15 +1222,15 @@ msgstr "Befejezetlen letöltések könyvtára"
 
 #: src/trg-remote-prefs-dialog.c:580
 msgid "Torrent done script"
-msgstr "Torrent befejezve script"
+msgstr "Torrent befejezésekor futtatandó parancsfájl"
 
 #: src/trg-remote-prefs-dialog.c:588
 msgid "Cache size (MiB)"
-msgstr "Cache méret (MiB)"
+msgstr "Gyorsítótár mérete (MiB)"
 
 #: src/trg-remote-prefs-dialog.c:591
 msgid "Behavior"
-msgstr "Magatartás"
+msgstr "Működés"
 
 #: src/trg-remote-prefs-dialog.c:594
 msgid "Rename partial files"
@@ -1248,7 +1238,7 @@ msgstr "Részleges fájlok átnevezése"
 
 #: src/trg-remote-prefs-dialog.c:598
 msgid "Trash original torrent files"
-msgstr "Eredeti torrent fájlok a lomtárba"
+msgstr "Eredeti torrentfájlok áthelyezése a lomtárba"
 
 #: src/trg-remote-prefs-dialog.c:602
 msgid "Start added torrents"
@@ -1268,19 +1258,19 @@ msgstr "Korlátok"
 
 #: src/trg-state-selector.c:204
 msgid "Refresh"
-msgstr ""
+msgstr "Frissítés"
 
 #: src/trg-state-selector.c:601
 msgid "All"
-msgstr "Mind"
+msgstr "Összes"
 
 #: src/trg-state-selector.c:604 src/trg-state-selector.c:653
 msgid "Queue Down"
-msgstr "Sor Le"
+msgstr "Letöltési sor"
 
 #: src/trg-state-selector.c:608 src/trg-state-selector.c:655
 msgid "Queue Up"
-msgstr "Sor Fel"
+msgstr "Seedelési sor"
 
 #: src/trg-state-selector.c:612
 msgid "Complete"
@@ -1312,15 +1302,15 @@ msgstr "Feltöltések összesen"
 
 #: src/trg-stats-dialog.c:281
 msgid "Files Added"
-msgstr "Fájlok Hozzáadva"
+msgstr "Fájlok hozzáadva"
 
 #: src/trg-stats-dialog.c:282
 msgid "Session Count"
-msgstr "Munkamenet Száma"
+msgstr "Munkamenetek száma"
 
 #: src/trg-stats-dialog.c:283
 msgid "Time Active"
-msgstr "Aktív Idő"
+msgstr "Aktív idő"
 
 #: src/trg-stats-dialog.c:288
 msgid "Statistic"
@@ -1335,9 +1325,9 @@ msgid "Cumulative"
 msgstr "Halmozott"
 
 #: src/trg-status-bar.c:138
-#, fuzzy, c-format
+#, c-format
 msgid "Connected: %s :: %s"
-msgstr "Kapcsolódva: %s (Transmission %g)"
+msgstr "Kapcsolódva: %s :: %s"
 
 #: src/trg-status-bar.c:152
 msgid "Updating torrents..."
@@ -1350,11 +1340,11 @@ msgstr "Szabad hely: %s"
 
 #: src/trg-status-bar.c:176
 msgid "Disable alternate speed limits"
-msgstr "Váltakozó sebesség korlátok kikapcsolása"
+msgstr "Alternatív sebességkorlátok kikapcsolása"
 
 #: src/trg-status-bar.c:177
 msgid "Enable alternate speed limits"
-msgstr "Váltakozó sebesség korlátok bekapcsolása"
+msgstr "Alternatív sebességkorlátok bekapcsolása"
 
 #: src/trg-status-bar.c:212 src/trg-status-bar.c:218
 #, c-format
@@ -1364,11 +1354,11 @@ msgstr " (Korlát: %s)"
 #: src/trg-status-bar.c:221
 #, c-format
 msgid "Down: %s%s, Up: %s%s"
-msgstr "Le: %s%s, Fel: %s%s"
+msgstr "Letöltés: %s%s, Feltöltés: %s%s"
 
 #: src/trg-torrent-add-dialog.c:357
 msgid "Torrent files"
-msgstr "Torrent fájlok"
+msgstr "Torrentfájlok"
 
 #: src/trg-torrent-add-dialog.c:362
 msgid "All files"
@@ -1379,13 +1369,13 @@ msgid ""
 "Unable to parse torrent file. File preferences unavailable, but you can "
 "still try uploading it."
 msgstr ""
-"Nem sikerült feldolgozni a torrent fájlt. Fájl beállítások nem érhető el, de "
-"próbálhatod feltölteni."
+"Nem sikerült feldolgozni a torrentfájlt. A fájlbeállítások nem érhetők el, "
+"de a feltöltést ettől még megpróbálhatod."
 
 #: src/trg-torrent-add-dialog.c:401
 #, c-format
 msgid "Unable to open torrent file: %s"
-msgstr "Nem sikerült megnyitni a torrent fájlt: %s"
+msgstr "Nem sikerült megnyitni a torrentfájlt: %s"
 
 #: src/trg-torrent-add-dialog.c:465
 msgid "(None)"
@@ -1413,7 +1403,7 @@ msgstr "Alacsony prioritás"
 
 #: src/trg-torrent-add-dialog.c:562 src/trg-files-tree-view-common.c:87
 msgid "Skip"
-msgstr "Kihagy"
+msgstr "Kihagyás"
 
 #: src/trg-torrent-add-dialog.c:587
 msgid "Add Torrent"
@@ -1421,40 +1411,39 @@ msgstr "Torrent hozzáadása"
 
 #: src/trg-torrent-add-dialog.c:593
 msgid "_Open"
-msgstr ""
+msgstr "_Megnyitás"
 
 #: src/trg-torrent-add-dialog.c:604
 msgid "Start _paused"
-msgstr "_Szüneteltek indítása"
+msgstr "Indítás _szüneteltetve"
 
 #: src/trg-torrent-add-dialog.c:619
 msgid "_Torrent file:"
-msgstr "_Torrent fájl:"
+msgstr "_Torrentfájl:"
 
 #: src/trg-torrent-add-dialog.c:629
 msgid "_Destination folder:"
-msgstr "_Cél könyvtár:"
+msgstr "_Célmappa:"
 
 #: src/trg-torrent-add-dialog.c:637
 msgid "Apply to all:"
-msgstr "Alkalmaz mindre:"
+msgstr "Alkalmazás az összesre:"
 
 #: src/trg-torrent-add-dialog.c:639
 msgid "Torrent _priority:"
-msgstr "Torrent _prioritás:"
+msgstr "Torrent _prioritása:"
 
 #: src/trg-torrent-add-dialog.c:706
 msgid "Show _options dialog"
-msgstr "_Beállítások ablak mutatása"
+msgstr "_Beállítások ablak megjelenítése"
 
 #: src/trg-torrent-add-url-dialog.c:58
 msgid ""
 "You are trying to add a magnet torrent, but DHT is disabled. Distributed "
 "Hash Table (DHT) should be enabled in remote settings."
 msgstr ""
-"Mágnes torrentet próbáltál hozzáadni, de a DHT le van tiltva. A Distributed "
-"Hash Table (DHT) beállításnak engedélyezve kell lennie a Távoli "
-"beállításoknál."
+"Magnet torrentet próbálsz hozzáadni, de a DHT le van tiltva. A Distributed "
+"Hash Table (DHT) funkciót engedélyezni kell a távoli beállításokban."
 
 #: src/trg-torrent-add-url-dialog.c:123
 msgid "URL:"
@@ -1462,7 +1451,7 @@ msgstr "URL:"
 
 #: src/trg-torrent-add-url-dialog.c:125
 msgid "Start Paused"
-msgstr "Szüneteltek indítása"
+msgstr "Indítás szüneteltetve"
 
 #: src/trg-torrent-add-url-dialog.c:127
 msgid "Add torrent from URL"
@@ -1470,11 +1459,11 @@ msgstr "Torrent hozzáadása URL-ből"
 
 #: src/trg-torrent-graph.c:386
 msgid "Total Uploading"
-msgstr "Összes Feltöltés"
+msgstr "Összes feltöltés"
 
 #: src/trg-torrent-graph.c:393
 msgid "Total Downloading"
-msgstr "Összes Letöltés"
+msgstr "Összes letöltés"
 
 #: src/trg-torrent-model.c:339
 msgid "Default"
@@ -1487,12 +1476,12 @@ msgstr "Hely:"
 #: src/trg-torrent-move-dialog.c:131
 #, c-format
 msgid "Move %s"
-msgstr "Mozgat %s"
+msgstr "%s áthelyezése"
 
 #: src/trg-torrent-move-dialog.c:133
 #, c-format
 msgid "Move %d torrents"
-msgstr "Mozgat %d torrent"
+msgstr "%d torrent áthelyezése"
 
 #: src/trg-torrent-props-dialog.c:189
 msgid "Activity"
@@ -1556,7 +1545,7 @@ msgstr "Megjegyzés:"
 
 #: src/trg-torrent-props-dialog.c:299
 msgid "Private to this tracker -- DHT and PEX disabled"
-msgstr "Privát torrent - DHT és PEX kikapcsolva"
+msgstr "Privát ezen a trackeren – DHT és PEX kikapcsolva"
 
 #: src/trg-torrent-props-dialog.c:301
 msgid "Public torrent"
@@ -1565,17 +1554,17 @@ msgstr "Publikus torrent"
 #: src/trg-torrent-props-dialog.c:311
 #, c-format
 msgid "Created by %1$s on %2$s"
-msgstr "Készítette %1$s, ekkor: %2$s"
+msgstr "Készítette: %1$s, ekkor: %2$s"
 
 #: src/trg-torrent-props-dialog.c:313
 #, c-format
 msgid "Created on %1$s"
-msgstr "Létrehozva ekkor: %1$s"
+msgstr "Létrehozva: %1$s"
 
 #: src/trg-torrent-props-dialog.c:315
-#, fuzzy, c-format
+#, c-format
 msgid "Created by %1$s"
-msgstr "Létrehozva ekkor: %1$s"
+msgstr "Készítette: %1$s"
 
 #: src/trg-torrent-props-dialog.c:345
 msgid "No errors"
@@ -1587,23 +1576,23 @@ msgstr "Most aktív"
 
 #: src/trg-torrent-props-dialog.c:379
 msgid "Honor global limits"
-msgstr "Honor global limits"
+msgstr "Globális korlátok betartása"
 
 #: src/trg-torrent-props-dialog.c:386
 msgid "Torrent priority:"
-msgstr "Torrent prioritás:"
+msgstr "Torrent prioritása:"
 
 #: src/trg-torrent-props-dialog.c:391
 msgid "Queue Position:"
-msgstr "Sor pozíció:"
+msgstr "Pozíció a sorban:"
 
 #: src/trg-torrent-props-dialog.c:395
 msgid "Limit download speed (KiB/s)"
-msgstr "Letöltési seb. korlátozása (KiB/s)"
+msgstr "Letöltési sebesség korlátozása (KiB/s)"
 
 #: src/trg-torrent-props-dialog.c:400
 msgid "Limit upload speed (KiB/s)"
-msgstr "Feltöltési seb. korlátozása (KiB/s)"
+msgstr "Feltöltési sebesség korlátozása (KiB/s)"
 
 #: src/trg-torrent-props-dialog.c:407
 msgid "Use global settings"
@@ -1611,28 +1600,28 @@ msgstr "Globális beállítások használata"
 
 #: src/trg-torrent-props-dialog.c:407
 msgid "Stop seeding at ratio"
-msgstr "Feltöltés leállítása a megadott arány elérésekor"
+msgstr "Seedelés leállítása a megadott arány elérésekor"
 
 #: src/trg-torrent-props-dialog.c:408
 msgid "Seed regardless of ratio"
-msgstr "Feltöltés tekintet nélkül az arányra"
+msgstr "Seedelés az aránytól függetlenül"
 
 #: src/trg-torrent-props-dialog.c:410
 msgid "Seed ratio mode:"
-msgstr "Feltöltési arány mód:"
+msgstr "Seed arány módja:"
 
 #: src/trg-torrent-props-dialog.c:417
 msgid "Seed ratio limit:"
-msgstr "Feltöltési arány korlát:"
+msgstr "Seed aránykorlát:"
 
 #: src/trg-torrent-props-dialog.c:422
 msgid "Peer limit:"
-msgstr "Peer korlát:"
+msgstr "Peerkorlát:"
 
 #: src/trg-torrent-props-dialog.c:481
 #, c-format
 msgid "Multiple (%d) torrent properties"
-msgstr "Többszörös (%d) torrent beállítások"
+msgstr "Több torrent (%d) tulajdonságai"
 
 #: src/trg-torrent-props-dialog.c:508
 msgid "Information"
@@ -1664,27 +1653,27 @@ msgstr "Kapcsolódva"
 
 #: src/trg-torrent-tree-view.c:72
 msgid "PEX Peers"
-msgstr "PEX Peerek"
+msgstr "PEX peerek"
 
 #: src/trg-torrent-tree-view.c:74
 msgid "DHT Peers"
-msgstr "DHT Peerek"
+msgstr "DHT peerek"
 
 #: src/trg-torrent-tree-view.c:77
 msgid "Tracker Peers"
-msgstr "Tracker Peerek"
+msgstr "Tracker peerek"
 
 #: src/trg-torrent-tree-view.c:79
 msgid "LTEP Peers"
-msgstr "LTEP Peerek"
+msgstr "LTEP peerek"
 
 #: src/trg-torrent-tree-view.c:82
 msgid "Resumed Peers"
-msgstr "Folytatott Peerek"
+msgstr "Folytatott peerek"
 
 #: src/trg-torrent-tree-view.c:85
 msgid "Incoming Peers"
-msgstr "Bejövő Peerek"
+msgstr "Bejövő peerek"
 
 #: src/trg-torrent-tree-view.c:88
 msgid "Peers T/I/E/H/X/L/R"
@@ -1696,7 +1685,7 @@ msgstr "Hozzáadva"
 
 #: src/trg-torrent-tree-view.c:101
 msgid "First Tracker"
-msgstr "Első Tracker"
+msgstr "Első tracker"
 
 #: src/trg-torrent-tree-view.c:105
 msgid "ID"
@@ -1704,7 +1693,7 @@ msgstr "ID"
 
 #: src/trg-torrent-tree-view.c:110
 msgid "Queue Position"
-msgstr "Sor Pozíció"
+msgstr "Pozíció a sorban"
 
 #: src/trg-torrent-tree-view.c:113
 msgid "Last Active"
@@ -1720,19 +1709,19 @@ msgstr "Announce URL"
 
 #: src/trg-trackers-tree-view.c:157
 msgid "Seeder Count"
-msgstr "Feltöltők Száma"
+msgstr "Feltöltők száma"
 
 #: src/trg-trackers-tree-view.c:160
 msgid "Leecher Count"
-msgstr "Letöltők Száma"
+msgstr "Letöltők száma"
 
 #: src/trg-trackers-tree-view.c:162
 msgid "Last Announce"
-msgstr "Utolsó Announce"
+msgstr "Utolsó announce"
 
 #: src/trg-trackers-tree-view.c:164
 msgid "Last Result"
-msgstr "Utolsó Eredmény"
+msgstr "Utolsó eredmény"
 
 #: src/trg-trackers-tree-view.c:165
 msgid "Scrape URL"
@@ -1740,7 +1729,7 @@ msgstr "Scrape URL"
 
 #: src/trg-trackers-tree-view.c:167
 msgid "Last Scrape"
-msgstr "Utolsó Scrape"
+msgstr "Utolsó scrape"
 
 #: src/trg-tree-view.c:261
 msgid "Ascending"
@@ -1752,20 +1741,20 @@ msgstr "Csökkenő"
 
 #: src/trg-files-tree-view-common.c:57
 msgid "Rename..."
-msgstr ""
+msgstr "Átnevezés..."
 
 #: src/trg-files-tree-view-common.c:93
 msgid "Expand All"
-msgstr "Kinyit mindet"
+msgstr "Összes kibontása"
 
 #: src/trg-files-tree-view-common.c:97
 msgid "Collapse All"
-msgstr "Bezár mindet"
+msgstr "Összes összecsukása"
 
 #: src/util.c:341
-#, fuzzy, c-format
+#, c-format
 msgid "Request failed with HTTP code: %d"
-msgstr "Kérés hiba. HTTP Kód: %d"
+msgstr "A kérés sikertelen. HTTP-kód: %d"
 
 #: src/util.c:371
 msgid "None"
@@ -1796,8 +1785,8 @@ msgstr[1] "%d perc"
 #, c-format
 msgid "%ld second"
 msgid_plural "%ld seconds"
-msgstr[0] "%ld m.perc"
-msgstr[1] "%ld m.perc"
+msgstr[0] "%ld másodperc"
+msgstr[1] "%ld másodperc"
 
 #~ msgid "No hostname set"
 #~ msgstr "Nincs host név beállítva"
